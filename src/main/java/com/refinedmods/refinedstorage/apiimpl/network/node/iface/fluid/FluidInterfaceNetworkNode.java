@@ -1,10 +1,13 @@
-package com.refinedmods.refinedstorage.apiimpl.network.node;
+package com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorage;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.fluid.ProxyFluidHandler;
@@ -111,36 +114,45 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
             } else {
                 int delta = got.isEmpty() ? wanted.getAmount() : (wanted.getAmount() - got.getAmount());
 
+                // fluid iface => 1000 mB -> dan crafting starten voor 1000 mb -> dan veranderen naar 500 mb -> 500 mb in fluid iface en 1000 in system?!
                 if (delta > 0) {
-                    final boolean actingAsStorage = isActingAsStorage();
+                    if (true) {
+                        ICraftingTask task = network.getCraftingManager().request(this, wanted, delta);
+                        if (task != null) {
+                            task.addOutputInterceptor(new FluidInterfaceOutputInterceptor(wanted, world.getDimension().getType(), pos));
+                        }
+                    } else {
+                        final boolean actingAsStorage = isActingAsStorage();
 
-                    FluidStack result = network.extractFluid(wanted, delta, IComparer.COMPARE_NBT, Action.PERFORM, s -> {
-                        // If we are not an interface acting as a storage, we can extract from anywhere.
-                        if (!actingAsStorage) {
-                            return true;
+                        FluidStack result = network.extractFluid(wanted, delta, IComparer.COMPARE_NBT, Action.PERFORM, s -> {
+                            // If we are not an interface acting as a storage, we can extract from anywhere.
+                            if (!actingAsStorage) {
+                                return true;
+                            }
+
+                            // If we are an interface acting as a storage, we don't want to extract from other interfaces to
+                            // avoid stealing from each other.
+                            return !(s instanceof FluidExternalStorage) || !((FluidExternalStorage) s).isConnectedToInterface();
+                        });
+
+                        if (!result.isEmpty()) {
+                            if (tankOut.getFluid().isEmpty()) {
+                                tankOut.setFluid(result);
+                            } else {
+                                tankOut.getFluid().grow(result.getAmount());
+                                markDirty();
+                            }
+
+                            onTankOutChanged();
                         }
 
-                        // If we are an interface acting as a storage, we don't want to extract from other interfaces to
-                        // avoid stealing from each other.
-                        return !(s instanceof FluidExternalStorage) || !((FluidExternalStorage) s).isConnectedToInterface();
-                    });
+                        // Example: our delta is 5, we extracted 3 fluids.
+                        // That means we still have to autocraft 2 fluids.
+                        delta -= result.getAmount();
 
-                    if (!result.isEmpty()) {
-                        if (tankOut.getFluid().isEmpty()) {
-                            tankOut.setFluid(result);
-                        } else {
-                            tankOut.getFluid().grow(result.getAmount());
+                        if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
+                            network.getCraftingManager().request(this, wanted, delta);
                         }
-
-                        onTankOutChanged();
-                    }
-
-                    // Example: our delta is 5, we extracted 3 fluids.
-                    // That means we still have to autocraft 2 fluids.
-                    delta -= result.getAmount();
-
-                    if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
-                        network.getCraftingManager().request(this, wanted, delta);
                     }
                 } else if (delta < 0) {
                     FluidStack remainder = network.insertFluidTracked(got, Math.abs(delta));

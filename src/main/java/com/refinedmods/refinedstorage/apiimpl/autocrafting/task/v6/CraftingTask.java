@@ -763,7 +763,7 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
+        ItemStack remainder = network.insertItem(output, output.getCount(), Action.PERFORM);
 
         this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
     }
@@ -778,7 +778,7 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        FluidStack remainder = network.insertFluid(output, count, Action.PERFORM);
+        FluidStack remainder = network.insertFluid(output, output.getAmount(), Action.PERFORM);
 
         this.internalFluidStorage.insert(remainder, remainder.getAmount(), Action.PERFORM);
     }

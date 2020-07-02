@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.network.node.FluidInterfaceNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid.FluidInterfaceNetworkNode;
 import com.refinedmods.refinedstorage.container.FluidInterfaceContainer;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;

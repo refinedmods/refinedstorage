@@ -26,6 +26,9 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.exporter.ExporterOutp
 import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceOutputInterceptor;
 import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceOutputInterceptorFactory;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid.FluidInterfaceNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid.FluidInterfaceOutputInterceptor;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid.FluidInterfaceOutputInterceptorFactory;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
@@ -140,6 +143,7 @@ public class CommonSetup {
 
         API.instance().getOutputInterceptorRegistry().add(ExporterOutputInterceptor.ID, new ExporterOutputInterceptorFactory());
         API.instance().getOutputInterceptorRegistry().add(InterfaceOutputInterceptor.ID, new InterfaceOutputInterceptorFactory());
+        API.instance().getOutputInterceptorRegistry().add(FluidInterfaceOutputInterceptor.ID, new FluidInterfaceOutputInterceptorFactory());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());

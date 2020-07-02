@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.RSTiles;
-import com.refinedmods.refinedstorage.apiimpl.network.node.FluidInterfaceNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid.FluidInterfaceNetworkNode;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.Direction;
