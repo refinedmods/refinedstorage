@@ -17,6 +17,7 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInvento
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
+import com.refinedmods.refinedstorage.tile.config.ICraftOnly;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -34,7 +35,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class FluidInterfaceNetworkNode extends NetworkNode {
+public class FluidInterfaceNetworkNode extends NetworkNode implements ICraftOnly {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid_interface");
 
     public static final int TANK_CAPACITY = 16_000;
@@ -42,6 +43,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     private static final String NBT_TANK_IN = "TankIn";
     private static final String NBT_TANK_OUT = "TankOut";
     private static final String NBT_OUT = "Out";
+    private static final String NBT_CRAFT_ONLY = "CraftOnly";
 
     private final FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
         @Override
@@ -63,6 +65,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     private final FluidInventory out = new FluidInventory(1, TANK_CAPACITY).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING).addListener(new NetworkNodeInventoryListener(this));
+
+    private boolean craftOnly;
 
     public FluidInterfaceNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -115,7 +119,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
                 int delta = got.isEmpty() ? wanted.getAmount() : (wanted.getAmount() - got.getAmount());
 
                 if (delta > 0) {
-                    if (true) { // TODO: Fix toggle.
+                    if (craftOnly && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                         ICraftingTask task = network.getCraftingManager().request(this, wanted, delta);
                         if (task != null) {
                             task.addOutputInterceptor(new FluidInterfaceOutputInterceptor(wanted, world.getDimension().getType(), pos));
@@ -223,6 +227,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
         super.writeConfiguration(tag);
 
         tag.put(NBT_OUT, out.writeToNbt());
+        tag.putBoolean(NBT_CRAFT_ONLY, craftOnly);
 
         return tag;
     }
@@ -233,6 +238,10 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
         if (tag.contains(NBT_OUT)) {
             out.readFromNbt(tag.getCompound(NBT_OUT));
+        }
+
+        if (tag.contains(NBT_CRAFT_ONLY)) {
+            craftOnly = tag.getBoolean(NBT_CRAFT_ONLY);
         }
     }
 
@@ -260,7 +269,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
         return tankOut;
     }
 
-    private void onTankOutChanged() {
+    public void onTankOutChanged() {
         if (!world.isRemote) {
             ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
         }
@@ -271,5 +280,17 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     @Override
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(in, upgrades);
+    }
+
+    @Override
+    public boolean isCraftOnly() {
+        return world.isRemote ? FluidInterfaceTile.CRAFT_ONLY.getValue() : craftOnly;
+    }
+
+    @Override
+    public void setCraftOnly(boolean craftOnly) {
+        this.craftOnly = craftOnly;
+
+        markDirty();
     }
 }

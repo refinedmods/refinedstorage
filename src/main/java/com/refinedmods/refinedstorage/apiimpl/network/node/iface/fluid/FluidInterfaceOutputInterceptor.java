@@ -79,8 +79,9 @@ public class FluidInterfaceOutputInterceptor implements IOutputInterceptor {
                     fluidInterface.getTankOut().setFluid(StackUtils.copy(stack, needed));
                 } else {
                     fluidInterface.getTankOut().getFluid().grow(needed);
-                    fluidInterface.markDirty();
                 }
+
+                fluidInterface.onTankOutChanged();
 
                 stack.shrink(needed);
             }

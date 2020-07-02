@@ -4,7 +4,9 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.iface.fluid.FluidInterfaceNetworkNode;
 import com.refinedmods.refinedstorage.container.FluidInterfaceContainer;
+import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
+import com.refinedmods.refinedstorage.screen.widget.sidebutton.CraftOnlySideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
@@ -16,17 +18,25 @@ import net.minecraft.util.text.TextFormatting;
 public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
     private static final FluidRenderer TANK_RENDERER = new FluidRenderer(FluidInterfaceNetworkNode.TANK_CAPACITY, 12, 47, 1);
 
+    private CraftOnlySideButton craftOnlyButton;
+
     public FluidInterfaceScreen(FluidInterfaceContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 211, 204, inventory, title);
+    }
+
+    private boolean hasCraftingUpgrade() {
+        return ((FluidInterfaceTile) container.getTile()).getNode().getUpgrades().hasUpgrade(UpgradeItem.Type.CRAFTING);
     }
 
     @Override
     public void onPostInit(int x, int y) {
         addSideButton(new RedstoneModeSideButton(this, FluidInterfaceTile.REDSTONE_MODE));
+        addSideButton(craftOnlyButton = new CraftOnlySideButton(this, FluidInterfaceTile.CRAFT_ONLY, hasCraftingUpgrade()));
     }
 
     @Override
     public void tick(int x, int y) {
+        craftOnlyButton.tick(hasCraftingUpgrade());
     }
 
     @Override
