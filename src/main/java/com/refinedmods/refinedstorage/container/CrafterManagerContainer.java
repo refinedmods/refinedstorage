@@ -175,7 +175,9 @@ public class CrafterManagerContainer extends BaseContainer {
 
         if (slot.getHasStack()) {
             stack = slot.getStack();
-
+            if (!new PatternItemValidator(getPlayer().getEntityWorld()).test(stack)) {
+                return ItemStack.EMPTY;
+            }
             if (index < 9 * 4) {
                 if (!mergeItemStack(stack, 9 * 4, inventorySlots.size(), false)) {
                     return ItemStack.EMPTY;
