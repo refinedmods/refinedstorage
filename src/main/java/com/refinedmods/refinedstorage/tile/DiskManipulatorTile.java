@@ -43,7 +43,7 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
 
     private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getDisks());
 
-    private final DiskState[] diskState = new DiskState[8];
+    private final DiskState[] diskState = new DiskState[6];
 
     public DiskManipulatorTile() {
         super(RSTiles.DISK_MANIPULATOR);

@@ -134,17 +134,17 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
     }
 
     private Vector3f getDiskTranslation(Direction facing, int x, int y) {
-        Vector3f trans = new Vector3f();
+        Vector3f translation = new Vector3f();
 
         if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-            trans.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
+            translation.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
         } else if (facing == Direction.EAST || facing == Direction.WEST) {
-            trans.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Y
+            translation.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
         }
 
-        trans.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
+        translation.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
 
-        return trans;
+        return translation;
     }
 
     @Nonnull
