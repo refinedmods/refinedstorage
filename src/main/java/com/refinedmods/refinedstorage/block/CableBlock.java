@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.tile.CableTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -70,6 +71,10 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
+        return ShapeCache.getOrCreate(state, CableBlock::getCableShape);
+    }
+
+    protected static VoxelShape getCableShape(BlockState state) {
         VoxelShape shape = SHAPE_CORE;
 
         if (state.get(NORTH)) {
