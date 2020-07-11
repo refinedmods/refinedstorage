@@ -324,7 +324,6 @@ public class CraftingTask implements ICraftingTask {
         }
 
         // Return false if we're exhausted.
-        // TODO: never called?
         boolean cycle() {
             if (pos + 1 >= possibilities.size()) {
                 pos = 0;
@@ -560,11 +559,22 @@ public class CraftingTask implements ICraftingTask {
                             // fromSelf contains the amount crafted after the loop.
                             this.toCraftFluids.add(fromSelf.copy());
                         } else {
-                            this.missingFluids.add(possibleInput, remaining);
+                            if (!possibleInputs.cycle()) {
+                                // Give up.
+                                possibleInput = possibleInputs.get(); // Revert back to 0.
 
-                            fluidsToExtract.add(possibleInput, remaining);
+                                this.missingFluids.add(possibleInput, remaining);
 
-                            remaining = 0;
+                                fluidsToExtract.add(possibleInput, remaining);
+
+                                remaining = 0;
+                            } else {
+                                // Retry with new input...
+                                possibleInput = possibleInputs.get();
+
+                                fromSelf = fluidResults.get(possibleInput);
+                                fromNetwork = mutatedFluidStorage.get(possibleInput);
+                            }
                         }
                     }
                 }
