@@ -37,29 +37,22 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(@Nonnull CacheKey key) {
-            List<BakedQuad> quads = new ArrayList<>();
+            Direction direction = key.state.get(RSBlocks.PORTABLE_GRID.getDirection().getProperty());
+            boolean active = key.state.get(PortableGridBlock.ACTIVE);
+            PortableGridDiskState diskState = key.state.get(PortableGridBlock.DISK_STATE);
 
-            if (key.active) {
-                quads.addAll(new TRSRBakedModel(baseConnected, key.direction).getQuads(key.state, null, key.random));
-            } else {
-                quads.addAll(new TRSRBakedModel(baseDisconnected, key.direction).getQuads(key.state, null, key.random));
-            }
+            List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
+                active ? baseConnected : baseDisconnected,
+                direction,
+                null,
+                key.state,
+                key.random,
+                key.side
+            ));
 
-            switch (key.diskState) {
-                case NORMAL:
-                    quads.addAll(new TRSRBakedModel(disk, key.direction).getQuads(key.state, null, key.random));
-                    break;
-                case NEAR_CAPACITY:
-                    quads.addAll(new TRSRBakedModel(diskNearCapacity, key.direction).getQuads(key.state, null, key.random));
-                    break;
-                case FULL:
-                    quads.addAll(new TRSRBakedModel(diskFull, key.direction).getQuads(key.state, null, key.random));
-                    break;
-                case DISCONNECTED:
-                    quads.addAll(new TRSRBakedModel(diskDisconnected, key.direction).getQuads(key.state, null, key.random));
-                    break;
-                case NONE:
-                    break;
+            IBakedModel diskModel = getDiskModel(diskState);
+            if (diskModel != null) {
+                quads.addAll(QuadTransformer.getTransformedQuads(diskModel, direction, null, key.state, key.random, key.side));
             }
 
             return quads;
@@ -82,6 +75,24 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         this.diskDisconnected = diskDisconnected;
     }
 
+    @Nullable
+    private IBakedModel getDiskModel(PortableGridDiskState state) {
+        switch (state) {
+            case NORMAL:
+                return disk;
+            case NEAR_CAPACITY:
+                return diskNearCapacity;
+            case FULL:
+                return diskFull;
+            case DISCONNECTED:
+                return diskDisconnected;
+            case NONE:
+                return null;
+            default:
+                return null;
+        }
+    }
+
     @Override
     public ItemOverrideList getOverrides() {
         return itemOverrideList;
@@ -90,11 +101,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
         if (state != null) {
-            Direction direction = state.get(RSBlocks.PORTABLE_GRID.getDirection().getProperty());
-            boolean active = state.get(PortableGridBlock.ACTIVE);
-            PortableGridDiskState diskState = state.get(PortableGridBlock.DISK_STATE);
-
-            return cache.getUnchecked(new CacheKey(direction, diskState, active, rand, state));
+            return cache.getUnchecked(new CacheKey(state, side, rand));
         }
 
         return super.getQuads(state, side, rand);
@@ -106,46 +113,23 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
             PortableGrid portableGrid = new PortableGrid(null, stack, -1);
 
-            IBakedModel myDisk = null;
-
-            switch (portableGrid.getDiskState()) {
-                case NORMAL:
-                    myDisk = disk;
-                    break;
-                case NEAR_CAPACITY:
-                    myDisk = diskNearCapacity;
-                    break;
-                case FULL:
-                    myDisk = diskFull;
-                    break;
-                case DISCONNECTED:
-                    myDisk = diskDisconnected;
-                    break;
-                case NONE:
-                    break;
-            }
-
             if (portableGrid.isGridActive()) {
-                return new PortableGridItemBakedModel(baseConnected, myDisk);
+                return new PortableGridItemBakedModel(baseConnected, getDiskModel(portableGrid.getDiskState()));
             } else {
-                return new PortableGridItemBakedModel(baseDisconnected, myDisk);
+                return new PortableGridItemBakedModel(baseDisconnected, getDiskModel(portableGrid.getDiskState()));
             }
         }
     }
 
     private static class CacheKey {
-        private final Direction direction;
-        private final PortableGridDiskState diskState;
-        private final boolean active;
-        private final Random random;
         private final BlockState state;
+        private final Direction side;
+        private final Random random;
 
-        public CacheKey(Direction direction, PortableGridDiskState diskState, boolean active, Random random, BlockState state) {
-            this.direction = direction;
-            this.diskState = diskState;
-            this.active = active;
-            this.random = random;
+        public CacheKey(BlockState state, Direction side, Random random) {
             this.state = state;
+            this.side = side;
+            this.random = random;
         }
 
         @Override
@@ -153,14 +137,14 @@ public class PortableGridBakedModel extends DelegateBakedModel {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             CacheKey cacheKey = (CacheKey) o;
-            return active == cacheKey.active &&
-                direction == cacheKey.direction &&
-                diskState == cacheKey.diskState;
+            return state.equals(cacheKey.state) &&
+                side == cacheKey.side &&
+                random.equals(cacheKey.random);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(direction, diskState, active);
+            return Objects.hash(state, side, random);
         }
     }
 }

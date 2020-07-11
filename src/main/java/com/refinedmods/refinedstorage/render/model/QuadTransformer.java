@@ -13,14 +13,10 @@ import net.minecraftforge.client.model.pipeline.TRSRTransformer;
 import net.minecraftforge.common.model.TransformationHelper;
 
 import javax.annotation.Nullable;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-public class QuadTransformer {
-    private static final Map<Direction, TransformationMatrix> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
-
+public final class QuadTransformer {
     public static List<BakedQuad> getTransformedQuads(IBakedModel model, Direction facing, @Nullable Vector3f translation, BlockState state, Random rand, Direction side) {
         double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
 
