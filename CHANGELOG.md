@@ -7,6 +7,7 @@
 - Fixed internal crafting inventory not being returned when Controller is broken (raoulvdberge)
 - Fixed bug where autocrafting tasks started on the same tick make the wrong assumption about available items and fluids (Darkere)
 - Fixed bug where the "To craft" amount in the Crafting Preview window is wrong (raoulvdberge)
+- Fixed bug where non-pattern items are able to be inserted into the Crafter Manager (Darkere)
 - Drastically improved shift clicking performance in Crafting Grid (Darkere)
 - Removed autocrafting engine version from crafting preview screen (raoulvdberge)
 
