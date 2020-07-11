@@ -256,11 +256,11 @@ public class CraftingTask implements ICraftingTask {
 
         if (requested.getItem() != null) {
             ItemStack req = requested.getItem().copy();
-            req.setCount(qty);
+            req.setCount(qty * qtyPerCraft);
             this.toCraft.add(req);
         } else {
             FluidStack req = requested.getFluid().copy();
-            req.setAmount(qty);
+            req.setAmount(qty * qtyPerCraft);
             this.toCraftFluids.add(req);
         }
 
