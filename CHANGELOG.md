@@ -1,7 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.8.7
-- Added a craft-only option to the Exporter (raoulvdberge)
+- Added a craft-only option to the Exporter, Interface and Fluid Interface (raoulvdberge)
 - Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
 - Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
 - Fixed Controller always using energy, even when disabled with redstone (raoulvdberge)
