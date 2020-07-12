@@ -5,12 +5,12 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.util.ISaveData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class StorageDiskManager extends WorldSavedData implements IStorageDiskManager {
-    public static final String NAME = "refinedstorage_disks";
+public class StorageDiskManager implements IStorageDiskManager, ISaveData {
+    public static final String NAME = "refinedstorage_disks.dat";
 
     private static final String NBT_DISKS = "Disks";
     private static final String NBT_DISK_ID = "Id";
@@ -27,13 +27,8 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     private static final String NBT_DISK_DATA = "Data";
 
     private final Map<UUID, IStorageDisk> disks = new HashMap<>();
-    private final ServerWorld world;
+    private boolean dirty;
 
-    public StorageDiskManager(String name, ServerWorld world) {
-        super(name);
-
-        this.world = world;
-    }
 
     @Override
     @Nullable
@@ -90,13 +85,13 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
 
     @Override
     public void markForSaving() {
-        markDirty();
+        dirty = true;
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        if (tag.contains(NBT_DISKS)) {
-            ListNBT disksTag = tag.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
+    public void read(CompoundNBT nbt, ServerWorld world) {
+        if (nbt.contains(NBT_DISKS)) {
+            ListNBT disksTag = nbt.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < disksTag.size(); ++i) {
                 CompoundNBT diskTag = disksTag.getCompound(i);
@@ -114,7 +109,7 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public void write(CompoundNBT nbt) {
         ListNBT disks = new ListNBT();
 
         for (Map.Entry<UUID, IStorageDisk> entry : this.disks.entrySet()) {
@@ -126,9 +121,21 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
 
             disks.add(diskTag);
         }
+        nbt.put(NBT_DISKS, disks);
+    }
 
-        tag.put(NBT_DISKS, disks);
+    @Override
+    public String getFileName() {
+        return NAME;
+    }
 
-        return tag;
+    @Override
+    public boolean isMarkedForSaving() {
+        return dirty;
+    }
+
+    @Override
+    public void markSaved() {
+        dirty = false;
     }
 }

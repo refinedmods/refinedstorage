@@ -39,6 +39,7 @@ import com.refinedmods.refinedstorage.apiimpl.util.Comparer;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
+import com.refinedmods.refinedstorage.util.SaveDataManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -125,12 +126,14 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager("network_nodes", world), "network_nodes");
+
+        return SaveDataManager.getNetworkNodeManager(world);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkManager("networks", world), "networks");
+
+        return SaveDataManager.getNetworkManager(world);
     }
 
     @Override
@@ -190,9 +193,8 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().func_241755_D_(); // Get the overworld
 
-        return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
+        return SaveDataManager.getStorageDiskManager();
     }
 
     @Nonnull
