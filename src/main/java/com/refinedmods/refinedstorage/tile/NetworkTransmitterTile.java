@@ -22,7 +22,7 @@ public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNe
     public static final TileDataParameter<Integer, NetworkTransmitterTile> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getDistance());
     public static final TileDataParameter<Optional<ResourceLocation>, NetworkTransmitterTile> RECEIVER_DIMENSION = new TileDataParameter<>(RSSerializers.OPTIONAL_RESOURCE_LOCATION_SERIALIZER, Optional.empty(), t -> {
         if (t.getNode().getReceiverDimension() != null) {
-            return Optional.of(t.getNode().getReceiverDimension().func_240901_a_()); // TODO check
+            return Optional.of(t.getNode().getReceiverDimension().func_240901_a_());
         }
 
         return Optional.empty();

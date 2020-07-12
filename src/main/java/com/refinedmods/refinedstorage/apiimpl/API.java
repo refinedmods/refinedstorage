@@ -312,7 +312,7 @@ public class API implements IRSAPI {
     @Override
     public int getNetworkNodeHashCode(INetworkNode node) {
         int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().func_234923_W_().hashCode(); // TODO check
+        result = 31 * result + node.getWorld().func_234923_W_().hashCode();
 
         return result;
     }
@@ -329,7 +329,7 @@ public class API implements IRSAPI {
 
         INetworkNode rightNode = (INetworkNode) right;
 
-        if (left.getWorld().func_234923_W_() != rightNode.getWorld().func_234923_W_()) { // TODO check
+        if (left.getWorld().func_234923_W_() != rightNode.getWorld().func_234923_W_()) {
             return false;
         }
 

@@ -9,8 +9,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
 public final class RSLootFunctions {
-    public static final LootFunctionType STORAGE_BLOCK = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
-    public static final LootFunctionType PORTABLE_GRID = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
-    public static final LootFunctionType CRAFTER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
-    public static final LootFunctionType CONTROLLER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
+    public static LootFunctionType STORAGE_BLOCK;
+    public static LootFunctionType PORTABLE_GRID;
+    public static LootFunctionType CRAFTER;
+    public static LootFunctionType CONTROLLER;
+
+    public static void register() {
+        STORAGE_BLOCK = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
+        PORTABLE_GRID = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
+        CRAFTER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
+        CONTROLLER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
+    }
 }

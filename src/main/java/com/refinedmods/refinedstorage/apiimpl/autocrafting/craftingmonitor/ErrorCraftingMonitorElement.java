@@ -6,15 +6,13 @@ import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
@@ -39,7 +37,7 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     @Nullable
     @Override
     public List<ITextComponent> getTooltip() {
-        List<ITextComponent> items = base.getTooltip(); // TODO Make sure this doesn't crash
+        List<ITextComponent> items = new ArrayList<>(base.getTooltip());
         items.add(new TranslationTextComponent(message).func_230530_a_(Styles.RED));
         return items;
     }
@@ -88,6 +86,6 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     }
 
     public void mergeBases(ICraftingMonitorElement element) {
-            this.base.merge(element);
+        this.base.merge(element);
     }
 }

@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
+import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
@@ -66,6 +67,8 @@ public class CommonSetup {
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
         MinecraftForge.EVENT_BUS.register(new NetworkListener());
         MinecraftForge.EVENT_BUS.register(new BlockListener());
+
+        RSLootFunctions.register();
 
         API.instance().getStorageDiskRegistry().add(ItemStorageDiskFactory.ID, new ItemStorageDiskFactory());
         API.instance().getStorageDiskRegistry().add(FluidStorageDiskFactory.ID, new FluidStorageDiskFactory());

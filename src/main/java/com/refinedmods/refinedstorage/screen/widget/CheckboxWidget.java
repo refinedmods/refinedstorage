@@ -57,7 +57,15 @@ public class CheckboxWidget extends CheckboxButton {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        blit(matrixStack, this.x, this.y, this.isFocused() ? 20.0F : 0.0F, this.checked ? 20.0F : 0.0F, 20, this.height, 64, 64);
+
+        float textureX = (this.isFocused() ? 10.0F : 0.0F);
+        float textureY = (this.checked ? 10.0F : 0.0F);
+
+        int width = 10;
+        int height = 10;
+
+        blit(matrixStack, this.x, this.y, textureX, textureY, width, height, 32, 32);
+
         this.renderBg(matrixStack, minecraft, p_230431_2_, p_230431_3_);
 
         int color = 14737632;
