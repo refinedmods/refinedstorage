@@ -36,10 +36,6 @@ import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksI
 import com.refinedmods.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
-import com.refinedmods.refinedstorage.loottable.ControllerLootFunctionSerializer;
-import com.refinedmods.refinedstorage.loottable.CrafterLootFunctionSerializer;
-import com.refinedmods.refinedstorage.loottable.PortableGridBlockLootFunctionSerializer;
-import com.refinedmods.refinedstorage.loottable.StorageBlockLootFunctionSerializer;
 import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.refinedmods.refinedstorage.tile.*;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
@@ -54,7 +50,6 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -131,11 +126,6 @@ public class CommonSetup {
         API.instance().getCraftingMonitorElementRegistry().add(ErrorCraftingMonitorElement.ID, ErrorCraftingMonitorElement::read);
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
-
-        LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
-        LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());
-        LootFunctionManager.registerFunction(new CrafterLootFunctionSerializer());
-        LootFunctionManager.registerFunction(new ControllerLootFunctionSerializer());
 
         if (CraftingTweaksIntegration.isLoaded()) {
             CraftingTweaksIntegration.register();

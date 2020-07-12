@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,7 +37,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     public NetworkItem(Item.Properties item, boolean creative, Supplier<Integer> energyCapacity) {
         super(item, creative, energyCapacity);
 
-        addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
+        ItemModelsProperties.func_239418_a_(this, new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -44,7 +45,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), player.inventory.currentItem), player::sendMessage);
+            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), player.inventory.currentItem), err -> player.sendMessage(err, player.getUniqueID()));
         }
 
         return ActionResult.resultSuccess(stack);
@@ -84,7 +85,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         super.addInformation(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
+            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).func_230530_a_(Styles.GRAY));
         }
     }
 

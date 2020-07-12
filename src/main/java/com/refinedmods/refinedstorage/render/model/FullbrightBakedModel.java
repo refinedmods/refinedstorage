@@ -75,7 +75,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
             quad.getTintIndex(),
             quad.getFace(),
             quad.func_187508_a(),
-            quad.shouldApplyDiffuseLighting()
+            quad.func_239287_f_() // shouldApplyDiffuseLighting
         );
     }
 

@@ -36,7 +36,7 @@ public enum GridType implements IStringSerializable {
 
     @Nonnull
     @Override
-    public String getName() {
+    public String getString() {
         return name;
     }
 

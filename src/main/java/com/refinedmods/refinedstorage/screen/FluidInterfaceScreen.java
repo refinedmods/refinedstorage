@@ -37,11 +37,11 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
         blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
         if (!FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
-            TANK_RENDERER.render(x + 46, y + 56, FluidInterfaceTile.TANK_IN.getValue());
+            TANK_RENDERER.render(matrixStack, x + 46, y + 56, FluidInterfaceTile.TANK_IN.getValue());
         }
 
         if (!FluidInterfaceTile.TANK_OUT.getValue().isEmpty()) {
-            TANK_RENDERER.render(x + 118, y + 56, FluidInterfaceTile.TANK_OUT.getValue());
+            TANK_RENDERER.render(matrixStack, x + 118, y + 56, FluidInterfaceTile.TANK_OUT.getValue());
         }
     }
 

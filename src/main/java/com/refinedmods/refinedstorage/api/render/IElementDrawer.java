@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 
@@ -14,9 +15,10 @@ import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewE
 @FunctionalInterface
 public interface IElementDrawer<T> {
     /**
-     * @param x       the x axis
-     * @param y       the y axis
-     * @param element the element type
+     * @param matrixStack the matrix stack
+     * @param x           the x axis
+     * @param y           the y axis
+     * @param element     the element type
      */
-    void draw(int x, int y, T element);
+    void draw(MatrixStack matrixStack, int x, int y, T element);
 }

@@ -137,7 +137,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                 FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!stack.isEmpty()) {
-                    FluidRenderer.INSTANCE.render(guiLeft + slot.xPos, guiTop + slot.yPos, stack);
+                    FluidRenderer.INSTANCE.render(matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
 
                     if (((FluidFilterSlot) slot).isSizeAllowed()) {
                         renderQuantity(matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderSettings.INSTANCE.getSecondaryColor());

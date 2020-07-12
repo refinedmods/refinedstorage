@@ -178,9 +178,9 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
             for (int i = 0; i < 3 * 5; ++i) {
                 if (slot < stacks.size()) {
-                    ICraftingPreviewElement stack = stacks.get(slot);
+                    ICraftingPreviewElement<?> stack = stacks.get(slot);
 
-                    stack.draw(x, y + 5, drawers);
+                    stack.draw(matrixStack, x, y + 5, drawers);
 
                     if (RenderUtils.inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
                         this.hoveringStack = stack.getId().equals(ItemCraftingPreviewElement.ID) ? (ItemStack) stack.getElement() : null;

@@ -80,9 +80,9 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             if (requested.getItem() != null) {
                 RenderHelper.setupGui3DDiffuseLighting();
 
-                itemDrawer.draw(x, y, requested.getItem());
+                itemDrawer.draw(matrixStack, x, y, requested.getItem());
             } else {
-                fluidDrawer.draw(x, y, requested.getFluid());
+                fluidDrawer.draw(matrixStack, x, y, requested.getFluid());
 
                 RenderSystem.enableAlphaTest();
             }
@@ -261,16 +261,16 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         int x = 7;
         int y = 20;
 
-        String itemSelectedTooltip = null;
+        List<ITextComponent> tooltip = null;
 
         for (int i = 0; i < 3 * 5; ++i) {
             if (item < getElements().size()) {
                 ICraftingMonitorElement element = getElements().get(item);
 
-                element.draw(x, y, drawers);
+                element.draw(matrixStack, x, y, drawers);
 
                 if (RenderUtils.inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
-                    itemSelectedTooltip = element.getTooltip();
+                    tooltip = element.getTooltip();
                 }
 
                 if ((i + 1) % 3 == 0) {
@@ -284,8 +284,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             item++;
         }
 
-        if (itemSelectedTooltip != null && !itemSelectedTooltip.isEmpty()) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.format(itemSelectedTooltip));
+        if (tooltip != null && !tooltip.isEmpty()) {
+            renderTooltip(matrixStack, ItemStack.EMPTY, mouseX, mouseY, tooltip);
         }
 
         tabs.drawTooltip(matrixStack, font, mouseX, mouseY);

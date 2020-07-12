@@ -13,7 +13,6 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
     private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
     private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
 
-
     @Override
     public void directAdd(ICraftingMonitorElement element) {
         elements.add(element);

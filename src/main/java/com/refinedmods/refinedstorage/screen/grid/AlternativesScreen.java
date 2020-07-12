@@ -299,7 +299,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         @Override
         public void render(MatrixStack matrixStack, int x, int y) {
-            FluidRenderer.INSTANCE.render(x + 3, y + 2, fluid);
+            FluidRenderer.INSTANCE.render(matrixStack, x + 3, y + 2, fluid);
             renderString(matrixStack, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
         }
     }
@@ -363,7 +363,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         @Override
         public void render(MatrixStack matrixStack, int x, int y) {
             for (FluidStack fluid : fluids) {
-                FluidRenderer.INSTANCE.render(x + 3, y, fluid);
+                FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluid);
 
                 x += 17;
             }

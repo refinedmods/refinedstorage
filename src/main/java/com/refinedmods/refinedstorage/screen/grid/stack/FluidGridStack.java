@@ -161,7 +161,7 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y) {
-        FluidRenderer.INSTANCE.render(x, y, stack);
+        FluidRenderer.INSTANCE.render(matrixStack, x, y, stack);
 
         String text;
         int color = RenderSettings.INSTANCE.getSecondaryColor();

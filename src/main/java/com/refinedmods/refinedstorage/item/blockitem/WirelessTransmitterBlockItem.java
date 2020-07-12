@@ -24,6 +24,6 @@ public class WirelessTransmitterBlockItem extends BaseBlockItem {
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("block.refinedstorage.wireless_transmitter.tooltip", new TranslationTextComponent("block.refinedstorage.cable")).setStyle(Styles.GRAY));
+        tooltip.add(new TranslationTextComponent("block.refinedstorage.wireless_transmitter.tooltip", new TranslationTextComponent("block.refinedstorage.cable")).func_230530_a_(Styles.GRAY));
     }
 }

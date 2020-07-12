@@ -1,15 +1,21 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     public static final ResourceLocation ID = new ResourceLocation("error");
@@ -24,16 +30,18 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void draw(int x, int y, IElementDrawers drawers) {
-        base.draw(x, y, drawers);
+    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
+        base.draw(matrixStack, x, y, drawers);
 
-        drawers.getErrorDrawer().draw(x, y, null);
+        drawers.getErrorDrawer().draw(matrixStack, x, y, null);
     }
 
     @Nullable
     @Override
-    public String getTooltip() {
-        return base.getTooltip() + "\n" + TextFormatting.RED + I18n.format(message);
+    public List<ITextComponent> getTooltip() {
+        List<ITextComponent> items = base.getTooltip(); // TODO Make sure this doesn't crash
+        items.add(new TranslationTextComponent(message).func_230530_a_(Styles.RED));
+        return items;
     }
 
     @Override

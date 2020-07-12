@@ -21,7 +21,7 @@ public class CrafterManagerContainerFactory implements IContainerFactory<Crafter
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            data.put(buf.readTextComponent().getFormattedText(), buf.readInt());
+            data.put(buf.readTextComponent().getString(), buf.readInt());
         }
 
         CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerTile) inv.player.world.getTileEntity(pos), inv.player, windowId);

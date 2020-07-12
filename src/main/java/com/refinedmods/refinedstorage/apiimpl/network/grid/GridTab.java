@@ -49,9 +49,9 @@ public class GridTab implements IGridTab {
         if (!icon.isEmpty()) {
             RenderHelper.setupGui3DDiffuseLighting();
 
-            itemDrawer.draw(x, y, icon);
+            itemDrawer.draw(matrixStack, x, y, icon);
         } else {
-            fluidDrawer.draw(x, y, fluidIcon);
+            fluidDrawer.draw(matrixStack, x, y, fluidIcon);
 
             RenderSystem.enableAlphaTest();
         }

@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -52,7 +53,7 @@ public interface IElementDrawers {
      * @return a drawer that does nothing
      */
     default <T> IElementDrawer<T> getNullDrawer() {
-        return (x, y, element) -> {
+        return (matrixStack, x, y, element) -> {
             // NO OP
         };
     }

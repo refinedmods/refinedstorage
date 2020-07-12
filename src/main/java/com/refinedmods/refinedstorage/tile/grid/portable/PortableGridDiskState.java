@@ -22,23 +22,13 @@ public enum PortableGridDiskState implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+    public String getString() {
         return type;
     }
 
     @Override
     public String toString() {
         return type;
-    }
-
-    public static PortableGridDiskState getById(int id) {
-        for (PortableGridDiskState diskState : values()) {
-            if (diskState.getId() == id) {
-                return diskState;
-            }
-        }
-
-        return NONE;
     }
 }
 
