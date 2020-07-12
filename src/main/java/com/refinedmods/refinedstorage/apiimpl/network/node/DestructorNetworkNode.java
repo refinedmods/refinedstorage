@@ -31,7 +31,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ServerWorld;
@@ -127,7 +127,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         Block frontBlock = frontBlockState.getBlock();
         ItemStack frontStack = frontBlock.getPickBlock(
             frontBlockState,
-            new BlockRayTraceResult(Vec3d.ZERO, getDirection().getOpposite(), front, false),
+            new BlockRayTraceResult(Vector3d.ZERO, getDirection().getOpposite(), front, false),
             world,
             front,
             WorldUtils.getFakePlayer((ServerWorld) world, getOwner())

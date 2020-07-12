@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 
@@ -22,8 +23,8 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
     }
 
     @Override
-    protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.start");
+    protected ITextComponent getOkButtonText() {
+        return new TranslationTextComponent("misc.refinedstorage.start");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -32,11 +33,11 @@ public class ExactModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
         int ty = 16 * 12;
         int tx = (parameter.getValue() & MASK) == MASK ? 0 : 16;
 
-        screen.blit(x, y, tx, ty, 16, 16);
+        screen.blit(matrixStack, x, y, tx, ty, 16, 16);
     }
 
     @Override

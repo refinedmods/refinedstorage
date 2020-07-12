@@ -16,8 +16,8 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.Position;
-import net.minecraft.entity.item.FireworkRocketEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
@@ -114,7 +114,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
                 WorldUtils.getFakePlayer((ServerWorld) world, getOwner()),
                 Hand.MAIN_HAND,
                 took,
-                new BlockRayTraceResult(Vec3d.ZERO, getDirection(), pos, false)
+                new BlockRayTraceResult(Vector3d.ZERO, getDirection(), pos, false)
             );
 
             ActionResultType result = ForgeHooks.onPlaceItemIntoWorld(ctx);

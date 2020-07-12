@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,7 +41,7 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, I18n.format("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.displayGuiScreen(alternativesScreenFactory.apply(this)));
+            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.displayGuiScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -69,8 +70,8 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
     }
 
     @Override
-    protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.set");
+    protected ITextComponent getOkButtonText() {
+        return new TranslationTextComponent("misc.refinedstorage.set");
     }
 
     @Override

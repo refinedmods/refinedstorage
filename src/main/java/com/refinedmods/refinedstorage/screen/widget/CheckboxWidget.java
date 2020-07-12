@@ -1,11 +1,14 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.function.Consumer;
 
@@ -16,11 +19,11 @@ public class CheckboxWidget extends CheckboxButton {
     private final Consumer<CheckboxButton> onPress;
     private boolean shadow = true;
 
-    public CheckboxWidget(int x, int y, String text, boolean isChecked, Consumer<CheckboxButton> onPress) {
+    public CheckboxWidget(int x, int y, ITextComponent text, boolean isChecked, Consumer<CheckboxButton> onPress) {
         super(
             x,
             y,
-            Minecraft.getInstance().fontRenderer.getStringWidth(text) + BOX_WIDTH,
+            Minecraft.getInstance().fontRenderer.getStringWidth(text.getString()) + BOX_WIDTH,
             10,
             text,
             isChecked
@@ -45,17 +48,17 @@ public class CheckboxWidget extends CheckboxButton {
     }
 
     @Override
-    public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
-        Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager().bindTexture(TEXTURE);
+    public void renderButton(MatrixStack matrixStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.getTextureManager().bindTexture(TEXTURE);
         RenderSystem.enableDepthTest();
-        FontRenderer fontRenderer = mc.fontRenderer;
+        FontRenderer fontrenderer = minecraft.fontRenderer;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        blit(this.x, this.y, 0.0F, this.checked ? 10.0F : 0.0F, 10, this.height, 16, 32);
-        this.renderBg(mc, p_renderButton_1_, p_renderButton_2_);
+        blit(matrixStack, this.x, this.y, this.isFocused() ? 20.0F : 0.0F, this.checked ? 20.0F : 0.0F, 20, this.height, 64, 64);
+        this.renderBg(matrixStack, minecraft, p_230431_2_, p_230431_3_);
 
         int color = 14737632;
 
@@ -66,9 +69,9 @@ public class CheckboxWidget extends CheckboxButton {
         }
 
         if (shadow) {
-            super.drawString(fontRenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
+            super.drawString(matrixStack, fontrenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
         } else {
-            fontRenderer.drawString(this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2F, color);
+            fontrenderer.drawString(matrixStack, this.getMessage().getString(), this.x + 13, this.y + (this.height - 8) / 2F, color);
         }
     }
 }

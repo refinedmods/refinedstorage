@@ -45,7 +45,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
 
                         // If there is no space in the network, just dump it in the world.
                         if (!remainderStack.isEmpty()) {
-                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
+                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), remainderStack);
                         }
                     }
 
@@ -127,7 +127,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 }
 
                 if (!remainder.isEmpty()) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), remainder);
                 }
             }
         }

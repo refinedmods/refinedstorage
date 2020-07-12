@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItemProvider;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Map;
@@ -33,7 +33,7 @@ public class NetworkItemManager implements INetworkItemManager {
                 ((IWirelessTransmitter) node).getDimension() == player.dimension) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 
-                Vec3d pos = player.getPositionVec();
+                Vector3d pos = player.getPositionVec();
 
                 double distance = Math.sqrt(Math.pow(transmitter.getOrigin().getX() - pos.getX(), 2) + Math.pow(transmitter.getOrigin().getY() - pos.getY(), 2) + Math.pow(transmitter.getOrigin().getZ() - pos.getZ(), 2));
 
@@ -46,7 +46,7 @@ public class NetworkItemManager implements INetworkItemManager {
         }
 
         if (!inRange) {
-            player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_range"));
+            player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_range"), player.getUniqueID());
 
             return;
         }

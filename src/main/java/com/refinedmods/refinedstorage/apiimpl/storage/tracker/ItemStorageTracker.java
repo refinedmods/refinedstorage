@@ -26,7 +26,7 @@ public class ItemStorageTracker implements IStorageTracker<ItemStack> {
 
     @Override
     public void changed(PlayerEntity player, ItemStack stack) {
-        changes.put(new Key(stack), new StorageTrackerEntry(System.currentTimeMillis(), player.getName().getFormattedText()));
+        changes.put(new Key(stack), new StorageTrackerEntry(System.currentTimeMillis(), player.getName().getString()));
 
         listener.run();
     }

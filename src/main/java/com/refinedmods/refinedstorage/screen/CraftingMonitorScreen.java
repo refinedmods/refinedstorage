@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -21,10 +22,12 @@ import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -52,8 +55,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         @Override
-        public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
-            List<String> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName().getFormattedText() : requested.getFluid().getDisplayName().getFormattedText());
+        public void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
+            List<ITextComponent> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName() : requested.getFluid().getDisplayName());
             List<String> smallTextLines = Lists.newArrayList();
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
@@ -64,7 +67,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
             smallTextLines.add(String.format("%d%%", completionPercentage));
 
-            RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
+            RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
         }
 
         @Override
@@ -73,9 +76,9 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         @Override
-        public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+        public void drawIcon(MatrixStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
             if (requested.getItem() != null) {
-                RenderSystem.setupGui3DDiffuseLighting();
+                RenderHelper.setupGui3DDiffuseLighting();
 
                 itemDrawer.draw(x, y, requested.getItem());
             } else {
@@ -160,11 +163,11 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             addSideButton(new RedstoneModeSideButton(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
-        String cancel = I18n.format("gui.cancel");
-        String cancelAll = I18n.format("misc.refinedstorage.cancel_all");
+        ITextComponent cancel = new TranslationTextComponent("gui.cancel");
+        ITextComponent cancelAll = new TranslationTextComponent("misc.refinedstorage.cancel_all");
 
-        int cancelButtonWidth = 14 + font.getStringWidth(cancel);
-        int cancelAllButtonWidth = 14 + font.getStringWidth(cancelAll);
+        int cancelButtonWidth = 14 + font.getStringWidth(cancel.getString());
+        int cancelAllButtonWidth = 14 + font.getStringWidth(cancelAll.getString());
 
         this.cancelButton = addButton(x + 7, y + 201 - 20 - 7, cancelButtonWidth, 20, cancel, false, true, btn -> {
             if (hasValidTabSelected()) {
@@ -233,27 +236,27 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         if (craftingMonitor.isActiveOnClient()) {
-            tabs.drawBackground(x, y - tabs.getHeight());
+            tabs.drawBackground(matrixStack, x, y - tabs.getHeight());
         }
 
         bindTexture(RS.ID, "gui/crafting_preview.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
-        scrollbar.render();
+        scrollbar.render(matrixStack);
 
-        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActiveOnClient());
+        tabs.drawForeground(matrixStack, x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActiveOnClient());
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
-        RenderSystem.setupGui3DDiffuseLighting();
+        RenderHelper.setupGui3DDiffuseLighting();
 
         int x = 7;
         int y = 20;
@@ -282,10 +285,10 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         if (itemSelectedTooltip != null && !itemSelectedTooltip.isEmpty()) {
-            renderTooltip(mouseX, mouseY, I18n.format(itemSelectedTooltip));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.format(itemSelectedTooltip));
         }
 
-        tabs.drawTooltip(font, mouseX, mouseY);
+        tabs.drawTooltip(matrixStack, font, mouseX, mouseY);
     }
 
     @Override

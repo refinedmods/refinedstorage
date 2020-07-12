@@ -1,11 +1,14 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
@@ -35,16 +38,16 @@ public class GridTab implements IGridTab {
     }
 
     @Override
-    public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
+    public void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
         if (!name.trim().equals("")) {
-            GuiUtils.drawHoveringText(Collections.singletonList(name), x, y, screenWidth, screenHeight, -1, fontRenderer);
+            GuiUtils.drawHoveringText(matrixStack, Collections.singletonList(new StringTextComponent(name)), x, y, screenWidth, screenHeight, -1, fontRenderer);
         }
     }
 
     @Override
-    public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+    public void drawIcon(MatrixStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
         if (!icon.isEmpty()) {
-            RenderSystem.setupGui3DDiffuseLighting();
+            RenderHelper.setupGui3DDiffuseLighting();
 
             itemDrawer.draw(x, y, icon);
         } else {

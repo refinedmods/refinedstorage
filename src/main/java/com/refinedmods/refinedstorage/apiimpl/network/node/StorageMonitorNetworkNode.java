@@ -165,7 +165,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
             ItemStack container = result.getLeft();
             if (!player.inventory.addItemStackToInventory(container.copy())) {
-                InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), container);
+                InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), container);
             }
         }
     }
@@ -196,7 +196,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
             if (!result.isEmpty()) {
                 if (!player.inventory.addItemStackToInventory(result.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), result);
                 }
             }
         }
@@ -222,7 +222,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
                 fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
                 if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), fluidHandler.getContainer());
                 }
             }));
         }

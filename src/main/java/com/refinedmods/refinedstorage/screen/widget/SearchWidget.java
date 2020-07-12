@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class SearchWidget extends TextFieldWidget {
     private int historyIndex = -1;
 
     public SearchWidget(FontRenderer fontRenderer, int x, int y, int width) {
-        super(fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT, "");
+        super(fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT, new StringTextComponent(""));
 
         this.setEnableBackgroundDrawing(false);
         this.setVisible(true);

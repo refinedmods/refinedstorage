@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.container.DiskDriveContainer;
 import com.refinedmods.refinedstorage.tile.DiskDriveTile;
 import net.minecraft.client.resources.I18n;
@@ -25,9 +26,9 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainer> {
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(79, 42, I18n.format("gui.refinedstorage.disk_drive.disks"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 79, 42, I18n.format("gui.refinedstorage.disk_drive.disks"));
 
-        super.renderForeground(mouseX, mouseY);
+        super.renderForeground(matrixStack, mouseX, mouseY);
     }
 }

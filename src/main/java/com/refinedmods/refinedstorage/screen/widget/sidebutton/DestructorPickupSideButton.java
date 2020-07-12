@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.container.DestructorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.DestructorTile;
@@ -13,8 +14,8 @@ public class DestructorPickupSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, 64 + (!DestructorTile.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, 64 + (!DestructorTile.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
     }
 
     @Override

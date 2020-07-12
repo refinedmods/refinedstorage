@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
@@ -9,6 +10,7 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideB
 import com.refinedmods.refinedstorage.tile.ClientNode;
 import com.refinedmods.refinedstorage.tile.ControllerTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -43,16 +45,16 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/controller.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
         int energyBarHeightNew = Network.getEnergyScaled(ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
 
-        blit(x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
+        blit(matrixStack, x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
 
-        scrollbar.render();
+        scrollbar.render(matrixStack);
     }
 
     @Override
@@ -78,16 +80,16 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, 87, I18n.format("container.inventory"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, 87, I18n.format("container.inventory"));
 
         int x = 33;
         int y = 26;
 
         int slot = scrollbar.getOffset() * 2;
 
-        RenderSystem.setupGui3DDiffuseLighting();
+        RenderHelper.setupGui3DDiffuseLighting();
 
         List<ClientNode> nodes = ControllerTile.NODES.getValue();
 
@@ -97,7 +99,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
             if (slot < nodes.size()) {
                 ClientNode node = nodes.get(slot);
 
-                renderItem(x, y + 5, node.getStack());
+                renderItem(matrixStack, x, y + 5, node.getStack());
 
                 float scale = minecraft.getForceUnicodeFont() ? 1F : 0.5F;
 
@@ -105,11 +107,12 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
                 RenderSystem.scalef(scale, scale, 1);
 
                 renderString(
+                    matrixStack,
                     RenderUtils.getOffsetOnScale(x + 1, scale),
                     RenderUtils.getOffsetOnScale(y - 2, scale),
                     trimNameIfNeeded(!minecraft.getForceUnicodeFont(), node.getStack().getDisplayName().getString())
                 );
-                renderString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
+                renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
                 RenderSystem.popMatrix();
 
@@ -129,11 +132,11 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
         }
 
         if (hoveringNode != null) {
-            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
         }
 
         if (RenderUtils.inBounds(ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT, mouseX, mouseY)) {
-            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage", ControllerTile.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage.energy_stored", ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue()));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage", ControllerTile.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage.energy_stored", ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue()));
         }
     }
 

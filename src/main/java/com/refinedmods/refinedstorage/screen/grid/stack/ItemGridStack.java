@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.RenderSettings;
@@ -9,16 +10,15 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ItemGridStack implements IGridStack {
     private final Logger logger = LogManager.getLogger(getClass());
@@ -36,7 +36,7 @@ public class ItemGridStack implements IGridStack {
     private String cachedName;
     private String cachedModId;
     private String cachedModName;
-    private String cachedTooltip;
+    private List<ITextComponent> cachedTooltip;
 
     public ItemGridStack(ItemStack stack) {
         this.stack = stack;
@@ -90,7 +90,7 @@ public class ItemGridStack implements IGridStack {
     public String getName() {
         if (cachedName == null) {
             try {
-                cachedName = stack.getDisplayName().getFormattedText();
+                cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item name of " + stack.getItem().toString(), t);
 
@@ -141,14 +141,15 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public String getTooltip() {
+    public List<ITextComponent> getTooltip() {
         if (cachedTooltip == null) {
             try {
-                cachedTooltip = String.join("\n", RenderUtils.getTooltipFromItem(stack));
+                cachedTooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item tooltip of " + stack.getItem().toString(), t);
 
-                cachedTooltip = "<Error>";
+                cachedTooltip = new ArrayList<>();
+                cachedTooltip.add(new StringTextComponent("<Error>"));
             }
         }
 
@@ -171,7 +172,7 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(BaseScreen<?> screen, int x, int y) {
+    public void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y) {
         String text = null;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
 
@@ -184,7 +185,7 @@ public class ItemGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        screen.renderItem(x, y, stack, true, text, color);
+        screen.renderItem(matrixStack, x, y, stack, true, text, color);
     }
 
     @Override
