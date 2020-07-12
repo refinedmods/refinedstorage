@@ -1,7 +1,8 @@
 package com.refinedmods.refinedstorage.api.network;
 
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.World;
 
 /**
  * Represents a node that can send a wireless signal.
@@ -20,5 +21,5 @@ public interface IWirelessTransmitter {
     /**
      * @return the dimension in which the transmitter is
      */
-    DimensionType getDimension();
+    RegistryKey<World> getDimension();
 }

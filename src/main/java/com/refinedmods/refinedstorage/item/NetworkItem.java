@@ -12,16 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,13 +55,13 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        DimensionType dimension = getDimension(stack);
+        RegistryKey<World> dimension = getDimension(stack);
         if (dimension == null) {
             onError.accept(notFound);
             return;
         }
 
-        World nodeWorld = DimensionManager.getWorld(server, dimension, true, true);
+        World nodeWorld = server.getWorld(dimension);
         if (nodeWorld == null) {
             onError.accept(notFound);
             return;
@@ -104,7 +100,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             tag.putInt(NBT_NODE_X, network.getPosition().getX());
             tag.putInt(NBT_NODE_Y, network.getPosition().getY());
             tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
-            tag.putString(NBT_DIMENSION, DimensionType.getKey(ctx.getWorld().getDimension().getType()).toString());
+            tag.putString(NBT_DIMENSION, ctx.getWorld().func_234923_W_().func_240901_a_().toString());
 
             stack.setTag(tag);
 
@@ -115,14 +111,14 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     @Nullable
-    public static DimensionType getDimension(ItemStack stack) {
+    public static RegistryKey<World> getDimension(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains(NBT_DIMENSION)) {
             ResourceLocation name = ResourceLocation.tryCreate(stack.getTag().getString(NBT_DIMENSION));
             if (name == null) {
                 return null;
             }
 
-            return DimensionType.byName(name);
+            return RegistryKey.func_240903_a_(Registry.WORLD_KEY, name);
         }
 
         return null;

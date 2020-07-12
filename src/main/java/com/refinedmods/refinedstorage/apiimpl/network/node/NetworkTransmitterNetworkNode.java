@@ -11,10 +11,10 @@ import com.refinedmods.refinedstorage.item.NetworkCardItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -42,7 +42,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
         });
 
     private BlockPos receiver;
-    private DimensionType receiverDimension;
+    private RegistryKey<World> receiverDimension;
 
     public NetworkTransmitterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -89,7 +89,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     @Nullable
-    public DimensionType getReceiverDimension() {
+    public RegistryKey<World> getReceiverDimension() {
         return receiverDimension;
     }
 
@@ -102,7 +102,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.getDimension().getType() == receiverDimension;
+        return world.func_234923_W_() == receiverDimension;
     }
 
     private boolean canTransmit() {

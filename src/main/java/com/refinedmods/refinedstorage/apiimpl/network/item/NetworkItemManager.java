@@ -30,7 +30,7 @@ public class NetworkItemManager implements INetworkItemManager {
             if (node instanceof IWirelessTransmitter &&
                 network.canRun() &&
                 node.isActive() &&
-                ((IWirelessTransmitter) node).getDimension() == player.dimension) {
+                ((IWirelessTransmitter) node).getDimension() == player.getEntityWorld().func_234923_W_()) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 
                 Vector3d pos = player.getPositionVec();
