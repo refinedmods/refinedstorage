@@ -1,11 +1,13 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.container.CrafterContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class CrafterModeSideButton extends SideButton {
     public CrafterModeSideButton(BaseScreen<CrafterContainer> screen) {
@@ -14,12 +16,12 @@ public class CrafterModeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.crafter_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.crafter_mode." + CrafterTile.MODE.getValue());
+        return new TranslationTextComponent("sidebutton.refinedstorage.crafter_mode").getString() + "\n" + TextFormatting.GRAY + new TranslationTextComponent("sidebutton.refinedstorage.crafter_mode." + CrafterTile.MODE.getValue()).getString();
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, CrafterTile.MODE.getValue() * 16, 0, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, CrafterTile.MODE.getValue() * 16, 0, 16, 16);
     }
 
     @Override

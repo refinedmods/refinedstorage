@@ -9,10 +9,10 @@ import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -63,8 +63,8 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
     }
 
     @Override
-    public DimensionType getDimension() {
-        return world.getDimension().getType();
+    public RegistryKey<World> getDimension() {
+        return world.func_234923_W_();
     }
 
     public BaseItemHandler getUpgrades() {

@@ -50,7 +50,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
             if (shift) {
                 if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), fluidHandler.getContainer());
                 }
             } else {
                 player.inventory.setItemStack(fluidHandler.getContainer());

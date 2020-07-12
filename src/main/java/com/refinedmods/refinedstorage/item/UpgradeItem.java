@@ -6,6 +6,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -93,9 +94,9 @@ public class UpgradeItem extends Item {
         if (type.getFortuneLevel() > 0) {
             tooltip.add(
                 new TranslationTextComponent("enchantment.minecraft.fortune")
-                    .appendText(" ")
-                    .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
-                    .setStyle(Styles.GRAY)
+                    .func_230529_a_(new StringTextComponent(" "))
+                    .func_230529_a_(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
+                    .func_230530_a_(Styles.GRAY)
             );
         }
     }

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.InputEvent;
@@ -26,13 +27,13 @@ public class KeyInputListener {
             PlayerInventory inv = Minecraft.getInstance().player.inventory;
 
             if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_GRID, RSItems.CREATIVE_WIRELESS_GRID);
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_GRID, RSItems.CREATIVE_WIRELESS_GRID);
             } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_FLUID_GRID, RSItems.CREATIVE_WIRELESS_FLUID_GRID);
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_FLUID_GRID, RSItems.CREATIVE_WIRELESS_FLUID_GRID);
             } else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.PORTABLE_GRID, RSItems.CREATIVE_PORTABLE_GRID);
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.PORTABLE_GRID, RSItems.CREATIVE_PORTABLE_GRID);
             } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_CRAFTING_MONITOR, RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR);
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_CRAFTING_MONITOR, RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR);
             }
         }
     }

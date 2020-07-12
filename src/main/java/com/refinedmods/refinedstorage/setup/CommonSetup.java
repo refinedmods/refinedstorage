@@ -36,10 +36,7 @@ import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksI
 import com.refinedmods.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
-import com.refinedmods.refinedstorage.loottable.ControllerLootFunctionSerializer;
-import com.refinedmods.refinedstorage.loottable.CrafterLootFunctionSerializer;
-import com.refinedmods.refinedstorage.loottable.PortableGridBlockLootFunctionSerializer;
-import com.refinedmods.refinedstorage.loottable.StorageBlockLootFunctionSerializer;
+import com.refinedmods.refinedstorage.loottable.*;
 import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.refinedmods.refinedstorage.tile.*;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
@@ -51,10 +48,12 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.loot.LootFunctionType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.storage.loot.functions.LootFunctionManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -62,6 +61,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CommonSetup {
+
+    public static final LootFunctionType LOOTFUNCTION_STORAGEBLOCK = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
+    public static final LootFunctionType LOOTFUNCTION_PORTABLEGRID = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
+    public static final LootFunctionType LOOTFUNCTION_CRAFTER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
+    public static final LootFunctionType LOOTFUNCTION_CONTROLLER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
+
     @SubscribeEvent
     public void onCommonSetup(FMLCommonSetupEvent e) {
         RS.NETWORK_HANDLER.register();
@@ -131,11 +136,6 @@ public class CommonSetup {
         API.instance().getCraftingMonitorElementRegistry().add(ErrorCraftingMonitorElement.ID, ErrorCraftingMonitorElement::read);
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
-
-        LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
-        LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());
-        LootFunctionManager.registerFunction(new CrafterLootFunctionSerializer());
-        LootFunctionManager.registerFunction(new ControllerLootFunctionSerializer());
 
         if (CraftingTweaksIntegration.isLoaded()) {
             CraftingTweaksIntegration.register();

@@ -1,17 +1,26 @@
 package com.refinedmods.refinedstorage.loottable;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.setup.CommonSetup;
 import com.refinedmods.refinedstorage.tile.ControllerTile;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootFunction;
+import net.minecraft.loot.LootFunctionType;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.functions.ILootFunction;
 import net.minecraftforge.energy.CapabilityEnergy;
 
-public class ControllerLootFunction implements ILootFunction {
+public class ControllerLootFunction extends LootFunction {
+    protected ControllerLootFunction(ILootCondition[] conditionsIn) {
+        super(conditionsIn);
+    }
+
     @Override
-    public ItemStack apply(ItemStack itemStack, LootContext lootContext) {
+    protected ItemStack doApply(ItemStack itemStack, LootContext lootContext) {
         TileEntity tile = lootContext.get(LootParameters.BLOCK_ENTITY);
 
         if (tile instanceof ControllerTile) {
@@ -22,4 +31,19 @@ public class ControllerLootFunction implements ILootFunction {
 
         return itemStack;
     }
+
+    @Override
+    public LootFunctionType func_230425_b_() {
+        return CommonSetup.LOOTFUNCTION_CONTROLLER;
+    }
+
+    public static class Serializer extends LootFunction.Serializer<ControllerLootFunction> {
+
+        @Override
+        public ControllerLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditionsIn) {
+            return new ControllerLootFunction(conditionsIn);
+        }
+
+    }
+
 }

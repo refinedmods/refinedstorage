@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
@@ -29,8 +30,7 @@ public class SecurityCardItem extends Item {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.setRegistryName(RS.ID, "security_card");
-
-        addPropertyOverride(new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
+        ItemModelsProperties.func_239418_a_(this, new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -83,12 +83,12 @@ public class SecurityCardItem extends Item {
         super.addInformation(stack, world, tooltip, flag);
 
         if (stack.hasTag() && stack.getTag().contains(NBT_OWNER_NAME)) {
-            tooltip.add(new TranslationTextComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).setStyle(Styles.GRAY));
+            tooltip.add(new TranslationTextComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).func_230530_a_(Styles.GRAY));
         }
 
         for (Permission permission : Permission.values()) {
             if (hasPermission(stack, permission)) {
-                tooltip.add(new StringTextComponent("- ").appendSibling(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
+                tooltip.add(new StringTextComponent("- ").func_230529_a_(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).func_230530_a_(Styles.GRAY));
             }
         }
     }

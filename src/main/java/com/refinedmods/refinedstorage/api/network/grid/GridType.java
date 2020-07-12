@@ -34,14 +34,14 @@ public enum GridType implements IStringSerializable {
         this.name = name;
     }
 
-    @Nonnull
     @Override
-    public String getName() {
+    public String toString() {
         return name;
     }
 
+    @Nonnull
     @Override
-    public String toString() {
+    public String getString() {
         return name;
     }
 }

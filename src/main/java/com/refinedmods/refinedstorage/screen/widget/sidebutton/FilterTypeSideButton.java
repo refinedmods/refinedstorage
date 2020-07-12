@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.screen.FilterScreen;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class FilterTypeSideButton extends SideButton {
     private final FilterScreen screen;
@@ -16,12 +18,12 @@ public class FilterTypeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.type." + screen.getType());
+        return new TranslationTextComponent("sidebutton.refinedstorage.type").getString() + "\n" + TextFormatting.GRAY + new TranslationTextComponent("sidebutton.refinedstorage.type." + screen.getType()).getString();
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, 16 * screen.getType(), 128, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack,x, y, 16 * screen.getType(), 128, 16, 16);
     }
 
     @Override

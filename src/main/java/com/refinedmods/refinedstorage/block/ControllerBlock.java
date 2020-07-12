@@ -46,12 +46,12 @@ public class ControllerBlock extends BaseBlock {
         }
 
         @Override
-        public String getName() {
+        public String toString() {
             return name;
         }
 
         @Override
-        public String toString() {
+        public String getString() {
             return name;
         }
     }

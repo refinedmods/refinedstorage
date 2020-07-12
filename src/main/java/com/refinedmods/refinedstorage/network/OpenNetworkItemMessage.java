@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Util;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -34,7 +35,7 @@ public class OpenNetworkItemMessage {
                 ItemStack stack = player.inventory.getStackInSlot(message.slotId);
 
                 if (stack.getItem() instanceof NetworkItem) {
-                    ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack, message.slotId), player::sendMessage);
+                    ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack, message.slotId), m -> player.sendMessage(m, Util.DUMMY_UUID));
                 } else if (stack.getItem() instanceof PortableGridBlockItem) {
                     API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, player, stack, message.slotId);
                 }

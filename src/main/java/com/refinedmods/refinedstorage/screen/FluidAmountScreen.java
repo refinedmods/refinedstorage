@@ -40,7 +40,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, I18n.format("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.displayGuiScreen(alternativesScreenFactory.apply(this)));
+            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.displayGuiScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -70,7 +70,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
 
     @Override
     protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.set");
+        return new TranslationTextComponent("misc.refinedstorage.set").getString();
     }
 
     @Override

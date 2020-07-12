@@ -655,8 +655,8 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
 
         if (tag.contains(GridNetworkNode.NBT_SORTING_DIRECTION)) {
             sortingDirection = tag.getInt(GridNetworkNode.NBT_SORTING_DIRECTION);

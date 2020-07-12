@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 
@@ -29,7 +30,7 @@ public interface IGridStack {
 
     String getFormattedFullQuantity();
 
-    void draw(BaseScreen<?> screen, int x, int y);
+    void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y);
 
     Object getIngredient();
 

@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.FluidInterfaceNetworkNode;
@@ -12,6 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
     private static final FluidRenderer TANK_RENDERER = new FluidRenderer(FluidInterfaceNetworkNode.TANK_CAPACITY, 12, 47, 1);
@@ -30,33 +32,33 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/fluid_interface.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
         if (!FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
-            TANK_RENDERER.render(x + 46, y + 56, FluidInterfaceTile.TANK_IN.getValue());
+            TANK_RENDERER.render(matrixStack, x + 46, y + 56, FluidInterfaceTile.TANK_IN.getValue());
         }
 
         if (!FluidInterfaceTile.TANK_OUT.getValue().isEmpty()) {
-            TANK_RENDERER.render(x + 118, y + 56, FluidInterfaceTile.TANK_OUT.getValue());
+            TANK_RENDERER.render(matrixStack, x + 118, y + 56, FluidInterfaceTile.TANK_OUT.getValue());
         }
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(43 + 4, 20, I18n.format("gui.refinedstorage.fluid_interface.in"));
-        renderString(115 + 1, 20, I18n.format("gui.refinedstorage.fluid_interface.out"));
-        renderString(7, 111, I18n.format("container.inventory"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 43 + 4, 20, new TranslationTextComponent("gui.refinedstorage.fluid_interface.in").getString());
+        renderString(matrixStack, 115 + 1, 20, new TranslationTextComponent("gui.refinedstorage.fluid_interface.out").getString());
+        renderString(matrixStack, 7, 111, new TranslationTextComponent("container.inventory").getString());
 
         if (RenderUtils.inBounds(46, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
-            renderTooltip(mouseX, mouseY, FluidInterfaceTile.TANK_IN.getValue().getDisplayName().getFormattedText() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_IN.getValue().getAmount()) + TextFormatting.RESET);
+            renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceTile.TANK_IN.getValue().getDisplayName().getString() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_IN.getValue().getAmount()) + TextFormatting.RESET);
         }
 
         if (RenderUtils.inBounds(118, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceTile.TANK_OUT.getValue().isEmpty()) {
-            renderTooltip(mouseX, mouseY, FluidInterfaceTile.TANK_OUT.getValue().getDisplayName().getFormattedText() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_OUT.getValue().getAmount()) + TextFormatting.RESET);
+            renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceTile.TANK_OUT.getValue().getDisplayName().getString() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_OUT.getValue().getAmount()) + TextFormatting.RESET);
         }
     }
 }

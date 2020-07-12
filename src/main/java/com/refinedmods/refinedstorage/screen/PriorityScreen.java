@@ -30,7 +30,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
 
     @Override
     protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.set");
+        return new TranslationTextComponent("misc.refinedstorage.set").getString();
     }
 
     @Override

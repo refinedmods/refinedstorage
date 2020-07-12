@@ -24,12 +24,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -40,7 +39,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     private ItemStack stack;
     @Nullable
     private final MinecraftServer server;
-    private final DimensionType nodeDimension;
+    private final RegistryKey<World> nodeDimension;
     private final BlockPos nodePos;
     private final int slotId;
 
@@ -93,7 +92,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(server, nodeDimension, true, true);
+        World world = server.getWorld(nodeDimension);
 
         if (world != null) {
             return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getTileEntity(nodePos)));

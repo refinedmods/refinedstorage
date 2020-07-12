@@ -43,7 +43,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
@@ -126,14 +127,14 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkNodeManager.NAME;
+        String name = world.func_234923_W_().func_240901_a_().getNamespace() + "_" + world.func_234923_W_().func_240901_a_().getPath() + "_" + NetworkNodeManager.NAME;
 
         return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(name, world), name);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkManager.NAME;
+        String name = world.func_234923_W_().func_240901_a_().getNamespace() + "_" + world.func_234923_W_().func_240901_a_().getPath() + "_" + NetworkManager.NAME;
 
         return world.getSavedData().getOrCreate(() -> new NetworkManager(name, world), name);
     }
@@ -195,7 +196,7 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().getWorld(DimensionType.OVERWORLD);
+        ServerWorld world = anyWorld.getServer().getWorld(World.field_234918_g_);
 
         return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
     }
@@ -317,7 +318,7 @@ public class API implements IRSAPI {
     @Override
     public int getNetworkNodeHashCode(INetworkNode node) {
         int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().getDimension().getType().getId();
+        result = 31 * result + node.getWorld().func_234923_W_().hashCode();
 
         return result;
     }
@@ -334,7 +335,7 @@ public class API implements IRSAPI {
 
         INetworkNode rightNode = (INetworkNode) right;
 
-        if (left.getWorld().getDimension().getType().getId() != rightNode.getWorld().getDimension().getType().getId()) {
+        if (left.getWorld().func_234923_W_().hashCode() != rightNode.getWorld().func_234923_W_().hashCode()) {
             return false;
         }
 

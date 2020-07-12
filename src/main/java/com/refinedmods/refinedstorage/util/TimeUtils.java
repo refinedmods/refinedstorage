@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public final class TimeUtils {
     private static final long SECOND = 1000;
@@ -14,19 +14,19 @@ public final class TimeUtils {
         long diff = System.currentTimeMillis() - ago;
 
         if (diff < SECOND * 10) {
-            return I18n.format("misc.refinedstorage.last_modified.just_now", by);
+            return new TranslationTextComponent("misc.refinedstorage.last_modified.just_now", by).getString();
         } else if (diff < MINUTE) {
-            return I18n.format("misc.refinedstorage.last_modified.second" + ((diff / SECOND) > 1 ? "s" : ""), diff / SECOND, by);
+            return new TranslationTextComponent("misc.refinedstorage.last_modified.second" + ((diff / SECOND) > 1 ? "s" : ""), diff / SECOND, by).getString();
         } else if (diff < HOUR) {
-            return I18n.format("misc.refinedstorage.last_modified.minute" + ((diff / MINUTE) > 1 ? "s" : ""), diff / MINUTE, by);
+            return new TranslationTextComponent("misc.refinedstorage.last_modified.minute" + ((diff / MINUTE) > 1 ? "s" : ""), diff / MINUTE, by).getString();
         } else if (diff < DAY) {
-            return I18n.format("misc.refinedstorage.last_modified.hour" + ((diff / HOUR) > 1 ? "s" : ""), diff / HOUR, by);
+            return new TranslationTextComponent("misc.refinedstorage.last_modified.hour" + ((diff / HOUR) > 1 ? "s" : ""), diff / HOUR, by).getString();
         } else if (diff < WEEK) {
-            return I18n.format("misc.refinedstorage.last_modified.day" + ((diff / DAY) > 1 ? "s" : ""), diff / DAY, by);
+            return new TranslationTextComponent("misc.refinedstorage.last_modified.day" + ((diff / DAY) > 1 ? "s" : ""), diff / DAY, by).getString();
         } else if (diff < YEAR) {
-            return I18n.format("misc.refinedstorage.last_modified.week" + ((diff / WEEK) > 1 ? "s" : ""), diff / WEEK, by);
+            return new TranslationTextComponent("misc.refinedstorage.last_modified.week" + ((diff / WEEK) > 1 ? "s" : ""), diff / WEEK, by).getString();
         }
 
-        return I18n.format("misc.refinedstorage.last_modified.year" + ((diff / YEAR) > 1 ? "s" : ""), diff / YEAR, by);
+        return new TranslationTextComponent("misc.refinedstorage.last_modified.year" + ((diff / YEAR) > 1 ? "s" : ""), diff / YEAR, by).getString();
     }
 }

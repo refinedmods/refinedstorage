@@ -28,7 +28,7 @@ public class GridBlock extends NetworkNodeBlock {
 
         this.type = type;
 
-        this.setRegistryName(RS.ID, type == GridType.NORMAL ? "grid" : type.getName() + "_grid");
+        this.setRegistryName(RS.ID, type == GridType.NORMAL ? "grid" : type.getString() + "_grid");
     }
 
     @Override

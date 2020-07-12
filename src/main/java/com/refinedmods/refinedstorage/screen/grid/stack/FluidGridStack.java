@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
@@ -8,6 +9,7 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,7 +78,7 @@ public class FluidGridStack implements IGridStack {
     public String getName() {
         if (cachedName == null) {
             try {
-                cachedName = stack.getDisplayName().getFormattedText();
+                cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
                 logger.warn("Could not retrieve fluid name of " + stack.getFluid().getRegistryName().toString(), t);
 
@@ -132,7 +134,7 @@ public class FluidGridStack implements IGridStack {
     public String getTooltip() {
         if (cachedTooltip == null) {
             try {
-                cachedTooltip = stack.getDisplayName().getFormattedText();
+                cachedTooltip = stack.getDisplayName().getString();
             } catch (Throwable t) {
                 cachedTooltip = "<Error>";
 
@@ -159,8 +161,8 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(BaseScreen<?> screen, int x, int y) {
-        FluidRenderer.INSTANCE.render(x, y, stack);
+    public void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y) {
+        FluidRenderer.INSTANCE.render(matrixStack, x, y, stack);
 
         String text;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
@@ -169,12 +171,12 @@ public class FluidGridStack implements IGridStack {
             text = "0";
             color = 16733525;
         } else if (isCraftable()) {
-            text = I18n.format("gui.refinedstorage.grid.craft");
+            text = new TranslationTextComponent("gui.refinedstorage.grid.craft").getString();
         } else {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }
 
-        screen.renderQuantity(x, y, text, color);
+        screen.renderQuantity(matrixStack, x, y, text, color);
     }
 
     @Override

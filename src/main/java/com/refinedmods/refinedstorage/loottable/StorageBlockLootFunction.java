@@ -1,19 +1,28 @@
 package com.refinedmods.refinedstorage.loottable;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
+import com.refinedmods.refinedstorage.setup.CommonSetup;
 import com.refinedmods.refinedstorage.tile.FluidStorageTile;
 import com.refinedmods.refinedstorage.tile.StorageTile;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootFunction;
+import net.minecraft.loot.LootFunctionType;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.functions.ILootFunction;
 
-public class StorageBlockLootFunction implements ILootFunction {
+public class StorageBlockLootFunction extends LootFunction {
+    protected StorageBlockLootFunction(ILootCondition[] conditionsIn) {
+        super(conditionsIn);
+    }
+
     @Override
-    public ItemStack apply(ItemStack stack, LootContext lootContext) {
+    protected ItemStack doApply(ItemStack stack, LootContext lootContext) {
         TileEntity tile = lootContext.get(LootParameters.BLOCK_ENTITY);
 
         // This code needs to work without the node being removed as well.
@@ -39,4 +48,18 @@ public class StorageBlockLootFunction implements ILootFunction {
 
         return stack;
     }
+
+    @Override
+    public LootFunctionType func_230425_b_() {
+        return CommonSetup.LOOTFUNCTION_STORAGEBLOCK;
+    }
+
+    public static class Serializer extends LootFunction.Serializer<StorageBlockLootFunction> {
+
+        @Override
+        public StorageBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditionsIn) {
+            return new StorageBlockLootFunction(conditionsIn);
+        }
+    }
+
 }

@@ -7,11 +7,11 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 
 public class CraftingPreviewElementDrawers extends ElementDrawers {
-    private final IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
+    private final IElementDrawer<Integer> overlayDrawer = (matrixStack, x, y, colour) -> {
         RenderSystem.color4f(1, 1, 1, 1);
         RenderSystem.disableLighting();
 
-        AbstractGui.fill(x, y, x + 73, y + 29, colour);
+        AbstractGui.fill(matrixStack, x, y, x + 73, y + 29, colour);
     };
 
     public CraftingPreviewElementDrawers(CraftingPreviewScreen screen, FontRenderer fontRenderer) {

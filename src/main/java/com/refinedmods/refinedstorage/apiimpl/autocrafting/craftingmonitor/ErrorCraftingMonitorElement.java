@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -8,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -24,16 +26,16 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void draw(int x, int y, IElementDrawers drawers) {
-        base.draw(x, y, drawers);
+    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
+        base.draw(matrixStack, x, y, drawers);
 
-        drawers.getErrorDrawer().draw(x, y, null);
+        drawers.getErrorDrawer().draw(matrixStack, x, y, null);
     }
 
     @Nullable
     @Override
     public String getTooltip() {
-        return base.getTooltip() + "\n" + TextFormatting.RED + I18n.format(message);
+        return base.getTooltip() + "\n" + TextFormatting.RED + new TranslationTextComponent(message);
     }
 
     @Override

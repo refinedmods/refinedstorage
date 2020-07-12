@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -20,11 +22,11 @@ public class GridSizeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.grid.size") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.grid.size." + this.sizeSupplier.get());
+        return new TranslationTextComponent("sidebutton.refinedstorage.grid.size").getString() + "\n" + TextFormatting.GRAY + new TranslationTextComponent("sidebutton.refinedstorage.grid.size." + this.sizeSupplier.get()).getString();
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
         int size = this.sizeSupplier.get();
 
         int tx = 0;
@@ -39,7 +41,7 @@ public class GridSizeSideButton extends SideButton {
             tx = 32;
         }
 
-        screen.blit(x, y, 64 + tx, 64, 16, 16);
+        screen.blit(matrixStack, x, y, 64 + tx, 64, 16, 16);
     }
 
     @Override

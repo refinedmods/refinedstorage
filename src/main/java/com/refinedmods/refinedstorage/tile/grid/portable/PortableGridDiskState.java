@@ -22,11 +22,6 @@ public enum PortableGridDiskState implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
-        return type;
-    }
-
-    @Override
     public String toString() {
         return type;
     }
@@ -39,6 +34,11 @@ public enum PortableGridDiskState implements IStringSerializable {
         }
 
         return NONE;
+    }
+
+    @Override
+    public String getString() {
+        return type;
     }
 }
 

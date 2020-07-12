@@ -23,7 +23,7 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
 
     @Override
     protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.start");
+        return new TranslationTextComponent("misc.refinedstorage.start").getString();
     }
 
     @Override

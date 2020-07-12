@@ -12,12 +12,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private final ItemStack stack;
     @Nullable
     private final MinecraftServer server;
-    private final DimensionType nodeDimension;
+    private final RegistryKey<World> nodeDimension;
     private final BlockPos nodePos;
     private int tabPage;
     private Optional<UUID> tabSelected;
@@ -97,7 +96,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     private INetwork getNetwork() {
-        World world = DimensionManager.getWorld(server, nodeDimension, true, true);
+        World world = server.getWorld(nodeDimension);
 
         if (world != null) {
             return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getTileEntity(nodePos)));

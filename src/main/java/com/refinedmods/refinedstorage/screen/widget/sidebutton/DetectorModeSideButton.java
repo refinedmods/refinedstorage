@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
 import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -7,6 +8,7 @@ import com.refinedmods.refinedstorage.tile.DetectorTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class DetectorModeSideButton extends SideButton {
     public DetectorModeSideButton(BaseScreen<DetectorContainer> screen) {
@@ -15,12 +17,12 @@ public class DetectorModeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.detector.mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.detector.mode." + DetectorTile.MODE.getValue());
+        return new TranslationTextComponent("sidebutton.refinedstorage.detector.mode").getString() + "\n" + TextFormatting.GRAY + new TranslationTextComponent("sidebutton.refinedstorage.detector.mode." + DetectorTile.MODE.getValue()).getString();
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, DetectorTile.MODE.getValue() * 16, 176, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack,x, y, DetectorTile.MODE.getValue() * 16, 176, 16, 16);
     }
 
     @Override

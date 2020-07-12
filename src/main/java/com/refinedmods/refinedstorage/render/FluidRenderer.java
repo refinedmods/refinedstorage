@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -35,7 +36,7 @@ public class FluidRenderer {
         this.minHeight = minHeight;
     }
 
-    public void render(final int xPosition, final int yPosition, @Nonnull FluidStack fluidStack) {
+    public void render(MatrixStack matrixStack, final int xPosition, final int yPosition, @Nonnull FluidStack fluidStack) {
         RenderSystem.enableBlend();
         RenderSystem.enableAlphaTest();
 

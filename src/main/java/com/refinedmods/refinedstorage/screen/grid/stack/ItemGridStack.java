@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.RenderSettings;
@@ -9,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
@@ -90,7 +92,7 @@ public class ItemGridStack implements IGridStack {
     public String getName() {
         if (cachedName == null) {
             try {
-                cachedName = stack.getDisplayName().getFormattedText();
+                cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item name of " + stack.getItem().toString(), t);
 
@@ -171,7 +173,7 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(BaseScreen<?> screen, int x, int y) {
+    public void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y) {
         String text = null;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
 
@@ -179,12 +181,12 @@ public class ItemGridStack implements IGridStack {
             text = "0";
             color = 16733525;
         } else if (craftable) {
-            text = I18n.format("gui.refinedstorage.grid.craft");
+            text = new TranslationTextComponent("gui.refinedstorage.grid.craft").getString();
         } else if (stack.getCount() > 1) {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        screen.renderItem(x, y, stack, true, text, color);
+        screen.renderItem(matrixStack, x, y, stack, true, text, color);
     }
 
     @Override

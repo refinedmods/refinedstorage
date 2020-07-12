@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.autocrafting.preview;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +22,7 @@ public interface ICraftingPreviewElement<T> {
      * @param drawers the drawers this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(int x, int y, IElementDrawers drawers);
+    void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers);
 
     /**
      * @return available amount of the {@link #getElement()}

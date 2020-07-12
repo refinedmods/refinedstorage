@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
 import com.refinedmods.refinedstorage.screen.CrafterManagerScreen;
@@ -7,6 +8,7 @@ import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class CrafterManagerSearchBoxModeSideButton extends SideButton {
     public CrafterManagerSearchBoxModeSideButton(CrafterManagerScreen screen) {
@@ -15,14 +17,14 @@ public class CrafterManagerSearchBoxModeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.grid.search_box_mode." + ((CrafterManagerScreen) screen).getCrafterManager().getSearchBoxMode());
+        return new TranslationTextComponent("sidebutton.refinedstorage.grid.search_box_mode").getString() + "\n" + TextFormatting.GRAY + new TranslationTextComponent("sidebutton.refinedstorage.grid.search_box_mode." + ((CrafterManagerScreen) screen).getCrafterManager().getSearchBoxMode()).getString();
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
         int mode = ((CrafterManagerScreen) screen).getCrafterManager().getSearchBoxMode();
 
-        screen.blit(x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
+        screen.blit(matrixStack, x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
     }
 
     @Override

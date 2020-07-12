@@ -61,7 +61,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
+        tooltip.add(new TranslationTextComponent("block.refinedstorage.portable_grid.tooltip").func_230530_a_(Styles.GRAY));
     }
 
     @Override
