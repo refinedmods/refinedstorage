@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class StorageDiskManager implements IStorageDiskManager, ISaveData {
-    public static final String NAME = "refinedstorage_disks.dat";
+    public static final String NAME = "refinedstorage_disks";
 
     private static final String NBT_DISKS = "Disks";
     private static final String NBT_DISK_ID = "Id";
@@ -125,7 +125,7 @@ public class StorageDiskManager implements IStorageDiskManager, ISaveData {
     }
 
     @Override
-    public String getFileName() {
+    public String getName() {
         return NAME;
     }
 

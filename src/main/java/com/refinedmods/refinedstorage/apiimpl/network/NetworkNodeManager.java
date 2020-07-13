@@ -7,9 +7,10 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.util.ISaveData;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,7 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
-    public static final String NAME = "refinedstorage_nodes.dat";
+    public static final String NAME = "refinedstorage_nodes";
 
     private static final String NBT_NODES = "Nodes";
     private static final String NBT_NODE_ID = "Id";
@@ -28,14 +29,14 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
     private static final String NBT_NODE_POS = "Pos";
 
     private boolean dirty;
-    private DimensionType dimensionType;
+    private RegistryKey<World> worldKey;
 
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
-    public NetworkNodeManager(DimensionType type) {
-        this.dimensionType = type;
+    public NetworkNodeManager(RegistryKey<World> worldKey) {
+        this.worldKey = worldKey;
     }
 
     @Override
@@ -84,9 +85,8 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
     }
 
     @Override
-    public String getFileName() {
-        //TODO 1.16 remove double identifier? file is already in the data folder for the world, no need to give it the world as name
-        return dimensionType.getRegistryName().getNamespace() + "_" + dimensionType.getRegistryName().getPath() + "_" + NAME;
+    public String getName() {
+        return NAME;
     }
 
     @Override

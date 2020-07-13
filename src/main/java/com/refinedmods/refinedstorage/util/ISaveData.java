@@ -1,13 +1,15 @@
 package com.refinedmods.refinedstorage.util;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 public interface ISaveData {
     /**
      * @return file name
      */
-    String getFileName();
+    String getName();
 
     /**
      * @param nbt tag to write data to

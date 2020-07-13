@@ -6,8 +6,9 @@ import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.util.ISaveData;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +19,7 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkManager implements INetworkManager, ISaveData {
-    public static final String NAME = "refinedstorage_networks.dat";
+    public static final String NAME = "refinedstorage_networks";
 
     private static final String NBT_NETWORKS = "Networks";
     private static final String NBT_TYPE = "Type";
@@ -26,13 +27,13 @@ public class NetworkManager implements INetworkManager, ISaveData {
     private static final String NBT_POS = "Pos";
 
     private boolean dirty;
-    private DimensionType dimensionType;
+    private RegistryKey<World> worldKey;
     private Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
 
-    public NetworkManager(DimensionType type) {
-        this.dimensionType = type;
+    public NetworkManager(RegistryKey<World> worldKey) {
+        this.worldKey = worldKey;
     }
 
     @Override
@@ -63,9 +64,8 @@ public class NetworkManager implements INetworkManager, ISaveData {
     }
 
     @Override
-    public String getFileName() {
-        //TODO 1.16 remove double identifier? file is already in the data folder for this world, no need to give it the world as name
-        return dimensionType.getRegistryName().getNamespace() + "_" + dimensionType.getRegistryName().getPath() + "_" + NAME;
+    public String getName() {
+        return NAME;
     }
 
     @Override

@@ -21,14 +21,14 @@ public class ServerSetup {
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save e) {
         if (!e.getWorld().isRemote()) {
-            SaveDataManager.save((ServerWorld) e.getWorld());
+            SaveDataManager.INSTANCE.save((ServerWorld) e.getWorld());
         }
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load e) {
         if (!e.getWorld().isRemote()) {
-            SaveDataManager.read((ServerWorld) e.getWorld());
+            SaveDataManager.INSTANCE.read((ServerWorld) e.getWorld());
         }
     }
 
@@ -37,7 +37,7 @@ public class ServerSetup {
         //Overworld is the only dimension that only gets unloaded when the save game is switched
         //Other dimensions may get unloaded at any point
         if (!e.getWorld().isRemote()) {
-            SaveDataManager.removeManagers((ServerWorld) e.getWorld());
+            SaveDataManager.INSTANCE.removeManagers((ServerWorld) e.getWorld());
         }
     }
 }

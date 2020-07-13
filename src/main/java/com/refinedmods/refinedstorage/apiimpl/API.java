@@ -44,6 +44,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
@@ -127,13 +128,13 @@ public class API implements IRSAPI {
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
 
-        return SaveDataManager.getNetworkNodeManager(world);
+        return SaveDataManager.INSTANCE.getManager(NetworkNodeManager.class, world.func_234923_W_());
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
 
-        return SaveDataManager.getNetworkManager(world);
+        return SaveDataManager.INSTANCE.getManager(NetworkManager.class, world.func_234923_W_());
     }
 
     @Override
@@ -192,9 +193,9 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
+    public IStorageDiskManager getStorageDiskManager() {
 
-        return SaveDataManager.getStorageDiskManager();
+        return SaveDataManager.INSTANCE.getManager(StorageDiskManager.class, World.field_234918_g_);
     }
 
     @Nonnull
