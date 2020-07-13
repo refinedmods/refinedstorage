@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.8.8
+- Fixed duplication bug and weird behavior in the Crafting Grid matrix (Darkere)
+
 ### 1.8.7
 - Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
 - Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
