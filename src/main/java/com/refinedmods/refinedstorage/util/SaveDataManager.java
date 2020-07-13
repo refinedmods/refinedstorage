@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -21,7 +22,7 @@ public class SaveDataManager {
     public static final SaveDataManager INSTANCE = new SaveDataManager();
     private static final Logger LOGGER = LogManager.getLogger(SaveDataManager.class);
     private final Map<RegistryKey<World>, Map<Class<?>, ISaveData>> worldSaveData = new HashMap<>();
-    private final Map<Class<?>, Function<RegistryKey<World>, ISaveData>> managerTypes = new HashMap<>();
+    private final Map<Class<?>, Function<RegistryKey<World>, ISaveData>> managerTypes = new LinkedHashMap<>();
 
     public void registerManager(Class<?> clazz, Function<RegistryKey<World>, ISaveData> producer) {
         managerTypes.put(clazz, producer);
@@ -66,7 +67,7 @@ public class SaveDataManager {
     }
 
     private void createManagers(RegistryKey<World> worldKey) {
-        Map<Class<?>, ISaveData> map = new HashMap<>();
+        Map<Class<?>, ISaveData> map = new LinkedHashMap<>();
         managerTypes.forEach((clazz, producer) -> {
             ISaveData data = producer.apply(worldKey);
             if (data != null) {

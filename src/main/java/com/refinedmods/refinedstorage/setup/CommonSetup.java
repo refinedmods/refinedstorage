@@ -144,9 +144,12 @@ public class CommonSetup {
             InventorySorterIntegration.register();
         }
 
-        SaveDataManager.INSTANCE.registerManager(NetworkManager.class, NetworkManager::new);
-        SaveDataManager.INSTANCE.registerManager(NetworkNodeManager.class, NetworkNodeManager::new);
+        //The StorageDiskManager needs to be loaded before the Network!
         SaveDataManager.INSTANCE.registerManager(StorageDiskManager.class, (RegistryKey<World> worldKey) -> worldKey == World.field_234918_g_ ? new StorageDiskManager() : null);
+        SaveDataManager.INSTANCE.registerManager(NetworkNodeManager.class, NetworkNodeManager::new);
+        SaveDataManager.INSTANCE.registerManager(NetworkManager.class, NetworkManager::new);
+
+
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {
