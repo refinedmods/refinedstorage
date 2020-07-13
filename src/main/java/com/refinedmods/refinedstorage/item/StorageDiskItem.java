@@ -49,8 +49,8 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
         if (!world.isRemote && !stack.hasTag()) {
             UUID id = UUID.randomUUID();
 
-            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultItemDisk((ServerWorld) world, getCapacity(stack)));
-            API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+            API.instance().getStorageDiskManager().set(id, API.instance().createDefaultItemDisk((ServerWorld) world, getCapacity(stack)));
+            API.instance().getStorageDiskManager().markForSaving();
 
             setId(stack, id);
         }
@@ -85,7 +85,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
         ItemStack diskStack = player.getHeldItem(hand);
 
         if (!world.isRemote && player.isCrouching() && type != ItemStorageType.CREATIVE) {
-            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(diskStack);
+            IStorageDisk disk = API.instance().getStorageDiskManager().getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type), diskStack.getCount());
@@ -94,8 +94,8 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
                     InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
                 }
 
-                API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));
-                API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+                API.instance().getStorageDiskManager().remove(getId(diskStack));
+                API.instance().getStorageDiskManager().markForSaving();
 
                 return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
             }

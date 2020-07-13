@@ -203,7 +203,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
         }
 
         if (world != null) {
-            API.instance().getStorageDiskManager(world).markForSaving();
+            API.instance().getStorageDiskManager().markForSaving();
         }
     }
 }

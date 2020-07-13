@@ -204,7 +204,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
         }
 
         if (world != null) {
-            API.instance().getStorageDiskManager(world).markForSaving();
+            API.instance().getStorageDiskManager().markForSaving();
         }
     }
 }
