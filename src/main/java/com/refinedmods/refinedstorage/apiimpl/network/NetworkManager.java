@@ -27,14 +27,10 @@ public class NetworkManager implements INetworkManager, ISaveData {
     private static final String NBT_POS = "Pos";
 
     private boolean dirty;
-    private RegistryKey<World> worldKey;
-    private Logger logger = LogManager.getLogger(getClass());
+
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
-
-    public NetworkManager(RegistryKey<World> worldKey) {
-        this.worldKey = worldKey;
-    }
 
     @Override
     public void read(CompoundNBT tag, ServerWorld world) {

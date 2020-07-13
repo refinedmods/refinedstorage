@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
+import com.refinedmods.refinedstorage.apiimpl.storage.disk.StorageDiskManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.RegistryKey;
@@ -16,16 +17,38 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class SaveDataManager {
     public static final SaveDataManager INSTANCE = new SaveDataManager();
     private static final Logger LOGGER = LogManager.getLogger(SaveDataManager.class);
     private final Map<RegistryKey<World>, Map<Class<?>, ISaveData>> worldSaveData = new HashMap<>();
-    private final Map<Class<?>, Function<RegistryKey<World>, ISaveData>> managerTypes = new LinkedHashMap<>();
+    private final Map<Class<?>, Supplier<ISaveData>> managerTypes = new LinkedHashMap<>();
 
-    public void registerManager(Class<?> clazz, Function<RegistryKey<World>, ISaveData> producer) {
-        managerTypes.put(clazz, producer);
+    public void registerManager(Class<?> clazz, Supplier<ISaveData> supplier) {
+        managerTypes.put(clazz, supplier);
+    }
+
+    private void createManagers(RegistryKey<World> worldKey) {
+        Map<Class<?>, ISaveData> map = new LinkedHashMap<>();
+        managerTypes.forEach((clazz, supplier) -> {
+            if (clazz == StorageDiskManager.class) {
+                if (worldKey == World.field_234918_g_) {
+                    map.put(clazz, supplier.get());
+                }
+            } else {
+                map.put(clazz, supplier.get());
+            }
+        });
+        worldSaveData.put(worldKey, map);
+    }
+
+    public <T extends ISaveData> T getManager(Class<T> clazz, RegistryKey<World> worldKey) {
+        return clazz.cast(worldSaveData.get(worldKey).get(clazz));
+    }
+
+    public void removeManagers(ServerWorld world) {
+        worldSaveData.remove(world.func_234923_W_());
     }
 
     public void read(ServerWorld world) {
@@ -60,25 +83,6 @@ public class SaveDataManager {
             }
             saveDatum.markSaved();
         }
-    }
-
-    public <T extends ISaveData> T getManager(Class<T> clazz, RegistryKey<World> worldKey) {
-        return clazz.cast(worldSaveData.get(worldKey).get(clazz));
-    }
-
-    private void createManagers(RegistryKey<World> worldKey) {
-        Map<Class<?>, ISaveData> map = new LinkedHashMap<>();
-        managerTypes.forEach((clazz, producer) -> {
-            ISaveData data = producer.apply(worldKey);
-            if (data != null) {
-                map.put(clazz, data);
-            }
-        });
-        worldSaveData.put(worldKey, map);
-    }
-
-    public void removeManagers(ServerWorld world) {
-        worldSaveData.remove(world.func_234923_W_());
     }
 
     private void writeTagToFile(ServerWorld world, String fileName, CompoundNBT nbt) throws IOException {
