@@ -61,6 +61,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     } else { // for shift crafting
                         if (availableItems.get(slot) != null) {
                             refill = availableItems.remove(slot, 1).getStack().copy();
+                            refill.setCount(1);
                             usedItems.add(refill);
                         } else {
                             refill = ItemStack.EMPTY;
