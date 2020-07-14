@@ -70,44 +70,36 @@ public class SaveDataManager {
             if (saveData.isMarkedForSaving()) {
                 CompoundNBT nbt = new CompoundNBT();
                 saveData.write(nbt);
-
                 try {
                     writeTagToFile(world, saveData.getName(), nbt);
                 } catch (IOException e) {
                     LOGGER.error("Unable to save " + saveData.getName(), e);
+
                 }
             }
-
             saveData.markSaved();
         }
     }
 
-    private File getDataDirectory(ServerWorld world) {
-        return world.getChunkProvider().getSavedData().folder;
-    }
-
     private void writeTagToFile(ServerWorld world, String fileName, CompoundNBT nbt) throws IOException {
-        File dataDirectory = getDataDirectory(world);
+        String dataDirectory = world.getServer().func_240776_a_(new FolderName("data")).toString();
         File backupFile = new File(dataDirectory, fileName + "_backup.dat");
         File file = new File(dataDirectory, fileName + ".dat");
 
         if (backupFile.exists()) {
             backupFile.delete();
         }
-
         CompressedStreamTools.writeCompressed(nbt, new FileOutputStream(backupFile));
-
         if (file.exists()) {
             if (!file.delete()) {
-                throw new IOException("Cannot delete original file " + file.getAbsolutePath() + " to rename the backup file, aborting");
+                throw new IOException("Cannot delete " + file.getAbsolutePath() + " aborting");
             }
         }
-
         backupFile.renameTo(file);
     }
 
     private CompoundNBT readTagFromFile(ServerWorld world, String fileName) {
-        File dataDirectory = getDataDirectory(world);
+        String dataDirectory = world.getServer().func_240776_a_(new FolderName("data")).toString();
         File backupFile = new File(dataDirectory, fileName + "_backup.dat");
         File file = new File(dataDirectory, fileName + ".dat");
 
