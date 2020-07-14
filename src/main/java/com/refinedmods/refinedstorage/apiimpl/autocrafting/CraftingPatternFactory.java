@@ -40,7 +40,7 @@ public class CraftingPatternFactory {
 
         try {
             if (processing) {
-                for (int i = 0; i < GridNetworkNode.processingMatrixSize; ++i) {
+                for (int i = 0; i < GridNetworkNode.PROCESSING_MATRIX_SIZE; ++i) {
                     fillProcessingInputs(i, stack, inputs, outputs, allowedTagList);
                     fillProcessingFluidInputs(i, stack, fluidInputs, fluidOutputs, allowedTagList);
                 }

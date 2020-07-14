@@ -77,9 +77,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
     private static final String NBT_ALLOWED_TAGS = "AllowedTags";
 
-    public static int processingMatrixSize = 81;
+    public static final int PROCESSING_MATRIX_SIZE = 81;
 
-    private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags, processingMatrixSize);
+    private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags, PROCESSING_MATRIX_SIZE);
 
     private final Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
@@ -97,17 +97,17 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private ICraftingRecipe currentRecipe;
     private final CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private final CraftResultInventory result = new CraftResultInventory();
-    private final BaseItemHandler processingMatrix = new BaseItemHandler(processingMatrixSize * 2)
+    private final BaseItemHandler processingMatrix = new BaseItemHandler(PROCESSING_MATRIX_SIZE * 2)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!reading && slot < processingMatrixSize) {
+            if (!reading && slot < PROCESSING_MATRIX_SIZE) {
                 allowedTagList.clearItemTags(slot);
             }
         });
-    private final FluidInventory processingMatrixFluids = new FluidInventory(processingMatrixSize * 2, FluidAttributes.BUCKET_VOLUME * 64)
+    private final FluidInventory processingMatrixFluids = new FluidInventory(PROCESSING_MATRIX_SIZE * 2, FluidAttributes.BUCKET_VOLUME * 64)
         .addListener(new NetworkNodeFluidInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!reading && slot < processingMatrixSize) {
+            if (!reading && slot < PROCESSING_MATRIX_SIZE) {
                 allowedTagList.clearFluidTags(slot);
             }
         });
@@ -146,11 +146,11 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 boolean processing = PatternItem.isProcessing(pattern);
 
                 if (processing) {
-                    for (int i = 0; i < processingMatrixSize; ++i) {
+                    for (int i = 0; i < PROCESSING_MATRIX_SIZE; ++i) {
                         processingMatrix.setStackInSlot(i, PatternItem.getInputSlot(pattern, i));
                         processingMatrixFluids.setFluid(i, PatternItem.getFluidInputSlot(pattern, i));
-                        processingMatrix.setStackInSlot(processingMatrixSize + i, PatternItem.getOutputSlot(pattern, i));
-                        processingMatrixFluids.setFluid(processingMatrixSize + i, PatternItem.getFluidOutputSlot(pattern, i));
+                        processingMatrix.setStackInSlot(PROCESSING_MATRIX_SIZE + i, PatternItem.getOutputSlot(pattern, i));
+                        processingMatrixFluids.setFluid(PROCESSING_MATRIX_SIZE + i, PatternItem.getFluidOutputSlot(pattern, i));
                     }
 
                     AllowedTagList allowedTagsFromPattern = PatternItem.getAllowedTags(pattern);
@@ -465,8 +465,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             if (processingPattern) {
                 for (int i = 0; i < processingMatrix.getSlots(); ++i) {
                     if (!processingMatrix.getStackInSlot(i).isEmpty()) {
-                        if (i >= processingMatrixSize) {
-                            PatternItem.setOutputSlot(pattern, i - processingMatrixSize, processingMatrix.getStackInSlot(i));
+                        if (i >= PROCESSING_MATRIX_SIZE) {
+                            PatternItem.setOutputSlot(pattern, i - PROCESSING_MATRIX_SIZE, processingMatrix.getStackInSlot(i));
                         } else {
                             PatternItem.setInputSlot(pattern, i, processingMatrix.getStackInSlot(i));
                         }
@@ -474,8 +474,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
                     FluidStack fluid = processingMatrixFluids.getFluid(i);
                     if (!fluid.isEmpty()) {
-                        if (i >= processingMatrixSize) {
-                            PatternItem.setFluidOutputSlot(pattern, i - processingMatrixSize, fluid);
+                        if (i >= PROCESSING_MATRIX_SIZE) {
+                            PatternItem.setFluidOutputSlot(pattern, i - PROCESSING_MATRIX_SIZE, fluid);
                         } else {
                             PatternItem.setFluidInputSlot(pattern, i, fluid);
                         }
@@ -508,7 +508,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             int inputsFilled = 0;
             int outputsFilled = 0;
 
-            for (int i = 0; i < processingMatrixSize; ++i) {
+            for (int i = 0; i < PROCESSING_MATRIX_SIZE; ++i) {
                 if (!processingMatrix.getStackInSlot(i).isEmpty()) {
                     inputsFilled++;
                 }
@@ -518,7 +518,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 }
             }
 
-            for (int i = processingMatrixSize; i < processingMatrix.getSlots(); ++i) {
+            for (int i = PROCESSING_MATRIX_SIZE; i < processingMatrix.getSlots(); ++i) {
                 if (!processingMatrix.getStackInSlot(i).isEmpty()) {
                     outputsFilled++;
                 }

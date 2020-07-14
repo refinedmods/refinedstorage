@@ -264,7 +264,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             return null;
         }
 
-        AllowedTagList allowedTagList = new AllowedTagList(null, GridNetworkNode.processingMatrixSize);
+        AllowedTagList allowedTagList = new AllowedTagList(null, GridNetworkNode.PROCESSING_MATRIX_SIZE);
 
         allowedTagList.readFromNbt(pattern.getTag().getCompound(NBT_ALLOWED_TAGS));
 

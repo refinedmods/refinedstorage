@@ -177,14 +177,14 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         int x = ox;
         int y = headerAndSlots + 4;
 
-        for (int i = 0; i < GridNetworkNode.processingMatrixSize*2; ++i) {
+        for (int i = 0; i < GridNetworkNode.PROCESSING_MATRIX_SIZE * 2; ++i) {
             int itemFilterSlotConfig = FilterSlot.FILTER_ALLOW_SIZE;
-            if (i < GridNetworkNode.processingMatrixSize) {
+            if (i < GridNetworkNode.PROCESSING_MATRIX_SIZE) {
                 itemFilterSlotConfig |= FilterSlot.FILTER_ALLOW_ALTERNATIVES;
             }
 
             int fluidFilterSlotConfig = FluidFilterSlot.FILTER_ALLOW_SIZE;
-            if (i < GridNetworkNode.processingMatrixSize) {
+            if (i < GridNetworkNode.PROCESSING_MATRIX_SIZE) {
                 fluidFilterSlotConfig |= FluidFilterSlot.FILTER_ALLOW_ALTERNATIVES;
             }
 
@@ -197,7 +197,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             x += 18;
 
             if ((i + 1) % 3 == 0) {
-                if (i == GridNetworkNode.processingMatrixSize - 1) {
+                if (i == GridNetworkNode.PROCESSING_MATRIX_SIZE - 1) {
                     ox = 93;
                     x = ox;
                     y = headerAndSlots + 4;
@@ -230,8 +230,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         return (slotNumber >= patternScrollOffset * 3
             && slotNumber < patternScrollOffset * 3 + 9)
 
-            || (slotNumber >= patternScrollOffset * 3 + GridNetworkNode.processingMatrixSize
-            && slotNumber < patternScrollOffset * 3 + GridNetworkNode.processingMatrixSize + 9);
+            || (slotNumber >= patternScrollOffset * 3 + GridNetworkNode.PROCESSING_MATRIX_SIZE
+            && slotNumber < patternScrollOffset * 3 + GridNetworkNode.PROCESSING_MATRIX_SIZE + 9);
     }
 
     public IGrid getGrid() {
@@ -310,11 +310,12 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     public void updatePatternSlotPositions(int newOffset) {
         patternScrollOffset = newOffset;
         int yPosition = screenInfoProvider.getTopHeight() + (screenInfoProvider.getVisibleRows() * 18) + 4;
+        int originalYPosition = yPosition;
 
         for (int i = 0; i < itemPatternSlots.size(); i++) {
 
-            if (i == GridNetworkNode.processingMatrixSize) { // reset when reaching output slots
-                yPosition = screenInfoProvider.getTopHeight() + (screenInfoProvider.getVisibleRows() * 18) + 4;
+            if (i == GridNetworkNode.PROCESSING_MATRIX_SIZE) { // reset when reaching output slots
+                yPosition = originalYPosition;
             }
 
             if (isVisible(i)) {

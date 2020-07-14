@@ -61,10 +61,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     private boolean wasConnected;
     private boolean doSort;
 
+    private final int patternScrollOffsetAbsoluteMax = GridNetworkNode.PROCESSING_MATRIX_SIZE / 3 - 3;
+
     private int slotNumber;
     private int patternScrollOffset;
     private int patternScrollOffsetMax;
-    private int patternScrollOffsetAbsoluteMax;
     private boolean updatePatternOffset;
 
     public GridScreen(GridContainer container, IGrid grid, PlayerInventory inventory, ITextComponent title) {
@@ -140,11 +141,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         addSideButton(new GridSizeSideButton(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
 
         if (grid.getGridType() == GridType.PATTERN) {
-
             patternScrollbar = new ScrollbarWidget(this, 160, getTopHeight() + getVisibleRows() * 18 + 4, 6, 18 * 3 - 2, true);
-            patternScrollOffsetAbsoluteMax = GridNetworkNode.processingMatrixSize / 3 - 3;
+
             patternScrollbar.setMaxOffset(patternScrollOffsetAbsoluteMax);
             patternScrollbar.setOffset(patternScrollOffset); // keep offset when changing between fluid and item view
+
             container.updatePatternSlotPositions(patternScrollOffset);
             patternScrollbar.addListener((oldOffset, newOffset) -> {
                 patternScrollOffset = newOffset;
@@ -367,7 +368,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (processingPattern.isChecked()) {
                 updatePatternScrollbar();
                 patternScrollbar.render(matrixStack);
-
             }
         }
 
@@ -471,10 +471,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         if (scrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
             return true;
         }
-        if (grid.getGridType() == GridType.PATTERN) {
-            if (patternScrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
-                return true;
-            }
+        if (grid.getGridType() == GridType.PATTERN && patternScrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
+            return true;
         }
         if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
             doSort = !isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !isOverCraftingOutputArea(mouseX - guiLeft, mouseY - guiTop);
@@ -568,22 +566,16 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean mouseReleased(double mx, double my, int button) {
-        if (grid.getGridType() == GridType.PATTERN) {
-            if (patternScrollbar.mouseReleased(mx, my, button)) {
-                return true;
-            }
+        if (grid.getGridType() == GridType.PATTERN && patternScrollbar.mouseReleased(mx, my, button)) {
+            return true;
         }
         return scrollbar.mouseReleased(mx, my, button) || super.mouseReleased(mx, my, button);
     }
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
-        if (grid.getGridType() == GridType.PATTERN) {
-            if (isOverPatternArea(x - guiLeft, y - guiTop)) {
-                if (patternScrollbar.mouseScrolled(x, y, delta)) {
-                    return true;
-                }
-            }
+        if (grid.getGridType() == GridType.PATTERN && isOverPatternArea(x - guiLeft, y - guiTop) && patternScrollbar.mouseScrolled(x, y, delta)) {
+            return true;
         }
         return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
     }
@@ -635,11 +627,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         int lastFilledInputSlot = 0;
         int lastFilledOutputSlot = 0;
 
-        for (int i = 0; i < GridNetworkNode.processingMatrixSize * 2; i++) {
+        for (int i = 0; i < GridNetworkNode.PROCESSING_MATRIX_SIZE * 2; i++) {
             if (!isMatrixSlotEmpty(isItems, i)) {
-                if (i > GridNetworkNode.processingMatrixSize - 1) {
+                if (i > GridNetworkNode.PROCESSING_MATRIX_SIZE - 1) {
                     filledOutputSlots++;
-                    lastFilledOutputSlot = i - GridNetworkNode.processingMatrixSize - 1;
+                    lastFilledOutputSlot = i - GridNetworkNode.PROCESSING_MATRIX_SIZE - 1;
                 } else {
                     filledInputSlots++;
                     lastFilledInputSlot = i;
@@ -647,8 +639,16 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
             }
         }
-        patternScrollOffsetMax = Math.max(Math.floorDiv(Math.max(filledInputSlots, filledOutputSlots) - 1, 3),
-            (Math.floorDiv(Math.max(lastFilledInputSlot, lastFilledOutputSlot), 3) - 2));
+
+        int maxFilledSlots = Math.max(filledInputSlots, filledOutputSlots);
+        int maxLastFilledSlot = Math.max(lastFilledInputSlot, lastFilledOutputSlot);
+
+        // offset calculation to show next row if 4 of 9 slots are filled.
+        int filledSlotOffset = Math.floorDiv(maxFilledSlots - 1, 3);
+        // offset to show the last item in the matrix
+        int lastSlotOffset = Math.floorDiv(maxLastFilledSlot, 3) - 2;
+
+        patternScrollOffsetMax = Math.max(filledSlotOffset, lastSlotOffset);
     }
 
     private boolean isMatrixSlotEmpty(boolean isItems, int slotNumber) {

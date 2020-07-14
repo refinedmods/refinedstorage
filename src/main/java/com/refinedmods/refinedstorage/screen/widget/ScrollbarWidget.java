@@ -38,6 +38,7 @@ public class ScrollbarWidget implements IGuiEventListener {
         this.width = width;
         this.height = height;
     }
+
     public ScrollbarWidget(BaseScreen screen, int x, int y, int width, int height, boolean small) {
         this(screen, x, y, width, height);
         this.small = small;
@@ -67,7 +68,12 @@ public class ScrollbarWidget implements IGuiEventListener {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         screen.bindTexture(RS.ID, "icons.png");
-        screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)),small ? (isEnabled() ? 218 : 225) : (isEnabled() ? 232 : 244), 0, small ? 7 : 12, SCROLLER_HEIGHT);
+        if (small) {
+            screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, SCROLLER_HEIGHT);
+        } else {
+            screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
+        }
+
     }
 
     @Override
