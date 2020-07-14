@@ -58,12 +58,7 @@ public class SaveDataManager {
         }
 
         for (ISaveData saveData : worldSaveData.get(worldKey).values()) {
-            CompoundNBT nbt = new CompoundNBT();
-            try {
-                nbt = readTagFromFile(world, saveData.getName());
-            } catch (IOException e) {
-                LOGGER.warn("Unable to read " + saveData.getName() + "'s backup. Continuing without data", e.getCause());
-            }
+            CompoundNBT nbt = readTagFromFile(world, saveData.getName());
             saveData.read(nbt, world);
         }
     }
@@ -101,25 +96,29 @@ public class SaveDataManager {
         backupFile.renameTo(file);
     }
 
-    private CompoundNBT readTagFromFile(ServerWorld world, String fileName) throws IOException {
+    private CompoundNBT readTagFromFile(ServerWorld world, String fileName) {
         String dataDirectory = world.getServer().func_240776_a_(new FolderName("data")).toString();
         File backupFile = new File(dataDirectory, fileName + "_backup.dat");
         File file = new File(dataDirectory, fileName + ".dat");
 
         CompoundNBT nbt = null;
-        try {
-            if (file.exists()) {
+        if (file.exists()) {
+            try {
                 nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
+            } catch (IOException e) {
+                LOGGER.warn("Unable to read " + fileName, e.getCause());
             }
-        } catch (IOException e) {
-            LOGGER.warn("Unable to read " + fileName, e.getCause());
         }
 
         if (nbt == null) {
             if (backupFile.exists()) {
                 LOGGER.warn("Unable to read " + fileName + ", trying backup file");
-                nbt = CompressedStreamTools.readCompressed(new FileInputStream(backupFile));
-                LOGGER.warn("Backup file loaded.");
+                try {
+                    nbt = CompressedStreamTools.readCompressed(new FileInputStream(backupFile));
+                } catch (IOException e) {
+                    LOGGER.warn("Unable to read " + fileName + "'s backup. Continuing without data", e.getCause());
+                }
+
             }
         }
 
