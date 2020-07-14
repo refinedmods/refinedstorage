@@ -125,12 +125,12 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager("network_nodes", world), "network_nodes");
+        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(NetworkNodeManager.NAME, world), NetworkNodeManager.NAME);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkManager("networks", world), "networks");
+        return world.getSavedData().getOrCreate(() -> new NetworkManager(NetworkManager.NAME, world), NetworkManager.NAME);
     }
 
     @Override
