@@ -78,6 +78,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         .addListener((handler, slot, reading) -> {
             if (!world.isRemote) {
                 StackUtils.createStorages(
+                    (ServerWorld) world,
                     handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
@@ -98,6 +99,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         .addListener(((handler, slot, reading) -> {
             if (!world.isRemote) {
                 StackUtils.createStorages(
+                    (ServerWorld) world,
                     handler.getStackInSlot(slot),
                     3 + slot,
                     itemDisks,

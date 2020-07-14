@@ -66,6 +66,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         .addListener((handler, slot, reading) -> {
             if (!world.isRemote) {
                 StackUtils.createStorages(
+                    (ServerWorld) world,
                     handler.getStackInSlot(slot),
                     slot,
                     itemDisks,

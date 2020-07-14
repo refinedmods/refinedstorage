@@ -73,7 +73,7 @@ public class StorageBlockItem extends BaseBlockItem {
 
             if (isValid(storageStack)) {
                 diskId = getId(storageStack);
-                disk = API.instance().getStorageDiskManager().get(diskId);
+                disk = API.instance().getStorageDiskManager((ServerWorld) world).get(diskId);
             }
 
             // Newly created storages won't have a tag yet, so allow invalid disks as well.
@@ -85,8 +85,8 @@ public class StorageBlockItem extends BaseBlockItem {
                 }
 
                 if (disk != null) {
-                    API.instance().getStorageDiskManager().remove(diskId);
-                    API.instance().getStorageDiskManager().markForSaving();
+                    API.instance().getStorageDiskManager((ServerWorld) world).remove(diskId);
+                    API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
                 }
 
                 return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));

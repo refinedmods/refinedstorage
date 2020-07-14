@@ -16,9 +16,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCrafting
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener;
-import com.refinedmods.refinedstorage.apiimpl.network.NetworkManager;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeListener;
-import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.*;
 import com.refinedmods.refinedstorage.apiimpl.network.node.*;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
@@ -27,7 +25,6 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageN
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
-import com.refinedmods.refinedstorage.apiimpl.storage.disk.StorageDiskManager;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorageProvider;
@@ -47,7 +44,6 @@ import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
-import com.refinedmods.refinedstorage.util.SaveDataManager;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -55,8 +51,6 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -143,11 +137,6 @@ public class CommonSetup {
         if (InventorySorterIntegration.isLoaded()) {
             InventorySorterIntegration.register();
         }
-
-        //The StorageDiskManager needs to be loaded before the Network!
-        SaveDataManager.INSTANCE.registerManager(StorageDiskManager.class, StorageDiskManager::new);
-        SaveDataManager.INSTANCE.registerManager(NetworkNodeManager.class, NetworkNodeManager::new);
-        SaveDataManager.INSTANCE.registerManager(NetworkManager.class, NetworkManager::new);
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {

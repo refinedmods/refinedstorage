@@ -161,12 +161,12 @@ public final class StackUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static void createStorages(ItemStack diskStack, int slot, IStorageDisk<ItemStack>[] itemDisks, IStorageDisk<FluidStack>[] fluidDisks, Function<IStorageDisk<ItemStack>, IStorageDisk> itemDiskWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidDiskWrapper) {
+    public static void createStorages(ServerWorld world, ItemStack diskStack, int slot, IStorageDisk<ItemStack>[] itemDisks, IStorageDisk<FluidStack>[] fluidDisks, Function<IStorageDisk<ItemStack>, IStorageDisk> itemDiskWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidDiskWrapper) {
         if (diskStack.isEmpty()) {
             itemDisks[slot] = null;
             fluidDisks[slot] = null;
         } else {
-            IStorageDisk disk = API.instance().getStorageDiskManager().getByStack(diskStack);
+            IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(diskStack);
 
             if (disk != null) {
                 switch (((IStorageDiskProvider) diskStack.getItem()).getType()) {

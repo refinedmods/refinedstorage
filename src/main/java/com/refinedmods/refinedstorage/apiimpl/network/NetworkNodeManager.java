@@ -4,12 +4,12 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.util.ISaveData;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
+public class NetworkNodeManager extends WorldSavedData implements INetworkNodeManager {
     public static final String NAME = "refinedstorage_nodes";
 
     private static final String NBT_NODES = "Nodes";
@@ -26,14 +26,20 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private boolean dirty;
+    private final World world;
 
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
+    public NetworkNodeManager(String name, World world) {
+        super(name);
+
+        this.world = world;
+    }
+
     @Override
-    public void read(CompoundNBT tag, ServerWorld world) {
+    public void read(CompoundNBT tag) {
         if (tag.contains(NBT_NODES)) {
             ListNBT nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
 
@@ -68,22 +74,7 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
     }
 
     @Override
-    public boolean isMarkedForSaving() {
-        return dirty;
-    }
-
-    @Override
-    public void markSaved() {
-        dirty = false;
-    }
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @Override
-    public void write(CompoundNBT tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         ListNBT list = new ListNBT();
 
         for (INetworkNode node : all()) {
@@ -102,6 +93,7 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
 
         tag.put(NBT_NODES, list);
 
+        return tag;
     }
 
     @Nullable
@@ -139,6 +131,6 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
 
     @Override
     public void markForSaving() {
-        dirty = true;
+        markDirty();
     }
 }

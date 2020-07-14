@@ -125,10 +125,11 @@ public interface IRSAPI {
     IStorageDiskRegistry getStorageDiskRegistry();
 
     /**
+     * @param anyWorld any world associated with the server
      * @return the storage disk manager
      */
     @Nonnull
-    IStorageDiskManager getStorageDiskManager();
+    IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld);
 
     /**
      * @return the storage disk sync manager

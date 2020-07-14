@@ -190,7 +190,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
             this.storage = null;
             this.cache = null;
         } else {
-            IStorageDisk disk = API.instance().getStorageDiskManager().getByStack(getDisk().getStackInSlot(0));
+            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDisk().getStackInSlot(0));
 
             if (disk != null) {
                 StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();
