@@ -139,11 +139,11 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     }
 
     public void loadStorage() {
-        IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
+        IStorageDisk disk = API.instance().getStorageDiskManager().get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity()));
-            API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+            API.instance().getStorageDiskManager().set(storageId, disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity()));
+            API.instance().getStorageDiskManager().markForSaving();
         }
 
         this.storage = new ItemStorageWrapperStorageDisk(this, disk);

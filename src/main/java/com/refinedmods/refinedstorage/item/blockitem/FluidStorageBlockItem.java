@@ -75,7 +75,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
 
             if (isValid(storageStack)) {
                 diskId = getId(storageStack);
-                disk = API.instance().getStorageDiskManager((ServerWorld) world).get(diskId);
+                disk = API.instance().getStorageDiskManager().get(diskId);
             }
 
             // Newly created fluid storages won't have a tag yet, so allow invalid disks as well.
@@ -99,8 +99,8 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                 }
 
                 if (disk != null) {
-                    API.instance().getStorageDiskManager((ServerWorld) world).remove(diskId);
-                    API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+                    API.instance().getStorageDiskManager().remove(diskId);
+                    API.instance().getStorageDiskManager().markForSaving();
                 }
 
                 return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));

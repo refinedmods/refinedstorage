@@ -107,7 +107,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDisk().getStackInSlot(0));
+                    IStorageDisk disk = API.instance().getStorageDiskManager().getByStack(getDisk().getStackInSlot(0));
 
                     if (disk != null) {
                         StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();
