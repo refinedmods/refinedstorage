@@ -148,8 +148,6 @@ public class CommonSetup {
         SaveDataManager.INSTANCE.registerManager(StorageDiskManager.class, StorageDiskManager::new);
         SaveDataManager.INSTANCE.registerManager(NetworkNodeManager.class, NetworkNodeManager::new);
         SaveDataManager.INSTANCE.registerManager(NetworkManager.class, NetworkManager::new);
-
-
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {

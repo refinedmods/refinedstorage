@@ -21,7 +21,9 @@ import java.util.function.Supplier;
 
 public class SaveDataManager {
     public static final SaveDataManager INSTANCE = new SaveDataManager();
+    
     private static final Logger LOGGER = LogManager.getLogger(SaveDataManager.class);
+
     private final Map<RegistryKey<World>, Map<Class<?>, ISaveData>> worldSaveData = new HashMap<>();
     private final LinkedHashMap<Class<?>, Supplier<ISaveData>> managerTypes = new LinkedHashMap<>();
 
@@ -110,15 +112,12 @@ public class SaveDataManager {
             }
         }
 
-        if (nbt == null) {
-            if (backupFile.exists()) {
-                LOGGER.warn("Unable to read " + fileName + ", trying backup file");
-                try {
-                    nbt = CompressedStreamTools.readCompressed(new FileInputStream(backupFile));
-                } catch (IOException e) {
-                    LOGGER.warn("Unable to read " + fileName + "'s backup. Continuing without data", e);
-                }
-
+        if (nbt == null && backupFile.exists()) {
+            LOGGER.warn("Unable to read " + fileName + ", trying backup file");
+            try {
+                nbt = CompressedStreamTools.readCompressed(new FileInputStream(backupFile));
+            } catch (IOException e) {
+                LOGGER.warn("Unable to read " + fileName + "'s backup. Continuing without data", e);
             }
         }
 

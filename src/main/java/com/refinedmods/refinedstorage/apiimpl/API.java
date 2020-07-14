@@ -127,13 +127,11 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-
         return SaveDataManager.INSTANCE.getManager(NetworkNodeManager.class, world.func_234923_W_());
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-
         return SaveDataManager.INSTANCE.getManager(NetworkManager.class, world.func_234923_W_());
     }
 
@@ -194,7 +192,6 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager() {
-
         return SaveDataManager.INSTANCE.getManager(StorageDiskManager.class, World.field_234918_g_);
     }
 

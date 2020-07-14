@@ -27,6 +27,7 @@ public class StorageDiskManager implements IStorageDiskManager, ISaveData {
     private static final String NBT_DISK_DATA = "Data";
 
     private final Map<UUID, IStorageDisk> disks = new HashMap<>();
+
     private boolean dirty;
 
 
