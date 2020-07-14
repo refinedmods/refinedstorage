@@ -5,6 +5,9 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.CrafterContainer;
 import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
+import com.refinedmods.refinedstorage.item.property.ControllerItemPropertyGetter;
+import com.refinedmods.refinedstorage.item.property.NetworkItemPropertyGetter;
+import com.refinedmods.refinedstorage.item.property.SecurityCardItemPropertyGetter;
 import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
@@ -20,6 +23,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -242,6 +246,20 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer(RSTiles.STORAGE_MONITOR, StorageMonitorTileRenderer::new);
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN);
+
+        ItemModelsProperties.func_239418_a_(RSItems.SECURITY_CARD, new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.CONTROLLER, new ResourceLocation("energy_type"), new ControllerItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_CONTROLLER, new ResourceLocation("energy_type"), new ControllerItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_CRAFTING_MONITOR, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
     }
 
     @SubscribeEvent

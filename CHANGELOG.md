@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.9.1
+- Fixed server crash (raoulvdberge)
+
 ### 1.9
 - Port to Minecraft 1.16 (raoulvdberge)
 - Fixed wrench requiring shift click to rotate blocks (raoulvdberge)

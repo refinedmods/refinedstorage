@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage;
 
 import com.refinedmods.refinedstorage.item.*;
+import com.refinedmods.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -24,6 +25,10 @@ public final class RSItems {
     public static final NetworkCardItem NETWORK_CARD = null;
     @ObjectHolder("security_card")
     public static final SecurityCardItem SECURITY_CARD = null;
+    @ObjectHolder("controller")
+    public static final ControllerBlockItem CONTROLLER = null;
+    @ObjectHolder("creative_controller")
+    public static final ControllerBlockItem CREATIVE_CONTROLLER = null;
     @ObjectHolder("construction_core")
     public static final CoreItem CONSTRUCTION_CORE = null;
     @ObjectHolder("destruction_core")
