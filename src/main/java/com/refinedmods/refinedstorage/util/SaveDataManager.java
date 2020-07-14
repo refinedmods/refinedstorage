@@ -71,7 +71,7 @@ public class SaveDataManager {
                 try {
                     writeTagToFile(world, saveData.getName(), nbt);
                 } catch (IOException e) {
-                    LOGGER.error("Unable to save " + saveData.getName(), e.getCause());
+                    LOGGER.error("Unable to save " + saveData.getName(), e);
 
                 }
             }
@@ -106,7 +106,7 @@ public class SaveDataManager {
             try {
                 nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
             } catch (IOException e) {
-                LOGGER.warn("Unable to read " + fileName, e.getCause());
+                LOGGER.warn("Unable to read " + fileName, e);
             }
         }
 
@@ -116,7 +116,7 @@ public class SaveDataManager {
                 try {
                     nbt = CompressedStreamTools.readCompressed(new FileInputStream(backupFile));
                 } catch (IOException e) {
-                    LOGGER.warn("Unable to read " + fileName + "'s backup. Continuing without data", e.getCause());
+                    LOGGER.warn("Unable to read " + fileName + "'s backup. Continuing without data", e);
                 }
 
             }
