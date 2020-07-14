@@ -76,6 +76,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_TYPE = "ProcessingType";
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
     private static final String NBT_ALLOWED_TAGS = "AllowedTags";
+
     public static int processingMatrixSize = 81;
 
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags, processingMatrixSize);
