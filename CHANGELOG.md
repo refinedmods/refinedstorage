@@ -3,6 +3,7 @@
 ### 1.9
 - Port to Minecraft 1.16 (raoulvdberge)
 - Introduced new save system that should make saving network data more robust. RS previously used standard Minecraft-provided mechanisms for this, but those were unreliable (Darkere)
+- Fixed wrench requiring shift click to rotate blocks (raoulvdberge)
 
 ### 1.8.8
 - Fixed duplication bug and weird behavior in the Crafting Grid matrix (Darkere)
