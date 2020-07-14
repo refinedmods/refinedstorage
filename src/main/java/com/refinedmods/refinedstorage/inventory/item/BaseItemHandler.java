@@ -53,6 +53,10 @@ public class BaseItemHandler extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
+        onChanged(slot);
+    }
+
+    public void onChanged(int slot) {
         this.empty = stacks.stream().allMatch(ItemStack::isEmpty);
         this.listeners.forEach(l -> l.onChanged(this, slot, reading));
     }

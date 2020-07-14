@@ -1,12 +1,12 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[32,)"
 issueTrackerURL="https://github.com/refinedmods/refinedstorage"
 [[mods]]
 modId="refinedstorage"
 version="${version}"
 displayName="Refined Storage"
-updateJSONURL="https://refinedstorage.raoulvdberge.com/update"
-displayURL="https://refinedstorage.raoulvdberge.com"
+updateJSONURL="https://refinedmods.com/refined-storage/update.json"
+displayURL="https://refinedmods.com/refined-storage"
 logoFile="logo.png"
 authors="Refined Mods"
 description='''

@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.integration.jei.GridRecipeTransferHandler;
@@ -14,10 +15,10 @@ import java.util.List;
 public class ScrollbarWidget implements IGuiEventListener {
     private static final int SCROLLER_HEIGHT = 15;
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
     private boolean enabled = false;
 
     private int offset;
@@ -26,11 +27,11 @@ public class ScrollbarWidget implements IGuiEventListener {
     private boolean clicked = false;
     private boolean small = false;
 
-    private List<ScrollbarWidgetListener> listeners = new LinkedList<>();
+    private final List<ScrollbarWidgetListener> listeners = new LinkedList<>();
 
-    private BaseScreen screen;
+    private final BaseScreen<?> screen;
 
-    public ScrollbarWidget(BaseScreen screen, int x, int y, int width, int height) {
+    public ScrollbarWidget(BaseScreen<?> screen, int x, int y, int width, int height) {
         this.screen = screen;
         this.x = x;
         this.y = y;
@@ -62,11 +63,11 @@ public class ScrollbarWidget implements IGuiEventListener {
         return enabled;
     }
 
-    public void render() {
+    public void render(MatrixStack matrixStack) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         screen.bindTexture(RS.ID, "icons.png");
-        screen.blit(screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)),small ? (isEnabled() ? 218 : 225) : (isEnabled() ? 232 : 244), 0, small ? 7 : 12, SCROLLER_HEIGHT);
+        screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)),small ? (isEnabled() ? 218 : 225) : (isEnabled() ? 232 : 244), 0, small ? 7 : 12, SCROLLER_HEIGHT);
     }
 
     @Override

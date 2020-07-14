@@ -1,32 +1,35 @@
 package com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a crafting monitor element.
  */
 public interface ICraftingMonitorElement {
     /**
-     * @param x       position on the x axis to render
-     * @param y       position on the y axis to render
-     * @param drawers the drawers that this element can use
+     * @param matrixStack the matrix stack
+     * @param x           position on the x axis to render
+     * @param y           position on the y axis to render
+     * @param drawers     the drawers that this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(int x, int y, IElementDrawers drawers);
+    void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers);
 
     /**
      * Returns the id for the base of this element, used for sorting in the {@link CraftingMonitorElementList}
      *
      * @return the id
      */
-
     ResourceLocation getBaseId();
 
     /**
@@ -37,11 +40,10 @@ public interface ICraftingMonitorElement {
     ResourceLocation getId();
 
     /**
-     * @return the tooltip of this element, or null for no tooltip
+     * @return the tooltip of this element
      */
-    @Nullable
-    default String getTooltip() {
-        return null;
+    default List<ITextComponent> getTooltip() {
+        return Collections.emptyList();
     }
 
     /**
@@ -58,6 +60,7 @@ public interface ICraftingMonitorElement {
      * @return true if merge was successful, false otherwise
      */
     boolean merge(ICraftingMonitorElement element);
+
     /**
      * @return the hash code for the underlying base item/fluid element
      */

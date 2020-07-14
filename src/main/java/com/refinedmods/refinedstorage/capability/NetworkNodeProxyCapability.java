@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 
 public class NetworkNodeProxyCapability {
     @CapabilityInject(INetworkNodeProxy.class)
-    public static Capability<INetworkNodeProxy> NETWORK_NODE_PROXY_CAPABILITY = null;
+    public static final Capability<INetworkNodeProxy> NETWORK_NODE_PROXY_CAPABILITY = null;
 
     public static void register() {
         CapabilityManager.INSTANCE.register(INetworkNodeProxy.class, new Storage(), new Factory());

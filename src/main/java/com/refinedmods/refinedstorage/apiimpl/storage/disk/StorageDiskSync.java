@@ -13,8 +13,8 @@ import java.util.UUID;
 public class StorageDiskSync implements IStorageDiskSync {
     private static final int THROTTLE_MS = 500;
 
-    private Map<UUID, StorageDiskSyncData> data = new HashMap<>();
-    private Map<UUID, Long> syncTime = new HashMap<>();
+    private final Map<UUID, StorageDiskSyncData> data = new HashMap<>();
+    private final Map<UUID, Long> syncTime = new HashMap<>();
 
     @Nullable
     @Override

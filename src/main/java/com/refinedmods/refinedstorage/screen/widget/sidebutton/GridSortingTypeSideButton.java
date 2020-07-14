@@ -1,17 +1,19 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.integration.inventorytweaks.InventoryTweaksIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class GridSortingTypeSideButton extends SideButton {
-    private IGrid grid;
+    private final IGrid grid;
 
-    public GridSortingTypeSideButton(BaseScreen screen, IGrid grid) {
+    public GridSortingTypeSideButton(BaseScreen<GridContainer> screen, IGrid grid) {
         super(screen);
 
         this.grid = grid;
@@ -23,11 +25,11 @@ public class GridSortingTypeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
         if (grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED) {
-            screen.blit(x, y, 48, 48, 16, 16);
+            screen.blit(matrixStack, x, y, 48, 48, 16, 16);
         } else {
-            screen.blit(x, y, grid.getSortingType() * 16, 32, 16, 16);
+            screen.blit(matrixStack, x, y, grid.getSortingType() * 16, 32, 16, 16);
         }
     }
 

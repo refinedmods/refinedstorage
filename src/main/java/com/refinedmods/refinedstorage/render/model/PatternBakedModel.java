@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverride;
 import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -25,7 +26,7 @@ public class PatternBakedModel extends DelegateBakedModel {
         return new ItemOverrideList() {
             @Nullable
             @Override
-            public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, @Nullable World world, @Nullable LivingEntity entity) {
+            public IBakedModel func_239290_a_(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
                 if (entity != null) {
                     CraftingPattern pattern = PatternItem.fromCache(entity.world, stack);
 
@@ -36,7 +37,7 @@ public class PatternBakedModel extends DelegateBakedModel {
                     }
                 }
 
-                return super.getModelWithOverrides(model, stack, world, entity);
+                return super.func_239290_a_(model, stack, world, entity);
             }
 
             @Override

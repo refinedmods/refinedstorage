@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
@@ -28,17 +29,17 @@ public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainer> 
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/disk_manipulator.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, 117, I18n.format("container.inventory"));
-        renderString(43, 45, I18n.format("gui.refinedstorage.disk_manipulator.in"));
-        renderString(115, 45, I18n.format("gui.refinedstorage.disk_manipulator.out"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, 117, I18n.format("container.inventory"));
+        renderString(matrixStack, 43, 45, I18n.format("gui.refinedstorage.disk_manipulator.in"));
+        renderString(matrixStack, 115, 45, I18n.format("gui.refinedstorage.disk_manipulator.out"));
     }
 }

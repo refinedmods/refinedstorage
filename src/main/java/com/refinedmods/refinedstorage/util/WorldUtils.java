@@ -12,10 +12,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -77,15 +78,15 @@ public final class WorldUtils {
     }
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED));
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").func_230530_a_(Styles.RED), player.getUniqueID());
     }
 
     public static RayTraceResult rayTracePlayer(World world, PlayerEntity player) {
-        double reachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+        double reachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 
-        Vec3d base = player.getEyePosition(1.0F);
-        Vec3d look = player.getLookVec();
-        Vec3d target = base.add(look.x * reachDistance, look.y * reachDistance, look.z * reachDistance);
+        Vector3d base = player.getEyePosition(1.0F);
+        Vector3d look = player.getLookVec();
+        Vector3d target = base.add(look.x * reachDistance, look.y * reachDistance, look.z * reachDistance);
 
         return world.rayTraceBlocks(new RayTraceContext(base, target, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
     }

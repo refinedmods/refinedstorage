@@ -36,11 +36,11 @@ public interface ICraftingManager {
     Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
-     * Adds a crafting task.
+     * Starts a crafting task.
      *
-     * @param task the task to add
+     * @param task the task to start
      */
-    void add(@Nonnull ICraftingTask task);
+    void start(@Nonnull ICraftingTask task);
 
     /**
      * Cancels a crafting task.

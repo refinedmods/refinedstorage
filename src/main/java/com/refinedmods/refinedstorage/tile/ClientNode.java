@@ -4,9 +4,9 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 
 public class ClientNode {
-    private ItemStack stack;
+    private final ItemStack stack;
     private int amount;
-    private int energyUsage;
+    private final int energyUsage;
 
     public ClientNode(ItemStack stack, int amount, int energyUsage) {
         this.stack = stack;

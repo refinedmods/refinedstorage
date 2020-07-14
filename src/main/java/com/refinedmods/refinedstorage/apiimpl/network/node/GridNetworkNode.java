@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.AllowedTagList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
@@ -55,10 +56,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
@@ -82,7 +80,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags, processingMatrixSize);
 
-    private Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
+    private final Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
         public boolean canInteractWith(PlayerEntity player) {
             return false;
@@ -96,16 +94,16 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         }
     };
     private ICraftingRecipe currentRecipe;
-    private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
-    private CraftResultInventory result = new CraftResultInventory();
-    private BaseItemHandler processingMatrix = new BaseItemHandler(processingMatrixSize * 2)
+    private final CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
+    private final CraftResultInventory result = new CraftResultInventory();
+    private final BaseItemHandler processingMatrix = new BaseItemHandler(processingMatrixSize * 2)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < processingMatrixSize) {
                 allowedTagList.clearItemTags(slot);
             }
         });
-    private FluidInventory processingMatrixFluids = new FluidInventory(processingMatrixSize * 2, FluidAttributes.BUCKET_VOLUME * 64)
+    private final FluidInventory processingMatrixFluids = new FluidInventory(processingMatrixSize * 2, FluidAttributes.BUCKET_VOLUME * 64)
         .addListener(new NetworkNodeFluidInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < processingMatrixSize) {
@@ -115,9 +113,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     private boolean reading;
 
-    private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
+    private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
-    private BaseItemHandler patterns = new BaseItemHandler(2) {
+    private final BaseItemHandler patterns = new BaseItemHandler(2) {
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);
@@ -171,9 +169,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             }
         }));
 
-    private List<IFilter> filters = new ArrayList<>();
-    private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
 
     private final GridType type;
 
@@ -420,8 +418,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     @Override
-    public void onCrafted(PlayerEntity player) {
-        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player);
+    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player, availableItems, usedItems);
     }
 
     @Override

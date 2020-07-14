@@ -53,14 +53,14 @@ public class FluidStorageBlockItem extends BaseBlockItem {
             StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).setStyle(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).func_230530_a_(Styles.GRAY));
                 } else {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).setStyle(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).func_230530_a_(Styles.GRAY));
                 }
             }
 
             if (flag.isAdvanced()) {
-                tooltip.add(new StringTextComponent(id.toString()).setStyle(Styles.GRAY));
+                tooltip.add(new StringTextComponent(id.toString()).func_230530_a_(Styles.GRAY));
             }
         }
     }
@@ -83,19 +83,19 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                 ItemStack fluidStoragePart = new ItemStack(FluidStoragePartItem.getByType(type));
 
                 if (!player.inventory.addItemStackToInventory(fluidStoragePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidStoragePart);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), fluidStoragePart);
                 }
 
                 ItemStack processor = new ItemStack(RSItems.BASIC_PROCESSOR);
 
                 if (!player.inventory.addItemStackToInventory(processor.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), processor);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), processor);
                 }
 
                 ItemStack bucket = new ItemStack(Items.BUCKET);
 
                 if (!player.inventory.addItemStackToInventory(bucket.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), bucket);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), bucket);
                 }
 
                 if (disk != null) {

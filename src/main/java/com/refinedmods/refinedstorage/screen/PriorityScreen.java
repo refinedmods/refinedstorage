@@ -6,11 +6,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class PriorityScreen extends AmountSpecifyingScreen<Container> {
-    private TileDataParameter<Integer, ?> priority;
+    private final TileDataParameter<Integer, ?> priority;
 
     public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
         super(parent, new Container(null, 0) {
@@ -29,8 +30,8 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
     }
 
     @Override
-    protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.set");
+    protected ITextComponent getOkButtonText() {
+        return new TranslationTextComponent("misc.refinedstorage.set");
     }
 
     @Override

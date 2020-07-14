@@ -68,14 +68,14 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
             StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).setStyle(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).func_230530_a_(Styles.GRAY));
                 } else {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).setStyle(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).func_230530_a_(Styles.GRAY));
                 }
             }
 
             if (flag.isAdvanced()) {
-                tooltip.add(new StringTextComponent(id.toString()).setStyle(Styles.GRAY));
+                tooltip.add(new StringTextComponent(id.toString()).func_230530_a_(Styles.GRAY));
             }
         }
     }
@@ -91,7 +91,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type), diskStack.getCount());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
                 }
 
                 API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));

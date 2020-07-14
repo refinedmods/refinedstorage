@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -8,23 +9,25 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AmountSpecifyingScreen<T extends Container> extends BaseScreen<T> {
-    private BaseScreen parent;
+    private final BaseScreen<T> parent;
 
     protected TextFieldWidget amountField;
     protected Button okButton;
     protected Button cancelButton;
 
-    public AmountSpecifyingScreen(BaseScreen parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
+    public AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
         super(container, width, height, playerInventory, title);
 
         this.parent = parent;
     }
 
-    protected abstract String getOkButtonText();
+    protected abstract ITextComponent getOkButtonText();
 
     protected abstract String getTexture();
 
@@ -53,9 +56,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         Pair<Integer, Integer> pos = getOkCancelPos();
 
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, I18n.format("gui.cancel"), true, true, btn -> close());
+        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
 
-        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, "");
+        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, new StringTextComponent(""));
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setText(String.valueOf(getDefaultAmount()));
@@ -75,10 +78,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         for (int i = 0; i < 3; ++i) {
             int increment = increments[i];
 
-            String text = "+" + increment;
-
-            if (text.equals("+1000")) {
-                text = "+1B";
+            ITextComponent text = new StringTextComponent("+" + increment);
+            if (text.getString().equals("+1000")) {
+                text = new StringTextComponent("+1B");
             }
 
             addButton(x + xx, y + 20, width, 20, text, true, true, btn -> onIncrementButtonClicked(increment));
@@ -91,10 +93,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         for (int i = 0; i < 3; ++i) {
             int increment = increments[i];
 
-            String text = "-" + increment;
-
-            if (text.equals("-1000")) {
-                text = "-1B";
+            ITextComponent text = new StringTextComponent("-" + increment);
+            if (text.getString().equals("-1000")) {
+                text = new StringTextComponent("-1B");
             }
 
             addButton(x + xx, y + ySize - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));
@@ -154,17 +155,17 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, getTexture());
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
-        amountField.renderButton(0, 0, 0);
+        amountField.renderButton(matrixStack, 0, 0, 0);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
     }
 
     protected void onOkButtonPressed(boolean shiftDown) {
@@ -175,7 +176,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         minecraft.displayGuiScreen(parent);
     }
 
-    public BaseScreen getParent() {
+    public BaseScreen<T> getParent() {
         return parent;
     }
 }

@@ -6,8 +6,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class TileDataWatcher {
     private boolean sentInitial;
-    private ServerPlayerEntity player;
-    private TileDataManager manager;
+    private final ServerPlayerEntity player;
+    private final TileDataManager manager;
 
     private Object[] cache;
 

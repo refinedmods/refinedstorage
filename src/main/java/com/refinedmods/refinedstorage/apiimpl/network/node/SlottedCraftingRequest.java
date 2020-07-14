@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import java.util.Objects;
 
 public class SlottedCraftingRequest {
-    private INetworkNode node;
-    private int slot;
+    private final INetworkNode node;
+    private final int slot;
 
     public SlottedCraftingRequest(INetworkNode node, int slot) {
         this.node = node;

@@ -13,13 +13,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class EnergyCapabilityProvider implements ICapabilityProvider {
-    private ItemStack stack;
-    private int energyCapacity;
-    private LazyOptional<IEnergyStorage> capability = LazyOptional.of(() -> new ItemEnergyStorage(stack, energyCapacity));
+    private final LazyOptional<IEnergyStorage> capability;
 
     public EnergyCapabilityProvider(ItemStack stack, int energyCapacity) {
-        this.stack = stack;
-        this.energyCapacity = energyCapacity;
+        this.capability = LazyOptional.of(() -> new ItemEnergyStorage(stack, energyCapacity));
     }
 
     @Nonnull

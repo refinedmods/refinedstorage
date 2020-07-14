@@ -22,8 +22,8 @@ public class FluidInterfaceTile extends NetworkNodeTile<FluidInterfaceNetworkNod
     public static final TileDataParameter<FluidStack, FluidInterfaceTile> TANK_IN = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, FluidStack.EMPTY, t -> t.getNode().getTankIn().getFluid());
     public static final TileDataParameter<FluidStack, FluidInterfaceTile> TANK_OUT = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, FluidStack.EMPTY, t -> t.getNode().getTankOut().getFluid());
 
-    private LazyOptional<IFluidHandler> tankCapability = LazyOptional.of(() -> getNode().getTank());
-    private LazyOptional<IItemHandler> inCapability = LazyOptional.of(() -> getNode().getIn());
+    private final LazyOptional<IFluidHandler> tankCapability = LazyOptional.of(() -> getNode().getTank());
+    private final LazyOptional<IItemHandler> inCapability = LazyOptional.of(() -> getNode().getIn());
 
     public FluidInterfaceTile() {
         super(RSTiles.FLUID_INTERFACE);

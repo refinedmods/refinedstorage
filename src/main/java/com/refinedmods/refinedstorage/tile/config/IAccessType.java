@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.tileentity.TileEntity;
 
 public interface IAccessType {
-    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<AccessType, T> createParameter() {
+    static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<AccessType, T> createParameter() {
         return new TileDataParameter<>(RSSerializers.ACCESS_TYPE_SERIALIZER, AccessType.INSERT_EXTRACT, t -> ((IAccessType) t.getNode()).getAccessType(), (t, v) -> ((IAccessType) t.getNode()).setAccessType(v));
     }
 

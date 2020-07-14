@@ -1,6 +1,8 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
+import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -8,7 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class IoModeSideButton extends SideButton {
-    public IoModeSideButton(BaseScreen screen) {
+    public IoModeSideButton(BaseScreen<DiskManipulatorContainer> screen) {
         super(screen);
     }
 
@@ -18,8 +20,8 @@ public class IoModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, DiskManipulatorTile.IO_MODE.getValue() == DiskManipulatorNetworkNode.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, DiskManipulatorTile.IO_MODE.getValue() == DiskManipulatorNetworkNode.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
     }
 
     @Override

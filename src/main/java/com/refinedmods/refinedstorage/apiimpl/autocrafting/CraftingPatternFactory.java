@@ -171,7 +171,7 @@ public class CraftingPatternFactory {
         inv.setInventorySlotContents(i, input);
     }
 
-    private void modifyCraftingInputsToUseAlternatives(ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) throws CraftingPatternFactoryException {
+    private void modifyCraftingInputsToUseAlternatives(ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) {
         if (!recipe.getIngredients().isEmpty()) {
             inputs.clear();
 

@@ -4,8 +4,8 @@ package com.refinedmods.refinedstorage.api.storage.disk;
  * Contains synced info about a storage disk.
  */
 public class StorageDiskSyncData {
-    private int stored;
-    private int capacity;
+    private final int stored;
+    private final int capacity;
 
     public StorageDiskSyncData(int stored, int capacity) {
         this.stored = stored;

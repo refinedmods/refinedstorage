@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
@@ -9,8 +10,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GridSizeSideButton extends SideButton {
-    private Supplier<Integer> sizeSupplier;
-    private Consumer<Integer> listener;
+    private final Supplier<Integer> sizeSupplier;
+    private final Consumer<Integer> listener;
 
     public GridSizeSideButton(BaseScreen screen, Supplier<Integer> sizeSupplier, Consumer<Integer> listener) {
         super(screen);
@@ -24,7 +25,7 @@ public class GridSizeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
         int size = this.sizeSupplier.get();
 
         int tx = 0;
@@ -39,7 +40,7 @@ public class GridSizeSideButton extends SideButton {
             tx = 32;
         }
 
-        screen.blit(x, y, 64 + tx, 64, 16, 16);
+        screen.blit(matrixStack, x, y, 64 + tx, 64, 16, 16);
     }
 
     @Override

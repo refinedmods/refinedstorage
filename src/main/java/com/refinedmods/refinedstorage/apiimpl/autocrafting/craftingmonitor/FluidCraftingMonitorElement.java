@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -10,11 +11,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
     private static final int COLOR_PROCESSING = 0xFFD9EDF7;
@@ -24,7 +28,7 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
 
-    private FluidStack stack;
+    private final FluidStack stack;
     private int stored;
     private int missing;
     private int processing;
@@ -42,18 +46,18 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(int x, int y, IElementDrawers drawers) {
+    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_MISSING);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_MISSING);
         } else if (processing > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_PROCESSING);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_PROCESSING);
         } else if (scheduled > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_SCHEDULED);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_SCHEDULED);
         } else if (crafting > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_CRAFTING);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_CRAFTING);
         }
 
-        drawers.getFluidDrawer().draw(x + 4, y + 6, stack);
+        drawers.getFluidDrawer().draw(matrixStack, x + 4, y + 6, stack);
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
@@ -63,31 +67,31 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
         int yy = y + 7;
 
         if (stored > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", API.instance().getQuantityFormatter().formatInBucketForm(stored)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", API.instance().getQuantityFormatter().formatInBucketForm(stored)));
 
             yy += 7;
         }
 
         if (missing > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", API.instance().getQuantityFormatter().formatInBucketForm(missing)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", API.instance().getQuantityFormatter().formatInBucketForm(missing)));
 
             yy += 7;
         }
 
         if (processing > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.processing", API.instance().getQuantityFormatter().formatInBucketForm(processing)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.processing", API.instance().getQuantityFormatter().formatInBucketForm(processing)));
 
             yy += 7;
         }
 
         if (scheduled > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.scheduled", API.instance().getQuantityFormatter().formatInBucketForm(scheduled)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.scheduled", API.instance().getQuantityFormatter().formatInBucketForm(scheduled)));
 
             yy += 7;
         }
 
         if (crafting > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", API.instance().getQuantityFormatter().formatInBucketForm(crafting)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", API.instance().getQuantityFormatter().formatInBucketForm(crafting)));
         }
 
         RenderSystem.popMatrix();
@@ -105,8 +109,8 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Nullable
     @Override
-    public String getTooltip() {
-        return I18n.format(stack.getTranslationKey());
+    public List<ITextComponent> getTooltip() {
+        return Collections.singletonList(stack.getFluid().getAttributes().getDisplayName(stack));
     }
 
     @Override

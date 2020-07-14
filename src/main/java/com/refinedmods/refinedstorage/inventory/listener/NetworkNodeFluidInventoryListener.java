@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 
 public class NetworkNodeFluidInventoryListener implements InventoryListener<FluidInventory> {
-    private INetworkNode node;
+    private final INetworkNode node;
 
     public NetworkNodeFluidInventoryListener(INetworkNode node) {
         this.node = node;

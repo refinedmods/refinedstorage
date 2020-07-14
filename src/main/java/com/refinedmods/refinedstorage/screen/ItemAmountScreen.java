@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,11 +16,11 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
-    private int containerSlot;
-    private ItemStack stack;
-    private int maxAmount;
+    private final int containerSlot;
+    private final ItemStack stack;
+    private final int maxAmount;
     @Nullable
-    private Function<Screen, Screen> alternativesScreenFactory;
+    private final Function<Screen, Screen> alternativesScreenFactory;
 
     public ItemAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount, @Nullable Function<Screen, Screen> alternativesScreenFactory) {
         super(parent, new AmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.item_amount"));
@@ -40,9 +41,7 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, I18n.format("gui.refinedstorage.alternatives"), true, true, btn -> {
-                minecraft.displayGuiScreen(alternativesScreenFactory.apply(this));
-            });
+            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.displayGuiScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -71,8 +70,8 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
     }
 
     @Override
-    protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage.set");
+    protected ITextComponent getOkButtonText() {
+        return new TranslationTextComponent("misc.refinedstorage.set");
     }
 
     @Override

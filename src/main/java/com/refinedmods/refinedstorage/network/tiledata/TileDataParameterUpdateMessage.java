@@ -11,8 +11,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class TileDataParameterUpdateMessage {
-    private TileDataParameter parameter;
-    private Object value;
+    private final TileDataParameter parameter;
+    private final Object value;
 
     public TileDataParameterUpdateMessage(TileDataParameter parameter, Object value) {
         this.parameter = parameter;

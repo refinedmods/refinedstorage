@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
-    private INetwork network;
+    private final INetwork network;
 
     public ItemGridHandler(INetwork network) {
         this.network = network;
@@ -180,7 +180,7 @@ public class ItemGridHandler implements IItemGridHandler {
                         )
                     );
                 } else if (noPreview && !task.hasMissing()) {
-                    network.getCraftingManager().add(task);
+                    network.getCraftingManager().start(task);
 
                     RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
@@ -217,7 +217,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
             ICraftingTaskError error = task.calculate();
             if (error == null && !task.hasMissing()) {
-                network.getCraftingManager().add(task);
+                network.getCraftingManager().start(task);
             }
         }
     }

@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -37,21 +38,21 @@ public class CraftingManager implements ICraftingManager {
     private static final String NBT_TASK_TYPE = "Type";
     private static final String NBT_TASK_DATA = "Task";
 
-    private INetwork network;
+    private final INetwork network;
 
-    private Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
-    private Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
+    private final Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
-    private List<ICraftingPattern> patterns = new ArrayList<>();
+    private final List<ICraftingPattern> patterns = new ArrayList<>();
 
-    private Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
-    private List<ICraftingTask> tasksToAdd = new ArrayList<>();
-    private List<UUID> tasksToCancel = new ArrayList<>();
+    private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
+    private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
+    private final List<UUID> tasksToCancel = new ArrayList<>();
     private ListNBT tasksToRead;
 
-    private Map<Object, Long> throttledRequesters = new HashMap<>();
+    private final Map<Object, Long> throttledRequesters = new HashMap<>();
 
-    private Set<ICraftingMonitorListener> listeners = new HashSet<>();
+    private final Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
     public CraftingManager(INetwork network) {
         this.network = network;
@@ -74,7 +75,8 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void add(@Nonnull ICraftingTask task) {
+    public void start(@Nonnull ICraftingTask task) {
+        task.start();
         tasksToAdd.add(task);
 
         network.markDirty();
@@ -253,7 +255,7 @@ public class CraftingManager implements ICraftingManager {
                 ICraftingTaskError error = task.calculate();
 
                 if (error == null && !task.hasMissing()) {
-                    this.add(task);
+                    this.start(task);
 
                     return task;
                 } else {
@@ -289,7 +291,7 @@ public class CraftingManager implements ICraftingManager {
                 ICraftingTaskError error = task.calculate();
 
                 if (error == null && !task.hasMissing()) {
-                    this.add(task);
+                    this.start(task);
 
                     return task;
                 } else {

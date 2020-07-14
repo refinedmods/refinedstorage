@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class GridProcessingTransferMessage {
-    private Collection<ItemStack> inputs;
-    private Collection<ItemStack> outputs;
-    private Collection<FluidStack> fluidInputs;
-    private Collection<FluidStack> fluidOutputs;
+    private final Collection<ItemStack> inputs;
+    private final Collection<ItemStack> outputs;
+    private final Collection<FluidStack> fluidInputs;
+    private final Collection<FluidStack> fluidOutputs;
 
     public GridProcessingTransferMessage(Collection<ItemStack> inputs, Collection<ItemStack> outputs, Collection<FluidStack> fluidInputs, Collection<FluidStack> fluidOutputs) {
         this.inputs = inputs;

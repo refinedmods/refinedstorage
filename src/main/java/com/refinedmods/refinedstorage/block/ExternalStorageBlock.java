@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
+import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ExternalStorageContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
@@ -51,11 +52,13 @@ public class ExternalStorageBlock extends CableBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        VoxelShape shape = super.getShape(state, world, pos, ctx);
+        return ShapeCache.getOrCreate(state, s -> {
+            VoxelShape shape = getCableShape(s);
 
-        shape = VoxelShapes.or(shape, getHeadShape(state));
+            shape = VoxelShapes.or(shape, getHeadShape(s));
 
-        return shape;
+            return shape;
+        });
     }
 
     private VoxelShape getHeadShape(BlockState state) {

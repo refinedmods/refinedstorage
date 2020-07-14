@@ -115,6 +115,11 @@ public interface ICraftingPatternContainer {
     }
 
     /**
+     * Unlock the container so it may be used by processing pattern
+     */
+    void unlock();
+
+    /**
      * Called when this container is used by a processing pattern to insert items or fluids in the connected inventory.
      */
     default void onUsedForProcessing() {

@@ -93,9 +93,9 @@ public class UpgradeItem extends Item {
         if (type.getFortuneLevel() > 0) {
             tooltip.add(
                 new TranslationTextComponent("enchantment.minecraft.fortune")
-                    .appendText(" ")
-                    .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
-                    .setStyle(Styles.GRAY)
+                    .func_240702_b_(" ")
+                    .func_230529_a_(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
+                    .func_230530_a_(Styles.GRAY)
             );
         }
     }

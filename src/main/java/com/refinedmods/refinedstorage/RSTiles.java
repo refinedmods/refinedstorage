@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class RSTiles {
+public final class RSTiles {
     @ObjectHolder(RS.ID + ":controller")
     public static final TileEntityType<ControllerTile> CONTROLLER = null;
     @ObjectHolder(RS.ID + ":creative_controller")

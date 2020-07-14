@@ -22,7 +22,6 @@ import com.refinedmods.refinedstorage.tile.config.IAccessType;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.StorageBlockUtils;
@@ -55,7 +54,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     private static final String NBT_MODE = "Mode";
     public static final String NBT_ID = "Id";
 
-    private BaseItemHandler filters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final BaseItemHandler filters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
     private final ItemStorageType type;
 
@@ -231,36 +230,6 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     @Override
     public ITextComponent getTitle() {
         return new TranslationTextComponent("block.refinedstorage." + type.getName() + "_storage_block");
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getTypeParameter() {
-        return null;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return StorageTile.REDSTONE_MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getCompareParameter() {
-        return StorageTile.COMPARE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
-        return StorageTile.WHITELIST_BLACKLIST;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getPriorityParameter() {
-        return StorageTile.PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
-        return StorageTile.ACCESS_TYPE;
     }
 
     @Override

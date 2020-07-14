@@ -1,6 +1,8 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
+import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.DetectorTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -8,7 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class DetectorModeSideButton extends SideButton {
-    public DetectorModeSideButton(BaseScreen screen) {
+    public DetectorModeSideButton(BaseScreen<DetectorContainer> screen) {
         super(screen);
     }
 
@@ -18,8 +20,8 @@ public class DetectorModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, DetectorTile.MODE.getValue() * 16, 176, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, DetectorTile.MODE.getValue() * 16, 176, 16, 16);
     }
 
     @Override

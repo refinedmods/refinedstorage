@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
@@ -11,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
 
-    private CraftingTaskErrorType type;
-    private ItemStack stack;
+    private final CraftingTaskErrorType type;
+    private final ItemStack stack;
 
     public ErrorCraftingPreviewElement(CraftingTaskErrorType type, ItemStack stack) {
         this.type = type;
@@ -25,7 +26,7 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<Item
     }
 
     @Override
-    public void draw(int x, int y, IElementDrawers drawers) {
+    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
         // NO OP
     }
 

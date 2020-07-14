@@ -7,21 +7,25 @@ import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.tile.DiskDriveTile;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.IModelData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class DiskDriveBakedModel extends DelegateBakedModel {
-    private class CacheKey {
-        private BlockState state;
-        private Direction side;
-        private DiskState[] diskState;
-        private Random random;
+    private static class CacheKey {
+        private final BlockState state;
+        private final Direction side;
+        private final DiskState[] diskState;
+        private final Random random;
 
         CacheKey(BlockState state, @Nullable Direction side, DiskState[] diskState, Random random) {
             this.state = state;
@@ -62,20 +66,39 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         }
     }
 
-    private Map<Direction, IBakedModel> baseByFacing = new HashMap<>();
-    private Map<Direction, Map<DiskState, List<IBakedModel>>> disksByFacing = new HashMap<>();
+    private final IBakedModel base;
+    private final IBakedModel disk;
+    private final IBakedModel diskNearCapacity;
+    private final IBakedModel diskFull;
+    private final IBakedModel diskDisconnected;
 
-    private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
+    private final LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
 
-            List<BakedQuad> quads = new ArrayList<>(baseByFacing.get(facing).getQuads(key.state, key.side, key.random));
+            List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(base, facing, null, key.state, key.random, key.side));
 
+            int x = 0, y = 0;
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
-                    quads.addAll(disksByFacing.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
+                    IBakedModel diskModel = getDiskModel(key.diskState[i]);
+
+                    quads.addAll(QuadTransformer.getTransformedQuads(
+                        diskModel,
+                        facing,
+                        getDiskTranslation(facing, x, y),
+                        key.state,
+                        key.random,
+                        key.side
+                    ));
+                }
+
+                x++;
+                if ((i + 1) % 2 == 0) {
+                    y++;
+                    x = 0;
                 }
             }
 
@@ -90,43 +113,43 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
                                IBakedModel diskDisconnected) {
         super(base);
 
-        for (Direction facing : Direction.values()) {
-            if (facing.getHorizontalIndex() == -1) {
-                continue;
-            }
+        this.base = base;
+        this.disk = disk;
+        this.diskNearCapacity = diskNearCapacity;
+        this.diskFull = diskFull;
+        this.diskDisconnected = diskDisconnected;
+    }
 
-            baseByFacing.put(facing, new TRSRBakedModel(base, facing, null));
-            disksByFacing.put(facing, new HashMap<>());
-
-            addDiskModels(disk, DiskState.NORMAL, facing);
-            addDiskModels(diskNearCapacity, DiskState.NEAR_CAPACITY, facing);
-            addDiskModels(diskFull, DiskState.FULL, facing);
-            addDiskModels(diskDisconnected, DiskState.DISCONNECTED, facing);
+    private IBakedModel getDiskModel(DiskState diskState) {
+        switch (diskState) {
+            case DISCONNECTED:
+                return diskDisconnected;
+            case NEAR_CAPACITY:
+                return diskNearCapacity;
+            case FULL:
+                return diskFull;
+            default:
+                return disk;
         }
     }
 
-    private void addDiskModels(IBakedModel disk, DiskState type, Direction facing) {
-        disksByFacing.get(facing).put(type, new ArrayList<>());
+    private Vector3f getDiskTranslation(Direction facing, int x, int y) {
+        Vector3f translation = new Vector3f();
 
-        for (int y = 0; y < 4; ++y) {
-            for (int x = 0; x < 2; ++x) {
-                Vector3f trans = new Vector3f();
-
-                if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-                    trans.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
-                } else if (facing == Direction.EAST || facing == Direction.WEST) {
-                    trans.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Y
-                }
-
-                trans.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
-
-                disksByFacing.get(facing).get(type).add(new TRSRBakedModel(disk, facing, trans));
-            }
+        if (facing == Direction.NORTH || facing == Direction.SOUTH) {
+            translation.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
+        } else if (facing == Direction.EAST || facing == Direction.WEST) {
+            translation.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
         }
+
+        translation.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
+
+        return translation;
     }
 
+    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
         DiskState[] diskState = data.getData(DiskDriveTile.DISK_STATE_PROPERTY);
 
         if (diskState == null) {

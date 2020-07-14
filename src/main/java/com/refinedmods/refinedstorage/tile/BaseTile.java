@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -10,7 +11,7 @@ import net.minecraft.tileentity.TileEntityType;
 import javax.annotation.Nullable;
 
 public abstract class BaseTile extends TileEntity {
-    protected TileDataManager dataManager = new TileDataManager(this);
+    protected final TileDataManager dataManager = new TileDataManager(this);
 
     public BaseTile(TileEntityType<?> tileType) {
         super(tileType);
@@ -32,7 +33,6 @@ public abstract class BaseTile extends TileEntity {
         return writeUpdate(super.getUpdateTag());
     }
 
-    @Nullable
     @Override
     public final SUpdateTileEntityPacket getUpdatePacket() {
         return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
@@ -44,8 +44,8 @@ public abstract class BaseTile extends TileEntity {
     }
 
     @Override
-    public final void handleUpdateTag(CompoundNBT tag) {
-        super.read(tag);
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
 
         readUpdate(tag);
     }

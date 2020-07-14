@@ -17,7 +17,7 @@ public enum AccessType {
      */
     EXTRACT(2);
 
-    private int id;
+    private final int id;
 
     /**
      * @param id the id of this access type
