@@ -307,7 +307,6 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         return grid.getSlotId();
     }
 
-
     public void updatePatternSlotPositions(int newOffset) {
         patternScrollOffset = newOffset;
         int yPosition = screenInfoProvider.getTopHeight() + (screenInfoProvider.getVisibleRows() * 18) + 4;
@@ -327,6 +326,4 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
     }
-
-
 }

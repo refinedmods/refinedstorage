@@ -156,6 +156,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
                 this.container.initSlots();
+
                 patternScrollOffset = 0; // reset offset when switching between crafting and processing
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
@@ -558,6 +559,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     @Override
     public void mouseMoved(double mx, double my) {
         scrollbar.mouseMoved(mx, my);
+
         if (grid.getGridType() == GridType.PATTERN) {
             patternScrollbar.mouseMoved(mx, my);
         }
@@ -588,10 +590,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     private boolean isOverPatternArea(double x, double y) {
         return RenderUtils.inBounds(8, getTopHeight() + getVisibleRows() * 18, 152, 54, x, y);
-    }
-
-    private boolean isOverInventory(double x, double y) {
-        return RenderUtils.inBounds(8, getYPlayerInventory(), 9 * 18 - 2, 4 * 18 + 2, x, y);
     }
 
     @Override
