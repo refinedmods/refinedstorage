@@ -23,7 +23,7 @@ public class SaveDataManager {
     public static final SaveDataManager INSTANCE = new SaveDataManager();
     private static final Logger LOGGER = LogManager.getLogger(SaveDataManager.class);
     private final Map<RegistryKey<World>, Map<Class<?>, ISaveData>> worldSaveData = new HashMap<>();
-    private final Map<Class<?>, Supplier<ISaveData>> managerTypes = new LinkedHashMap<>();
+    private final LinkedHashMap<Class<?>, Supplier<ISaveData>> managerTypes = new LinkedHashMap<>();
 
     public void registerManager(Class<?> clazz, Supplier<ISaveData> supplier) {
         managerTypes.put(clazz, supplier);
@@ -57,31 +57,30 @@ public class SaveDataManager {
             createManagers(worldKey);
         }
 
-        for (ISaveData saveDatum : worldSaveData.get(worldKey).values()) {
+        for (ISaveData saveData : worldSaveData.get(worldKey).values()) {
             CompoundNBT nbt = new CompoundNBT();
             try {
-                nbt = readTagFromFile(world, saveDatum.getName());
+                nbt = readTagFromFile(world, saveData.getName());
             } catch (IOException e) {
-                LOGGER.warn("Unable to read " + saveDatum.getName() + "'s backup. Continuing without data");
-                e.printStackTrace();
+                LOGGER.warn("Unable to read " + saveData.getName() + "'s backup. Continuing without data", e.getCause());
             }
-            saveDatum.read(nbt, world);
+            saveData.read(nbt, world);
         }
     }
 
     public void save(ServerWorld world) {
-        for (ISaveData saveDatum : worldSaveData.get(world.func_234923_W_()).values()) {
-            if (saveDatum.isMarkedForSaving()) {
+        for (ISaveData saveData : worldSaveData.get(world.func_234923_W_()).values()) {
+            if (saveData.isMarkedForSaving()) {
                 CompoundNBT nbt = new CompoundNBT();
-                saveDatum.write(nbt);
+                saveData.write(nbt);
                 try {
-                    writeTagToFile(world, saveDatum.getName(), nbt);
+                    writeTagToFile(world, saveData.getName(), nbt);
                 } catch (IOException e) {
-                    LOGGER.error("Unable to save " + saveDatum.getName());
-                    e.printStackTrace();
+                    LOGGER.error("Unable to save " + saveData.getName(), e.getCause());
+
                 }
             }
-            saveDatum.markSaved();
+            saveData.markSaved();
         }
     }
 
@@ -113,8 +112,7 @@ public class SaveDataManager {
                 nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
             }
         } catch (IOException e) {
-            LOGGER.warn("Unable to read " + fileName);
-            e.printStackTrace();
+            LOGGER.warn("Unable to read " + fileName, e.getCause());
         }
 
         if (nbt == null) {
