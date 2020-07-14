@@ -39,9 +39,12 @@ public class ClientSetup {
     private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager instanceof IReloadableResourceManager) {
-            ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft != null) { // This is null in a runData environment.
+            IResourceManager resourceManager = minecraft.getResourceManager();
+            if (resourceManager instanceof IReloadableResourceManager) {
+                ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
+            }
         }
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "controller"), (base, registry) -> new FullbrightBakedModel(
