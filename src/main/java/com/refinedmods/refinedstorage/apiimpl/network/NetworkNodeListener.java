@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.network;
 
+import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.api.util.Action;
@@ -22,10 +23,13 @@ public class NetworkNodeListener {
             if (e.phase == TickEvent.Phase.END) {
                 e.world.getProfiler().startSection("network node ticking");
 
-                for (INetworkNode node : API.instance().getNetworkNodeManager((ServerWorld) e.world).all()) {
-                    node.update();
+                for (INetwork network : API.instance().getNetworkManager((ServerWorld) e.world).all()) {
+                    if (e.world.isBlockPresent(network.getPosition())) {
+                        for (INetworkNode node : network.getNodeGraph().all()) {
+                            node.update();
+                        }
+                    }
                 }
-
                 e.world.getProfiler().endSection();
             }
         }

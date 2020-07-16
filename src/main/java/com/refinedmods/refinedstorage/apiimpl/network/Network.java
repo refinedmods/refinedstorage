@@ -134,7 +134,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void update() {
-        if (!world.isRemote && world.isBlockPresent(pos)) {
+        if (!world.isRemote) {
             updateEnergyUsage();
 
             if (canRun()) {
