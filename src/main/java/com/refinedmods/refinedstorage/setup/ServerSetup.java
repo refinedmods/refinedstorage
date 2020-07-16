@@ -2,15 +2,15 @@ package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.command.PatternDumpCommand;
 import net.minecraft.command.Commands;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 public class ServerSetup {
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent e) {
-        e.getCommandDispatcher().register(
+    public void onRegisterCommands(RegisterCommandsEvent e) {
+        e.getDispatcher().register(
             Commands.literal("refinedstorage")
-                .then(PatternDumpCommand.register(e.getCommandDispatcher()))
+                .then(PatternDumpCommand.register(e.getDispatcher()))
         );
     }
 }
