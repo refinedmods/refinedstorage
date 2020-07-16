@@ -1,4 +1,6 @@
 # Refined Storage Changelog
+### 1.9.2
+- Fixed crash with forge version 67 (Darkere)
 
 ### 1.9.1
 - Fixed server crash (raoulvdberge)
