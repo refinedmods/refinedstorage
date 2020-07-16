@@ -71,6 +71,10 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     public void update() {
         super.update();
 
+        if (!canUpdate()) {
+            return;
+        }
+
         int newAmount = getAmount();
 
         if (oldAmount == -1) {
