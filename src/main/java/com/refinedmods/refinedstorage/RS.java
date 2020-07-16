@@ -32,7 +32,7 @@ public final class RS {
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
     public RS() {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSetup::new);
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::new);
 
         MinecraftForge.EVENT_BUS.register(new ServerSetup());
 
