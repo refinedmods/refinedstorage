@@ -94,7 +94,7 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.63'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.67'
 
     compileOnly fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6")
