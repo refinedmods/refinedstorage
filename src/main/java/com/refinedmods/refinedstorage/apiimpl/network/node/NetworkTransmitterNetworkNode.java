@@ -120,18 +120,14 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                return;
-            }
+                World dimensionWorld = world.getServer().getWorld(receiverDimension);
 
-            // TODO if (!isSameDimension()) {
-            //    World dimensionWorld = DimensionManager.getWorld(world.getServer(), receiverDimension, true, true);
-
-            //if (dimensionWorld != null) {
-            //        operator.apply(dimensionWorld, receiver, null);
-            //    }
-            //} else {
+                if (dimensionWorld != null) {
+                    operator.apply(dimensionWorld, receiver, null);
+                }
+            } else {
                 operator.apply(world, receiver, null);
-            //}
+            }
         }
     }
 }
