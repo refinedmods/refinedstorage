@@ -1,6 +1,8 @@
 # Refined Storage Changelog
+
 ### 1.9.2
-- Fixed crash with forge version 67 (Darkere)
+- Fixed crash with Forge version 67 (Darkere)
+- Networks that are in a chunk that isn't loaded will no longer work, they will turn off. Chunkload the Controller to maintain a functioning network over long distances (Darkere/raoulvdberge)
 
 ### 1.9.1
 - Fixed server crash (raoulvdberge)

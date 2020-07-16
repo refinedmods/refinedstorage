@@ -81,6 +81,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
+    private boolean amILoaded = false;
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
@@ -114,7 +115,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
+        return amILoaded && energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -135,6 +136,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            amILoaded = world.isBlockPresent(pos);
+
             updateEnergyUsage();
 
             if (canRun()) {
