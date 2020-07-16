@@ -40,6 +40,11 @@ public interface INetwork {
     NetworkType getType();
 
     /**
+     * updates the networks load status
+     */
+    void checkLoaded();
+
+    /**
      * @return true if this network is able to run (usually corresponds to the redstone configuration), false otherwise
      */
     boolean canRun();

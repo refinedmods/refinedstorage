@@ -22,13 +22,11 @@ public class NetworkNodeListener {
         if (!e.world.isRemote()) {
             if (e.phase == TickEvent.Phase.END) {
                 e.world.getProfiler().startSection("network node ticking");
-
                 for (INetwork network : API.instance().getNetworkManager((ServerWorld) e.world).all()) {
-                    if (e.world.isBlockPresent(network.getPosition())) {
-                        for (INetworkNode node : network.getNodeGraph().all()) {
-                            node.update();
-                        }
-                    }
+                    network.checkLoaded();
+                }
+                for (INetworkNode node : API.instance().getNetworkNodeManager((ServerWorld) e.world).all()) {
+                    node.update();
                 }
                 e.world.getProfiler().endSection();
             }

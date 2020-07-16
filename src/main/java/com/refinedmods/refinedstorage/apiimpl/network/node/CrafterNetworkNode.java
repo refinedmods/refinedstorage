@@ -133,7 +133,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             invalidate();
         }
 
-        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET) {
+        if (world.isBlockPresent(pos) && mode == CrafterMode.PULSE_INSERTS_NEXT_SET) {
             if (world.isBlockPowered(pos)) {
                 this.wasPowered = true;
 
