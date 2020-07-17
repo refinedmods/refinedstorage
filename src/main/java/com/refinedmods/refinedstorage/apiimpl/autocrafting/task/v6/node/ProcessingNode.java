@@ -55,7 +55,7 @@ public class ProcessingNode extends Node {
     }
 
     @Override
-    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onStepFinished) {
         if (getState() == ProcessingState.PROCESSED) {
             nodes.remove(this);
             network.getCraftingManager().onTaskChanged();
@@ -140,7 +140,8 @@ public class ProcessingNode extends Node {
                         IoUtil.insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
 
                         next();
-                        // TODO currentStep++;
+                        onStepFinished.run();
+
                         network.getCraftingManager().onTaskChanged();
                         container.onUsedForProcessing();
                     }

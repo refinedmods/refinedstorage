@@ -31,8 +31,9 @@ public abstract class Node {
 
     private final boolean root;
     private final ICraftingPattern pattern;
-    private final Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
-    private final Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
+
+    private final Map<Integer, IStackList<ItemStack>> itemRequirements = new LinkedHashMap<>();
+    private final Map<Integer, Integer> itemsNeededPerCraft = new LinkedHashMap<>();
 
     protected int quantity;
 
@@ -48,12 +49,12 @@ public abstract class Node {
 
         ListNBT list = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
         for (int i = 0; i < list.size(); i++) {
-            this.itemsToUse.put(i, SerializationUtil.readItemStackList(list.getList(i)));
+            this.itemRequirements.put(i, SerializationUtil.readItemStackList(list.getList(i)));
         }
 
         List<Integer> perCraftList = Ints.asList(tag.getIntArray(NBT_NEEDED_PER_CRAFT));
         for (int i = 0; i < perCraftList.size(); i++) {
-            neededPerCraft.put(i, perCraftList.get(i));
+            itemsNeededPerCraft.put(i, perCraftList.get(i));
         }
     }
 
@@ -61,7 +62,7 @@ public abstract class Node {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingNode(network, tag) : new CraftingNode(network, tag);
     }
 
-    public abstract void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage);
+    public abstract void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onFinishedStep);
 
     public abstract void onCalculationFinished();
 
@@ -86,51 +87,60 @@ public abstract class Node {
     }
 
     protected boolean hasItems() {
-        return !itemsToUse.isEmpty();
+        return !itemRequirements.isEmpty();
     }
 
     protected IStackList<ItemStack> getItemsToUse(boolean simulate) {
         IStackList<ItemStack> toReturn = API.instance().createItemStackList();
 
-        for (int i = 0; i < itemsToUse.size(); i++) {
-            int needed = neededPerCraft.get(i);
-            if (!itemsToUse.get(i).isEmpty()) {
-                Iterator<StackListEntry<ItemStack>> it = itemsToUse.get(i).getStacks().iterator();
+        for (int i = 0; i < itemRequirements.size(); i++) {
+            int needed = itemsNeededPerCraft.get(i);
+
+            if (!itemRequirements.get(i).isEmpty()) {
+                Iterator<StackListEntry<ItemStack>> it = itemRequirements.get(i).getStacks().iterator();
+
                 while (needed > 0 && it.hasNext()) {
                     ItemStack toUse = it.next().getStack();
+
                     if (needed < toUse.getCount()) {
                         if (!simulate) {
-                            itemsToUse.get(i).remove(toUse, needed);
+                            itemRequirements.get(i).remove(toUse, needed);
                         }
+
                         toReturn.add(toUse, needed);
+
                         needed = 0;
                     } else {
                         if (!simulate) {
                             it.remove();
                         }
-                        needed -= toUse.getCount();
+
                         toReturn.add(toUse);
+
+                        needed -= toUse.getCount();
                     }
                 }
-            } else {
-                LogManager.getLogger(Node.class).warn("Craft requested more Items than available");
+            } else { // TODO why break here?
+                LogManager.getLogger(Node.class).warn("Craft requested more Items than available"); // TODO Improve logging
                 this.quantity = 0; // stop crafting
                 break;
             }
         }
+
         return toReturn;
     }
 
     public void addItemsToUse(int ingredientNumber, ItemStack stack, int size, int perCraft) {
-        if (!neededPerCraft.containsKey(ingredientNumber)) {
-            neededPerCraft.put(ingredientNumber, perCraft);
+        if (!itemsNeededPerCraft.containsKey(ingredientNumber)) {
+            itemsNeededPerCraft.put(ingredientNumber, perCraft);
         }
 
-        if (!itemsToUse.containsKey(ingredientNumber)) {
-            itemsToUse.put(ingredientNumber, API.instance().createItemStackList());
+        IStackList<ItemStack> list = itemRequirements.get(ingredientNumber);
+        if (list == null) {
+            itemRequirements.put(ingredientNumber, list = API.instance().createItemStackList());
         }
 
-        itemsToUse.get(ingredientNumber).add(stack, size);
+        list.add(stack, size);
     }
 
     public CompoundNBT writeToNbt() {
@@ -142,12 +152,12 @@ public abstract class Node {
         tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
 
         ListNBT itemsToUse = new ListNBT();
-        for (IStackList<ItemStack> stackList : this.itemsToUse.values()) {
+        for (IStackList<ItemStack> stackList : this.itemRequirements.values()) {
             itemsToUse.add(SerializationUtil.writeItemStackList(stackList));
         }
         tag.put(NBT_ITEMS_TO_USE, itemsToUse);
 
-        tag.putIntArray(NBT_NEEDED_PER_CRAFT, Ints.toArray(neededPerCraft.values()));
+        tag.putIntArray(NBT_NEEDED_PER_CRAFT, Ints.toArray(itemsNeededPerCraft.values()));
 
         return tag;
     }

@@ -139,7 +139,7 @@ public class CraftingCalculator {
                 fluidResults.add(output, output.getAmount() * qty);
             }
 
-            //only add this once
+            //only add this once TODO: why?
             if (processing.getItemsToReceive().isEmpty()) {
                 pattern.getOutputs().forEach(processing::addItemsToReceive);
             }

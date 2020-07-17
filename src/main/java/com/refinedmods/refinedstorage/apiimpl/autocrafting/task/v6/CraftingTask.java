@@ -187,7 +187,7 @@ public class CraftingTask implements ICraftingTask {
             IoUtil.extractFluidsFromNetwork(toExtractInitialFluids, network, internalFluidStorage);
 
             for (Node node : nodes.all()) {
-                node.update(network, ticks, nodes, internalStorage, internalFluidStorage);
+                node.update(network, ticks, nodes, internalStorage, internalFluidStorage, () -> currentStep++);
             }
 
             nodes.removeMarkedForRemoval();

@@ -38,7 +38,7 @@ public class CraftingNode extends Node {
     }
 
     @Override
-    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onFinishedStep) {
         for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
             int interval = container.getUpdateInterval();
             if (interval < 0) {
@@ -72,7 +72,8 @@ public class CraftingNode extends Node {
                         }
 
                         next();
-                        // TODO currentStep++;
+                        onFinishedStep.run();
+
                         network.getCraftingManager().onTaskChanged();
                     } else {
                         break;
