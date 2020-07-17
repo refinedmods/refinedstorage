@@ -30,8 +30,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -214,19 +212,16 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
         IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
 
-        NonNullList<ItemStack> recipe = NonNullList.create();
-        List<Pair<NonNullList<ItemStack>, Integer>> ingredients = new ArrayList<>();
+        CraftingPatternInputs inputs = new CraftingPatternInputs(pattern);
 
-        combineCommonStacks(recipe, ingredients, pattern);
-
-        CraftingTaskNode node = nodes.createOrAddToExistingNode(pattern, root, recipe, qty);
+        CraftingTaskNode node = nodes.createOrAddToExistingNode(pattern, root, inputs.getRecipe(), qty);
 
         int ingredientNumber = -1;
 
-        for (Pair<NonNullList<ItemStack>, Integer> pair : ingredients) {
+        for (CraftingPatternInputs.Ingredient ingredient : inputs.getIngredients()) {
             ingredientNumber++;
 
-            PossibleInputs possibleInputs = new PossibleInputs(new ArrayList<>(pair.getLeft()));
+            PossibleInputs possibleInputs = new PossibleInputs(new ArrayList<>(ingredient.getInputs()));
             possibleInputs.sort(storageSource, results);
 
             ItemStack possibleInput = possibleInputs.get();
@@ -234,7 +229,7 @@ public class CraftingTask implements ICraftingTask {
             ItemStack fromSelf = results.get(possibleInput);
             ItemStack fromNetwork = storageSource.get(possibleInput);
 
-            int remaining = pair.getRight() * qty;
+            int remaining = ingredient.getCount() * qty;
 
             if (remaining < 0) { //int overflow
                 return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
@@ -244,7 +239,7 @@ public class CraftingTask implements ICraftingTask {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getCount());
 
-                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, pair.getRight());
+                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, ingredient.getCount());
 
                     results.remove(fromSelf, toTake);
 
@@ -257,7 +252,7 @@ public class CraftingTask implements ICraftingTask {
 
                     this.toTake.add(possibleInput, toTake);
 
-                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, pair.getRight());
+                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, ingredient.getCount());
 
                     storageSource.remove(fromNetwork, toTake);
 
@@ -313,10 +308,10 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (node instanceof RecipeCraftingTaskNode) {
-            ItemStack output = pattern.getOutput(recipe);
+            ItemStack output = pattern.getOutput(inputs.getRecipe());
             results.add(output, output.getCount() * qty);
 
-            for (ItemStack byproduct : pattern.getByproducts(recipe)) {
+            for (ItemStack byproduct : pattern.getByproducts(inputs.getRecipe())) {
                 results.add(byproduct, byproduct.getCount() * qty);
             }
         } else {
@@ -324,13 +319,14 @@ public class CraftingTask implements ICraftingTask {
 
             ingredientNumber = -1;
 
-            for (NonNullList<FluidStack> inputs : pattern.getFluidInputs()) {
-                if (inputs.isEmpty()) {
+            for (NonNullList<FluidStack> fluidInputs : pattern.getFluidInputs()) {
+                if (fluidInputs.isEmpty()) {
                     continue;
                 }
+
                 ingredientNumber++;
 
-                PossibleFluidInputs possibleInputs = new PossibleFluidInputs(new ArrayList<>(inputs));
+                PossibleFluidInputs possibleInputs = new PossibleFluidInputs(new ArrayList<>(fluidInputs));
                 possibleInputs.sort(fluidStorageSource, fluidResults);
 
                 FluidStack possibleInput = possibleInputs.get();
@@ -490,36 +486,6 @@ public class CraftingTask implements ICraftingTask {
 
             if (!toRemove.isEmpty()) {
                 network.getCraftingManager().onTaskChanged();
-            }
-        }
-    }
-
-    private void combineCommonStacks(NonNullList<ItemStack> recipe, List<Pair<NonNullList<ItemStack>, Integer>> ingredients, ICraftingPattern pattern) {
-        for (NonNullList<ItemStack> inputs : pattern.getInputs()) {
-            if (inputs.isEmpty()) {
-                recipe.add(ItemStack.EMPTY);
-            } else {
-                recipe.add(inputs.get(0));
-
-                boolean match = false;
-                for (Pair<NonNullList<ItemStack>, Integer> pair : ingredients) {
-                    if (pair.getLeft().size() == inputs.size()) {
-                        match = true;
-                        for (int i = 0; i < inputs.size(); i++) {
-                            if (!API.instance().getComparer().isEqualNoQuantity(pair.getLeft().get(i), inputs.get(i))) {
-                                match = false;
-                                break;
-                            }
-                        }
-                        if (match) {
-                            pair.setValue(pair.getRight() + inputs.get(0).getCount());
-                            break;
-                        }
-                    }
-                }
-                if (!match) {
-                    ingredients.add(new MutablePair<>(inputs, inputs.get(0).getCount()));
-                }
             }
         }
     }
