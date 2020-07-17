@@ -2,23 +2,19 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
+import com.refinedmods.refinedstorage.api.autocrafting.task.*;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.calculator.CraftingCalculator;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nonnull;
 
 public class CraftingTaskFactory implements ICraftingTaskFactory {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "v6");
 
-    @Nonnull
     @Override
-    public ICraftingTask create(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
-        return new CraftingTask(network, requested, quantity, pattern);
+    public ICalculationResult create(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
+        CraftingCalculator calculator = new CraftingCalculator(network, requested, quantity, pattern);
+        return calculator.calculate();
     }
 
     @Override

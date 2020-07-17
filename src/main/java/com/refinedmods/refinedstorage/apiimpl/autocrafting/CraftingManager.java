@@ -5,14 +5,12 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
+import com.refinedmods.refinedstorage.api.autocrafting.task.*;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.calculator.CalculationResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -93,32 +91,30 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    @Nullable
-    public ICraftingTask create(ItemStack stack, int quantity) {
+    public ICalculationResult create(ItemStack stack, int quantity) {
         ICraftingPattern pattern = getPattern(stack);
         if (pattern == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
         ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getCraftingTaskFactoryId());
         if (factory == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
         return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
     }
 
-    @Nullable
     @Override
-    public ICraftingTask create(FluidStack stack, int quantity) {
+    public ICalculationResult create(FluidStack stack, int quantity) {
         ICraftingPattern pattern = getPattern(stack);
         if (pattern == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
         ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getCraftingTaskFactoryId());
         if (factory == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
         return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
@@ -248,18 +244,10 @@ public class CraftingManager implements ICraftingManager {
         }
 
         if (amount > 0) {
-            ICraftingTask task = create(stack, amount);
+            ICalculationResult result = create(stack, amount);
 
-            if (task != null) {
-                ICalculationResult result = task.calculate();
-
-                if (result.isOk() && !task.hasMissing()) {
-                    this.start(task);
-
-                    return task;
-                } else {
-                    throttle(source);
-                }
+            if (result.isOk()) {
+                start(result.getTask());
             } else {
                 throttle(source);
             }
@@ -284,18 +272,10 @@ public class CraftingManager implements ICraftingManager {
         }
 
         if (amount > 0) {
-            ICraftingTask task = create(stack, amount);
+            ICalculationResult result = create(stack, amount);
 
-            if (task != null) {
-                ICalculationResult result = task.calculate();
-
-                if (result.isOk() && !task.hasMissing()) {
-                    this.start(task);
-
-                    return task;
-                } else {
-                    throttle(source);
-                }
+            if (result.isOk()) {
+                start(result.getTask());
             } else {
                 throttle(source);
             }

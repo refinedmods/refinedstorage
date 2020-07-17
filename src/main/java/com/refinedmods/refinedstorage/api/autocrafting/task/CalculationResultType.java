@@ -9,6 +9,14 @@ public enum CalculationResultType {
      */
     OK,
     /**
+     * Some requirements are missing.
+     */
+    MISSING,
+    /**
+     * There is no pattern for the requested stack.
+     */
+    NO_PATTERN,
+    /**
      * When the crafting task would cause too much server strain or is too complex.
      */
     TOO_COMPLEX,

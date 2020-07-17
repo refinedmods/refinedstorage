@@ -20,7 +20,6 @@ public class ClientProxy {
 
         Minecraft.getInstance().displayGuiScreen(new CraftingPreviewScreen(
             screen,
-            message.getFactoryId(),
             message.getElements(),
             message.getId(),
             message.getQuantity(),

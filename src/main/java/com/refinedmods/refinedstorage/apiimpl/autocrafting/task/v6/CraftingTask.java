@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.*;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.util.Action;
@@ -12,27 +12,22 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.monitor.CraftingMonitorElementFactory;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingNode;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.NodeList;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingNode;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingPreviewElementFactory;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingPreviewInfo;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
-import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class CraftingTask implements ICraftingTask {
     private static final String NBT_REQUESTED = "Requested";
@@ -49,39 +44,45 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_TOTAL_STEPS = "TotalSteps";
     private static final String NBT_CURRENT_STEP = "CurrentStep";
 
+    private final IStorageDisk<ItemStack> internalStorage;
+    private final IStorageDisk<FluidStack> internalFluidStorage;
+
     private final INetwork network;
     private final ICraftingRequestInfo requested;
     private final int quantity;
     private final ICraftingPattern pattern;
-    private UUID id = UUID.randomUUID();
+    private final UUID id;
+    private final NodeList nodes;
+    private final IStackList<ItemStack> toExtractInitial;
+    private final IStackList<FluidStack> toExtractInitialFluids;
+
     private int ticks;
-    private long calculationStarted = -1;
     private long executionStarted = -1;
     private int totalSteps;
     private int currentStep;
-    private final Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
-    private final IStorageDisk<ItemStack> internalStorage;
-    private final IStorageDisk<FluidStack> internalFluidStorage;
-
-    private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
-    private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
-
-    private final NodeList nodes = new NodeList();
-
-    private final CraftingPreviewInfo craftingPreviewInfo = new CraftingPreviewInfo();
-
-    private final CraftingPreviewElementFactory craftingPreviewElementFactory = new CraftingPreviewElementFactory();
     private final CraftingMonitorElementFactory craftingMonitorElementFactory = new CraftingMonitorElementFactory();
 
-    public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
+    public CraftingTask(INetwork network,
+                        ICraftingRequestInfo requested,
+                        int quantity,
+                        ICraftingPattern pattern,
+                        NodeList nodes,
+                        IStackList<ItemStack> toExtractInitial,
+                        IStackList<FluidStack> toExtractInitialFluids) {
         this.network = network;
+
         this.requested = requested;
         this.quantity = quantity;
         this.pattern = pattern;
+        this.id = UUID.randomUUID();
+        this.nodes = nodes;
 
         this.internalStorage = new ItemStorageDisk(null, -1);
         this.internalFluidStorage = new FluidStorageDisk(null, -1);
+
+        this.toExtractInitial = toExtractInitial;
+        this.toExtractInitialFluids = toExtractInitialFluids;
     }
 
     public CraftingTask(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
@@ -90,8 +91,10 @@ public class CraftingTask implements ICraftingTask {
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
-        this.ticks = tag.getInt(NBT_TICKS);
         this.id = tag.getUniqueId(NBT_ID);
+        this.nodes = new NodeList();
+
+        this.ticks = tag.getInt(NBT_TICKS);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
         this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
         this.currentStep = tag.getInt(NBT_CURRENT_STEP);
@@ -134,298 +137,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public ICalculationResult calculate() {
-        if (calculationStarted != -1) {
-            throw new IllegalStateException("Task already calculated!");
-        }
-
-        if (executionStarted != -1) {
-            throw new IllegalStateException("Task already started!");
-        }
-
-        this.calculationStarted = System.currentTimeMillis();
-
-        IStackList<ItemStack> results = API.instance().createItemStackList();
-        IStackList<FluidStack> fluidResults = API.instance().createFluidStackList();
-
-        IStackList<ItemStack> storageSource = network.getItemStorageCache().getList().copy();
-        IStackList<FluidStack> fluidStorageSource = network.getFluidStorageCache().getList().copy();
-
-        int qtyPerCraft = getQuantityPerCraft(requested.getItem(), requested.getFluid(), pattern);
-        int qty = ((quantity - 1) / qtyPerCraft) + 1;
-
-        ICalculationResult result = calculateInternal(qty, storageSource, fluidStorageSource, results, fluidResults, pattern, true);
-
-        if (requested.getItem() != null) {
-            craftingPreviewInfo.getToCraft().add(ItemHandlerHelper.copyStackWithSize(requested.getItem(), qty * qtyPerCraft));
-        } else if (requested.getFluid() != null) {
-            craftingPreviewInfo.getToCraftFluids().add(StackUtils.copy(requested.getFluid(), qty * qtyPerCraft));
-        }
-
-        return result;
-    }
-
-    private ICalculationResult calculateInternal(
-        int qty,
-        IStackList<ItemStack> storageSource,
-        IStackList<FluidStack> fluidStorageSource,
-        IStackList<ItemStack> results,
-        IStackList<FluidStack> fluidResults,
-        ICraftingPattern pattern,
-        boolean root) {
-
-        if (System.currentTimeMillis() - calculationStarted > RS.SERVER_CONFIG.getAutocrafting().getCalculationTimeoutMs()) {
-            return new CalculationResult(CalculationResultType.TOO_COMPLEX);
-        }
-
-        if (!patternsUsed.add(pattern)) {
-            return new CalculationResult(CalculationResultType.RECURSIVE, pattern);
-        }
-
-        IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
-        IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
-
-        CraftingPatternInputs inputs = new CraftingPatternInputs(pattern);
-
-        Node node = nodes.createOrAddToExistingNode(pattern, root, inputs.getRecipe(), qty);
-
-        ICalculationResult result = calculateForItems(qty, storageSource, fluidStorageSource, results, fluidResults, itemsToExtract, inputs, node);
-        if (!result.isOk()) {
-            return result;
-        }
-
-        if (node instanceof CraftingNode) {
-            ItemStack output = pattern.getOutput(inputs.getRecipe());
-            results.add(output, output.getCount() * qty);
-
-            for (ItemStack byproduct : pattern.getByproducts(inputs.getRecipe())) {
-                results.add(byproduct, byproduct.getCount() * qty);
-            }
-        } else if (node instanceof ProcessingNode) {
-            ProcessingNode processing = (ProcessingNode) node;
-
-            result = calculateForFluids(qty, storageSource, fluidStorageSource, results, fluidResults, pattern, fluidsToExtract, processing);
-            if (!result.isOk()) {
-                return result;
-            }
-
-            for (ItemStack output : pattern.getOutputs()) {
-                results.add(output, output.getCount() * qty);
-            }
-
-            for (FluidStack output : pattern.getFluidOutputs()) {
-                fluidResults.add(output, output.getAmount() * qty);
-            }
-
-            //only add this once
-            if (processing.getItemsToReceive().isEmpty()) {
-                pattern.getOutputs().forEach(processing::addItemsToReceive);
-            }
-
-            if (processing.getFluidsToReceive().isEmpty()) {
-                pattern.getFluidOutputs().forEach(processing::addFluidsToReceive);
-            }
-        }
-
-        patternsUsed.remove(pattern);
-
-        return new CalculationResult(CalculationResultType.OK);
-    }
-
-    private ICalculationResult calculateForItems(int qty, IStackList<ItemStack> storageSource, IStackList<FluidStack> fluidStorageSource, IStackList<ItemStack> results, IStackList<FluidStack> fluidResults, IStackList<ItemStack> itemsToExtract, CraftingPatternInputs inputs, Node node) {
-        int ingredientNumber = -1;
-
-        for (CraftingPatternInputs.Ingredient ingredient : inputs.getIngredients()) {
-            ingredientNumber++;
-
-            PossibleInputs possibleInputs = new PossibleInputs(ingredient.getInputs());
-            possibleInputs.sort(storageSource, results);
-
-            ItemStack possibleInput = possibleInputs.get();
-
-            ItemStack fromSelf = results.get(possibleInput);
-            ItemStack fromNetwork = storageSource.get(possibleInput);
-
-            int remaining = ingredient.getCount() * qty;
-
-            if (remaining < 0) { // int overflow
-                return new CalculationResult(CalculationResultType.TOO_COMPLEX);
-            }
-
-            while (remaining > 0) {
-                if (fromSelf != null) {
-                    int toTake = Math.min(remaining, fromSelf.getCount());
-
-                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, ingredient.getCount());
-
-                    results.remove(fromSelf, toTake);
-
-                    remaining -= toTake;
-
-                    fromSelf = results.get(possibleInput);
-                }
-
-                if (fromNetwork != null && remaining > 0) {
-                    int toTake = Math.min(remaining, fromNetwork.getCount());
-
-                    craftingPreviewInfo.getToTake().add(possibleInput, toTake);
-
-                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, ingredient.getCount());
-
-                    storageSource.remove(fromNetwork, toTake);
-
-                    remaining -= toTake;
-
-                    fromNetwork = storageSource.get(possibleInput);
-
-                    toExtractInitial.add(possibleInput, toTake);
-                }
-
-                if (remaining > 0) {
-                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
-
-                    if (subPattern != null) {
-                        int qtyPerCraft = getQuantityPerCraft(possibleInput, null, subPattern);
-                        int subQty = ((remaining - 1) / qtyPerCraft) + 1;
-
-                        ICalculationResult result = calculateInternal(subQty, storageSource, fluidStorageSource, results, fluidResults, subPattern, false);
-                        if (!result.isOk()) {
-                            return result;
-                        }
-
-                        fromSelf = results.get(possibleInput);
-                        if (fromSelf == null) {
-                            throw new IllegalStateException("Recursive calculation didn't yield anything");
-                        }
-
-                        fromNetwork = storageSource.get(possibleInput);
-
-                        // fromSelf contains the amount crafted after the loop.
-                        craftingPreviewInfo.getToCraft().add(fromSelf.copy());
-                    } else {
-                        if (!possibleInputs.cycle()) {
-                            // Give up.
-                            possibleInput = possibleInputs.get(); // Revert back to 0.
-
-                            craftingPreviewInfo.getMissing().add(possibleInput, remaining);
-
-                            itemsToExtract.add(possibleInput, remaining);
-
-                            remaining = 0;
-                        } else {
-                            // Retry with new input...
-                            possibleInput = possibleInputs.get();
-
-                            fromSelf = results.get(possibleInput);
-                            fromNetwork = storageSource.get(possibleInput);
-                        }
-                    }
-                }
-            }
-        }
-
-        return new CalculationResult(CalculationResultType.OK);
-    }
-
-    private ICalculationResult calculateForFluids(int qty, IStackList<ItemStack> storageSource, IStackList<FluidStack> fluidStorageSource, IStackList<ItemStack> results, IStackList<FluidStack> fluidResults, ICraftingPattern pattern, IStackList<FluidStack> fluidsToExtract, ProcessingNode processing) {
-        for (NonNullList<FluidStack> fluidInputs : pattern.getFluidInputs()) {
-            if (fluidInputs.isEmpty()) {
-                continue;
-            }
-
-            PossibleFluidInputs possibleInputs = new PossibleFluidInputs(new ArrayList<>(fluidInputs));
-            possibleInputs.sort(fluidStorageSource, fluidResults);
-
-            FluidStack possibleInput = possibleInputs.get();
-
-            FluidStack fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
-            FluidStack fromNetwork = fluidStorageSource.get(possibleInput, IComparer.COMPARE_NBT);
-
-            int remaining = possibleInput.getAmount() * qty;
-
-            if (remaining < 0) { // int overflow
-                return new CalculationResult(CalculationResultType.TOO_COMPLEX);
-            }
-
-            processing.addFluidsToUse(possibleInput);
-
-            while (remaining > 0) {
-                if (fromSelf != null) {
-                    int toTake = Math.min(remaining, fromSelf.getAmount());
-
-                    fluidResults.remove(possibleInput, toTake);
-
-                    remaining -= toTake;
-
-                    fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
-                }
-
-                if (fromNetwork != null && remaining > 0) {
-                    int toTake = Math.min(remaining, fromNetwork.getAmount());
-
-                    craftingPreviewInfo.getToTakeFluids().add(possibleInput, toTake);
-
-                    fluidStorageSource.remove(fromNetwork, toTake);
-
-                    remaining -= toTake;
-
-                    fromNetwork = fluidStorageSource.get(possibleInput, IComparer.COMPARE_NBT);
-
-                    toExtractInitialFluids.add(possibleInput, toTake);
-                }
-
-                if (remaining > 0) {
-                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
-
-                    if (subPattern != null) {
-                        int qtyPerCraft = getQuantityPerCraft(null, possibleInput, subPattern);
-                        int subQty = ((remaining - 1) / qtyPerCraft) + 1;
-
-                        ICalculationResult result = calculateInternal(subQty, storageSource, fluidStorageSource, results, fluidResults, subPattern, false);
-                        if (!result.isOk()) {
-                            return result;
-                        }
-
-                        fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
-                        if (fromSelf == null) {
-                            throw new IllegalStateException("Recursive fluid calculation didn't yield anything");
-                        }
-
-                        fromNetwork = fluidStorageSource.get(possibleInput, IComparer.COMPARE_NBT);
-
-                        // fromSelf contains the amount crafted after the loop.
-                        craftingPreviewInfo.getToCraftFluids().add(fromSelf.copy());
-                    } else {
-                        if (!possibleInputs.cycle()) {
-                            // Give up.
-                            possibleInput = possibleInputs.get(); // Revert back to 0.
-
-                            craftingPreviewInfo.getMissingFluids().add(possibleInput, remaining);
-
-                            fluidsToExtract.add(possibleInput, remaining);
-
-                            remaining = 0;
-                        } else {
-                            // Retry with new input...
-                            possibleInput = possibleInputs.get();
-
-                            fromSelf = fluidResults.get(possibleInput);
-                            fromNetwork = fluidStorageSource.get(possibleInput);
-                        }
-                    }
-                }
-            }
-        }
-
-        return new CalculationResult(CalculationResultType.OK);
-    }
-
-    @Override
     public void start() {
-        if (hasMissing()) {
-            throw new RuntimeException("Cannot start crafting task with missing stacks");
-        }
-
         nodes.all().forEach(node -> {
             totalSteps += node.getQuantity();
             node.finishCalculation();
@@ -448,10 +160,6 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update() {
-        if (hasMissing()) {
-            throw new RuntimeException("Cannot call update on a crafting task that has missing items");
-        }
-
         ++ticks;
 
         if (nodes.isEmpty()) {
@@ -503,30 +211,6 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public int getQuantity() {
         return quantity;
-    }
-
-    private int getQuantityPerCraft(@Nullable ItemStack item, @Nullable FluidStack fluid, ICraftingPattern pattern) {
-        int qty = 0;
-
-        if (item != null) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (API.instance().getComparer().isEqualNoQuantity(output, item)) {
-                    qty += output.getCount();
-
-                    if (!pattern.isProcessing()) {
-                        break;
-                    }
-                }
-            }
-        } else if (fluid != null) {
-            for (FluidStack output : pattern.getFluidOutputs()) {
-                if (API.instance().getComparer().isEqual(output, fluid, IComparer.COMPARE_NBT)) {
-                    qty += output.getAmount();
-                }
-            }
-        }
-
-        return qty;
     }
 
     @Override
@@ -617,11 +301,6 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public List<ICraftingPreviewElement<?>> getPreviewElements() {
-        return craftingPreviewElementFactory.getElements(craftingPreviewInfo);
-    }
-
-    @Override
     public ICraftingPattern getPattern() {
         return pattern;
     }
@@ -629,11 +308,6 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public long getExecutionStarted() {
         return executionStarted;
-    }
-
-    @Override
-    public boolean hasMissing() {
-        return craftingPreviewInfo.hasMissing();
     }
 
     @Override

@@ -25,7 +25,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,7 +41,6 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
     private final List<ICraftingPreviewElement<?>> stacks;
     private final Screen parent;
-    private final ResourceLocation factoryId;
 
     private final ScrollbarWidget scrollbar;
 
@@ -55,7 +53,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
     private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
 
-    public CraftingPreviewScreen(Screen parent, ResourceLocation factoryId, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
+    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
         super(new Container(null, 0) {
             @Override
             public boolean canInteractWith(@Nonnull PlayerEntity player) {
@@ -65,7 +63,6 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
-        this.factoryId = factoryId;
 
         this.id = id;
         this.quantity = quantity;
@@ -134,8 +131,6 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
                     renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
 
-                    RenderSystem.popMatrix();
-
                     ICraftingPattern pattern = PatternItem.fromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
 
                     int yy = 83;
@@ -161,11 +156,11 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
                     renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
                     renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
 
-                    RenderSystem.popMatrix();
-
                     break;
                 }
             }
+
+            RenderSystem.popMatrix();
         } else {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 

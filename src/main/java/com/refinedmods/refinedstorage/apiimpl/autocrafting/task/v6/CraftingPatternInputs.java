@@ -30,6 +30,10 @@ public class CraftingPatternInputs {
 
     private void combineRecipeIntoIngredients(ICraftingPattern pattern) {
         for (NonNullList<ItemStack> inputsForSlot : pattern.getInputs()) {
+            if (inputsForSlot.isEmpty()) {
+                continue;
+            }
+
             Ingredient matchingIngredient = findMatchingIngredient(inputsForSlot);
 
             if (matchingIngredient == null) {

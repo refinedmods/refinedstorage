@@ -1,17 +1,30 @@
 package com.refinedmods.refinedstorage.api.autocrafting.task;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
- * Returned from {@link ICraftingTask#calculate()} to indicate the result of the calculation.
+ * The result of the crafting calculation.
  */
 public interface ICalculationResult {
     /**
      * @return the type
      */
     CalculationResultType getType();
+
+    /**
+     * @return get a list of {@link ICraftingPreviewElement}s
+     */
+    List<ICraftingPreviewElement<?>> getPreviewElements();
+
+    /**
+     * @return the task if the calculation {@link #isOk()}, otherwise null
+     */
+    @Nullable
+    ICraftingTask getTask();
 
     /**
      * @return whether the calculation succeeded

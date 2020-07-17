@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.api.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -54,20 +55,18 @@ public interface ICraftingManager {
      *
      * @param stack    the stack to craft
      * @param quantity the quantity to craft
-     * @return the crafting task, or null if no pattern was found for the given stack
+     * @return the calculation result
      */
-    @Nullable
-    ICraftingTask create(ItemStack stack, int quantity);
+    ICalculationResult create(ItemStack stack, int quantity);
 
     /**
      * Creates a crafting task for a given stack, but doesn't add it to the list.
      *
      * @param stack    the stack to craft
      * @param quantity the quantity to craft
-     * @return the crafting task, or null if no pattern was found for the given stack
+     * @return the calculation result
      */
-    @Nullable
-    ICraftingTask create(FluidStack stack, int quantity);
+    ICalculationResult create(FluidStack stack, int quantity);
 
     /**
      * @return a new pattern chain list

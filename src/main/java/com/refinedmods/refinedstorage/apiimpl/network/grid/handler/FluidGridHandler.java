@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid.handler;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
@@ -15,7 +15,6 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -101,36 +100,30 @@ public class FluidGridHandler implements IFluidGridHandler {
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
-                ICraftingTask task = network.getCraftingManager().create(stack, quantity);
-                if (task == null) {
+                ICalculationResult result = network.getCraftingManager().create(stack, quantity);
+                if (result == null) {
                     return;
                 }
 
-                ICalculationResult result = task.calculate();
-
-                ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
-
-                if (!result.isOk()) {
+                if (!result.isOk() && result.getType() != CalculationResultType.MISSING) {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
-                            factoryId,
                             Collections.singletonList(new ErrorCraftingPreviewElement(result.getType(), result.getRecursedPattern() == null ? ItemStack.EMPTY : result.getRecursedPattern().getStack())),
                             id,
                             quantity,
                             true
                         )
                     );
-                } else if (noPreview && !task.hasMissing()) {
-                    network.getCraftingManager().start(task);
+                } else if (result.isOk() && noPreview) {
+                    network.getCraftingManager().start(result.getTask());
 
                     RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
-                            factoryId,
-                            task.getPreviewElements(),
+                            result.getPreviewElements(),
                             id,
                             quantity,
                             true
@@ -152,14 +145,9 @@ public class FluidGridHandler implements IFluidGridHandler {
         FluidStack stack = network.getFluidStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
-            ICraftingTask task = network.getCraftingManager().create(stack, quantity);
-            if (task == null) {
-                return;
-            }
-
-            ICalculationResult result = task.calculate();
-            if (result.isOk() && !task.hasMissing()) {
-                network.getCraftingManager().start(task);
+            ICalculationResult result = network.getCraftingManager().create(stack, quantity);
+            if (result.isOk()) {
+                network.getCraftingManager().start(result.getTask());
             }
         }
     }
