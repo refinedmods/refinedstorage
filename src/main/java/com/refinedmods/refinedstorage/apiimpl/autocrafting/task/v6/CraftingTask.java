@@ -525,52 +525,6 @@ public class CraftingTask implements ICraftingTask {
         }
     }
 
-    private void updateCrafting(RecipeCraftingTaskNode c) {
-        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(c.getPattern())) {
-            int interval = container.getUpdateInterval();
-
-            if (interval < 0) {
-                throw new IllegalStateException(container + " has an update interval of < 0");
-            }
-
-            if (interval == 0 || ticks % interval == 0) {
-                for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
-
-                    if (c.getQuantity() <= 0) {
-                        nodes.remove(c);
-                        return;
-                    }
-
-                    if (IoUtil.extractFromInternalItemStorage(c.getItemsToUse(true).getStacks(), this.internalStorage, Action.SIMULATE) != null) {
-                        IoUtil.extractFromInternalItemStorage(c.getItemsToUse(false).getStacks(), this.internalStorage, Action.PERFORM);
-
-                        ItemStack output = c.getPattern().getOutput(c.getRecipe());
-
-                        if (!c.isRoot()) {
-                            this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
-                        } else {
-                            ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
-
-                            this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
-                        }
-
-                        // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
-                        // Regular outputs can be inserted into the network *IF* it's a root since it's *NOT* expected to be used later on.
-                        for (ItemStack byp : c.getPattern().getByproducts(c.getRecipe())) {
-                            this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
-                        }
-
-                        c.next();
-                        currentStep++;
-                        network.getCraftingManager().onTaskChanged();
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     private void updateProcessing(ProcessingCraftingTaskNode p) {
         if (p.getState() == ProcessingState.PROCESSED) {
             nodes.remove(p);
@@ -714,7 +668,7 @@ public class CraftingTask implements ICraftingTask {
 
             for (CraftingTaskNode node : nodes.all()) {
                 if (node instanceof RecipeCraftingTaskNode) {
-                    updateCrafting((RecipeCraftingTaskNode) node);
+                    ((RecipeCraftingTaskNode) node).update(network, ticks, nodes, internalStorage, internalFluidStorage);
                 } else {
                     updateProcessing((ProcessingCraftingTaskNode) node);
                 }
