@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
+package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node;
 
 import com.google.common.primitives.Ints;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -18,8 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public abstract class Craft {
+public abstract class CraftingTaskNode {
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_ROOT = "Root";
     private static final String NBT_IS_PROCESSING = "IsProcessing";
@@ -33,18 +33,18 @@ public abstract class Craft {
     private final Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
     private final Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
 
-    Craft(ICraftingPattern pattern, boolean root) {
+    public CraftingTaskNode(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
         this.root = root;
     }
 
-    Craft(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public CraftingTaskNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
-        this.pattern = CraftingTask.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
+        this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
         this.root = tag.getBoolean(NBT_ROOT);
         ListNBT list = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
         for (int i = 0; i < list.size(); i++) {
-            this.itemsToUse.put(i, CraftingTask.readItemStackList(list.getList(i)));
+            this.itemsToUse.put(i, SerializationUtil.readItemStackList(list.getList(i)));
         }
         List<Integer> perCraftList = Ints.asList(tag.getIntArray(NBT_NEEDED_PER_CRAFT));
         for (int i = 0; i < perCraftList.size(); i++) {
@@ -52,35 +52,35 @@ public abstract class Craft {
         }
     }
 
-    static Craft createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        return tag.getBoolean(NBT_IS_PROCESSING) ? new Processing(network, tag) : new Crafting(network, tag);
+    public static CraftingTaskNode createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+        return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingCraftingTaskNode(network, tag) : new RecipeCraftingTaskNode(network, tag);
     }
 
-    ICraftingPattern getPattern() {
+    public ICraftingPattern getPattern() {
         return pattern;
     }
 
-    int getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    void addQuantity(int quantity) {
+    public void addQuantity(int quantity) {
         this.quantity += quantity;
     }
 
-    void next() {
+    public void next() {
         quantity--;
     }
 
-    boolean isRoot() {
+    public boolean isRoot() {
         return root;
     }
 
-    boolean hasItems() {
+    public boolean hasItems() {
         return !itemsToUse.isEmpty();
     }
 
-    IStackList<ItemStack> getItemsToUse(boolean simulate) {
+    public IStackList<ItemStack> getItemsToUse(boolean simulate) {
         IStackList<ItemStack> toReturn = API.instance().createItemStackList();
         for (int i = 0; i < itemsToUse.size(); i++) {
             int needed = neededPerCraft.get(i);
@@ -103,7 +103,7 @@ public abstract class Craft {
                     }
                 }
             } else {
-                LogManager.getLogger(Craft.class).warn("Craft requested more Items than available");
+                LogManager.getLogger(CraftingTaskNode.class).warn("Craft requested more Items than available");
                 this.quantity = 0; // stop crafting
                 break;
             }
@@ -111,7 +111,7 @@ public abstract class Craft {
         return toReturn;
     }
 
-    void addItemsToUse(int ingredientNumber, ItemStack stack, int size, int perCraft) {
+    public void addItemsToUse(int ingredientNumber, ItemStack stack, int size, int perCraft) {
         if (!neededPerCraft.containsKey(ingredientNumber)) {
             neededPerCraft.put(ingredientNumber, perCraft);
         }
@@ -121,15 +121,15 @@ public abstract class Craft {
         itemsToUse.get(ingredientNumber).add(stack, size);
     }
 
-    CompoundNBT writeToNbt() {
+    public CompoundNBT writeToNbt() {
         CompoundNBT tag = new CompoundNBT();
         tag.putInt(NBT_QUANTITY, quantity);
-        tag.putBoolean(NBT_IS_PROCESSING, this instanceof Processing);
+        tag.putBoolean(NBT_IS_PROCESSING, this instanceof ProcessingCraftingTaskNode);
         tag.putBoolean(NBT_ROOT, root);
-        tag.put(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
+        tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
         ListNBT list = new ListNBT();
         for (IStackList<ItemStack> stackList : itemsToUse.values()) {
-            list.add(CraftingTask.writeItemStackList(stackList));
+            list.add(SerializationUtil.writeItemStackList(stackList));
         }
         tag.put(NBT_ITEMS_TO_USE, list);
         tag.putIntArray(NBT_NEEDED_PER_CRAFT, Ints.toArray(neededPerCraft.values()));
@@ -138,8 +138,7 @@ public abstract class Craft {
         return tag;
     }
 
-    void finishCalculation() {
+    public void finishCalculation() {
         //NOOP
     }
-
 }

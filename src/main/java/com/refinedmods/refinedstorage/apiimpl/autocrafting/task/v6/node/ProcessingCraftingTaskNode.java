@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
+package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
@@ -6,12 +6,14 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.ProcessingState;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
-class Processing extends Craft {
+public class ProcessingCraftingTaskNode extends CraftingTaskNode {
     private static final String NBT_ITEMS_TO_RECEIVE = "ItemsToReceive";
     private static final String NBT_FLUIDS_TO_RECEIVE = "FluidsToReceive";
     private static final String NBT_FLUIDS_TO_USE = "FluidsToUse";
@@ -32,29 +34,29 @@ class Processing extends Craft {
     private int finished;
     private int totalQuantity;
 
-    Processing(ICraftingPattern pattern, boolean root) {
+    public ProcessingCraftingTaskNode(ICraftingPattern pattern, boolean root) {
         super(pattern, root);
     }
 
-    Processing(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public ProcessingCraftingTaskNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
-        this.itemsToReceive = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+        this.itemsToReceive = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+        this.fluidsToReceive = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
         this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
-        this.itemsReceived = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.fluidsReceived = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToUse = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND));
-        this.itemsToDisplay = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
+        this.itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
+        this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
+        this.fluidsToUse = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND));
+        this.itemsToDisplay = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
     }
 
     @Override
-    void finishCalculation() {
+    public void finishCalculation() {
         this.totalQuantity = quantity;
         updateItemsToDisplay();
     }
 
-    int getNeeded(ItemStack stack) {
+    public int getNeeded(ItemStack stack) {
         if (itemsToReceive.get(stack) != null) {
             int needed = itemsToReceive.get(stack).getCount() * totalQuantity;
             if (itemsReceived.get(stack) != null) {
@@ -65,7 +67,7 @@ class Processing extends Craft {
         return 0;
     }
 
-    int getNeeded(FluidStack stack) {
+    public int getNeeded(FluidStack stack) {
         if (fluidsToReceive.get(stack) != null) {
             int needed = fluidsToReceive.get(stack).getAmount() * totalQuantity;
             if (fluidsReceived.get(stack) != null) {
@@ -76,7 +78,7 @@ class Processing extends Craft {
         return 0;
     }
 
-    boolean updateFinished() {
+    public boolean updateFinished() {
         int fin = finished;
         updateFinishedPatterns();
         if (finished == totalQuantity) {
@@ -117,15 +119,15 @@ class Processing extends Craft {
         finished = temp;
     }
 
-    IStackList<ItemStack> getItemsToReceive() {
+    public IStackList<ItemStack> getItemsToReceive() {
         return itemsToReceive;
     }
 
-    IStackList<FluidStack> getFluidsToReceive() {
+    public IStackList<FluidStack> getFluidsToReceive() {
         return fluidsToReceive;
     }
 
-    IStackList<ItemStack> getItemsToDisplay() {
+    public IStackList<ItemStack> getItemsToDisplay() {
         return itemsToDisplay;
     }
 
@@ -133,56 +135,56 @@ class Processing extends Craft {
         itemsToDisplay = getItemsToUse(true);
     }
 
-    IStackList<FluidStack> getFluidsToUse() {
+    public IStackList<FluidStack> getFluidsToUse() {
         return fluidsToUse;
     }
 
-    void addFluidsToUse(FluidStack stack) {
+    public void addFluidsToUse(FluidStack stack) {
         fluidsToUse.add(stack);
     }
 
-    void addItemsToReceive(ItemStack stack) {
+    public void addItemsToReceive(ItemStack stack) {
         itemsToReceive.add(stack);
     }
 
-    void addFluidsToReceive(FluidStack stack) {
+    public void addFluidsToReceive(FluidStack stack) {
         fluidsToReceive.add(stack);
     }
 
-    int getProcessing() {
+    public int getProcessing() {
         return totalQuantity - quantity - finished;
     }
 
-    void addFinished(ItemStack received, int size) {
+    public void addFinished(ItemStack received, int size) {
         itemsReceived.add(received, size);
     }
 
-    void addFinished(FluidStack received, int size) {
+    public void addFinished(FluidStack received, int size) {
         fluidsReceived.add(received, size);
     }
 
-    void setState(ProcessingState state) {
+    public void setState(ProcessingState state) {
         this.state = state;
     }
 
-    ProcessingState getState() {
+    public ProcessingState getState() {
         return state;
     }
 
-    boolean hasFluids() {
+    public boolean hasFluids() {
         return !fluidsToUse.isEmpty();
     }
 
-    CompoundNBT writeToNbt() {
+    public CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
-        tag.put(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
-        tag.put(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
+        tag.put(NBT_ITEMS_TO_RECEIVE, SerializationUtil.writeItemStackList(itemsToReceive));
+        tag.put(NBT_FLUIDS_TO_RECEIVE, SerializationUtil.writeFluidStackList(fluidsToReceive));
         tag.putInt(NBT_STATE, state.ordinal());
         tag.putInt(NBT_QUANTITY_TOTAL, totalQuantity);
-        tag.put(NBT_ITEMS_RECEIVED, CraftingTask.writeItemStackList(itemsReceived));
-        tag.put(NBT_FLUIDS_RECEIVED, CraftingTask.writeFluidStackList(fluidsReceived));
-        tag.put(NBT_FLUIDS_TO_USE, CraftingTask.writeFluidStackList(fluidsToUse));
-        tag.put(NBT_ITEMS_TO_DISPLAY, CraftingTask.writeItemStackList(itemsToDisplay));
+        tag.put(NBT_ITEMS_RECEIVED, SerializationUtil.writeItemStackList(itemsReceived));
+        tag.put(NBT_FLUIDS_RECEIVED, SerializationUtil.writeFluidStackList(fluidsReceived));
+        tag.put(NBT_FLUIDS_TO_USE, SerializationUtil.writeFluidStackList(fluidsToUse));
+        tag.put(NBT_ITEMS_TO_DISPLAY, SerializationUtil.writeItemStackList(itemsToDisplay));
 
         return tag;
     }

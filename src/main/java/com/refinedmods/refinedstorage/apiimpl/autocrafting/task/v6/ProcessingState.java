@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
 
-enum ProcessingState {
+public enum ProcessingState {
     READY,
     MACHINE_NONE,
     MACHINE_DOES_NOT_ACCEPT,
