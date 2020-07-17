@@ -120,12 +120,6 @@ public interface ICraftingTask {
      * @return the id of this task
      */
     UUID getId();
-
-    /**
-     * @return the state of this crafting task
-     */
-    CraftingTaskState getState();
-
     /**
      * Start the CraftingTask
      */
