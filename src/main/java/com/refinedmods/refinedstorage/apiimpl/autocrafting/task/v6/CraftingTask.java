@@ -693,7 +693,7 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
         }
-        if (craft.itemsToUse == null) {
+        if (!craft.hasItemsToUse()) {
             craft.initItemsToUse(itemsToUse);
         }
     }

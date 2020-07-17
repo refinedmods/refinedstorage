@@ -33,8 +33,8 @@ public abstract class Craft {
     private final boolean root;
     protected int quantity;
     private ICraftingPattern pattern;
-    int maxSlots = 0;
-    Map<Integer, Ingredient> itemsToUse;
+    private int maxSlots = 0;
+    private Map<Integer, Ingredient> itemsToUse;
 
     Craft(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
@@ -59,6 +59,10 @@ public abstract class Craft {
 
     static Craft createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new Processing(network, tag) : new Crafting(network, tag);
+    }
+
+    boolean hasItemsToUse() {
+        return itemsToUse != null;
     }
 
     void initItemsToUse(Map<Integer, Ingredient> itemsToUse) {
@@ -164,11 +168,7 @@ public abstract class Craft {
     static class Ingredient {
         IStackList<ItemStack> storage = API.instance().createItemStackList();
         int perCraft;
-
         public Map<Integer, Integer> amountPerSlot = new HashMap<>();
-
-        Ingredient() {
-        }
 
         public int calculatePerCraft() {
             int maxSlot = 0;
@@ -178,6 +178,8 @@ public abstract class Craft {
             }
             return maxSlot;
         }
+
+        Ingredient(){}
 
         //Extracts perCraft items from Storage
         IStackList<ItemStack> getIngredients(boolean simulate) {
