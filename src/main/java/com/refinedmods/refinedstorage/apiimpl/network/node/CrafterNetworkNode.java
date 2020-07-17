@@ -299,6 +299,17 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         return proxy.getFacingTile();
     }
 
+    @Nullable
+    @Override
+    public TileEntity getFacingTile() {
+        BlockPos facingPos = pos.offset(getDirection());
+        if (!world.isBlockPresent(facingPos)) {
+            return null;
+        }
+
+        return world.getTileEntity(facingPos);
+    }
+
     @Override
     public List<ICraftingPattern> getPatterns() {
         return patterns;
