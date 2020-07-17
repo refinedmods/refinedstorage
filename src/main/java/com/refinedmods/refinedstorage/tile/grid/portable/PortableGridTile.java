@@ -541,7 +541,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
             return false;
         }
 
-        return redstoneMode.isEnabled(world, pos);
+        return redstoneMode.isEnabled(world.isBlockPowered(pos));
     }
 
     @Override
@@ -565,7 +565,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     public void drainEnergy(int energy) {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() &&
             type != PortableGridBlockItem.Type.CREATIVE &&
-            redstoneMode.isEnabled(world, pos)) {
+            redstoneMode.isEnabled(world.isBlockPowered(pos))) {
             energyStorage.extractEnergy(energy, false);
 
             updateState();

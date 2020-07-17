@@ -84,7 +84,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
+        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0 && world.isBlockPresent(pos)) {
             if (type == IType.ITEMS) {
                 if (pickupItem) {
                     pickupItems();

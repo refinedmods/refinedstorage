@@ -250,7 +250,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     private void onTankOutChanged() {
-        if (!world.isRemote) {
+        if (!world.isRemote && world.isBlockPresent(pos)) {
             ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
         }
 

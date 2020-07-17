@@ -60,7 +60,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public void update() {
         super.update();
 
-        if (!canUpdate()) {
+        if (!canUpdate() || !world.isBlockPresent(pos)) {
             return;
         }
 

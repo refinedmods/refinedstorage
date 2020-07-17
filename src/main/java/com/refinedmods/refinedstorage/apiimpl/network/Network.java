@@ -80,11 +80,13 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
     private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    private boolean redstonePowered = false;
 
     private boolean amILoaded = false;
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
+    private int ticks;
 
     public Network(World world, BlockPos pos, NetworkType type) {
         this.pos = pos;
@@ -115,7 +117,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return amILoaded && energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
+        return amILoaded && energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(redstonePowered);
+    }
+
+    public void setRedstonePowered(boolean redstonePowered) {
+        this.redstonePowered = redstonePowered;
     }
 
     @Override
@@ -136,6 +142,12 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            if (ticks == 0) {
+                redstonePowered = world.isBlockPowered(pos);
+            }
+
+            ++ticks;
+
             amILoaded = world.isBlockPresent(pos);
 
             updateEnergyUsage();
@@ -498,7 +510,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     public ControllerBlock.EnergyType getEnergyType() {
-        if (!redstoneMode.isEnabled(world, pos)) {
+        if (!redstoneMode.isEnabled(redstonePowered)) {
             return ControllerBlock.EnergyType.OFF;
         }
 
@@ -532,7 +544,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     private void updateEnergyUsage() {
-        if (!redstoneMode.isEnabled(world, pos)) {
+        if (!redstoneMode.isEnabled(redstonePowered)) {
             this.lastEnergyUsage = 0;
             return;
         }

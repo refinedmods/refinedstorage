@@ -29,8 +29,14 @@ public class ItemExternalStorageProvider implements IExternalStorageProvider<Ite
 
     @Nonnull
     @Override
-    public IExternalStorage<ItemStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, Direction direction) {
-        return new ItemExternalStorage(context, () -> WorldUtils.getItemHandler(tile.get(), direction.getOpposite()), tile.get() instanceof InterfaceTile);
+    public IExternalStorage<ItemStack> provide(IExternalStorageContext context, TileEntity tile, Direction direction) {
+        return new ItemExternalStorage(context, () -> {
+            if (!tile.getWorld().isBlockPresent(tile.getPos())) {
+                return null;
+            }
+
+            return WorldUtils.getItemHandler(tile, direction.getOpposite());
+        }, tile instanceof InterfaceTile);
     }
 
     @Override

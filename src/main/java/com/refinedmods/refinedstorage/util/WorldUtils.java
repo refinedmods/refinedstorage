@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public final class WorldUtils {
     public static void updateBlock(@Nullable World world, BlockPos pos) {
-        if (world != null) {
+        if (world != null && world.isBlockPresent(pos)) {
             BlockState state = world.getBlockState(pos);
 
             world.notifyBlockUpdate(pos, state, state, 1 | 2);

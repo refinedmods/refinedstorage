@@ -61,7 +61,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (powered != wasPowered) {
+        if (powered != wasPowered && world.isBlockPresent(pos)) {
             wasPowered = powered;
 
             world.setBlockState(pos, world.getBlockState(pos).with(DetectorBlock.POWERED, powered));

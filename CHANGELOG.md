@@ -2,6 +2,7 @@
 
 ### 1.9.2
 - Fixed crash with Forge version 67 (Darkere)
+- Fixed cases where Refined Storage unwillingly acts like a chunkloader (raoulvdberge)
 - Networks that are in a chunk that isn't loaded will no longer work, they will turn off. Chunkload the Controller to maintain a functioning network over long distances (Darkere/raoulvdberge)
 - Re-added interdimensional networks with the Network Transmitter and Network Receiver (raoulvdberge)
 

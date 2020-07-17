@@ -12,14 +12,14 @@ public enum RedstoneMode {
 
     private static final String NBT = "RedstoneMode";
 
-    public boolean isEnabled(World world, BlockPos pos) {
+    public boolean isEnabled(boolean powered) {
         switch (this) {
             case IGNORE:
                 return true;
             case HIGH:
-                return world.isBlockPowered(pos);
+                return powered;
             case LOW:
-                return !world.isBlockPowered(pos);
+                return !powered;
             default:
                 return false;
         }

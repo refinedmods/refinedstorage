@@ -21,12 +21,12 @@ public interface IExternalStorageProvider<T> {
 
     /**
      * @param context   the context of the external storage
-     * @param tile      the tile supplier
+     * @param tile      the tile
      * @param direction the direction of the external storage
      * @return the external storage handler
      */
     @Nonnull
-    IExternalStorage<T> provide(IExternalStorageContext context, Supplier<TileEntity> tile, Direction direction);
+    IExternalStorage<T> provide(IExternalStorageContext context, TileEntity tile, Direction direction);
 
     /**
      * Returns the priority of this external storage provider.

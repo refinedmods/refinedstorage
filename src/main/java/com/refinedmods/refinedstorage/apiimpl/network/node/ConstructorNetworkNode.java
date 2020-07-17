@@ -77,7 +77,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
+        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0 && world.isBlockPresent(pos)) {
             if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
                 ItemStack stack = itemFilters.getStackInSlot(0);
 

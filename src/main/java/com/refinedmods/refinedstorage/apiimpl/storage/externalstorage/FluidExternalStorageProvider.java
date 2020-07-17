@@ -20,8 +20,14 @@ public class FluidExternalStorageProvider implements IExternalStorageProvider<Fl
 
     @Nonnull
     @Override
-    public IExternalStorage<FluidStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, Direction direction) {
-        return new FluidExternalStorage(context, () -> WorldUtils.getFluidHandler(tile.get(), direction.getOpposite()), tile.get() instanceof FluidInterfaceTile);
+    public IExternalStorage<FluidStack> provide(IExternalStorageContext context, TileEntity tile, Direction direction) {
+        return new FluidExternalStorage(context, () -> {
+            if (!tile.getWorld().isBlockPresent(tile.getPos())) {
+                return null;
+            }
+
+            return WorldUtils.getFluidHandler(tile, direction.getOpposite());
+        }, tile instanceof FluidInterfaceTile);
     }
 
     @Override

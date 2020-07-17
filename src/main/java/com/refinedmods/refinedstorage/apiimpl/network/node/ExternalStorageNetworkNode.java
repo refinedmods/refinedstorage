@@ -85,7 +85,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     public void update() {
         super.update();
 
-        if (canUpdate()) {
+        if (canUpdate() && world.isBlockPresent(pos)) {
             if (networkTicks++ == 0) {
                 updateStorage(network, InvalidateCause.INITIAL_TICK_INVALIDATION);
 
@@ -214,7 +214,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
             if (type == IType.ITEMS) {
                 for (IExternalStorageProvider<ItemStack> provider : API.instance().getExternalStorageProviders(StorageType.ITEM)) {
                     if (provider.canProvide(facing, getDirection())) {
-                        itemStorages.add(provider.provide(this, this::getFacingTile, getDirection()));
+                        itemStorages.add(provider.provide(this, getFacingTile(), getDirection()));
 
                         break;
                     }
@@ -222,7 +222,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
             } else if (type == IType.FLUIDS) {
                 for (IExternalStorageProvider<FluidStack> provider : API.instance().getExternalStorageProviders(StorageType.FLUID)) {
                     if (provider.canProvide(facing, getDirection())) {
-                        fluidStorages.add(provider.provide(this, this::getFacingTile, getDirection()));
+                        fluidStorages.add(provider.provide(this, getFacingTile(), getDirection()));
 
                         break;
                     }
