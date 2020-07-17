@@ -188,7 +188,7 @@ public class ItemGridHandler implements IItemGridHandler {
                         player,
                         new GridCraftingPreviewResponseMessage(
                             factoryId,
-                            task.getPreviewStacks(),
+                            task.getPreviewElements(),
                             id,
                             quantity,
                             false

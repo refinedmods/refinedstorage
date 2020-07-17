@@ -130,7 +130,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                         player,
                         new GridCraftingPreviewResponseMessage(
                             factoryId,
-                            task.getPreviewStacks(),
+                            task.getPreviewElements(),
                             id,
                             quantity,
                             true
