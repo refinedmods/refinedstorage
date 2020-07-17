@@ -4,7 +4,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.network.INetwork;
-import com.refinedmods.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -100,26 +99,15 @@ public interface ICraftingTask {
     long getExecutionStarted();
 
     /**
-     * @return the missing items
-     */
-    IStackList<ItemStack> getMissing();
-
-    /**
-     * @return the missing fluids
-     */
-    IStackList<FluidStack> getMissingFluids();
-
-    /**
      * @return true if any items or fluids are missing, false otherwise
      */
-    default boolean hasMissing() {
-        return !getMissing().isEmpty() || !getMissingFluids().isEmpty();
-    }
+    boolean hasMissing();
 
     /**
      * @return the id of this task
      */
     UUID getId();
+
     /**
      * Start the CraftingTask
      */

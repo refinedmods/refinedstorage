@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PossibleInputs {
@@ -10,7 +11,7 @@ public class PossibleInputs {
     private int pos;
 
     public PossibleInputs(List<ItemStack> possibilities) {
-        this.possibilities = possibilities;
+        this.possibilities = new ArrayList<>(possibilities);
     }
 
     public ItemStack get() {

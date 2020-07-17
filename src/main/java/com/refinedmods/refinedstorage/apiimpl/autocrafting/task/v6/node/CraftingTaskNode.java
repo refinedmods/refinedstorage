@@ -54,7 +54,7 @@ public abstract class CraftingTaskNode {
         }
     }
 
-    public static CraftingTaskNode createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public static CraftingTaskNode fromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingCraftingTaskNode(network, tag) : new RecipeCraftingTaskNode(network, tag);
     }
 
