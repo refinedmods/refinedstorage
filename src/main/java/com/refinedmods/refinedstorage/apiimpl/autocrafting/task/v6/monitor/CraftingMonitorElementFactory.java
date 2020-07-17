@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.monitor;
 
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -20,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class CraftingMonitorElementFactory {
-    public List<ICraftingMonitorElement> getList(Collection<CraftingTaskNode> nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+    public List<ICraftingMonitorElement> getElements(Collection<CraftingTaskNode> nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
         ICraftingMonitorElementList list = API.instance().createCraftingMonitorElementList();
 
         for (CraftingTaskNode node : nodes) {

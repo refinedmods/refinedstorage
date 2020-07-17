@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskCalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
@@ -36,7 +36,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class CraftingPreviewScreen extends BaseScreen<Container> {
     private static final int VISIBLE_ROWS = 5;
@@ -90,7 +89,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     }
 
     @Nullable
-    private CraftingTaskErrorType getErrorType() {
+    private CraftingTaskCalculationResultType getErrorType() {
         if (stacks.size() == 1 && stacks.get(0) instanceof ErrorCraftingPreviewElement) {
             return ((ErrorCraftingPreviewElement) stacks.get(0)).getType();
         }

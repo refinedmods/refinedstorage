@@ -1,9 +1,13 @@
 package com.refinedmods.refinedstorage.api.autocrafting.task;
 
 /**
- * The error type.
+ * The result type.
  */
-public enum CraftingTaskErrorType {
+public enum CraftingTaskCalculationResultType {
+    /**
+     * No problems.
+     */
+    OK,
     /**
      * When the crafting task would cause too much server strain or is too complex.
      */
@@ -11,5 +15,5 @@ public enum CraftingTaskErrorType {
     /**
      * When one of the used patterns during the calculation reuses itself again and would cause an infinite loop.
      */
-    RECURSIVE
+    RECURSIVE;
 }

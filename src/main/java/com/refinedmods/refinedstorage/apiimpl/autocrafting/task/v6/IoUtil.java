@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
 
+import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
@@ -14,10 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -117,5 +115,57 @@ public class IoUtil {
             }
         }
         return true;
+    }
+
+    public static void extractItemsFromNetwork(IStackList<ItemStack> toExtractInitial, INetwork network, IStorageDisk<ItemStack> internalStorage) {
+        if (toExtractInitial.isEmpty()) {
+            return;
+        }
+
+        List<ItemStack> toRemove = new ArrayList<>();
+
+        for (StackListEntry<ItemStack> toExtract : toExtractInitial.getStacks()) {
+            ItemStack result = network.extractItem(toExtract.getStack(), toExtract.getStack().getCount(), Action.PERFORM);
+
+            if (!result.isEmpty()) {
+                internalStorage.insert(toExtract.getStack(), result.getCount(), Action.PERFORM);
+
+                toRemove.add(result);
+            }
+        }
+
+        for (ItemStack stack : toRemove) {
+            toExtractInitial.remove(stack);
+        }
+
+        if (!toRemove.isEmpty()) {
+            network.getCraftingManager().onTaskChanged();
+        }
+    }
+
+    public static void extractFluidsFromNetwork(IStackList<FluidStack> toExtractInitial, INetwork network, IStorageDisk<FluidStack> internalStorage) {
+        if (toExtractInitial.isEmpty()) {
+            return;
+        }
+
+        List<FluidStack> toRemove = new ArrayList<>();
+
+        for (StackListEntry<FluidStack> toExtract : toExtractInitial.getStacks()) {
+            FluidStack result = network.extractFluid(toExtract.getStack(), toExtract.getStack().getAmount(), Action.PERFORM);
+
+            if (!result.isEmpty()) {
+                internalStorage.insert(toExtract.getStack(), result.getAmount(), Action.PERFORM);
+
+                toRemove.add(result);
+            }
+        }
+
+        for (FluidStack stack : toRemove) {
+            toExtractInitial.remove(stack);
+        }
+
+        if (!toRemove.isEmpty()) {
+            network.getCraftingManager().onTaskChanged();
+        }
     }
 }

@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.grid.handler;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskCalculationResult;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
@@ -106,16 +106,16 @@ public class FluidGridHandler implements IFluidGridHandler {
                     return;
                 }
 
-                ICraftingTaskError error = task.calculate();
+                ICraftingTaskCalculationResult result = task.calculate();
 
                 ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
 
-                if (error != null) {
+                if (!result.isOk()) {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
                             factoryId,
-                            Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
+                            Collections.singletonList(new ErrorCraftingPreviewElement(result.getType(), result.getRecursedPattern() == null ? ItemStack.EMPTY : result.getRecursedPattern().getStack())),
                             id,
                             quantity,
                             true
@@ -157,8 +157,8 @@ public class FluidGridHandler implements IFluidGridHandler {
                 return;
             }
 
-            ICraftingTaskError error = task.calculate();
-            if (error == null && !task.hasMissing()) {
+            ICraftingTaskCalculationResult result = task.calculate();
+            if (result.isOk() && !task.hasMissing()) {
                 network.getCraftingManager().start(task);
             }
         }

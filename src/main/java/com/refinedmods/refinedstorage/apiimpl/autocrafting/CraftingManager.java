@@ -7,13 +7,12 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskCalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -252,9 +251,9 @@ public class CraftingManager implements ICraftingManager {
             ICraftingTask task = create(stack, amount);
 
             if (task != null) {
-                ICraftingTaskError error = task.calculate();
+                ICraftingTaskCalculationResult result = task.calculate();
 
-                if (error == null && !task.hasMissing()) {
+                if (result.isOk() && !task.hasMissing()) {
                     this.start(task);
 
                     return task;
@@ -288,9 +287,9 @@ public class CraftingManager implements ICraftingManager {
             ICraftingTask task = create(stack, amount);
 
             if (task != null) {
-                ICraftingTaskError error = task.calculate();
+                ICraftingTaskCalculationResult result = task.calculate();
 
-                if (error == null && !task.hasMissing()) {
+                if (result.isOk() && !task.hasMissing()) {
                     this.start(task);
 
                     return task;

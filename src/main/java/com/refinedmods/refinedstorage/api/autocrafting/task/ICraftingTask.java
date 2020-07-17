@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,10 +18,9 @@ public interface ICraftingTask {
     /**
      * Calculates what this task will do, but doesn't run the task yet.
      *
-     * @return the error, or null if there was no error
+     * @return the result
      */
-    @Nullable
-    ICraftingTaskError calculate();
+    ICraftingTaskCalculationResult calculate();
 
     /**
      * Updates this task.
