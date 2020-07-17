@@ -170,6 +170,18 @@ public abstract class Craft {
         int perCraft;
         public Map<Integer, Integer> amountPerSlot = new HashMap<>();
 
+        Ingredient() {
+        }
+
+        public Ingredient(CompoundNBT nbt) throws CraftingTaskReadException {
+            storage = CraftingTask.readItemStackList(nbt.getList(NBT_INGREDIENT_STORAGE, Constants.NBT.TAG_COMPOUND));
+            perCraft = nbt.getInt(NBT_NEEDED_PER_CRAFT);
+            List<Integer> ints = Ints.asList(nbt.getIntArray(NBT_AMOUNTS_PER_SLOT));
+            for (int i = 0; i < ints.size(); i += 2) {
+                amountPerSlot.put(ints.get(i), ints.get(i + 1));
+            }
+        }
+
         public int calculatePerCraft() {
             int maxSlot = 0;
             for (Map.Entry<Integer, Integer> entry : amountPerSlot.entrySet()) {
@@ -178,8 +190,6 @@ public abstract class Craft {
             }
             return maxSlot;
         }
-
-        Ingredient(){}
 
         //Extracts perCraft items from Storage
         IStackList<ItemStack> getIngredients(boolean simulate) {
@@ -218,13 +228,6 @@ public abstract class Craft {
             return tag;
         }
 
-        public Ingredient(CompoundNBT nbt) throws CraftingTaskReadException {
-            storage = CraftingTask.readItemStackList(nbt.getList(NBT_INGREDIENT_STORAGE, Constants.NBT.TAG_COMPOUND));
-            perCraft = nbt.getInt(NBT_NEEDED_PER_CRAFT);
-            List<Integer> ints = Ints.asList(nbt.getIntArray(NBT_AMOUNTS_PER_SLOT));
-            for (int i = 0; i < ints.size(); i += 2) {
-                amountPerSlot.put(ints.get(i), ints.get(i + 1));
-            }
-        }
+
     }
 }
