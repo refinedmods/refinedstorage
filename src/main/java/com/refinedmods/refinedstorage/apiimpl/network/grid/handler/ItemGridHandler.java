@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid.handler;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskCalculationResult;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
@@ -164,7 +164,7 @@ public class ItemGridHandler implements IItemGridHandler {
                     return;
                 }
 
-                ICraftingTaskCalculationResult result = task.calculate();
+                ICalculationResult result = task.calculate();
 
                 ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
 
@@ -215,7 +215,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 return;
             }
 
-            ICraftingTaskCalculationResult result = task.calculate();
+            ICalculationResult result = task.calculate();
             if (result.isOk() && !task.hasMissing()) {
                 network.getCraftingManager().start(task);
             }

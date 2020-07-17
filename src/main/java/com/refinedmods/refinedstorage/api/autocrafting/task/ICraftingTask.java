@@ -20,7 +20,7 @@ public interface ICraftingTask {
      *
      * @return the result
      */
-    ICraftingTaskCalculationResult calculate();
+    ICalculationResult calculate();
 
     /**
      * Updates this task.

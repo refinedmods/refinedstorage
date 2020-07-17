@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.api.autocrafting.task;
 /**
  * The result type.
  */
-public enum CraftingTaskCalculationResultType {
+public enum CalculationResultType {
     /**
      * No problems.
      */

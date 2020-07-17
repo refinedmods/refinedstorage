@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskCalculationResultType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
@@ -89,7 +89,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     }
 
     @Nullable
-    private CraftingTaskCalculationResultType getErrorType() {
+    private CalculationResultType getErrorType() {
         if (stacks.size() == 1 && stacks.get(0) instanceof ErrorCraftingPreviewElement) {
             return ((ErrorCraftingPreviewElement) stacks.get(0)).getType();
         }

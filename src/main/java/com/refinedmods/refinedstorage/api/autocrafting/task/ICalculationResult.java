@@ -7,11 +7,11 @@ import javax.annotation.Nullable;
 /**
  * Returned from {@link ICraftingTask#calculate()} to indicate the result of the calculation.
  */
-public interface ICraftingTaskCalculationResult {
+public interface ICalculationResult {
     /**
      * @return the type
      */
-    CraftingTaskCalculationResultType getType();
+    CalculationResultType getType();
 
     /**
      * @return whether the calculation succeeded
@@ -19,9 +19,9 @@ public interface ICraftingTaskCalculationResult {
     boolean isOk();
 
     /**
-     * If this result type is a {@link CraftingTaskCalculationResultType#RECURSIVE}, the recursed pattern will be returned here.
+     * If this result type is a {@link CalculationResultType#RECURSIVE}, the recursed pattern will be returned here.
      *
-     * @return the recursed pattern, or null if this result is not {@link CraftingTaskCalculationResultType#RECURSIVE}
+     * @return the recursed pattern, or null if this result is not {@link CalculationResultType#RECURSIVE}
      */
     @Nullable
     ICraftingPattern getRecursedPattern();

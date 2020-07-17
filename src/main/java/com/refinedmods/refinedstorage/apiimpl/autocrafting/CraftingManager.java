@@ -6,8 +6,8 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternChainList
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskCalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
@@ -251,7 +251,7 @@ public class CraftingManager implements ICraftingManager {
             ICraftingTask task = create(stack, amount);
 
             if (task != null) {
-                ICraftingTaskCalculationResult result = task.calculate();
+                ICalculationResult result = task.calculate();
 
                 if (result.isOk() && !task.hasMissing()) {
                     this.start(task);
@@ -287,7 +287,7 @@ public class CraftingManager implements ICraftingManager {
             ICraftingTask task = create(stack, amount);
 
             if (task != null) {
-                ICraftingTaskCalculationResult result = task.calculate();
+                ICalculationResult result = task.calculate();
 
                 if (result.isOk() && !task.hasMissing()) {
                     this.start(task);
