@@ -17,7 +17,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ProcessingCraftingTaskNode extends CraftingTaskNode {
+public class ProcessingNode extends Node {
     private static final String NBT_ITEMS_TO_RECEIVE = "ItemsToReceive";
     private static final String NBT_FLUIDS_TO_RECEIVE = "FluidsToReceive";
     private static final String NBT_FLUIDS_TO_USE = "FluidsToUse";
@@ -38,11 +38,11 @@ public class ProcessingCraftingTaskNode extends CraftingTaskNode {
     private int finished;
     private int totalQuantity;
 
-    public ProcessingCraftingTaskNode(ICraftingPattern pattern, boolean root) {
+    public ProcessingNode(ICraftingPattern pattern, boolean root) {
         super(pattern, root);
     }
 
-    public ProcessingCraftingTaskNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public ProcessingNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
         this.itemsToReceive = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.fluidsToReceive = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
@@ -55,7 +55,7 @@ public class ProcessingCraftingTaskNode extends CraftingTaskNode {
     }
 
     @Override
-    public void update(INetwork network, int ticks, CraftingTaskNodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
         if (getState() == ProcessingState.PROCESSED) {
             nodes.remove(this);
             network.getCraftingManager().onTaskChanged();

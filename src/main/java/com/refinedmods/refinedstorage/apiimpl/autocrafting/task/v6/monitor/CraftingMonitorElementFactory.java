@@ -9,9 +9,9 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.Error
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.FluidCraftingMonitorElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.ItemCraftingMonitorElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.ProcessingState;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingTaskNode;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingCraftingTaskNode;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.RecipeCraftingTaskNode;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingNode;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingNode;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -19,14 +19,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class CraftingMonitorElementFactory {
-    public List<ICraftingMonitorElement> getElements(Collection<CraftingTaskNode> nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+    public List<ICraftingMonitorElement> getElements(Collection<Node> nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
         ICraftingMonitorElementList list = API.instance().createCraftingMonitorElementList();
 
-        for (CraftingTaskNode node : nodes) {
-            if (node instanceof RecipeCraftingTaskNode) {
-                addForRecipe(list, (RecipeCraftingTaskNode) node);
+        for (Node node : nodes) {
+            if (node instanceof CraftingNode) {
+                addForRecipe(list, (CraftingNode) node);
             } else {
-                addForProcessing(list, (ProcessingCraftingTaskNode) node);
+                addForProcessing(list, (ProcessingNode) node);
             }
         }
 
@@ -43,7 +43,7 @@ public class CraftingMonitorElementFactory {
         return list.getElements();
     }
 
-    private void addForProcessing(ICraftingMonitorElementList list, ProcessingCraftingTaskNode node) {
+    private void addForProcessing(ICraftingMonitorElementList list, ProcessingNode node) {
         if (node.getState() == ProcessingState.PROCESSED) {
             return;
         }
@@ -95,7 +95,7 @@ public class CraftingMonitorElementFactory {
         }
     }
 
-    private void addForRecipe(ICraftingMonitorElementList list, RecipeCraftingTaskNode node) {
+    private void addForRecipe(ICraftingMonitorElementList list, CraftingNode node) {
         if (node.getQuantity() > 0) {
             for (ItemStack receive : node.getPattern().getOutputs()) {
                 list.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount() * node.getQuantity()), false);

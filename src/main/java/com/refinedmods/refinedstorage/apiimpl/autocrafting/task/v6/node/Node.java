@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class CraftingTaskNode {
+public abstract class Node {
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_ROOT = "Root";
     private static final String NBT_IS_PROCESSING = "IsProcessing";
@@ -35,12 +35,12 @@ public abstract class CraftingTaskNode {
     private final Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
     private final Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
 
-    public CraftingTaskNode(ICraftingPattern pattern, boolean root) {
+    public Node(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
         this.root = root;
     }
 
-    public CraftingTaskNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public Node(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
         this.root = tag.getBoolean(NBT_ROOT);
@@ -54,11 +54,11 @@ public abstract class CraftingTaskNode {
         }
     }
 
-    public static CraftingTaskNode fromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingCraftingTaskNode(network, tag) : new RecipeCraftingTaskNode(network, tag);
+    public static Node fromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+        return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingNode(network, tag) : new CraftingNode(network, tag);
     }
 
-    public abstract void update(INetwork network, int ticks, CraftingTaskNodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage);
+    public abstract void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage);
 
     public ICraftingPattern getPattern() {
         return pattern;
@@ -107,7 +107,7 @@ public abstract class CraftingTaskNode {
                     }
                 }
             } else {
-                LogManager.getLogger(CraftingTaskNode.class).warn("Craft requested more Items than available");
+                LogManager.getLogger(Node.class).warn("Craft requested more Items than available");
                 this.quantity = 0; // stop crafting
                 break;
             }
@@ -128,7 +128,7 @@ public abstract class CraftingTaskNode {
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = new CompoundNBT();
         tag.putInt(NBT_QUANTITY, quantity);
-        tag.putBoolean(NBT_IS_PROCESSING, this instanceof ProcessingCraftingTaskNode);
+        tag.putBoolean(NBT_IS_PROCESSING, this instanceof ProcessingNode);
         tag.putBoolean(NBT_ROOT, root);
         tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
         ListNBT list = new ListNBT();

@@ -15,16 +15,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
-public class RecipeCraftingTaskNode extends CraftingTaskNode {
+public class CraftingNode extends Node {
     private static final String NBT_RECIPE = "Recipe";
     private final NonNullList<ItemStack> recipe;
 
-    public RecipeCraftingTaskNode(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
+    public CraftingNode(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
         super(pattern, root);
         this.recipe = recipe;
     }
 
-    public RecipeCraftingTaskNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public CraftingNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
         this.recipe = NonNullList.create();
         ListNBT tookList = tag.getList(NBT_RECIPE, Constants.NBT.TAG_COMPOUND);
@@ -37,7 +37,7 @@ public class RecipeCraftingTaskNode extends CraftingTaskNode {
     }
 
     @Override
-    public void update(INetwork network, int ticks, CraftingTaskNodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
         for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
             int interval = container.getUpdateInterval();
             if (interval < 0) {
