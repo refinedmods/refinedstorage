@@ -17,22 +17,23 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class CraftingNode extends Node {
     private static final String NBT_RECIPE = "Recipe";
+
     private final NonNullList<ItemStack> recipe;
 
     public CraftingNode(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
         super(pattern, root);
+
         this.recipe = recipe;
     }
 
     public CraftingNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
+
         this.recipe = NonNullList.create();
+
         ListNBT tookList = tag.getList(NBT_RECIPE, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tookList.size(); ++i) {
-            ItemStack stack = StackUtils.deserializeStackFromNbt(tookList.getCompound(i));
-
-            // Can be empty.
-            recipe.add(stack);
+            recipe.add(StackUtils.deserializeStackFromNbt(tookList.getCompound(i)));
         }
     }
 
@@ -54,7 +55,7 @@ public class CraftingNode extends Node {
                     if (IoUtil.extractFromInternalItemStorage(getItemsToUse(true).getStacks(), internalStorage, Action.SIMULATE) != null) {
                         IoUtil.extractFromInternalItemStorage(getItemsToUse(false).getStacks(), internalStorage, Action.PERFORM);
 
-                        ItemStack output = getPattern().getOutput(getRecipe());
+                        ItemStack output = getPattern().getOutput(recipe);
 
                         if (!isRoot()) {
                             internalStorage.insert(output, output.getCount(), Action.PERFORM);
@@ -66,7 +67,7 @@ public class CraftingNode extends Node {
 
                         // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
                         // Regular outputs can be inserted into the network *IF* it's a root since it's *NOT* expected to be used later on.
-                        for (ItemStack byp : getPattern().getByproducts(getRecipe())) {
+                        for (ItemStack byp : getPattern().getByproducts(recipe)) {
                             internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                         }
 
@@ -81,10 +82,12 @@ public class CraftingNode extends Node {
         }
     }
 
-    public NonNullList<ItemStack> getRecipe() {
-        return recipe;
+    @Override
+    public void onCalculationFinished() {
+        // NO OP
     }
 
+    @Override
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
 

@@ -57,7 +57,7 @@ public class CraftingTask implements ICraftingTask {
     private final IStackList<FluidStack> toExtractInitialFluids;
 
     private int ticks;
-    private long executionStarted = -1;
+    private long startTime = -1;
     private int totalSteps;
     private int currentStep;
 
@@ -95,7 +95,7 @@ public class CraftingTask implements ICraftingTask {
         this.nodes = new NodeList();
 
         this.ticks = tag.getInt(NBT_TICKS);
-        this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
+        this.startTime = tag.getLong(NBT_EXECUTION_STARTED);
         this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
         this.currentStep = tag.getInt(NBT_CURRENT_STEP);
 
@@ -119,7 +119,7 @@ public class CraftingTask implements ICraftingTask {
         tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
         tag.putInt(NBT_TICKS, ticks);
         tag.putUniqueId(NBT_ID, id);
-        tag.putLong(NBT_EXECUTION_STARTED, executionStarted);
+        tag.putLong(NBT_EXECUTION_STARTED, startTime);
         tag.put(NBT_INTERNAL_STORAGE, internalStorage.writeToNbt());
         tag.put(NBT_INTERNAL_FLUID_STORAGE, internalFluidStorage.writeToNbt());
         tag.put(NBT_TO_EXTRACT_INITIAL, SerializationUtil.writeItemStackList(toExtractInitial));
@@ -140,10 +140,11 @@ public class CraftingTask implements ICraftingTask {
     public void start() {
         nodes.all().forEach(node -> {
             totalSteps += node.getQuantity();
-            node.finishCalculation();
+
+            node.onCalculationFinished();
         });
 
-        executionStarted = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
         IoUtil.extractItemsFromNetwork(toExtractInitial, network, internalStorage);
         IoUtil.extractFluidsFromNetwork(toExtractInitialFluids, network, internalFluidStorage);
@@ -306,8 +307,8 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public long getExecutionStarted() {
-        return executionStarted;
+    public long getStartTime() {
+        return startTime;
     }
 
     @Override

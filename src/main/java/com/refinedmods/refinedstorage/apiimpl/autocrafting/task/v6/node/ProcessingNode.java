@@ -155,8 +155,9 @@ public class ProcessingNode extends Node {
     }
 
     @Override
-    public void finishCalculation() {
+    public void onCalculationFinished() {
         this.totalQuantity = quantity;
+
         updateItemsToDisplay();
     }
 
@@ -186,7 +187,7 @@ public class ProcessingNode extends Node {
         int fin = finished;
         updateFinishedPatterns();
         if (finished == totalQuantity) {
-            this.setState(ProcessingState.PROCESSED);
+            setState(ProcessingState.PROCESSED);
         }
         return fin != finished;
     }
@@ -267,7 +268,7 @@ public class ProcessingNode extends Node {
         fluidsReceived.add(received, size);
     }
 
-    public void setState(ProcessingState state) {
+    private void setState(ProcessingState state) {
         this.state = state;
     }
 
@@ -279,6 +280,7 @@ public class ProcessingNode extends Node {
         return !fluidsToUse.isEmpty();
     }
 
+    @Override
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
         tag.put(NBT_ITEMS_TO_RECEIVE, SerializationUtil.writeItemStackList(itemsToReceive));

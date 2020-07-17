@@ -74,9 +74,9 @@ public interface ICraftingTask {
     ICraftingPattern getPattern();
 
     /**
-     * @return the time in ms when this task has started
+     * @return the unix time in ms when this task has started
      */
-    long getExecutionStarted();
+    long getStartTime();
 
     /**
      * @return the id of this task

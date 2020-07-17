@@ -83,7 +83,7 @@ public class CraftingMonitorUpdateMessage {
             buf.writeUniqueId(task.getId());
             buf.writeCompoundTag(task.getRequested().writeToNbt());
             buf.writeInt(task.getQuantity());
-            buf.writeLong(task.getExecutionStarted());
+            buf.writeLong(task.getStartTime());
             buf.writeInt(task.getCompletionPercentage());
 
             List<ICraftingMonitorElement> elements = task.getCraftingMonitorElements();

@@ -30,10 +30,11 @@ public abstract class Node {
     private static final String NBT_NEEDED_PER_CRAFT = "NeededPerCraft";
 
     private final boolean root;
-    protected int quantity;
     private final ICraftingPattern pattern;
     private final Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
     private final Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
+
+    protected int quantity;
 
     public Node(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
@@ -44,10 +45,12 @@ public abstract class Node {
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
         this.root = tag.getBoolean(NBT_ROOT);
+
         ListNBT list = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
         for (int i = 0; i < list.size(); i++) {
             this.itemsToUse.put(i, SerializationUtil.readItemStackList(list.getList(i)));
         }
+
         List<Integer> perCraftList = Ints.asList(tag.getIntArray(NBT_NEEDED_PER_CRAFT));
         for (int i = 0; i < perCraftList.size(); i++) {
             neededPerCraft.put(i, perCraftList.get(i));
@@ -59,6 +62,8 @@ public abstract class Node {
     }
 
     public abstract void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage);
+
+    public abstract void onCalculationFinished();
 
     public ICraftingPattern getPattern() {
         return pattern;
@@ -72,7 +77,7 @@ public abstract class Node {
         this.quantity += quantity;
     }
 
-    public void next() {
+    protected void next() {
         quantity--;
     }
 
@@ -80,12 +85,13 @@ public abstract class Node {
         return root;
     }
 
-    public boolean hasItems() {
+    protected boolean hasItems() {
         return !itemsToUse.isEmpty();
     }
 
-    public IStackList<ItemStack> getItemsToUse(boolean simulate) {
+    protected IStackList<ItemStack> getItemsToUse(boolean simulate) {
         IStackList<ItemStack> toReturn = API.instance().createItemStackList();
+
         for (int i = 0; i < itemsToUse.size(); i++) {
             int needed = neededPerCraft.get(i);
             if (!itemsToUse.get(i).isEmpty()) {
@@ -119,30 +125,30 @@ public abstract class Node {
         if (!neededPerCraft.containsKey(ingredientNumber)) {
             neededPerCraft.put(ingredientNumber, perCraft);
         }
+
         if (!itemsToUse.containsKey(ingredientNumber)) {
             itemsToUse.put(ingredientNumber, API.instance().createItemStackList());
         }
+
         itemsToUse.get(ingredientNumber).add(stack, size);
     }
 
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = new CompoundNBT();
+
         tag.putInt(NBT_QUANTITY, quantity);
         tag.putBoolean(NBT_IS_PROCESSING, this instanceof ProcessingNode);
         tag.putBoolean(NBT_ROOT, root);
         tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
-        ListNBT list = new ListNBT();
-        for (IStackList<ItemStack> stackList : itemsToUse.values()) {
-            list.add(SerializationUtil.writeItemStackList(stackList));
+
+        ListNBT itemsToUse = new ListNBT();
+        for (IStackList<ItemStack> stackList : this.itemsToUse.values()) {
+            itemsToUse.add(SerializationUtil.writeItemStackList(stackList));
         }
-        tag.put(NBT_ITEMS_TO_USE, list);
+        tag.put(NBT_ITEMS_TO_USE, itemsToUse);
+
         tag.putIntArray(NBT_NEEDED_PER_CRAFT, Ints.toArray(neededPerCraft.values()));
 
-
         return tag;
-    }
-
-    public void finishCalculation() {
-        //NOOP
     }
 }
