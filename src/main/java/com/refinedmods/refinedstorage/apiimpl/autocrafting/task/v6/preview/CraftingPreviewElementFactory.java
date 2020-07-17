@@ -16,10 +16,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CraftingTaskPreviewFactory {
+public class CraftingPreviewElementFactory {
     private final ICraftingTask craftingTask;
 
-    public CraftingTaskPreviewFactory(ICraftingTask craftingTask) {
+    public CraftingPreviewElementFactory(ICraftingTask craftingTask) {
         this.craftingTask = craftingTask;
     }
 

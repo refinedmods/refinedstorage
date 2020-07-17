@@ -4,7 +4,6 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.*;
 import com.refinedmods.refinedstorage.api.network.INetwork;
@@ -14,13 +13,11 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.ErrorCraftingMonitorElement;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.FluidCraftingMonitorElement;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.ItemCraftingMonitorElement;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.monitor.CraftingMonitorElementFactory;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingTaskNode;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingCraftingTaskNode;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.RecipeCraftingTaskNode;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingTaskPreviewFactory;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingPreviewElementFactory;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
@@ -67,7 +64,7 @@ public class CraftingTask implements ICraftingTask {
     private long calculationStarted = -1;
     private long executionStarted = -1;
     private int totalSteps;
-    private int currentstep;
+    private int currentStep;
     private final Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
     private final IStorageDisk<ItemStack> internalStorage;
@@ -76,8 +73,8 @@ public class CraftingTask implements ICraftingTask {
     private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
     private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
 
-    private final Map<ICraftingPattern, CraftingTaskNode> crafts = new LinkedHashMap<>();
-    private final List<CraftingTaskNode> toRemove = new ArrayList<>();
+    private final Map<ICraftingPattern, CraftingTaskNode> nodes = new LinkedHashMap<>();
+    private final List<CraftingTaskNode> nodesToRemove = new ArrayList<>();
 
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
     private IStackList<FluidStack> missingFluids = API.instance().createFluidStackList();
@@ -88,7 +85,8 @@ public class CraftingTask implements ICraftingTask {
     private final List<ItemStack> toCraft = new ArrayList<>();
     private final List<FluidStack> toCraftFluids = new ArrayList<>();
 
-    private final CraftingTaskPreviewFactory previewFactory = new CraftingTaskPreviewFactory(this);
+    private final CraftingPreviewElementFactory craftingPreviewElementFactory = new CraftingPreviewElementFactory(this);
+    private final CraftingMonitorElementFactory craftingMonitorElementFactory = new CraftingMonitorElementFactory();
 
     public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
@@ -110,7 +108,7 @@ public class CraftingTask implements ICraftingTask {
         this.id = tag.getUniqueId(NBT_ID);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
         this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
-        this.currentstep = tag.getInt(NBT_CURRENT_STEP);
+        this.currentStep = tag.getInt(NBT_CURRENT_STEP);
 
         ItemStorageDiskFactory factoryItem = new ItemStorageDiskFactory();
         FluidStorageDiskFactory factoryFluid = new FluidStorageDiskFactory();
@@ -124,7 +122,7 @@ public class CraftingTask implements ICraftingTask {
         ListNBT craftList = tag.getList(NBT_CRAFTS, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < craftList.size(); ++i) {
             CraftingTaskNode c = CraftingTaskNode.createCraftFromNBT(network, craftList.getCompound(i));
-            crafts.put(c.getPattern(), c);
+            nodes.put(c.getPattern(), c);
         }
 
         this.missing = SerializationUtil.readItemStackList(tag.getList(NBT_MISSING, Constants.NBT.TAG_COMPOUND));
@@ -144,10 +142,10 @@ public class CraftingTask implements ICraftingTask {
         tag.put(NBT_TO_EXTRACT_INITIAL, SerializationUtil.writeItemStackList(toExtractInitial));
         tag.put(NBT_TO_EXTRACT_INITIAL_FLUIDS, SerializationUtil.writeFluidStackList(toExtractInitialFluids));
         tag.putInt(NBT_TOTAL_STEPS, totalSteps);
-        tag.putInt(NBT_CURRENT_STEP, currentstep);
+        tag.putInt(NBT_CURRENT_STEP, currentStep);
 
         ListNBT craftingList = new ListNBT();
-        for (CraftingTaskNode craft : this.crafts.values()) {
+        for (CraftingTaskNode craft : this.nodes.values()) {
             craftingList.add(craft.writeToNbt());
         }
         tag.put(NBT_CRAFTS, craftingList);
@@ -224,10 +222,10 @@ public class CraftingTask implements ICraftingTask {
         List<Pair<NonNullList<ItemStack>, Integer>> ingredients = new ArrayList<>();
 
         combineCommonStacks(recipe, ingredients, pattern);
-        CraftingTaskNode craft = crafts.get(pattern);
+        CraftingTaskNode craft = nodes.get(pattern);
         if (craft == null) {
             craft = pattern.isProcessing() ? new ProcessingCraftingTaskNode(pattern, root) : new RecipeCraftingTaskNode(pattern, root, recipe);
-            crafts.put(pattern, craft);
+            nodes.put(pattern, craft);
         }
         craft.addQuantity(qty);
 
@@ -448,7 +446,7 @@ public class CraftingTask implements ICraftingTask {
             return;
         }
 
-        crafts.values().forEach(craft -> {
+        nodes.values().forEach(craft -> {
             totalSteps += craft.getQuantity();
             craft.finishCalculation();
         });
@@ -549,7 +547,7 @@ public class CraftingTask implements ICraftingTask {
                 for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
 
                     if (c.getQuantity() <= 0) {
-                        toRemove.add(c);
+                        nodesToRemove.add(c);
                         return;
                     }
 
@@ -574,7 +572,7 @@ public class CraftingTask implements ICraftingTask {
                         }
 
                         c.next();
-                        currentstep++;
+                        currentStep++;
                         network.getCraftingManager().onTaskChanged();
                     } else {
                         break;
@@ -587,7 +585,7 @@ public class CraftingTask implements ICraftingTask {
     private void updateProcessing(ProcessingCraftingTaskNode p) {
 
         if (p.getState() == ProcessingState.PROCESSED) {
-            toRemove.add(p);
+            nodesToRemove.add(p);
             network.getCraftingManager().onTaskChanged();
             return;
         }
@@ -669,7 +667,7 @@ public class CraftingTask implements ICraftingTask {
                         IoUtil.insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
 
                         p.next();
-                        currentstep++;
+                        currentStep++;
                         network.getCraftingManager().onTaskChanged();
                         container.onUsedForProcessing();
 
@@ -689,7 +687,7 @@ public class CraftingTask implements ICraftingTask {
         if (totalSteps == 0) {
             return 0;
         }
-        return (int) ((float) currentstep * 100 / totalSteps);
+        return (int) ((float) currentStep * 100 / totalSteps);
     }
 
     @Override
@@ -702,7 +700,7 @@ public class CraftingTask implements ICraftingTask {
 
         ++ticks;
 
-        if (this.crafts.isEmpty()) {
+        if (this.nodes.isEmpty()) {
             List<Runnable> toPerform = new ArrayList<>();
 
             for (ItemStack stack : internalStorage.getStacks()) {
@@ -724,7 +722,7 @@ public class CraftingTask implements ICraftingTask {
         } else {
             extractInitial();
 
-            for (CraftingTaskNode craft : crafts.values()) {
+            for (CraftingTaskNode craft : nodes.values()) {
                 if (craft instanceof RecipeCraftingTaskNode) {
                     updateCrafting((RecipeCraftingTaskNode) craft);
                 } else {
@@ -732,10 +730,10 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
 
-            for (CraftingTaskNode craft : toRemove) {
-                crafts.remove(craft.getPattern());
+            for (CraftingTaskNode craft : nodesToRemove) {
+                nodes.remove(craft.getPattern());
             }
-            toRemove.clear();
+            nodesToRemove.clear();
 
             return false;
         }
@@ -743,7 +741,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void onCancelled() {
-        crafts.values().forEach(c -> {
+        nodes.values().forEach(c -> {
             if (c instanceof ProcessingCraftingTaskNode) {
                 network.getCraftingManager().getAllContainer(c.getPattern()).forEach(ICraftingPatternContainer::unlock);
             }
@@ -794,7 +792,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public int onTrackedInsert(ItemStack stack, int size) {
-        for (CraftingTaskNode craft : this.crafts.values()) {
+        for (CraftingTaskNode craft : this.nodes.values()) {
             if (craft instanceof ProcessingCraftingTaskNode) {
                 ProcessingCraftingTaskNode p = (ProcessingCraftingTaskNode) craft;
 
@@ -833,7 +831,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public int onTrackedInsert(FluidStack stack, int size) {
-        for (CraftingTaskNode craft : this.crafts.values()) {
+        for (CraftingTaskNode craft : this.nodes.values()) {
             if (craft instanceof ProcessingCraftingTaskNode) {
                 ProcessingCraftingTaskNode p = (ProcessingCraftingTaskNode) craft;
 
@@ -873,81 +871,12 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
-        ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
-
-        for (CraftingTaskNode craft : this.crafts.values()) {
-            if (craft instanceof RecipeCraftingTaskNode) {
-                if (craft.getQuantity() > 0) {
-                    RecipeCraftingTaskNode c = (RecipeCraftingTaskNode) craft;
-                    for (ItemStack receive : c.getPattern().getOutputs()) {
-                        elements.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount() * c.getQuantity()), false);
-                    }
-                }
-            } else {
-                ProcessingCraftingTaskNode p = (ProcessingCraftingTaskNode) craft;
-                if (p.getState() == ProcessingState.PROCESSED) {
-                    continue;
-                }
-
-                for (StackListEntry<ItemStack> put : p.getItemsToDisplay().getStacks()) {
-                    if (p.getProcessing() > 0 || p.getState() != ProcessingState.READY) {
-                        ICraftingMonitorElement element = new ItemCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getCount() * p.getProcessing(), 0, 0);
-
-                        if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_item");
-                        } else if (p.getState() == ProcessingState.MACHINE_NONE) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
-                        } else if (p.getState() == ProcessingState.LOCKED) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
-                        }
-                        elements.add(element, true);
-                    }
-                }
-                for (StackListEntry<ItemStack> receive : p.getItemsToReceive().getStacks()) {
-                    int count = p.getNeeded(receive.getStack());
-                    if (count > 0) {
-                        elements.add(new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0), true);
-                    }
-                }
-                for (StackListEntry<FluidStack> put : p.getFluidsToUse().getStacks()) {
-                    if (p.getProcessing() > 0 || p.getState() != ProcessingState.READY) {
-                        ICraftingMonitorElement element = new FluidCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getAmount() * p.getProcessing(), 0, 0);
-                        if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
-                        } else if (p.getState() == ProcessingState.MACHINE_NONE) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
-                        } else if (p.getState() == ProcessingState.LOCKED) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
-                        }
-                        elements.add(element, true);
-                    }
-                }
-
-                for (StackListEntry<FluidStack> receive : p.getFluidsToReceive().getStacks()) {
-                    int count = p.getNeeded(receive.getStack());
-                    if (count > 0) {
-                        elements.add(new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0), true);
-                    }
-                }
-            }
-        }
-
-        for (ItemStack stack : this.internalStorage.getStacks()) {
-            elements.addStorage(new ItemCraftingMonitorElement(stack, stack.getCount(), 0, 0, 0, 0));
-        }
-
-        for (FluidStack stack : this.internalFluidStorage.getStacks()) {
-            elements.addStorage(new FluidCraftingMonitorElement(stack, stack.getAmount(), 0, 0, 0, 0));
-        }
-
-        elements.commit();
-
-        return elements.getElements();
+        return craftingMonitorElementFactory.getList(nodes.values(), internalStorage, internalFluidStorage);
     }
 
     @Override
     public List<ICraftingPreviewElement<?>> getPreviewElements() {
-        return previewFactory.getElements(toCraft, toCraftFluids, toTake, toTakeFluids);
+        return craftingPreviewElementFactory.getElements(toCraft, toCraftFluids, toTake, toTakeFluids);
     }
 
     @Override
