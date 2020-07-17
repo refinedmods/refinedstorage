@@ -4,6 +4,7 @@ import com.google.common.primitives.Ints;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Iterator;
@@ -55,6 +57,8 @@ public abstract class CraftingTaskNode {
     public static CraftingTaskNode createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingCraftingTaskNode(network, tag) : new RecipeCraftingTaskNode(network, tag);
     }
+
+    public abstract void update(INetwork network, int ticks, CraftingTaskNodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage);
 
     public ICraftingPattern getPattern() {
         return pattern;

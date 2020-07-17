@@ -12,7 +12,7 @@ public class CraftingTaskNodeList {
     private final Map<ICraftingPattern, CraftingTaskNode> nodes = new LinkedHashMap<>();
     private final List<CraftingTaskNode> nodesToRemove = new ArrayList<>();
 
-    public void update() {
+    public void removeMarkedForRemoval() {
         for (CraftingTaskNode node : nodesToRemove) {
             nodes.remove(node.getPattern());
         }

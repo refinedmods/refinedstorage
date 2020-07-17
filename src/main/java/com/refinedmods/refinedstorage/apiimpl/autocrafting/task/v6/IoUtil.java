@@ -106,7 +106,7 @@ public class IoUtil {
         return success;
     }
 
-    static boolean insertIntoTank(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action) {
+    public static boolean insertIntoTank(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action) {
         for (StackListEntry<FluidStack> entry : toInsert) {
             int filled = dest.fill(entry.getStack(), action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
             if (filled != entry.getStack().getAmount()) {

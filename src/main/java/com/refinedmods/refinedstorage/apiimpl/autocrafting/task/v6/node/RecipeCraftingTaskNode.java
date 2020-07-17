@@ -36,6 +36,7 @@ public class RecipeCraftingTaskNode extends CraftingTaskNode {
         }
     }
 
+    @Override
     public void update(INetwork network, int ticks, CraftingTaskNodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
         for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
             int interval = container.getUpdateInterval();

@@ -1,11 +1,15 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
+import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.ProcessingState;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
 import net.minecraft.item.ItemStack;
@@ -48,6 +52,106 @@ public class ProcessingCraftingTaskNode extends CraftingTaskNode {
         this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
         this.fluidsToUse = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND));
         this.itemsToDisplay = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
+    }
+
+    @Override
+    public void update(INetwork network, int ticks, CraftingTaskNodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage) {
+        if (getState() == ProcessingState.PROCESSED) {
+            nodes.remove(this);
+            network.getCraftingManager().onTaskChanged();
+            return;
+        }
+
+        //These are for handling multiple crafters with differing states
+        boolean allLocked = true;
+        boolean allNull = true;
+        boolean allRejected = true;
+
+        ProcessingState originalState = getState();
+
+        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
+            int interval = container.getUpdateInterval();
+
+            if (interval < 0) {
+                throw new IllegalStateException(container + " has an update interval of < 0");
+            }
+
+            if (interval == 0 || ticks % interval == 0) {
+                for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
+                    if (getQuantity() <= 0) {
+                        return;
+                    }
+
+                    if (container.isLocked()) {
+                        if (allLocked) {
+                            setState(ProcessingState.LOCKED);
+                        }
+                        break;
+                    } else {
+                        allLocked = false;
+                    }
+                    if ((hasItems() && container.getConnectedInventory() == null) ||
+                        (hasFluids() && container.getConnectedFluidInventory() == null)) {
+                        if (allNull) {
+                            setState(ProcessingState.MACHINE_NONE);
+                        }
+
+                        break;
+                    } else {
+                        allNull = false;
+                    }
+
+                    boolean hasAll = false;
+                    IStackList<ItemStack> extractedItems;
+                    IStackList<FluidStack> extractedFluids = null;
+
+                    extractedItems = IoUtil.extractFromInternalItemStorage(getItemsToUse(true).getStacks(), internalStorage, Action.SIMULATE);
+                    if (extractedItems != null) {
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(getFluidsToUse().getStacks(), internalFluidStorage, Action.SIMULATE);
+                        if (extractedFluids != null) {
+                            hasAll = true;
+                        }
+                    }
+
+                    boolean canInsert = false;
+                    if (hasAll) {
+                        canInsert = IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        if (canInsert) {
+                            canInsert = IoUtil.insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                        }
+                    }
+
+                    if (hasAll && !canInsert) {
+                        if (allRejected) {
+                            setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
+                        }
+                        break;
+                    } else {
+                        allRejected = false;
+                    }
+
+                    if (hasAll && canInsert) {
+                        setState(ProcessingState.READY);
+
+                        IoUtil.extractFromInternalItemStorage(getItemsToUse(false).getStacks(), internalStorage, Action.PERFORM);
+                        IoUtil.extractFromInternalFluidStorage(getFluidsToUse().getStacks(), internalFluidStorage, Action.PERFORM);
+
+                        IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
+                        IoUtil.insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
+
+                        next();
+                        // TODO currentStep++;
+                        network.getCraftingManager().onTaskChanged();
+                        container.onUsedForProcessing();
+                    }
+                }
+
+            }
+        }
+
+        if (originalState != getState()) {
+            network.getCraftingManager().onTaskChanged();
+        }
     }
 
     @Override
