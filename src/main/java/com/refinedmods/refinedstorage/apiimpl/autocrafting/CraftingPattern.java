@@ -161,7 +161,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public boolean canBeInChainWith(ICraftingPattern other) {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CraftingPattern)) {
+            return false;
+        }
+        CraftingPattern other = (CraftingPattern) obj;
         if (other.isProcessing() != processing) {
             return false;
         }
@@ -231,7 +235,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public int getChainHashCode() {
+    public int hashCode() {
         int result = 0;
 
         result = 31 * result + (processing ? 1 : 0);
@@ -262,19 +266,6 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         return result;
-    }
-
-    @Override
-    public int hashCode() {
-        return getChainHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof CraftingPattern) {
-            return canBeInChainWith((CraftingPattern) obj);
-        }
-        return false;
     }
 
     public static class DummyCraftingInventory extends CraftingInventory {
