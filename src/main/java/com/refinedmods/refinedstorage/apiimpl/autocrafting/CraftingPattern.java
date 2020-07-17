@@ -98,10 +98,6 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalStateException("Cannot get crafting output from processing pattern");
         }
 
-        if (took.size() != inputs.size()) {
-            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
-        }
-
         CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
@@ -129,10 +125,6 @@ public class CraftingPattern implements ICraftingPattern {
     public NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took) {
         if (processing) {
             throw new IllegalStateException("Cannot get byproduct outputs from processing pattern");
-        }
-
-        if (took.size() != inputs.size()) {
-            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
         CraftingInventory inv = new DummyCraftingInventory();

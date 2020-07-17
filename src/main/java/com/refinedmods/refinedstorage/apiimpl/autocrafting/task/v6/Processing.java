@@ -130,7 +130,11 @@ class Processing extends Craft {
     }
 
     private void updateItemsToDisplay() {
-        itemsToDisplay = getItemsToUse(true);
+        IStackList<ItemStack> stacks = API.instance().createItemStackList();
+        getItemsToUse(true).values().forEach(stackList -> {
+            stackList.getStacks().forEach(stack -> stacks.add(stack.getStack()));
+        });
+        itemsToDisplay = stacks;
     }
 
     IStackList<FluidStack> getFluidsToUse() {
