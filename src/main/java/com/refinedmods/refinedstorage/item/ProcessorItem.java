@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 
 public class ProcessorItem extends Item {
     public enum Type {
-
         RAW_BASIC("raw_basic"),
         RAW_IMPROVED("raw_improved"),
         RAW_ADVANCED("raw_advanced"),
