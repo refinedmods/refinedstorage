@@ -169,9 +169,8 @@ public interface ICraftingManager {
     void onTaskChanged();
 
     /**
-     * @param pattern to look for
-     * @return a LinkedHashSet with all container that have this pattern
+     * @param pattern pattern to look for
+     * @return a set with all containers that have this pattern
      */
-
-    Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern);
+    Set<ICraftingPatternContainer> getAllContainers(ICraftingPattern pattern);
 }

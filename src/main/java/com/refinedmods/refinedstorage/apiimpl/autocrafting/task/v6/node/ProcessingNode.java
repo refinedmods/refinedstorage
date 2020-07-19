@@ -59,10 +59,9 @@ public class ProcessingNode extends Node {
     }
 
     @Override
-    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onStepFinished) {
+    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, NodeListener listener) {
         if (state == ProcessingState.PROCESSED) {
-            nodes.remove(this);
-            network.getCraftingManager().onTaskChanged();
+            listener.onAllDone(this);
             return;
         }
 
@@ -72,7 +71,7 @@ public class ProcessingNode extends Node {
 
         ProcessingState originalState = state;
 
-        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
+        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainers(getPattern())) {
             int interval = container.getUpdateInterval();
 
             if (interval < 0) {
@@ -146,9 +145,7 @@ public class ProcessingNode extends Node {
 
                         next();
 
-                        onStepFinished.run();
-
-                        network.getCraftingManager().onTaskChanged();
+                        listener.onSingleDone(this);
 
                         container.onUsedForProcessing();
                     }

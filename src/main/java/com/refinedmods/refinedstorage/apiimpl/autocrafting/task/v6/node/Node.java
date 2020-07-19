@@ -62,7 +62,7 @@ public abstract class Node {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingNode(network, tag) : new CraftingNode(network, tag);
     }
 
-    public abstract void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onFinishedStep);
+    public abstract void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, NodeListener listener);
 
     public abstract void onCalculationFinished();
 

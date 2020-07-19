@@ -14,6 +14,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.monitor.CraftingMonitorElementFactory;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.NodeList;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.NodeListener;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CraftingTask implements ICraftingTask {
+public class CraftingTask implements ICraftingTask, NodeListener {
     private static final String NBT_REQUESTED = "Requested";
     private static final String NBT_QUANTITY = "Quantity";
     private static final String NBT_PATTERN = "Pattern";
@@ -187,7 +188,7 @@ public class CraftingTask implements ICraftingTask {
             IoUtil.extractFluidsFromNetwork(toExtractInitialFluids, network, internalFluidStorage);
 
             for (Node node : nodes.all()) {
-                node.update(network, ticks, nodes, internalStorage, internalFluidStorage, () -> currentStep++);
+                node.update(network, ticks, nodes, internalStorage, internalFluidStorage, this);
             }
 
             nodes.removeMarkedForRemoval();
@@ -314,5 +315,16 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public UUID getId() {
         return id;
+    }
+
+    @Override
+    public void onAllDone(Node node) {
+        nodes.remove(node);
+    }
+
+    @Override
+    public void onSingleDone(Node node) {
+        currentStep++;
+        network.getCraftingManager().onTaskChanged();
     }
 }

@@ -26,7 +26,7 @@ public class NodeList {
     public void unlockAll(INetwork network) {
         for (Node node : nodes.values()) {
             if (node instanceof ProcessingNode) {
-                network.getCraftingManager().getAllContainer(node.getPattern()).forEach(ICraftingPatternContainer::unlock);
+                network.getCraftingManager().getAllContainers(node.getPattern()).forEach(ICraftingPatternContainer::unlock);
             }
         }
     }

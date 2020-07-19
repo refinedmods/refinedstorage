@@ -38,8 +38,8 @@ public class CraftingNode extends Node {
     }
 
     @Override
-    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onFinishedStep) {
-        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
+    public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, NodeListener listener) {
+        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainers(getPattern())) {
             int interval = container.getUpdateInterval();
             if (interval < 0) {
                 throw new IllegalStateException(container + " has an update interval of < 0");
@@ -47,11 +47,6 @@ public class CraftingNode extends Node {
 
             if (interval == 0 || ticks % interval == 0) {
                 for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
-                    if (getQuantity() <= 0) {
-                        nodes.remove(this);
-                        return;
-                    }
-
                     if (IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(true).getStacks(), internalStorage, Action.SIMULATE) != null) {
                         IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(false).getStacks(), internalStorage, Action.PERFORM);
 
@@ -72,9 +67,13 @@ public class CraftingNode extends Node {
                         }
 
                         next();
-                        onFinishedStep.run();
 
-                        network.getCraftingManager().onTaskChanged();
+                        listener.onSingleDone(this);
+
+                        if (getQuantity() <= 0) {
+                            listener.onAllDone(this);
+                            return;
+                        }
                     } else {
                         break;
                     }

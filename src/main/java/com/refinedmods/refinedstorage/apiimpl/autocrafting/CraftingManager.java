@@ -392,8 +392,8 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern) {
-        return patternToContainer.getOrDefault(pattern, new LinkedHashSet<>());
+    public Set<ICraftingPatternContainer> getAllContainers(ICraftingPattern pattern) {
+        return patternToContainer.getOrDefault(pattern, Collections.emptySet());
     }
 
     @Nullable
