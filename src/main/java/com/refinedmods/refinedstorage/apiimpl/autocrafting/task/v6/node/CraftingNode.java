@@ -52,8 +52,8 @@ public class CraftingNode extends Node {
                         return;
                     }
 
-                    if (IoUtil.extractFromInternalItemStorage(getItemsToUse(true).getStacks(), internalStorage, Action.SIMULATE) != null) {
-                        IoUtil.extractFromInternalItemStorage(getItemsToUse(false).getStacks(), internalStorage, Action.PERFORM);
+                    if (IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(true).getStacks(), internalStorage, Action.SIMULATE) != null) {
+                        IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(false).getStacks(), internalStorage, Action.PERFORM);
 
                         ItemStack output = getPattern().getOutput(recipe);
 

@@ -32,10 +32,10 @@ public abstract class Node {
     private final boolean root;
     private final ICraftingPattern pattern;
 
-    private final Map<Integer, IStackList<ItemStack>> itemRequirements = new LinkedHashMap<>();
-    private final Map<Integer, Integer> itemsNeededPerCraft = new LinkedHashMap<>();
-
     protected int quantity;
+    protected final Map<Integer, IStackList<ItemStack>> itemRequirements = new LinkedHashMap<>();
+
+    private final Map<Integer, Integer> itemsNeededPerCraft = new LinkedHashMap<>();
 
     public Node(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
@@ -86,11 +86,7 @@ public abstract class Node {
         return root;
     }
 
-    protected boolean hasItems() {
-        return !itemRequirements.isEmpty();
-    }
-
-    protected IStackList<ItemStack> getItemsToUse(boolean simulate) {
+    protected IStackList<ItemStack> getItemRequirementsForSingleCraft(boolean simulate) {
         IStackList<ItemStack> toReturn = API.instance().createItemStackList();
 
         for (int i = 0; i < itemRequirements.size(); i++) {

@@ -29,10 +29,14 @@ public class ProcessingNode extends Node {
 
     private IStackList<ItemStack> itemsToReceive = API.instance().createItemStackList();
     private IStackList<ItemStack> itemsReceived = API.instance().createItemStackList();
+
     private IStackList<FluidStack> fluidsToReceive = API.instance().createFluidStackList();
     private IStackList<FluidStack> fluidsReceived = API.instance().createFluidStackList();
-    private IStackList<FluidStack> fluidsToUse = API.instance().createFluidStackList();
+
+    private IStackList<FluidStack> fluidRequirements = API.instance().createFluidStackList();
+
     private IStackList<ItemStack> itemsToDisplay;
+
     private ProcessingState state = ProcessingState.READY;
 
     private int finished;
@@ -50,24 +54,23 @@ public class ProcessingNode extends Node {
         this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
         this.itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
         this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToUse = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND));
+        this.fluidRequirements = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND));
         this.itemsToDisplay = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
     }
 
     @Override
     public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, Runnable onStepFinished) {
-        if (getState() == ProcessingState.PROCESSED) {
+        if (state == ProcessingState.PROCESSED) {
             nodes.remove(this);
             network.getCraftingManager().onTaskChanged();
             return;
         }
 
-        //These are for handling multiple crafters with differing states
         boolean allLocked = true;
-        boolean allNull = true;
+        boolean allMissingMachine = true;
         boolean allRejected = true;
 
-        ProcessingState originalState = getState();
+        ProcessingState originalState = state;
 
         for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(getPattern())) {
             int interval = container.getUpdateInterval();
@@ -84,69 +87,72 @@ public class ProcessingNode extends Node {
 
                     if (container.isLocked()) {
                         if (allLocked) {
-                            setState(ProcessingState.LOCKED);
+                            this.state = ProcessingState.LOCKED;
                         }
+
                         break;
                     } else {
                         allLocked = false;
                     }
-                    if ((hasItems() && container.getConnectedInventory() == null) ||
-                        (hasFluids() && container.getConnectedFluidInventory() == null)) {
-                        if (allNull) {
-                            setState(ProcessingState.MACHINE_NONE);
+
+                    if ((requiresItems() && container.getConnectedInventory() == null) ||
+                        (requiresFluids() && container.getConnectedFluidInventory() == null)) {
+                        if (allMissingMachine) {
+                            this.state = ProcessingState.MACHINE_NONE;
                         }
 
                         break;
                     } else {
-                        allNull = false;
+                        allMissingMachine = false;
                     }
 
-                    boolean hasAll = false;
-                    IStackList<ItemStack> extractedItems;
+                    boolean hasAllRequirements = false;
+
+                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(true).getStacks(), internalStorage, Action.SIMULATE);
                     IStackList<FluidStack> extractedFluids = null;
-
-                    extractedItems = IoUtil.extractFromInternalItemStorage(getItemsToUse(true).getStacks(), internalStorage, Action.SIMULATE);
                     if (extractedItems != null) {
-                        extractedFluids = IoUtil.extractFromInternalFluidStorage(getFluidsToUse().getStacks(), internalFluidStorage, Action.SIMULATE);
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(getFluidRequirements().getStacks(), internalFluidStorage, Action.SIMULATE);
                         if (extractedFluids != null) {
-                            hasAll = true;
+                            hasAllRequirements = true;
                         }
                     }
 
-                    boolean canInsert = false;
-                    if (hasAll) {
-                        canInsert = IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
-                        if (canInsert) {
-                            canInsert = IoUtil.insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                    boolean canInsertFullAmount = false;
+                    if (hasAllRequirements) {
+                        canInsertFullAmount = IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        if (canInsertFullAmount) {
+                            canInsertFullAmount = IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
                         }
                     }
 
-                    if (hasAll && !canInsert) {
+                    if (hasAllRequirements && !canInsertFullAmount) {
                         if (allRejected) {
-                            setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
+                            this.state = ProcessingState.MACHINE_DOES_NOT_ACCEPT;
                         }
+
                         break;
                     } else {
                         allRejected = false;
                     }
 
-                    if (hasAll && canInsert) {
-                        setState(ProcessingState.READY);
+                    if (hasAllRequirements && canInsertFullAmount) {
+                        this.state = ProcessingState.READY;
 
-                        IoUtil.extractFromInternalItemStorage(getItemsToUse(false).getStacks(), internalStorage, Action.PERFORM);
-                        IoUtil.extractFromInternalFluidStorage(getFluidsToUse().getStacks(), internalFluidStorage, Action.PERFORM);
+                        IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(false).getStacks(), internalStorage, Action.PERFORM);
+                        IoUtil.extractFromInternalFluidStorage(getFluidRequirements().getStacks(), internalFluidStorage, Action.PERFORM);
 
                         IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
-                        IoUtil.insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
+                        IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
 
                         next();
+
                         onStepFinished.run();
 
                         network.getCraftingManager().onTaskChanged();
+
                         container.onUsedForProcessing();
                     }
                 }
-
             }
         }
 
@@ -159,7 +165,7 @@ public class ProcessingNode extends Node {
     public void onCalculationFinished() {
         this.totalQuantity = quantity;
 
-        updateItemsToDisplay();
+        itemsToDisplay = getItemRequirementsForSingleCraft(true);
     }
 
     public int getNeeded(ItemStack stack) {
@@ -188,7 +194,7 @@ public class ProcessingNode extends Node {
         int fin = finished;
         updateFinishedPatterns();
         if (finished == totalQuantity) {
-            setState(ProcessingState.PROCESSED);
+            this.state = ProcessingState.PROCESSED;
         }
         return fin != finished;
     }
@@ -237,16 +243,12 @@ public class ProcessingNode extends Node {
         return itemsToDisplay;
     }
 
-    private void updateItemsToDisplay() {
-        itemsToDisplay = getItemsToUse(true);
-    }
-
-    public IStackList<FluidStack> getFluidsToUse() {
-        return fluidsToUse;
+    public IStackList<FluidStack> getFluidRequirements() {
+        return fluidRequirements;
     }
 
     public void addFluidsToUse(FluidStack stack) {
-        fluidsToUse.add(stack);
+        fluidRequirements.add(stack);
     }
 
     public void addItemsToReceive(ItemStack stack) {
@@ -269,28 +271,29 @@ public class ProcessingNode extends Node {
         fluidsReceived.add(received, size);
     }
 
-    private void setState(ProcessingState state) {
-        this.state = state;
-    }
-
     public ProcessingState getState() {
         return state;
     }
 
-    public boolean hasFluids() {
-        return !fluidsToUse.isEmpty();
+    private boolean requiresItems() {
+        return !itemRequirements.isEmpty();
+    }
+
+    private boolean requiresFluids() {
+        return !fluidRequirements.isEmpty();
     }
 
     @Override
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
+
         tag.put(NBT_ITEMS_TO_RECEIVE, SerializationUtil.writeItemStackList(itemsToReceive));
         tag.put(NBT_FLUIDS_TO_RECEIVE, SerializationUtil.writeFluidStackList(fluidsToReceive));
         tag.putInt(NBT_STATE, state.ordinal());
         tag.putInt(NBT_QUANTITY_TOTAL, totalQuantity);
         tag.put(NBT_ITEMS_RECEIVED, SerializationUtil.writeItemStackList(itemsReceived));
         tag.put(NBT_FLUIDS_RECEIVED, SerializationUtil.writeFluidStackList(fluidsReceived));
-        tag.put(NBT_FLUIDS_TO_USE, SerializationUtil.writeFluidStackList(fluidsToUse));
+        tag.put(NBT_FLUIDS_TO_USE, SerializationUtil.writeFluidStackList(fluidRequirements));
         tag.put(NBT_ITEMS_TO_DISPLAY, SerializationUtil.writeItemStackList(itemsToDisplay));
 
         return tag;

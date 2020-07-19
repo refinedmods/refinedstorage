@@ -71,7 +71,7 @@ public class CraftingMonitorElementFactory {
             }
         }
 
-        for (StackListEntry<FluidStack> use : node.getFluidsToUse().getStacks()) {
+        for (StackListEntry<FluidStack> use : node.getFluidRequirements().getStacks()) {
             if (node.getProcessing() > 0 || node.getState() != ProcessingState.READY) {
                 ICraftingMonitorElement element = new FluidCraftingMonitorElement(use.getStack(), 0, 0, use.getStack().getAmount() * node.getProcessing(), 0, 0);
 
