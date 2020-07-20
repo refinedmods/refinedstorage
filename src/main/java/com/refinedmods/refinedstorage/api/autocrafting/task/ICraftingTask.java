@@ -45,6 +45,7 @@ public interface ICraftingTask {
      * Called when a stack is inserted into the system through {@link INetwork#insertItemTracked(ItemStack, int)}.
      *
      * @param stack the stack
+     * @return the remainder of this stack after processing of the task
      */
     int onTrackedInsert(ItemStack stack, int size);
 
@@ -52,6 +53,7 @@ public interface ICraftingTask {
      * Called when a stack is inserted into the system through {@link INetwork#insertFluidTracked(FluidStack, int)}.
      *
      * @param stack the stack
+     * @return the remainder of this stack after processing of the task
      */
     int onTrackedInsert(FluidStack stack, int size);
 
