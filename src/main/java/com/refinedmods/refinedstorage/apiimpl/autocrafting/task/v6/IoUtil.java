@@ -19,49 +19,60 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class IoUtil {
+public final class IoUtil {
     private static final Logger LOGGER = LogManager.getLogger(IoUtil.class);
 
     private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT;
 
-    public static IStackList<ItemStack> extractFromInternalItemStorage(Collection<StackListEntry<ItemStack>> stacks, IStorageDisk<ItemStack> storage, Action action) {
-        IStackList<ItemStack> toReturn = API.instance().createItemStackList();
-        for (StackListEntry<ItemStack> entry : stacks) {
+    public static IStackList<ItemStack> extractFromInternalItemStorage(IStackList<ItemStack> list, IStorageDisk<ItemStack> storage, Action action) {
+        IStackList<ItemStack> extracted = API.instance().createItemStackList();
+
+        for (StackListEntry<ItemStack> entry : list.getStacks()) {
             ItemStack result = storage.extract(entry.getStack(), entry.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, action);
 
             if (result.isEmpty() || result.getCount() != entry.getStack().getCount()) {
                 if (action == Action.PERFORM) {
                     throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
                 }
+
                 return null;
             }
-            toReturn.add(result);
+
+            extracted.add(result);
         }
-        return toReturn;
+
+        return extracted;
     }
 
-    public static IStackList<FluidStack> extractFromInternalFluidStorage(Collection<StackListEntry<FluidStack>> stacks, IStorageDisk<FluidStack> storage, Action action) {
-        IStackList<FluidStack> toReturn = API.instance().createFluidStackList();
-        for (StackListEntry<FluidStack> entry : stacks) {
-            FluidStack result = storage.extract(entry.getStack(), entry.getStack().getAmount(), IComparer.COMPARE_NBT, action);
+    public static IStackList<FluidStack> extractFromInternalFluidStorage(IStackList<FluidStack> list, IStorageDisk<FluidStack> storage, Action action) {
+        IStackList<FluidStack> extracted = API.instance().createFluidStackList();
+
+        for (StackListEntry<FluidStack> entry : list.getStacks()) {
+            FluidStack result = storage.extract(entry.getStack(), entry.getStack().getAmount(), DEFAULT_EXTRACT_FLAGS, action);
+
             if (result.isEmpty() || result.getAmount() != entry.getStack().getAmount()) {
                 if (action == Action.PERFORM) {
                     throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
                 }
+
                 return null;
             }
-            toReturn.add(result);
+
+            extracted.add(result);
         }
-        return toReturn;
+
+        return extracted;
     }
 
     public static boolean insertIntoInventory(@Nullable IItemHandler dest, Collection<StackListEntry<ItemStack>> toInsert, Action action) {
         if (dest == null) {
             return false;
         }
+
         if (toInsert.isEmpty()) {
             return true;
         }
+
         Deque<StackListEntry<ItemStack>> stacks = new ArrayDeque<>(toInsert);
 
         StackListEntry<ItemStack> currentEntry = stacks.poll();
@@ -98,22 +109,27 @@ public class IoUtil {
         }
 
         boolean success = current == null && stacks.isEmpty();
+
         if (!success && action == Action.PERFORM) {
-            LOGGER.warn("Item Handler unexpectedly didn't accept " + (current != null ? current.getTranslationKey() : null) + ", the remainder has been voided!");
+            LOGGER.warn("Inventory unexpectedly didn't accept " + (current != null ? current.getTranslationKey() : null) + ", the remainder has been voided!");
         }
+
         return success;
     }
 
     public static boolean insertIntoInventory(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action) {
         for (StackListEntry<FluidStack> entry : toInsert) {
             int filled = dest.fill(entry.getStack(), action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+
             if (filled != entry.getStack().getAmount()) {
                 if (action == Action.PERFORM) {
-                    LOGGER.warn("Fluid Handler unexpectedly didn't accept all of " + entry.getStack().getTranslationKey() + ", the remainder has been voided!");
+                    LOGGER.warn("Inventory unexpectedly didn't accept all of " + entry.getStack().getTranslationKey() + ", the remainder has been voided!");
                 }
+
                 return false;
             }
         }
+
         return true;
     }
 

@@ -10,7 +10,6 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.ProcessingState;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

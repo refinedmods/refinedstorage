@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
+package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node;
 
 public enum ProcessingState {
     READY,

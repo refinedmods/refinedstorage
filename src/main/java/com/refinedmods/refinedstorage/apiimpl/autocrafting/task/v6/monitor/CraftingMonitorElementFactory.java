@@ -8,10 +8,10 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.ErrorCraftingMonitorElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.FluidCraftingMonitorElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.ItemCraftingMonitorElement;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.ProcessingState;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingNode;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingNode;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingState;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
