@@ -232,7 +232,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
                         needed = size;
                     }
 
-                    processing.addFinished(stack, needed);
+                    processing.markReceived(stack, needed);
 
                     size -= needed;
 
@@ -244,9 +244,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
                         internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
                     }
 
-                    if (processing.updateFinished()) { //only update if finished changes
-                        network.getCraftingManager().onTaskChanged();
-                    }
+                    network.getCraftingManager().onTaskChanged();
 
                     if (size == 0) {
                         return 0;
@@ -271,7 +269,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
                         needed = size;
                     }
 
-                    processing.addFinished(stack, needed);
+                    processing.markReceived(stack, needed);
 
                     size -= needed;
 
@@ -283,9 +281,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
                         internalFluidStorage.insert(remainder, remainder.getAmount(), Action.PERFORM);
                     }
 
-                    if (processing.updateFinished()) { //only update if finished changes
-                        network.getCraftingManager().onTaskChanged();
-                    }
+                    network.getCraftingManager().onTaskChanged();
 
                     if (size == 0) {
                         return 0;

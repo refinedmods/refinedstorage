@@ -18,50 +18,63 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ProcessingNode extends Node {
-    private static final String NBT_ITEMS_TO_RECEIVE = "ItemsToReceive";
-    private static final String NBT_FLUIDS_TO_RECEIVE = "FluidsToReceive";
-    private static final String NBT_FLUIDS_TO_USE = "FluidsToUse";
-    private static final String NBT_STATE = "State";
-    private static final String NBT_QUANTITY_TOTAL = "TotalQuantity";
     private static final String NBT_ITEMS_RECEIVED = "ItemsReceived";
     private static final String NBT_FLUIDS_RECEIVED = "FluidsReceived";
-    private static final String NBT_ITEMS_TO_DISPLAY = "ItemsToDisplay";
+    private static final String NBT_SINGLE_ITEM_SET_TO_REQUIRE = "SingleItemSetToRequire";
+    private static final String NBT_SINGLE_FLUID_SET_TO_REQUIRE = "SingleFluidSetToRequire";
+    private static final String NBT_STATE = "State";
 
-    private IStackList<ItemStack> itemsToReceive = API.instance().createItemStackList();
+    private final IStackList<ItemStack> singleItemSetToReceive = API.instance().createItemStackList();
+    private final IStackList<FluidStack> singleFluidSetToReceive = API.instance().createFluidStackList();
+
+    private IStackList<ItemStack> singleItemSetToRequire;
+    private IStackList<FluidStack> singleFluidSetToRequire;
+
     private IStackList<ItemStack> itemsReceived = API.instance().createItemStackList();
-
-    private IStackList<FluidStack> fluidsToReceive = API.instance().createFluidStackList();
     private IStackList<FluidStack> fluidsReceived = API.instance().createFluidStackList();
 
-    private IStackList<FluidStack> fluidRequirements = API.instance().createFluidStackList();
+    private ProcessingState state;
 
-    private IStackList<ItemStack> itemsToDisplay;
-
-    private ProcessingState state = ProcessingState.READY;
-
-    private int finished;
-    private int totalQuantity;
+    private int quantityFinished;
 
     public ProcessingNode(ICraftingPattern pattern, boolean root) {
         super(pattern, root);
+
+        initSetsToReceive();
     }
 
     public ProcessingNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
-        this.itemsToReceive = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToReceive = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
-        this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
-        this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
+
         this.itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
         this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.fluidRequirements = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND));
-        this.itemsToDisplay = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
+
+        this.singleItemSetToRequire = SerializationUtil.readItemStackList(tag.getList(NBT_SINGLE_ITEM_SET_TO_REQUIRE, Constants.NBT.TAG_COMPOUND));
+        this.singleFluidSetToRequire = SerializationUtil.readFluidStackList(tag.getList(NBT_SINGLE_FLUID_SET_TO_REQUIRE, Constants.NBT.TAG_COMPOUND));
+
+        this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
+
+        initSetsToReceive();
+    }
+
+    private void initSetsToReceive() {
+        for (ItemStack output : getPattern().getOutputs()) {
+            singleItemSetToReceive.add(output, output.getCount());
+        }
+
+        for (FluidStack output : getPattern().getFluidOutputs()) {
+            singleFluidSetToReceive.add(output, output.getAmount());
+        }
     }
 
     @Override
     public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, NodeListener listener) {
         if (state == ProcessingState.PROCESSED) {
             listener.onAllDone(this);
+            return;
+        }
+
+        if (getQuantity() <= 0) {
             return;
         }
 
@@ -94,8 +107,8 @@ public class ProcessingNode extends Node {
                         allLocked = false;
                     }
 
-                    if ((requiresItems() && container.getConnectedInventory() == null) ||
-                        (requiresFluids() && container.getConnectedFluidInventory() == null)) {
+                    if ((!singleItemSetToReceive.isEmpty() && container.getConnectedInventory() == null) ||
+                        (!singleFluidSetToReceive.isEmpty() && container.getConnectedFluidInventory() == null)) {
                         if (allMissingMachine) {
                             this.state = ProcessingState.MACHINE_NONE;
                         }
@@ -107,10 +120,10 @@ public class ProcessingNode extends Node {
 
                     boolean hasAllRequirements = false;
 
-                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(true).getStacks(), internalStorage, Action.SIMULATE);
+                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true).getStacks(), internalStorage, Action.SIMULATE);
                     IStackList<FluidStack> extractedFluids = null;
                     if (extractedItems != null) {
-                        extractedFluids = IoUtil.extractFromInternalFluidStorage(getFluidRequirements().getStacks(), internalFluidStorage, Action.SIMULATE);
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(true).getStacks(), internalFluidStorage, Action.SIMULATE);
                         if (extractedFluids != null) {
                             hasAllRequirements = true;
                         }
@@ -137,8 +150,8 @@ public class ProcessingNode extends Node {
                     if (hasAllRequirements && canInsertFullAmount) {
                         this.state = ProcessingState.READY;
 
-                        IoUtil.extractFromInternalItemStorage(getItemRequirementsForSingleCraft(false).getStacks(), internalStorage, Action.PERFORM);
-                        IoUtil.extractFromInternalFluidStorage(getFluidRequirements().getStacks(), internalFluidStorage, Action.PERFORM);
+                        extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false).getStacks(), internalStorage, Action.PERFORM);
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false).getStacks(), internalFluidStorage, Action.PERFORM);
 
                         IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
                         IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
@@ -153,145 +166,107 @@ public class ProcessingNode extends Node {
             }
         }
 
-        if (originalState != getState()) {
+        if (originalState != state) {
             network.getCraftingManager().onTaskChanged();
         }
-    }
-
-    @Override
-    public void onCalculationFinished() {
-        this.totalQuantity = quantity;
-
-        itemsToDisplay = getItemRequirementsForSingleCraft(true);
-    }
-
-    public int getNeeded(ItemStack stack) {
-        if (itemsToReceive.get(stack) != null) {
-            int needed = itemsToReceive.get(stack).getCount() * totalQuantity;
-            if (itemsReceived.get(stack) != null) {
-                needed -= itemsReceived.get(stack).getCount();
-            }
-            return needed;
-        }
-        return 0;
-    }
-
-    public int getNeeded(FluidStack stack) {
-        if (fluidsToReceive.get(stack) != null) {
-            int needed = fluidsToReceive.get(stack).getAmount() * totalQuantity;
-            if (fluidsReceived.get(stack) != null) {
-                needed -= fluidsReceived.get(stack).getAmount();
-            }
-            return needed;
-        }
-        return 0;
-    }
-
-    public boolean updateFinished() {
-        int fin = finished;
-        updateFinishedPatterns();
-        if (finished == totalQuantity) {
-            this.state = ProcessingState.PROCESSED;
-        }
-        return fin != finished;
-    }
-
-    /*
-       Calculates how many patterns were already finished
-       by calculating the number finished patterns for every output
-       and then taking the minimum of those
-    */
-    private void updateFinishedPatterns() {
-        int temp = totalQuantity;
-        if (!itemsToReceive.isEmpty()) {
-            for (StackListEntry<ItemStack> stack : itemsToReceive.getStacks()) {
-                if (itemsReceived.get(stack.getStack()) != null) {
-                    if (temp > itemsReceived.get(stack.getStack()).getCount() / (itemsToReceive.get(stack.getStack()).getCount())) {
-                        temp = itemsReceived.get(stack.getStack()).getCount() / (itemsToReceive.get(stack.getStack()).getCount());
-                    }
-                } else {
-                    temp = 0;
-                }
-            }
-        }
-        if (!fluidsToReceive.isEmpty()) {
-            for (StackListEntry<FluidStack> stack : fluidsToReceive.getStacks()) {
-                if (fluidsReceived.get(stack.getStack()) != null) {
-                    if (temp > fluidsReceived.get(stack.getStack()).getAmount() / (fluidsToReceive.get(stack.getStack()).getAmount())) {
-                        temp = fluidsReceived.get(stack.getStack()).getAmount() / (fluidsToReceive.get(stack.getStack()).getAmount());
-                    }
-                } else {
-                    temp = 0;
-                }
-            }
-        }
-        finished = temp;
-    }
-
-    public IStackList<ItemStack> getItemsToReceive() {
-        return itemsToReceive;
-    }
-
-    public IStackList<FluidStack> getFluidsToReceive() {
-        return fluidsToReceive;
-    }
-
-    public IStackList<ItemStack> getItemsToDisplay() {
-        return itemsToDisplay;
-    }
-
-    public IStackList<FluidStack> getFluidRequirements() {
-        return fluidRequirements;
-    }
-
-    public void addFluidsToUse(FluidStack stack) {
-        fluidRequirements.add(stack);
-    }
-
-    public void addItemsToReceive(ItemStack stack) {
-        itemsToReceive.add(stack);
-    }
-
-    public void addFluidsToReceive(FluidStack stack) {
-        fluidsToReceive.add(stack);
-    }
-
-    public int getProcessing() {
-        return totalQuantity - quantity - finished;
-    }
-
-    public void addFinished(ItemStack received, int size) {
-        itemsReceived.add(received, size);
-    }
-
-    public void addFinished(FluidStack received, int size) {
-        fluidsReceived.add(received, size);
     }
 
     public ProcessingState getState() {
         return state;
     }
 
-    private boolean requiresItems() {
-        return !itemRequirements.isEmpty();
+    public IStackList<ItemStack> getSingleItemSetToReceive() {
+        return singleItemSetToReceive;
     }
 
-    private boolean requiresFluids() {
-        return !fluidRequirements.isEmpty();
+    public IStackList<FluidStack> getSingleFluidSetToReceive() {
+        return singleFluidSetToReceive;
+    }
+
+    public IStackList<ItemStack> getSingleItemSetToRequire() {
+        return singleItemSetToRequire;
+    }
+
+    public IStackList<FluidStack> getSingleFluidSetToRequire() {
+        return singleFluidSetToRequire;
+    }
+
+    public int getNeeded(ItemStack stack) {
+        return (singleItemSetToReceive.getCount(stack) * totalQuantity) - itemsReceived.getCount(stack);
+    }
+
+    public int getNeeded(FluidStack stack) {
+        return (singleFluidSetToReceive.getCount(stack) * totalQuantity) - fluidsReceived.getCount(stack);
+    }
+
+    public int getCurrentlyProcessing() {
+        int unprocessed = totalQuantity - quantity;
+        return unprocessed - quantityFinished;
+    }
+
+    public void markReceived(ItemStack stack, int count) {
+        itemsReceived.add(stack, count);
+        updateFinishedQuantity();
+    }
+
+    public void markReceived(FluidStack stack, int count) {
+        fluidsReceived.add(stack, count);
+        updateFinishedQuantity();
+    }
+
+    public void updateFinishedQuantity() {
+        int quantityFinished = totalQuantity;
+
+        for (StackListEntry<ItemStack> toReceive : singleItemSetToReceive.getStacks()) {
+            if (itemsReceived.get(toReceive.getStack()) != null) {
+                int ratioReceived = itemsReceived.get(toReceive.getStack()).getCount() / toReceive.getStack().getCount();
+
+                if (quantityFinished > ratioReceived) {
+                    quantityFinished = ratioReceived;
+                }
+            } else {
+                quantityFinished = 0;
+            }
+        }
+
+        for (StackListEntry<FluidStack> toReceive : singleFluidSetToReceive.getStacks()) {
+            if (fluidsReceived.get(toReceive.getStack()) != null) {
+                int ratioReceived = fluidsReceived.get(toReceive.getStack()).getAmount() / toReceive.getStack().getAmount();
+
+                if (quantityFinished > ratioReceived) {
+                    quantityFinished = ratioReceived;
+                }
+            } else {
+                quantityFinished = 0;
+            }
+        }
+
+        this.quantityFinished = quantityFinished;
+
+        if (this.quantityFinished == this.totalQuantity) {
+            this.state = ProcessingState.PROCESSED;
+        }
+    }
+
+    @Override
+    public void onCalculationFinished() {
+        super.onCalculationFinished();
+
+        this.singleItemSetToRequire = requirements.getSingleItemRequirementSet(true);
+        this.singleFluidSetToRequire = requirements.getSingleFluidRequirementSet(true);
     }
 
     @Override
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
 
-        tag.put(NBT_ITEMS_TO_RECEIVE, SerializationUtil.writeItemStackList(itemsToReceive));
-        tag.put(NBT_FLUIDS_TO_RECEIVE, SerializationUtil.writeFluidStackList(fluidsToReceive));
-        tag.putInt(NBT_STATE, state.ordinal());
-        tag.putInt(NBT_QUANTITY_TOTAL, totalQuantity);
         tag.put(NBT_ITEMS_RECEIVED, SerializationUtil.writeItemStackList(itemsReceived));
         tag.put(NBT_FLUIDS_RECEIVED, SerializationUtil.writeFluidStackList(fluidsReceived));
-        tag.put(NBT_FLUIDS_TO_USE, SerializationUtil.writeFluidStackList(fluidRequirements));
-        tag.put(NBT_ITEMS_TO_DISPLAY, SerializationUtil.writeItemStackList(itemsToDisplay));
+
+        tag.put(NBT_SINGLE_ITEM_SET_TO_REQUIRE, SerializationUtil.writeItemStackList(singleItemSetToRequire));
+        tag.put(NBT_SINGLE_FLUID_SET_TO_REQUIRE, SerializationUtil.writeFluidStackList(singleFluidSetToRequire));
+
+        tag.putInt(NBT_STATE, state.ordinal());
 
         return tag;
     }

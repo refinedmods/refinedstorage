@@ -29,7 +29,7 @@ public class IoUtil {
         for (StackListEntry<ItemStack> entry : stacks) {
             ItemStack result = storage.extract(entry.getStack(), entry.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, action);
 
-            if (result == ItemStack.EMPTY || result.getCount() != entry.getStack().getCount()) {
+            if (result.isEmpty() || result.getCount() != entry.getStack().getCount()) {
                 if (action == Action.PERFORM) {
                     throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
                 }
@@ -44,7 +44,7 @@ public class IoUtil {
         IStackList<FluidStack> toReturn = API.instance().createFluidStackList();
         for (StackListEntry<FluidStack> entry : stacks) {
             FluidStack result = storage.extract(entry.getStack(), entry.getStack().getAmount(), IComparer.COMPARE_NBT, action);
-            if (result == FluidStack.EMPTY || result.getAmount() != entry.getStack().getAmount()) {
+            if (result.isEmpty() || result.getAmount() != entry.getStack().getAmount()) {
                 if (action == Action.PERFORM) {
                     throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
                 }

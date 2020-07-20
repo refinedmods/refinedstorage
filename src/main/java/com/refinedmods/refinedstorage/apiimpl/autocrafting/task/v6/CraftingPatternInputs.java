@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -11,11 +13,13 @@ import java.util.List;
 
 public class CraftingPatternInputs {
     private final NonNullList<ItemStack> recipe = NonNullList.create();
-    private final List<Ingredient> ingredients = new ArrayList<>();
+    private final List<Ingredient<ItemStack>> itemIngredients = new ArrayList<>();
+    private final List<Ingredient<FluidStack>> fluidIngredients = new ArrayList<>();
 
     public CraftingPatternInputs(ICraftingPattern pattern) {
         fillOutRecipe(pattern);
-        combineRecipeIntoIngredients(pattern);
+        combineItemInputs(pattern);
+        combineFluidInputs(pattern);
     }
 
     private void fillOutRecipe(ICraftingPattern pattern) {
@@ -28,28 +32,61 @@ public class CraftingPatternInputs {
         }
     }
 
-    private void combineRecipeIntoIngredients(ICraftingPattern pattern) {
+    private void combineItemInputs(ICraftingPattern pattern) {
         for (NonNullList<ItemStack> inputsForSlot : pattern.getInputs()) {
             if (inputsForSlot.isEmpty()) {
                 continue;
             }
 
-            Ingredient matchingIngredient = findMatchingIngredient(inputsForSlot);
+            Ingredient<ItemStack> matchingIngredient = findMatchingItemIngredient(inputsForSlot);
 
             if (matchingIngredient == null) {
-                ingredients.add(new Ingredient(inputsForSlot, inputsForSlot.get(0).getCount()));
+                itemIngredients.add(new Ingredient<>(inputsForSlot, inputsForSlot.get(0).getCount()));
             } else {
                 matchingIngredient.increaseCount(inputsForSlot.get(0).getCount());
             }
         }
     }
 
+    private void combineFluidInputs(ICraftingPattern pattern) {
+        for (NonNullList<FluidStack> inputsForSlot : pattern.getFluidInputs()) {
+            if (inputsForSlot.isEmpty()) {
+                continue;
+            }
+
+            Ingredient<FluidStack> matchingIngredient = findMatchingFluidIngredient(inputsForSlot);
+
+            if (matchingIngredient == null) {
+                fluidIngredients.add(new Ingredient<>(inputsForSlot, inputsForSlot.get(0).getAmount()));
+            } else {
+                matchingIngredient.increaseCount(inputsForSlot.get(0).getAmount());
+            }
+        }
+    }
+
     @Nullable
-    private Ingredient findMatchingIngredient(NonNullList<ItemStack> inputsForSlot) {
-        for (Ingredient existingIngredient : ingredients) {
+    private Ingredient<ItemStack> findMatchingItemIngredient(NonNullList<ItemStack> inputsForSlot) {
+        for (Ingredient<ItemStack> existingIngredient : itemIngredients) {
             if (existingIngredient.getInputs().size() == inputsForSlot.size()) {
                 for (int i = 0; i < inputsForSlot.size(); i++) {
                     if (!API.instance().getComparer().isEqualNoQuantity(existingIngredient.getInputs().get(i), inputsForSlot.get(i))) {
+                        break;
+                    }
+                }
+
+                return existingIngredient;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    private Ingredient<FluidStack> findMatchingFluidIngredient(NonNullList<FluidStack> inputsForSlot) {
+        for (Ingredient<FluidStack> existingIngredient : fluidIngredients) {
+            if (existingIngredient.getInputs().size() == inputsForSlot.size()) {
+                for (int i = 0; i < inputsForSlot.size(); i++) {
+                    if (!API.instance().getComparer().isEqual(existingIngredient.getInputs().get(i), inputsForSlot.get(i), IComparer.COMPARE_NBT)) {
                         break;
                     }
                 }
@@ -65,20 +102,24 @@ public class CraftingPatternInputs {
         return recipe;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public List<Ingredient<ItemStack>> getItemIngredients() {
+        return itemIngredients;
     }
 
-    public static class Ingredient {
-        private final NonNullList<ItemStack> inputs;
+    public List<Ingredient<FluidStack>> getFluidIngredients() {
+        return fluidIngredients;
+    }
+
+    public static class Ingredient<T> {
+        private final NonNullList<T> inputs;
         private int count;
 
-        public Ingredient(NonNullList<ItemStack> inputs, int count) {
+        public Ingredient(NonNullList<T> inputs, int count) {
             this.inputs = inputs;
             this.count = count;
         }
 
-        public NonNullList<ItemStack> getInputs() {
+        public NonNullList<T> getInputs() {
             return inputs;
         }
 

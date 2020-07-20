@@ -22,12 +22,10 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.Craft
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.preview.CraftingPreviewInfo;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -129,7 +127,7 @@ public class CraftingCalculator {
         } else if (node instanceof ProcessingNode) {
             ProcessingNode processing = (ProcessingNode) node;
 
-            calculateForFluids(qty, storageSource, fluidStorageSource, results, fluidResults, pattern, fluidsToExtract, processing);
+            calculateForFluids(qty, storageSource, fluidStorageSource, results, fluidResults, pattern, inputs, fluidsToExtract, processing);
 
             for (ItemStack output : pattern.getOutputs()) {
                 results.add(output, output.getCount() * qty);
@@ -137,15 +135,6 @@ public class CraftingCalculator {
 
             for (FluidStack output : pattern.getFluidOutputs()) {
                 fluidResults.add(output, output.getAmount() * qty);
-            }
-
-            //only add this once TODO: why?
-            if (processing.getItemsToReceive().isEmpty()) {
-                pattern.getOutputs().forEach(processing::addItemsToReceive);
-            }
-
-            if (processing.getFluidsToReceive().isEmpty()) {
-                pattern.getFluidOutputs().forEach(processing::addFluidsToReceive);
             }
         }
 
@@ -162,7 +151,7 @@ public class CraftingCalculator {
                                    Node node) throws CraftingCalculatorException {
         int ingredientNumber = -1;
 
-        for (CraftingPatternInputs.Ingredient ingredient : inputs.getIngredients()) {
+        for (CraftingPatternInputs.Ingredient<ItemStack> ingredient : inputs.getItemIngredients()) {
             ingredientNumber++;
 
             PossibleInputs possibleInputs = new PossibleInputs(ingredient.getInputs());
@@ -183,7 +172,7 @@ public class CraftingCalculator {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getCount());
 
-                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, ingredient.getCount());
+                    node.getRequirements().addItemRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount());
 
                     results.remove(fromSelf, toTake);
 
@@ -197,7 +186,7 @@ public class CraftingCalculator {
 
                     craftingPreviewInfo.getToTake().add(possibleInput, toTake);
 
-                    node.addItemsToUse(ingredientNumber, possibleInput, toTake, ingredient.getCount());
+                    node.getRequirements().addItemRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount());
 
                     storageSource.remove(fromNetwork, toTake);
 
@@ -255,14 +244,15 @@ public class CraftingCalculator {
                                     IStackList<ItemStack> results,
                                     IStackList<FluidStack> fluidResults,
                                     ICraftingPattern pattern,
+                                    CraftingPatternInputs inputs,
                                     IStackList<FluidStack> fluidsToExtract,
-                                    ProcessingNode processing) throws CraftingCalculatorException {
-        for (NonNullList<FluidStack> fluidInputs : pattern.getFluidInputs()) {
-            if (fluidInputs.isEmpty()) {
-                continue;
-            }
+                                    ProcessingNode node) throws CraftingCalculatorException {
+        int ingredientNumber = -1;
 
-            PossibleFluidInputs possibleInputs = new PossibleFluidInputs(new ArrayList<>(fluidInputs));
+        for (CraftingPatternInputs.Ingredient<FluidStack> ingredient : inputs.getFluidIngredients()) {
+            ingredientNumber++;
+
+            PossibleFluidInputs possibleInputs = new PossibleFluidInputs(ingredient.getInputs());
             possibleInputs.sort(fluidStorageSource, fluidResults);
 
             FluidStack possibleInput = possibleInputs.get();
@@ -276,11 +266,11 @@ public class CraftingCalculator {
                 throw new CraftingCalculatorException(CalculationResultType.TOO_COMPLEX);
             }
 
-            processing.addFluidsToUse(possibleInput);
-
             while (remaining > 0) {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getAmount());
+
+                    node.getRequirements().addFluidRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount());
 
                     fluidResults.remove(possibleInput, toTake);
 
@@ -291,6 +281,8 @@ public class CraftingCalculator {
 
                 if (fromNetwork != null && remaining > 0) {
                     int toTake = Math.min(remaining, fromNetwork.getAmount());
+
+                    node.getRequirements().addFluidRequirement(ingredientNumber, possibleInput, toTake, ingredient.getCount());
 
                     craftingPreviewInfo.getToTakeFluids().add(possibleInput, toTake);
 
