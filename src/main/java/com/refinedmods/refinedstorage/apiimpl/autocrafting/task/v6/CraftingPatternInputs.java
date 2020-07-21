@@ -68,13 +68,18 @@ public class CraftingPatternInputs {
     private Ingredient<ItemStack> findMatchingItemIngredient(NonNullList<ItemStack> inputsForSlot) {
         for (Ingredient<ItemStack> existingIngredient : itemIngredients) {
             if (existingIngredient.getInputs().size() == inputsForSlot.size()) {
+                boolean found = true;
+
                 for (int i = 0; i < inputsForSlot.size(); i++) {
                     if (!API.instance().getComparer().isEqualNoQuantity(existingIngredient.getInputs().get(i), inputsForSlot.get(i))) {
+                        found = false;
                         break;
                     }
                 }
 
-                return existingIngredient;
+                if (found) {
+                    return existingIngredient;
+                }
             }
         }
 
@@ -85,13 +90,18 @@ public class CraftingPatternInputs {
     private Ingredient<FluidStack> findMatchingFluidIngredient(NonNullList<FluidStack> inputsForSlot) {
         for (Ingredient<FluidStack> existingIngredient : fluidIngredients) {
             if (existingIngredient.getInputs().size() == inputsForSlot.size()) {
+                boolean found = true;
+
                 for (int i = 0; i < inputsForSlot.size(); i++) {
                     if (!API.instance().getComparer().isEqual(existingIngredient.getInputs().get(i), inputsForSlot.get(i), IComparer.COMPARE_NBT)) {
+                        found = false;
                         break;
                     }
                 }
 
-                return existingIngredient;
+                if (found) {
+                    return existingIngredient;
+                }
             }
         }
 
