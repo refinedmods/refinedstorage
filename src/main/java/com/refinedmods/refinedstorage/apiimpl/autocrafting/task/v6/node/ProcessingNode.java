@@ -119,10 +119,10 @@ public class ProcessingNode extends Node {
 
                     boolean hasAllRequirements = false;
 
-                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true).getStacks(), internalStorage, Action.SIMULATE);
+                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE);
                     IStackList<FluidStack> extractedFluids = null;
                     if (extractedItems != null) {
-                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(true).getStacks(), internalFluidStorage, Action.SIMULATE);
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(true), internalFluidStorage, Action.SIMULATE);
                         if (extractedFluids != null) {
                             hasAllRequirements = true;
                         }
@@ -149,8 +149,8 @@ public class ProcessingNode extends Node {
                     if (hasAllRequirements && canInsertFullAmount) {
                         this.state = ProcessingState.READY;
 
-                        extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false).getStacks(), internalStorage, Action.PERFORM);
-                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false).getStacks(), internalFluidStorage, Action.PERFORM);
+                        extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
 
                         IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
                         IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);

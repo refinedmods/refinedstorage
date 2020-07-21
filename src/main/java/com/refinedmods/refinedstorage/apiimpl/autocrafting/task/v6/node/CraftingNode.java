@@ -47,8 +47,8 @@ public class CraftingNode extends Node {
 
             if (interval == 0 || ticks % interval == 0) {
                 for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
-                    if (IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true).getStacks(), internalStorage, Action.SIMULATE) != null) {
-                        IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false).getStacks(), internalStorage, Action.PERFORM);
+                    if (IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE) != null) {
+                        IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
 
                         ItemStack output = getPattern().getOutput(recipe);
 

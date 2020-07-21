@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.api.autocrafting.task.*;
@@ -118,11 +117,6 @@ public class CraftingManager implements ICraftingManager {
         }
 
         return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
-    }
-
-    @Override
-    public ICraftingPatternChainList createPatternChainList() {
-        return new CraftingPatternChainList(patterns);
     }
 
     @Override
