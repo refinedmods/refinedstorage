@@ -12,8 +12,6 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingPatternInputs;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.PossibleFluidInputs;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.PossibleInputs;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.CraftingNode;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.NodeList;
@@ -154,7 +152,7 @@ public class CraftingCalculator {
         for (CraftingPatternInputs.Ingredient<ItemStack> ingredient : inputs.getItemIngredients()) {
             ingredientNumber++;
 
-            PossibleInputs possibleInputs = new PossibleInputs(ingredient.getInputs());
+            PossibleInputs<ItemStack> possibleInputs = new PossibleInputs<>(ingredient.getInputs());
             possibleInputs.sort(storageSource, results);
 
             ItemStack possibleInput = possibleInputs.get();
@@ -252,7 +250,7 @@ public class CraftingCalculator {
         for (CraftingPatternInputs.Ingredient<FluidStack> ingredient : inputs.getFluidIngredients()) {
             ingredientNumber++;
 
-            PossibleFluidInputs possibleInputs = new PossibleFluidInputs(ingredient.getInputs());
+            PossibleInputs<FluidStack> possibleInputs = new PossibleInputs<>(ingredient.getInputs());
             possibleInputs.sort(fluidStorageSource, fluidResults);
 
             FluidStack possibleInput = possibleInputs.get();
