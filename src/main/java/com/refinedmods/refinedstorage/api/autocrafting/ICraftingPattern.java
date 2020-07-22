@@ -81,15 +81,4 @@ public interface ICraftingPattern {
      * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link ICraftingTaskRegistry}
      */
     ResourceLocation getCraftingTaskFactoryId();
-
-    /**
-     * @param other the other pattern
-     * @return true if this pattern chain be in a chain with the other pattern, false otherwise
-     */
-    boolean canBeInChainWith(ICraftingPattern other);
-
-    /**
-     * @return the hashcode used to store the pattern chains
-     */
-    int getChainHashCode();
 }

@@ -22,8 +22,8 @@ public interface ICraftingMonitorElementList {
      * Add a element to the Processing or Crafting list, similar elements will be merged.
      * A {@link #commit()} will stop any following adds to be merged with previous ones.
      *
-     * @param element the {@link ICraftingMonitorElement}
-     * @param isProcessing wether to add to the processing list or the crafting list
+     * @param element      the {@link ICraftingMonitorElement}
+     * @param isProcessing whether to add to the processing list or the crafting list
      */
     void add(ICraftingMonitorElement element, boolean isProcessing);
 

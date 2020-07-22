@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -12,10 +12,10 @@ import net.minecraft.util.ResourceLocation;
 public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
 
-    private final CraftingTaskErrorType type;
+    private final CalculationResultType type;
     private final ItemStack stack;
 
-    public ErrorCraftingPreviewElement(CraftingTaskErrorType type, ItemStack stack) {
+    public ErrorCraftingPreviewElement(CalculationResultType type, ItemStack stack) {
         this.type = type;
         this.stack = stack;
     }
@@ -51,13 +51,13 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<Item
         buf.writeItemStack(stack);
     }
 
-    public CraftingTaskErrorType getType() {
+    public CalculationResultType getType() {
         return type;
     }
 
     public static ErrorCraftingPreviewElement read(PacketBuffer buf) {
         int errorIdx = buf.readInt();
-        CraftingTaskErrorType error = errorIdx >= 0 && errorIdx < CraftingTaskErrorType.values().length ? CraftingTaskErrorType.values()[errorIdx] : CraftingTaskErrorType.TOO_COMPLEX;
+        CalculationResultType error = errorIdx >= 0 && errorIdx < CalculationResultType.values().length ? CalculationResultType.values()[errorIdx] : CalculationResultType.TOO_COMPLEX;
         ItemStack stack = buf.readItemStack();
 
         return new ErrorCraftingPreviewElement(error, stack);

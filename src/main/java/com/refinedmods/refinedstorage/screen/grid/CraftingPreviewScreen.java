@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
@@ -25,7 +25,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,14 +35,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class CraftingPreviewScreen extends BaseScreen<Container> {
     private static final int VISIBLE_ROWS = 5;
 
     private final List<ICraftingPreviewElement<?>> stacks;
     private final Screen parent;
-    private final ResourceLocation factoryId;
 
     private final ScrollbarWidget scrollbar;
 
@@ -56,7 +53,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
     private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
 
-    public CraftingPreviewScreen(Screen parent, ResourceLocation factoryId, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
+    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
         super(new Container(null, 0) {
             @Override
             public boolean canInteractWith(@Nonnull PlayerEntity player) {
@@ -66,7 +63,6 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
-        this.factoryId = factoryId;
 
         this.id = id;
         this.quantity = quantity;
@@ -90,7 +86,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     }
 
     @Nullable
-    private CraftingTaskErrorType getErrorType() {
+    private CalculationResultType getErrorType() {
         if (stacks.size() == 1 && stacks.get(0) instanceof ErrorCraftingPreviewElement) {
             return ((ErrorCraftingPreviewElement) stacks.get(0)).getType();
         }
@@ -135,8 +131,6 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
                     renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
 
-                    RenderSystem.popMatrix();
-
                     ICraftingPattern pattern = PatternItem.fromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
 
                     int yy = 83;
@@ -162,11 +156,11 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
                     renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
                     renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
 
-                    RenderSystem.popMatrix();
-
                     break;
                 }
             }
+
+            RenderSystem.popMatrix();
         } else {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 

@@ -158,4 +158,50 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
     public int elementHashCode() {
         return API.instance().getItemStackHashCode(stack);
     }
+
+    public static class Builder {
+        private final ItemStack stack;
+        private int stored;
+        private int missing;
+        private int processing;
+        private int scheduled;
+        private int crafting;
+
+        public Builder(ItemStack stack) {
+            this.stack = stack;
+        }
+
+        public Builder stored(int stored) {
+            this.stored = stored;
+            return this;
+        }
+
+        public Builder missing(int missing) {
+            this.missing = missing;
+            return this;
+        }
+
+        public Builder processing(int processing) {
+            this.processing = processing;
+            return this;
+        }
+
+        public Builder scheduled(int scheduled) {
+            this.scheduled = scheduled;
+            return this;
+        }
+
+        public Builder crafting(int crafting) {
+            this.crafting = crafting;
+            return this;
+        }
+
+        public ItemCraftingMonitorElement build() {
+            return new ItemCraftingMonitorElement(stack, stored, missing, processing, scheduled, crafting);
+        }
+
+        public static Builder forStack(ItemStack stack) {
+            return new Builder(stack);
+        }
+    }
 }

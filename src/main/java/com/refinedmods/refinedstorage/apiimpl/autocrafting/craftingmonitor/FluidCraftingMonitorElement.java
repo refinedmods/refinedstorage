@@ -158,4 +158,50 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
     public int elementHashCode() {
         return API.instance().getFluidStackHashCode(stack);
     }
+
+    public static class Builder {
+        private final FluidStack stack;
+        private int stored;
+        private int missing;
+        private int processing;
+        private int scheduled;
+        private int crafting;
+
+        public Builder(FluidStack stack) {
+            this.stack = stack;
+        }
+
+        public FluidCraftingMonitorElement.Builder stored(int stored) {
+            this.stored = stored;
+            return this;
+        }
+
+        public FluidCraftingMonitorElement.Builder missing(int missing) {
+            this.missing = missing;
+            return this;
+        }
+
+        public FluidCraftingMonitorElement.Builder processing(int processing) {
+            this.processing = processing;
+            return this;
+        }
+
+        public FluidCraftingMonitorElement.Builder scheduled(int scheduled) {
+            this.scheduled = scheduled;
+            return this;
+        }
+
+        public FluidCraftingMonitorElement.Builder crafting(int crafting) {
+            this.crafting = crafting;
+            return this;
+        }
+
+        public FluidCraftingMonitorElement build() {
+            return new FluidCraftingMonitorElement(stack, stored, missing, processing, scheduled, crafting);
+        }
+
+        public static FluidCraftingMonitorElement.Builder forStack(FluidStack stack) {
+            return new FluidCraftingMonitorElement.Builder(stack);
+        }
+    }
 }
