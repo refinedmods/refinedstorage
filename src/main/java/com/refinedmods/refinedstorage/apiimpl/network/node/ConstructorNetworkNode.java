@@ -118,7 +118,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             );
 
             ActionResultType result = ForgeHooks.onPlaceItemIntoWorld(ctx);
-            if (result == ActionResultType.SUCCESS) {
+            if (result.isSuccessOrConsume()) {
                 network.extractItem(stack, 1, Action.PERFORM);
             }
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
