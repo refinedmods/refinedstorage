@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.9.3
+- Fixed duplication bug with the Constructor (Darkere)
+- Updated Japanese translation (a2y4)
+- Updated Taiwanese translation (ForFunPenguin)
+
 ### 1.9.2
 - Fixed crash with Forge version 67 (Darkere)
 - Fixed cases where Refined Storage unwillingly acts like a chunkloader (raoulvdberge)
