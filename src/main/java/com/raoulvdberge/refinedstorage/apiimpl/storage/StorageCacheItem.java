@@ -62,7 +62,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
             if (!batched) {
                 listeners.forEach(l -> l.onChanged(stack, size));
             } else {
-                batchedChanges.add(Pair.of(stack, size));
+                batchedChanges.add(Pair.of(stack.copy(), size));
             }
         }
     }
@@ -73,7 +73,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
             if (!batched) {
                 listeners.forEach(l -> l.onChanged(stack, -size));
             } else {
-                batchedChanges.add(Pair.of(stack, -size));
+                batchedChanges.add(Pair.of(stack.copy(), -size));
             }
         }
     }
@@ -81,11 +81,12 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     @Override
     public synchronized void flush() {
         if (!batchedChanges.isEmpty()) {
-            if(batchedChanges.size() > 1) {
+            if (batchedChanges.size() > 1) {
                 listeners.forEach(l -> l.onChangedBulk(batchedChanges));
             } else {
                 batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
             }
+
             batchedChanges.clear();
         }
     }

@@ -57,13 +57,29 @@ public abstract class ContainerBase extends Container {
     }
 
     protected void addPlayerInventory(int xInventory, int yInventory) {
-        int id = 0;
+        int disabledSlotNumber = getDisabledSlotNumber();
+
+        int id = 9;
+        
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                if (id == disabledSlotNumber) {
+                    addSlotToContainer(new SlotLegacyDisabled(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+                } else {
+                    addSlotToContainer(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+                }
+
+                id++;
+            }
+        }
+        
+        id = 0;
 
         for (int i = 0; i < 9; i++) {
             int x = xInventory + i * 18;
             int y = yInventory + 4 + (3 * 18);
 
-            if (isHeldItemDisabled() && i == player.inventory.currentItem) {
+            if (id == disabledSlotNumber) {
                 addSlotToContainer(new SlotLegacyDisabled(player.inventory, id, x, y));
             } else {
                 addSlotToContainer(new Slot(player.inventory, id, x, y));
@@ -71,22 +87,22 @@ public abstract class ContainerBase extends Container {
 
             id++;
         }
+    }
 
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
-
-                id++;
-            }
-        }
+    public List<SlotFilterFluid> getFluidSlots() {
+        return fluidSlots;
     }
 
     @Override
     public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
+        int disabledSlotNumber = getDisabledSlotNumber();
+
         // Prevent swapping disabled held item with the number keys (dragType is the slot we're swapping with)
-        if (isHeldItemDisabled() && clickType == ClickType.SWAP && dragType == player.inventory.currentItem) {
+        if (disabledSlotNumber != -1 &&
+                clickType == ClickType.SWAP &&
+                dragType == disabledSlotNumber) {
             return ItemStack.EMPTY;
         }
 
@@ -152,8 +168,8 @@ public abstract class ContainerBase extends Container {
         return super.canMergeSlot(stack, slot);
     }
 
-    protected boolean isHeldItemDisabled() {
-        return false;
+    protected int getDisabledSlotNumber() {
+        return -1;
     }
 
     @Override

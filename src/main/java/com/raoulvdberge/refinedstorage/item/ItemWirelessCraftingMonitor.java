@@ -33,8 +33,8 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
 
     @Override
     @Nonnull
-    public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
-        return new NetworkItemWirelessCraftingMonitor(handler, player, stack);
+    public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack, int slotId) {
+        return new NetworkItemWirelessCraftingMonitor(handler, player, stack, slotId);
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {

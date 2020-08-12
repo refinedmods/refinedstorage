@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -159,9 +158,6 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
 
     private void setFluidSlots(FluidInventory inventory, Collection<FluidStack> stacks, int begin, int end) {
         for (FluidStack stack : stacks) {
-            if (stack.amount > Fluid.BUCKET_VOLUME) {
-                continue;
-            }
 
             inventory.setFluid(begin, stack.copy());
 

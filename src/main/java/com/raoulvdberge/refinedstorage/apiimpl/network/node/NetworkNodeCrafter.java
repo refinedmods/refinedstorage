@@ -61,12 +61,14 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!world.isRemote) {
-                invalidate();
-            }
+            if (!reading) {
+                if (!world.isRemote) {
+                    invalidate();
+                }
 
-            if (network != null) {
-                network.getCraftingManager().rebuild();
+                if (network != null) {
+                    network.getCraftingManager().rebuild();
+                }
             }
         }
 
@@ -90,6 +92,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private CrafterMode mode = CrafterMode.IGNORE;
     private boolean locked = false;
     private boolean wasPowered;
+
+    private boolean reading;
 
     @Nullable
     private String displayName;
@@ -171,11 +175,18 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
+        // Fix cascading crafter invalidates while reading patterns
+        this.reading = true;
+
         StackUtils.readItems(patternsInventory, 0, tag);
 
         if (API.instance().getOneSixMigrationHelper().migratePatternInventory(patternsInventory)) {
             markNetworkNodeDirty();
         }
+
+        this.invalidate();
+
+        this.reading = false;
 
         StackUtils.readItems(upgrades, 1, tag);
 
@@ -228,8 +239,39 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public int getSpeedUpgradeCount() {
-        return upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
+    public int getUpdateInterval() {
+        switch (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED)) {
+            case 0:
+                return 10;
+            case 1:
+                return 8;
+            case 2:
+                return 6;
+            case 3:
+                return 4;
+            case 4:
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
+    @Override
+    public int getMaximumSuccessfulCraftingUpdates() {
+        switch (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED)) {
+            case 0:
+                return 1;
+            case 1:
+                return 2;
+            case 2:
+                return 3;
+            case 3:
+                return 4;
+            case 4:
+                return 5;
+            default:
+                return 1;
+        }
     }
 
     @Override

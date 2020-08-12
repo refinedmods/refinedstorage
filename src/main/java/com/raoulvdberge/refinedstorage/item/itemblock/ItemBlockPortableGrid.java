@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -29,7 +30,7 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            API.instance().openWirelessGrid(player, hand, world.provider.getDimension(), PortableGrid.ID);
+            API.instance().getGridManager().openGrid(PortableGrid.ID, (EntityPlayerMP) player, stack, player.inventory.currentItem);
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);

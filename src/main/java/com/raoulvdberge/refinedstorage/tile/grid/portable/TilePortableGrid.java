@@ -47,6 +47,7 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -62,6 +63,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext, IPortableGrid.IPortableGridRenderInfo {
+    public static int FACTORY_ID;
+
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
     private static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
     private static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
@@ -105,7 +108,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private static final String NBT_STORAGE_TRACKER = "StorageTracker";
     private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
     private static final String NBT_TYPE = "Type";
-
+    private static final String NBT_ENCHANTMENTS = "ench"; // @Volatile: minecraft specific nbt key
     private EnergyStorage energyStorage = recreateEnergyStorage(0);
     private PortableGridType type;
 
@@ -146,6 +149,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markNetworkNodeDirty);
     private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markNetworkNodeDirty);
+    private NBTTagList enchants = null;
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -243,6 +247,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             if (stack.getTagCompound().hasKey(PortableGrid.NBT_FLUID_STORAGE_TRACKER)) {
                 fluidStorageTracker.readFromNbt(stack.getTagCompound().getTagList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
             }
+
+            if (stack.getTagCompound().hasKey(NBT_ENCHANTMENTS)) {
+                enchants = stack.getTagCompound().getTagList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
+            }
         }
 
         this.diskState = getDiskState(this);
@@ -268,6 +276,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         stack.getTagCompound().setTag(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
         stack.getTagCompound().setTag(PortableGrid.NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
+
+        if (enchants != null) {
+            stack.getTagCompound().setTag(NBT_ENCHANTMENTS, enchants);
+        }
 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
 
@@ -508,6 +520,11 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
+    public int getSlotId() {
+        return -1;
+    }
+
+    @Override
     @Nullable
     public IStorageCache getCache() {
         return cache;
@@ -600,6 +617,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         tag.setTag(NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
         tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
+        if (enchants != null) {
+            tag.setTag(NBT_ENCHANTMENTS, enchants);
+        }
+
         return tag;
     }
 
@@ -646,6 +667,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
             fluidStorageTracker.readFromNbt(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        }
+
+        if (tag.hasKey(NBT_ENCHANTMENTS)) {
+            enchants = tag.getTagList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
         }
     }
 

@@ -606,7 +606,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         int energy = getEnergyScaled(stored, capacity, 100);
 
         if (energy <= 0) {
-            return ControllerEnergyType.OFF;
+            return ControllerEnergyType.OFF; 
         } else if (energy <= 10) {
             return ControllerEnergyType.NEARLY_OFF;
         } else if (energy <= 20) {

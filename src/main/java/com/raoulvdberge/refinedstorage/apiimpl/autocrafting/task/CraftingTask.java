@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
+import com.google.common.collect.Maps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -56,6 +57,7 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_PROCESSING = "Processing";
     private static final String NBT_MISSING = "Missing";
     private static final String NBT_MISSING_FLUIDS = "MissingFluids";
+    private static final String NBT_TOTAL_STEPS = "TotalSteps";
 
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
@@ -72,6 +74,7 @@ public class CraftingTask implements ICraftingTask {
     private int ticks;
     private long calculationStarted = -1;
     private long executionStarted = -1;
+    private int totalSteps;
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
     private IStorageDisk<ItemStack> internalStorage;
@@ -118,6 +121,10 @@ public class CraftingTask implements ICraftingTask {
         this.id = tag.getUniqueId(NBT_ID);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
 
+        if (tag.hasKey(NBT_TOTAL_STEPS)) {
+            this.totalSteps = tag.getInteger(NBT_TOTAL_STEPS);
+        }
+
         StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();
         StorageDiskFactoryFluid factoryFluid = new StorageDiskFactoryFluid();
 
@@ -153,6 +160,7 @@ public class CraftingTask implements ICraftingTask {
         tag.setTag(NBT_INTERNAL_FLUID_STORAGE, internalFluidStorage.writeToNbt());
         tag.setTag(NBT_TO_EXTRACT_INITIAL, writeItemStackList(toExtractInitial));
         tag.setTag(NBT_TO_EXTRACT_INITIAL_FLUIDS, writeFluidStackList(toExtractInitialFluids));
+        tag.setInteger(NBT_TOTAL_STEPS, totalSteps);
 
         NBTTagList craftingList = new NBTTagList();
         for (Crafting crafting : this.crafting) {
@@ -535,23 +543,6 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
-    private static int getTickInterval(int speedUpgrades) {
-        switch (speedUpgrades) {
-            case 0:
-                return 10;
-            case 1:
-                return 8;
-            case 2:
-                return 6;
-            case 3:
-                return 4;
-            case 4:
-                return 2;
-            default:
-                return 2;
-        }
-    }
-
     private void extractInitial() {
         if (!toExtractInitial.isEmpty()) {
             List<ItemStack> toRemove = new ArrayList<>();
@@ -560,7 +551,7 @@ public class CraftingTask implements ICraftingTask {
                 ItemStack result = network.extractItem(toExtract, toExtract.getCount(), Action.PERFORM);
 
                 if (result != null) {
-                    internalStorage.insert(toExtract, toExtract.getCount(), Action.PERFORM);
+                    internalStorage.insert(toExtract, result.getCount(), Action.PERFORM);
 
                     toRemove.add(result);
                 }
@@ -582,7 +573,7 @@ public class CraftingTask implements ICraftingTask {
                 FluidStack result = network.extractFluid(toExtract, toExtract.amount, Action.PERFORM);
 
                 if (result != null) {
-                    internalFluidStorage.insert(toExtract, toExtract.amount, Action.PERFORM);
+                    internalFluidStorage.insert(toExtract, result.amount, Action.PERFORM);
 
                     toRemove.add(result);
                 }
@@ -601,10 +592,24 @@ public class CraftingTask implements ICraftingTask {
     private void updateCrafting() {
         Iterator<Crafting> it = crafting.iterator();
 
+        Map<ICraftingPatternContainer, Integer> counter = Maps.newHashMap();
+
         while (it.hasNext()) {
             Crafting c = it.next();
 
-            if (ticks % getTickInterval(c.getPattern().getContainer().getSpeedUpgradeCount()) == 0) {
+            ICraftingPatternContainer container = c.getPattern().getContainer();
+
+            int interval = container.getUpdateInterval();
+
+            if (interval < 0) {
+                throw new IllegalStateException(c.getPattern().getContainer() + " has an update interval of < 0");
+            }
+
+            if (interval == 0 || ticks % interval == 0) {
+                if (counter.getOrDefault(container, 0) == container.getMaximumSuccessfulCraftingUpdates()) {
+                    continue;
+                }
+
                 boolean hasAll = true;
 
                 for (ItemStack need : c.getToExtract().getStacks()) {
@@ -648,7 +653,7 @@ public class CraftingTask implements ICraftingTask {
 
                     network.getCraftingManager().onTaskChanged();
 
-                    return;
+                    counter.merge(container, 1, (a, b) -> a + b);
                 }
             }
         }
@@ -657,8 +662,12 @@ public class CraftingTask implements ICraftingTask {
     private void updateProcessing() {
         Iterator<Processing> it = processing.iterator();
 
+        Map<ICraftingPatternContainer, Integer> counter = Maps.newHashMap();
+
         while (it.hasNext()) {
             Processing p = it.next();
+
+            ICraftingPatternContainer container = p.getPattern().getContainer();
 
             if (p.getState() == ProcessingState.PROCESSED) {
                 it.remove();
@@ -672,7 +681,17 @@ public class CraftingTask implements ICraftingTask {
                 continue;
             }
 
-            if (ticks % getTickInterval(p.getPattern().getContainer().getSpeedUpgradeCount()) == 0) {
+            int interval = p.getPattern().getContainer().getUpdateInterval();
+
+            if (interval < 0) {
+                throw new IllegalStateException(p.getPattern().getContainer() + " has an update interval of < 0");
+            }
+
+            if (interval == 0 || ticks % interval == 0) {
+                if (counter.getOrDefault(container, 0) == container.getMaximumSuccessfulCraftingUpdates()) {
+                    continue;
+                }
+
                 ProcessingState originalState = p.getState();
 
                 if (p.getPattern().getContainer().isLocked()) {
@@ -751,6 +770,8 @@ public class CraftingTask implements ICraftingTask {
                         p.setState(ProcessingState.EXTRACTED_ALL);
 
                         p.getPattern().getContainer().onUsedForProcessing();
+
+                        counter.merge(container, 1, (a, b) -> a + b);
                     }
                 }
 
@@ -799,6 +820,15 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
+    public int getCompletionPercentage() {
+        if (totalSteps == 0) {
+            return 0;
+        }
+
+        return 100 - (int) (((float) (crafting.size() + processing.size()) / (float) totalSteps) * 100F);
+    }
+
+    @Override
     public boolean update() {
         if (hasMissing()) {
             LOGGER.warn("Crafting task with missing items or fluids cannot execute, cancelling...");
@@ -808,6 +838,8 @@ public class CraftingTask implements ICraftingTask {
 
         if (executionStarted == -1) {
             executionStarted = System.currentTimeMillis();
+
+            totalSteps = crafting.size() + processing.size();
         }
 
         ++ticks;

@@ -231,6 +231,11 @@ public interface IGrid {
      */
     boolean isActive();
 
+    /**
+     * @return the slot id where this grid is located, if applicable, otherwise -1
+     */
+    int getSlotId();
+
     static boolean isValidViewType(int type) {
         return type == VIEW_TYPE_NORMAL ||
             type == VIEW_TYPE_CRAFTABLES ||

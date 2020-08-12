@@ -83,7 +83,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void updateNetworkNode() {
         super.updateNetworkNode();
 
-        if (network != null) {
+        if (canUpdate()) {
             if (networkTicks++ == 0) {
                 updateStorage(network);
 
@@ -293,12 +293,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public int getStored() {
+    public long getStored() {
         return TileExternalStorage.STORED.getValue();
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         return TileExternalStorage.CAPACITY.getValue();
     }
 

@@ -6,8 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -108,11 +106,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
             }
 
-            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-            if (networkItem != null) {
-                networkItem.onAction(NetworkItemAction.ITEM_EXTRACTED);
-            }
+            network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
         }
     }
 
@@ -126,11 +120,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
 
-        INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-        if (networkItem != null) {
-            networkItem.onAction(NetworkItemAction.ITEM_INSERTED);
-        }
+        network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
 
         return remainder;
     }
@@ -162,11 +152,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-        if (networkItem != null) {
-            networkItem.onAction(NetworkItemAction.ITEM_INSERTED);
-        }
+        network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
     }
 
     @Override
@@ -257,10 +243,6 @@ public class ItemGridHandler implements IItemGridHandler {
 
         network.getCraftingManager().cancel(id);
 
-        INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-        if (networkItem != null) {
-            networkItem.onAction(id == null ? NetworkItemAction.CRAFTING_TASK_ALL_CANCELLED : NetworkItemAction.CRAFTING_TASK_CANCELLED);
-        }
+        network.getNetworkItemHandler().drainEnergy(player, id == null ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
     }
 }

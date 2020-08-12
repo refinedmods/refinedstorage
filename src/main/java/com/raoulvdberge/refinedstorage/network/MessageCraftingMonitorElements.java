@@ -48,6 +48,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
 
             int qty = buf.readInt();
             long executionStarted = buf.readLong();
+            int percentage = buf.readInt();
 
             List<ICraftingMonitorElement> elements = new ArrayList<>();
 
@@ -61,7 +62,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
                 }
             }
 
-            tasks.add(new GuiCraftingMonitor.CraftingMonitorTask(id, requested, qty, executionStarted, elements));
+            tasks.add(new GuiCraftingMonitor.CraftingMonitorTask(id, requested, qty, executionStarted, percentage, elements));
         }
     }
 
@@ -74,6 +75,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
             ByteBufUtils.writeTag(buf, task.getRequested().writeToNbt());
             buf.writeInt(task.getQuantity());
             buf.writeLong(task.getExecutionStarted());
+            buf.writeInt(task.getCompletionPercentage());
 
             List<ICraftingMonitorElement> elements = task.getCraftingMonitorElements();
 

@@ -31,15 +31,15 @@ import java.util.function.Predicate;
 
 public class ContainerCrafterManager extends ContainerBase {
     public class CrafterManagerListener implements IContainerListener {
-        private IContainerListener base;
+        private EntityPlayerMP base;
         private boolean receivedContainerData;
 
-        public CrafterManagerListener(IContainerListener base) {
+        public CrafterManagerListener(EntityPlayerMP base) {
             this.base = base;
         }
 
         public EntityPlayerMP getPlayer() {
-            return (EntityPlayerMP) base;
+            return base;
         }
 
         @Override
@@ -80,7 +80,11 @@ public class ContainerCrafterManager extends ContainerBase {
 
     @Override
     public void addListener(IContainerListener listener) {
-        super.addListener(new CrafterManagerListener(listener));
+        if (listener instanceof EntityPlayerMP) {
+            listener = new CrafterManagerListener((EntityPlayerMP) listener);
+        }
+
+        super.addListener(listener);
     }
 
     public List<IContainerListener> getListeners() {

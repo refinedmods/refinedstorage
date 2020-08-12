@@ -6,8 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -78,11 +76,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                     player.updateHeldItem();
                 }
 
-                INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-                if (networkItem != null) {
-                    networkItem.onAction(NetworkItemAction.FLUID_EXTRACTED);
-                }
+                network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
             }
         }
     }
@@ -103,11 +97,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
             network.insertFluid(result.getValue(), result.getValue().amount, Action.PERFORM);
 
-            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-            if (networkItem != null) {
-                networkItem.onAction(NetworkItemAction.FLUID_INSERTED);
-            }
+            network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridInsertUsage);
 
             return result.getLeft();
         }

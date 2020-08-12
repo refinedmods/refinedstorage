@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -29,8 +30,8 @@ public class RecipeWrapperHollowCover implements IShapedCraftingRecipeWrapper {
             }
         }
 
-        ingredients.setInputs(ItemStack.class, inputs);
-        ingredients.setOutput(ItemStack.class, hollowCover);
+        ingredients.setInputs(VanillaTypes.ITEM, inputs);
+        ingredients.setOutput(VanillaTypes.ITEM, hollowCover);
     }
 
     @Override

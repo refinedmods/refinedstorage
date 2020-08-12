@@ -119,7 +119,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     delta -= result == null ? 0 : result.getCount();
 
                     if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                        network.getCraftingManager().request(this, wanted, delta);
+                        network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItemTracked(got, Math.abs(delta));

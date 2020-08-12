@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import com.raoulvdberge.refinedstorage.api.RSAPIInject;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
@@ -12,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRe
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridRegistry;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
@@ -33,20 +31,18 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.*;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
@@ -67,7 +63,7 @@ public class API implements IRSAPI {
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
     private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
-    private IWirelessGridRegistry gridRegistry = new WirelessGridRegistry();
+    private IGridManager gridManager = new GridManager();
     private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private IStorageDiskSync storageDiskSync = new StorageDiskSync();
     private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
@@ -185,8 +181,8 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IWirelessGridRegistry getWirelessGridRegistry() {
-        return gridRegistry;
+    public IGridManager getGridManager() {
+        return gridManager;
     }
 
     @Nonnull
@@ -275,11 +271,6 @@ public class API implements IRSAPI {
     @Override
     public List<ICraftingPatternRenderHandler> getPatternRenderHandlers() {
         return patternRenderHandlers;
-    }
-
-    @Override
-    public void openWirelessGrid(EntityPlayer player, EnumHand hand, int networkDimension, int id) {
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), networkDimension, id);
     }
 
     @Override

@@ -13,10 +13,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridFactoryPortableGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridFactoryWirelessFluidGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridFactoryWirelessGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.*;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
@@ -52,6 +51,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -90,6 +90,12 @@ public class ProxyCommon {
         CapabilityNetworkNodeProxy.register();
 
         API.deliver(e.getAsmData());
+
+        NetworkNodeGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryGridBlock());
+        WirelessGrid.ID = API.instance().getGridManager().add(new GridFactoryWirelessGrid());
+        WirelessFluidGrid.ID = API.instance().getGridManager().add(new GridFactoryWirelessFluidGrid());
+        TilePortableGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryPortableGridBlock());
+        PortableGrid.ID = API.instance().getGridManager().add(new GridFactoryPortableGrid());
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 
@@ -184,6 +190,8 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageSlotFilterSet.class, MessageSlotFilterSet.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageSlotFilterSetFluid.class, MessageSlotFilterSetFluid.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageSlotFilterFluidUpdate.class, MessageSlotFilterFluidUpdate.class, id++, Side.CLIENT);
+        RS.INSTANCE.network.registerMessage(MessageGridOpen.class, MessageGridOpen.class, id++, Side.CLIENT);
+        RS.INSTANCE.network.registerMessage(MessageNetworkItemOpen.class, MessageNetworkItemOpen.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
@@ -251,10 +259,6 @@ public class ProxyCommon {
         GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_BASIC), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC), 0.5F);
         GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_IMPROVED), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED), 0.5F);
         GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_ADVANCED), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED), 0.5F);
-
-        WirelessGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessGrid());
-        WirelessFluidGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessFluidGrid());
-        PortableGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryPortableGrid());
 
         if (IntegrationOC.isLoaded()) {
             DriverNetwork.register();

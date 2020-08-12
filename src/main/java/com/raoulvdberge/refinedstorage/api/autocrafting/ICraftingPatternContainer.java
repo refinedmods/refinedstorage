@@ -16,9 +16,37 @@ import java.util.UUID;
  */
 public interface ICraftingPatternContainer {
     /**
+     * @deprecated Use {@link #getUpdateInterval()} and/or {@link #getMaximumSuccessfulCraftingUpdates()}
      * @return the amount of speed upgrades in the container
      */
-    int getSpeedUpgradeCount();
+    @Deprecated
+    default int getSpeedUpgradeCount() {
+        return 0;
+    }
+
+    /**
+     * Returns the interval of when a crafting step with a pattern in this container can update.
+     * Minimum value is 0 (each tick).
+     * <p>
+     * Note: rather than maxing out the update interval, implementors might want to balance around {@link #getMaximumSuccessfulCraftingUpdates()}.
+     * This method merely speeds up the update rate, it might be more interesting to increase the output rate in {@link #getMaximumSuccessfulCraftingUpdates()}.
+     *
+     * @return the update interval
+     */
+    default int getUpdateInterval() {
+        return 10;
+    }
+
+    /**
+     * Returns the amount of successful crafting updates that this container can have per crafting step update.
+     * If this limit is reached, crafting patterns from this container won't be able to update until the next
+     * eligible crafting step update interval from {@link #getUpdateInterval()}.
+     *
+     * @return the maximum amount of successful crafting updates
+     */
+    default int getMaximumSuccessfulCraftingUpdates() {
+        return 1;
+    }
 
     /**
      * @return the inventory that this container is connected to, or null if no inventory is present

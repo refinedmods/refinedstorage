@@ -39,6 +39,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
     private int networkDimension;
     private BlockPos network;
+    private int slotId;
 
     private int viewType;
     private int sortingType;
@@ -63,11 +64,12 @@ public class WirelessGrid implements IGridNetworkAware {
         }
     };
 
-    public WirelessGrid(int networkDimension, ItemStack stack) {
-        this.networkDimension = networkDimension;
+    public WirelessGrid(ItemStack stack, int slotId) {
+        this.networkDimension = ItemWirelessGrid.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.stack = stack;
+        this.slotId = slotId;
 
         this.viewType = ItemWirelessGrid.getViewType(stack);
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
@@ -301,11 +303,17 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
+    public int getSlotId() {
+        return slotId;
+    }
+
+
+    @Override
     public void onClosed(EntityPlayer player) {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().onClose(player);
+            network.getNetworkItemHandler().close(player);
         }
     }
 }

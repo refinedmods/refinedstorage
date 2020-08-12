@@ -65,9 +65,14 @@ public class CraftingPattern implements ICraftingPattern {
                             if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
                                 ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
                             } else {
-                                ores.add(ore);
+                                ores.add(ore.copy());
                             }
                         }
+                    }
+
+                    // Fix item count
+                    for (ItemStack ore: ores) {
+                        ore.setCount(input.getCount());
                     }
 
                     inputs.add(ores);

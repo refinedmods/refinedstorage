@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
+import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -24,6 +25,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.EnumFacing;
@@ -37,6 +39,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
@@ -52,6 +55,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class NetworkNodeDestructor extends NetworkNode implements IComparable, IFilterable, IType, ICoverable {
     public static final String ID = "destructor";
@@ -84,6 +88,19 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.destructorUsage + upgrades.getEnergyUsage();
+    }
+
+    private FakePlayer getFakePlayer() {
+        WorldServer world = (WorldServer) this.world;
+        UUID owner = getOwner();
+        if (owner != null) {
+            PlayerProfileCache profileCache = world.getMinecraftServer().getPlayerProfileCache();
+            GameProfile profile = profileCache.getProfileByUUID(owner);
+            if (profile != null) {
+                return FakePlayerFactory.get(world, profile);
+            }
+        }
+        return FakePlayerFactory.getMinecraft(world);
     }
 
     @Override
@@ -121,7 +138,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     new RayTraceResult(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), getDirection().getOpposite()),
                     world,
                     front,
-                    FakePlayerFactory.getMinecraft((WorldServer) world)
+                    getFakePlayer()
                 );
 
                 if (!frontStack.isEmpty()) {
@@ -150,7 +167,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                             }
                         }
 
-                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) world));
+                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, getFakePlayer());
 
                         if (!MinecraftForge.EVENT_BUS.post(e)) {
                             world.playEvent(null, 2001, front, Block.getStateId(frontBlockState));

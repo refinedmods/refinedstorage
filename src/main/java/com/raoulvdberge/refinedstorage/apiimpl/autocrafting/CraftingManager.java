@@ -44,7 +44,7 @@ public class CraftingManager implements ICraftingManager {
     private List<UUID> tasksToCancel = new ArrayList<>();
     private NBTTagList tasksToRead;
 
-    private Map<INetworkNode, Long> throttledRequesters = new HashMap<>();
+    private Map<Object, Long> throttledRequesters = new HashMap<>();
 
     private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
@@ -228,7 +228,7 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     @Nullable
-    public ICraftingTask request(INetworkNode source, ItemStack stack, int amount) {
+    public ICraftingTask request(Object source, ItemStack stack, int amount) {
         if (isThrottled(source)) {
             return null;
         }
@@ -264,7 +264,7 @@ public class CraftingManager implements ICraftingManager {
 
     @Nullable
     @Override
-    public ICraftingTask request(INetworkNode source, FluidStack stack, int amount) {
+    public ICraftingTask request(Object source, FluidStack stack, int amount) {
         if (isThrottled(source)) {
             return null;
         }
@@ -298,22 +298,22 @@ public class CraftingManager implements ICraftingManager {
         return null;
     }
 
-    private void throttle(@Nullable INetworkNode node) {
-        OneSixMigrationHelper.removalHook(); // Remove @Nullable node
+    private void throttle(@Nullable Object source) {
+        OneSixMigrationHelper.removalHook(); // Remove @Nullable source
 
-        if (node != null) {
-            throttledRequesters.put(node, MinecraftServer.getCurrentTimeMillis());
+        if (source != null) {
+            throttledRequesters.put(source, MinecraftServer.getCurrentTimeMillis());
         }
     }
 
-    private boolean isThrottled(@Nullable INetworkNode node) {
-        OneSixMigrationHelper.removalHook(); // Remove @Nullable node
+    private boolean isThrottled(@Nullable Object source) {
+        OneSixMigrationHelper.removalHook(); // Remove @Nullable source
 
-        if (node == null) {
+        if (source == null) {
             return false;
         }
 
-        Long throttledSince = throttledRequesters.get(node);
+        Long throttledSince = throttledRequesters.get(source);
         if (throttledSince == null) {
             return false;
         }

@@ -37,12 +37,30 @@ public class BakedModelPattern extends BakedModelDelegate {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
                 if (canDisplayOutput(stack, pattern)) {
-                    return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
+                    ItemStack outputToRender = pattern.getOutputs().get(0);
+
+                    // @Volatile: Gregtech banned for rendering due to issues
+                    if (!hasBrokenRendering(outputToRender)) {
+                        return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(outputToRender, world, entity);
+                    }
                 }
 
                 return super.handleItemState(originalModel, stack, world, entity);
             }
         };
+    }
+
+    private boolean hasBrokenRendering(ItemStack stack) {
+        if ("gregtech".equals(stack.getItem().getCreatorModId(stack))) {
+            if ("tile.pipe".equals(stack.getTranslationKey())) {
+                return true;
+            }
+
+            if ("machine".equals(stack.getItem().delegate.name().getPath())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean canDisplayOutput(ItemStack patternStack, CraftingPattern pattern) {

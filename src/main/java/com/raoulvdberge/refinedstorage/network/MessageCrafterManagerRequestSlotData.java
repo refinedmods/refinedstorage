@@ -19,11 +19,13 @@ public class MessageCrafterManagerRequestSlotData extends MessageHandlerPlayerTo
     protected void handle(MessageCrafterManagerRequestSlotData message, EntityPlayerMP player) {
         if (player.openContainer instanceof ContainerCrafterManager) {
             for (IContainerListener listener : ((ContainerCrafterManager) player.openContainer).getListeners()) {
-                ContainerCrafterManager.CrafterManagerListener crafterCrafterManagerListener = (ContainerCrafterManager.CrafterManagerListener) listener;
+                if (listener instanceof ContainerCrafterManager.CrafterManagerListener) {
+                    ContainerCrafterManager.CrafterManagerListener cmListener = (ContainerCrafterManager.CrafterManagerListener) listener;
 
-                if (crafterCrafterManagerListener.getPlayer() == player) {
-                    crafterCrafterManagerListener.setReceivedContainerData();
-                    crafterCrafterManagerListener.sendAllContents(player.openContainer, player.openContainer.getInventory());
+                    if (cmListener.getPlayer() == player) {
+                        cmListener.setReceivedContainerData();
+                        cmListener.sendAllContents(player.openContainer, player.openContainer.getInventory());
+                    }
                 }
             }
         }

@@ -252,12 +252,12 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public int getStored() {
+    public long getStored() {
         return TileFluidStorage.STORED.getValue();
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         return getType().getCapacity();
     }
 

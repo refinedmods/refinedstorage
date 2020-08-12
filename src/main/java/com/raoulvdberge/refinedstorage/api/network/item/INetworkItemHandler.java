@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.item;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
@@ -14,16 +14,17 @@ public interface INetworkItemHandler {
      * Called when a player opens a network item.
      *
      * @param player the player that opened the network item
-     * @param hand   the hand the player opened it with
+     * @param stack  the stack that has been opened
+     * @param slotId the slot id, if applicable, otherwise -1
      */
-    void onOpen(EntityPlayer player, EnumHand hand);
+    void open(EntityPlayer player, ItemStack stack, int slotId);
 
     /**
      * Called when the player closes a network item.
      *
      * @param player the player that closed the network item
      */
-    void onClose(EntityPlayer player);
+    void close(EntityPlayer player);
 
     /**
      * Returns a {@link INetworkItem} for a player.
@@ -33,4 +34,10 @@ public interface INetworkItemHandler {
      */
     @Nullable
     INetworkItem getItem(EntityPlayer player);
+
+    /**
+     * @param player the player
+     * @param energy energy to extract
+     */
+    void drainEnergy(EntityPlayer player, int energy);
 }

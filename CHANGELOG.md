@@ -1,5 +1,44 @@
 # Refined Storage Changelog
 
+### 1.6.16
+- Updated Russian translation (Bytegm)
+- Fixed erroring controller tile entity (ian-rampage)
+- Fixed Inventory Tweaks sorting not respecting locked slots (Landmaster)
+- Fixed OpenComputers driver voiding excess fluids (BlueAgent)
+- Fixed being able to move wireless items in inventory (raoulvdberge, Dabombber)
+
+### 1.6.15
+- Fixed recipes with more than 1 bucket of fluid not transferring from JEI (Darkere)
+- Fixed oredict crafting patterns redefining recipes (Darkere)
+- Fixed Portable Grids not keeping their enchantments when placed (Darkere)
+- Shortened crafting text for the Russion translation to fix Grid overlays (yaroslav4167)
+- Fixed JEI hotkeys not working on fluid filter slots (raoulvdberge)
+- Fixed crash when opening Crafter Manager with FTB Quests installed (raoulvdberge)
+- GregTech Community Edition Wires and Machines are now banned from rendering on Refined Storage patterns because they are causing crashes (raoulvdberge/Darkere)
+- Fixed a bug where the container slots weren't synced when opening a Grid (raoulvdberge)
+
+### 1.6.14
+- Fixed server crash (raoulvdberge)
+
+### 1.6.13
+- Fixed Interface with Crafting Upgrade being stuck if an earlier item configuration has missing items or fluids (raoulvdberge)
+- Added keybindings to open wireless items. The default one set to open a Wireless Crafting Grid from Refined Storage Addons is CTRL + G (raoulvdberge)
+- Added Grid quantity formatting for item counts over 1 billion (raoulvdberge)
+- Updated German translation (cydhra)
+- Updated Chinese translation (KoderX)
+- Fixed wrong item count for oredict patterns (the-eater)
+- Fixed autocrafting duplication bug (Radviger / notcake)
+- Fixed Crafting Pattern not rendering tile entity items like a chest (zhykzhykzhyk / raoulvdberge)
+- Let Constructor and Destructor interact with world using their owner's profile (Radviger)
+
+### 1.6.12
+- Increased the speed of autocrafting (raoulvdberge)
+- Fixed External Storage sending storage updates when it is disabled (raoulvdberge)
+- Fixed slight performance issue with loading Crafters from disk (raoulvdberge)
+- Fixed storage GUIs overflowing on large numbers (raoulvdberge)
+- Added a completion percentage to the Crafting Monitor (raoulvdberge)
+- Updated Russian translation (kellixon)
+
 ### 1.6.11
 - Fixed blocks neighboring a controller breaking when returning from a dimension in a unchunkloaded area (raoulvdberge)
 

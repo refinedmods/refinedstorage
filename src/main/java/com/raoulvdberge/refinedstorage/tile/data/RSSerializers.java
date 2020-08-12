@@ -109,4 +109,26 @@ public final class RSSerializers {
             return value;
         }
     };
+
+    public static final DataSerializer<Long> LONG_SERIALIZER = new DataSerializer<Long>() {
+        @Override
+        public void write(PacketBuffer buf, Long value) {
+            buf.writeLong(value);
+        }
+
+        @Override
+        public Long read(PacketBuffer buf) throws IOException {
+            return buf.readLong();
+        }
+
+        @Override
+        public DataParameter<Long> createKey(int id) {
+            return null;
+        }
+
+        @Override
+        public Long copyValue(Long value) {
+            return value;
+        }
+    };
 }

@@ -7,8 +7,6 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
@@ -58,6 +56,7 @@ import java.util.Set;
 
 public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, IType {
     public static final String ID = "grid";
+    public static int FACTORY_ID = 0;
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
@@ -451,6 +450,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
+    public int getSlotId() {
+        return -1;
+    }
+
+    @Override
     public void onCrafted(EntityPlayer player) {
         onCrafted(this, world, player);
     }
@@ -496,14 +500,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         }
 
         grid.onCraftingMatrixChanged();
-
-        if (network != null) {
-            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
-
-            if (networkItem != null) {
-                networkItem.onAction(NetworkItemAction.ITEM_CRAFTED);
-            }
-        }
     }
 
     @Override

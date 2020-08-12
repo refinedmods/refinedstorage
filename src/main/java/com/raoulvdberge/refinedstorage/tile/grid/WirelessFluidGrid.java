@@ -39,6 +39,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
 
     private int networkDimension;
     private BlockPos network;
+    private int slotId;
 
     private int sortingType;
     private int sortingDirection;
@@ -62,11 +63,12 @@ public class WirelessFluidGrid implements IGridNetworkAware {
         }
     };
 
-    public WirelessFluidGrid(int networkDimension, ItemStack stack) {
-        this.networkDimension = networkDimension;
+    public WirelessFluidGrid(ItemStack stack, int slotId) {
+        this.networkDimension = ItemWirelessFluidGrid.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
 
         this.stack = stack;
+        this.slotId = slotId;
 
         this.sortingType = ItemWirelessFluidGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessFluidGrid.getSortingDirection(stack);
@@ -295,11 +297,16 @@ public class WirelessFluidGrid implements IGridNetworkAware {
     }
 
     @Override
+    public int getSlotId() {
+        return slotId;
+    }
+
+    @Override
     public void onClosed(EntityPlayer player) {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().onClose(player);
+            network.getNetworkItemHandler().close(player);
         }
     }
 }

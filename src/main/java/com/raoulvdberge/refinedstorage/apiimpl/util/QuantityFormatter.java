@@ -20,7 +20,14 @@ public class QuantityFormatter implements IQuantityFormatter {
 
     @Override
     public String formatWithUnits(int qty) {
-        if (qty >= 1_000_000) {
+        return formatWithUnits((long) qty);
+    }
+
+    @Override
+    public String formatWithUnits(long qty) {
+        if (qty >= 1_000_000_000) {
+            return formatterWithUnits.format(Math.round((float) qty / 1_000_000_000)) + "B";
+        } else if (qty >= 1_000_000) {
             float qtyShort = (float) qty / 1_000_000F;
 
             if (qty >= 100_000_000) {
@@ -43,6 +50,11 @@ public class QuantityFormatter implements IQuantityFormatter {
 
     @Override
     public String format(int qty) {
+        return formatter.format(qty);
+    }
+
+    @Override
+    public String format(long qty) {
         return formatter.format(qty);
     }
 
