@@ -64,8 +64,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (ticks == 1) {
             invalidate();

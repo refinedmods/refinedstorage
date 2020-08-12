@@ -431,7 +431,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
         if (clickedCreatePattern) {
-            BlockPos gridPos = ((NetworkNodeGrid) grid).getPos();
+            BlockPos gridPos = ((NetworkNodeGrid) grid).getNetworkNodePos();
 
             RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isActive()) {

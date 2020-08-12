@@ -80,8 +80,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (network != null) {
             if (networkTicks++ == 0) {
@@ -190,7 +190,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void setCompare(int compare) {
         this.compare = compare;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -202,7 +202,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void setMode(int mode) {
         this.mode = mode;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -214,7 +214,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void setPriority(int priority) {
         this.priority = priority;
 
-        markDirty();
+        markNetworkNodeDirty();
 
         if (network != null) {
             network.getItemStorageCache().sort();
@@ -326,7 +326,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
             network.getFluidStorageCache().invalidate();
         }
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -343,7 +343,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void setType(int type) {
         this.type = type;
 
-        markDirty();
+        markNetworkNodeDirty();
 
         if (network != null) {
             updateStorage(network);

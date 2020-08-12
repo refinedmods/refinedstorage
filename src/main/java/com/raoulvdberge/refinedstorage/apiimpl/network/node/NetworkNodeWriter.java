@@ -39,8 +39,8 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (getRedstoneStrength() != lastRedstoneStrength) {
             lastRedstoneStrength = getRedstoneStrength();

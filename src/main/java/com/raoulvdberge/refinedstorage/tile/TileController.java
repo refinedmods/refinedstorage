@@ -46,6 +46,8 @@ import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -134,10 +136,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private ISecurityManager securityManager = new SecurityManager(this);
 
     private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
-    private StorageTrackerItem itemStorageTracker = new StorageTrackerItem(this::markDirty);
+    private StorageTrackerItem itemStorageTracker = new StorageTrackerItem(this::markNetworkNodeDirty);
 
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
-    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
+    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markNetworkNodeDirty);
 
     private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 
@@ -167,7 +169,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             @Override
             public void onChanged() {
-                markDirty();
+                markNetworkNodeDirty();
             }
         });
 
@@ -206,6 +208,25 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void update() {
+        // Delegating to a secondary method name due to but in mine craft obfuscation
+        this.updateNetworkNode();
+    }
+
+    @Override
+    @MethodsReturnNonnullByDefault
+    public World getWorld() {
+        // Delegating to a secondary method name due to but in mine craft obfuscation
+        return this.getWorldForNetwork();
+    }
+
+    @Override
+    public BlockPos getNetworkNodePos() {
+        // Delegating to a secondary method name due to but in mine craft obfuscation
+        return this.getPos();
+    }
+
+    @Override
+    public void updateNetworkNode() {
         if (!world.isRemote) {
             if (canRun()) {
                 craftingManager.update();
@@ -213,7 +234,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 readerWriterManager.update();
 
                 if (!craftingManager.getTasks().isEmpty()) {
-                    markDirty();
+                    markNetworkNodeDirty();
                 }
             }
 
@@ -511,7 +532,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public World getWorld()
+    public World getWorldForNetwork()
     {
         // This is provided by net.minecraft.TileEntity - and needed as a part of INetworkNode
         // After obfuscation - these two methods will not be the same - so we have to redefine this here
@@ -616,7 +637,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override

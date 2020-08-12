@@ -127,7 +127,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void setStorageId(UUID id) {
         this.storageId = id;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public UUID getStorageId() {
@@ -196,7 +196,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void setCompare(int compare) {
         this.compare = compare;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -208,7 +208,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void setMode(int mode) {
         this.mode = mode;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public ItemHandlerBase getFilters() {
@@ -273,7 +273,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
             network.getItemStorageCache().invalidate();
         }
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -285,7 +285,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void setPriority(int priority) {
         this.priority = priority;
 
-        markDirty();
+        markNetworkNodeDirty();
 
         if (network != null) {
             network.getItemStorageCache().sort();

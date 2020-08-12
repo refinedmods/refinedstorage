@@ -132,8 +132,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (!canUpdate() || ticks % upgrades.getSpeed() != 0) {
             return;
@@ -468,11 +468,11 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         StackUtils.readItems(outputDisks, 5, tag);
 
         if (API.instance().getOneSixMigrationHelper().migrateDiskInventory(world, inputDisks)) {
-            markDirty();
+            markNetworkNodeDirty();
         }
 
         if (API.instance().getOneSixMigrationHelper().migrateDiskInventory(world, outputDisks)) {
-            markDirty();
+            markNetworkNodeDirty();
         }
     }
 

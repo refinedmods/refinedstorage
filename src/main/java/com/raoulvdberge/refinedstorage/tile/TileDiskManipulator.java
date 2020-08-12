@@ -22,7 +22,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     public static final TileDataParameter<Integer, TileDiskManipulator> TYPE = IType.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, NetworkNodeDiskManipulator.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
         t.getNode().setIoMode(v);
-        t.getNode().markDirty();
+        t.getNode().markNetworkNodeDirty();
     });
 
     private Integer[] diskState = new Integer[6];

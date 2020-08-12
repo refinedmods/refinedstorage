@@ -127,7 +127,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void setStorageId(UUID id) {
         this.storageId = id;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public UUID getStorageId() {
@@ -197,7 +197,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void setCompare(int compare) {
         this.compare = compare;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -209,7 +209,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void setMode(int mode) {
         this.mode = mode;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public FluidInventory getFilters() {
@@ -274,7 +274,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
             network.getFluidStorageCache().invalidate();
         }
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override
@@ -286,7 +286,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void setPriority(int priority) {
         this.priority = priority;
 
-        markDirty();
+        markNetworkNodeDirty();
 
         if (network != null) {
             network.getFluidStorageCache().sort();

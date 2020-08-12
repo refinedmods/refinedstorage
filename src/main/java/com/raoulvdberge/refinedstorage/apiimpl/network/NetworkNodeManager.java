@@ -81,7 +81,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                 NBTTagCompound nodeTag = new NBTTagCompound();
 
                 nodeTag.setString(NBT_NODE_ID, node.getId());
-                nodeTag.setLong(NBT_NODE_POS, node.getPos().toLong());
+                nodeTag.setLong(NBT_NODE_POS, node.getNetworkNodePos().toLong());
                 nodeTag.setTag(NBT_NODE_DATA, node.write(new NBTTagCompound()));
 
                 list.appendTag(nodeTag);

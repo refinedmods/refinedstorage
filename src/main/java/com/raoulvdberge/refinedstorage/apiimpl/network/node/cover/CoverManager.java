@@ -43,7 +43,7 @@ public class CoverManager {
             return false;
         }
 
-        INetworkNode neighbor = API.instance().getNetworkNodeManager(node.getWorld()).getNode(node.getPos().offset(direction));
+        INetworkNode neighbor = API.instance().getNetworkNodeManager(node.getWorldForNetwork()).getNode(node.getNetworkNodePos().offset(direction));
         if (neighbor instanceof ICoverable) {
             cover = ((ICoverable) neighbor).getCoverManager().getCover(direction.getOpposite());
 
@@ -78,7 +78,7 @@ public class CoverManager {
                 covers.put(facing, cover);
             }
 
-            node.markDirty();
+            node.markNetworkNodeDirty();
 
             if (node.getNetwork() != null) {
                 node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());

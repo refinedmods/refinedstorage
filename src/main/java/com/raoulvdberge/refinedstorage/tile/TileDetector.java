@@ -21,12 +21,12 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     public static final TileDataParameter<Integer, TileDetector> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getMode(), (t, v) -> {
         if (v == NetworkNodeDetector.MODE_UNDER || v == NetworkNodeDetector.MODE_EQUAL || v == NetworkNodeDetector.MODE_ABOVE) {
             t.getNode().setMode(v);
-            t.getNode().markDirty();
+            t.getNode().markNetworkNodeDirty();
         }
     });
     public static final TileDataParameter<Integer, TileDetector> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
-        t.getNode().markDirty();
+        t.getNode().markNetworkNodeDirty();
     }, (initial, p) -> GuiBase.executeLater(GuiDetector.class, detector -> detector.getAmount().setText(String.valueOf(p))));
 
     public TileDetector() {

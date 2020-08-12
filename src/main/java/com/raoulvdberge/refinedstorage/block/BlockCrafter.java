@@ -66,7 +66,7 @@ public class BlockCrafter extends BlockNode {
 
             if (tile instanceof TileCrafter && stack.hasDisplayName()) {
                 ((TileCrafter) tile).getNode().setDisplayName(stack.getDisplayName());
-                ((TileCrafter) tile).getNode().markDirty();
+                ((TileCrafter) tile).getNode().markNetworkNodeDirty();
             }
         }
     }

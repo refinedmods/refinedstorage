@@ -17,7 +17,7 @@ public class TileDestructor extends TileNode<NetworkNodeDestructor> {
     public static final TileDataParameter<Integer, TileDestructor> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean, TileDestructor> PICKUP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isPickupItem(), (t, v) -> {
         t.getNode().setPickupItem(v);
-        t.getNode().markDirty();
+        t.getNode().markNetworkNodeDirty();
     });
 
     public TileDestructor() {

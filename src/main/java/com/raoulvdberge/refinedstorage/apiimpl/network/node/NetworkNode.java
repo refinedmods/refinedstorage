@@ -69,7 +69,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     public void setRedstoneMode(RedstoneMode redstoneMode) {
         this.redstoneMode = redstoneMode;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Nonnull
@@ -99,7 +99,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public void markDirty() {
+    public void markNetworkNodeDirty() {
         if (!world.isRemote) {
             API.instance().getNetworkNodeManager(world).markForSaving();
         }
@@ -129,7 +129,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public void update() {
+    public void updateNetworkNode() {
         ++ticks;
 
         boolean canUpdate = canUpdate();
@@ -213,12 +213,12 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public BlockPos getPos() {
+    public BlockPos getNetworkNodePos() {
         return pos;
     }
 
     @Override
-    public World getWorld() {
+    public World getWorldForNetwork() {
         return world;
     }
 
@@ -249,7 +249,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
         onDirectionChanged();
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     protected void onDirectionChanged() {
@@ -280,7 +280,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     public void setOwner(@Nullable UUID owner) {
         this.owner = owner;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Nullable

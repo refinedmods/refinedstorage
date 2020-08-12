@@ -220,7 +220,7 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
         if (tag.hasKey(NBT_STORAGE)) {
             NBTTagCompound storageTag = tag.getCompoundTag(NBT_STORAGE);
 
-            storage.setStorageId(createItemDisk(storage.getWorld(), storage.getType().getCapacity(), storageTag));
+            storage.setStorageId(createItemDisk(storage.getWorldForNetwork(), storage.getType().getCapacity(), storageTag));
             storage.loadStorage();
         }
     }
@@ -238,7 +238,7 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
         if (tag.hasKey(NBT_STORAGE)) {
             NBTTagCompound storageTag = tag.getCompoundTag(NBT_STORAGE);
 
-            storage.setStorageId(createFluidDisk(storage.getWorld(), storage.getType().getCapacity(), storageTag));
+            storage.setStorageId(createFluidDisk(storage.getWorldForNetwork(), storage.getType().getCapacity(), storageTag));
             storage.loadStorage();
         }
     }

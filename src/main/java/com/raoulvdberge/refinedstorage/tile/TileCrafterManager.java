@@ -13,13 +13,13 @@ public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
     public static final TileDataParameter<Integer, TileCrafterManager> SIZE = new TileDataParameter<>(DataSerializers.VARINT, IGrid.SIZE_STRETCH, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
-            t.getNode().markDirty();
+            t.getNode().markNetworkNodeDirty();
         }
     }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, GuiBase::initGui));
     public static final TileDataParameter<Integer, TileCrafterManager> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
-            t.getNode().markDirty();
+            t.getNode().markNetworkNodeDirty();
         }
     }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, crafterManager -> crafterManager.getSearchField().setMode(p)));
 

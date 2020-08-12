@@ -50,8 +50,8 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (!canUpdate()) {
             return;
@@ -158,7 +158,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public void setCompare(int compare) {
         this.compare = compare;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override

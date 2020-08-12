@@ -57,8 +57,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (powered != wasPowered) {
             wasPowered = powered;
@@ -147,7 +147,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     public void setCompare(int compare) {
         this.compare = compare;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public int getMode() {
@@ -227,7 +227,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     public void setType(int type) {
         this.type = type;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override

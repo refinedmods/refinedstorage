@@ -144,8 +144,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean connected;
 
-    private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markDirty);
-    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markNetworkNodeDirty);
+    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markNetworkNodeDirty);
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -247,7 +247,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         this.diskState = getDiskState(this);
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     private EnergyStorage recreateEnergyStorage(int energyStored) {
@@ -701,7 +701,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public static PortableGridDiskState getDiskState(IPortableGridRenderInfo renderInfo) {

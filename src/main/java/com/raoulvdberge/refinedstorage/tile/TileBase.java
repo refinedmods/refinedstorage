@@ -30,7 +30,7 @@ public abstract class TileBase extends TileEntity {
 
         world.notifyNeighborsOfStateChange(pos, world.getBlockState(pos).getBlock(), true);
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     public EnumFacing getDirection() {
@@ -116,9 +116,16 @@ public abstract class TileBase extends TileEntity {
         return null;
     }
 
-    // @Volatile: Copied with some changes from the super method (avoid sending neighbor updates, it's not needed)
     @Override
     public void markDirty() {
+        // Delegating to a secondary method name due to but in mine craft obfuscation
+        // TODO review against markDirty logic - very hard to tell if this correct, or if we should be overriding
+        // markNetworkNodeDirty to point at markDirty()
+        markNetworkNodeDirty();
+    }
+
+    // @Volatile: Copied with some changes from the super method (avoid sending neighbor updates, it's not needed)
+    public void markNetworkNodeDirty() {
         if (world != null) {
             world.markChunkDirty(pos, this);
         }

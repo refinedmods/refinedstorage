@@ -15,7 +15,7 @@ public class TileConstructor extends TileNode<NetworkNodeConstructor> {
     public static final TileDataParameter<Integer, TileConstructor> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean, TileConstructor> DROP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isDrop(), (t, v) -> {
         t.getNode().setDrop(v);
-        t.getNode().markDirty();
+        t.getNode().markNetworkNodeDirty();
     });
 
     public TileConstructor() {

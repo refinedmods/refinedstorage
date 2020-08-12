@@ -57,7 +57,7 @@ public interface INetworkNode {
     /**
      * Updates a network node.
      */
-    void update();
+    void updateNetworkNode();
 
     /**
      * Writes the network node data to NBT.
@@ -70,17 +70,17 @@ public interface INetworkNode {
     /**
      * @return the position of this network node
      */
-    BlockPos getPos();
+    BlockPos getNetworkNodePos();
 
     /**
      * @return the world of this network node
      */
-    World getWorld();
+    World getWorldForNetwork();
 
     /**
      * Marks this node as dirty for saving.
      */
-    void markDirty();
+    void markNetworkNodeDirty();
 
     /**
      * @return the id of this node as specified in {@link INetworkNodeRegistry}

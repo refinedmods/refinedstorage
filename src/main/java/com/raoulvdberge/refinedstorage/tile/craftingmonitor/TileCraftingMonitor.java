@@ -19,12 +19,12 @@ public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
             t.getNode().setTabSelected(v);
         }
 
-        t.getNode().markDirty();
+        t.getNode().markNetworkNodeDirty();
     });
     public static final TileDataParameter<Integer, TileCraftingMonitor> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0) {
             t.getNode().setTabPage(v);
-            t.getNode().markDirty();
+            t.getNode().markNetworkNodeDirty();
         }
     });
 

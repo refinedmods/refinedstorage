@@ -60,8 +60,8 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (canUpdate() && ticks % upgrades.getSpeed() == 0) {
             if (type == IType.ITEMS) {
@@ -161,7 +161,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     public void setCompare(int compare) {
         this.compare = compare;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
 
@@ -243,7 +243,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     public void setType(int type) {
         this.type = type;
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override

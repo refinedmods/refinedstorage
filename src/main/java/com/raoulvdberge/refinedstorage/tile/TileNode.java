@@ -114,7 +114,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
             directionToMigrate = null;
 
-            markDirty();
+            markNetworkNodeDirty();
         }
 
         return (N) node;

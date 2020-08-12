@@ -45,7 +45,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                 ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
             }
 
-            markDirty();
+            markNetworkNodeDirty();
         }
     };
     private FluidTank tankOut = new FluidTank(TANK_CAPACITY);
@@ -68,8 +68,8 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void updateNetworkNode() {
+        super.updateNetworkNode();
 
         if (canUpdate()) {
             ItemStack container = in.getStackInSlot(0);
@@ -262,7 +262,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
         }
 
-        markDirty();
+        markNetworkNodeDirty();
     }
 
     @Override

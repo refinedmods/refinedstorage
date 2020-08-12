@@ -13,6 +13,6 @@ public class ListenerNetworkNode implements Consumer<Integer> {
 
     @Override
     public void accept(Integer slot) {
-        node.markDirty();
+        node.markNetworkNodeDirty();
     }
 }
