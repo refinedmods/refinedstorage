@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Ingredient<T> {
-
     private static final String NBT_INGREDIENTS = "Ingredients";
     private static final String NBT_AMOUNTS_PER_SLOT = "AmountsPerSlot";
     private static final String NBT_COUNT = "Count";
@@ -36,7 +35,6 @@ public class Ingredient<T> {
         slotCounts.put(slot, count);
         isItem = inputs.get(0) instanceof ItemStack;
         ingredients = getStackList();
-
     }
 
     public Ingredient(boolean isItem, CompoundNBT nbt) throws CraftingTaskReadException {

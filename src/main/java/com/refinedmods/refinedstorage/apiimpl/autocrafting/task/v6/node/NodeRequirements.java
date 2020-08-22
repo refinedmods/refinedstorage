@@ -91,7 +91,9 @@ public class NodeRequirements {
     }
 
     NonNullList<ItemStack> getItemsAsList(Map<Integer, Queue<ItemStack>> extracted, boolean removeEmpty) {
-        if (extracted.isEmpty()) return NonNullList.create();
+        if (extracted.isEmpty()) {
+            return NonNullList.create();
+        }
         NonNullList<ItemStack> toReturn = NonNullList.withSize(maxItemSlot + 1, ItemStack.EMPTY);
         extracted.forEach((id, queue) -> itemRequirements.get(id).getSlotCounts().forEach((slot, count) -> {
             int needed = count;
@@ -127,7 +129,9 @@ public class NodeRequirements {
     }
 
     NonNullList<FluidStack> getFluidsAsList(Map<Integer, Queue<FluidStack>> extracted) {
-        if (extracted.isEmpty()) return NonNullList.create();
+        if (extracted.isEmpty()) {
+            return NonNullList.create();
+        }
         NonNullList<FluidStack> toReturn = NonNullList.withSize(maxFluidSlot + 1, FluidStack.EMPTY);
         extracted.forEach((id, queue) -> fluidRequirements.get(id).getSlotCounts().forEach((slot, count) -> {
             int needed = count;
