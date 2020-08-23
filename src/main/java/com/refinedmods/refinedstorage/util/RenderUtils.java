@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -59,10 +60,10 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new StringTextComponent(amount + "x ").func_230529_a_(data);
+                    data = new StringTextComponent(amount + "x ").append(data);
                 }
 
-                tooltip.add(data.func_230530_a_(Styles.GRAY));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -87,10 +88,10 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").func_230529_a_(data);
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
                 }
 
-                tooltip.add(data.func_230530_a_(Styles.GRAY));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -162,15 +163,15 @@ public final class RenderUtils {
                 List<ITextProperties> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
                     ITextProperties  textLine = textLines.get(i);
-                    List<ITextProperties> wrappedLine = font.func_238425_b_(textLine, tooltipTextWidth);
+                    List<IReorderingProcessor> wrappedLine = font.func_238425_b_(textLine, tooltipTextWidth);
                     if (i == 0)
                         titleLinesCount = wrappedLine.size();
 
-                    for (ITextProperties line : wrappedLine) {
-                        int lineWidth = font.getStringWidth(line.getString());
+                    for (IReorderingProcessor line : wrappedLine) {
+                        /* TODO int lineWidth = font.getStringWidth(line.getString());
                         if (lineWidth > wrappedTooltipWidth)
                             wrappedTooltipWidth = lineWidth;
-                        wrappedTextLines.add(line);
+                        wrappedTextLines.add(line);*/
                     }
                 }
                 tooltipTextWidth = wrappedTooltipWidth;
@@ -235,7 +236,7 @@ public final class RenderUtils {
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 ITextProperties line = textLines.get(lineNumber);
                 if (line != null)
-                    font.func_238416_a_(line, (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
+                    // TODO font.func_238416_a_(line, (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
 
                 if (lineNumber + 1 == titleLinesCount)
                     tooltipY += 2;

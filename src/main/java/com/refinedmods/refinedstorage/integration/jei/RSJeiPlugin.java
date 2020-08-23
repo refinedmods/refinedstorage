@@ -27,7 +27,7 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGuiContainerHandler(BaseScreen.class, new GuiContainerHandler());
+        // TODO registration.addGuiContainerHandler(BaseScreen.class, new GuiContainerHandler());
 
         // TODO: https://github.com/mezz/JustEnoughItems/issues/1307
         // registration.addGhostIngredientHandler(BaseScreen.class, new GhostIngredientHandler());

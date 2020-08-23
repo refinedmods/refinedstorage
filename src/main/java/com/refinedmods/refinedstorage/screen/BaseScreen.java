@@ -124,8 +124,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         func_230459_a_(matrixStack, mouseX, mouseY);
     }
 
-    @Override // drawGuiContainerBackgroundLayer
-    protected void func_230450_a_(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         renderBackground(matrixStack, guiLeft, guiTop, mouseX, mouseY);
@@ -149,8 +149,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    @Override // drawGuiContainerForegroundLayer
-    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX -= guiLeft;
@@ -334,7 +334,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderTooltip(MatrixStack matrixStack, @Nonnull ItemStack stack, int x, int y, List<ITextComponent> lines) {
-        GuiUtils.drawHoveringText(stack, matrixStack, lines, x, y, width, height, -1, font);
+        // TODO GuiUtils.drawHoveringText(stack, matrixStack, lines, x, y, width, height, -1, font);
     }
 
     protected void onPreInit() {

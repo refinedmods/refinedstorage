@@ -38,7 +38,7 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     @Override
     public List<ITextComponent> getTooltip() {
         List<ITextComponent> items = new ArrayList<>(base.getTooltip());
-        items.add(new TranslationTextComponent(message).func_230530_a_(Styles.RED));
+        items.add(new TranslationTextComponent(message).setStyle(Styles.RED));
         return items;
     }
 

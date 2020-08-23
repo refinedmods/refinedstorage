@@ -1,6 +1,7 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+loaderVersion="[33,)"
 issueTrackerURL="https://github.com/refinedmods/refinedstorage"
+license="MIT"
 [[mods]]
 modId="refinedstorage"
 version="${version}"
@@ -18,7 +19,7 @@ An elegant solution to your hoarding problem
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[32.0.67,)" #mandatory
+    versionRange="[33.0.20,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER

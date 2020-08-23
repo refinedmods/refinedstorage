@@ -1,9 +1,11 @@
 # Refined Storage Changelog
 
 ### 1.9.3
+- Port to Minecraft 1.16.2 (raoulvdberge)
 - Fixed duplication bug with the Constructor (Darkere)
 - Updated Japanese translation (a2y4)
 - Updated Taiwanese translation (ForFunPenguin)
+- Refactored autocrafting code (raoulvdberge)
 
 ### 1.9.2
 - Fixed crash with Forge version 67 (Darkere)

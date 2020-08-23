@@ -40,7 +40,7 @@ public class GridTab implements IGridTab {
     @Override
     public void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
         if (!name.trim().equals("")) {
-            GuiUtils.drawHoveringText(matrixStack, Collections.singletonList(new StringTextComponent(name)), x, y, screenWidth, screenHeight, -1, fontRenderer);
+            // TODO GuiUtils.drawHoveringText(matrixStack, Collections.singletonList(new StringTextComponent(name)), x, y, screenWidth, screenHeight, -1, fontRenderer);
         }
     }
 

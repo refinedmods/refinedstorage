@@ -78,10 +78,10 @@ public class FilterItem extends Item {
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).func_230530_a_(Styles.YELLOW));
+        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
 
         if (isModFilter(stack)) {
-            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").func_230530_a_(Styles.BLUE));
+            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
         }
 
         FilterItemsItemHandler items = new FilterItemsItemHandler(stack);

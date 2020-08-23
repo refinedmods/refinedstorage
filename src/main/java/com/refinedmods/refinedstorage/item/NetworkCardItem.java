@@ -67,7 +67,7 @@ public class NetworkCardItem extends Item {
                 pos.getY(),
                 pos.getZ(),
                 type.func_240901_a_().toString()
-            ).func_230530_a_(Styles.GRAY));
+            ).setStyle(Styles.GRAY));
         }
     }
 
