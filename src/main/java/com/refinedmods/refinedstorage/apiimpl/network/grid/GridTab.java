@@ -5,12 +5,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.util.TemporaryPortingUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +40,7 @@ public class GridTab implements IGridTab {
     @Override
     public void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
         if (!name.trim().equals("")) {
-            // TODO GuiUtils.drawHoveringText(matrixStack, Collections.singletonList(new StringTextComponent(name)), x, y, screenWidth, screenHeight, -1, fontRenderer);
+            TemporaryPortingUtils.drawHoveringText(matrixStack, Collections.singletonList(new StringTextComponent(name)), x, y, screenWidth, screenHeight, -1, fontRenderer);
         }
     }
 

@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.screen.grid.AlternativesScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import com.refinedmods.refinedstorage.util.TemporaryPortingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
@@ -30,7 +31,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
@@ -334,7 +334,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderTooltip(MatrixStack matrixStack, @Nonnull ItemStack stack, int x, int y, List<ITextComponent> lines) {
-        // TODO GuiUtils.drawHoveringText(stack, matrixStack, lines, x, y, width, height, -1, font);
+        TemporaryPortingUtils.drawHoveringText(stack, matrixStack, lines, x, y, width, height, -1, font);
     }
 
     protected void onPreInit() {
