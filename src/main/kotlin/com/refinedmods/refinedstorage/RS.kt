@@ -11,14 +11,17 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
-object RS: ModInitializer {
-    private val log = getCustomLogger(RS::class)
-    const val ID = "refinedstorage"
-    val MAIN_GROUP: ItemGroup by lazy {
-        FabricItemGroupBuilder
-                .create(Identifier(ID, ID))
-                .icon {ItemStack(BlockRegistryGenerated.CREATIVE_CONTROLLER_BLOCK) }
-                .build() // TODO add to item group
+class RS: ModInitializer {
+    companion object{
+        val log = getCustomLogger(RS::class)
+        const val ID = "refinedstorage"
+        val MAIN_GROUP: ItemGroup by lazy {
+            FabricItemGroupBuilder
+                    .create(Identifier(ID, ID))
+                    .icon {ItemStack(BlockRegistryGenerated.CREATIVE_CONTROLLER_BLOCK) }
+                    .build() // TODO add to item group
+        }
+
     }
 //    val NETWORK_HANDLER = NetworkHandler()
 //    val SERVER_CONFIG = ServerConfig()
