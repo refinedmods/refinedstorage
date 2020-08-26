@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.config.ClientConfig
 //import com.refinedmods.refinedstorage.config.ServerConfig
 //import com.refinedmods.refinedstorage.network.NetworkHandler
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.ItemGroup
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
 object RS: ModInitializer {
+    val log = getCustomLogger(RS::class)
     const val ID = "refinedstorage"
 //    val NETWORK_HANDLER = NetworkHandler()
 //    val MAIN_GROUP: ItemGroup = FabricItemGroupBuilder
@@ -21,6 +23,7 @@ object RS: ModInitializer {
 
     override fun onInitialize() {
         // TODO Register stuff!
+        log.info("Initializing...")
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec())
@@ -33,5 +36,6 @@ object RS: ModInitializer {
 //        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer::class.java, { e:<<>?> -> commonSetup.onRegisterRecipeSerializers(e) })
 //        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType::class.java, { e:<<>?> -> commonSetup.onRegisterContainers(e) })
 //        deliver()
+        log.info("Initialized!")
     }
 }
