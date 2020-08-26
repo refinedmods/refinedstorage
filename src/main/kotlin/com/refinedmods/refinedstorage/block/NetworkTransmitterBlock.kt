@@ -1,11 +1,12 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
-import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
+//import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer
+//import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
+//import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile
 import com.refinedmods.refinedstorage.util.BlockUtils
-import com.refinedmods.refinedstorage.util.NetworkUtils
+//import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -29,7 +30,10 @@ class NetworkTransmitterBlock:
         const val ID = "network_transmitter"
     }
 
-    override fun createBlockEntity(world: BlockView): BlockEntity? = NetworkTransmitterTile()
+    override fun createBlockEntity(world: BlockView): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = NetworkTransmitterTile()
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         // TODO Port Gui

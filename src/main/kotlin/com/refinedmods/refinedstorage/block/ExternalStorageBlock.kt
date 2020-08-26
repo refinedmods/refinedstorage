@@ -1,15 +1,16 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause
-import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode
+//import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause
+//import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
-import com.refinedmods.refinedstorage.container.ExternalStorageContainer
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
-import com.refinedmods.refinedstorage.tile.ExternalStorageTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
+//import com.refinedmods.refinedstorage.container.ExternalStorageContainer
+//import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
+//import com.refinedmods.refinedstorage.tile.ExternalStorageTile
 import com.refinedmods.refinedstorage.util.BlockUtils
-import com.refinedmods.refinedstorage.util.CollisionUtils
-import com.refinedmods.refinedstorage.util.NetworkUtils
+//import com.refinedmods.refinedstorage.util.CollisionUtils
+//import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -56,7 +57,10 @@ class ExternalStorageBlock:
         }
     }
 
-    override fun createBlockEntity(world: BlockView): BlockEntity = ExternalStorageTile()
+    override fun createBlockEntity(world: BlockView): BlockEntity
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = ExternalStorageTile()
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         // TODO Port Gui
@@ -77,16 +81,17 @@ class ExternalStorageBlock:
         return ActionResult.SUCCESS
     }
 
-    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify)
-
-        if (!world.isClient) {
-            val node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos))
-            if (node is ExternalStorageNetworkNode && node.network != null && fromPos == pos.offset(node.direction)) {
-                node.updateStorage(node.network, InvalidateCause.NEIGHBOR_CHANGED)
-            }
-        }
-    }
+    // TODO
+//    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
+//        super.neighborUpdate(state, world, pos, block, fromPos, notify)
+//
+//        if (!world.isClient) {
+//            val node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos))
+//            if (node is ExternalStorageNetworkNode && node.network != null && fromPos == pos.offset(node.direction)) {
+//                node.updateStorage(node.network, InvalidateCause.NEIGHBOR_CHANGED)
+//            }
+//        }
+//    }
 
     companion object {
         const val ID = "external_storage"

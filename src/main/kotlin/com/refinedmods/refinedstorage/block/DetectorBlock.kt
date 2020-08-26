@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.DetectorTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.Block
@@ -28,7 +28,9 @@ class DetectorBlock:
 {
 
     override fun createBlockEntity(world: BlockView?): BlockEntity? {
-        return DetectorTile()
+        return NoOpBlockEntity()
+        // TODO BlockEntities
+//        return DetectorTile()
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
@@ -39,15 +41,15 @@ class DetectorBlock:
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape
             = SHAPE
 
-
-    fun canProvidePower(state: BlockState?): Boolean {
-        return true
-    }
-
-    fun getWeakPower(state: BlockState?, world: BlockView, pos: BlockPos?, side: Direction?): Int {
-        val tile: BlockEntity = world.getBlockEntity(pos)!!
-        return if (tile is DetectorTile && tile.node!!.isPowered) 15 else 0
-    }
+// TODO Power
+//    fun canProvidePower(state: BlockState?): Boolean {
+//        return true
+//    }
+//
+//    fun getWeakPower(state: BlockState?, world: BlockView, pos: BlockPos?, side: Direction?): Int {
+//        val tile: BlockEntity = world.getBlockEntity(pos)!!
+//        return if (tile is DetectorTile && tile.node!!.isPowered) 15 else 0
+//    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui

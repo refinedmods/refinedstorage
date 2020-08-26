@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
-import com.refinedmods.refinedstorage.tile.ConstructorTile
+//import com.refinedmods.refinedstorage.tile.ConstructorTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -29,7 +29,10 @@ class ConstructorBlock:
     override val direction: BlockDirection
         get() = BlockDirection.ANY
 
-    override fun createBlockEntity(world: BlockView): BlockEntity = ConstructorTile()
+    // TODO BlockEntities
+//    override fun createBlockEntity(world: BlockView): {
+//        BlockEntity = ConstructorTile()
+//    }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
         return getOrCreate(state, Function { s: BlockState ->

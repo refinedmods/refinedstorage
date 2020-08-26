@@ -2,7 +2,8 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
-import com.refinedmods.refinedstorage.tile.DestructorTile
+//import com.refinedmods.refinedstorage.tile.DestructorTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -30,7 +31,9 @@ class DestructorBlock:
         get() = BlockDirection.ANY
 
     override fun createBlockEntity(world: BlockView): BlockEntity {
-        return DestructorTile()
+        return NoOpBlockEntity()
+        // TODO BlockEntities
+//        return DestructorTile()
     }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {

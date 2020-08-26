@@ -2,7 +2,8 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.grid.GridType
-import com.refinedmods.refinedstorage.tile.grid.GridTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
+//import com.refinedmods.refinedstorage.tile.grid.GridTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -32,7 +33,9 @@ open class GridBlock(private val type: GridType=GridType.NORMAL):
         get() = BlockDirection.HORIZONTAL
 
     override fun createBlockEntity(world: BlockView): BlockEntity? {
-        return GridTile(type)
+        return NoOpBlockEntity()
+        // TODO BlockEntities
+//        return GridTile(type)
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {

@@ -1,12 +1,13 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.api.network.security.Permission
-import com.refinedmods.refinedstorage.container.FluidInterfaceContainer
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
-import com.refinedmods.refinedstorage.tile.FluidInterfaceTile
+//import com.refinedmods.refinedstorage.api.network.security.Permission
+//import com.refinedmods.refinedstorage.container.FluidInterfaceContainer
+//import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
+//import com.refinedmods.refinedstorage.tile.FluidInterfaceTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
-import com.refinedmods.refinedstorage.util.NetworkUtils
+//import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -30,7 +31,10 @@ class FluidInterfaceBlock:
         const val ID = "fluid_interface"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = FluidInterfaceTile()
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = FluidInterfaceTile()
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui

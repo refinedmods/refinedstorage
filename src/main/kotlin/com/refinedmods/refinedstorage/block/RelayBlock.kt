@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.RelayTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -24,7 +24,10 @@ class RelayBlock:
         const val ID = "relay"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = RelayTile()
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = RelayTile()
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         // TODO Port Gui

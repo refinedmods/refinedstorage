@@ -2,9 +2,10 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.api.network.NetworkType
-import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
-import com.refinedmods.refinedstorage.apiimpl.network.Network
-import com.refinedmods.refinedstorage.tile.ControllerTile
+//import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
+//import com.refinedmods.refinedstorage.apiimpl.network.Network
+//import com.refinedmods.refinedstorage.tile.ControllerTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.Block
@@ -47,7 +48,9 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     }
 
     override fun createBlockEntity(world: BlockView): BlockEntity {
-        return ControllerTile(type)
+        return NoOpBlockEntity()
+        // TODO BlockEntities
+//        return ControllerTile(type)
     }
 
     override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
@@ -63,19 +66,19 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         }
     }
 
-
-
-    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify)
-        if (!world.isClient) {
-            val network = instance()
-                    .getNetworkManager(world as ServerWorld)!!
-                    .getNetwork(pos)
-            if (network is Network) {
-                network.setRedstonePowered(world.isReceivingRedstonePower(pos))
-            }
-        }
-    }
+// TODO Network
+//
+//    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, fromPos: BlockPos, notify: Boolean) {
+//        super.neighborUpdate(state, world, pos, block, fromPos, notify)
+//        if (!world.isClient) {
+//            val network = instance()
+//                    .getNetworkManager(world as ServerWorld)!!
+//                    .getNetwork(pos)
+////            if (network is Network) {
+////                network.setRedstonePowered(world.isReceivingRedstonePower(pos))
+////            }
+//        }
+//    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Figure out how to port the GUI

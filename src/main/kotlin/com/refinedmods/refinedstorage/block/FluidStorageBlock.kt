@@ -1,9 +1,10 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode
-import com.refinedmods.refinedstorage.apiimpl.storageimport.FluidStorageType
-import com.refinedmods.refinedstorage.tile.FluidStorageTile
+//import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode
+import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType
+//import com.refinedmods.refinedstorage.tile.FluidStorageTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -31,23 +32,27 @@ open class FluidStorageBlock(val type: FluidStorageType):
         const val CREATIVE_FLUID_STORAGE_BLOCK_ID = "creative_fluid_storage_block"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = FluidStorageTile(type)
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = FluidStorageTile(type)
 
-    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
-        if (!world.isClient) {
-            (world.getBlockEntity(pos) as FluidStorageTile?)?.node?.let {
-                itemStack.tag?.let { tag ->
-                    if (tag.containsUuid(FluidStorageNetworkNode.NBT_ID)) {
-                        it.storageId = tag.getUuid(FluidStorageNetworkNode.NBT_ID)
-                    }
-                    it.loadStorage()
-                }
-            }
-        }
-
-        // Call this after loading the storage, so the network discovery can use the loaded storage.
-        super.onPlaced(world, pos, state, placer, itemStack)
-    }
+    // TODO Network
+//    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
+//        if (!world.isClient) {
+//            (world.getBlockEntity(pos) as FluidStorageTile?)?.node?.let {
+//                itemStack.tag?.let { tag ->
+//                    if (tag.containsUuid(FluidStorageNetworkNode.NBT_ID)) {
+//                        it.storageId = tag.getUuid(FluidStorageNetworkNode.NBT_ID)
+//                    }
+//                    it.loadStorage()
+//                }
+//            }
+//        }
+//
+//        // Call this after loading the storage, so the network discovery can use the loaded storage.
+//        super.onPlaced(world, pos, state, placer, itemStack)
+//    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui

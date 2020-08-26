@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.WirelessTransmitterTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -27,7 +27,10 @@ class WirelessTransmitterBlock:
     override val direction: BlockDirection
         get() = BlockDirection.ANY
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = WirelessTransmitterTile()
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = WirelessTransmitterTile()
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
         return when (state.get(direction.property)) {

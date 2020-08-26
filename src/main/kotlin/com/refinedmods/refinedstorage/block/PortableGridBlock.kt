@@ -1,9 +1,10 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem
+//import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridDiskState
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile
+//import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.Block
@@ -26,15 +27,18 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, PortableGridBlock.ID)
-open class PortableGridBlock(private val type: PortableGridBlockItem.Type = PortableGridBlockItem.Type.NORMAL):
+open class PortableGridBlock(private val type: Type = Type.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES),
         BlockEntityProvider
 {
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = PortableGridTile(type)
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = PortableGridTile(type)
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
         super.appendProperties(builder)
-        builder.add(DISK_STATE)
+//        builder.add(DISK_STATE)
         builder.add(ACTIVE)
     }
 
@@ -54,13 +58,14 @@ open class PortableGridBlock(private val type: PortableGridBlockItem.Type = Port
         return ActionResult.SUCCESS
     }
 
-    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack)
-        if (!world.isClient) {
-            (world.getBlockEntity(pos) as PortableGridTile?)!!.applyDataFromItemToTile(itemStack)
-            (world.getBlockEntity(pos) as PortableGridTile?)!!.updateState()
-        }
-    }
+    // TODO Tiles
+//    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
+//        super.onPlaced(world, pos, state, placer, itemStack)
+//        if (!world.isClient) {
+//            (world.getBlockEntity(pos) as PortableGridTile?)!!.applyDataFromItemToTile(itemStack)
+//            (world.getBlockEntity(pos) as PortableGridTile?)!!.updateState()
+//        }
+//    }
 
     companion object {
         const val ID = "portable_grid"
@@ -76,4 +81,8 @@ open class PortableGridBlock(private val type: PortableGridBlockItem.Type = Port
 }
 
 @RegisterBlock(RS.ID, PortableGridBlock.CREATIVE_ID)
-class CreativePortableGridBlock: PortableGridBlock(PortableGridBlockItem.Type.CREATIVE)
+class CreativePortableGridBlock: PortableGridBlock(Type.CREATIVE)
+
+enum class Type {
+    NORMAL, CREATIVE
+}

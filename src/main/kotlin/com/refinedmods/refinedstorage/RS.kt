@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage
 
-import com.refinedmods.refinedstorage.config.ClientConfig
-import com.refinedmods.refinedstorage.config.ServerConfig
-import com.refinedmods.refinedstorage.network.NetworkHandler
+//import com.refinedmods.refinedstorage.config.ClientConfig
+//import com.refinedmods.refinedstorage.config.ServerConfig
+//import com.refinedmods.refinedstorage.network.NetworkHandler
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.ItemGroup
@@ -11,13 +11,13 @@ import net.minecraft.util.Identifier
 
 object RS: ModInitializer {
     const val ID = "refinedstorage"
-    val NETWORK_HANDLER = NetworkHandler()
-    val MAIN_GROUP: ItemGroup = FabricItemGroupBuilder
-            .create(Identifier(ID, ID))
-            .icon {ItemStack(RSBlocks.CREATIVE_CONTROLLER) }
-            .build() // TODO add to item group
-    val SERVER_CONFIG = ServerConfig()
-    val CLIENT_CONFIG = ClientConfig()
+//    val NETWORK_HANDLER = NetworkHandler()
+//    val MAIN_GROUP: ItemGroup = FabricItemGroupBuilder
+//            .create(Identifier(ID, ID))
+//            .icon {ItemStack(RSBlocks.CREATIVE_CONTROLLER) }
+//            .build() // TODO add to item group
+//    val SERVER_CONFIG = ServerConfig()
+//    val CLIENT_CONFIG = ClientConfig()
 
     override fun onInitialize() {
         // TODO Register stuff!

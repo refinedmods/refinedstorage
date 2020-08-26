@@ -1,7 +1,8 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
+//import com.refinedmods.refinedstorage.tile.CrafterManagerTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -27,7 +28,9 @@ class CrafterManagerBlock:
         get() = BlockDirection.HORIZONTAL
 
     override fun createBlockEntity(world: BlockView): BlockEntity? {
-        return CrafterManagerTile()
+        return NoOpBlockEntity()
+        // TODO BlockEntities
+//        return CrafterManagerTile()
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {

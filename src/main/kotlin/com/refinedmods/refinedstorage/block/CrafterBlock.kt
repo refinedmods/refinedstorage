@@ -1,7 +1,8 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.CrafterTile
+//import com.refinedmods.refinedstorage.tile.CrafterTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -29,19 +30,22 @@ class CrafterBlock:
         get() = BlockDirection.ANY_FACE_PLAYER
 
     override fun createBlockEntity(world: BlockView): BlockEntity? {
-        return CrafterTile()
+        // TODO BlockEntities
+        return NoOpBlockEntity()
+//        return CrafterTile()
     }
 
-    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack)
-        if (!world.isClient) {
-            val tile: BlockEntity? = world.getBlockEntity(pos)
-            if (tile is CrafterTile && itemStack.hasCustomName()) {
-                (tile as CrafterTile?)!!.node!!.displayName = itemStack.name
-                (tile as CrafterTile?)!!.node!!.markDirty()
-            }
-        }
-    }
+    // TODO BlockEntities
+//    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
+//        super.onPlaced(world, pos, state, placer, itemStack)
+//        if (!world.isClient) {
+//            val tile: BlockEntity? = world.getBlockEntity(pos)
+//            if (tile is CrafterTile && itemStack.hasCustomName()) {
+//                (tile as CrafterTile?)!!.node!!.displayName = itemStack.name
+//                (tile as CrafterTile?)!!.node!!.markDirty()
+//            }
+//        }
+//    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         //TODO  Port GUI

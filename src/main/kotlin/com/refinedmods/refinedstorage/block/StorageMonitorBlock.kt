@@ -1,12 +1,13 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.container.StorageMonitorContainer
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
-import com.refinedmods.refinedstorage.tile.StorageMonitorTile
+//import com.refinedmods.refinedstorage.container.StorageMonitorContainer
+//import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
+//import com.refinedmods.refinedstorage.tile.StorageMonitorTile
 import com.refinedmods.refinedstorage.util.BlockUtils
-import com.refinedmods.refinedstorage.util.NetworkUtils
-import com.refinedmods.refinedstorage.util.WorldUtils
+//import com.refinedmods.refinedstorage.util.NetworkUtils
+//import com.refinedmods.refinedstorage.util.WorldUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -33,7 +34,10 @@ class StorageMonitorBlock:
     override val direction: BlockDirection
         get() = BlockDirection.HORIZONTAL
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = StorageMonitorTile()
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = StorageMonitorTile()
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port gui

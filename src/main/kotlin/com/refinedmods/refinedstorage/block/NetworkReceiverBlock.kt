@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.NetworkReceiverTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -17,6 +17,9 @@ class NetworkReceiverBlock:
         const val ID = "network_receiver"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = NetworkReceiverTile()
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = NetworkReceiverTile()
 
 }

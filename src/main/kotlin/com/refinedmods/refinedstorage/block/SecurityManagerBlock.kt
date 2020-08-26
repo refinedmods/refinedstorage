@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.tile.SecurityManagerTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -24,7 +24,10 @@ class SecurityManagerBlock:
         const val ID = "security_manager"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = SecurityManagerTile()
+    override fun createBlockEntity(world: BlockView?): BlockEntity?
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = SecurityManagerTile()
 
     override val direction: BlockDirection
         get() = BlockDirection.HORIZONTAL

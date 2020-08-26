@@ -2,8 +2,9 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
-import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability
-import com.refinedmods.refinedstorage.tile.CableTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
+//import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability
+//import com.refinedmods.refinedstorage.tile.CableTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.Block
@@ -104,7 +105,9 @@ open class CableBlock(
     }
 
     override fun createBlockEntity(world: BlockView): BlockEntity {
-        return CableTile()
+        return NoOpBlockEntity()
+        // TODO TileEntities
+//        return CableTile()
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {

@@ -2,7 +2,8 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
-import com.refinedmods.refinedstorage.tile.ImporterTile
+//import com.refinedmods.refinedstorage.tile.ImporterTile
+import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import net.minecraft.block.BlockEntityProvider
@@ -48,7 +49,10 @@ class ImporterBlock:
         }
     }
 
-    override fun createBlockEntity(world: BlockView): BlockEntity = ImporterTile()
+    override fun createBlockEntity(world: BlockView): BlockEntity
+            = NoOpBlockEntity()
+    // TODO BlockEntities
+//            = ImporterTile()
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui
