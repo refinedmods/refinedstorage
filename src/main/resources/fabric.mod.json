@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "refinedstorage",
+  "version": "${version}",
+
+  "name": "RefinedStorage",
+  "description": "Refined Storage resources",
+  "authors": [
+    "Original RefinedStorage Team",
+    "slynk",
+    "dyedquartz"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/thinkslynk/refinedstorage"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/refinedstorage/logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+        "com.refinedmods.refinedstorage.RS"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
