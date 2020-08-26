@@ -16,5 +16,5 @@ pluginManagement {
 }
 
 include(":annotations", ":processor")
-project(":annotations").projectDir = file("../fabric_annotations/annotations")
-project(":processor").projectDir = file("../fabric_annotations/processor")
+project(":annotations").projectDir = file("../FabricSeams/annotations")
+project(":processor").projectDir = file("../FabricSeams/processor")
