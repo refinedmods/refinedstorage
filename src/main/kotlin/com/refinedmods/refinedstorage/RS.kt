@@ -12,20 +12,22 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
 object RS: ModInitializer {
-    val log = getCustomLogger(RS::class)
+    private val log = getCustomLogger(RS::class)
     const val ID = "refinedstorage"
+    val MAIN_GROUP: ItemGroup by lazy {
+        FabricItemGroupBuilder
+                .create(Identifier(ID, ID))
+                .icon {ItemStack(BlockRegistryGenerated.CREATIVE_CONTROLLER_BLOCK) }
+                .build() // TODO add to item group
+    }
 //    val NETWORK_HANDLER = NetworkHandler()
-    val MAIN_GROUP: ItemGroup = FabricItemGroupBuilder
-            .create(Identifier(ID, ID))
-            .icon {ItemStack(BlockRegistryGenerated.CREATIVE_CONTROLLER_BLOCK) }
-            .build() // TODO add to item group
 //    val SERVER_CONFIG = ServerConfig()
 //    val CLIENT_CONFIG = ClientConfig()
 
     override fun onInitialize() {
-        BlockRegistryGenerated.register()
-        // TODO Register stuff!
         log.info("Initializing...")
+//        BlockRegistryGenerated.register()
+        // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec())
