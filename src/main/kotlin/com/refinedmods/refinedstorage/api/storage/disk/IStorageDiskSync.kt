@@ -1,0 +1,26 @@
+package com.refinedmods.refinedstorage.api.storage.disk
+
+import java.util.*
+
+
+/**
+ * Used to send requests to the server to get storage disk information ([StorageDiskSyncData]).
+ */
+interface IStorageDiskSync {
+    /**
+     * Gets disk data by disk id.
+     * Can return null if there is no response yet.
+     *
+     * @param id the disk id
+     * @return the disk data, or null if there was no response from the server yet
+     */
+    fun getData(id: UUID): StorageDiskSyncData?
+
+    /**
+     * Sends a request to the server to get information from a storage disk.
+     * Can be called in a loop or in high frequency, the request is throttled.
+     *
+     * @param id the disk id
+     */
+    fun sendRequest(id: UUID)
+}
