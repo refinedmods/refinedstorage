@@ -13,7 +13,6 @@ plugins {
 val modVersion: String by project
 val mavenGroup: String by project
 val archivesBaseName: String by project
-val bla: String by project.project("../")
 
 version = modVersion
 group = mavenGroup
