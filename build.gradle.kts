@@ -43,7 +43,6 @@ repositories {
     maven("https://server.bbkr.space/artifactory/libs-release")
     maven("https://aperlambda.github.io/maven")
     maven("https://jitpack.io")
-    maven("https://www.cursemaven.com")
 }
 
 dependencies {
@@ -65,7 +64,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
 
-    modImplementation("curse.maven:roughly-enough-items:$reiVersion")
+    modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
