@@ -124,20 +124,21 @@ open class CableBlock(
         private val DOWN: BooleanProperty = BooleanProperty.of("down")
         private val WATERLOGGED: BooleanProperty = BooleanProperty.of("waterlogged")
 
-        protected val HOLDER_NORTH: VoxelShape = createCuboidShape(7.0, 7.0, 2.0, 9.0, 9.0, 6.0)
-        protected val HOLDER_EAST: VoxelShape = createCuboidShape(10.0, 7.0, 7.0, 14.0, 9.0, 9.0)
-        protected val HOLDER_SOUTH: VoxelShape = createCuboidShape(7.0, 7.0, 10.0, 9.0, 9.0, 14.0)
-        protected val HOLDER_WEST: VoxelShape = createCuboidShape(2.0, 7.0, 7.0, 6.0, 9.0, 9.0)
-        protected val HOLDER_UP: VoxelShape = createCuboidShape(7.0, 10.0, 7.0, 9.0, 14.0, 9.0)
-        protected val HOLDER_DOWN: VoxelShape = createCuboidShape(7.0, 2.0, 7.0, 9.0, 6.0, 9.0)
-        private val SHAPE_CORE: VoxelShape = createCuboidShape(6.0, 6.0, 6.0, 10.0, 10.0, 10.0)
-        private val SHAPE_NORTH: VoxelShape = createCuboidShape(6.0, 6.0, 0.0, 10.0, 10.0, 6.0)
-        private val SHAPE_EAST: VoxelShape = createCuboidShape(10.0, 6.0, 6.0, 16.0, 10.0, 10.0)
-        private val SHAPE_SOUTH: VoxelShape = createCuboidShape(6.0, 6.0, 10.0, 10.0, 10.0, 16.0)
-        private val SHAPE_WEST: VoxelShape = createCuboidShape(0.0, 6.0, 6.0, 6.0, 10.0, 10.0)
-        private val SHAPE_UP: VoxelShape = createCuboidShape(6.0, 10.0, 6.0, 10.0, 16.0, 10.0)
-        private val SHAPE_DOWN: VoxelShape =  createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
+        @JvmStatic protected val HOLDER_NORTH: VoxelShape = createCuboidShape(7.0, 7.0, 2.0, 9.0, 9.0, 6.0)
+        @JvmStatic protected val HOLDER_EAST: VoxelShape = createCuboidShape(10.0, 7.0, 7.0, 14.0, 9.0, 9.0)
+        @JvmStatic protected val HOLDER_SOUTH: VoxelShape = createCuboidShape(7.0, 7.0, 10.0, 9.0, 9.0, 14.0)
+        @JvmStatic protected val HOLDER_WEST: VoxelShape = createCuboidShape(2.0, 7.0, 7.0, 6.0, 9.0, 9.0)
+        @JvmStatic protected val HOLDER_UP: VoxelShape = createCuboidShape(7.0, 10.0, 7.0, 9.0, 14.0, 9.0)
+        @JvmStatic protected val HOLDER_DOWN: VoxelShape = createCuboidShape(7.0, 2.0, 7.0, 9.0, 6.0, 9.0)
+        @JvmStatic  private val SHAPE_CORE: VoxelShape = createCuboidShape(6.0, 6.0, 6.0, 10.0, 10.0, 10.0)
+        @JvmStatic private val SHAPE_NORTH: VoxelShape = createCuboidShape(6.0, 6.0, 0.0, 10.0, 10.0, 6.0)
+        @JvmStatic private val SHAPE_EAST: VoxelShape = createCuboidShape(10.0, 6.0, 6.0, 16.0, 10.0, 10.0)
+        @JvmStatic private val SHAPE_SOUTH: VoxelShape = createCuboidShape(6.0, 6.0, 10.0, 10.0, 10.0, 16.0)
+        @JvmStatic private val SHAPE_WEST: VoxelShape = createCuboidShape(0.0, 6.0, 6.0, 6.0, 10.0, 10.0)
+        @JvmStatic private val SHAPE_UP: VoxelShape = createCuboidShape(6.0, 10.0, 6.0, 10.0, 16.0, 10.0)
+        @JvmStatic private val SHAPE_DOWN: VoxelShape =  createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
 
+        @JvmStatic
         protected fun getCableShape(state: BlockState): VoxelShape {
             var shape = SHAPE_CORE
             
