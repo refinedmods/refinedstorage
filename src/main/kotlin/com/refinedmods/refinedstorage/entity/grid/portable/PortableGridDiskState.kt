@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.tile.grid.portable
+package com.refinedmods.refinedstorage.entity.grid.portable
 
 import net.minecraft.util.StringIdentifiable
 

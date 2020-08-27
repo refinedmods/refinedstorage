@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "refinedstorage",
-  "version": "${version}",
+  "version": "${VERSION}",
 
   "name": "RefinedStorage",
   "description": "An elegant solution to your hoarding problem",

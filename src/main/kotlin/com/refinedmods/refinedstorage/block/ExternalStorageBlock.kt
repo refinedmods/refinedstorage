@@ -4,7 +4,6 @@ import com.refinedmods.refinedstorage.RS
 //import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause
 //import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
-import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 //import com.refinedmods.refinedstorage.container.ExternalStorageContainer
 //import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider
 //import com.refinedmods.refinedstorage.tile.ExternalStorageTile
@@ -12,19 +11,13 @@ import com.refinedmods.refinedstorage.util.BlockUtils
 //import com.refinedmods.refinedstorage.util.CollisionUtils
 //import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
-import net.minecraft.block.Block
-import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
