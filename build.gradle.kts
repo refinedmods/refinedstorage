@@ -51,6 +51,7 @@ dependencies {
     val loaderVersion: String by project
     val fabricVersion: String by project
     val fabricKotlinVersion: String by project
+    val reiVersion: String by project
 //    val libGui: String by project
 //    val spruceUi: String by project
 
@@ -62,6 +63,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
+
+    modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
