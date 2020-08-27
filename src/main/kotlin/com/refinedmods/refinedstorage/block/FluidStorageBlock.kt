@@ -6,6 +6,8 @@ import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType
 //import com.refinedmods.refinedstorage.tile.FluidStorageTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
@@ -64,12 +66,20 @@ open class FluidStorageBlock(val type: FluidStorageType):
 }
 
 @RegisterBlock(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class SixtyFourKFluidStorageBlock: FluidStorageBlock(FluidStorageType.SIXTY_FOUR_K)
+
 @RegisterBlock(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class TwoHundredFiftySixKFluidStorageBlock: FluidStorageBlock(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K)
+
 @RegisterBlock(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class ThousandFourKFluidStorageBlock: FluidStorageBlock(FluidStorageType.THOUSAND_TWENTY_FOUR_K)
+
 @RegisterBlock(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class FourThousandNinetySixKFluidStorageBlock: FluidStorageBlock(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K)
+
 @RegisterBlock(RS.ID, FluidStorageBlock.CREATIVE_FLUID_STORAGE_BLOCK_ID)
 class CreativeFluidStorageBlock: FluidStorageBlock(FluidStorageType.CREATIVE)

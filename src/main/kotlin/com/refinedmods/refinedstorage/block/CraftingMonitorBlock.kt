@@ -4,6 +4,8 @@ import com.refinedmods.refinedstorage.RS
 //import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
@@ -13,6 +15,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, CraftingMonitorBlock.ID)
+@RegisterBlockItem(RS.ID, CraftingMonitorBlock.ID, "R_S_ITEM_GROUP")
 class CraftingMonitorBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
 //        BlockEntityProvider

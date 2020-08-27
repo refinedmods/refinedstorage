@@ -1,7 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "refinedstorage",
+<<<<<<< HEAD
   "version": "${VERSION}",
+=======
+  "version": "%VERSION%",
+>>>>>>> fabric-working
 
   "name": "RefinedStorage",
   "description": "An elegant solution to your hoarding problem",

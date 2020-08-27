@@ -5,6 +5,8 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
 //import com.refinedmods.refinedstorage.tile.ImporterTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.entity.player.PlayerEntity
@@ -19,6 +21,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ImporterBlock.ID)
+@RegisterBlockItem(RS.ID, ImporterBlock.ID, "R_S_ITEM_GROUP")
 class ImporterBlock:
         CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
 //        BlockEntityProvider

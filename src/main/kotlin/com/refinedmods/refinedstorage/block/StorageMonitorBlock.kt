@@ -8,6 +8,8 @@ import com.refinedmods.refinedstorage.util.BlockUtils
 //import com.refinedmods.refinedstorage.util.NetworkUtils
 //import com.refinedmods.refinedstorage.util.WorldUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
@@ -17,6 +19,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, StorageMonitorBlock.ID)
+@RegisterBlockItem(RS.ID, StorageMonitorBlock.ID, "R_S_ITEM_GROUP")
 class StorageMonitorBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
 //        BlockEntityProvider

@@ -5,6 +5,7 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -16,20 +17,15 @@ class RS: ModInitializer {
     companion object{
         val log = getCustomLogger(RS::class)
         const val ID = "refinedstorage"
-        val MAIN_GROUP: ItemGroup by lazy {
-            FabricItemGroupBuilder
-                    .create(Identifier(ID, ID))
-                    .icon {ItemStack(BlockRegistryGenerated.CREATIVE_CONTROLLER_BLOCK) }
-                    .build() // TODO add to item group
-        }
-
     }
 //    val NETWORK_HANDLER = NetworkHandler()
 //    val SERVER_CONFIG = ServerConfig()
 //    val CLIENT_CONFIG = ClientConfig()
 
     override fun onInitialize() {
-        log.info("Initializing...")
+
+//        BlockRegistryGenerated.register()
+        ItemRegistryGenerated.register()
         BlockRegistryGenerated.register()
         BlockItemRegistryGenerated.register()
         // TODO Register stuff!
