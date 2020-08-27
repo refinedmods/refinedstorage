@@ -19,8 +19,8 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, GridBlock.NORMAL_ID)
 open class GridBlock(private val type: GridType=GridType.NORMAL):
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val NORMAL_ID = "grid"
@@ -32,11 +32,11 @@ open class GridBlock(private val type: GridType=GridType.NORMAL):
     override val direction: BlockDirection
         get() = BlockDirection.HORIZONTAL
 
-    override fun createBlockEntity(world: BlockView): BlockEntity? {
-        return NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView): BlockEntity? {
+//        return NoOpBlockEntity()
         // TODO BlockEntities
 //        return GridTile(type)
-    }
+//    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui

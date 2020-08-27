@@ -17,17 +17,17 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, RelayBlock.ID)
 class RelayBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "relay"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
-    // TODO BlockEntities
-//            = RelayTile()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
+//    // TODO BlockEntities
+////            = RelayTile()
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         // TODO Port Gui

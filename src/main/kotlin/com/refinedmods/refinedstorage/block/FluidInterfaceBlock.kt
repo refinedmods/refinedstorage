@@ -24,15 +24,15 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, FluidInterfaceBlock.ID)
 class FluidInterfaceBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object{
         const val ID = "fluid_interface"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = FluidInterfaceTile()
 

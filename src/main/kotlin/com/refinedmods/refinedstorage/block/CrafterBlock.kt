@@ -20,8 +20,8 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, CrafterBlock.ID)
 class CrafterBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "crafter"
@@ -29,11 +29,11 @@ class CrafterBlock:
     override val direction: BlockDirection
         get() = BlockDirection.ANY_FACE_PLAYER
 
-    override fun createBlockEntity(world: BlockView): BlockEntity? {
-        // TODO BlockEntities
-        return NoOpBlockEntity()
-//        return CrafterTile()
-    }
+//    override fun createBlockEntity(world: BlockView): BlockEntity? {
+//        // TODO BlockEntities
+//        return NoOpBlockEntity()
+////        return CrafterTile()
+//    }
 
     // TODO BlockEntities
 //    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {

@@ -23,8 +23,8 @@ import java.util.function.Function
 
 @RegisterBlock(RS.ID, ExporterBlock.ID)
 class ExporterBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false), // TODO Check connected
-        BlockEntityProvider
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+//        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
@@ -36,22 +36,23 @@ class ExporterBlock:
     }
 
     private fun getLineShape(state: BlockState): VoxelShape {
-        val direction: Direction = state.get(direction.property)
-        return when {
-            direction === Direction.NORTH -> LINE_NORTH
-            direction === Direction.EAST -> LINE_EAST
-            direction === Direction.SOUTH -> LINE_SOUTH
-            direction === Direction.WEST -> LINE_WEST
-            direction === Direction.UP -> LINE_UP
-            direction === Direction.DOWN -> LINE_DOWN
-            else -> VoxelShapes.empty()
-        }
+        return LINE_NORTH
+//        val direction: Direction = state.get(direction.property)
+//        return when {
+//            direction === Direction.NORTH -> LINE_NORTH
+//            direction === Direction.EAST -> LINE_EAST
+//            direction === Direction.SOUTH -> LINE_SOUTH
+//            direction === Direction.WEST -> LINE_WEST
+//            direction === Direction.UP -> LINE_UP
+//            direction === Direction.DOWN -> LINE_DOWN
+//            else -> VoxelShapes.empty()
+//        }
     }
 
-    override fun createBlockEntity(world: BlockView): BlockEntity
-            = NoOpBlockEntity()
-    // TODO BlockEntities
-//            = ExporterTile()
+//    override fun createBlockEntity(world: BlockView): BlockEntity
+//            = NoOpBlockEntity()
+//    // TODO BlockEntities
+////            = ExporterTile()
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         // TODO Port Gui

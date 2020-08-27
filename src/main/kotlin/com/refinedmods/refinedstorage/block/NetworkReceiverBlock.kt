@@ -10,16 +10,16 @@ import net.minecraft.world.BlockView
 
 @RegisterBlock(RS.ID, NetworkReceiverBlock.ID)
 class NetworkReceiverBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "network_receiver"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
-    // TODO BlockEntities
-//            = NetworkReceiverTile()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
+//    // TODO BlockEntities
+////            = NetworkReceiverTile()
 
 }

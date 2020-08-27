@@ -24,8 +24,8 @@ import java.util.function.Function
 
 @RegisterBlock(RS.ID, ImporterBlock.ID)
 class ImporterBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false), // TODO Check connected
-        BlockEntityProvider
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+//        BlockEntityProvider
 {
 
     override val direction: BlockDirection
@@ -38,19 +38,20 @@ class ImporterBlock:
     }
 
     private fun getLineShape(state: BlockState): VoxelShape {
-        return when(state.get(BlockDirection.ANY.property)) {
-            Direction.DOWN -> LINE_DOWN
-            Direction.UP -> LINE_UP
-            Direction.NORTH -> LINE_NORTH
-            Direction.SOUTH -> LINE_SOUTH
-            Direction.WEST -> LINE_WEST
-            Direction.EAST -> LINE_EAST
-            else -> VoxelShapes.empty()
-        }
+        return LINE_NORTH
+//        return when(state.get(BlockDirection.ANY.property)) {
+//            Direction.DOWN -> LINE_DOWN
+//            Direction.UP -> LINE_UP
+//            Direction.NORTH -> LINE_NORTH
+//            Direction.SOUTH -> LINE_SOUTH
+//            Direction.WEST -> LINE_WEST
+//            Direction.EAST -> LINE_EAST
+//            else -> VoxelShapes.empty()
+//        }
     }
 
-    override fun createBlockEntity(world: BlockView): BlockEntity
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView): BlockEntity
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = ImporterTile()
 

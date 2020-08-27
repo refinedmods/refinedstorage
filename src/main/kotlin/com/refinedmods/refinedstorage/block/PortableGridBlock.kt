@@ -28,19 +28,19 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, PortableGridBlock.ID)
 open class PortableGridBlock(private val type: Type = Type.NORMAL):
-        BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES),
-        BlockEntityProvider
+        BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
+//        BlockEntityProvider
 {
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
-    // TODO BlockEntities
-//            = PortableGridTile(type)
-
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        super.appendProperties(builder)
-//        builder.add(DISK_STATE)
-        builder.add(ACTIVE)
-    }
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
+//    // TODO BlockEntities
+////            = PortableGridTile(type)
+//
+//    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+//        super.appendProperties(builder)
+////        builder.add(DISK_STATE)
+//        builder.add(ACTIVE)
+//    }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape
             = SHAPE
@@ -70,14 +70,14 @@ open class PortableGridBlock(private val type: Type = Type.NORMAL):
     companion object {
         const val ID = "portable_grid"
         const val CREATIVE_ID = "creative_portable_grid"
-        val DISK_STATE: EnumProperty<PortableGridDiskState> = EnumProperty.of("disk_state", PortableGridDiskState::class.java)
-        val ACTIVE: BooleanProperty = BooleanProperty.of("active")
+//        val DISK_STATE: EnumProperty<PortableGridDiskState> = EnumProperty.of("disk_state", PortableGridDiskState::class.java)
+//        val ACTIVE: BooleanProperty = BooleanProperty.of("active")
         private val SHAPE: VoxelShape = createCuboidShape(0.0, 0.0, 0.0, 16.0, 13.2, 16.0)
     }
 
-    init {
-        defaultState = stateManager.defaultState.with(DISK_STATE, PortableGridDiskState.NONE).with(ACTIVE, false)
-    }
+//    init {
+//        defaultState = stateManager.defaultState.with(DISK_STATE, PortableGridDiskState.NONE).with(ACTIVE, false)
+//    }
 }
 
 @RegisterBlock(RS.ID, PortableGridBlock.CREATIVE_ID)

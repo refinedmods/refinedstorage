@@ -17,8 +17,8 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, DiskDriveBlock.ID)
 class DiskDriveBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false), // TODO Double check connected value
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "disk_drive"
@@ -26,10 +26,10 @@ class DiskDriveBlock:
     override val direction: BlockDirection
         get() = BlockDirection.HORIZONTAL
 
-    override fun createBlockEntity(world: BlockView): BlockEntity?
-            = NoOpBlockEntity()
-    // TODO BlockEntities
-//            = DiskDriveTile()
+//    override fun createBlockEntity(world: BlockView): BlockEntity?
+//            = NoOpBlockEntity()
+//    // TODO BlockEntities
+////            = DiskDriveTile()
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui

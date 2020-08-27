@@ -27,8 +27,8 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 open class StorageBlock(val type: ItemStorageType):
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false), // TODO Double check connected value...
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value...
+//        BlockEntityProvider
 {
     companion object {
         const val ONE_K_STORAGE_BLOCK_ID = "1k_storage_block"
@@ -38,8 +38,8 @@ open class StorageBlock(val type: ItemStorageType):
         const val CREATIVE_STORAGE_BLOCK_ID ="creative_storage_block"
     }
 
-    override fun createBlockEntity(world: BlockView): BlockEntity?
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView): BlockEntity?
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = StorageTile(type)
 

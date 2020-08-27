@@ -13,23 +13,23 @@ abstract class BaseBlock(settings: Settings): Block(settings) {
 
 
 
-    override fun rotate(state: BlockState, rotation: BlockRotation): BlockState {
-        val dir = direction
-        if (dir != BlockDirection.NONE) {
-            val newDirection = dir.cycle(state.get(dir.property))
-            return state.with(dir.property, newDirection)
-        }
-        return super.rotate(state, rotation)
-    }
-
-    override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        super.onStateReplaced(state, world, pos, newState, moved)
-        if (direction != BlockDirection.NONE &&
-                state.block === newState.block &&
-                state.get(direction.property) !== newState.get(direction.property)) {
-            onDirectionChanged(world, pos, newState.get(direction.property))
-        }
-    }
+//    override fun rotate(state: BlockState, rotation: BlockRotation): BlockState {
+//        val dir = direction
+//        if (dir != BlockDirection.NONE) {
+//            val newDirection = dir.cycle(state.get(dir.property))
+//            return state.with(dir.property, newDirection)
+//        }
+//        return super.rotate(state, rotation)
+//    }
+//
+//    override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
+//        super.onStateReplaced(state, world, pos, newState, moved)
+//        if (direction != BlockDirection.NONE &&
+//                state.block === newState.block &&
+//                state.get(direction.property) !== newState.get(direction.property)) {
+//            onDirectionChanged(world, pos, newState.get(direction.property))
+//        }
+//    }
 
     protected open fun onDirectionChanged(world: World, pos: BlockPos, newDirection: Direction) {}
 

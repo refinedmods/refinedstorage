@@ -21,27 +21,28 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, WirelessTransmitterBlock.ID)
 class WirelessTransmitterBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = WirelessTransmitterTile()
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
-        return when (state.get(direction.property)) {
-            Direction.DOWN -> SHAPE_DOWN
-            Direction.UP -> SHAPE_UP
-            Direction.NORTH -> SHAPE_NORTH
-            Direction.SOUTH -> SHAPE_SOUTH
-            Direction.WEST -> SHAPE_WEST
-            Direction.EAST -> SHAPE_EAST
-            else -> VoxelShapes.empty()
-        }
+        return SHAPE_NORTH
+//        return when (state.get(direction.property)) {
+//            Direction.DOWN -> SHAPE_DOWN
+//            Direction.UP -> SHAPE_UP
+//            Direction.NORTH -> SHAPE_NORTH
+//            Direction.SOUTH -> SHAPE_SOUTH
+//            Direction.WEST -> SHAPE_WEST
+//            Direction.EAST -> SHAPE_EAST
+//            else -> VoxelShapes.empty()
+//        }
     }
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
