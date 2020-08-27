@@ -55,12 +55,7 @@ abstract class NetworkNodeBlock(
 //        }
 //    }
 
-
-//    fun hasBlockEntity(state: BlockState): Boolean {
-//        return connected
-//    }
-//
-
+    
     companion object {
         @JvmField
         val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
