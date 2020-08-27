@@ -36,7 +36,6 @@ abstract class BaseBlock(settings: Settings): Block(settings) {
     protected open fun onDirectionChanged(world: World, pos: BlockPos, newDirection: Direction) {}
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        super.appendProperties(builder)
         if (this.direction != BlockDirection.NONE) {
             builder.add(direction.property)
         }

@@ -4,26 +4,15 @@ package com.refinedmods.refinedstorage.block
 //import com.refinedmods.refinedstorage.apiimpl.API
 //import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.RS
-import com.refinedmods.refinedstorage.extensions.drop
-import com.refinedmods.refinedstorage.extensions.getStacks
 //import com.refinedmods.refinedstorage.tile.NetworkNodeTile
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.inventory.Inventory
-import net.minecraft.item.ItemStack
-import net.minecraft.loot.entry.ItemEntry
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.World
-import reborncore.api.items.InventoryUtils
 
 abstract class NetworkNodeBlock(
         settings: Settings,
-        val connected: Boolean
+        val hasConnected: Boolean
 ) : BaseBlock(settings) {
 
     // TODO Network
@@ -69,8 +58,8 @@ abstract class NetworkNodeBlock(
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
         super.appendProperties(builder)
-        RS.log.info("connected: $connected and added")
-        if (connected) {
+        RS.log.info("appendProperties: hasConnected: $hasConnected")
+        if (hasConnected) {
             builder.add(CONNECTED)
         }
     }
@@ -86,7 +75,9 @@ abstract class NetworkNodeBlock(
     }
 
     init {
-        RS.log.info("connected: $connected")
-        this.defaultState = this.defaultState.with(CONNECTED, connected)
+        RS.log.info("init: hasConnected: $hasConnected")
+        if (hasConnected) {
+            this.defaultState = this.defaultState.with(CONNECTED, false)
+        }
     }
 }

@@ -7,7 +7,6 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
-import com.thinkslynk.fabric.helpers.AnnotationHelpers
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -27,12 +26,11 @@ import java.util.function.Function
 @RegisterBlockItem(RS.ID, CableBlock.ID, "R_S_ITEM_GROUP")
 open class CableBlock(
         settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES,
-        connected: Boolean = true // TODO Check connected
-): NetworkNodeBlock(settingsIn, connected)
+        hasConnected: Boolean = false // TODO Check connected
+): NetworkNodeBlock(settingsIn, hasConnected)
 //        BlockEntityProvider
 {
     init {
-
 //        defaultState = defaultState.with(NORTH, false)
 //                .with(EAST, false)
 //                .with(SOUTH, false)
