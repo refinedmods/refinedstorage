@@ -1,7 +1,9 @@
 package com.refinedmods.refinedstorage.block
 
+import com.refinedmods.refinedstorage.RS
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.state.StateManager
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -32,6 +34,13 @@ abstract class BaseBlock(settings: Settings): Block(settings) {
 //    }
 
     protected open fun onDirectionChanged(world: World, pos: BlockPos, newDirection: Direction) {}
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        super.appendProperties(builder)
+        if (this.direction != BlockDirection.NONE) {
+            builder.add(direction.property)
+        }
+    }
 
     // TODO Is this the same as entity tags?
 //    protected open fun fillStateContainer(builder: StateContainer.Builder<Block?, BlockState?>) {

@@ -14,8 +14,11 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.state.StateManager
+import net.minecraft.state.property.EnumProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -26,21 +29,21 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
 {
-//    enum class EnergyType(val string: String): StringIdentifiable {
-//        OFF("off"),
-//        NEARLY_OFF("nearly_off"),
-//        NEARLY_ON("nearly_on"),
-//        ON("on");
-//
-//        override fun asString(): String {
-//            return string
-//        }
-//    }
+    enum class EnergyType(val string: String): StringIdentifiable {
+        OFF("off"),
+        NEARLY_OFF("nearly_off"),
+        NEARLY_ON("nearly_on"),
+        ON("on");
 
-//    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-//        super.appendProperties(builder)
-//        builder.add(ENERGY_TYPE)
-//    }
+        override fun asString(): String {
+            return string
+        }
+    }
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        super.appendProperties(builder)
+        builder.add(ENERGY_TYPE)
+    }
 
 //    override fun createBlockEntity(world: BlockView): BlockEntity {
 //        return NoOpBlockEntity()
@@ -102,12 +105,13 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     companion object {
         const val ID = "controller"
         const val CREATIVE_ID = "creative_controller"
-//        @JvmField
-//        val ENERGY_TYPE: EnumProperty<EnergyType> = EnumProperty.of("energy_type", EnergyType::class.java)
+        @JvmField
+        val ENERGY_TYPE: EnumProperty<EnergyType> = EnumProperty.of("energy_type", EnergyType::class.java)
     }
 
     init {
-//        defaultState = stateManager.defaultState.with(ENERGY_TYPE, EnergyType.OFF)
+        val d = stateManager.defaultState.with(ENERGY_TYPE, EnergyType.OFF)
+        defaultState = d
     }
 
 }

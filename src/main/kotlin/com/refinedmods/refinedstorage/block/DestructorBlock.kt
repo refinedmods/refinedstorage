@@ -6,14 +6,17 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
+import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.state.StateManager
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -44,17 +47,16 @@ class DestructorBlock:
     }
 
     private fun getHeadShape(state: BlockState): VoxelShape {
-        return HEAD_NORTH
-//        val direction: Direction = state.get(direction.property)
-//        return when {
-//            direction === Direction.NORTH -> HEAD_NORTH
-//            direction === Direction.EAST -> HEAD_EAST
-//            direction === Direction.SOUTH -> HEAD_SOUTH
-//            direction === Direction.WEST -> HEAD_WEST
-//            direction === Direction.UP -> HEAD_UP
-//            direction === Direction.DOWN -> HEAD_DOWN
-//            else -> VoxelShapes.empty()
-//        }
+        val direction: Direction = state.get(direction.property)
+        return when {
+            direction == Direction.NORTH -> HEAD_NORTH
+            direction == Direction.EAST -> HEAD_EAST
+            direction == Direction.SOUTH -> HEAD_SOUTH
+            direction == Direction.WEST -> HEAD_WEST
+            direction == Direction.UP -> HEAD_UP
+            direction == Direction.DOWN -> HEAD_DOWN
+            else -> VoxelShapes.empty()
+        }
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {

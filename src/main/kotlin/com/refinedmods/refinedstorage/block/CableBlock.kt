@@ -27,11 +27,19 @@ import java.util.function.Function
 @RegisterBlockItem(RS.ID, CableBlock.ID, "R_S_ITEM_GROUP")
 open class CableBlock(
         settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES,
-        connected: Boolean = false // TODO Check connected
+        connected: Boolean = true // TODO Check connected
 ): NetworkNodeBlock(settingsIn, connected)
 //        BlockEntityProvider
 {
     init {
+
+//        defaultState = defaultState.with(NORTH, false)
+//                .with(EAST, false)
+//                .with(SOUTH, false)
+//                .with(WEST, false)
+//                .with(UP, false)
+//                .with(DOWN, false)
+//                .with(WATERLOGGED, false)
         val d  = stateManager.defaultState
                 .with(NORTH, false)
                 .with(EAST, false)

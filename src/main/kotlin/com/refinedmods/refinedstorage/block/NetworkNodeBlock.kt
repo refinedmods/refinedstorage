@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.block
 //import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 //import com.refinedmods.refinedstorage.apiimpl.API
 //import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
+import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.extensions.drop
 import com.refinedmods.refinedstorage.extensions.getStacks
 //import com.refinedmods.refinedstorage.tile.NetworkNodeTile
@@ -66,29 +67,26 @@ abstract class NetworkNodeBlock(
 //        }
 //    }
 
-//    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-//        super.appendProperties(builder)
-//        if (hasConnectedState()) {
-//            builder.add(CONNECTED)
-//        }
-//    }
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        super.appendProperties(builder)
+        RS.log.info("connected: $connected and added")
+        if (connected) {
+            builder.add(CONNECTED)
+        }
+    }
 
 //    fun hasBlockEntity(state: BlockState): Boolean {
 //        return connected
 //    }
 //
-//    open fun hasConnectedState(): Boolean {
-//        return false
-//    }
 
-//    companion object {
-//        @JvmField
-//        val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
-//    }
-//
-//    init {
-//        if (connected) {
-//            defaultState = stateManager.defaultState.with(CONNECTED, false)
-//        }
-//    }
+    companion object {
+        @JvmField
+        val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
+    }
+
+    init {
+        RS.log.info("connected: $connected")
+        this.defaultState = this.defaultState.with(CONNECTED, connected)
+    }
 }
