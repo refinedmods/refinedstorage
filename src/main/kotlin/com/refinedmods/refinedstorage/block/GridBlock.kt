@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 //import com.refinedmods.refinedstorage.tile.grid.GridTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -18,6 +19,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, GridBlock.NORMAL_ID)
+@RegisterBlockItem(RS.ID, GridBlock.NORMAL_ID, "R_S_ITEM_GROUP")
 open class GridBlock(private val type: GridType=GridType.NORMAL):
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
 //        BlockEntityProvider
@@ -49,8 +51,13 @@ open class GridBlock(private val type: GridType=GridType.NORMAL):
 }
 
 @RegisterBlock(RS.ID, GridBlock.CRAFTING_ID)
+@RegisterBlockItem(RS.ID, GridBlock.CRAFTING_ID, "R_S_ITEM_GROUP")
 class CraftingGridBlock: GridBlock(GridType.CRAFTING)
+
 @RegisterBlock(RS.ID, GridBlock.PATTERN_ID)
+@RegisterBlockItem(RS.ID, GridBlock.PATTERN_ID, "R_S_ITEM_GROUP")
 class PatternGridBlock: GridBlock(GridType.PATTERN)
+
 @RegisterBlock(RS.ID, GridBlock.FLUID_ID)
+@RegisterBlockItem(RS.ID, GridBlock.FLUID_ID, "R_S_ITEM_GROUP")
 class FluidGridBlock: GridBlock(GridType.FLUID)

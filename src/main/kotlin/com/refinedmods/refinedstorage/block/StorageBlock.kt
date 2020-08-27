@@ -11,6 +11,7 @@ import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 //import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -75,12 +76,21 @@ open class StorageBlock(val type: ItemStorageType):
 }
 
 @RegisterBlock(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class OneKStorageBlock: StorageBlock(ItemStorageType.ONE_K)
+
 @RegisterBlock(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class FourKStorageBlock: StorageBlock(ItemStorageType.FOUR_K)
+
 @RegisterBlock(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class SixteenKStorageBlock: StorageBlock(ItemStorageType.SIXTEEN_K)
+
 @RegisterBlock(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class SixtyFourKStorageBlock: StorageBlock(ItemStorageType.SIXTY_FOUR_K)
+
 @RegisterBlock(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID)
+@RegisterBlockItem(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
 class CreativeStorageBlock: StorageBlock(ItemStorageType.CREATIVE)

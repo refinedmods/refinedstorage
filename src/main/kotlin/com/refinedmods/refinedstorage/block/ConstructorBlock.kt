@@ -24,7 +24,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ConstructorBlock.ID)
-@RegisterBlockItem(RS.ID, ConstructorBlock.ID, AnnotationHelpers.ItemGroup.MISC)
+@RegisterBlockItem(RS.ID, ConstructorBlock.ID, "R_S_ITEM_GROUP")
 class ConstructorBlock:
         CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true)
 //        BlockEntityProvider
