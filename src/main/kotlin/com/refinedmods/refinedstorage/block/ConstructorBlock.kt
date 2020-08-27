@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 //import com.refinedmods.refinedstorage.tile.ConstructorTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
@@ -29,11 +30,20 @@ import java.util.function.Function
 @RegisterBlock(RS.ID, ConstructorBlock.ID)
 @RegisterBlockItem(RS.ID, ConstructorBlock.ID, "R_S_ITEM_GROUP")
 class ConstructorBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true)
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES)
 //        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
+
+    init {
+        defaultState = defaultState.with(CONNECTED, false)
+    }
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        super.appendProperties(builder)
+        builder.add(CONNECTED)
+    }
 
     // TODO BlockEntities
 //    override fun createBlockEntity(world: BlockView): {
@@ -77,6 +87,8 @@ class ConstructorBlock:
     }
 
     companion object {
+        val log = getCustomLogger(CableBlock::class)
+
         const val ID = "constructor"
 
         private val HEAD_NORTH: VoxelShape = VoxelShapes.union(createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 2.0), HOLDER_NORTH)

@@ -22,7 +22,7 @@ import java.util.function.Function
 @RegisterBlock(RS.ID, ExporterBlock.ID)
 @RegisterBlockItem(RS.ID, ExporterBlock.ID, "R_S_ITEM_GROUP")
 class ExporterBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider
 {
     override val direction: BlockDirection

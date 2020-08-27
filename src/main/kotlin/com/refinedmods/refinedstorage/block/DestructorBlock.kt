@@ -26,11 +26,20 @@ import java.util.function.Function
 @RegisterBlock(RS.ID, DestructorBlock.ID)
 @RegisterBlockItem(RS.ID, DestructorBlock.ID, "R_S_ITEM_GROUP")
 class DestructorBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true)
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES)
 //        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
+
+    init {
+        defaultState = defaultState.with(CONNECTED, false)
+    }
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        super.appendProperties(builder)
+        builder.add(CONNECTED)
+    }
 
 //    override fun createBlockEntity(world: BlockView): BlockEntity {
 //        return NoOpBlockEntity()

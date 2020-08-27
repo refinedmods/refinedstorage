@@ -30,7 +30,7 @@ import java.util.function.Function
 @RegisterBlock(RS.ID, ExternalStorageBlock.ID)
 @RegisterBlockItem(RS.ID, ExternalStorageBlock.ID, "R_S_ITEM_GROUP")
 class ExternalStorageBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider
 {
     override val direction: BlockDirection

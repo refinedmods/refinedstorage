@@ -16,7 +16,7 @@ import net.minecraft.world.World
 @RegisterBlock(RS.ID, DiskDriveBlock.ID)
 @RegisterBlockItem(RS.ID, DiskDriveBlock.ID, "R_S_ITEM_GROUP")
 class DiskDriveBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) // TODO Double check connected value
 //        BlockEntityProvider
 {
     companion object {

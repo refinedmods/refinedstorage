@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 //import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability
 //import com.refinedmods.refinedstorage.tile.CableTile
 import com.refinedmods.refinedstorage.util.BlockUtils
@@ -24,21 +25,12 @@ import java.util.function.Function
 
 @RegisterBlock(RS.ID, CableBlock.ID)
 @RegisterBlockItem(RS.ID, CableBlock.ID, "R_S_ITEM_GROUP")
-open class CableBlock(
-        settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES,
-        hasConnected: Boolean = false // TODO Check connected
-): NetworkNodeBlock(settingsIn, hasConnected)
+open class CableBlock( settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES):
+        NetworkNodeBlock(settingsIn)
 //        BlockEntityProvider
 {
     init {
-//        defaultState = defaultState.with(NORTH, false)
-//                .with(EAST, false)
-//                .with(SOUTH, false)
-//                .with(WEST, false)
-//                .with(UP, false)
-//                .with(DOWN, false)
-//                .with(WATERLOGGED, false)
-        val d  = stateManager.defaultState
+        defaultState = defaultState
                 .with(NORTH, false)
                 .with(EAST, false)
                 .with(SOUTH, false)
@@ -46,8 +38,6 @@ open class CableBlock(
                 .with(UP, false)
                 .with(DOWN, false)
                 .with(WATERLOGGED, false)
-
-        defaultState = d
     }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
@@ -120,6 +110,7 @@ open class CableBlock(
     }
 
     companion object {
+        val log = getCustomLogger(ConstructorBlock::class)
         const val ID = "cable"
 
         private val NORTH: BooleanProperty = BooleanProperty.of("north")

@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.block
 //import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
 //import com.refinedmods.refinedstorage.apiimpl.API
 //import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
-import com.refinedmods.refinedstorage.RS
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 //import com.refinedmods.refinedstorage.tile.NetworkNodeTile
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -11,8 +11,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 
 abstract class NetworkNodeBlock(
-        settings: Settings,
-        val hasConnected: Boolean
+        settings: Settings
 ) : BaseBlock(settings) {
 
     // TODO Network
@@ -56,13 +55,6 @@ abstract class NetworkNodeBlock(
 //        }
 //    }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        super.appendProperties(builder)
-        RS.log.info("appendProperties: hasConnected: $hasConnected")
-        if (hasConnected) {
-            builder.add(CONNECTED)
-        }
-    }
 
 //    fun hasBlockEntity(state: BlockState): Boolean {
 //        return connected
@@ -72,12 +64,5 @@ abstract class NetworkNodeBlock(
     companion object {
         @JvmField
         val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
-    }
-
-    init {
-        RS.log.info("init: hasConnected: $hasConnected")
-        if (hasConnected) {
-            this.defaultState = this.defaultState.with(CONNECTED, false)
-        }
     }
 }

@@ -20,7 +20,7 @@ import net.minecraft.world.World
 @RegisterBlock(RS.ID, DetectorBlock.ID)
 @RegisterBlockItem(RS.ID, DetectorBlock.ID, "R_S_ITEM_GROUP")
 class DetectorBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) // TODO Double check connected value
 //        BlockEntityProvider
 {
 

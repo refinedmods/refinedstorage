@@ -23,7 +23,7 @@ import java.util.function.Function
 @RegisterBlock(RS.ID, ImporterBlock.ID)
 @RegisterBlockItem(RS.ID, ImporterBlock.ID, "R_S_ITEM_GROUP")
 class ImporterBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider
 {
 
