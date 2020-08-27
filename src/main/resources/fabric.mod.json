@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "RefinedStorage",
-  "description": "Refined Storage resources",
+  "description": "An elegant solution to your hoarding problem",
   "authors": [
     "Original RefinedStorage Team",
     "slynk",
@@ -16,7 +16,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/refinedstorage/logo.png",
+  "icon": "assets/refinedstorage/icon.png",
 
   "environment": "*",
   "entrypoints": {
