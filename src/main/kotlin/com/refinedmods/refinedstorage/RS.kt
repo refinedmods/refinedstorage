@@ -5,6 +5,7 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.thinkslynk.fabric.generated.ItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.ItemGroup
@@ -18,7 +19,7 @@ class RS: ModInitializer {
         val MAIN_GROUP: ItemGroup by lazy {
             FabricItemGroupBuilder
                     .create(Identifier(ID, ID))
-                    .icon {ItemStack(BlockRegistryGenerated.CREATIVE_CONTROLLER_BLOCK) }
+                    .icon {ItemStack(ItemRegistryGenerated.SILICON_ITEM) } // TODO revert this
                     .build() // TODO add to item group
         }
 
@@ -30,6 +31,7 @@ class RS: ModInitializer {
     override fun onInitialize() {
         log.info("Initializing...")
 //        BlockRegistryGenerated.register()
+        ItemRegistryGenerated.register()
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())
