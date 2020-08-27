@@ -33,8 +33,8 @@ import java.util.function.Function
 
 @RegisterBlock(RS.ID, ExternalStorageBlock.ID)
 class ExternalStorageBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false), // TODO Check connected
-        BlockEntityProvider
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+//        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
@@ -46,21 +46,23 @@ class ExternalStorageBlock:
     }
 
     private fun getHeadShape(state: BlockState): VoxelShape {
-        return when(state.get(direction.property)){
-            Direction.NORTH -> HEAD_NORTH
-            Direction.EAST -> HEAD_EAST
-            Direction.SOUTH -> HEAD_SOUTH
-            Direction.WEST -> HEAD_WEST
-            Direction.UP -> HEAD_UP
-            Direction.DOWN -> HEAD_DOWN
-            else -> VoxelShapes.empty()
-        }
+        return HEAD_NORTH
+        // TODO Fix
+//        return when(state.get(direction.property)){
+//            Direction.NORTH -> HEAD_NORTH
+//            Direction.EAST -> HEAD_EAST
+//            Direction.SOUTH -> HEAD_SOUTH
+//            Direction.WEST -> HEAD_WEST
+//            Direction.UP -> HEAD_UP
+//            Direction.DOWN -> HEAD_DOWN
+//            else -> VoxelShapes.empty()
+//        }
     }
-
-    override fun createBlockEntity(world: BlockView): BlockEntity
-            = NoOpBlockEntity()
-    // TODO BlockEntities
-//            = ExternalStorageTile()
+//
+//    override fun createBlockEntity(world: BlockView): BlockEntity
+//            = NoOpBlockEntity()
+//    // TODO BlockEntities
+////            = ExternalStorageTile()
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         // TODO Port Gui

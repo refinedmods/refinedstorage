@@ -5,6 +5,8 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
 //import com.refinedmods.refinedstorage.tile.ConstructorTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
+import com.thinkslynk.fabric.helpers.AnnotationHelpers
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -22,9 +24,10 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ConstructorBlock.ID)
+@RegisterBlockItem(RS.ID, ConstructorBlock.ID, AnnotationHelpers.ItemGroup.MISC)
 class ConstructorBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true),
-        BlockEntityProvider
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true)
+//        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
@@ -41,15 +44,16 @@ class ConstructorBlock:
     }
 
     private fun getHeadShape(state: BlockState): VoxelShape {
-        return when(state.get(direction.property)) {
-            Direction.DOWN -> HEAD_DOWN
-            Direction.UP -> HEAD_UP
-            Direction.NORTH -> HEAD_NORTH
-            Direction.SOUTH -> HEAD_SOUTH
-            Direction.WEST -> HEAD_WEST
-            Direction.EAST -> HEAD_EAST
-            else -> VoxelShapes.empty()
-        }
+        return HEAD_NORTH
+//        return when(state.get(direction.property)) {
+//            Direction.DOWN -> HEAD_DOWN
+//            Direction.UP -> HEAD_UP
+//            Direction.NORTH -> HEAD_NORTH
+//            Direction.SOUTH -> HEAD_SOUTH
+//            Direction.WEST -> HEAD_WEST
+//            Direction.EAST -> HEAD_EAST
+//            else -> VoxelShapes.empty()
+//        }
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {

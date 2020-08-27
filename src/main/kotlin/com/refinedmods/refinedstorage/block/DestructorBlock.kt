@@ -24,17 +24,17 @@ import java.util.function.Function
 
 @RegisterBlock(RS.ID, DestructorBlock.ID)
 class DestructorBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true),
-        BlockEntityProvider
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, true)
+//        BlockEntityProvider
 {
     override val direction: BlockDirection
         get() = BlockDirection.ANY
 
-    override fun createBlockEntity(world: BlockView): BlockEntity {
-        return NoOpBlockEntity()
-        // TODO BlockEntities
-//        return DestructorTile()
-    }
+//    override fun createBlockEntity(world: BlockView): BlockEntity {
+//        return NoOpBlockEntity()
+//        // TODO BlockEntities
+////        return DestructorTile()
+//    }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
         return getOrCreate(state, Function { s: BlockState ->
@@ -45,16 +45,17 @@ class DestructorBlock:
     }
 
     private fun getHeadShape(state: BlockState): VoxelShape {
-        val direction: Direction = state.get(direction.property)
-        return when {
-            direction === Direction.NORTH -> HEAD_NORTH
-            direction === Direction.EAST -> HEAD_EAST
-            direction === Direction.SOUTH -> HEAD_SOUTH
-            direction === Direction.WEST -> HEAD_WEST
-            direction === Direction.UP -> HEAD_UP
-            direction === Direction.DOWN -> HEAD_DOWN
-            else -> VoxelShapes.empty()
-        }
+        return HEAD_NORTH
+//        val direction: Direction = state.get(direction.property)
+//        return when {
+//            direction === Direction.NORTH -> HEAD_NORTH
+//            direction === Direction.EAST -> HEAD_EAST
+//            direction === Direction.SOUTH -> HEAD_SOUTH
+//            direction === Direction.WEST -> HEAD_WEST
+//            direction === Direction.UP -> HEAD_UP
+//            direction === Direction.DOWN -> HEAD_DOWN
+//            else -> VoxelShapes.empty()
+//        }
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {

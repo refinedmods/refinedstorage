@@ -17,15 +17,15 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, SecurityManagerBlock.ID)
 class SecurityManagerBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "security_manager"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = SecurityManagerTile()
 

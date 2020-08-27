@@ -66,29 +66,29 @@ abstract class NetworkNodeBlock(
 //        }
 //    }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        super.appendProperties(builder)
-        if (hasConnectedState()) {
-            builder.add(CONNECTED)
-        }
-    }
+//    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+//        super.appendProperties(builder)
+//        if (hasConnectedState()) {
+//            builder.add(CONNECTED)
+//        }
+//    }
 
-    fun hasBlockEntity(state: BlockState): Boolean {
-        return connected
-    }
+//    fun hasBlockEntity(state: BlockState): Boolean {
+//        return connected
+//    }
+//
+//    open fun hasConnectedState(): Boolean {
+//        return false
+//    }
 
-    open fun hasConnectedState(): Boolean {
-        return false
-    }
-
-    companion object {
-        @JvmField
-        val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
-    }
-
-    init {
-        if (connected) {
-            defaultState = stateManager.defaultState.with(CONNECTED, false)
-        }
-    }
+//    companion object {
+//        @JvmField
+//        val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
+//    }
+//
+//    init {
+//        if (connected) {
+//            defaultState = stateManager.defaultState.with(CONNECTED, false)
+//        }
+//    }
 }

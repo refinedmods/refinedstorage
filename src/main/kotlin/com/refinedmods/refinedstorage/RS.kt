@@ -5,6 +5,7 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.network.NetworkHandler
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
+import com.thinkslynk.fabric.generated.BlockItemRegistryGenerated
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.ItemGroup
@@ -29,7 +30,8 @@ class RS: ModInitializer {
 
     override fun onInitialize() {
         log.info("Initializing...")
-//        BlockRegistryGenerated.register()
+        BlockRegistryGenerated.register()
+        BlockItemRegistryGenerated.register()
         // TODO Register stuff!
 //        DistExecutor.safeRunWhenOn(Dist.CLIENT, { { ClientSetup() } })
 //        MinecraftForge.EVENT_BUS.register(ServerSetup())

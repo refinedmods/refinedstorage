@@ -23,20 +23,20 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, DetectorBlock.ID)
 class DetectorBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false), // TODO Double check connected value
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value
+//        BlockEntityProvider
 {
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? {
-        return NoOpBlockEntity()
-        // TODO BlockEntities
-//        return DetectorTile()
-    }
-
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        super.appendProperties(builder)
-        builder.add(POWERED)
-    }
+//    override fun createBlockEntity(world: BlockView?): BlockEntity? {
+//        return NoOpBlockEntity()
+//        // TODO BlockEntities
+////        return DetectorTile()
+//    }
+//
+//    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+//        super.appendProperties(builder)
+//        builder.add(POWERED)
+//    }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape
             = SHAPE
@@ -72,13 +72,11 @@ class DetectorBlock:
 
     companion object {
         const val ID = "detector"
-
-        @JvmField
-        val POWERED: BooleanProperty = BooleanProperty.of("powered")
+//        val POWERED: BooleanProperty = BooleanProperty.of("powered")
         private val SHAPE: VoxelShape = createCuboidShape(0.0, 0.0, 0.0, 16.0, 5.0, 16.0)
     }
 
     init {
-        defaultState = stateManager.defaultState.with(POWERED, false)
+//        defaultState = stateManager.defaultState.with(POWERED, false)
     }
 }

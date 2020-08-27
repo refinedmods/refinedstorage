@@ -25,8 +25,8 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, StorageMonitorBlock.ID)
 class StorageMonitorBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "storage_monitor"
@@ -34,8 +34,8 @@ class StorageMonitorBlock:
     override val direction: BlockDirection
         get() = BlockDirection.HORIZONTAL
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = StorageMonitorTile()
 

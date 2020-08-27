@@ -18,8 +18,8 @@ import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, CraftingMonitorBlock.ID)
 class CraftingMonitorBlock:
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true),
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
+//        BlockEntityProvider
 {
     companion object {
         const val ID = "crafting_monitor"
@@ -27,11 +27,11 @@ class CraftingMonitorBlock:
     override val direction: BlockDirection
         get() = BlockDirection.HORIZONTAL
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? {
-        return NoOpBlockEntity()
-        // TODO BlockEntities
-//        return CraftingMonitorTile()
-    }
+//    override fun createBlockEntity(world: BlockView?): BlockEntity? {
+//        return NoOpBlockEntity()
+//        // TODO BlockEntities
+////        return CraftingMonitorTile()
+//    }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
         // TODO Port Gui

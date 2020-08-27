@@ -21,8 +21,8 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 open class FluidStorageBlock(val type: FluidStorageType):
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false), // TODO Double check connected value
-        BlockEntityProvider
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value
+//        BlockEntityProvider
 {
     companion object {
         const val SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID = "64k_fluid_storage_block"
@@ -32,8 +32,8 @@ open class FluidStorageBlock(val type: FluidStorageType):
         const val CREATIVE_FLUID_STORAGE_BLOCK_ID = "creative_fluid_storage_block"
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity?
-            = NoOpBlockEntity()
+//    override fun createBlockEntity(world: BlockView?): BlockEntity?
+//            = NoOpBlockEntity()
     // TODO BlockEntities
 //            = FluidStorageTile(type)
 
