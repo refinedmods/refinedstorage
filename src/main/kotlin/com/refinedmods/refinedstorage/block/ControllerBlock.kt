@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.api.network.NetworkType
 import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -27,6 +28,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
+@RegisterBlockItem(RS.ID, ControllerBlock.ID, "R_S_ITEM_GROUP")
 open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
@@ -118,4 +120,5 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
 }
 
 @RegisterBlock(RS.ID, ControllerBlock.CREATIVE_ID)
+@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "R_S_ITEM_GROUP")
 class CreativeControllerBlock: ControllerBlock(NetworkType.CREATIVE)

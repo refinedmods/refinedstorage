@@ -30,7 +30,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, CableBlock.ID)
-@RegisterBlockItem(RS.ID, CableBlock.ID, AnnotationHelpers.ItemGroup.MISC)
+@RegisterBlockItem(RS.ID, CableBlock.ID, "R_S_ITEM_GROUP")
 open class CableBlock(
         settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES,
         connected: Boolean = false // TODO Check connected
