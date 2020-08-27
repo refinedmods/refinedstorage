@@ -17,13 +17,6 @@ class RS: ModInitializer {
     companion object{
         val log = getCustomLogger(RS::class)
         const val ID = "refinedstorage"
-        val MAIN_GROUP: ItemGroup by lazy {
-            FabricItemGroupBuilder
-                    .create(Identifier(ID, ID))
-                    .icon {ItemStack(ItemRegistryGenerated.SILICON_ITEM) } // TODO revert this
-                    .build() // TODO add to item group
-        }
-
     }
 //    val NETWORK_HANDLER = NetworkHandler()
 //    val SERVER_CONFIG = ServerConfig()
