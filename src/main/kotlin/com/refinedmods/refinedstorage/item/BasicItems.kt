@@ -3,17 +3,18 @@ package com.refinedmods.refinedstorage.item
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType
 import com.thinkslynk.fabric.annotations.registry.RegisterItem
+import com.thinkslynk.fabric.generated.MyItemGroups
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 
 @RegisterItem(RS.ID, "quartz_enriched_iron")
-class QuartzEnrichedIronItem : Item(Settings().group(RS.MAIN_GROUP))
+class QuartzEnrichedIronItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "silicon")
-class SiliconItem : Item(Settings().group(RS.MAIN_GROUP))
+class SiliconItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID,"processor_binding")
-class ProcessorBindingItem : Item(Settings().group(RS.MAIN_GROUP))
+class ProcessorBindingItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 // wrench
 
@@ -22,34 +23,34 @@ class ProcessorBindingItem : Item(Settings().group(RS.MAIN_GROUP))
 // filter
 
 @RegisterItem(RS.ID, "storage_housing")
-class StorageHousingItem : Item(Settings().group(RS.MAIN_GROUP))
+class StorageHousingItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 // network_card
 
 // security_card
 
 @RegisterItem(RS.ID, "construction_core")
-class ConstructionCoreItem : Item(Settings().group(RS.MAIN_GROUP))
+class ConstructionCoreItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 @RegisterItem(RS.ID, "destruction_core")
-class DestructionCoreItem : Item(Settings().group(RS.MAIN_GROUP))
+class DestructionCoreItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "raw_basic_processor")
-class RawBasicProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
+class RawBasicProcessorItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "raw_improved_processor")
-class RawImprovedProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
+class RawImprovedProcessorItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "raw_advanced_processor")
-class RawAdvancedProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
+class RawAdvancedProcessorItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "basic_processor")
-class BasicProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
+class BasicProcessorItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "improved_processor")
-class ImprovedProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
+class ImprovedProcessorItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "advanced_processor")
-class AdvancedProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
+class AdvancedProcessorItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 // upgrade
 
@@ -78,16 +79,16 @@ class AdvancedProcessorItem : Item(Settings().group(RS.MAIN_GROUP))
 // creative_wireless_fluid_grid
 
 @RegisterItem(RS.ID, "1k_storage_part")
-class OneKStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class OneKStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "4k_storage_part")
-class FourKStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class FourKStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "16k_storage_part")
-class SixteenKStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class SixteenKStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "64k_storage_part")
-class SixtyFourKStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class SixtyFourKStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 // 1k_storage_disk
 
@@ -100,16 +101,16 @@ class SixtyFourKStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
 // creative_storage_disk
 
 @RegisterItem(RS.ID, "64k_fluid_storage_part")
-class SixtyFourKFluidStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class SixtyFourKFluidStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "256k_fluid_storage_part")
-class TwoHundredFiftySixKFluidStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class TwoHundredFiftySixKFluidStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "1024k_fluid_storage_part")
-class ThousandTwentyFourKFluidStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class ThousandTwentyFourKFluidStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 @RegisterItem(RS.ID, "4096k_fluid_storage_part")
-class FourThousandNinetySixKFluidStoragePartItem : Item(Settings().group(RS.MAIN_GROUP))
+class FourThousandNinetySixKFluidStoragePartItem : Item(Settings().group(MyItemGroups.R_S_ITEM_GROUP))
 
 // 64k_fluid_storage_disk
 
