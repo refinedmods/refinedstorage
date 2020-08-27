@@ -13,7 +13,7 @@
       "item": "refinedstorage:pattern"
     },
     "G": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"

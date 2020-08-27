@@ -3,29 +3,26 @@
   "pattern": [
     "PCG",
     "EMG",
-    "PDG"
+    "PCG"
   ],
   "key": {
     "P": {
-      "item": "refinedstorage:improved_processor"
+      "item": "refinedstorage:advanced_processor"
     },
     "C": {
-      "item": "refinedstorage:construction_core"
+      "item": "refinedstorage:crafter"
     },
     "G": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "M": {
       "item": "refinedstorage:machine_casing"
-    },
-    "D": {
-      "item": "refinedstorage:destruction_core"
     }
   },
   "result": {
-    "item": "refinedstorage:grid"
+    "item": "refinedstorage:crafter_manager"
   }
 }

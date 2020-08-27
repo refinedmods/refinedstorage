@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ANA",
+    "EEE",
     "CMD",
-    "EEE"
+    "ANA"
   ],
   "key": {
     "E": {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     },
     "C": {
       "item": "refinedstorage:construction_core"
@@ -26,6 +26,6 @@
     }
   },
   "result": {
-    "item": "refinedstorage:network_receiver"
+    "item": "refinedstorage:network_transmitter"
   }
 }

@@ -1,25 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "SES",
+    "EEE",
     "GRG",
-    "SGS"
+    "EEE"
   ],
   "key": {
-    "S": {
-      "tag": "refinedstorage:silicon"
-    },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "G": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "R": {
       "item": "minecraft:redstone"
     }
   },
   "result": {
-    "item": "refinedstorage:1k_storage_part"
+    "item": "refinedstorage:cable",
+    "count": 12
   }
 }
