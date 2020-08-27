@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
+import com.refinedmods.refinedstorage.tile.CableTile
 //import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability
 //import com.refinedmods.refinedstorage.tile.CableTile
 import com.refinedmods.refinedstorage.util.BlockUtils
@@ -9,8 +10,10 @@ import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import com.thinkslynk.fabric.helpers.AnnotationHelpers
 import net.minecraft.block.Block
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
@@ -28,8 +31,8 @@ import java.util.function.Function
 open class CableBlock(
         settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES,
         connected: Boolean = false // TODO Check connected
-): NetworkNodeBlock(settingsIn, connected)
-//        BlockEntityProvider
+): NetworkNodeBlock(settingsIn, connected),
+        BlockEntityProvider
 {
     init {
         val d  = stateManager.defaultState
@@ -102,11 +105,9 @@ open class CableBlock(
                 .with(DOWN, down)
     }
 
-//    override fun createBlockEntity(world: BlockView): BlockEntity {
-//        return NoOpBlockEntity()
-//        // TODO TileEntities
-////        return CableTile()
-//    }
+    override fun createBlockEntity(world: BlockView): BlockEntity {
+        return CableTile()
+    }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
         super.appendProperties(builder)
