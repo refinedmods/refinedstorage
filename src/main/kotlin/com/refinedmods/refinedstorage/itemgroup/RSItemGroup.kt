@@ -9,6 +9,6 @@ import net.minecraft.item.ItemStack
 @RegisterItemGroup
 class RSItemGroup: ItemGroup(GROUPS.size - 1, RS.ID) {
     override fun createIcon(): ItemStack {
-        return BlockItemRegistryGenerated.CONSTRUCTOR_BLOCK.stackForRender
+        return BlockItemRegistryGenerated.CREATIVE_CONTROLLER_BLOCK.stackForRender
     }
 }

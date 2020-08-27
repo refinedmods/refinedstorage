@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 //import com.refinedmods.refinedstorage.util.NetworkUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
+import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -23,6 +24,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, FluidInterfaceBlock.ID)
+@RegisterBlockItem(RS.ID, FluidInterfaceBlock.ID, "R_S_ITEM_GROUP")
 class FluidInterfaceBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, true)
 //        BlockEntityProvider
