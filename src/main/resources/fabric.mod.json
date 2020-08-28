@@ -24,6 +24,9 @@
     "main": [
         "com.refinedmods.refinedstorage.RS"
     ],
+    "client": [
+      "com.refinedmods.refinedstorage.RSClient"
+    ],
     "cardinal-components-block": [
       "com.refinedmods.refinedstorage.RSComponents"
     ]
