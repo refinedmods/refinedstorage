@@ -21,7 +21,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ExporterBlock.ID)
-@RegisterBlockItem(RS.ID, ExporterBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, ExporterBlock.ID, "CURED_STORAGE")
 class ExporterBlock:
         CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider

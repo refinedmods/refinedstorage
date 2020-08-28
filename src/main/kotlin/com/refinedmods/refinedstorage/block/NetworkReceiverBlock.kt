@@ -12,7 +12,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.world.BlockView
 
 @RegisterBlock(RS.ID, NetworkReceiverBlock.ID)
-@RegisterBlockItem(RS.ID, NetworkReceiverBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, NetworkReceiverBlock.ID, "CURED_STORAGE")
 class NetworkReceiverBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

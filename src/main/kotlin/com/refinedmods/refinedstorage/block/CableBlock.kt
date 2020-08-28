@@ -27,7 +27,7 @@ import net.minecraft.world.WorldAccess
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, CableBlock.ID)
-@RegisterBlockItem(RS.ID, CableBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, CableBlock.ID, "CURED_STORAGE")
 open class CableBlock( settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES):
         NetworkNodeBlock(settingsIn),
         BlockEntityProvider

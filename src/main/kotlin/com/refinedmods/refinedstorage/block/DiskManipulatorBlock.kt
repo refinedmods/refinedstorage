@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, DiskManipulatorBlock.ID)
-@RegisterBlockItem(RS.ID, DiskManipulatorBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, DiskManipulatorBlock.ID, "CURED_STORAGE")
 class DiskManipulatorBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

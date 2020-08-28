@@ -18,7 +18,6 @@ class RS: ModInitializer {
     companion object{
         val log = getCustomLogger(RS::class)
         const val ID = "refinedstorage"
-        val MAIN_GROUP: ItemGroup = FabricItemGroupBuilder.create(Identifier(RS.ID, RS.ID)).icon{ItemStack(ItemRegistryGenerated.SILICON_ITEM)}.build()
     }
 //    val NETWORK_HANDLER = NetworkHandler()
 //    val SERVER_CONFIG = ServerConfig()

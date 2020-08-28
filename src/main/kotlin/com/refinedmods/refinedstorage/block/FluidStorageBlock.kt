@@ -66,19 +66,19 @@ open class FluidStorageBlock(val type: FluidStorageType):
 }
 
 @RegisterBlock(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class SixtyFourKFluidStorageBlock: FluidStorageBlock(FluidStorageType.SIXTY_FOUR_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class TwoHundredFiftySixKFluidStorageBlock: FluidStorageBlock(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class ThousandFourKFluidStorageBlock: FluidStorageBlock(FluidStorageType.THOUSAND_TWENTY_FOUR_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class FourThousandNinetySixKFluidStorageBlock: FluidStorageBlock(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.CREATIVE_FLUID_STORAGE_BLOCK_ID)

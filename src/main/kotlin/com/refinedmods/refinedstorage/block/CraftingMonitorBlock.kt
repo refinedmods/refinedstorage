@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, CraftingMonitorBlock.ID)
-@RegisterBlockItem(RS.ID, CraftingMonitorBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, CraftingMonitorBlock.ID, "CURED_STORAGE")
 class CraftingMonitorBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
