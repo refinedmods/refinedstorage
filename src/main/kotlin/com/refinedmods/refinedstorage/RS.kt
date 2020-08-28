@@ -3,6 +3,8 @@ package com.refinedmods.refinedstorage
 //import com.refinedmods.refinedstorage.config.ClientConfig
 //import com.refinedmods.refinedstorage.config.ServerConfig
 //import com.refinedmods.refinedstorage.network.NetworkHandler
+import com.refinedmods.refinedstorage.config.ClientConfig
+import com.refinedmods.refinedstorage.config.ServerConfig
 import com.thinkslynk.fabric.generated.BlockRegistryGenerated
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.thinkslynk.fabric.generated.BlockEntityRegistryGenerated
@@ -13,6 +15,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
+import reborncore.common.config.Configuration
 
 class RS: ModInitializer {
     companion object{
@@ -24,6 +27,8 @@ class RS: ModInitializer {
 //    val CLIENT_CONFIG = ClientConfig()
 
     override fun onInitialize() {
+        Configuration(ServerConfig::class.java, ID)
+        Configuration(ClientConfig::class.java, ID)
 
 //        BlockRegistryGenerated.register()
         ItemRegistryGenerated.register()
