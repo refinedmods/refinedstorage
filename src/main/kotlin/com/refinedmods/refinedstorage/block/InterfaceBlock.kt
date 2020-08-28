@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, InterfaceBlock.ID)
-@RegisterBlockItem(RS.ID, InterfaceBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, InterfaceBlock.ID, "MISC")
 class InterfaceBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
-@RegisterBlockItem(RS.ID, ControllerBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, ControllerBlock.ID, "MISC")
 open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
@@ -110,12 +110,11 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     }
 
     init {
-        val d = stateManager.defaultState.with(ENERGY_TYPE, EnergyType.OFF)
-        defaultState = d
+        defaultState = stateManager.defaultState.with(ENERGY_TYPE, EnergyType.OFF)
     }
 
 }
 
 @RegisterBlock(RS.ID, ControllerBlock.CREATIVE_ID)
-@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "MISC")
 class CreativeControllerBlock: ControllerBlock(NetworkType.CREATIVE)

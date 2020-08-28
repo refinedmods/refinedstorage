@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, CrafterBlock.ID)
-@RegisterBlockItem(RS.ID, CrafterBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, CrafterBlock.ID, "MISC")
 class CrafterBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

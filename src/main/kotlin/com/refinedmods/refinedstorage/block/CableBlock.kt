@@ -24,7 +24,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, CableBlock.ID)
-@RegisterBlockItem(RS.ID, CableBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, CableBlock.ID, "MISC")
 open class CableBlock( settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES):
         NetworkNodeBlock(settingsIn)
 //        BlockEntityProvider
