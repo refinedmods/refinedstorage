@@ -23,6 +23,9 @@
   "entrypoints": {
     "main": [
         "com.refinedmods.refinedstorage.RS"
+    ],
+    "cardinal-components-block": [
+      "com.refinedmods.refinedstorage.RSComponents"
     ]
   },
 
@@ -33,5 +36,10 @@
   },
   "suggests": {
     "flamingo": "*"
+  },
+  "custom": {
+    "cardinal-components": [
+      "refinedstorage:network_node_proxy_component"
+    ]
   }
 }

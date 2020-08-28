@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "SLS",
+    "   "
+  ],
+  "key": {
+    "S": {
+      "tag": "c:string"
+    },
+    "L": {
+      "tag": "c:slime_balls"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:processor_binding",
+    "count": 8
+  }
+}
