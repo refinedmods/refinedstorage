@@ -39,10 +39,10 @@ configurations.api {
 
 
 repositories {
+    maven("https://jitpack.io")
     maven("http://maven.fabricmc.net/")
     maven("https://server.bbkr.space/artifactory/libs-release")
     maven("https://aperlambda.github.io/maven")
-    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -53,6 +53,7 @@ dependencies {
     val fabricKotlinVersion: String by project
 //    val libGui: String by project
 //    val spruceUi: String by project
+    val cardinalComponents: String by project
 
     //to change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -62,6 +63,14 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
+
+    // Replace modImplementation with modApi if you expose components in your own API
+    modImplementation("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:$cardinalComponents")
+    modImplementation("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:$cardinalComponents")
+    // Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
+    include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:$cardinalComponents")
+    include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:$cardinalComponents")
+
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs

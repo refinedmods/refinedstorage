@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block
 
-import com.refinedmods.refinedstorage.RS
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.state.StateManager

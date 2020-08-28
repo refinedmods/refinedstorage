@@ -34,7 +34,6 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         NEARLY_OFF("nearly_off"),
         NEARLY_ON("nearly_on"),
         ON("on");
-
         override fun asString(): String {
             return string
         }
