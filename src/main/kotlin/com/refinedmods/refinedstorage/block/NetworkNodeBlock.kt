@@ -77,14 +77,14 @@ abstract class NetworkNodeBlock(
 //        return connected
 //    }
 //
-//    open fun hasConnectedState(): Boolean {
-//        return false
-//    }
+    open fun hasConnectedState(): Boolean {
+        return false
+    }
 
-//    companion object {
-//        @JvmField
-//        val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
-//    }
+    companion object {
+        @JvmField
+        val CONNECTED: BooleanProperty = BooleanProperty.of("connected")
+    }
 //
 //    init {
 //        if (connected) {

@@ -1,8 +1,6 @@
 package com.refinedmods.refinedstorage.block
 
 import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
@@ -10,8 +8,6 @@ import net.minecraft.world.World
 abstract class BaseBlock(settings: Settings): Block(settings) {
     open val direction: BlockDirection
         get() = BlockDirection.NONE
-
-
 
 //    override fun rotate(state: BlockState, rotation: BlockRotation): BlockState {
 //        val dir = direction

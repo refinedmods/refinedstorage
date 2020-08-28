@@ -5,26 +5,21 @@ import com.refinedmods.refinedstorage.api.network.NetworkType
 //import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 //import com.refinedmods.refinedstorage.apiimpl.network.Network
 //import com.refinedmods.refinedstorage.tile.ControllerTile
-import com.refinedmods.refinedstorage.tile.NoOpBlockEntity
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.state.StateManager
 import net.minecraft.state.property.EnumProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
@@ -33,16 +28,16 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
 {
-//    enum class EnergyType(val string: String): StringIdentifiable {
-//        OFF("off"),
-//        NEARLY_OFF("nearly_off"),
-//        NEARLY_ON("nearly_on"),
-//        ON("on");
-//
-//        override fun asString(): String {
-//            return string
-//        }
-//    }
+    enum class EnergyType(val string: String): StringIdentifiable {
+        OFF("off"),
+        NEARLY_OFF("nearly_off"),
+        NEARLY_ON("nearly_on"),
+        ON("on");
+
+        override fun asString(): String {
+            return string
+        }
+    }
 
 //    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
 //        super.appendProperties(builder)
@@ -109,8 +104,8 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     companion object {
         const val ID = "controller"
         const val CREATIVE_ID = "creative_controller"
-//        @JvmField
-//        val ENERGY_TYPE: EnumProperty<EnergyType> = EnumProperty.of("energy_type", EnergyType::class.java)
+        @JvmField
+        val ENERGY_TYPE: EnumProperty<EnergyType> = EnumProperty.of("energy_type", EnergyType::class.java)
     }
 
     init {
