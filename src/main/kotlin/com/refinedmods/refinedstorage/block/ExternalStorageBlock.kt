@@ -21,6 +21,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -28,9 +29,9 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ExternalStorageBlock.ID)
-@RegisterBlockItem(RS.ID, ExternalStorageBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, ExternalStorageBlock.ID, "MISC")
 class ExternalStorageBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider
 {
     override val direction: BlockDirection
@@ -43,17 +44,15 @@ class ExternalStorageBlock:
     }
 
     private fun getHeadShape(state: BlockState): VoxelShape {
-        return HEAD_NORTH
-        // TODO Fix
-//        return when(state.get(direction.property)){
-//            Direction.NORTH -> HEAD_NORTH
-//            Direction.EAST -> HEAD_EAST
-//            Direction.SOUTH -> HEAD_SOUTH
-//            Direction.WEST -> HEAD_WEST
-//            Direction.UP -> HEAD_UP
-//            Direction.DOWN -> HEAD_DOWN
-//            else -> VoxelShapes.empty()
-//        }
+        return when(state.get(direction.property)){
+            Direction.NORTH -> HEAD_NORTH
+            Direction.EAST -> HEAD_EAST
+            Direction.SOUTH -> HEAD_SOUTH
+            Direction.WEST -> HEAD_WEST
+            Direction.UP -> HEAD_UP
+            Direction.DOWN -> HEAD_DOWN
+            else -> VoxelShapes.empty()
+        }
     }
 //
 //    override fun createBlockEntity(world: BlockView): BlockEntity

@@ -6,7 +6,7 @@ import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
 
 @RegisterBlock(RS.ID, MachineCasingBlock.ID)
-@RegisterBlockItem(RS.ID, MachineCasingBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, MachineCasingBlock.ID, "MISC")
 class MachineCasingBlock : BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) {
     companion object{
         const val ID = "machine_casing"

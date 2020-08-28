@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 open class StorageBlock(val type: ItemStorageType):
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value...
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) // TODO Double check connected value...
 //        BlockEntityProvider
 {
     companion object {
@@ -69,21 +69,21 @@ open class StorageBlock(val type: ItemStorageType):
 }
 
 @RegisterBlock(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID, "MISC")
 class OneKStorageBlock: StorageBlock(ItemStorageType.ONE_K)
 
 @RegisterBlock(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID, "MISC")
 class FourKStorageBlock: StorageBlock(ItemStorageType.FOUR_K)
 
 @RegisterBlock(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID, "MISC")
 class SixteenKStorageBlock: StorageBlock(ItemStorageType.SIXTEEN_K)
 
 @RegisterBlock(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID, "MISC")
 class SixtyFourKStorageBlock: StorageBlock(ItemStorageType.SIXTY_FOUR_K)
 
 @RegisterBlock(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID, "MISC")
 class CreativeStorageBlock: StorageBlock(ItemStorageType.CREATIVE)

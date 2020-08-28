@@ -14,6 +14,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.state.StateManager
 import net.minecraft.state.property.EnumProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -23,7 +24,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
-@RegisterBlockItem(RS.ID, ControllerBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, ControllerBlock.ID, "MISC")
 open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
@@ -33,16 +34,15 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         NEARLY_OFF("nearly_off"),
         NEARLY_ON("nearly_on"),
         ON("on");
-
         override fun asString(): String {
             return string
         }
     }
 
-//    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-//        super.appendProperties(builder)
-//        builder.add(ENERGY_TYPE)
-//    }
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        super.appendProperties(builder)
+        builder.add(ENERGY_TYPE)
+    }
 
 //    override fun createBlockEntity(world: BlockView): BlockEntity {
 //        return NoOpBlockEntity()
@@ -109,11 +109,11 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
     }
 
     init {
-//        defaultState = stateManager.defaultState.with(ENERGY_TYPE, EnergyType.OFF)
+        defaultState = stateManager.defaultState.with(ENERGY_TYPE, EnergyType.OFF)
     }
 
 }
 
 @RegisterBlock(RS.ID, ControllerBlock.CREATIVE_ID)
-@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "MISC")
 class CreativeControllerBlock: ControllerBlock(NetworkType.CREATIVE)

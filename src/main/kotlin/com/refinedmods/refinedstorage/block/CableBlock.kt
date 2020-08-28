@@ -1,14 +1,14 @@
 package com.refinedmods.refinedstorage.block
 
 import com.refinedmods.refinedstorage.RS
+import com.refinedmods.refinedstorage.RSComponents
 import com.refinedmods.refinedstorage.block.shape.ShapeCache.getOrCreate
+import com.refinedmods.refinedstorage.extensions.getCustomLogger
 import com.refinedmods.refinedstorage.tile.CableTile
-//import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability
-//import com.refinedmods.refinedstorage.tile.CableTile
 import com.refinedmods.refinedstorage.util.BlockUtils
 import com.thinkslynk.fabric.annotations.registry.RegisterBlock
 import com.thinkslynk.fabric.annotations.registry.RegisterBlockItem
-import com.thinkslynk.fabric.helpers.AnnotationHelpers
+import dev.onyxstudios.cca.api.v3.block.BlockComponents
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -17,25 +17,23 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
-import net.minecraft.util.function.BooleanBiFunction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, CableBlock.ID)
-@RegisterBlockItem(RS.ID, CableBlock.ID, "R_S_ITEM_GROUP")
-open class CableBlock(
-        settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES,
-        connected: Boolean = false // TODO Check connected
-): NetworkNodeBlock(settingsIn, connected),
+@RegisterBlockItem(RS.ID, CableBlock.ID, "MISC")
+open class CableBlock( settingsIn: Settings = BlockUtils.DEFAULT_GLASS_PROPERTIES):
+        NetworkNodeBlock(settingsIn),
         BlockEntityProvider
 {
     init {
-        val d  = stateManager.defaultState
+        defaultState = defaultState
                 .with(NORTH, false)
                 .with(EAST, false)
                 .with(SOUTH, false)
@@ -43,8 +41,6 @@ open class CableBlock(
                 .with(UP, false)
                 .with(DOWN, false)
                 .with(WATERLOGGED, false)
-
-        defaultState = d
     }
 
     override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
@@ -63,6 +59,10 @@ open class CableBlock(
         super.onDirectionChanged(world, pos, newDirection)
     }
 
+    override fun getStateForNeighborUpdate(state: BlockState, direction: Direction, newState: BlockState, world: WorldAccess, pos: BlockPos, posFrom: BlockPos): BlockState {
+        return getState(defaultState, world, pos)
+    }
+
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
         return getState(defaultState, ctx.world, ctx.blockPos)
     }
@@ -74,18 +74,14 @@ open class CableBlock(
 //        }
 //    }
 
+    @Suppress("UnstableApiUsage")
     private fun hasNode(world: BlockView, pos: BlockPos, state: BlockState, direction: Direction): Boolean {
         // Prevent the "holder" of a cable block conflicting with a cable connection.
-        // TODO Figure out which property this is supposed to be
-//        if (state.get<Direction>(direction.property).opposite == direction) {
-//            return false
-//        }
+        if (this.direction != BlockDirection.NONE && state.get<Direction>(this.direction.property).opposite == direction) {
+            return false
+        }
 
-        // TODO Replace capabilities
-        return false
-
-//        return world.getBlockEntity(pos)?.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction)?.isPresent()
-//                ?: false
+        return BlockComponents.get(RSComponents.NETWORK_NODE_PROXY, world, pos, direction) != null
     }
 
 
@@ -115,6 +111,7 @@ open class CableBlock(
     }
 
     companion object {
+        val log = getCustomLogger(ConstructorBlock::class)
         const val ID = "cable"
 
         private val NORTH: BooleanProperty = BooleanProperty.of("north")
@@ -131,7 +128,8 @@ open class CableBlock(
         @JvmStatic protected val HOLDER_WEST: VoxelShape = createCuboidShape(2.0, 7.0, 7.0, 6.0, 9.0, 9.0)
         @JvmStatic protected val HOLDER_UP: VoxelShape = createCuboidShape(7.0, 10.0, 7.0, 9.0, 14.0, 9.0)
         @JvmStatic protected val HOLDER_DOWN: VoxelShape = createCuboidShape(7.0, 2.0, 7.0, 9.0, 6.0, 9.0)
-        @JvmStatic  private val SHAPE_CORE: VoxelShape = createCuboidShape(6.0, 6.0, 6.0, 10.0, 10.0, 10.0)
+
+        @JvmStatic private val SHAPE_CORE: VoxelShape = createCuboidShape(6.0, 6.0, 6.0, 10.0, 10.0, 10.0)
         @JvmStatic private val SHAPE_NORTH: VoxelShape = createCuboidShape(6.0, 6.0, 0.0, 10.0, 10.0, 6.0)
         @JvmStatic private val SHAPE_EAST: VoxelShape = createCuboidShape(10.0, 6.0, 6.0, 16.0, 10.0, 10.0)
         @JvmStatic private val SHAPE_SOUTH: VoxelShape = createCuboidShape(6.0, 6.0, 10.0, 10.0, 10.0, 16.0)
@@ -143,12 +141,12 @@ open class CableBlock(
         protected fun getCableShape(state: BlockState): VoxelShape {
             var shape = SHAPE_CORE
             
-            if (state.get(NORTH)) shape = VoxelShapes.combine(shape, SHAPE_NORTH, BooleanBiFunction.OR)
-            if (state.get(EAST)) shape = VoxelShapes.combine(shape, SHAPE_EAST, BooleanBiFunction.OR)
-            if (state.get(SOUTH)) shape = VoxelShapes.combine(shape, SHAPE_SOUTH,BooleanBiFunction.OR)
-            if (state.get(WEST)) shape = VoxelShapes.combine(shape, SHAPE_WEST,BooleanBiFunction.OR)
-            if (state.get(UP)) shape = VoxelShapes.combine(shape, SHAPE_UP,BooleanBiFunction.OR)
-            if (state.get(DOWN)) shape = VoxelShapes.combine(shape, SHAPE_DOWN,BooleanBiFunction.OR)
+            if (state.get(NORTH)) shape = VoxelShapes.union(shape, SHAPE_NORTH)
+            if (state.get(EAST)) shape = VoxelShapes.union(shape, SHAPE_EAST)
+            if (state.get(SOUTH)) shape = VoxelShapes.union(shape, SHAPE_SOUTH)
+            if (state.get(WEST)) shape = VoxelShapes.union(shape, SHAPE_WEST)
+            if (state.get(UP)) shape = VoxelShapes.union(shape, SHAPE_UP)
+            if (state.get(DOWN)) shape = VoxelShapes.union(shape, SHAPE_DOWN)
             
             return shape
         }

@@ -132,7 +132,7 @@ abstract class NetworkNode(
                 couldUpdate = canUpdate
                 throttlingDisabled = false
                 val blockState = world.getBlockState(pos)
-                if (blockState.block is NetworkNodeBlock && (blockState.block as NetworkNodeBlock).hasConnectedState()) {
+                if (blockState.block is NetworkNodeBlock && (blockState.block as NetworkNodeBlock).defaultState.contains(NetworkNodeBlock.CONNECTED)) {
                     world.setBlockState(pos, world.getBlockState(pos).with(NetworkNodeBlock.CONNECTED, canUpdate))
                 }
                 if (network != null) {

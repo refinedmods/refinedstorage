@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.tile
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy
-import com.refinedmods.refinedstorage.api.util.Action
 import com.refinedmods.refinedstorage.apiimpl.API.Companion.instance
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode
 import com.refinedmods.refinedstorage.extensions.getCustomLogger
@@ -10,11 +9,12 @@ import com.refinedmods.refinedstorage.tile.config.RedstoneMode
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode.Companion.createParameter
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import java.lang.Exception
 
+@Suppress("UnstableApiUsage")
 abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
         BaseTile(tileType),
         INetworkNodeProxy<N>,
@@ -96,11 +96,7 @@ abstract class NetworkNodeTile<N : NetworkNode>(tileType: BlockEntityType<*>?):
 //    }
 
     abstract fun createNode(world: World, pos: BlockPos): N
-
-    // TODO Replace capabilities
-//    open fun <T> getCapability(cap: Capability<T>, direction: Direction?): LazyOptional<T> {
-//        return if (cap === NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY) {
-//            networkNodeProxy.cast()
-//        } else super.getCapability(cap, direction)
-//    }
+    override fun toTag(tag: CompoundTag): CompoundTag {
+        return CompoundTag()
+    }
 }

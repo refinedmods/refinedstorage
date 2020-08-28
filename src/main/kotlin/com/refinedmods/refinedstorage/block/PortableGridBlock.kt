@@ -20,7 +20,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, PortableGridBlock.ID)
-@RegisterBlockItem(RS.ID, PortableGridBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, PortableGridBlock.ID, "MISC")
 open class PortableGridBlock(private val type: Type = Type.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
@@ -75,7 +75,7 @@ open class PortableGridBlock(private val type: Type = Type.NORMAL):
 }
 
 @RegisterBlock(RS.ID, PortableGridBlock.CREATIVE_ID)
-@RegisterBlockItem(RS.ID, PortableGridBlock.CREATIVE_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, PortableGridBlock.CREATIVE_ID, "MISC")
 class CreativePortableGridBlock: PortableGridBlock(Type.CREATIVE)
 
 enum class Type {

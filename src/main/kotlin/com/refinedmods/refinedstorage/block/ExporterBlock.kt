@@ -13,6 +13,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -20,9 +21,9 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ExporterBlock.ID)
-@RegisterBlockItem(RS.ID, ExporterBlock.ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, ExporterBlock.ID, "MISC")
 class ExporterBlock:
-        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES, false) // TODO Check connected
+        CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider
 {
     override val direction: BlockDirection
@@ -35,17 +36,16 @@ class ExporterBlock:
     }
 
     private fun getLineShape(state: BlockState): VoxelShape {
-        return LINE_NORTH
-//        val direction: Direction = state.get(direction.property)
-//        return when {
-//            direction === Direction.NORTH -> LINE_NORTH
-//            direction === Direction.EAST -> LINE_EAST
-//            direction === Direction.SOUTH -> LINE_SOUTH
-//            direction === Direction.WEST -> LINE_WEST
-//            direction === Direction.UP -> LINE_UP
-//            direction === Direction.DOWN -> LINE_DOWN
-//            else -> VoxelShapes.empty()
-//        }
+        val direction: Direction = state.get(direction.property)
+        return when {
+            direction === Direction.NORTH -> LINE_NORTH
+            direction === Direction.EAST -> LINE_EAST
+            direction === Direction.SOUTH -> LINE_SOUTH
+            direction === Direction.WEST -> LINE_WEST
+            direction === Direction.UP -> LINE_UP
+            direction === Direction.DOWN -> LINE_DOWN
+            else -> VoxelShapes.empty()
+        }
     }
 
 //    override fun createBlockEntity(world: BlockView): BlockEntity

@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 open class FluidStorageBlock(val type: FluidStorageType):
-        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES, false) // TODO Double check connected value
+        NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) // TODO Double check connected value
 //        BlockEntityProvider
 {
     companion object {
@@ -66,19 +66,19 @@ open class FluidStorageBlock(val type: FluidStorageType):
 }
 
 @RegisterBlock(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "MISC")
 class SixtyFourKFluidStorageBlock: FluidStorageBlock(FluidStorageType.SIXTY_FOUR_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID, "MISC")
 class TwoHundredFiftySixKFluidStorageBlock: FluidStorageBlock(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID, "MISC")
 class ThousandFourKFluidStorageBlock: FluidStorageBlock(FluidStorageType.THOUSAND_TWENTY_FOUR_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID, "R_S_ITEM_GROUP")
+@RegisterBlockItem(RS.ID, FluidStorageBlock.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID, "MISC")
 class FourThousandNinetySixKFluidStorageBlock: FluidStorageBlock(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K)
 
 @RegisterBlock(RS.ID, FluidStorageBlock.CREATIVE_FLUID_STORAGE_BLOCK_ID)
