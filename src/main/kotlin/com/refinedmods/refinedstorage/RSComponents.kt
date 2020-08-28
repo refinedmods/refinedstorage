@@ -3,6 +3,8 @@ package com.refinedmods.refinedstorage
 import com.refinedmods.refinedstorage.api.component.INetworkNodeProxyComponent
 import com.refinedmods.refinedstorage.api.component.NetworkNodeProxyComponent
 import com.refinedmods.refinedstorage.block.CableBlock
+import com.refinedmods.refinedstorage.block.ConstructorBlock
+import com.refinedmods.refinedstorage.block.DestructorBlock
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer
 import dev.onyxstudios.cca.api.v3.component.ComponentKey
@@ -32,6 +34,20 @@ class RSComponents: BlockComponentInitializer {
                 Identifier(RS.ID, CableBlock.ID),
                 NETWORK_NODE_PROXY
         ) { _: BlockState, _: BlockView, _: BlockPos, _: Direction? ->
+            NetworkNodeProxyComponent()
+        }
+
+        registry.registerFor(
+                Identifier(RS.ID, ConstructorBlock.ID),
+                NETWORK_NODE_PROXY
+        ) {_: BlockState, _: BlockView, _: BlockPos, _:Direction? ->
+            NetworkNodeProxyComponent()
+        }
+
+        registry.registerFor(
+                Identifier(RS.ID, DestructorBlock.ID),
+                NETWORK_NODE_PROXY
+        ) {_: BlockState, _: BlockView, _: BlockPos, _:Direction? ->
             NetworkNodeProxyComponent()
         }
     }
