@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, ControllerBlock.ID)
-@RegisterBlockItem(RS.ID, ControllerBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, ControllerBlock.ID, "CURED_STORAGE")
 open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
         BaseBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider
@@ -115,5 +115,5 @@ open class ControllerBlock(val type: NetworkType = NetworkType.NORMAL):
 }
 
 @RegisterBlock(RS.ID, ControllerBlock.CREATIVE_ID)
-@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "MISC")
+@RegisterBlockItem(RS.ID, ControllerBlock.CREATIVE_ID, "CURED_STORAGE")
 class CreativeControllerBlock: ControllerBlock(NetworkType.CREATIVE)

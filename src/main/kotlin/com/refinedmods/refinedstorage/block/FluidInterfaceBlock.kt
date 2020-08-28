@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, FluidInterfaceBlock.ID)
-@RegisterBlockItem(RS.ID, FluidInterfaceBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, FluidInterfaceBlock.ID, "CURED_STORAGE")
 class FluidInterfaceBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

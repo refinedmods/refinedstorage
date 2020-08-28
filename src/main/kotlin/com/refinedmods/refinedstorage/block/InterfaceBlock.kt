@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, InterfaceBlock.ID)
-@RegisterBlockItem(RS.ID, InterfaceBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, InterfaceBlock.ID, "CURED_STORAGE")
 class InterfaceBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

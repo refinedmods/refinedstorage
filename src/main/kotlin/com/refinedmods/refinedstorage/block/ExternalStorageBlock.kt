@@ -29,7 +29,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, ExternalStorageBlock.ID)
-@RegisterBlockItem(RS.ID, ExternalStorageBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, ExternalStorageBlock.ID, "CURED_STORAGE")
 class ExternalStorageBlock:
         CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES) // TODO Check connected
 //        BlockEntityProvider

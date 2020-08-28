@@ -19,7 +19,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, WirelessTransmitterBlock.ID)
-@RegisterBlockItem(RS.ID, WirelessTransmitterBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, WirelessTransmitterBlock.ID, "CURED_STORAGE")
 class WirelessTransmitterBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

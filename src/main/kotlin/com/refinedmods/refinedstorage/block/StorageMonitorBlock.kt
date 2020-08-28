@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, StorageMonitorBlock.ID)
-@RegisterBlockItem(RS.ID, StorageMonitorBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, StorageMonitorBlock.ID, "CURED_STORAGE")
 class StorageMonitorBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

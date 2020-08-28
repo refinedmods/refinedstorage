@@ -69,21 +69,21 @@ open class StorageBlock(val type: ItemStorageType):
 }
 
 @RegisterBlock(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, StorageBlock.ONE_K_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class OneKStorageBlock: StorageBlock(ItemStorageType.ONE_K)
 
 @RegisterBlock(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, StorageBlock.FOUR_K_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class FourKStorageBlock: StorageBlock(ItemStorageType.FOUR_K)
 
 @RegisterBlock(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, StorageBlock.SIXTEEN_K_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class SixteenKStorageBlock: StorageBlock(ItemStorageType.SIXTEEN_K)
 
 @RegisterBlock(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, StorageBlock.SIXTY_FOUR_K_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class SixtyFourKStorageBlock: StorageBlock(ItemStorageType.SIXTY_FOUR_K)
 
 @RegisterBlock(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID)
-@RegisterBlockItem(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID, "MISC")
+@RegisterBlockItem(RS.ID, StorageBlock.CREATIVE_STORAGE_BLOCK_ID, "CURED_STORAGE")
 class CreativeStorageBlock: StorageBlock(ItemStorageType.CREATIVE)

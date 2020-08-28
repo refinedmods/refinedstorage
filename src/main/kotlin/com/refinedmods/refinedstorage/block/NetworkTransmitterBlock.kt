@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, NetworkTransmitterBlock.ID)
-@RegisterBlockItem(RS.ID, NetworkTransmitterBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, NetworkTransmitterBlock.ID, "CURED_STORAGE")
 class NetworkTransmitterBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

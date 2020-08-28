@@ -20,7 +20,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, DetectorBlock.ID)
-@RegisterBlockItem(RS.ID, DetectorBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, DetectorBlock.ID, "CURED_STORAGE")
 class DetectorBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) // TODO Double check connected value
 //        BlockEntityProvider

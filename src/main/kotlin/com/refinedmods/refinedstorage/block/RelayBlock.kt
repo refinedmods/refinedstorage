@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, RelayBlock.ID)
-@RegisterBlockItem(RS.ID, RelayBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, RelayBlock.ID, "CURED_STORAGE")
 class RelayBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES)
 //        BlockEntityProvider

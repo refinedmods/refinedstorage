@@ -24,7 +24,7 @@ import net.minecraft.world.World
 import java.util.function.Function
 
 @RegisterBlock(RS.ID, DestructorBlock.ID)
-@RegisterBlockItem(RS.ID, DestructorBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, DestructorBlock.ID, "CURED_STORAGE")
 class DestructorBlock:
         CableBlock(BlockUtils.DEFAULT_GLASS_PROPERTIES)
 //        BlockEntityProvider

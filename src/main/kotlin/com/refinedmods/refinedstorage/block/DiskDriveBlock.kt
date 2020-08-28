@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 @RegisterBlock(RS.ID, DiskDriveBlock.ID)
-@RegisterBlockItem(RS.ID, DiskDriveBlock.ID, "MISC")
+@RegisterBlockItem(RS.ID, DiskDriveBlock.ID, "CURED_STORAGE")
 class DiskDriveBlock:
         NetworkNodeBlock(BlockUtils.DEFAULT_ROCK_PROPERTIES) // TODO Double check connected value
 //        BlockEntityProvider
