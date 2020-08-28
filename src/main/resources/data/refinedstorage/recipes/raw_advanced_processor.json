@@ -5,16 +5,16 @@
       "item": "refinedstorage:processor_binding"
     },
     {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:diamond"
     },
     {
-      "tag": "refinedstorage:silicon"
+      "tag": "c:silicon"
     },
     {
       "item": "minecraft:redstone"
     }
   ],
   "result": {
-    "item": "refinedstorage:raw_improved_processor"
+    "item": "refinedstorage:raw_advanced_processor"
   }
 }

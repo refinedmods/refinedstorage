@@ -7,10 +7,10 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:string"
+      "tag": "c:string"
     },
     "L": {
-      "tag": "forge:slimeballs"
+      "tag": "c:slime_balls"
     }
   },
   "result": {

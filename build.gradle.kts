@@ -51,6 +51,7 @@ dependencies {
     val loaderVersion: String by project
     val fabricVersion: String by project
     val fabricKotlinVersion: String by project
+    val reiVersion: String by project
 //    val libGui: String by project
 //    val spruceUi: String by project
     val cardinalComponents: String by project
@@ -71,6 +72,8 @@ dependencies {
     include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-base:$cardinalComponents")
     include("com.github.OnyxStudios.Cardinal-Components-API:cardinal-components-block:$cardinalComponents")
 
+    // JEI style mod
+    modRuntime("me.shedaniel:RoughlyEnoughItems:$reiVersion")
 
     // GUI Library
     // https://github.com/CottonMC/LibGui/wiki/Getting-Started-with-GUIs
