@@ -5,18 +5,12 @@ package com.refinedmods.refinedstorage.api.storage.tracker
 /**
  * Represents a storage tracker entry.
  */
-class StorageTrackerEntry(private val time: Long, private val name: String) {
+class StorageTrackerEntry(
     /**
-     * @return the modification time
+     * the modification time
      */
-    fun getTime(): Long {
-        return time
-    }
-
+    val time: Long,
     /**
-     * @return the name of the player who modified this item
+     * the name of the player who modified this item
      */
-    fun getName(): String {
-        return name
-    }
-}
+    val name: String)
