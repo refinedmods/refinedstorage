@@ -1,7 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.9.4
-- Fixes JEI recipes/usages keys not working in Grids (raoulvdberge)
+- Fixed JEI recipes/usages keys not working in Grids (raoulvdberge)
 
 ### 1.9.3
 - Port to Minecraft 1.16.2 (raoulvdberge)
