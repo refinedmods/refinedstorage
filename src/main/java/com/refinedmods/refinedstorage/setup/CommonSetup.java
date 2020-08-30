@@ -51,6 +51,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -158,10 +159,10 @@ public class CommonSetup {
         e.getRegistry().register(new MachineCasingBlock());
         e.getRegistry().register(new CableBlock());
         e.getRegistry().register(new DiskDriveBlock());
-        e.getRegistry().register(new GridBlock(GridType.NORMAL));
-        e.getRegistry().register(new GridBlock(GridType.CRAFTING));
-        e.getRegistry().register(new GridBlock(GridType.PATTERN));
-        e.getRegistry().register(new GridBlock(GridType.FLUID));
+        e.getRegistry().register(new GridBlock(GridType.NORMAL, new ResourceLocation(RS.ID, "grid")));
+        e.getRegistry().register(new GridBlock(GridType.CRAFTING, new ResourceLocation(RS.ID, GridType.CRAFTING.getString() + "_grid")));
+        e.getRegistry().register(new GridBlock(GridType.PATTERN, new ResourceLocation(RS.ID, GridType.PATTERN.getString() + "_grid")));
+        e.getRegistry().register(new GridBlock(GridType.FLUID, new ResourceLocation(RS.ID, GridType.FLUID.getString() + "_grid")));
 
         for (ItemStorageType type : ItemStorageType.values()) {
             e.getRegistry().register(new StorageBlock(type));

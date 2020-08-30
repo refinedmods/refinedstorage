@@ -13,6 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -23,12 +24,11 @@ import javax.annotation.Nullable;
 public class GridBlock extends NetworkNodeBlock {
     private final GridType type;
 
-    public GridBlock(GridType type) {
+    public GridBlock(GridType type, ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type == GridType.NORMAL ? "grid" : type.getString() + "_grid");
+        setRegistryName(registryName);
     }
 
     @Override
