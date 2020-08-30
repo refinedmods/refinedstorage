@@ -158,10 +158,10 @@ public class CommonSetup {
         e.getRegistry().register(new MachineCasingBlock());
         e.getRegistry().register(new CableBlock());
         e.getRegistry().register(new DiskDriveBlock());
-        e.getRegistry().register(new GridBlock(GridType.NORMAL));
-        e.getRegistry().register(new GridBlock(GridType.CRAFTING));
-        e.getRegistry().register(new GridBlock(GridType.PATTERN));
-        e.getRegistry().register(new GridBlock(GridType.FLUID));
+        e.getRegistry().register(GridBlock.create(GridType.NORMAL));
+        e.getRegistry().register(GridBlock.create(GridType.CRAFTING));
+        e.getRegistry().register(GridBlock.create(GridType.PATTERN));
+        e.getRegistry().register(GridBlock.create(GridType.FLUID));
 
         for (ItemStorageType type : ItemStorageType.values()) {
             e.getRegistry().register(new StorageBlock(type));

@@ -23,12 +23,17 @@ import javax.annotation.Nullable;
 public class GridBlock extends NetworkNodeBlock {
     private final GridType type;
 
+    public static GridBlock create(GridType type) {
+        GridBlock gridBlock = new GridBlock(type);
+
+        gridBlock.setRegistryName(RS.ID, type == GridType.NORMAL ? "grid" : type.getString() + "_grid");
+        return gridBlock;
+    }
+
     public GridBlock(GridType type) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type == GridType.NORMAL ? "grid" : type.getString() + "_grid");
     }
 
     @Override
