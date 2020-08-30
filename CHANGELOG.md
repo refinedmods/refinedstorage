@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.9.4
+- Fixes JEI recipes/usages keys not working in Grids (raoulvdberge)
+
 ### 1.9.3
 - Port to Minecraft 1.16.2 (raoulvdberge)
 - Fixed duplication bug with the Constructor (Darkere)
