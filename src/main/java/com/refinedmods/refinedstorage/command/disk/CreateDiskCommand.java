@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.command.StorageDiskIdSuggestionProvider;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;

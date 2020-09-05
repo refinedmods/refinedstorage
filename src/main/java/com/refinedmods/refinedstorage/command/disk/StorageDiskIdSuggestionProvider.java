@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.command;
+package com.refinedmods.refinedstorage.command.disk;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
