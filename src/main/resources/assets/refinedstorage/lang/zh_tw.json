@@ -306,10 +306,8 @@
   "item.refinedstorage.security_card": "安全卡",
   "item.refinedstorage.security_card.owner": "綁定至: %s",
   "item.refinedstorage.processor_binding": "處理器黏合物",
-  
-  "commands.refinedstorage.createdisk.error.diskNotFound": "磁碟 %s 未找到.",
-  "commands.refinedstorage.createdisk.success": "成功把磁碟 %s 給了 %s.",
-  
+  "commands.refinedstorage.disk.create.error.disk_not_found": "磁碟 %s 未找到.",
+  "commands.refinedstorage.disk.create.success": "成功把磁碟 %s 給了 %s.",
   "advancements.refinedstorage.controlling.description": "合成一個控制器",
   "advancements.refinedstorage.connecting": "連接",
   "advancements.refinedstorage.connecting.description": "你可以將所有設備放在一起或者使用線纜以將它們連接起來",

@@ -306,10 +306,8 @@
   "item.refinedstorage.security_card": "セキュリティカード",
   "item.refinedstorage.security_card.owner": "所有者: %s",
   "item.refinedstorage.processor_binding": "プロセッサ接合材",
-
-  "commands.refinedstorage.createdisk.error.diskNotFound": "ディスク%sが見つかりません",
-  "commands.refinedstorage.createdisk.success": "ディスク%sを%sに割り当てました",
-
+  "commands.refinedstorage.disk.create.error.disk_not_found": "ディスク%sが見つかりません",
+  "commands.refinedstorage.disk.create.success": "ディスク%sを%sに割り当てました",
   "advancements.refinedstorage.controlling.description": "コントローラーを作る",
   "advancements.refinedstorage.connecting": "接続",
   "advancements.refinedstorage.connecting.description": "装置を隣接させて設置する他、ケーブルを使用することもできます",

@@ -300,10 +300,8 @@
     "item.refinedstorage.cover": "伪装板",
     "item.refinedstorage.hollow_cover": "空心伪装板",
     "item.refinedstorage.processor_binding": "处理器粘合物",
-
-    "commands.refinedstorage.createdisk.error.diskNotFound": "磁盘 %s 未找到.",
-    "commands.refinedstorage.createdisk.success": "成功把磁盘 %s 给了 %s.",
-
+    "commands.refinedstorage.disk.create.error.disk_not_found": "磁盘 %s 未找到.",
+    "commands.refinedstorage.disk.create.success": "成功把磁盘 %s 给了 %s.",
     "advancements.refinedstorage.controlling.description": "合成了控制器",
     "advancements.refinedstorage.connecting": "连接",
     "advancements.refinedstorage.connecting.description": "您可以将所有设备放在一起或者使用【线缆】以将它们连接起来",

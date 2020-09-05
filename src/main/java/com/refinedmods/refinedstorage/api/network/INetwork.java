@@ -263,6 +263,11 @@ public interface INetwork {
     CompoundNBT writeToNbt(CompoundNBT tag);
 
     /**
+     * @return sampled tick times
+     */
+    long[] getTickTimes();
+
+    /**
      * Marks the network dirty.
      */
     void markDirty();

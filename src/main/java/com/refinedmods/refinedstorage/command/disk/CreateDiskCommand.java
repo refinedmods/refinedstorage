@@ -41,7 +41,7 @@ public class CreateDiskCommand implements Command<CommandSource> {
 
         IStorageDisk<?> disk = API.instance().getStorageDiskManager(context.getSource().getWorld()).get(id);
         if (disk == null) {
-            context.getSource().sendErrorMessage(new TranslationTextComponent("commands.refinedstorage.createdisk.error.diskNotFound", id));
+            context.getSource().sendErrorMessage(new TranslationTextComponent("commands.refinedstorage.disk.create.error.disk_not_found", id));
         } else {
             IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(disk.getFactoryId());
 
@@ -69,7 +69,7 @@ public class CreateDiskCommand implements Command<CommandSource> {
                 }
 
                 context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.refinedstorage.createdisk.success",
+                    "commands.refinedstorage.disk.create.success",
                     new StringTextComponent(id.toString()).setStyle(Styles.YELLOW),
                     context.getSource().getDisplayName().deepCopy().setStyle(Styles.YELLOW)
                 ), false);

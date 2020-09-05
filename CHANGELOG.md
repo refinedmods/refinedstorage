@@ -4,6 +4,8 @@
 - Re-added the `/refinedstorage disk create <player> <id>` command (raoulvdberge)
 - Added the `/refinedstorage disk list` command (raoulvdberge)
 - Added the `/refinedstorage disk list <player>` command (raoulvdberge)
+- Added the `/refinedstorage network list <dimension>` command (raoulvdberge)
+- Added the `/refinedstorage network get <dimension> <pos>` command (raoulvdberge)
 - Added JEI ghost ingredient dragging support (raoulvdberge)
 - Fixed text field not being focused in amount specifying screens (raoulvdberge)
 

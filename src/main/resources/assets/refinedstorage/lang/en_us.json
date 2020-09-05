@@ -306,10 +306,14 @@
   "item.refinedstorage.security_card": "Security Card",
   "item.refinedstorage.security_card.owner": "Bound to: %s",
   "item.refinedstorage.processor_binding": "Processor Binding",
-
-  "commands.refinedstorage.createdisk.error.diskNotFound": "Disk %s was not found.",
-  "commands.refinedstorage.createdisk.success": "Successfully gave disk %s to %s.",
-
+  "commands.refinedstorage.disk.create.error.disk_not_found": "Disk %s was not found.",
+  "commands.refinedstorage.disk.create.success": "Successfully gave disk %s to %s.",
+  "commands.refinedstorage.network.list.pos": "Network at X: %d, Y: %d, Z: %d",
+  "commands.refinedstorage.network.list.tick_times": "Mean tick time: %s ms. Mean TPS: %s",
+  "commands.refinedstorage.network.list.autocrafting_tasks": "%s tasks",
+  "commands.refinedstorage.network.list.nodes": "%s nodes",
+  "commands.refinedstorage.network.list.energy_usage": "Energy usage: %s",
+  "commands.refinedstorage.network.get.error.not_found": "Network not found.",
   "advancements.refinedstorage.controlling.description": "Craft a Controller",
   "advancements.refinedstorage.connecting": "Connecting",
   "advancements.refinedstorage.connecting.description": "You can place all the devices next to each other to connect them up, or, use Cable",
