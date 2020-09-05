@@ -67,7 +67,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
         addButton(amountField);
 
-        setFocusedDefault(amountField); // TODO ?
+        setListener(amountField);
 
         int[] increments = getIncrements();
 
