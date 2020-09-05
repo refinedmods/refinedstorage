@@ -21,6 +21,7 @@ public class ListNetworkCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("list")
+            .requires(cs -> cs.hasPermissionLevel(2))
             .then(Commands.argument("dimension", DimensionArgument.getDimension())
                 .executes(new ListNetworkCommand()));
     }

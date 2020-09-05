@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.command.disk;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -11,7 +10,10 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class ListDiskCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("list").executes(new ListDiskCommand()).then(ListDiskForPlayerCommand.register());
+        return Commands.literal("list")
+            .requires(cs -> cs.hasPermissionLevel(2))
+            .executes(new ListDiskCommand())
+            .then(ListDiskForPlayerCommand.register());
     }
 
     @Override

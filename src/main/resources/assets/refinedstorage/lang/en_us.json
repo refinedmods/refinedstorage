@@ -315,6 +315,8 @@
   "commands.refinedstorage.network.list.energy_usage": "Energy usage: %s",
   "commands.refinedstorage.network.get.error.not_found": "Network not found.",
   "commands.refinedstorage.network.autocrafting.get.error.not_found": "Task not found.",
+  "commands.refinedstorage.network.autocrafting.cancel.single": "Cancelled %d task.",
+  "commands.refinedstorage.network.autocrafting.cancel.multiple": "Cancelled %d tasks.",
   "advancements.refinedstorage.controlling.description": "Craft a Controller",
   "advancements.refinedstorage.connecting": "Connecting",
   "advancements.refinedstorage.connecting.description": "You can place all the devices next to each other to connect them up, or, use Cable",

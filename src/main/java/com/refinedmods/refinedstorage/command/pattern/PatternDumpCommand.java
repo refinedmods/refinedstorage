@@ -18,7 +18,6 @@ import net.minecraftforge.fluids.FluidStack;
 public class PatternDumpCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("dump")
-            .requires(cs -> cs.hasPermissionLevel(0))
             .executes(new PatternDumpCommand());
     }
 
