@@ -264,10 +264,10 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void addSideButton(SideButton button) {
-        button.x = guiLeft + -SideButton.WIDTH - 2;
+        button.x = guiLeft - button.getWidth() - 2;
         button.y = guiTop + sideButtonY;
 
-        sideButtonY += SideButton.HEIGHT + 2;
+        sideButtonY += button.getHeight() + 2;
 
         this.addButton(button);
     }
