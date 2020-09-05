@@ -94,10 +94,10 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.20'
+    minecraft 'net.minecraftforge:forge:1.16.2-33.0.37'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.1.3.19:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.1.3.19")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
 
     compileOnly 'mouse-tweaks:MouseTweaks:2.13:mc1.16.2'
 

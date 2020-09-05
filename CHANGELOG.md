@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.9.5
+- Added JEI ghost ingredient dragging support (raoulvdberge)
+
 ### 1.9.4
 - Fixed JEI recipes/usages keys not working in Grids (raoulvdberge)
 
