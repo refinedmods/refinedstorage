@@ -56,7 +56,10 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");

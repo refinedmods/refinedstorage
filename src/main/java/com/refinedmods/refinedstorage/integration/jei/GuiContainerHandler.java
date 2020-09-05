@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.container.BaseContainer;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;

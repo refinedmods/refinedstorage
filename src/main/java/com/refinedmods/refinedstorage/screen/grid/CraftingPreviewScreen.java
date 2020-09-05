@@ -117,8 +117,8 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         if (getErrorType() != null) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scalef(scale, scale, 1);
+            matrixStack.push();
+            matrixStack.scale(scale, scale, 1);
 
             renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage.crafting_preview.error"));
 
@@ -136,10 +136,10 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
                     int yy = 83;
                     for (ItemStack output : pattern.getOutputs()) {
                         if (output != null) {
-                            RenderSystem.pushMatrix();
-                            RenderSystem.scalef(scale, scale, 1);
+                            matrixStack.push();
+                            matrixStack.scale(scale, scale, 1);
                             renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getString());
-                            RenderSystem.popMatrix();
+                            matrixStack.pop();
 
                             RenderHelper.setupGui3DDiffuseLighting();
                             RenderSystem.enableDepthTest();
@@ -160,7 +160,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
                 }
             }
 
-            RenderSystem.popMatrix();
+            matrixStack.pop();
         } else {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 

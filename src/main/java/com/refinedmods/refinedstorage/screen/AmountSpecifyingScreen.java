@@ -5,7 +5,6 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;

@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -119,7 +118,7 @@ public final class RenderUtils {
             RenderSystem.disableDepthTest();
             int tooltipTextWidth = 0;
 
-            for (ITextProperties  textLine : textLines) {
+            for (ITextProperties textLine : textLines) {
                 int textLineWidth = font.getStringWidth(textLine.getString());
                 if (textLineWidth > tooltipTextWidth)
                     tooltipTextWidth = textLineWidth;
@@ -162,8 +161,8 @@ public final class RenderUtils {
                 int wrappedTooltipWidth = 0;
                 List<ITextProperties> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
-                    ITextProperties  textLine = textLines.get(i);
-                    List<ITextProperties> wrappedLine =  font.func_238420_b_().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
+                    ITextProperties textLine = textLines.get(i);
+                    List<ITextProperties> wrappedLine = font.func_238420_b_().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
                     if (i == 0)
                         titleLinesCount = wrappedLine.size();
 

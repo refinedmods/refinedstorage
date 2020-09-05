@@ -142,25 +142,25 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         final int colorAlpha = fluidColor >> 24 & 0xFF;
 
         buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -0.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMinU(), sprite.getMinV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMinU(), sprite.getMinV())
+            .lightmap(light)
+            .endVertex();
         buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -0.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMaxU(), sprite.getMinV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMaxU(), sprite.getMinV())
+            .lightmap(light)
+            .endVertex();
         buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -1.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMaxU(), sprite.getMaxV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMaxU(), sprite.getMaxV())
+            .lightmap(light)
+            .endVertex();
         buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -1.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMinU(), sprite.getMaxV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMinU(), sprite.getMaxV())
+            .lightmap(light)
+            .endVertex();
 
         matrixStack.pop();
     }

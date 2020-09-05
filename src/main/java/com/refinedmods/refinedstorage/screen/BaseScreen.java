@@ -305,16 +305,16 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     public void renderQuantity(MatrixStack matrixStack, int x, int y, String qty, int color) {
         boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(x, y, Z_LEVEL_QTY);
+        matrixStack.push();
+        matrixStack.translate(x, y, Z_LEVEL_QTY);
 
         if (!large) {
-            RenderSystem.scalef(0.5f, 0.5f, 1);
+            matrixStack.scale(0.5F, 0.5F, 1);
         }
 
         font.drawStringWithShadow(matrixStack, qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, color);
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     public void renderString(MatrixStack matrixStack, int x, int y, String message) {

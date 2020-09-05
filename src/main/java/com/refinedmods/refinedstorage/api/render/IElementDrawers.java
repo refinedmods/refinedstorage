@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.api.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;

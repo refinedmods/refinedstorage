@@ -44,7 +44,7 @@ public class GridItemPullMessage {
                 }
             });
         }
-        
+
         ctx.get().setPacketHandled(true);
     }
 }

@@ -372,13 +372,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
-                RenderSystem.pushMatrix();
+                matrixStack.push();
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
                 fillGradient(matrixStack, x, y, x + 16, y + 16, color, color);
                 RenderSystem.colorMask(true, true, true, true);
-                RenderSystem.popMatrix();
+                matrixStack.pop();
             }
 
             slot++;

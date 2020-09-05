@@ -4,7 +4,6 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.AmountContainer;
 import com.refinedmods.refinedstorage.network.SetFilterSlotMessage;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;

@@ -5,7 +5,6 @@ import com.refinedmods.refinedstorage.container.FluidAmountContainer;
 import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;

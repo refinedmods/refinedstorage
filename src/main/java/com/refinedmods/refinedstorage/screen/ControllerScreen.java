@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.container.ControllerContainer;
@@ -103,8 +102,8 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
                 float scale = minecraft.getForceUnicodeFont() ? 1F : 0.5F;
 
-                RenderSystem.pushMatrix();
-                RenderSystem.scalef(scale, scale, 1);
+                matrixStack.push();
+                matrixStack.scale(scale, scale, 1);
 
                 renderString(
                     matrixStack,
@@ -114,7 +113,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
                 );
                 renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
-                RenderSystem.popMatrix();
+                matrixStack.pop();
 
                 if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY)) {
                     hoveringNode = node;

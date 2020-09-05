@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -61,8 +60,8 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, 1);
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
         int yy = y + 7;
 
@@ -94,7 +93,7 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
             drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", crafting));
         }
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.refinedmods.refinedstorage.screen.AmountSpecifyingScreen;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;

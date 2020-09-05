@@ -23,7 +23,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
 
     public DestructorTile() {
         super(RSTiles.DESTRUCTOR);
-        
+
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);
