@@ -307,8 +307,6 @@
   "item.refinedstorage.security_card.owner": "Bound to: %s",
   "item.refinedstorage.processor_binding": "Processor Binding",
 
-  "commands.refinedstorage.createdisk.usage": "/createdisk <player> <item> <metadata> <id>",
-  "commands.refinedstorage.createdisk.error.notADisk": "The given disk item is not a disk.",
   "commands.refinedstorage.createdisk.error.diskNotFound": "Disk %s was not found.",
   "commands.refinedstorage.createdisk.success": "Successfully gave disk %s to %s.",
 

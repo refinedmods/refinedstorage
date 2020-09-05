@@ -301,8 +301,6 @@
     "item.refinedstorage.hollow_cover": "空心伪装板",
     "item.refinedstorage.processor_binding": "处理器粘合物",
 
-    "commands.refinedstorage.createdisk.usage": "/createdisk <玩家> <物品> <metadata> <id>",
-    "commands.refinedstorage.createdisk.error.notADisk": "该物品不是磁盘.",
     "commands.refinedstorage.createdisk.error.diskNotFound": "磁盘 %s 未找到.",
     "commands.refinedstorage.createdisk.success": "成功把磁盘 %s 给了 %s.",
 

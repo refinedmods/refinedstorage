@@ -50,10 +50,4 @@ public final class RS {
 
         API.deliver();
     }
-
-    /* TODO
-    @EventHandler
-    public void onServerStarting(FMLServerStartingEvent e) {
-        e.registerServerCommand(new CommandCreateDisk());
-    }*/
 }

@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.command;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -17,7 +16,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 public class PatternDumpCommand implements Command<CommandSource> {
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("patterndump")
             .requires(cs -> cs.hasPermissionLevel(0))
             .executes(new PatternDumpCommand());
@@ -37,7 +36,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
             context.getSource().sendFeedback(new StringTextComponent("Crafting task factory ID: ").setStyle(Styles.YELLOW).append(new StringTextComponent(pattern.getCraftingTaskFactoryId().toString()).setStyle(Styles.WHITE)), false);
 
             if (!pattern.isValid()) {
-                context.getSource().sendFeedback(new StringTextComponent("Pattern is invalid! Reason: ").append(pattern.getErrorMessage()).setStyle(Styles.RED), false);
+                context.getSource().sendErrorMessage(new StringTextComponent("Pattern is invalid! Reason: ").append(pattern.getErrorMessage()));
             } else {
                 context.getSource().sendFeedback(new StringTextComponent("Processing: ").setStyle(Styles.YELLOW).append(new StringTextComponent(String.valueOf(processing)).setStyle(Styles.WHITE)), false);
                 context.getSource().sendFeedback(new StringTextComponent("Exact: ").setStyle(Styles.YELLOW).append(new StringTextComponent(String.valueOf(exact)).setStyle(Styles.WHITE)), false);
@@ -117,7 +116,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
                 }
             }
         } else {
-            context.getSource().sendFeedback(new StringTextComponent("You need to be holding a pattern in your hand.").setStyle(Styles.RED), false);
+            context.getSource().sendErrorMessage(new StringTextComponent("You need to be holding a pattern in your hand."));
         }
 
         return 0;

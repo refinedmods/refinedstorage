@@ -306,8 +306,6 @@
   "item.refinedstorage.security_card.owner": "Привязана к %s",
   "item.refinedstorage.processor_binding": "Связующий процессорный компонент",
 
-  "commands.refinedstorage.createdisk.usage": "/createdisk <игрок> <предмет> <метаданные> <id>",
-  "commands.refinedstorage.createdisk.error.notADisk": "Данный предмет не является диском.",
   "commands.refinedstorage.createdisk.error.diskNotFound": "Диск %s не был найден.",
   "commands.refinedstorage.createdisk.success": "Диск %s успешно выдан %s.",
 

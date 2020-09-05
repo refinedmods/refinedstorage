@@ -1,7 +1,10 @@
 package com.refinedmods.refinedstorage.api.storage.disk;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
+
+import java.util.UUID;
 
 /**
  * Creates a storage disk from NBT or on-demand.
@@ -17,6 +20,15 @@ public interface IStorageDiskFactory<T> {
      * @return the storage disk
      */
     IStorageDisk<T> createFromNbt(ServerWorld world, CompoundNBT tag);
+
+    /**
+     * Creates a storage disk item based on ID.
+     *
+     * @param disk the disk
+     * @param id   the disk id
+     * @return the storage disk
+     */
+    ItemStack createDiskItem(IStorageDisk<T> disk, UUID id);
 
     /**
      * Creates a storage disk on-demand.

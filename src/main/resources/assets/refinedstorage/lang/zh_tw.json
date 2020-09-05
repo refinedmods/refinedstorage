@@ -307,8 +307,6 @@
   "item.refinedstorage.security_card.owner": "綁定至: %s",
   "item.refinedstorage.processor_binding": "處理器黏合物",
   
-  "commands.refinedstorage.createdisk.usage": "/createdisk <player> <item> <metadata> <id>",
-  "commands.refinedstorage.createdisk.error.notADisk": "該物品不是磁碟.",
   "commands.refinedstorage.createdisk.error.diskNotFound": "磁碟 %s 未找到.",
   "commands.refinedstorage.createdisk.success": "成功把磁碟 %s 給了 %s.",
   

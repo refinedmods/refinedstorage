@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.9.5
+- Re-implemented the /refinedstorage createdisk command (raoulvdberge)
 - Added JEI ghost ingredient dragging support (raoulvdberge)
 
 ### 1.9.4

@@ -281,8 +281,6 @@
   "item.refinedstorage.security_card.owner": "Besitzer: %s",
   "item.refinedstorage.processor_binding": "Prozessor Rohmaterial",
 
-  "commands.refinedstorage.createdisk.usage": "/createdisk <Spieler> <Item> <Metadaten> <ID>",
-  "commands.refinedstorage.createdisk.error.notADisk": "Das Item ist keine Speicherzelle.",
   "commands.refinedstorage.createdisk.error.diskNotFound": "Speicherzelle %s konnte nicht gefunden werden.",
   "commands.refinedstorage.createdisk.success": "Speicherzelle %s erfolgreich an %s gegeben.",
 
