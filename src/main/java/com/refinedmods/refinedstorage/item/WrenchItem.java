@@ -34,7 +34,7 @@ public class WrenchItem extends Item {
 
         BlockState state = ctx.getWorld().getBlockState(ctx.getPos());
 
-        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(Rotation.CLOCKWISE_90));
+        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(ctx.getWorld(), ctx.getPos(), Rotation.CLOCKWISE_90));
 
         return ActionResultType.CONSUME;
     }

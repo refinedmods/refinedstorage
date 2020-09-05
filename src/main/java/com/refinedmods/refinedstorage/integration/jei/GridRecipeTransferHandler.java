@@ -32,7 +32,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
+    public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
         IGrid grid = container.getGrid();
 
         if (doTransfer) {
