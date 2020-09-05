@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.command;
+package com.refinedmods.refinedstorage.command.disk;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.command.StorageDiskIdSuggestionProvider;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -24,7 +25,7 @@ import java.util.UUID;
 
 public class CreateDiskCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("createdisk")
+        return Commands.literal("create")
             .requires(cs -> cs.hasPermissionLevel(2))
             .then(Commands.argument("player", EntityArgument.player())
                 .then(Commands.argument("id", UUIDArgument.func_239194_a_()).suggests(new StorageDiskIdSuggestionProvider())

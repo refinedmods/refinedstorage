@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class FluidDriveWrapperStorageDisk implements IStorageDisk<FluidStack> {
     private final DiskDriveNetworkNode diskDrive;
@@ -83,6 +84,12 @@ public class FluidDriveWrapperStorageDisk implements IStorageDisk<FluidStack> {
     @Override
     public int getCapacity() {
         return parent.getCapacity();
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return parent.getOwner();
     }
 
     @Override

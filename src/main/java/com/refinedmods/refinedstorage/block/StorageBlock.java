@@ -48,7 +48,7 @@ public class StorageBlock extends NetworkNodeBlock {
                 storage.setStorageId(stack.getTag().getUniqueId(StorageNetworkNode.NBT_ID));
             }
 
-            storage.loadStorage();
+            storage.loadStorage(entity instanceof PlayerEntity ? (PlayerEntity) entity : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.

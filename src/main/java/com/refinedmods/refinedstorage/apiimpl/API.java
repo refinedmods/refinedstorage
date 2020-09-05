@@ -39,6 +39,7 @@ import com.refinedmods.refinedstorage.apiimpl.util.Comparer;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -52,6 +53,7 @@ import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -215,22 +217,22 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new ItemStorageDisk(world, capacity);
+        return new ItemStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new FluidStorageDisk(world, capacity);
+        return new FluidStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override

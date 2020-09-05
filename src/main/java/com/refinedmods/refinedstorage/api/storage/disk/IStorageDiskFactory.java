@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -35,7 +36,8 @@ public interface IStorageDiskFactory<T> {
      *
      * @param world    the world
      * @param capacity the capacity
+     * @param owner    the owner, or null if no owner
      * @return the storage disk
      */
-    IStorageDisk<T> create(ServerWorld world, int capacity);
+    IStorageDisk<T> create(ServerWorld world, int capacity, @Nullable UUID owner);
 }

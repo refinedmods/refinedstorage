@@ -24,6 +24,7 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.FluidStorageBlockUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -36,6 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,7 +109,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
         if (storage == null) {
-            loadStorage();
+            loadStorage(null);
         }
 
         storages.add(storage);
@@ -134,15 +136,15 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         if (tag.hasUniqueId(NBT_ID)) {
             storageId = tag.getUniqueId(NBT_ID);
 
-            loadStorage();
+            loadStorage(null);
         }
     }
 
-    public void loadStorage() {
+    public void loadStorage(@Nullable PlayerEntity owner) {
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity()));
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity(), owner));
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 

@@ -46,10 +46,10 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (!world.isRemote && !stack.hasTag()) {
+        if (!world.isRemote && !stack.hasTag() && entity instanceof PlayerEntity) {
             UUID id = UUID.randomUUID();
 
-            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultFluidDisk((ServerWorld) world, getCapacity(stack)));
+            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultFluidDisk((ServerWorld) world, getCapacity(stack), (PlayerEntity) entity));
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
             setId(stack, id);

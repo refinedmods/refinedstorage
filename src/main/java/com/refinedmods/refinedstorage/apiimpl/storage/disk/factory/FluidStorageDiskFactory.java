@@ -14,6 +14,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> {
@@ -21,7 +22,11 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
 
     @Override
     public IStorageDisk<FluidStack> createFromNbt(ServerWorld world, CompoundNBT tag) {
-        FluidStorageDisk disk = new FluidStorageDisk(world, tag.getInt(FluidStorageDisk.NBT_CAPACITY));
+        FluidStorageDisk disk = new FluidStorageDisk(
+            world,
+            tag.getInt(FluidStorageDisk.NBT_CAPACITY),
+            tag.contains(FluidStorageDisk.NBT_OWNER) ? tag.getUniqueId(FluidStorageDisk.NBT_OWNER) : null
+        );
 
         ListNBT list = tag.getList(FluidStorageDisk.NBT_FLUIDS, Constants.NBT.TAG_COMPOUND);
 
@@ -63,7 +68,7 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
     }
 
     @Override
-    public IStorageDisk<FluidStack> create(ServerWorld world, int capacity) {
-        return new FluidStorageDisk(world, capacity);
+    public IStorageDisk<FluidStack> create(ServerWorld world, int capacity, @Nullable UUID owner) {
+        return new FluidStorageDisk(world, capacity, owner);
     }
 }

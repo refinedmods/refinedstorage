@@ -4,12 +4,9 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
-import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.refinedmods.refinedstorage.item.StorageDiskItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -17,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
@@ -24,7 +22,11 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
 
     @Override
     public IStorageDisk<ItemStack> createFromNbt(ServerWorld world, CompoundNBT tag) {
-        ItemStorageDisk disk = new ItemStorageDisk(world, tag.getInt(ItemStorageDisk.NBT_CAPACITY));
+        ItemStorageDisk disk = new ItemStorageDisk(
+            world,
+            tag.getInt(ItemStorageDisk.NBT_CAPACITY),
+            tag.contains(ItemStorageDisk.NBT_OWNER) ? tag.getUniqueId(ItemStorageDisk.NBT_OWNER) : null
+        );
 
         ListNBT list = tag.getList(ItemStorageDisk.NBT_ITEMS, Constants.NBT.TAG_COMPOUND);
 
@@ -66,7 +68,7 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
     }
 
     @Override
-    public IStorageDisk<ItemStack> create(ServerWorld world, int capacity) {
-        return new ItemStorageDisk(world, capacity);
+    public IStorageDisk<ItemStack> create(ServerWorld world, int capacity, @Nullable UUID owner) {
+        return new ItemStorageDisk(world, capacity, owner);
     }
 }

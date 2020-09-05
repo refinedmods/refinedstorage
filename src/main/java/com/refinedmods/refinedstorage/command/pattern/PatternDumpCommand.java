@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.command;
+package com.refinedmods.refinedstorage.command.pattern;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class PatternDumpCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("patterndump")
+        return Commands.literal("dump")
             .requires(cs -> cs.hasPermissionLevel(0))
             .executes(new PatternDumpCommand());
     }

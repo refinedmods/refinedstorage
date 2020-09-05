@@ -20,25 +20,29 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     public static final String NBT_VERSION = "Version";
     public static final String NBT_CAPACITY = "Capacity";
     public static final String NBT_FLUIDS = "Fluids";
+    public static final String NBT_OWNER = "Owner";
     public static final int VERSION = 1;
 
     @Nullable
     private final ServerWorld world;
     private final int capacity;
     private final Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
+    private final UUID owner;
 
     @Nullable
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public FluidStorageDisk(@Nullable ServerWorld world, int capacity) {
+    public FluidStorageDisk(@Nullable ServerWorld world, int capacity, @Nullable UUID owner) {
         this.world = world;
         this.capacity = capacity;
+        this.owner = owner;
     }
 
     @Override
@@ -54,6 +58,10 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
         tag.putInt(NBT_VERSION, VERSION);
         tag.put(NBT_FLUIDS, list);
         tag.putInt(NBT_CAPACITY, capacity);
+
+        if (owner != null) {
+            tag.putUniqueId(NBT_OWNER, owner);
+        }
 
         return tag;
     }
@@ -171,6 +179,12 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     @Override
     public int getCapacity() {
         return capacity;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
     }
 
     @Override
