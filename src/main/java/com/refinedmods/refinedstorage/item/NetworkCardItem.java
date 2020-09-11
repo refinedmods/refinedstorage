@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSBlocks;
+import com.refinedmods.refinedstorage.block.NetworkReceiverBlock;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -37,7 +37,7 @@ public class NetworkCardItem extends Item {
     public ActionResultType onItemUse(ItemUseContext ctx) {
         Block block = ctx.getWorld().getBlockState(ctx.getPos()).getBlock();
 
-        if (block == RSBlocks.NETWORK_RECEIVER) {
+        if (block instanceof NetworkReceiverBlock) {
             CompoundNBT tag = new CompoundNBT();
 
             tag.putInt(NBT_RECEIVER_X, ctx.getPos().getX());
