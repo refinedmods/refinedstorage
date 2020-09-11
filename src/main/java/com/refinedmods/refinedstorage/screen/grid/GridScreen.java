@@ -45,6 +45,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
+    private static String searchQuery = "";
+
     private IGridView view;
 
     private SearchWidget searchField;
@@ -109,8 +111,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 searchField.updateJei();
 
                 getView().sort(); // Use getter since this view can be replaced.
+
+                searchQuery = value;
             });
             searchField.setMode(grid.getSearchBoxMode());
+            searchField.setText(searchQuery);
         } else {
             searchField.x = sx;
             searchField.y = sy;
@@ -550,6 +555,15 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         return super.keyPressed(key, scanCode, modifiers);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+
+        if (!RS.CLIENT_CONFIG.getGrid().getRememberSearchQuery()) {
+            searchQuery = "";
+        }
     }
 
     public SearchWidget getSearchField() {
