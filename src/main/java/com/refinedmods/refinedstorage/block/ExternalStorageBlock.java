@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -39,10 +40,10 @@ public class ExternalStorageBlock extends CableBlock {
     private static final VoxelShape HEAD_UP = VoxelShapes.or(makeCuboidShape(3, 14, 3, 13, 16, 13), HOLDER_UP);
     private static final VoxelShape HEAD_DOWN = VoxelShapes.or(makeCuboidShape(3, 0, 3, 13, 2, 13), HOLDER_DOWN);
 
-    public ExternalStorageBlock() {
+    public ExternalStorageBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "external_storage");
+        this.setRegistryName(registryName);
     }
 
     @Override

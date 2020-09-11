@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -32,10 +33,10 @@ public class DetectorBlock extends NetworkNodeBlock {
 
     private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 5, 16);
 
-    public DetectorBlock() {
+    public DetectorBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "detector");
+        this.setRegistryName(registryName);
         this.setDefaultState(this.getStateContainer().getBaseState().with(POWERED, false));
     }
 

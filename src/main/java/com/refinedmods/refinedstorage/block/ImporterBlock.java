@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -58,10 +59,10 @@ public class ImporterBlock extends CableBlock {
     private static final VoxelShape LINE_DOWN_3 = makeCuboidShape(3, 0, 3, 13, 2, 13);
     private static final VoxelShape LINE_DOWN = VoxelShapes.or(LINE_DOWN_1, LINE_DOWN_2, LINE_DOWN_3);
 
-    public ImporterBlock() {
+    public ImporterBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "importer");
+        this.setRegistryName(registryName);
     }
 
     @Override

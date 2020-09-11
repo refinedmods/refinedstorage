@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -26,10 +27,10 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class StorageMonitorBlock extends NetworkNodeBlock {
-    public StorageMonitorBlock() {
+    public StorageMonitorBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "storage_monitor");
+        this.setRegistryName(registryName);
     }
 
     @Override

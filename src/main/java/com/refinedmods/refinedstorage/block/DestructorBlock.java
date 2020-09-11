@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -35,10 +36,10 @@ public class DestructorBlock extends CableBlock {
     private static final VoxelShape HEAD_DOWN = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 2, 14), HOLDER_DOWN);
     private static final VoxelShape HEAD_UP = VoxelShapes.or(makeCuboidShape(2, 14, 2, 14, 16, 14), HOLDER_UP);
 
-    public DestructorBlock() {
+    public DestructorBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "destructor");
+        this.setRegistryName(registryName);
     }
 
     @Override

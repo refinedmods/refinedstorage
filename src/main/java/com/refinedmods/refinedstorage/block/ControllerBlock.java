@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -64,11 +65,11 @@ public class ControllerBlock extends BaseBlock {
 
     private final NetworkType type;
 
-    public ControllerBlock(NetworkType type) {
+    public ControllerBlock(NetworkType type, ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setRegistryName(RS.ID, type == NetworkType.CREATIVE ? "creative_controller" : "controller");
+        this.setRegistryName(registryName);
         this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
     }
 

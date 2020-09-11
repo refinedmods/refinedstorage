@@ -5,15 +5,16 @@ import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
 public class NetworkReceiverBlock extends NetworkNodeBlock {
-    public NetworkReceiverBlock() {
+    public NetworkReceiverBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "network_receiver");
+        this.setRegistryName(registryName);
     }
 
     @Nullable

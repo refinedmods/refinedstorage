@@ -12,6 +12,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -32,10 +33,10 @@ public class WirelessTransmitterBlock extends NetworkNodeBlock {
     private static final VoxelShape SHAPE_NORTH = makeCuboidShape(6.0D, 6.0D, 0.0D, 10.0D, 10.0D, 10.0D);
     private static final VoxelShape SHAPE_SOUTH = makeCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 16.0D);
 
-    public WirelessTransmitterBlock() {
+    public WirelessTransmitterBlock(ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "wireless_transmitter");
+        this.setRegistryName(registryName);
     }
 
     @Override

@@ -19,6 +19,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -36,11 +37,11 @@ public class PortableGridBlock extends BaseBlock {
 
     private final PortableGridBlockItem.Type type;
 
-    public PortableGridBlock(PortableGridBlockItem.Type type) {
+    public PortableGridBlock(PortableGridBlockItem.Type type, ResourceLocation registryName) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setRegistryName(RS.ID, (type == PortableGridBlockItem.Type.CREATIVE ? "creative_" : "") + "portable_grid");
+        this.setRegistryName(registryName);
         this.setDefaultState(getDefaultState().with(DISK_STATE, PortableGridDiskState.NONE).with(ACTIVE, false));
     }
 

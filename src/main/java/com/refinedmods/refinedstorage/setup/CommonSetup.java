@@ -153,45 +153,45 @@ public class CommonSetup {
 
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> e) {
-        e.getRegistry().register(new QuartzEnrichedIronBlock());
-        e.getRegistry().register(new ControllerBlock(NetworkType.NORMAL));
-        e.getRegistry().register(new ControllerBlock(NetworkType.CREATIVE));
-        e.getRegistry().register(new MachineCasingBlock());
-        e.getRegistry().register(new CableBlock());
-        e.getRegistry().register(new DiskDriveBlock());
+        e.getRegistry().register(new QuartzEnrichedIronBlock(new ResourceLocation(RS.ID, "quartz_enriched_iron_block")));
+        e.getRegistry().register(new ControllerBlock(NetworkType.NORMAL, new ResourceLocation(RS.ID, "controller")));
+        e.getRegistry().register(new ControllerBlock(NetworkType.CREATIVE, new ResourceLocation(RS.ID, "creative_controller")));
+        e.getRegistry().register(new MachineCasingBlock(new ResourceLocation(RS.ID, "machine_casing")));
+        e.getRegistry().register(new CableBlock(new ResourceLocation(RS.ID, "cable")));
+        e.getRegistry().register(new DiskDriveBlock(new ResourceLocation(RS.ID, "disk_drive")));
         e.getRegistry().register(new GridBlock(GridType.NORMAL, new ResourceLocation(RS.ID, "grid")));
         e.getRegistry().register(new GridBlock(GridType.CRAFTING, new ResourceLocation(RS.ID, GridType.CRAFTING.getString() + "_grid")));
         e.getRegistry().register(new GridBlock(GridType.PATTERN, new ResourceLocation(RS.ID, GridType.PATTERN.getString() + "_grid")));
         e.getRegistry().register(new GridBlock(GridType.FLUID, new ResourceLocation(RS.ID, GridType.FLUID.getString() + "_grid")));
 
         for (ItemStorageType type : ItemStorageType.values()) {
-            e.getRegistry().register(new StorageBlock(type));
+            e.getRegistry().register(new StorageBlock(type, new ResourceLocation(RS.ID, type.getName() + "_storage_block")));
         }
 
         for (FluidStorageType type : FluidStorageType.values()) {
-            e.getRegistry().register(new FluidStorageBlock(type));
+            e.getRegistry().register(new FluidStorageBlock(type, new ResourceLocation(RS.ID, type.getName() + "_fluid_storage_block")));
         }
 
-        e.getRegistry().register(new ExternalStorageBlock());
-        e.getRegistry().register(new ImporterBlock());
-        e.getRegistry().register(new ExporterBlock());
-        e.getRegistry().register(new NetworkReceiverBlock());
-        e.getRegistry().register(new NetworkTransmitterBlock());
-        e.getRegistry().register(new RelayBlock());
-        e.getRegistry().register(new DetectorBlock());
-        e.getRegistry().register(new SecurityManagerBlock());
-        e.getRegistry().register(new InterfaceBlock());
-        e.getRegistry().register(new FluidInterfaceBlock());
-        e.getRegistry().register(new WirelessTransmitterBlock());
-        e.getRegistry().register(new StorageMonitorBlock());
-        e.getRegistry().register(new ConstructorBlock());
-        e.getRegistry().register(new DestructorBlock());
-        e.getRegistry().register(new DiskManipulatorBlock());
-        e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.NORMAL));
-        e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.CREATIVE));
-        e.getRegistry().register(new CrafterBlock());
-        e.getRegistry().register(new CrafterManagerBlock());
-        e.getRegistry().register(new CraftingMonitorBlock());
+        e.getRegistry().register(new ExternalStorageBlock(new ResourceLocation(RS.ID, "external_storage")));
+        e.getRegistry().register(new ImporterBlock(new ResourceLocation(RS.ID, "importer")));
+        e.getRegistry().register(new ExporterBlock(new ResourceLocation(RS.ID, "exporter")));
+        e.getRegistry().register(new NetworkReceiverBlock(new ResourceLocation(RS.ID, "network_receiver")));
+        e.getRegistry().register(new NetworkTransmitterBlock(new ResourceLocation(RS.ID, "network_transmitter")));
+        e.getRegistry().register(new RelayBlock(new ResourceLocation(RS.ID, "relay")));
+        e.getRegistry().register(new DetectorBlock(new ResourceLocation(RS.ID, "detector")));
+        e.getRegistry().register(new SecurityManagerBlock(new ResourceLocation(RS.ID, "security_manager")));
+        e.getRegistry().register(new InterfaceBlock(new ResourceLocation(RS.ID, "interface")));
+        e.getRegistry().register(new FluidInterfaceBlock(new ResourceLocation(RS.ID, "fluid_interface")));
+        e.getRegistry().register(new WirelessTransmitterBlock(new ResourceLocation(RS.ID, "wireless_transmitter")));
+        e.getRegistry().register(new StorageMonitorBlock(new ResourceLocation(RS.ID, "storage_monitor")));
+        e.getRegistry().register(new ConstructorBlock(new ResourceLocation(RS.ID, "constructor")));
+        e.getRegistry().register(new DestructorBlock(new ResourceLocation(RS.ID, "destructor")));
+        e.getRegistry().register(new DiskManipulatorBlock(new ResourceLocation(RS.ID, "disk_manipulator")));
+        e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.NORMAL, new ResourceLocation(RS.ID, "portable_grid")));
+        e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.CREATIVE, new ResourceLocation(RS.ID, "creative_portable_grid")));
+        e.getRegistry().register(new CrafterBlock(new ResourceLocation(RS.ID, "crafter")));
+        e.getRegistry().register(new CrafterManagerBlock(new ResourceLocation(RS.ID, "crafter_manager")));
+        e.getRegistry().register(new CraftingMonitorBlock(new ResourceLocation(RS.ID, "crafting_monitor")));
     }
 
     @SubscribeEvent
