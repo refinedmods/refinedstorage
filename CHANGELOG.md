@@ -23,6 +23,9 @@
 - Updated Taiwanese translation (ForFunPenguin)
 - Refactored autocrafting code (raoulvdberge)
 
+### 1.9.2b
+Fixed duplication bug with the Constructor (Darkere, raoulvdberge)
+
 ### 1.9.2
 - Fixed crash with Forge version 67 (Darkere)
 - Fixed cases where Refined Storage unwillingly acts like a chunkloader (raoulvdberge)
