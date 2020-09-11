@@ -146,17 +146,14 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         }
     }
 
-    // @Volatile: From BlockDispenser#getDispensePosition
     private double getDispensePositionX() {
         return (double) pos.getX() + 0.5D + 0.8D * (double) getDirection().getXOffset();
     }
 
-    // @Volatile: From BlockDispenser#getDispensePosition
     private double getDispensePositionY() {
         return (double) pos.getY() + (getDirection() == Direction.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getYOffset();
     }
 
-    // @Volatile: From BlockDispenser#getDispensePosition
     private double getDispensePositionZ() {
         return (double) pos.getZ() + 0.5D + 0.8D * (double) getDirection().getZOffset();
     }

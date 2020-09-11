@@ -162,7 +162,6 @@ public abstract class BaseContainer extends Container {
 
     private boolean isTileStillThere() {
         if (tile != null) {
-            // @Volatile: Logic from LockableLootTileEntity#isUsableByPlayer
             return tile.getWorld().getTileEntity(tile.getPos()) == tile;
         }
 
