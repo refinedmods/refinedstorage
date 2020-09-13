@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class GridBlock extends NetworkNodeBlock {
+public class GridBlock extends ColoredNetworkBlock {
     private final GridType type;
 
     public GridBlock(GridType type, ResourceLocation registryName) {
@@ -50,6 +50,10 @@ public class GridBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
+            ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
         }
 

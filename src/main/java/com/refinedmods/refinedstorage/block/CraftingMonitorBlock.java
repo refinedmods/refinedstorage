@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class CraftingMonitorBlock extends NetworkNodeBlock {
+public class CraftingMonitorBlock extends ColoredNetworkBlock {
     public CraftingMonitorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
@@ -43,6 +43,10 @@ public class CraftingMonitorBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
+            ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
             CraftingMonitorTile tile = (CraftingMonitorTile) world.getTileEntity(pos);
 
             return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(

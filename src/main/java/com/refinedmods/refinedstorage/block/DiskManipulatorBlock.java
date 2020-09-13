@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class DiskManipulatorBlock extends NetworkNodeBlock {
+public class DiskManipulatorBlock extends ColoredNetworkBlock {
     public DiskManipulatorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
@@ -38,6 +38,10 @@ public class DiskManipulatorBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
+            ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, rayTraceResult);
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
             return NetworkUtils.attemptModify(world, pos, rayTraceResult.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DiskManipulatorTile>(

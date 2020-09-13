@@ -22,7 +22,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class SecurityManagerBlock extends NetworkNodeBlock {
+public class SecurityManagerBlock extends ColoredNetworkBlock {
     public SecurityManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
@@ -38,6 +38,10 @@ public class SecurityManagerBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
+            ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<SecurityManagerTile>(

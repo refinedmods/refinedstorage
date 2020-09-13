@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class NetworkTransmitterBlock extends NetworkNodeBlock {
+public class NetworkTransmitterBlock extends ColoredNetworkBlock {
     public NetworkTransmitterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
@@ -38,6 +38,10 @@ public class NetworkTransmitterBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
+            ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<NetworkTransmitterTile>(
