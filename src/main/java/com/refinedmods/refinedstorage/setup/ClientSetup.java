@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.*;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.block.ColoredNetworkBlock;
 import com.refinedmods.refinedstorage.container.CrafterContainer;
 import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
@@ -16,13 +17,17 @@ import com.refinedmods.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
 import com.refinedmods.refinedstorage.screen.factory.GridScreenFactory;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
@@ -34,6 +39,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.*;
 
 public class ClientSetup {
     private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
@@ -50,33 +57,34 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "controller"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
-            new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
-            new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"),
-            new ResourceLocation(RS.ID, "block/controller/cutouts/on")
+            getColoredModels("controller/cutouts/on_",
+                new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
+                new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"))
+
         ));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "creative_controller"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
-            new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
-            new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"),
-            new ResourceLocation(RS.ID, "block/controller/cutouts/on")
+            getColoredModels("block/controller/cutouts/on_",
+                new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
+                new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"))
         ));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/crafting_front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern_grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/fluid_front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/network_receiver/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/relay/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/grid/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/crafting_grid/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern_grid"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/pattern_grid/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/fluid_grid/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/network_receiver/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/network_transmitter/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/relay/cutouts/")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "detector"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/detector/cutouts/on")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "security_manager"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
-            new ResourceLocation(RS.ID, "block/security_manager/cutouts/top_connected"),
-            new ResourceLocation(RS.ID, "block/security_manager/cutouts/front_connected"),
-            new ResourceLocation(RS.ID, "block/security_manager/cutouts/left_connected"),
-            new ResourceLocation(RS.ID, "block/security_manager/cutouts/back_connected"),
-            new ResourceLocation(RS.ID, "block/security_manager/cutouts/right_connected")
+            getMultipleColoredModels("block/security_manager/cutouts/top_",
+                "block/security_manager/cutouts/front_",
+                "block/security_manager/cutouts/left_",
+                "block/security_manager/cutouts/back_",
+                "block/security_manager/cutouts/right_")
         ));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "wireless_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/wireless_transmitter/cutouts/connected")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected")));
@@ -96,17 +104,17 @@ public class ClientSetup {
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_manipulator"), (base, registry) -> new FullbrightBakedModel(
             new DiskManipulatorBakedModel(
-                registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator_connected")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected")),
+                getModelMap(registry, "block/disk_manipulator/"),
+                registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
             ),
             false,
-            new ResourceLocation(RS.ID, "block/disk_manipulator/cutouts/connected"),
-            new ResourceLocation(RS.ID, "block/disks/leds")
-        ));
+            getColoredModels("block/disk_manipulator/cutouts/",
+                new ResourceLocation(RS.ID, "block/disks/leds")
+            )));
 
         for (String portableGridName : new String[]{"portable_grid", "creative_portable_grid"}) {
             bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, portableGridName), (base, registry) -> new FullbrightBakedModel(
@@ -126,15 +134,11 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
-            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected"),
-            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_90"),
-            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_180"),
-            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_270"),
-            new ResourceLocation(RS.ID, "block/crafter/cutouts/front_connected")
+            getMultipleColoredModels("block/crafter/cutouts/side_", "block/crafter/cutouts/top_")
         ));
 
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter_manager"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/crafter_manager/cutouts/front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_monitor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/crafting_monitor/cutouts/front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter_manager"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/crafter_manager/cutouts/")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_monitor"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/crafting_monitor/cutouts/")));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
@@ -143,8 +147,10 @@ public class ClientSetup {
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_full"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"));
 
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_connected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
+        for (DyeColor color : DyeColor.values()) {
+            ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
+        }
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
@@ -185,6 +191,31 @@ public class ClientSetup {
 
             return false;
         });
+    }
+
+    private Map<DyeColor, IBakedModel> getModelMap(Map<ResourceLocation, IBakedModel> registry, String location) {
+        Map<DyeColor, IBakedModel> map = new HashMap<>();
+        for (DyeColor color : DyeColor.values()) {
+            map.put(color, registry.get(new ResourceLocation(RS.ID, location + color)));
+        }
+        return map;
+    }
+
+    private ResourceLocation[] getMultipleColoredModels(String... location) {
+        List<ResourceLocation> rls = new ArrayList<>();
+        for (String string : location) {
+            rls.addAll(Arrays.asList(getColoredModels(string)));
+        }
+        return rls.toArray(new ResourceLocation[0]);
+    }
+
+    private ResourceLocation[] getColoredModels(String location, ResourceLocation... other) {
+        List<ResourceLocation> rls = new ArrayList<>();
+        for (DyeColor color : DyeColor.values()) {
+            rls.add(new ResourceLocation(RS.ID, location + color));
+        }
+        rls.addAll(Arrays.asList(other));
+        return rls.toArray(new ResourceLocation[0]);
     }
 
     @SubscribeEvent
@@ -263,6 +294,19 @@ public class ClientSetup {
 
         ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
         ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+
+        ResourceLocation color = new ResourceLocation(RS.ID, "color");
+
+        for (Item coloredBlockItem : BlockUtils.COLORED_BLOCK_ITEMS) {
+            ItemModelsProperties.func_239418_a_(coloredBlockItem, color, (stack, world, player) -> {
+                if (stack.hasTag() && stack.getTag().contains(ColoredNetworkBlock.COLOR_NBT)) {
+                    return stack.getTag().getInt(ColoredNetworkBlock.COLOR_NBT);
+                } else {
+                    return 0;
+                }
+            });
+        }
+
     }
 
     @SubscribeEvent

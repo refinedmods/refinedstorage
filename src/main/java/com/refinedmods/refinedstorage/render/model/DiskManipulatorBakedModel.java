@@ -7,19 +7,18 @@ import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.block.DiskManipulatorBlock;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class DiskManipulatorBakedModel extends DelegateBakedModel {
     private static class CacheKey {
@@ -67,7 +66,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     }
 
-    private final IBakedModel baseConnected;
+    private final Map<DyeColor, IBakedModel> baseConnected;
     private final IBakedModel baseDisconnected;
     private final IBakedModel disk;
     private final IBakedModel diskNearCapacity;
@@ -80,9 +79,10 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.getDirection().getProperty());
             boolean connected = key.state.get(DiskManipulatorBlock.CONNECTED);
+            DyeColor color = key.state.get(BlockUtils.COLOR_PROPERTY);
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
-                connected ? baseConnected : baseDisconnected,
+                connected ? baseConnected.get(color) : baseDisconnected,
                 facing,
                 null,
                 key.state,
@@ -116,7 +116,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     });
 
-    public DiskManipulatorBakedModel(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
+    public DiskManipulatorBakedModel(Map<DyeColor, IBakedModel> baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
         super(baseDisconnected);
 
         this.baseConnected = baseConnected;

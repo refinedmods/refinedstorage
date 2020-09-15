@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -69,7 +70,7 @@ public class ControllerBlock extends BaseBlock {
 
         this.type = type;
         this.setRegistryName(RS.ID, type == NetworkType.CREATIVE ? "creative_controller" : "controller");
-        this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
+        this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF).with(BlockUtils.COLOR_PROPERTY, DyeColor.LIGHT_BLUE));
     }
 
     @Override
@@ -77,6 +78,7 @@ public class ControllerBlock extends BaseBlock {
         super.fillStateContainer(builder);
 
         builder.add(ENERGY_TYPE);
+        builder.add(BlockUtils.COLOR_PROPERTY);
     }
 
     public NetworkType getType() {
@@ -126,6 +128,14 @@ public class ControllerBlock extends BaseBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
+            ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, hit);
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
+            ActionResultType colorResult = BlockUtils.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+            if (colorResult != ActionResultType.PASS) {
+                return colorResult;
+            }
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new INamedContainerProvider() {
