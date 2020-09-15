@@ -104,6 +104,7 @@ public class ClientSetup {
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_manipulator"), (base, registry) -> new FullbrightBakedModel(
             new DiskManipulatorBakedModel(
+                base,
                 getModelMap(registry, "block/disk_manipulator/"),
                 registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),

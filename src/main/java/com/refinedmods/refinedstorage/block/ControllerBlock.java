@@ -21,6 +21,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -41,6 +42,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ControllerBlock extends BaseBlock {
     public enum EnergyType implements IStringSerializable {
@@ -187,5 +189,18 @@ public class ControllerBlock extends BaseBlock {
         tag.putInt(ColoredNetworkBlock.COLOR_NBT, DyeColor.LIGHT_BLUE.getId());
         stack.setTag(tag);
         items.add(stack);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        List<ItemStack> stacks = super.getDrops(state, builder);
+        stacks.forEach(stack -> {
+            if (state.getBlock() instanceof ColoredNetworkBlock) {
+                CompoundNBT tag = stack.getOrCreateTag();
+                tag.putInt(ColoredNetworkBlock.COLOR_NBT, state.get(BlockUtils.COLOR_PROPERTY).getId());
+                stack.setTag(tag);
+            }
+        });
+        return stacks;
     }
 }

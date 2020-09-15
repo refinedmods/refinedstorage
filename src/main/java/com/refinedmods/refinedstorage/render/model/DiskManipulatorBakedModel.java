@@ -116,8 +116,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     });
 
-    public DiskManipulatorBakedModel(Map<DyeColor, IBakedModel> baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        super(baseDisconnected);
+    public DiskManipulatorBakedModel(IBakedModel base, Map<DyeColor, IBakedModel> baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
+        super(base);
 
         this.baseConnected = baseConnected;
         this.baseDisconnected = baseDisconnected;

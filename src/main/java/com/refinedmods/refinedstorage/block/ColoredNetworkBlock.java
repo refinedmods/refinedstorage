@@ -51,7 +51,7 @@ public class ColoredNetworkBlock extends NetworkNodeBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> stacks = super.getDrops(state, builder);
         stacks.forEach(stack -> {
-            if (state.getBlock() instanceof ColoredNetworkBlock || state.getBlock() instanceof ControllerBlock) {
+            if (state.getBlock() instanceof ColoredNetworkBlock) {
                 CompoundNBT tag = stack.getOrCreateTag();
                 tag.putInt(COLOR_NBT, state.get(BlockUtils.COLOR_PROPERTY).getId());
                 stack.setTag(tag);
