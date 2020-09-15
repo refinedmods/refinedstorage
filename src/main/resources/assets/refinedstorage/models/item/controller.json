@@ -2,27 +2,99 @@
   "overrides": [
     {
       "predicate": {
-        "energy_type": 0
+        "refinedstorage:color": 0.0
       },
-      "model": "refinedstorage:block/controller/controller_off"
+      "model": "refinedstorage:item/controller/white"
     },
     {
       "predicate": {
-        "energy_type": 1
+        "refinedstorage:color": 1.0
       },
-      "model": "refinedstorage:block/controller/controller_nearly_off"
+      "model": "refinedstorage:item/controller/orange"
     },
     {
       "predicate": {
-        "energy_type": 2
+        "refinedstorage:color": 2.0
       },
-      "model": "refinedstorage:block/controller/controller_nearly_on"
+      "model": "refinedstorage:item/controller/magenta"
     },
     {
       "predicate": {
-        "energy_type": 3
+        "refinedstorage:color": 3.0
       },
-      "model": "refinedstorage:block/controller/controller_on"
+      "model": "refinedstorage:item/controller/light_blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 4.0
+      },
+      "model": "refinedstorage:item/controller/yellow"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 5.0
+      },
+      "model": "refinedstorage:item/controller/lime"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 6.0
+      },
+      "model": "refinedstorage:item/controller/pink"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 7.0
+      },
+      "model": "refinedstorage:item/controller/gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 8.0
+      },
+      "model": "refinedstorage:item/controller/light_gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 9.0
+      },
+      "model": "refinedstorage:item/controller/cyan"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 10.0
+      },
+      "model": "refinedstorage:item/controller/purple"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 11.0
+      },
+      "model": "refinedstorage:item/controller/blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 12.0
+      },
+      "model": "refinedstorage:item/controller/brown"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 13.0
+      },
+      "model": "refinedstorage:item/controller/green"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 14.0
+      },
+      "model": "refinedstorage:item/controller/red"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 15.0
+      },
+      "model": "refinedstorage:item/controller/black"
     }
   ]
 }

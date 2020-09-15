@@ -17,16 +17,21 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -154,5 +159,33 @@ public class ControllerBlock extends BaseBlock {
         }
 
         return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        ItemStack stack = super.getPickBlock(state, target, world, pos, player);
+        CompoundNBT tag = stack.getOrCreateTag();
+        tag.putInt(ColoredNetworkBlock.COLOR_NBT, state.get(BlockUtils.COLOR_PROPERTY).getId());
+        stack.setTag(tag);
+        return stack;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        if (state != null && context.getItem().hasTag() && context.getItem().getTag().contains(ColoredNetworkBlock.COLOR_NBT)) {
+            DyeColor color = DyeColor.byId(context.getItem().getTag().getInt(ColoredNetworkBlock.COLOR_NBT));
+            state = state.with(BlockUtils.COLOR_PROPERTY, color);
+        }
+        return state;
+    }
+
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        ItemStack stack = new ItemStack(this);
+        CompoundNBT tag = stack.getOrCreateTag();
+        tag.putInt(ColoredNetworkBlock.COLOR_NBT, DyeColor.LIGHT_BLUE.getId());
+        stack.setTag(tag);
+        items.add(stack);
     }
 }

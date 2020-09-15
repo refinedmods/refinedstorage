@@ -140,31 +140,31 @@ public class BlockModelGenerator extends BlockStateProvider {
         models.simpleBlockStateModel(block, state -> {
             if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.OFF)) {
                 return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(block) + "/off",
+                    "block/" + getBlockName(controllerBlock) + "/off",
                     getRL(controllerBlock, "off"),
                     getRL(controllerBlock, "off"),
                     getRL(controllerBlock, "cutouts/off")
                 );
             } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_OFF)) {
                 return models.createControllerNearlyCutoutModel(
-                    "block/" + getBlockName(block) + "/nearly_off",
+                    "block/" + getBlockName(controllerBlock) + "/nearly_off",
                     getRL(controllerBlock, "off"),
                     getRL(controllerBlock, "on"),
                     getRL(controllerBlock, "cutouts/nearly_off"),
                     getRL(controllerBlock, "cutouts/nearly_off_gray"));
             } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_ON)) {
                 return models.createControllerNearlyCutoutModel(
-                    "block/" + getBlockName(block) + "/nearly_on",
+                    "block/" + getBlockName(controllerBlock) + "/nearly_on",
                     getRL(controllerBlock, "off"),
                     getRL(controllerBlock, "on"),
                     getRL(controllerBlock, "cutouts/nearly_on"),
                     getRL(controllerBlock, "cutouts/nearly_on_gray"));
             } else {
                 return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(block) + "/on_" + state.get(BlockUtils.COLOR_PROPERTY),
+                    "block/" + getBlockName(controllerBlock) + "/" + state.get(BlockUtils.COLOR_PROPERTY),
                     getRL(controllerBlock, "off"),
                     getRL(controllerBlock, "on"),
-                    getRL(controllerBlock, "cutouts/on_" + state.get(BlockUtils.COLOR_PROPERTY)));
+                    getRL(controllerBlock, "cutouts/" + state.get(BlockUtils.COLOR_PROPERTY)));
             }
         });
     }

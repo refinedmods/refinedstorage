@@ -145,52 +145,52 @@
       "model": "refinedstorage:block/controller/nearly_on"
     },
     "color=white,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_white"
+      "model": "refinedstorage:block/controller/white"
     },
     "color=orange,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_orange"
+      "model": "refinedstorage:block/controller/orange"
     },
     "color=magenta,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_magenta"
+      "model": "refinedstorage:block/controller/magenta"
     },
     "color=light_blue,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_light_blue"
+      "model": "refinedstorage:block/controller/light_blue"
     },
     "color=yellow,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_yellow"
+      "model": "refinedstorage:block/controller/yellow"
     },
     "color=lime,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_lime"
+      "model": "refinedstorage:block/controller/lime"
     },
     "color=pink,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_pink"
+      "model": "refinedstorage:block/controller/pink"
     },
     "color=gray,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_gray"
+      "model": "refinedstorage:block/controller/gray"
     },
     "color=light_gray,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_light_gray"
+      "model": "refinedstorage:block/controller/light_gray"
     },
     "color=cyan,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_cyan"
+      "model": "refinedstorage:block/controller/cyan"
     },
     "color=purple,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_purple"
+      "model": "refinedstorage:block/controller/purple"
     },
     "color=blue,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_blue"
+      "model": "refinedstorage:block/controller/blue"
     },
     "color=brown,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_brown"
+      "model": "refinedstorage:block/controller/brown"
     },
     "color=green,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_green"
+      "model": "refinedstorage:block/controller/green"
     },
     "color=red,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_red"
+      "model": "refinedstorage:block/controller/red"
     },
     "color=black,energy_type=on": {
-      "model": "refinedstorage:block/controller/on_black"
+      "model": "refinedstorage:block/controller/black"
     }
   }
 }
