@@ -17,29 +17,29 @@ public class ItemModelGenerator extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        coloredItemModelBuilder(RSBlocks.CRAFTER);
-        coloredItemModelBuilder(RSBlocks.GRID);
-        coloredItemModelBuilder(RSBlocks.PATTERN_GRID);
-        coloredItemModelBuilder(RSBlocks.FLUID_GRID);
-        coloredItemModelBuilder(RSBlocks.CRAFTING_GRID);
-        coloredItemModelBuilder(RSBlocks.CONTROLLER);
-        coloredItemModelBuilder(RSBlocks.CREATIVE_CONTROLLER, "controller");
-        coloredItemModelBuilder(RSBlocks.SECURITY_MANAGER);
-        coloredItemModelBuilder(RSBlocks.RELAY);
-        coloredItemModelBuilder(RSBlocks.NETWORK_TRANSMITTER);
-        coloredItemModelBuilder(RSBlocks.NETWORK_RECEIVER);
-        coloredItemModelBuilder(RSBlocks.DISK_MANIPULATOR);
-        coloredItemModelBuilder(RSBlocks.CRAFTER_MANAGER);
-        coloredItemModelBuilder(RSBlocks.CRAFTING_MONITOR);
-        coloredItemModelBuilder(RSBlocks.DETECTOR);
-        coloredItemModelBuilder(RSBlocks.WIRELESS_TRANSMITTER);
+        coloredBlockItemModelBuilder(RSBlocks.CRAFTER);
+        coloredBlockItemModelBuilder(RSBlocks.GRID);
+        coloredBlockItemModelBuilder(RSBlocks.PATTERN_GRID);
+        coloredBlockItemModelBuilder(RSBlocks.FLUID_GRID);
+        coloredBlockItemModelBuilder(RSBlocks.CRAFTING_GRID);
+        coloredBlockItemModelBuilder(RSBlocks.CONTROLLER);
+        coloredBlockItemModelBuilder(RSBlocks.CREATIVE_CONTROLLER, "controller");
+        coloredBlockItemModelBuilder(RSBlocks.SECURITY_MANAGER);
+        coloredBlockItemModelBuilder(RSBlocks.RELAY);
+        coloredBlockItemModelBuilder(RSBlocks.NETWORK_TRANSMITTER);
+        coloredBlockItemModelBuilder(RSBlocks.NETWORK_RECEIVER);
+        coloredBlockItemModelBuilder(RSBlocks.DISK_MANIPULATOR);
+        coloredBlockItemModelBuilder(RSBlocks.CRAFTER_MANAGER);
+        coloredBlockItemModelBuilder(RSBlocks.CRAFTING_MONITOR);
+        coloredBlockItemModelBuilder(RSBlocks.DETECTOR);
+        coloredBlockItemModelBuilder(RSBlocks.WIRELESS_TRANSMITTER);
     }
 
-    private void coloredItemModelBuilder(Block block) {
-        coloredItemModelBuilder(block, null);
+    private void coloredBlockItemModelBuilder(Block block) {
+        coloredBlockItemModelBuilder(block, null);
     }
 
-    private void coloredItemModelBuilder(Block block, String replacement) {
+    private void coloredBlockItemModelBuilder(Block block, String replacement) {
         String name = block.getRegistryName().getPath();
         ItemModelBuilder builder = getBuilder("item/" + name); //name of the Item Model with overrides
         for (int i = 0; i < DyeColor.values().length; i++) {
