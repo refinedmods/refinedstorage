@@ -57,7 +57,7 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "controller"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
-            getColoredModels("controller/cutouts/on_",
+            getColoredModels("controller/cutouts/",
                 new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
                 new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"))
 
@@ -65,7 +65,7 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "creative_controller"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
-            getColoredModels("block/controller/cutouts/on_",
+            getColoredModels("block/controller/cutouts/",
                 new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
                 new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"))
         ));
@@ -76,7 +76,7 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/network_receiver/cutouts/")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/network_transmitter/cutouts/")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/relay/cutouts/")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "detector"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/detector/cutouts/on")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "detector"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/detector/cutouts/")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "security_manager"), (base, registry) -> new FullbrightBakedModel(
             base,
             true,
@@ -86,7 +86,7 @@ public class ClientSetup {
                 "block/security_manager/cutouts/back_",
                 "block/security_manager/cutouts/right_")
         ));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "wireless_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/wireless_transmitter/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "wireless_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels("block/wireless_transmitter/cutouts/")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "destructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/destructor/cutouts/connected")));
 
@@ -296,10 +296,8 @@ public class ClientSetup {
         ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
         ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID, new ResourceLocation("connected"), new NetworkItemPropertyGetter());
 
-        ResourceLocation color = new ResourceLocation(RS.ID, "color");
-
         for (Item coloredBlockItem : BlockUtils.COLORED_BLOCK_ITEMS) {
-            ItemModelsProperties.func_239418_a_(coloredBlockItem, color, (stack, world, player) -> {
+            ItemModelsProperties.func_239418_a_(coloredBlockItem, new ResourceLocation(RS.ID, "color"), (stack, world, player) -> {
                 if (stack.hasTag() && stack.getTag().contains(ColoredNetworkBlock.COLOR_NBT)) {
                     return stack.getTag().getInt(ColoredNetworkBlock.COLOR_NBT);
                 } else {

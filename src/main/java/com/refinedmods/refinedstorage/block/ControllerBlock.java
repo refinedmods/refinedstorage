@@ -134,15 +134,15 @@ public class ControllerBlock extends BaseBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, hit);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+        ActionResultType colorResult = BlockUtils.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (colorResult != ActionResultType.PASS) {
+            return colorResult;
+        }
         if (!world.isRemote) {
-            ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, hit);
-            if (result != ActionResultType.PASS) {
-                return result;
-            }
-            ActionResultType colorResult = BlockUtils.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
-            if (colorResult != ActionResultType.PASS) {
-                return colorResult;
-            }
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new INamedContainerProvider() {

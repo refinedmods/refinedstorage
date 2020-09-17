@@ -32,7 +32,7 @@ public class BlockUtils {
 
         blockItem.setRegistryName(block.getRegistryName());
 
-        if (block instanceof ColoredNetworkBlock || block instanceof ControllerBlock) {
+        if (block instanceof ColoredNetworkBlock) {
             COLORED_BLOCK_ITEMS.add(blockItem);
         }
 

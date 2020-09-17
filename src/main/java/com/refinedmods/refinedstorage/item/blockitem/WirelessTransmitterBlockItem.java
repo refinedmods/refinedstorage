@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.item.blockitem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.render.Styles;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,6 +19,8 @@ public class WirelessTransmitterBlockItem extends BaseBlockItem {
         super(RSBlocks.WIRELESS_TRANSMITTER, new Item.Properties().group(RS.MAIN_GROUP));
 
         this.setRegistryName(RS.ID, "wireless_transmitter");
+
+        BlockUtils.COLORED_BLOCK_ITEMS.add(this);
     }
 
     @Override

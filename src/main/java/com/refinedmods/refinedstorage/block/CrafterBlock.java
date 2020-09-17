@@ -58,11 +58,11 @@ public class CrafterBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
         if (!world.isRemote) {
-            ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
-            if (result != ActionResultType.PASS) {
-                return result;
-            }
             return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<CrafterTile>(

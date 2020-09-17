@@ -36,6 +36,18 @@ public class BlockModels {
             });
     }
 
+    public void wirelessTransmitterBlock(Block block, Function<BlockState, ModelFile> modelFunc, int angleOffset) {
+        gen.getVariantBuilder(block)
+            .forAllStates(state -> {
+                Direction dir = state.get(BlockDirection.ANY.getProperty());
+                return ConfiguredModel.builder()
+                    .modelFile(modelFunc.apply(state))
+                    .rotationX(dir.getAxis() == Direction.Axis.Y ? (dir == Direction.UP ? 180 : 0) : dir.getAxis().isHorizontal() ? 90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + angleOffset) % 360)
+                    .build();
+            });
+    }
+
     public void horizontalRSBlock(Block block, Function<BlockState, ModelFile> modelFunc, int angleOffset) {
         gen.getVariantBuilder(block)
             .forAllStates(state -> ConfiguredModel.builder()
@@ -44,6 +56,16 @@ public class BlockModels {
                 .build()
             );
 
+    }
+
+    public BlockModelBuilder createDetectorModel(String name, ResourceLocation torch) {
+        return gen.models().withExistingParent(name, new ResourceLocation(RS.ID, "detector"))
+            .texture("torch", torch);
+    }
+
+    public BlockModelBuilder createWirelessTransmitterModel(String name, ResourceLocation cutout) {
+        return gen.models().withExistingParent(name, new ResourceLocation(RS.ID, "wireless_transmitter"))
+            .texture("cutout", cutout);
     }
 
     public BlockModelBuilder createCubeCutoutModel(String name, ResourceLocation down, ResourceLocation downCutout, ResourceLocation up, ResourceLocation upCutout, ResourceLocation east, ResourceLocation eastCutout, ResourceLocation west, ResourceLocation westCutout, ResourceLocation north, ResourceLocation northCutout, ResourceLocation south, ResourceLocation southCutout) {
@@ -63,8 +85,7 @@ public class BlockModels {
             .texture("cutout_up", upCutout);
     }
 
-    public BlockModelBuilder createControllerNearlyCutoutModel(String name, ResourceLocation particle, ResourceLocation
-        all, ResourceLocation cutout_gray, ResourceLocation cutout) {
+    public BlockModelBuilder createControllerNearlyCutoutModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation cutout_gray, ResourceLocation cutout) {
         return gen.models().withExistingParent(name, new ResourceLocation(RS.ID, "block/controller/controller_nearly"))
             .texture("particle", particle)
             .texture("all", all)
@@ -72,17 +93,14 @@ public class BlockModels {
             .texture("cutout", cutout);
     }
 
-    public BlockModelBuilder createCubeAllCutoutModel(String name, ResourceLocation particle, ResourceLocation
-        all, ResourceLocation cutout) {
+    public BlockModelBuilder createCubeAllCutoutModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation cutout) {
         return gen.models().withExistingParent(name, new ResourceLocation(RS.ID, "cube_all_cutout"))
             .texture("particle", particle)
             .texture("all", all)
             .texture("cutout", cutout);
     }
 
-    public BlockModelBuilder createCubeNorthCutoutModel(String name, ResourceLocation down, ResourceLocation
-        up, ResourceLocation north, ResourceLocation south, ResourceLocation east, ResourceLocation
-                                                            west, ResourceLocation particle, ResourceLocation cutout) {
+    public BlockModelBuilder createCubeNorthCutoutModel(String name, ResourceLocation down, ResourceLocation up, ResourceLocation north, ResourceLocation south, ResourceLocation east, ResourceLocation west, ResourceLocation particle, ResourceLocation cutout) {
         return gen.models().withExistingParent(name, new ResourceLocation(RS.ID, "cube_north_cutout"))
             .texture("particle", particle)
             .texture("east", east)

@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.datageneration;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
+import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
@@ -39,7 +40,44 @@ public class BlockModelGenerator extends BlockStateProvider {
         genCubeAllCutoutModel(RSBlocks.NETWORK_TRANSMITTER);
         genCubeAllCutoutModel(RSBlocks.NETWORK_RECEIVER);
         genCubeCutoutModel(RSBlocks.SECURITY_MANAGER);
+        genDetectorModel(RSBlocks.DETECTOR);
+        genWirelessTransmitterModel(RSBlocks.WIRELESS_TRANSMITTER);
+    }
 
+    private void genWirelessTransmitterModel(Block block) {
+        models.wirelessTransmitterBlock(block, state -> {
+            if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                return models.createWirelessTransmitterModel(
+                    "block/" + getBlockName(block) + "/disconnected",
+                    getRL(block, "cutouts/disconnected")
+                );
+            } else {
+                DyeColor color = state.get(BlockUtils.COLOR_PROPERTY);
+                return models.createWirelessTransmitterModel(
+                    "block/" + getBlockName(block) + "/" + color,
+                    getRL(block, "cutouts/" + color)
+                );
+            }
+
+        }, 0);
+
+    }
+
+    private void genDetectorModel(Block block) {
+        models.simpleBlockStateModel(block, state -> {
+            if (!state.get(DetectorBlock.POWERED)) {
+                return models.createDetectorModel(
+                    "block/" + getBlockName(block) + "/off",
+                    getRL(block, "cutouts/off")
+                );
+            } else {
+                DyeColor color = state.get(BlockUtils.COLOR_PROPERTY);
+                return models.createDetectorModel(
+                    "block/" + getBlockName(block) + "/" + color,
+                    getRL(block, "cutouts/" + color)
+                );
+            }
+        });
     }
 
     private void genCubeCutoutModel(Block block) {
@@ -203,6 +241,6 @@ public class BlockModelGenerator extends BlockStateProvider {
     }
 
     private String getBlockName(Block block) {
-        return Objects.requireNonNull(block.getRegistryName()).getPath();
+        return block.getRegistryName().getPath();
     }
 }

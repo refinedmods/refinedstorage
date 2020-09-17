@@ -31,7 +31,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         coloredItemModelBuilder(RSBlocks.DISK_MANIPULATOR);
         coloredItemModelBuilder(RSBlocks.CRAFTER_MANAGER);
         coloredItemModelBuilder(RSBlocks.CRAFTING_MONITOR);
-
+        coloredItemModelBuilder(RSBlocks.DETECTOR);
+        coloredItemModelBuilder(RSBlocks.WIRELESS_TRANSMITTER);
     }
 
     private void coloredItemModelBuilder(Block block) {

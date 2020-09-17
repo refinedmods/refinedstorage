@@ -37,11 +37,11 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+        ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, rayTraceResult);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
         if (!world.isRemote) {
-            ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, rayTraceResult);
-            if (result != ActionResultType.PASS) {
-                return result;
-            }
             return NetworkUtils.attemptModify(world, pos, rayTraceResult.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DiskManipulatorTile>(
