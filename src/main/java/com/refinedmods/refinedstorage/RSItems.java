@@ -57,27 +57,17 @@ public final class RSItems {
     public static final Map<UpgradeItem.Type, RegistryObject<UpgradeItem>> UPGRADE_ITEMS = new HashMap<>();
 
     static {
-        CONSTRUCTION_CORE = ITEMS.register("construction_core", () -> new CoreItem(CoreItem.Type.CONSTRUCTION));
-        DESTRUCTION_CORE = ITEMS.register("destruction_core", () -> new CoreItem(CoreItem.Type.DESTRUCTION));
+        CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);
+        DESTRUCTION_CORE = ITEMS.register("destruction_core", CoreItem::new);
         QUARTZ_ENRICHED_IRON = ITEMS.register("quartz_enriched_iron", QuartzEnrichedIronItem::new);
         PROCESSOR_BINDING = ITEMS.register("processor_binding", ProcessorBindingItem::new);
+        for (ProcessorItem.Type type : ProcessorItem.Type.values()) {
+            PROCESSORS.put(type, ITEMS.register(type.getName() + "_processor", ProcessorItem::new));
+        }
         SILICON = ITEMS.register("silicon", SiliconItem::new);
         SECURITY_CARD = ITEMS.register("security_card", SecurityCardItem::new);
-        NETWORK_CARD = ITEMS.register("security_card", NetworkCardItem::new);
-        STORAGE_HOUSING = ITEMS.register("storage_housing", StorageHousingItem::new);
-        WRENCH = ITEMS.register("wrench", WrenchItem::new);
-        PATTERN = ITEMS.register("pattern", PatternItem::new);
-        FILTER = ITEMS.register("filter", FilterItem::new);
-        WIRELESS_GRID = ITEMS.register("wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.NORMAL));
-        CREATIVE_WIRELESS_GRID = ITEMS.register("creative_wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
-        WIRELESS_FLUID_GRID = ITEMS.register("wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.NORMAL));
-        CREATIVE_WIRELESS_FLUID_GRID = ITEMS.register("creative_wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.CREATIVE));
-        WIRELESS_CRAFTING_MONITOR = ITEMS.register("wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
-        CREATIVE_WIRELESS_CRAFTING_MONITOR = ITEMS.register("creative_wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
+        NETWORK_CARD = ITEMS.register("network_card", NetworkCardItem::new);
 
-        for (ProcessorItem.Type type : ProcessorItem.Type.values()) {
-            PROCESSORS.put(type, ITEMS.register(type.name() + "_processor", ProcessorItem::new));
-        }
         for (ItemStorageType type : ItemStorageType.values()) {
             if (type != ItemStorageType.CREATIVE) {
                 ITEM_STORAGE_PARTS.put(type, ITEMS.register(type.getName() + "_storage_part", StoragePartItem::new));
@@ -92,29 +82,21 @@ public final class RSItems {
 
             FLUID_STORAGE_DISKS.put(type, ITEMS.register(type.getName() + "_fluid_storage_disk", () -> new FluidStorageDiskItem(type)));
         }
+        STORAGE_HOUSING = ITEMS.register("storage_housing", StorageHousingItem::new);
+
         for (UpgradeItem.Type type : UpgradeItem.Type.values()) {
             UPGRADE_ITEMS.put(type, ITEMS.register(type == UpgradeItem.Type.NORMAL ? "upgrade" : type.getName() + "_upgrade", () -> new UpgradeItem(type)));
         }
+        WRENCH = ITEMS.register("wrench", WrenchItem::new);
+        PATTERN = ITEMS.register("pattern", PatternItem::new);
+        FILTER = ITEMS.register("filter", FilterItem::new);
+        PORTABLE_GRID = ITEMS.register("portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.NORMAL));
+        CREATIVE_PORTABLE_GRID = ITEMS.register("creative_portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
 
-        //BlockItems
-        createBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
-        createBlockItemFor(RSBlocks.IMPORTER);
-        createBlockItemFor(RSBlocks.EXPORTER);
-        createBlockItemFor(RSBlocks.NETWORK_RECEIVER);
-        createBlockItemFor(RSBlocks.NETWORK_TRANSMITTER);
-        createBlockItemFor(RSBlocks.RELAY);
-        createBlockItemFor(RSBlocks.DETECTOR);
-        createBlockItemFor(RSBlocks.SECURITY_MANAGER);
-        createBlockItemFor(RSBlocks.INTERFACE);
-        createBlockItemFor(RSBlocks.FLUID_INTERFACE);
-        createBlockItemFor(RSBlocks.STORAGE_MONITOR);
-        createBlockItemFor(RSBlocks.CONSTRUCTOR);
-        createBlockItemFor(RSBlocks.DESTRUCTOR);
-        createBlockItemFor(RSBlocks.DISK_MANIPULATOR);
-        createBlockItemFor(RSBlocks.CRAFTER);
-        createBlockItemFor(RSBlocks.CRAFTER_MANAGER);
-        createBlockItemFor(RSBlocks.CRAFTING_MONITOR);
+
         createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
+        CONTROLLER = ITEMS.register(RSBlocks.CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get()));
+        CREATIVE_CONTROLLER = ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get()));
         createBlockItemFor(RSBlocks.MACHINE_CASING);
         createBlockItemFor(RSBlocks.CABLE);
         createBlockItemFor(RSBlocks.DISK_DRIVE);
@@ -122,7 +104,6 @@ public final class RSItems {
         createBlockItemFor(RSBlocks.CRAFTING_GRID);
         createBlockItemFor(RSBlocks.PATTERN_GRID);
         createBlockItemFor(RSBlocks.FLUID_GRID);
-        createBlockItemFor(RSBlocks.WIRELESS_TRANSMITTER);
 
         for (ItemStorageType type : ItemStorageType.values()) {
             STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.STORAGE_BLOCKS.get(type).getId().getPath(),
@@ -133,10 +114,32 @@ public final class RSItems {
                 () -> new FluidStorageBlockItem(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).get())));
         }
 
-        CONTROLLER = ITEMS.register(RSBlocks.CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get()));
-        CREATIVE_CONTROLLER = ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get()));
-        PORTABLE_GRID = ITEMS.register("portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.NORMAL));
-        CREATIVE_PORTABLE_GRID = ITEMS.register("creative_portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
+        createBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
+        createBlockItemFor(RSBlocks.IMPORTER);
+        createBlockItemFor(RSBlocks.EXPORTER);
+        createBlockItemFor(RSBlocks.NETWORK_RECEIVER);
+        createBlockItemFor(RSBlocks.NETWORK_TRANSMITTER);
+        createBlockItemFor(RSBlocks.RELAY);
+        createBlockItemFor(RSBlocks.DETECTOR);
+        createBlockItemFor(RSBlocks.SECURITY_MANAGER);
+        createBlockItemFor(RSBlocks.INTERFACE);
+        createBlockItemFor(RSBlocks.FLUID_INTERFACE);
+        createBlockItemFor(RSBlocks.WIRELESS_TRANSMITTER);
+        createBlockItemFor(RSBlocks.STORAGE_MONITOR);
+        createBlockItemFor(RSBlocks.CONSTRUCTOR);
+        createBlockItemFor(RSBlocks.DESTRUCTOR);
+        createBlockItemFor(RSBlocks.DISK_MANIPULATOR);
+        createBlockItemFor(RSBlocks.CRAFTER);
+        createBlockItemFor(RSBlocks.CRAFTER_MANAGER);
+        createBlockItemFor(RSBlocks.CRAFTING_MONITOR);
+
+        WIRELESS_GRID = ITEMS.register("wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.NORMAL));
+        CREATIVE_WIRELESS_GRID = ITEMS.register("creative_wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
+        WIRELESS_FLUID_GRID = ITEMS.register("wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.NORMAL));
+        CREATIVE_WIRELESS_FLUID_GRID = ITEMS.register("creative_wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.CREATIVE));
+        WIRELESS_CRAFTING_MONITOR = ITEMS.register("wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
+        CREATIVE_WIRELESS_CRAFTING_MONITOR = ITEMS.register("creative_wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
+
 
     }
 

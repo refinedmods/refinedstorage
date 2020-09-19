@@ -16,8 +16,6 @@ public class BlockUtils {
     public static BlockItem createBlockItemFor(BaseBlock block) {
         BaseBlockItem blockItem = new BaseBlockItem(block, new Item.Properties().group(RS.MAIN_GROUP));
 
-        blockItem.setRegistryName(block.getRegistryName());
-
         return blockItem;
     }
 }

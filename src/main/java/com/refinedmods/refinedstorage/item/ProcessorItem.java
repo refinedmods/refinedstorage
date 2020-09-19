@@ -17,6 +17,10 @@ public class ProcessorItem extends Item {
         Type(String name) {
             this.name = name;
         }
+
+        public String getName() {
+            return name;
+        }
     }
 
     public ProcessorItem() {

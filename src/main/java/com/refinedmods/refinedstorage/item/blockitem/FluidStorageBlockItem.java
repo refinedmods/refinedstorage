@@ -38,8 +38,6 @@ public class FluidStorageBlockItem extends BaseBlockItem {
         super(block, new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = block.getType();
-
-        this.setRegistryName(block.getRegistryName());
     }
 
     @Override
