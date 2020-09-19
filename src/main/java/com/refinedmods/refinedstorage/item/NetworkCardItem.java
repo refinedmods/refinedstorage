@@ -29,15 +29,13 @@ public class NetworkCardItem extends Item {
 
     public NetworkCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "network_card");
     }
 
     @Override
     public ActionResultType onItemUse(ItemUseContext ctx) {
         Block block = ctx.getWorld().getBlockState(ctx.getPos()).getBlock();
 
-        if (block == RSBlocks.NETWORK_RECEIVER) {
+        if (block == RSBlocks.NETWORK_RECEIVER.get()) {
             CompoundNBT tag = new CompoundNBT();
 
             tag.putInt(NBT_RECEIVER_X, ctx.getPos().getX());

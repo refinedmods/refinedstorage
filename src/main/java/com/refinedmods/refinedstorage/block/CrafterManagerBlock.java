@@ -23,8 +23,6 @@ import javax.annotation.Nullable;
 public class CrafterManagerBlock extends NetworkNodeBlock {
     public CrafterManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "crafter_manager");
     }
 
     @Override

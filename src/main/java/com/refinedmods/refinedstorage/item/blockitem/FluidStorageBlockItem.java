@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageN
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.block.FluidStorageBlock;
 import com.refinedmods.refinedstorage.item.FluidStoragePartItem;
+import com.refinedmods.refinedstorage.item.ProcessorItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -86,7 +87,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                     InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), fluidStoragePart);
                 }
 
-                ItemStack processor = new ItemStack(RSItems.BASIC_PROCESSOR);
+                ItemStack processor = new ItemStack(RSItems.PROCESSORS.get(ProcessorItem.Type.BASIC).get());
 
                 if (!player.inventory.addItemStackToInventory(processor.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), processor);
@@ -103,7 +104,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                     API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
                 }
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING.get()));
             }
         }
 

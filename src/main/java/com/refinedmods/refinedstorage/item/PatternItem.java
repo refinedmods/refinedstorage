@@ -50,8 +50,6 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public PatternItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).setISTER(() -> PatternItemStackTileRenderer::new));
-
-        this.setRegistryName(RS.ID, "pattern");
     }
 
     public static CraftingPattern fromCache(World world, ItemStack stack) {
@@ -127,7 +125,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         if (!world.isRemote && player.isCrouching()) {
-            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN, player.getHeldItem(hand).getCount()));
+            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getHeldItem(hand).getCount()));
         }
 
         return new ActionResult<>(ActionResultType.PASS, player.getHeldItem(hand));

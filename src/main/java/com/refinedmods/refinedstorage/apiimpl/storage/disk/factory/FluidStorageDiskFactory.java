@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
+import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.refinedmods.refinedstorage.item.FluidStorageDiskItem;
 import net.minecraft.item.ItemStack;
@@ -46,19 +47,19 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
         FluidStorageDiskItem item;
         switch (disk.getCapacity()) {
             case 64_000:
-                item = RSItems.SIXTY_FOUR_K_FLUID_STORAGE_DISK;
+                item = RSItems.FLUID_STORAGE_DISKS.get(FluidStorageType.SIXTY_FOUR_K).get();
                 break;
             case 256_000:
-                item = RSItems.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_DISK;
+                item = RSItems.FLUID_STORAGE_DISKS.get(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K).get();
                 break;
             case 1024_000:
-                item = RSItems.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_DISK;
+                item = RSItems.FLUID_STORAGE_DISKS.get(FluidStorageType.THOUSAND_TWENTY_FOUR_K).get();
                 break;
             case 4096_000:
-                item = RSItems.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_DISK;
+                item = RSItems.FLUID_STORAGE_DISKS.get(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K).get();
                 break;
             default:
-                item = RSItems.CREATIVE_FLUID_STORAGE_DISK;
+                item = RSItems.FLUID_STORAGE_DISKS.get(FluidStorageType.CREATIVE).get();
                 break;
         }
 

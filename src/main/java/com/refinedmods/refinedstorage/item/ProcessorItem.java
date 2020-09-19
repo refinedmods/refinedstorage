@@ -19,9 +19,7 @@ public class ProcessorItem extends Item {
         }
     }
 
-    public ProcessorItem(Type type) {
+    public ProcessorItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP));
-
-        this.setRegistryName(RS.ID, type.name + "_processor");
     }
 }

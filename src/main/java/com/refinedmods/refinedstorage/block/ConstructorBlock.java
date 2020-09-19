@@ -37,8 +37,6 @@ public class ConstructorBlock extends CableBlock {
 
     public ConstructorBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "constructor");
     }
 
     @Override

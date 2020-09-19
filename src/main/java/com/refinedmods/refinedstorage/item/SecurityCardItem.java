@@ -26,8 +26,6 @@ public class SecurityCardItem extends Item {
 
     public SecurityCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "security_card");
     }
 
     @Override

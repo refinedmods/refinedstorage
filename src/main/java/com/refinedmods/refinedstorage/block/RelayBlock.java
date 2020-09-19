@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.RelayContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.RelayTile;
@@ -24,8 +23,6 @@ import javax.annotation.Nullable;
 public class RelayBlock extends NetworkNodeBlock {
     public RelayBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "relay");
     }
 
     @Nullable

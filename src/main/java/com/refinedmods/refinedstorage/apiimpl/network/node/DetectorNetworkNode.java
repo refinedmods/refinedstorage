@@ -65,7 +65,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
             wasPowered = powered;
 
             world.setBlockState(pos, world.getBlockState(pos).with(DetectorBlock.POWERED, powered));
-            world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
+            world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR.get());
         }
 
         if (canUpdate() && ticks % SPEED == 0) {

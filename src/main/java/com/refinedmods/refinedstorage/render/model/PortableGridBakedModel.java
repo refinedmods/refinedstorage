@@ -37,7 +37,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(@Nonnull CacheKey key) {
-            Direction direction = key.state.get(RSBlocks.PORTABLE_GRID.getDirection().getProperty());
+            Direction direction = key.state.get(RSBlocks.PORTABLE_GRID.get().getDirection().getProperty());
             boolean active = key.state.get(PortableGridBlock.ACTIVE);
             PortableGridDiskState diskState = key.state.get(PortableGridBlock.DISK_STATE);
 

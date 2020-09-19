@@ -35,7 +35,6 @@ public class DetectorBlock extends NetworkNodeBlock {
     public DetectorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "detector");
         this.setDefaultState(this.getStateContainer().getBaseState().with(POWERED, false));
     }
 

@@ -38,7 +38,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
 
         BlockState state = tile.getWorld().getBlockState(tile.getPos());
         if (state.getBlock() instanceof StorageMonitorBlock) {
-            direction = state.get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
+            direction = state.get(RSBlocks.STORAGE_MONITOR.get().getDirection().getProperty());
         }
 
         final int light = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(direction.getDirectionVec()));
