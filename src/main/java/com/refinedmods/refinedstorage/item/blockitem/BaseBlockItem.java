@@ -2,9 +2,12 @@ package com.refinedmods.refinedstorage.item.blockitem;
 
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.BlockDirection;
+import com.refinedmods.refinedstorage.block.ColoredNetworkBlock;
+import com.refinedmods.refinedstorage.block.ControllerBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.NonNullList;
 
 public class BaseBlockItem extends BlockItem {
     private final BaseBlock block;
@@ -14,6 +17,7 @@ public class BaseBlockItem extends BlockItem {
 
         this.block = block;
     }
+
 
     @Override
     protected boolean placeBlock(BlockItemUseContext context, BlockState state) {

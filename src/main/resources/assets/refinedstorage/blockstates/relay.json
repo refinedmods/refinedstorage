@@ -1,10 +1,100 @@
 {
   "variants": {
-    "connected=true": {
-      "model": "refinedstorage:block/relay_connected"
+    "color=white,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
     },
-    "connected=false": {
-      "model": "refinedstorage:block/relay_disconnected"
+    "color=orange,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=magenta,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=light_blue,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=yellow,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=lime,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=pink,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=gray,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=light_gray,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=cyan,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=purple,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=blue,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=brown,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=green,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=red,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=black,connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "color=white,connected=true": {
+      "model": "refinedstorage:block/relay/white"
+    },
+    "color=orange,connected=true": {
+      "model": "refinedstorage:block/relay/orange"
+    },
+    "color=magenta,connected=true": {
+      "model": "refinedstorage:block/relay/magenta"
+    },
+    "color=light_blue,connected=true": {
+      "model": "refinedstorage:block/relay/light_blue"
+    },
+    "color=yellow,connected=true": {
+      "model": "refinedstorage:block/relay/yellow"
+    },
+    "color=lime,connected=true": {
+      "model": "refinedstorage:block/relay/lime"
+    },
+    "color=pink,connected=true": {
+      "model": "refinedstorage:block/relay/pink"
+    },
+    "color=gray,connected=true": {
+      "model": "refinedstorage:block/relay/gray"
+    },
+    "color=light_gray,connected=true": {
+      "model": "refinedstorage:block/relay/light_gray"
+    },
+    "color=cyan,connected=true": {
+      "model": "refinedstorage:block/relay/cyan"
+    },
+    "color=purple,connected=true": {
+      "model": "refinedstorage:block/relay/purple"
+    },
+    "color=blue,connected=true": {
+      "model": "refinedstorage:block/relay/blue"
+    },
+    "color=brown,connected=true": {
+      "model": "refinedstorage:block/relay/brown"
+    },
+    "color=green,connected=true": {
+      "model": "refinedstorage:block/relay/green"
+    },
+    "color=red,connected=true": {
+      "model": "refinedstorage:block/relay/red"
+    },
+    "color=black,connected=true": {
+      "model": "refinedstorage:block/relay/black"
     }
   }
 }

@@ -1,3 +1,100 @@
 {
-  "parent": "refinedstorage:block/crafter/disconnected/north"
+  "overrides": [
+    {
+      "predicate": {
+        "refinedstorage:color": 0.0
+      },
+      "model": "refinedstorage:item/crafter/white"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 1.0
+      },
+      "model": "refinedstorage:item/crafter/orange"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 2.0
+      },
+      "model": "refinedstorage:item/crafter/magenta"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 3.0
+      },
+      "model": "refinedstorage:item/crafter/light_blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 4.0
+      },
+      "model": "refinedstorage:item/crafter/yellow"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 5.0
+      },
+      "model": "refinedstorage:item/crafter/lime"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 6.0
+      },
+      "model": "refinedstorage:item/crafter/pink"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 7.0
+      },
+      "model": "refinedstorage:item/crafter/gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 8.0
+      },
+      "model": "refinedstorage:item/crafter/light_gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 9.0
+      },
+      "model": "refinedstorage:item/crafter/cyan"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 10.0
+      },
+      "model": "refinedstorage:item/crafter/purple"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 11.0
+      },
+      "model": "refinedstorage:item/crafter/blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 12.0
+      },
+      "model": "refinedstorage:item/crafter/brown"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 13.0
+      },
+      "model": "refinedstorage:item/crafter/green"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 14.0
+      },
+      "model": "refinedstorage:item/crafter/red"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 15.0
+      },
+      "model": "refinedstorage:item/crafter/black"
+    }
+  ]
 }

@@ -1,3 +1,100 @@
 {
-  "parent": "refinedstorage:block/network_transmitter_disconnected"
+  "overrides": [
+    {
+      "predicate": {
+        "refinedstorage:color": 0.0
+      },
+      "model": "refinedstorage:item/network_transmitter/white"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 1.0
+      },
+      "model": "refinedstorage:item/network_transmitter/orange"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 2.0
+      },
+      "model": "refinedstorage:item/network_transmitter/magenta"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 3.0
+      },
+      "model": "refinedstorage:item/network_transmitter/light_blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 4.0
+      },
+      "model": "refinedstorage:item/network_transmitter/yellow"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 5.0
+      },
+      "model": "refinedstorage:item/network_transmitter/lime"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 6.0
+      },
+      "model": "refinedstorage:item/network_transmitter/pink"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 7.0
+      },
+      "model": "refinedstorage:item/network_transmitter/gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 8.0
+      },
+      "model": "refinedstorage:item/network_transmitter/light_gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 9.0
+      },
+      "model": "refinedstorage:item/network_transmitter/cyan"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 10.0
+      },
+      "model": "refinedstorage:item/network_transmitter/purple"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 11.0
+      },
+      "model": "refinedstorage:item/network_transmitter/blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 12.0
+      },
+      "model": "refinedstorage:item/network_transmitter/brown"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 13.0
+      },
+      "model": "refinedstorage:item/network_transmitter/green"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 14.0
+      },
+      "model": "refinedstorage:item/network_transmitter/red"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 15.0
+      },
+      "model": "refinedstorage:item/network_transmitter/black"
+    }
+  ]
 }

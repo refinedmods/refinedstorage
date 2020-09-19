@@ -1,3 +1,100 @@
 {
-  "parent": "refinedstorage:block/detector_off"
+  "overrides": [
+    {
+      "predicate": {
+        "refinedstorage:color": 0.0
+      },
+      "model": "refinedstorage:item/detector/white"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 1.0
+      },
+      "model": "refinedstorage:item/detector/orange"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 2.0
+      },
+      "model": "refinedstorage:item/detector/magenta"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 3.0
+      },
+      "model": "refinedstorage:item/detector/light_blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 4.0
+      },
+      "model": "refinedstorage:item/detector/yellow"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 5.0
+      },
+      "model": "refinedstorage:item/detector/lime"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 6.0
+      },
+      "model": "refinedstorage:item/detector/pink"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 7.0
+      },
+      "model": "refinedstorage:item/detector/gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 8.0
+      },
+      "model": "refinedstorage:item/detector/light_gray"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 9.0
+      },
+      "model": "refinedstorage:item/detector/cyan"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 10.0
+      },
+      "model": "refinedstorage:item/detector/purple"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 11.0
+      },
+      "model": "refinedstorage:item/detector/blue"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 12.0
+      },
+      "model": "refinedstorage:item/detector/brown"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 13.0
+      },
+      "model": "refinedstorage:item/detector/green"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 14.0
+      },
+      "model": "refinedstorage:item/detector/red"
+    },
+    {
+      "predicate": {
+        "refinedstorage:color": 15.0
+      },
+      "model": "refinedstorage:item/detector/black"
+    }
+  ]
 }

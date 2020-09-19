@@ -20,7 +20,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class CrafterManagerBlock extends NetworkNodeBlock {
+public class CrafterManagerBlock extends ColoredNetworkBlock {
     public CrafterManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
     }
@@ -39,6 +39,10 @@ public class CrafterManagerBlock extends NetworkNodeBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
         if (!world.isRemote) {
             return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
