@@ -34,11 +34,12 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.SECURITY_MANAGER, state, player.getHeldItem(handIn), world, pos, player);
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.SECURITY_MANAGER, state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
+
         if (!world.isRemote) {
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

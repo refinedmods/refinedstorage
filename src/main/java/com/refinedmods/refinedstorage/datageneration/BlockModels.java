@@ -13,8 +13,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import java.util.function.Function;
 
 public class BlockModels {
-
-    BlockModelGenerator generator;
+    private final BlockModelGenerator generator;
 
     public BlockModels(BlockModelGenerator blockModelGenerator) {
         this.generator = blockModelGenerator;
@@ -55,7 +54,6 @@ public class BlockModels {
                 .rotationY(((int) state.get(BlockDirection.HORIZONTAL.getProperty()).getHorizontalAngle() + angleOffset) % 360)
                 .build()
             );
-
     }
 
     public BlockModelBuilder createDetectorModel(String name, ResourceLocation torch) {

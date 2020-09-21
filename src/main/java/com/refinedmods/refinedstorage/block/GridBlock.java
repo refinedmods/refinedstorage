@@ -50,7 +50,7 @@ public class GridBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         Map<DyeColor, RegistryObject<GridBlock>> map;
         switch (type) {
             case FLUID:
@@ -68,10 +68,12 @@ public class GridBlock extends ColoredNetworkBlock {
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
         }
-        ActionResultType result = BlockUtils.changeBlockColor(map, state, player.getHeldItem(handIn), world, pos, player);
+
+        ActionResultType result = BlockUtils.changeBlockColor(map, state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
         }

@@ -129,7 +129,9 @@ public class ControllerBlock extends BaseBlock {
         if (result != ActionResultType.PASS) {
             return result;
         }
+
         DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
+
         BlockState newState = type == NetworkType.CREATIVE ?
             RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
             RSBlocks.CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
@@ -137,6 +139,7 @@ public class ControllerBlock extends BaseBlock {
         if (colorResult != ActionResultType.PASS) {
             return colorResult;
         }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

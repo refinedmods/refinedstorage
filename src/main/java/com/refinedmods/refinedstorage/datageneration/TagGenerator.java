@@ -9,7 +9,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import javax.annotation.Nullable;
 
 public class TagGenerator extends ItemTagsProvider {
-
     public TagGenerator(DataGenerator dataGenerator, BlockTagsProvider blockTagProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(dataGenerator, blockTagProvider, modId, existingFileHelper);
     }

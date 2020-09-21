@@ -22,9 +22,9 @@ public class BlockUtils {
     public static final Block.Properties DEFAULT_ROCK_PROPERTIES = Block.Properties.create(Material.ROCK).hardnessAndResistance(1.9F).sound(SoundType.STONE);
     public static final Block.Properties DEFAULT_GLASS_PROPERTIES = Block.Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.35F);
 
-    public static <T extends BaseBlock> ActionResultType changeBlockColor(BlockState newState, ItemStack heldItem, World worldIn, BlockPos pos, PlayerEntity player) {
-        if (!worldIn.isRemote) {
-            worldIn.setBlockState(pos, newState);
+    public static <T extends BaseBlock> ActionResultType changeBlockColor(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
+        if (!world.isRemote) {
+            world.setBlockState(pos, newState);
             if (((ServerPlayerEntity) player).interactionManager.getGameType() != GameType.CREATIVE) {
                 heldItem.shrink(1);
             }
@@ -32,12 +32,12 @@ public class BlockUtils {
         return ActionResultType.SUCCESS;
     }
 
-    public static <T extends BaseBlock> ActionResultType changeBlockColor(Map<DyeColor, RegistryObject<T>> map, BlockState state, ItemStack heldItem, World worldIn, BlockPos pos, PlayerEntity player) {
+    public static <T extends BaseBlock> ActionResultType changeBlockColor(Map<DyeColor, RegistryObject<T>> map, BlockState state, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
         DyeColor color = DyeColor.getColor(heldItem);
         if (color == null) {
             return ActionResultType.PASS;
         }
-        return changeBlockColor(getNewState(map.get(color), state), heldItem, worldIn, pos, player);
+        return changeBlockColor(getNewState(map.get(color), state), heldItem, world, pos, player);
     }
 
     private static <T extends BaseBlock> BlockState getNewState(RegistryObject<T> block, BlockState state) {

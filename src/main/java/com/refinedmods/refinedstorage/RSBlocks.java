@@ -79,28 +79,28 @@ public final class RSBlocks {
             FLUID_STORAGE_BLOCKS.put(type, BLOCKS.register(type.getName() + "_fluid_storage_block", () -> new FluidStorageBlock(type)));
         }
 
-        createColoredBlocks(GRID, "grid", () -> new GridBlock(GridType.NORMAL));
-        createColoredBlocks(CRAFTING_GRID, GridType.CRAFTING.getString() + "_grid", () -> new GridBlock(GridType.CRAFTING));
-        createColoredBlocks(PATTERN_GRID, GridType.PATTERN.getString() + "_grid", () -> new GridBlock(GridType.PATTERN));
-        createColoredBlocks(FLUID_GRID, GridType.FLUID.getString() + "_grid", () -> new GridBlock(GridType.FLUID));
-        createColoredBlocks(CONTROLLER, "controller", () -> new ControllerBlock(NetworkType.NORMAL));
-        createColoredBlocks(CREATIVE_CONTROLLER, "creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
-        createColoredBlocks(NETWORK_RECEIVER, "network_receiver", NetworkReceiverBlock::new);
-        createColoredBlocks(NETWORK_TRANSMITTER, "network_transmitter", NetworkTransmitterBlock::new);
-        createColoredBlocks(RELAY, "relay", RelayBlock::new);
-        createColoredBlocks(SECURITY_MANAGER, "security_manager", SecurityManagerBlock::new);
-        createColoredBlocks(WIRELESS_TRANSMITTER, "wireless_transmitter", WirelessTransmitterBlock::new);
-        createColoredBlocks(DISK_MANIPULATOR, "disk_manipulator", DiskManipulatorBlock::new);
-        createColoredBlocks(CRAFTER, "crafter", CrafterBlock::new);
-        createColoredBlocks(CRAFTER_MANAGER, "crafter_manager", CrafterManagerBlock::new);
-        createColoredBlocks(CRAFTING_MONITOR, "crafting_monitor", CraftingMonitorBlock::new);
-        createColoredBlocks(DETECTOR, "detector", DetectorBlock::new);
+        registerColoredBlocks(GRID, "grid", () -> new GridBlock(GridType.NORMAL));
+        registerColoredBlocks(CRAFTING_GRID, GridType.CRAFTING.getString() + "_grid", () -> new GridBlock(GridType.CRAFTING));
+        registerColoredBlocks(PATTERN_GRID, GridType.PATTERN.getString() + "_grid", () -> new GridBlock(GridType.PATTERN));
+        registerColoredBlocks(FLUID_GRID, GridType.FLUID.getString() + "_grid", () -> new GridBlock(GridType.FLUID));
+        registerColoredBlocks(CONTROLLER, "controller", () -> new ControllerBlock(NetworkType.NORMAL));
+        registerColoredBlocks(CREATIVE_CONTROLLER, "creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
+        registerColoredBlocks(NETWORK_RECEIVER, "network_receiver", NetworkReceiverBlock::new);
+        registerColoredBlocks(NETWORK_TRANSMITTER, "network_transmitter", NetworkTransmitterBlock::new);
+        registerColoredBlocks(RELAY, "relay", RelayBlock::new);
+        registerColoredBlocks(SECURITY_MANAGER, "security_manager", SecurityManagerBlock::new);
+        registerColoredBlocks(WIRELESS_TRANSMITTER, "wireless_transmitter", WirelessTransmitterBlock::new);
+        registerColoredBlocks(DISK_MANIPULATOR, "disk_manipulator", DiskManipulatorBlock::new);
+        registerColoredBlocks(CRAFTER, "crafter", CrafterBlock::new);
+        registerColoredBlocks(CRAFTER_MANAGER, "crafter_manager", CrafterManagerBlock::new);
+        registerColoredBlocks(CRAFTING_MONITOR, "crafting_monitor", CraftingMonitorBlock::new);
+        registerColoredBlocks(DETECTOR, "detector", DetectorBlock::new);
     }
 
-    private static <T extends Block> void createColoredBlocks(Map<DyeColor, RegistryObject<T>> map, String name, Supplier<T> supplier) {
+    private static <T extends Block> void registerColoredBlocks(Map<DyeColor, RegistryObject<T>> blockMap, String name, Supplier<T> blockFactory) {
         for (DyeColor color : DyeColor.values()) {
             String prefix = color != DyeColor.LIGHT_BLUE ? color + "_" : "";
-            map.put(color, BLOCKS.register(prefix + name, supplier));
+            blockMap.put(color, BLOCKS.register(prefix + name, blockFactory));
         }
     }
 

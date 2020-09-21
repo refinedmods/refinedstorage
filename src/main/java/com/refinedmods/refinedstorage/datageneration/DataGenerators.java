@@ -6,7 +6,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
 public class DataGenerators {
-
     @SubscribeEvent
     public void runDataGeneration(GatherDataEvent event) {
         if (event.includeClient()) {
@@ -15,9 +14,12 @@ public class DataGenerators {
         }
         if (event.includeServer()) {
             event.getGenerator().addProvider(new RecipeGenerator(event.getGenerator()));
-            event.getGenerator().addProvider(new TagGenerator(event.getGenerator(),
+            event.getGenerator().addProvider(new TagGenerator(
+                event.getGenerator(),
                 new BlockTagsProvider(event.getGenerator(), RS.ID, event.getExistingFileHelper()),
-                RS.ID, event.getExistingFileHelper()));
+                RS.ID,
+                event.getExistingFileHelper())
+            );
         }
     }
 }

@@ -34,11 +34,12 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult rayTraceResult) {
-        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.DISK_MANIPULATOR, state, player.getHeldItem(handIn), world, pos, player);
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.DISK_MANIPULATOR, state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, rayTraceResult.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
+import javax.annotation.Nullable;
+
 public class ItemModelGenerator extends ItemModelProvider {
     public ItemModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
         super(generator, modid, existingFileHelper);
@@ -38,7 +40,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         coloredBlockItemModelBuilder(block, null, color);
     }
 
-    private void coloredBlockItemModelBuilder(Block block, String replacement, DyeColor color) {
+    private void coloredBlockItemModelBuilder(Block block, @Nullable String replacement, DyeColor color) {
         String blockName = block.getRegistryName().getPath();
         String name = blockName;
         if (color != DyeColor.LIGHT_BLUE) {

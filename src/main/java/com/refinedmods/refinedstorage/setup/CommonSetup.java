@@ -197,9 +197,8 @@ public class CommonSetup {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.NORMAL), RSBlocks.PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "portable_grid")));
     }
 
-
-    private <T extends Block> Block[] getBlocks(Map<DyeColor, RegistryObject<T>> map) {
-        return map.values().stream().map(RegistryObject::get).toArray(Block[]::new);
+    private <T extends Block> Block[] getBlocks(Map<DyeColor, RegistryObject<T>> colorToBlockMap) {
+        return colorToBlockMap.values().stream().map(RegistryObject::get).toArray(Block[]::new);
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {

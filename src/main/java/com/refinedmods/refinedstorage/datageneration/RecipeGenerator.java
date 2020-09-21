@@ -13,13 +13,12 @@ import net.minecraft.util.ResourceLocation;
 import java.util.function.Consumer;
 
 public class RecipeGenerator extends RecipeProvider {
-    public RecipeGenerator(DataGenerator generatorIn) {
-        super(generatorIn);
+    public RecipeGenerator(DataGenerator generator) {
+        super(generator);
     }
 
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-
         //Tag + Color -> Colored Block
         RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> {
             map.forEach((color, item) -> {
@@ -28,7 +27,7 @@ public class RecipeGenerator extends RecipeProvider {
                     .addIngredient(color.getTag())
                     .setGroup(RS.ID)
                     .addCriterion("cobblestone", InventoryChangeTrigger.Instance.forItems(Blocks.COBBLESTONE))
-                    .build(consumer, new ResourceLocation(RS.ID, "colouring_recipes/" + item.getId().getPath()));
+                    .build(consumer, new ResourceLocation(RS.ID, "coloring_recipes/" + item.getId().getPath()));
             });
         });
 
@@ -61,7 +60,5 @@ public class RecipeGenerator extends RecipeProvider {
                 .addCriterion("cobblestone", InventoryChangeTrigger.Instance.forItems(Blocks.COBBLESTONE))
                 .build(consumer, new ResourceLocation(RS.ID, "pattern_grid/" + item.getId().getPath()));
         });
-
     }
-
 }
