@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.9.6
+- Fixed Portable Grid losing enchantments when placing and breaking (raoulvdberge)
+- Added client config option to remember the Grid search query (raoulvdberge)
+
 ### 1.9.5
 - Re-added the `/refinedstorage disk create <player> <id>` command (raoulvdberge)
 - Added the `/refinedstorage disk list` command (raoulvdberge)
@@ -22,6 +26,9 @@
 - Updated Japanese translation (a2y4)
 - Updated Taiwanese translation (ForFunPenguin)
 - Refactored autocrafting code (raoulvdberge)
+
+### 1.9.2b
+Fixed duplication bug with the Constructor (Darkere, raoulvdberge)
 
 ### 1.9.2
 - Fixed crash with Forge version 67 (Darkere)
