@@ -130,7 +130,8 @@ public class ControllerBlock extends BaseBlock {
             return result;
         }
         DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
-        BlockState newState = type == NetworkType.CREATIVE ? RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
+        BlockState newState = type == NetworkType.CREATIVE ?
+            RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
             RSBlocks.CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
         ActionResultType colorResult = BlockUtils.changeBlockColor(newState, player.getHeldItem(hand), world, pos, player);
         if (colorResult != ActionResultType.PASS) {

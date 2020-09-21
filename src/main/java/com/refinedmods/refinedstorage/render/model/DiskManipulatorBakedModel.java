@@ -80,7 +80,6 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
             Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(DyeColor.LIGHT_BLUE).get().getDirection().getProperty());
             boolean connected = key.state.get(DiskManipulatorBlock.CONNECTED);
 
-
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
                 connected ? baseConnected : baseDisconnected,
                 facing,

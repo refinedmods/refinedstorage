@@ -18,7 +18,6 @@ public class BaseBlockItem extends BlockItem {
         this.block = block;
     }
 
-
     @Override
     protected boolean placeBlock(BlockItemUseContext context, BlockState state) {
         boolean result = super.placeBlock(context, state);
