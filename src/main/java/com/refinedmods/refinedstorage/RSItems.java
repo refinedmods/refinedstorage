@@ -16,7 +16,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class RSItems {
@@ -73,6 +75,8 @@ public final class RSItems {
     public static final Map<DyeColor, RegistryObject<BlockItem>> DETECTOR = new HashMap<>();
 
     public static final Map<Tags.IOptionalNamedTag<Item>, Map<DyeColor, RegistryObject<BlockItem>>> COLORED_ITEM_TAGS = new HashMap<>();
+
+    private static final List<Runnable> lateRegistration = new ArrayList<>();
 
     static {
         CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);
@@ -138,15 +142,23 @@ public final class RSItems {
         registerBlockItemFor(RSBlocks.CONSTRUCTOR);
         registerBlockItemFor(RSBlocks.DESTRUCTOR);
 
-        RSBlocks.CONTROLLER.forEach((color, block) -> {
-            CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get())));
-            if (color == DyeColor.LIGHT_BLUE) {
-                COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, block.getId().getPath())), CONTROLLER);
-            }
-        });
+        CONTROLLER.put(DyeColor.LIGHT_BLUE, ITEMS.register(RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE).get())));
+        CREATIVE_CONTROLLER.put(DyeColor.LIGHT_BLUE, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE).get())));
 
-        RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
-            CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get())));
+        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath())), CONTROLLER);
+
+        lateRegistration.add(() -> {
+            RSBlocks.CONTROLLER.forEach((color, block) -> {
+                if (color != DyeColor.LIGHT_BLUE) {
+                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get())));
+                }
+            });
+
+            RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
+                if (color != DyeColor.LIGHT_BLUE) {
+                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get())));
+                }
+            });
         });
 
         registerItemsFromBlocks(RSBlocks.GRID, GRID);
@@ -170,6 +182,8 @@ public final class RSItems {
         CREATIVE_WIRELESS_FLUID_GRID = ITEMS.register("creative_wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.CREATIVE));
         WIRELESS_CRAFTING_MONITOR = ITEMS.register("wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
         CREATIVE_WIRELESS_CRAFTING_MONITOR = ITEMS.register("creative_wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
+
+        lateRegistration.forEach(Runnable::run);
     }
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
@@ -177,8 +191,12 @@ public final class RSItems {
     }
 
     private static <T extends BaseBlock> void registerItemsFromBlocks(Map<DyeColor, RegistryObject<T>> blockMap, Map<DyeColor, RegistryObject<BlockItem>> itemMap) {
-        blockMap.forEach((color, block) -> itemMap.put(color, registerBlockItemFor(block)));
-
+        itemMap.put(DyeColor.LIGHT_BLUE, registerBlockItemFor(blockMap.get(DyeColor.LIGHT_BLUE)));
+        lateRegistration.add(() -> blockMap.forEach((color, block) -> {
+            if (color != DyeColor.LIGHT_BLUE) {
+                itemMap.put(color, registerBlockItemFor(block));
+            }
+        }));
         COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(DyeColor.LIGHT_BLUE).getId().getPath())), itemMap);
     }
 
