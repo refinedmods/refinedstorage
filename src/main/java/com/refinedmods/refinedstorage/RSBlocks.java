@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class RSBlocks {
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
+    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
 
     public static final RegistryObject<ImporterBlock> IMPORTER;
     public static final RegistryObject<ExporterBlock> EXPORTER;

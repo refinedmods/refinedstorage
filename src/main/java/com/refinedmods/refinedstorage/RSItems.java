@@ -4,11 +4,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.item.*;
-import com.refinedmods.refinedstorage.item.blockitem.ControllerBlockItem;
-import com.refinedmods.refinedstorage.item.blockitem.FluidStorageBlockItem;
-import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import com.refinedmods.refinedstorage.item.blockitem.StorageBlockItem;
-import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.item.blockitem.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
@@ -61,9 +57,11 @@ public final class RSItems {
         DESTRUCTION_CORE = ITEMS.register("destruction_core", CoreItem::new);
         QUARTZ_ENRICHED_IRON = ITEMS.register("quartz_enriched_iron", QuartzEnrichedIronItem::new);
         PROCESSOR_BINDING = ITEMS.register("processor_binding", ProcessorBindingItem::new);
+
         for (ProcessorItem.Type type : ProcessorItem.Type.values()) {
             PROCESSORS.put(type, ITEMS.register(type.getName() + "_processor", ProcessorItem::new));
         }
+
         SILICON = ITEMS.register("silicon", SiliconItem::new);
         SECURITY_CARD = ITEMS.register("security_card", SecurityCardItem::new);
         NETWORK_CARD = ITEMS.register("network_card", NetworkCardItem::new);
@@ -75,6 +73,7 @@ public final class RSItems {
 
             ITEM_STORAGE_DISKS.put(type, ITEMS.register(type.getName() + "_storage_disk", () -> new StorageDiskItem(type)));
         }
+
         for (FluidStorageType type : FluidStorageType.values()) {
             if (type != FluidStorageType.CREATIVE) {
                 FLUID_STORAGE_PARTS.put(type, ITEMS.register(type.getName() + "_fluid_storage_part", FluidStoragePartItem::new));
@@ -82,17 +81,18 @@ public final class RSItems {
 
             FLUID_STORAGE_DISKS.put(type, ITEMS.register(type.getName() + "_fluid_storage_disk", () -> new FluidStorageDiskItem(type)));
         }
+
         STORAGE_HOUSING = ITEMS.register("storage_housing", StorageHousingItem::new);
 
         for (UpgradeItem.Type type : UpgradeItem.Type.values()) {
             UPGRADE_ITEMS.put(type, ITEMS.register(type == UpgradeItem.Type.NORMAL ? "upgrade" : type.getName() + "_upgrade", () -> new UpgradeItem(type)));
         }
+
         WRENCH = ITEMS.register("wrench", WrenchItem::new);
         PATTERN = ITEMS.register("pattern", PatternItem::new);
         FILTER = ITEMS.register("filter", FilterItem::new);
         PORTABLE_GRID = ITEMS.register("portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.NORMAL));
         CREATIVE_PORTABLE_GRID = ITEMS.register("creative_portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
-
 
         createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
         CONTROLLER = ITEMS.register(RSBlocks.CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get()));
@@ -106,12 +106,11 @@ public final class RSItems {
         createBlockItemFor(RSBlocks.FLUID_GRID);
 
         for (ItemStorageType type : ItemStorageType.values()) {
-            STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.STORAGE_BLOCKS.get(type).getId().getPath(),
-                () -> new StorageBlockItem(RSBlocks.STORAGE_BLOCKS.get(type).get())));
+            STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.STORAGE_BLOCKS.get(type).getId().getPath(), () -> new StorageBlockItem(RSBlocks.STORAGE_BLOCKS.get(type).get())));
         }
+
         for (FluidStorageType type : FluidStorageType.values()) {
-            FLUID_STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).getId().getPath(),
-                () -> new FluidStorageBlockItem(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).get())));
+            FLUID_STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).getId().getPath(), () -> new FluidStorageBlockItem(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).get())));
         }
 
         createBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
@@ -139,12 +138,10 @@ public final class RSItems {
         CREATIVE_WIRELESS_FLUID_GRID = ITEMS.register("creative_wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.CREATIVE));
         WIRELESS_CRAFTING_MONITOR = ITEMS.register("wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
         CREATIVE_WIRELESS_CRAFTING_MONITOR = ITEMS.register("creative_wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
-
-
     }
 
-    private static RegistryObject<BlockItem> createBlockItemFor(RegistryObject<? extends BaseBlock> block) {
-        return ITEMS.register(block.getId().getPath(), () -> BlockUtils.createBlockItemFor(block.get()));
+    private static <T extends BaseBlock> RegistryObject<BlockItem> createBlockItemFor(RegistryObject<T> block) {
+        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP)));
     }
 
     public static void register() {
