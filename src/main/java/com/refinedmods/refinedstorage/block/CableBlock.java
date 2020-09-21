@@ -58,7 +58,6 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     public CableBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "cable");
         this.setDefaultState(getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(WATERLOGGED, false));
     }
 

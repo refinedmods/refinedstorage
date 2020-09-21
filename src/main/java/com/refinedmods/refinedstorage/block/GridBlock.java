@@ -23,11 +23,10 @@ import javax.annotation.Nullable;
 public class GridBlock extends NetworkNodeBlock {
     private final GridType type;
 
-    public GridBlock(GridType type, ResourceLocation registryName) {
+    public GridBlock(GridType type) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        setRegistryName(registryName);
     }
 
     @Override

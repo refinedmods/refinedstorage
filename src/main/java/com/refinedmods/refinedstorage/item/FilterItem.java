@@ -42,8 +42,6 @@ public class FilterItem extends Item {
 
     public FilterItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "filter");
     }
 
     @Override
@@ -52,7 +50,7 @@ public class FilterItem extends Item {
 
         if (!world.isRemote) {
             if (player.isCrouching()) {
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER.get()));
             }
 
             player.openContainer(new INamedContainerProvider() {

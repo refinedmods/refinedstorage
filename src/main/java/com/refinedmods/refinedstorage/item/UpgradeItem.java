@@ -82,8 +82,6 @@ public class UpgradeItem extends Item {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type == Type.NORMAL ? "upgrade" : type.getName() + "_upgrade");
     }
 
     @Override

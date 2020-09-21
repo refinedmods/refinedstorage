@@ -31,8 +31,6 @@ public class FluidStorageBlock extends NetworkNodeBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_fluid_storage_block");
     }
 
     public FluidStorageType getType() {

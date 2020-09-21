@@ -236,7 +236,6 @@
   "block.refinedstorage.interface": "Interface",
   "block.refinedstorage.crafting_monitor": "Crafting Monitor",
   "block.refinedstorage.wireless_transmitter": "Wireless Transmitter",
-  "block.refinedstorage.wireless_transmitter.tooltip": "Must be placed on %s.",
   "block.refinedstorage.crafter": "Crafter",
   "block.refinedstorage.network_receiver": "Network Receiver",
   "block.refinedstorage.network_transmitter": "Network Transmitter",

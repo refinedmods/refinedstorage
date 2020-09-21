@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
+import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.refinedmods.refinedstorage.item.StorageDiskItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
@@ -46,19 +47,19 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
         StorageDiskItem item;
         switch (disk.getCapacity()) {
             case 1_000:
-                item = RSItems.ONE_K_STORAGE_DISK;
+                item = RSItems.ITEM_STORAGE_DISKS.get(ItemStorageType.ONE_K).get();
                 break;
             case 4_000:
-                item = RSItems.FOUR_K_STORAGE_DISK;
+                item = RSItems.ITEM_STORAGE_DISKS.get(ItemStorageType.FOUR_K).get();
                 break;
             case 16_000:
-                item = RSItems.SIXTEEN_K_STORAGE_DISK;
+                item = RSItems.ITEM_STORAGE_DISKS.get(ItemStorageType.SIXTEEN_K).get();
                 break;
             case 64_000:
-                item = RSItems.SIXTY_FOUR_K_STORAGE_DISK;
+                item = RSItems.ITEM_STORAGE_DISKS.get(ItemStorageType.SIXTY_FOUR_K).get();
                 break;
             default:
-                item = RSItems.CREATIVE_STORAGE_DISK;
+                item = RSItems.ITEM_STORAGE_DISKS.get(ItemStorageType.CREATIVE).get();
                 break;
         }
 

@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 public class CraftingMonitorBlock extends NetworkNodeBlock {
     public CraftingMonitorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "crafting_monitor");
     }
 
     @Override

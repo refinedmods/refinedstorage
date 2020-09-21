@@ -15,8 +15,6 @@ import net.minecraft.util.Rotation;
 public class WrenchItem extends Item {
     public WrenchItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "wrench");
     }
 
     @Override

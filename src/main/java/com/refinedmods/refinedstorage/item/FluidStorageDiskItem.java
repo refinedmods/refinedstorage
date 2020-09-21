@@ -38,8 +38,6 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_fluid_storage_disk");
     }
 
     @Override
@@ -97,7 +95,7 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
                 API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));
                 API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING.get()));
             }
         }
 

@@ -12,6 +12,6 @@ public class MainItemGroup extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(RSBlocks.CREATIVE_CONTROLLER);
+        return new ItemStack(RSBlocks.CREATIVE_CONTROLLER.get());
     }
 }

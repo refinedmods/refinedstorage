@@ -68,7 +68,6 @@ public class ControllerBlock extends BaseBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setRegistryName(RS.ID, type == NetworkType.CREATIVE ? "creative_controller" : "controller");
         this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
     }
 

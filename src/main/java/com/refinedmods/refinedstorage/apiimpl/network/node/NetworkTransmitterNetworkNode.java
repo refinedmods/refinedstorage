@@ -24,7 +24,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
     private final BaseItemHandler networkCard = new BaseItemHandler(1)
-        .addValidator(new ItemValidator(RSItems.NETWORK_CARD))
+        .addValidator(new ItemValidator(RSItems.NETWORK_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             ItemStack card = handler.getStackInSlot(slot);

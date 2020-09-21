@@ -26,8 +26,6 @@ import javax.annotation.Nullable;
 public class CrafterBlock extends NetworkNodeBlock {
     public CrafterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "crafter");
     }
 
     @Override

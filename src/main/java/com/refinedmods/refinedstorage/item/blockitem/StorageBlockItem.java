@@ -35,8 +35,6 @@ public class StorageBlockItem extends BaseBlockItem {
         super(block, new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = block.getType();
-
-        this.setRegistryName(block.getRegistryName());
     }
 
     @Override
@@ -89,7 +87,7 @@ public class StorageBlockItem extends BaseBlockItem {
                     API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
                 }
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING.get()));
             }
         }
 

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
 import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -28,8 +27,6 @@ import javax.annotation.Nullable;
 public class StorageMonitorBlock extends NetworkNodeBlock {
     public StorageMonitorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "storage_monitor");
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.WirelessTransmitterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.WirelessTransmitterTile;
@@ -34,8 +33,6 @@ public class WirelessTransmitterBlock extends NetworkNodeBlock {
 
     public WirelessTransmitterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "wireless_transmitter");
     }
 
     @Override

@@ -37,8 +37,6 @@ public class DestructorBlock extends CableBlock {
 
     public DestructorBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "destructor");
     }
 
     @Override

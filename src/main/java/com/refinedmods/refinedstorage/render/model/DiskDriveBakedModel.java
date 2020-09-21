@@ -76,7 +76,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
+            Direction facing = key.state.get(RSBlocks.DISK_DRIVE.get().getDirection().getProperty());
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(base, facing, null, key.state, key.random, key.side));
 
