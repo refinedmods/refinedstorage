@@ -177,14 +177,9 @@ public final class RSItems {
     }
 
     private static <T extends BaseBlock> void registerItemsFromBlocks(Map<DyeColor, RegistryObject<T>> blockMap, Map<DyeColor, RegistryObject<BlockItem>> itemMap) {
-        blockMap.forEach((color, block) -> {
-            itemMap.put(color, registerBlockItemFor(block));
-            if (color == DyeColor.LIGHT_BLUE) {
-                String name = block.getId().getPath();
-                Tags.IOptionalNamedTag<Item> tag = ItemTags.createOptional(new ResourceLocation(RS.ID, name));
-                COLORED_ITEM_TAGS.put(tag, itemMap);
-            }
-        });
+        blockMap.forEach((color, block) -> itemMap.put(color, registerBlockItemFor(block)));
+
+        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(DyeColor.LIGHT_BLUE).getId().getPath())), itemMap);
     }
 
     public static void register() {
