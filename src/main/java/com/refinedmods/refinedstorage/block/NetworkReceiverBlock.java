@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
@@ -30,4 +31,8 @@ public class NetworkReceiverBlock extends ColoredNetworkBlock {
         return true;
     }
 
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        return BlockUtils.changeBlockColor(RSBlocks.NETWORK_RECEIVER, state, player.getHeldItem(handIn), world, pos, player);
+    }
 }

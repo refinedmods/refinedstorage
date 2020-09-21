@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "refinedstorage:lime_grid"
+    },
+    {
+      "item": "refinedstorage:advanced_processor"
+    },
+    {
+      "tag": "refinedstorage:crafting_tables"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:lime_crafting_grid"
+  }
+}

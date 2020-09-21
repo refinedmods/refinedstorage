@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:gray_relay",
+    "refinedstorage:black_relay",
+    "refinedstorage:white_relay",
+    "refinedstorage:lime_relay",
+    "refinedstorage:pink_relay",
+    "refinedstorage:purple_relay",
+    "refinedstorage:yellow_relay",
+    "refinedstorage:blue_relay",
+    "refinedstorage:green_relay",
+    "refinedstorage:cyan_relay",
+    "refinedstorage:light_gray_relay",
+    "refinedstorage:magenta_relay",
+    "refinedstorage:brown_relay",
+    "refinedstorage:orange_relay",
+    "refinedstorage:relay",
+    "refinedstorage:red_relay"
+  ]
+}

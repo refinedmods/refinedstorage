@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -17,36 +16,36 @@ public class ItemModelGenerator extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        coloredBlockItemModelBuilder(RSBlocks.CRAFTER);
-        coloredBlockItemModelBuilder(RSBlocks.GRID);
-        coloredBlockItemModelBuilder(RSBlocks.PATTERN_GRID);
-        coloredBlockItemModelBuilder(RSBlocks.FLUID_GRID);
-        coloredBlockItemModelBuilder(RSBlocks.CRAFTING_GRID);
-        coloredBlockItemModelBuilder(RSBlocks.CONTROLLER);
-        coloredBlockItemModelBuilder(RSBlocks.CREATIVE_CONTROLLER, "controller");
-        coloredBlockItemModelBuilder(RSBlocks.SECURITY_MANAGER);
-        coloredBlockItemModelBuilder(RSBlocks.RELAY);
-        coloredBlockItemModelBuilder(RSBlocks.NETWORK_TRANSMITTER);
-        coloredBlockItemModelBuilder(RSBlocks.NETWORK_RECEIVER);
-        coloredBlockItemModelBuilder(RSBlocks.DISK_MANIPULATOR);
-        coloredBlockItemModelBuilder(RSBlocks.CRAFTER_MANAGER);
-        coloredBlockItemModelBuilder(RSBlocks.CRAFTING_MONITOR);
-        coloredBlockItemModelBuilder(RSBlocks.DETECTOR);
-        coloredBlockItemModelBuilder(RSBlocks.WIRELESS_TRANSMITTER);
+        RSBlocks.CRAFTER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.GRID.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.PATTERN_GRID.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.FLUID_GRID.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.CRAFTING_GRID.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.CONTROLLER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), "controller", color));
+        RSBlocks.SECURITY_MANAGER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.RELAY.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.NETWORK_TRANSMITTER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.NETWORK_RECEIVER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.DISK_MANIPULATOR.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.CRAFTER_MANAGER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.CRAFTING_MONITOR.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.DETECTOR.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
+        RSBlocks.WIRELESS_TRANSMITTER.forEach((color, block) -> coloredBlockItemModelBuilder(block.get(), color));
     }
 
-    private void coloredBlockItemModelBuilder(Block block) {
-        coloredBlockItemModelBuilder(block, null);
+    private void coloredBlockItemModelBuilder(Block block, DyeColor color) {
+        coloredBlockItemModelBuilder(block, null, color);
     }
 
-    private void coloredBlockItemModelBuilder(Block block, String replacement) {
-        String name = block.getRegistryName().getPath();
-        ItemModelBuilder builder = getBuilder("item/" + name); //name of the Item Model with overrides
-        for (int i = 0; i < DyeColor.values().length; i++) {
-            builder.override().predicate(new ResourceLocation(RS.ID, "color"), i)
-                .model(withExistingParent("item/" + name + "/" + DyeColor.byId(i), //name of actual Item Model
-                    new ResourceLocation(RS.ID, "block/" + (replacement == null ? name : replacement) + "/" + DyeColor.byId(i)))) //name of Block Model
-                .end();
+    private void coloredBlockItemModelBuilder(Block block, String replacement, DyeColor color) {
+        String blockName = block.getRegistryName().getPath();
+        String name = blockName;
+        if (color != DyeColor.LIGHT_BLUE) {
+            name = blockName.substring(blockName.indexOf(color.getString()) + color.getString().length() + 1);
         }
+        withExistingParent("item/" + blockName, //name of Item Model
+            new ResourceLocation(RS.ID, "block/" + (replacement == null ? name : replacement) + "/" + color)); //name of Block Model
     }
+
 }

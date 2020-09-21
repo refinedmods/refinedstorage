@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
@@ -34,8 +34,8 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, rayTraceResult);
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult rayTraceResult) {
+        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.DISK_MANIPULATOR, state, player.getHeldItem(handIn), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }

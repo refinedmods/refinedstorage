@@ -13,7 +13,7 @@
       "tag": "forge:ender_pearls"
     },
     "G": {
-      "item": "refinedstorage:fluid_grid"
+      "tag": "refinedstorage:fluid_grid"
     },
     "A": {
       "item": "refinedstorage:advanced_processor"

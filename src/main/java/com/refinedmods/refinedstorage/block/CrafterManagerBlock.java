@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.factory.CrafterManagerContainerProvider;
 import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
@@ -39,7 +39,7 @@ public class CrafterManagerBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ActionResultType result = super.onBlockActivated(state, world, pos, player, handIn, hit);
+        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.CRAFTER_MANAGER, state, player.getHeldItem(handIn), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }

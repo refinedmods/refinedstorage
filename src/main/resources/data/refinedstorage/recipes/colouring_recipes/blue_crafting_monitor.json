@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "refinedstorage",
+  "ingredients": [
+    {
+      "tag": "refinedstorage:crafting_monitor"
+    },
+    {
+      "tag": "forge:dyes/blue"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:blue_crafting_monitor"
+  }
+}

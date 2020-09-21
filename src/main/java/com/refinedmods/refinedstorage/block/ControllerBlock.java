@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -17,22 +17,16 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -42,7 +36,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class ControllerBlock extends BaseBlock {
     public enum EnergyType implements IStringSerializable {
@@ -76,7 +69,7 @@ public class ControllerBlock extends BaseBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF).with(BlockUtils.COLOR_PROPERTY, DyeColor.LIGHT_BLUE));
+        this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
     }
 
     @Override
@@ -84,7 +77,6 @@ public class ControllerBlock extends BaseBlock {
         super.fillStateContainer(builder);
 
         builder.add(ENERGY_TYPE);
-        builder.add(BlockUtils.COLOR_PROPERTY);
     }
 
     public NetworkType getType() {
@@ -137,7 +129,10 @@ public class ControllerBlock extends BaseBlock {
         if (result != ActionResultType.PASS) {
             return result;
         }
-        ActionResultType colorResult = BlockUtils.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
+        BlockState newState = type == NetworkType.CREATIVE ? RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
+            RSBlocks.CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
+        ActionResultType colorResult = BlockUtils.changeBlockColor(newState, player.getHeldItem(hand), world, pos, player);
         if (colorResult != ActionResultType.PASS) {
             return colorResult;
         }
@@ -160,46 +155,5 @@ public class ControllerBlock extends BaseBlock {
         }
 
         return ActionResultType.SUCCESS;
-    }
-
-    @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        ItemStack stack = super.getPickBlock(state, target, world, pos, player);
-        CompoundNBT tag = stack.getOrCreateTag();
-        tag.putInt(ColoredNetworkBlock.COLOR_NBT, state.get(BlockUtils.COLOR_PROPERTY).getId());
-        stack.setTag(tag);
-        return stack;
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockState state = super.getStateForPlacement(context);
-        if (state != null && context.getItem().hasTag() && context.getItem().getTag().contains(ColoredNetworkBlock.COLOR_NBT)) {
-            DyeColor color = DyeColor.byId(context.getItem().getTag().getInt(ColoredNetworkBlock.COLOR_NBT));
-            state = state.with(BlockUtils.COLOR_PROPERTY, color);
-        }
-        return state;
-    }
-
-    @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        ItemStack stack = new ItemStack(this);
-        CompoundNBT tag = stack.getOrCreateTag();
-        tag.putInt(ColoredNetworkBlock.COLOR_NBT, DyeColor.LIGHT_BLUE.getId());
-        stack.setTag(tag);
-        items.add(stack);
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> stacks = super.getDrops(state, builder);
-        stacks.forEach(stack -> {
-            if (state.getBlock() instanceof ColoredNetworkBlock) {
-                CompoundNBT tag = stack.getOrCreateTag();
-                tag.putInt(ColoredNetworkBlock.COLOR_NBT, state.get(BlockUtils.COLOR_PROPERTY).getId());
-                stack.setTag(tag);
-            }
-        });
-        return stacks;
     }
 }

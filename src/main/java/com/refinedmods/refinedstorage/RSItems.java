@@ -6,7 +6,11 @@ import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,8 +31,6 @@ public final class RSItems {
     public static final RegistryObject<StorageHousingItem> STORAGE_HOUSING;
     public static final RegistryObject<NetworkCardItem> NETWORK_CARD;
     public static final RegistryObject<SecurityCardItem> SECURITY_CARD;
-    public static final RegistryObject<ControllerBlockItem> CONTROLLER;
-    public static final RegistryObject<ControllerBlockItem> CREATIVE_CONTROLLER;
     public static final RegistryObject<CoreItem> CONSTRUCTION_CORE;
     public static final RegistryObject<CoreItem> DESTRUCTION_CORE;
     public static final RegistryObject<WirelessGridItem> WIRELESS_GRID;
@@ -39,6 +41,7 @@ public final class RSItems {
     public static final RegistryObject<PortableGridBlockItem> CREATIVE_PORTABLE_GRID;
     public static final RegistryObject<WirelessCraftingMonitorItem> WIRELESS_CRAFTING_MONITOR;
     public static final RegistryObject<WirelessCraftingMonitorItem> CREATIVE_WIRELESS_CRAFTING_MONITOR;
+    public static final RegistryObject<BlockItem> MACHINE_CASING;
 
     public static final Map<ProcessorItem.Type, RegistryObject<ProcessorItem>> PROCESSORS = new HashMap<>();
 
@@ -51,6 +54,25 @@ public final class RSItems {
     public static final Map<FluidStorageType, RegistryObject<FluidStorageBlockItem>> FLUID_STORAGE_BLOCKS = new HashMap<>();
 
     public static final Map<UpgradeItem.Type, RegistryObject<UpgradeItem>> UPGRADE_ITEMS = new HashMap<>();
+
+    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> RELAY = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> NETWORK_TRANSMITTER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> NETWORK_RECEIVER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> CONTROLLER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> CREATIVE_CONTROLLER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> GRID = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTING_GRID = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> PATTERN_GRID = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> FLUID_GRID = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> SECURITY_MANAGER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> WIRELESS_TRANSMITTER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> DISK_MANIPULATOR = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTER_MANAGER = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTING_MONITOR = new HashMap<>();
+    public static final Map<DyeColor, RegistryObject<BlockItem>> DETECTOR = new HashMap<>();
+
+    public static final Map<Tags.IOptionalNamedTag<Item>, Map<DyeColor, RegistryObject<BlockItem>>> COLORED_ITEM_TAGS = new HashMap<>();
 
     static {
         CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);
@@ -95,15 +117,9 @@ public final class RSItems {
         CREATIVE_PORTABLE_GRID = ITEMS.register("creative_portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
 
         createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
-        CONTROLLER = ITEMS.register(RSBlocks.CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get()));
-        CREATIVE_CONTROLLER = ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get()));
-        createBlockItemFor(RSBlocks.MACHINE_CASING);
+        MACHINE_CASING = createBlockItemFor(RSBlocks.MACHINE_CASING);
         createBlockItemFor(RSBlocks.CABLE);
         createBlockItemFor(RSBlocks.DISK_DRIVE);
-        createBlockItemFor(RSBlocks.GRID);
-        createBlockItemFor(RSBlocks.CRAFTING_GRID);
-        createBlockItemFor(RSBlocks.PATTERN_GRID);
-        createBlockItemFor(RSBlocks.FLUID_GRID);
 
         for (ItemStorageType type : ItemStorageType.values()) {
             STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.STORAGE_BLOCKS.get(type).getId().getPath(), () -> new StorageBlockItem(RSBlocks.STORAGE_BLOCKS.get(type).get())));
@@ -116,21 +132,37 @@ public final class RSItems {
         createBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
         createBlockItemFor(RSBlocks.IMPORTER);
         createBlockItemFor(RSBlocks.EXPORTER);
-        createBlockItemFor(RSBlocks.NETWORK_RECEIVER);
-        createBlockItemFor(RSBlocks.NETWORK_TRANSMITTER);
-        createBlockItemFor(RSBlocks.RELAY);
-        createBlockItemFor(RSBlocks.DETECTOR);
-        createBlockItemFor(RSBlocks.SECURITY_MANAGER);
         createBlockItemFor(RSBlocks.INTERFACE);
         createBlockItemFor(RSBlocks.FLUID_INTERFACE);
-        createBlockItemFor(RSBlocks.WIRELESS_TRANSMITTER);
         createBlockItemFor(RSBlocks.STORAGE_MONITOR);
         createBlockItemFor(RSBlocks.CONSTRUCTOR);
         createBlockItemFor(RSBlocks.DESTRUCTOR);
-        createBlockItemFor(RSBlocks.DISK_MANIPULATOR);
-        createBlockItemFor(RSBlocks.CRAFTER);
-        createBlockItemFor(RSBlocks.CRAFTER_MANAGER);
-        createBlockItemFor(RSBlocks.CRAFTING_MONITOR);
+
+        RSBlocks.CONTROLLER.forEach((color, block) -> {
+            CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get())));
+            if (color == DyeColor.LIGHT_BLUE) {
+                COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, block.getId().getPath())), CONTROLLER);
+            }
+        });
+
+        RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
+            CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get())));
+        });
+
+        mapBlocksToItems(RSBlocks.GRID, GRID);
+        mapBlocksToItems(RSBlocks.CRAFTING_GRID, CRAFTING_GRID);
+        mapBlocksToItems(RSBlocks.PATTERN_GRID, PATTERN_GRID);
+        mapBlocksToItems(RSBlocks.FLUID_GRID, FLUID_GRID);
+        mapBlocksToItems(RSBlocks.NETWORK_RECEIVER, NETWORK_RECEIVER);
+        mapBlocksToItems(RSBlocks.NETWORK_TRANSMITTER, NETWORK_TRANSMITTER);
+        mapBlocksToItems(RSBlocks.RELAY, RELAY);
+        mapBlocksToItems(RSBlocks.DETECTOR, DETECTOR);
+        mapBlocksToItems(RSBlocks.SECURITY_MANAGER, SECURITY_MANAGER);
+        mapBlocksToItems(RSBlocks.WIRELESS_TRANSMITTER, WIRELESS_TRANSMITTER);
+        mapBlocksToItems(RSBlocks.DISK_MANIPULATOR, DISK_MANIPULATOR);
+        mapBlocksToItems(RSBlocks.CRAFTER, CRAFTER);
+        mapBlocksToItems(RSBlocks.CRAFTER_MANAGER, CRAFTER_MANAGER);
+        mapBlocksToItems(RSBlocks.CRAFTING_MONITOR, CRAFTING_MONITOR);
 
         WIRELESS_GRID = ITEMS.register("wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         CREATIVE_WIRELESS_GRID = ITEMS.register("creative_wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
@@ -142,6 +174,17 @@ public final class RSItems {
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> createBlockItemFor(RegistryObject<T> block) {
         return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP)));
+    }
+
+    private static <T extends BaseBlock> void mapBlocksToItems(Map<DyeColor, RegistryObject<T>> blockMap, Map<DyeColor, RegistryObject<BlockItem>> itemMap) {
+        blockMap.forEach((color, block) -> {
+            itemMap.put(color, createBlockItemFor(block));
+            if (color == DyeColor.LIGHT_BLUE) {
+                String name = block.getId().getPath();
+                Tags.IOptionalNamedTag<Item> tag = ItemTags.createOptional(new ResourceLocation(RS.ID, name));
+                COLORED_ITEM_TAGS.put(tag, itemMap);
+            }
+        });
     }
 
     public static void register() {

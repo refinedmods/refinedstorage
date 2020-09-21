@@ -66,7 +66,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     }
 
-    private final Map<DyeColor, IBakedModel> baseConnected;
+    private final IBakedModel baseConnected;
     private final IBakedModel baseDisconnected;
     private final IBakedModel disk;
     private final IBakedModel diskNearCapacity;
@@ -77,12 +77,12 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get().getDirection().getProperty());
+            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(DyeColor.LIGHT_BLUE).get().getDirection().getProperty());
             boolean connected = key.state.get(DiskManipulatorBlock.CONNECTED);
-            DyeColor color = key.state.get(BlockUtils.COLOR_PROPERTY);
+
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
-                connected ? baseConnected.get(color) : baseDisconnected,
+                connected ? baseConnected : baseDisconnected,
                 facing,
                 null,
                 key.state,
@@ -116,8 +116,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     });
 
-    public DiskManipulatorBakedModel(IBakedModel base, Map<DyeColor, IBakedModel> baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        super(base);
+    public DiskManipulatorBakedModel(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
+        super(baseConnected);
 
         this.baseConnected = baseConnected;
         this.baseDisconnected = baseDisconnected;

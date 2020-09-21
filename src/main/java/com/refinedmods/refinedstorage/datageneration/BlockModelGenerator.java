@@ -5,15 +5,12 @@ import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
-import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-
-import java.util.Objects;
 
 public class BlockModelGenerator extends BlockStateProvider {
     private final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
@@ -26,221 +23,214 @@ public class BlockModelGenerator extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         models = new BlockModels(this);
-        genNorthCutoutModel(RSBlocks.GRID);
-        genNorthCutoutModel(RSBlocks.CRAFTING_GRID);
-        genNorthCutoutModel(RSBlocks.PATTERN_GRID);
-        genNorthCutoutModel(RSBlocks.FLUID_GRID);
-        genNorthCutoutModel(RSBlocks.CRAFTING_MONITOR);
-        genNorthCutoutModel(RSBlocks.CRAFTER_MANAGER);
-        genNorthCutoutModel(RSBlocks.DISK_MANIPULATOR);
-        genControllerModel(RSBlocks.CONTROLLER);
-        genControllerModel(RSBlocks.CREATIVE_CONTROLLER);
-        genCrafterModel(RSBlocks.CRAFTER);
-        genCubeAllCutoutModel(RSBlocks.RELAY);
-        genCubeAllCutoutModel(RSBlocks.NETWORK_TRANSMITTER);
-        genCubeAllCutoutModel(RSBlocks.NETWORK_RECEIVER);
-        genCubeCutoutModel(RSBlocks.SECURITY_MANAGER);
-        genDetectorModel(RSBlocks.DETECTOR);
-        genWirelessTransmitterModel(RSBlocks.WIRELESS_TRANSMITTER);
+        RSBlocks.GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.CRAFTING_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.PATTERN_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.FLUID_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.CRAFTING_MONITOR.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.CRAFTER_MANAGER.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.DISK_MANIPULATOR.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
+        RSBlocks.CONTROLLER.forEach((color, block) -> genControllerModel(block.get(), block.get(), color));
+        RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> genControllerModel(block.get(), RSBlocks.CONTROLLER.get(color).get(), color));
+        RSBlocks.CRAFTER.forEach((color, block) -> genCrafterModel(block.get(), color));
+        RSBlocks.RELAY.forEach((color, block) -> genCubeAllCutoutModel(block.get(), color));
+        RSBlocks.NETWORK_TRANSMITTER.forEach((color, block) -> genCubeAllCutoutModel(block.get(), color));
+        RSBlocks.NETWORK_RECEIVER.forEach((color, block) -> genCubeAllCutoutModel(block.get(), color));
+        RSBlocks.SECURITY_MANAGER.forEach((color, block) -> genCubeCutoutModel(block.get(), color));
+        RSBlocks.DETECTOR.forEach((color, block) -> genDetectorModel(block.get(), color));
+        RSBlocks.WIRELESS_TRANSMITTER.forEach((color, block) -> genWirelessTransmitterModel(block.get(), color));
     }
 
-    private void genWirelessTransmitterModel(Block block) {
+    private void genWirelessTransmitterModel(Block block, DyeColor color) {
         models.wirelessTransmitterBlock(block, state -> {
             if (!state.get(NetworkNodeBlock.CONNECTED)) {
                 return models.createWirelessTransmitterModel(
-                    "block/" + getBlockName(block) + "/disconnected",
-                    getRL(block, "cutouts/disconnected")
-                );
+                    "block/" + getBlockName(block, color) + "/disconnected",
+                    getRL(block, color, "cutouts/disconnected"));
             } else {
-                DyeColor color = state.get(BlockUtils.COLOR_PROPERTY);
                 return models.createWirelessTransmitterModel(
-                    "block/" + getBlockName(block) + "/" + color,
-                    getRL(block, "cutouts/" + color)
-                );
+                    "block/" + getBlockName(block, color) + "/" + color,
+                    getRL(block, color, "cutouts/" + color));
             }
-
         }, 0);
-
     }
 
-    private void genDetectorModel(Block block) {
+    private void genDetectorModel(Block block, DyeColor color) {
         models.simpleBlockStateModel(block, state -> {
             if (!state.get(DetectorBlock.POWERED)) {
                 return models.createDetectorModel(
-                    "block/" + getBlockName(block) + "/off",
-                    getRL(block, "cutouts/off")
-                );
+                    "block/" + getBlockName(block, color) + "/off",
+                    getRL(block, color, "cutouts/off"));
             } else {
-                DyeColor color = state.get(BlockUtils.COLOR_PROPERTY);
                 return models.createDetectorModel(
-                    "block/" + getBlockName(block) + "/" + color,
-                    getRL(block, "cutouts/" + color)
-                );
+                    "block/" + getBlockName(block, color) + "/" + color,
+                    getRL(block, color, "cutouts/" + color));
             }
         });
     }
 
-    private void genCubeCutoutModel(Block block) {
+    private void genCubeCutoutModel(Block block, DyeColor color) {
         models.horizontalRSBlock(block, state -> {
             if (!state.get(NetworkNodeBlock.CONNECTED)) {
                 return models.createCubeCutoutModel(
-                    "block/" + getBlockName(block) + "/disconnected",
+                    "block/" + getBlockName(block, color) + "/disconnected",
                     BOTTOM,
                     BOTTOM,
-                    getRL(block, "top"),
-                    getRL(block, "cutouts/top_disconnected"),
-                    getRL(block, "right"),
-                    getRL(block, "cutouts/right_disconnected"),
-                    getRL(block, "left"),
-                    getRL(block, "cutouts/left_disconnected"),
-                    getRL(block, "front"),
-                    getRL(block, "cutouts/front_disconnected"),
-                    getRL(block, "back"),
-                    getRL(block, "cutouts/back_disconnected"));
+                    getRL(block, color, "top"),
+                    getRL(block, color, "cutouts/top_disconnected"),
+                    getRL(block, color, "right"),
+                    getRL(block, color, "cutouts/right_disconnected"),
+                    getRL(block, color, "left"),
+                    getRL(block, color, "cutouts/left_disconnected"),
+                    getRL(block, color, "front"),
+                    getRL(block, color, "cutouts/front_disconnected"),
+                    getRL(block, color, "back"),
+                    getRL(block, color, "cutouts/back_disconnected"));
             } else {
-                DyeColor color = state.get(BlockUtils.COLOR_PROPERTY);
                 return models.createCubeCutoutModel(
-                    "block/" + getBlockName(block) + "/" + color,
+                    "block/" + getBlockName(block, color) + "/" + color,
                     BOTTOM,
                     BOTTOM,
-                    getRL(block, "top"),
-                    getRL(block, "cutouts/top" + "_" + color),
-                    getRL(block, "right"),
-                    getRL(block, "cutouts/right" + "_" + color),
-                    getRL(block, "left"),
-                    getRL(block, "cutouts/left" + "_" + color),
-                    getRL(block, "front"),
-                    getRL(block, "cutouts/front" + "_" + color),
-                    getRL(block, "back"),
-                    getRL(block, "cutouts/back" + "_" + color));
+                    getRL(block, color, "top"),
+                    getRL(block, color, "cutouts/top" + "_" + color),
+                    getRL(block, color, "right"),
+                    getRL(block, color, "cutouts/right" + "_" + color),
+                    getRL(block, color, "left"),
+                    getRL(block, color, "cutouts/left" + "_" + color),
+                    getRL(block, color, "front"),
+                    getRL(block, color, "cutouts/front" + "_" + color),
+                    getRL(block, color, "back"),
+                    getRL(block, color, "cutouts/back" + "_" + color));
             }
         }, 180);
     }
 
-    private void genCubeAllCutoutModel(Block block) {
+    private void genCubeAllCutoutModel(Block block, DyeColor color) {
         models.simpleBlockStateModel(block, state -> {
             if (state.get(NetworkNodeBlock.CONNECTED)) {
                 return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(block) + "/" + state.get(BlockUtils.COLOR_PROPERTY),
-                    getRL(block, getBlockName(block)),
-                    getRL(block, getBlockName(block)),
-                    getRL(block, "cutouts/" + state.get(BlockUtils.COLOR_PROPERTY)));
+                    "block/" + getBlockName(block, color) + "/" + color,
+                    getRL(block, color, getBlockName(block, color)),
+                    getRL(block, color, getBlockName(block, color)),
+                    getRL(block, color, "cutouts/" + color));
             } else {
                 return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(block) + "/disconnected",
-                    getRL(block, getBlockName(block)),
-                    getRL(block, getBlockName(block)),
-                    getRL(block, "cutouts/disconnected"));
+                    "block/" + getBlockName(block, color) + "/disconnected",
+                    getRL(block, color, getBlockName(block, color)),
+                    getRL(block, color, getBlockName(block, color)),
+                    getRL(block, color, "cutouts/disconnected"));
             }
         });
     }
 
-    private void genCrafterModel(Block block) {
+    private void genCrafterModel(Block block, DyeColor color) {
         models.anyDirectionalRSBlock(block, state -> {
             if (!state.get(NetworkNodeBlock.CONNECTED)) {
                 return models.createCubeCutoutModel(
-                    "block/" + getBlockName(block) + "/disconnected",
+                    "block/" + getBlockName(block, color) + "/disconnected",
                     BOTTOM,
                     BOTTOM,
-                    getRL(block, "top"),
-                    getRL(block, "cutouts/top_disconnected"),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_disconnected"),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_disconnected"),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_disconnected"),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_disconnected"));
+                    getRL(block, color, "top"),
+                    getRL(block, color, "cutouts/top_disconnected"),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_disconnected"),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_disconnected"),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_disconnected"),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_disconnected"));
             } else {
-                DyeColor color = state.get(BlockUtils.COLOR_PROPERTY);
                 return models.createCubeCutoutModel(
-                    "block/" + getBlockName(block) + "/" + color,
+                    "block/" + getBlockName(block, color) + "/" + color,
                     BOTTOM,
                     BOTTOM,
-                    getRL(block, "top"),
-                    getRL(block, "cutouts/top_" + color),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_" + color),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_" + color),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_" + color),
-                    getRL(block, "side"),
-                    getRL(block, "cutouts/side_" + color));
+                    getRL(block, color, "top"),
+                    getRL(block, color, "cutouts/top_" + color),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_" + color),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_" + color),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_" + color),
+                    getRL(block, color, "side"),
+                    getRL(block, color, "cutouts/side_" + color));
             }
         }, 180);
     }
 
-    private void genControllerModel(Block block) {
-        //avoid assigning new models to Creative Controller
-        ControllerBlock controllerBlock = RSBlocks.CONTROLLER;
+    private void genControllerModel(Block block, Block modelBlock, DyeColor color) {
         models.simpleBlockStateModel(block, state -> {
             if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.OFF)) {
                 return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(controllerBlock) + "/off",
-                    getRL(controllerBlock, "off"),
-                    getRL(controllerBlock, "off"),
-                    getRL(controllerBlock, "cutouts/off")
+                    "block/" + getBlockName(modelBlock, color) + "/off",
+                    getRL(modelBlock, color, "off"),
+                    getRL(modelBlock, color, "off"),
+                    getRL(modelBlock, color, "cutouts/off")
                 );
             } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_OFF)) {
                 return models.createControllerNearlyCutoutModel(
-                    "block/" + getBlockName(controllerBlock) + "/nearly_off",
-                    getRL(controllerBlock, "off"),
-                    getRL(controllerBlock, "on"),
-                    getRL(controllerBlock, "cutouts/nearly_off"),
-                    getRL(controllerBlock, "cutouts/nearly_off_gray"));
+                    "block/" + getBlockName(modelBlock, color) + "/nearly_off",
+                    getRL(modelBlock, color, "off"),
+                    getRL(modelBlock, color, "on"),
+                    getRL(modelBlock, color, "cutouts/nearly_off"),
+                    getRL(modelBlock, color, "cutouts/nearly_off_gray"));
             } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_ON)) {
                 return models.createControllerNearlyCutoutModel(
-                    "block/" + getBlockName(controllerBlock) + "/nearly_on",
-                    getRL(controllerBlock, "off"),
-                    getRL(controllerBlock, "on"),
-                    getRL(controllerBlock, "cutouts/nearly_on"),
-                    getRL(controllerBlock, "cutouts/nearly_on_gray"));
+                    "block/" + getBlockName(modelBlock, color) + "/nearly_on",
+                    getRL(modelBlock, color, "off"),
+                    getRL(modelBlock, color, "on"),
+                    getRL(modelBlock, color, "cutouts/nearly_on"),
+                    getRL(modelBlock, color, "cutouts/nearly_on_gray"));
             } else {
                 return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(controllerBlock) + "/" + state.get(BlockUtils.COLOR_PROPERTY),
-                    getRL(controllerBlock, "off"),
-                    getRL(controllerBlock, "on"),
-                    getRL(controllerBlock, "cutouts/" + state.get(BlockUtils.COLOR_PROPERTY)));
+                    "block/" + getBlockName(modelBlock, color) + "/" + color,
+                    getRL(modelBlock, color, "off"),
+                    getRL(modelBlock, color, "on"),
+                    getRL(modelBlock, color, "cutouts/" + color));
             }
         });
     }
 
-    private void genNorthCutoutModel(Block block) {
+    private void genNorthCutoutModel(Block block, DyeColor color) {
         models.horizontalRSBlock(block, state -> {
                 if (!state.get(NetworkNodeBlock.CONNECTED)) {
                     return models.createCubeNorthCutoutModel(
-                        "block/" + getBlockName(block) + "/disconnected",
+                        "block/" + getBlockName(block, color) + "/disconnected",
                         BOTTOM,
-                        getRL(block, "top"),
-                        getRL(block, "front"),
-                        getRL(block, "back"),
-                        getRL(block, "right"),
-                        getRL(block, "left"),
-                        getRL(block, "right"),
-                        getRL(block, "cutouts/disconnected"));
+                        getRL(block, color, "top"),
+                        getRL(block, color, "front"),
+                        getRL(block, color, "back"),
+                        getRL(block, color, "right"),
+                        getRL(block, color, "left"),
+                        getRL(block, color, "right"),
+                        getRL(block, color, "cutouts/disconnected"));
                 } else {
                     return models.createCubeNorthCutoutModel(
-                        "block/" + getBlockName(block) + "/" + state.get(BlockUtils.COLOR_PROPERTY),
+                        "block/" + getBlockName(block, color) + "/" + color,
                         BOTTOM,
-                        getRL(block, "top"),
-                        getRL(block, "front"),
-                        getRL(block, "back"),
-                        getRL(block, "right"),
-                        getRL(block, "left"),
-                        getRL(block, "right"),
-                        getRL(block, "cutouts/" + state.get(BlockUtils.COLOR_PROPERTY)));
+                        getRL(block, color, "top"),
+                        getRL(block, color, "front"),
+                        getRL(block, color, "back"),
+                        getRL(block, color, "right"),
+                        getRL(block, color, "left"),
+                        getRL(block, color, "right"),
+                        getRL(block, color, "cutouts/" + color));
                 }
             }
             , 180);
     }
 
-    private ResourceLocation getRL(Block block, String name) {
-        return new ResourceLocation(RS.ID, "block/" + getBlockName(block) + "/" + name);
+    private ResourceLocation getRL(Block block, DyeColor color, String name) {
+        return new ResourceLocation(RS.ID, "block/" + getBlockName(block, color) + "/" + name);
     }
 
-    private String getBlockName(Block block) {
-        return block.getRegistryName().getPath();
+    private String getBlockName(Block block, DyeColor color) {
+        String name = block.getRegistryName().getPath();
+        if (color == DyeColor.LIGHT_BLUE) {
+            return name;
+        } else {
+            return name.substring(name.indexOf(color.getString()) + color.getString().length() + 1);
+        }
     }
 }
