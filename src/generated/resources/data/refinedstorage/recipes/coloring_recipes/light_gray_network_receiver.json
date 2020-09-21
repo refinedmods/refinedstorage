@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "refinedstorage",
+  "ingredients": [
+    {
+      "tag": "refinedstorage:network_receiver"
+    },
+    {
+      "tag": "forge:dyes/light_gray"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:light_gray_network_receiver"
+  }
+}

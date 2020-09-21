@@ -10,7 +10,6 @@ public class DataGenerators {
     public void runDataGeneration(GatherDataEvent event) {
         if (event.includeClient()) {
             event.getGenerator().addProvider(new BlockModelGenerator(event.getGenerator(), RS.ID, event.getExistingFileHelper()));
-            event.getGenerator().addProvider(new ItemModelGenerator(event.getGenerator(), RS.ID, event.getExistingFileHelper()));
         }
         if (event.includeServer()) {
             event.getGenerator().addProvider(new RecipeGenerator(event.getGenerator()));

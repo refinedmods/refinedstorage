@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "refinedstorage:coloring_recipes/cyan_relay"
+    ]
+  },
+  "criteria": {
+    "cobblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:cobblestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "refinedstorage:coloring_recipes/cyan_relay"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "cobblestone",
+      "has_the_recipe"
+    ]
+  ]
+}

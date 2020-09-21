@@ -84,7 +84,7 @@ public class BlockModels {
     }
 
     public BlockModelBuilder createControllerNearlyCutoutModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation cutout_gray, ResourceLocation cutout) {
-        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "block/controller/controller_nearly"))
+        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "block/controller_nearly"))
             .texture("particle", particle)
             .texture("all", all)
             .texture("cutout_gray", cutout_gray)

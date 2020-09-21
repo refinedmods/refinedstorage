@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "refinedstorage:block/detector/off"
+    },
+    "powered=true": {
+      "model": "refinedstorage:block/detector/light_gray"
+    }
+  }
+}

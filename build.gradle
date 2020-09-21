@@ -79,6 +79,10 @@ minecraft {
     }
 }
 
+sourceSets {
+    main.resources.srcDirs += 'src/generated/resources'
+}
+
 processResources {
     inputs.property 'version', project.version
 

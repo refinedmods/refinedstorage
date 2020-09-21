@@ -10,6 +10,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class BlockModelGenerator extends BlockStateProvider {
@@ -24,7 +25,6 @@ public class BlockModelGenerator extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-
         RSBlocks.GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
         RSBlocks.CRAFTING_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
         RSBlocks.PATTERN_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
@@ -51,10 +51,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "cutouts/disconnected")
                 );
             } else {
-                return models.createWirelessTransmitterModel(
+                ModelFile model = models.createWirelessTransmitterModel(
                     "block/" + getBlockName(block, color) + "/" + color,
                     resourceLocation(block, color, "cutouts/" + color)
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         }, 0);
     }
@@ -67,10 +70,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "cutouts/off")
                 );
             } else {
-                return models.createDetectorModel(
+                ModelFile model = models.createDetectorModel(
                     "block/" + getBlockName(block, color) + "/" + color,
                     resourceLocation(block, color, "cutouts/" + color)
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         });
     }
@@ -94,7 +100,7 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "cutouts/back_disconnected")
                 );
             } else {
-                return models.createCubeCutoutModel(
+                ModelFile model = models.createCubeCutoutModel(
                     "block/" + getBlockName(block, color) + "/" + color,
                     BOTTOM,
                     BOTTOM,
@@ -109,6 +115,9 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "back"),
                     resourceLocation(block, color, "cutouts/back" + "_" + color)
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         }, 180);
     }
@@ -123,12 +132,15 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "cutouts/" + color)
                 );
             } else {
-                return models.createCubeAllCutoutModel(
+                ModelFile model = models.createCubeAllCutoutModel(
                     "block/" + getBlockName(block, color) + "/disconnected",
                     resourceLocation(block, color, getBlockName(block, color)),
                     resourceLocation(block, color, getBlockName(block, color)),
                     resourceLocation(block, color, "cutouts/disconnected")
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         });
     }
@@ -152,7 +164,7 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "cutouts/side_disconnected")
                 );
             } else {
-                return models.createCubeCutoutModel(
+                ModelFile model = models.createCubeCutoutModel(
                     "block/" + getBlockName(block, color) + "/" + color,
                     BOTTOM,
                     BOTTOM,
@@ -167,6 +179,9 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "side"),
                     resourceLocation(block, color, "cutouts/side_" + color)
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         }, 180);
     }
@@ -197,12 +212,15 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(modelBlock, color, "cutouts/nearly_on_gray")
                 );
             } else {
-                return models.createCubeAllCutoutModel(
+                ModelFile model = models.createCubeAllCutoutModel(
                     "block/" + getBlockName(modelBlock, color) + "/" + color,
                     resourceLocation(modelBlock, color, "off"),
                     resourceLocation(modelBlock, color, "on"),
                     resourceLocation(modelBlock, color, "cutouts/" + color)
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         });
     }
@@ -222,7 +240,7 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "cutouts/disconnected")
                 );
             } else {
-                return models.createCubeNorthCutoutModel(
+                ModelFile model = models.createCubeNorthCutoutModel(
                     "block/" + getBlockName(block, color) + "/" + color,
                     BOTTOM,
                     resourceLocation(block, color, "top"),
@@ -233,6 +251,9 @@ public class BlockModelGenerator extends BlockStateProvider {
                     resourceLocation(block, color, "right"),
                     resourceLocation(block, color, "cutouts/" + color)
                 );
+
+                simpleBlockItem(block, model);
+                return model;
             }
         }, 180);
     }
