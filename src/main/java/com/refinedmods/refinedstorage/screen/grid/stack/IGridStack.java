@@ -36,6 +36,7 @@ public interface IGridStack {
 
     Object getIngredient();
 
+
     @Nullable
     StorageTrackerEntry getTrackerEntry();
 
