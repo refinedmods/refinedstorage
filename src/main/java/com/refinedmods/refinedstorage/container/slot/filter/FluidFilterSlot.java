@@ -13,8 +13,8 @@ public class FluidFilterSlot extends BaseSlot {
     public static final int FILTER_ALLOW_SIZE = 1;
     public static final int FILTER_ALLOW_ALTERNATIVES = 2;
 
-    private int flags;
-    private FluidInventory fluidInventory;
+    private final int flags;
+    private final FluidInventory fluidInventory;
 
     public FluidFilterSlot(FluidInventory inventory, int inventoryIndex, int x, int y, int flags) {
         super(new ItemStackHandler(inventory.getSlots()), inventoryIndex, x, y);

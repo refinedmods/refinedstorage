@@ -14,10 +14,11 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class FluidStorageWrapperStorageDisk implements IStorageDisk<FluidStack> {
-    private FluidStorageNetworkNode storage;
-    private IStorageDisk<FluidStack> parent;
+    private final FluidStorageNetworkNode storage;
+    private final IStorageDisk<FluidStack> parent;
 
     public FluidStorageWrapperStorageDisk(FluidStorageNetworkNode storage, IStorageDisk<FluidStack> parent) {
         this.storage = storage;
@@ -69,6 +70,12 @@ public class FluidStorageWrapperStorageDisk implements IStorageDisk<FluidStack> 
     @Override
     public int getCapacity() {
         return parent.getCapacity();
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return parent.getOwner();
     }
 
     @Override

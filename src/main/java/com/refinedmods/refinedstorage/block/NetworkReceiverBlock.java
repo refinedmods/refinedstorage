@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
@@ -12,8 +11,6 @@ import javax.annotation.Nullable;
 public class NetworkReceiverBlock extends NetworkNodeBlock {
     public NetworkReceiverBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "network_receiver");
     }
 
     @Nullable

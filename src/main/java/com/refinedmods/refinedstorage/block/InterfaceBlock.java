@@ -25,8 +25,6 @@ import javax.annotation.Nullable;
 public class InterfaceBlock extends NetworkNodeBlock {
     public InterfaceBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "interface");
     }
 
     @Nullable

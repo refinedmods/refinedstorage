@@ -36,7 +36,7 @@ public interface IElementDrawers {
         return getNullDrawer();
     }
 
-    default IElementDrawer getErrorDrawer() {
+    default IElementDrawer<?> getErrorDrawer() {
         return getNullDrawer();
     }
 
@@ -52,7 +52,7 @@ public interface IElementDrawers {
      * @return a drawer that does nothing
      */
     default <T> IElementDrawer<T> getNullDrawer() {
-        return (x, y, element) -> {
+        return (matrixStack, x, y, element) -> {
             // NO OP
         };
     }

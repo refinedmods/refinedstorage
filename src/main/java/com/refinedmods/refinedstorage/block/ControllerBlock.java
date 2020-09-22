@@ -1,7 +1,10 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
+import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.container.ControllerContainer;
 import com.refinedmods.refinedstorage.tile.ControllerTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -27,6 +30,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -39,14 +43,14 @@ public class ControllerBlock extends BaseBlock {
         NEARLY_ON("nearly_on"),
         ON("on");
 
-        private String name;
+        private final String name;
 
         EnergyType(String name) {
             this.name = name;
         }
 
         @Override
-        public String getName() {
+        public String getString() {
             return name;
         }
 
@@ -58,13 +62,12 @@ public class ControllerBlock extends BaseBlock {
 
     public static final EnumProperty<EnergyType> ENERGY_TYPE = EnumProperty.create("energy_type", EnergyType.class);
 
-    private NetworkType type;
+    private final NetworkType type;
 
     public ControllerBlock(NetworkType type) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setRegistryName(RS.ID, type == NetworkType.CREATIVE ? "creative_controller" : "controller");
         this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
     }
 
@@ -102,6 +105,19 @@ public class ControllerBlock extends BaseBlock {
                     tile.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromTile -> energyFromTile.receiveEnergy(energyFromStack.getEnergyStored(), false));
                 }
             });
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+
+        if (!world.isRemote) {
+            INetwork network = API.instance().getNetworkManager((ServerWorld) world).getNetwork(pos);
+            if (network instanceof Network) {
+                ((Network) network).setRedstonePowered(world.isBlockPowered(pos));
+            }
         }
     }
 

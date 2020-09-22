@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.AlternativesContainer;
@@ -13,7 +14,6 @@ import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -22,6 +22,8 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
@@ -31,7 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AlternativesScreen extends BaseScreen {
+public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     private final Screen parent;
     private final ScrollbarWidget scrollbar;
 
@@ -133,8 +135,8 @@ public class AlternativesScreen extends BaseScreen {
             }
         }
 
-        Button apply = addButton(x + 7, y + 114, 50, 20, I18n.format("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
-        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
+        Button apply = addButton(x + 7, y + 114, 50, 20, new TranslationTextComponent("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
+        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -152,17 +154,17 @@ public class AlternativesScreen extends BaseScreen {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/alternatives.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
-        scrollbar.render();
+        scrollbar.render(matrixStack);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
 
         int x = 8;
         int y = 20;
@@ -172,7 +174,7 @@ public class AlternativesScreen extends BaseScreen {
 
             if (visible) {
                 lines.get(i).layoutDependantControls(true, guiLeft + x + 3, guiTop + y + 3);
-                lines.get(i).render(x, y);
+                lines.get(i).render(matrixStack, x, y);
 
                 y += 18;
             } else {
@@ -187,7 +189,7 @@ public class AlternativesScreen extends BaseScreen {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
 
             if (visible) {
-                lines.get(i).renderTooltip(x, y, mouseX, mouseY);
+                lines.get(i).renderTooltip(matrixStack, x, y, mouseX, mouseY);
 
                 y += 18;
             }
@@ -262,10 +264,10 @@ public class AlternativesScreen extends BaseScreen {
     }
 
     private interface Line {
-        default void render(int x, int y) {
+        default void render(MatrixStack matrixStack, int x, int y) {
         }
 
-        default void renderTooltip(int x, int y, int mx, int my) {
+        default void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
         }
 
         default void layoutDependantControls(boolean visible, int x, int y) {
@@ -280,10 +282,10 @@ public class AlternativesScreen extends BaseScreen {
         }
 
         @Override
-        public void render(int x, int y) {
-            RenderSystem.color4f(1,1,1,1);
-            renderItem(x + 3, y + 2, item);
-            renderString(x + 4 + 19, y + 7, item.getDisplayName().getFormattedText());
+        public void render(MatrixStack matrixStack, int x, int y) {
+            RenderSystem.color4f(1, 1, 1, 1);
+            renderItem(matrixStack, x + 3, y + 2, item);
+            renderString(matrixStack, x + 4 + 19, y + 7, item.getDisplayName().getString());
         }
     }
 
@@ -295,9 +297,9 @@ public class AlternativesScreen extends BaseScreen {
         }
 
         @Override
-        public void render(int x, int y) {
-            FluidRenderer.INSTANCE.render(x + 3, y + 2, fluid);
-            renderString(x + 4 + 19, y + 7, fluid.getDisplayName().getFormattedText());
+        public void render(MatrixStack matrixStack, int x, int y) {
+            FluidRenderer.INSTANCE.render(matrixStack, x + 3, y + 2, fluid);
+            renderString(matrixStack, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
         }
     }
 
@@ -307,7 +309,7 @@ public class AlternativesScreen extends BaseScreen {
 
         public TagLine(ResourceLocation tagName, boolean checked) {
             this.tagName = tagName;
-            this.widget = addCheckBox(-100, -100, RenderUtils.shorten(tagName.toString(), 22), checked, (btn) -> {
+            this.widget = addCheckBox(-100, -100, new StringTextComponent(RenderUtils.shorten(tagName.toString(), 22)), checked, (btn) -> {
             });
 
             widget.setFGColor(0xFF373737);
@@ -325,26 +327,24 @@ public class AlternativesScreen extends BaseScreen {
     private class ItemListLine implements Line {
         private final List<ItemStack> items = new ArrayList<>();
 
-        public ItemListLine addItem(ItemStack stack) {
+        public void addItem(ItemStack stack) {
             items.add(stack);
-
-            return this;
         }
 
         @Override
-        public void render(int x, int y) {
+        public void render(MatrixStack matrixStack, int x, int y) {
             for (ItemStack item : items) {
-                renderItem(x + 3, y, item);
+                renderItem(matrixStack, x + 3, y, item);
 
                 x += 17;
             }
         }
 
         @Override
-        public void renderTooltip(int x, int y, int mx, int my) {
+        public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
             for (ItemStack item : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(item, mx, my, RenderUtils.getTooltipFromItem(item));
+                    AlternativesScreen.this.renderTooltip(matrixStack, item, mx, my, RenderUtils.getTooltipFromItem(item));
                 }
 
                 x += 17;
@@ -355,26 +355,24 @@ public class AlternativesScreen extends BaseScreen {
     private class FluidListLine implements Line {
         private final List<FluidStack> fluids = new ArrayList<>();
 
-        public FluidListLine addFluid(FluidStack stack) {
+        public void addFluid(FluidStack stack) {
             fluids.add(stack);
-
-            return this;
         }
 
         @Override
-        public void render(int x, int y) {
+        public void render(MatrixStack matrixStack, int x, int y) {
             for (FluidStack fluid : fluids) {
-                FluidRenderer.INSTANCE.render(x + 3, y, fluid);
+                FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluid);
 
                 x += 17;
             }
         }
 
         @Override
-        public void renderTooltip(int x, int y, int mx, int my) {
+        public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
             for (FluidStack fluid : fluids) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(mx, my, fluid.getDisplayName().getFormattedText());
+                    AlternativesScreen.this.renderTooltip(matrixStack, mx, my, fluid.getDisplayName().getString());
                 }
 
                 x += 17;

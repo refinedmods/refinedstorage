@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -12,10 +12,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
     private static final int COLOR_PROCESSING = 0xFFD9EDF7;
@@ -25,7 +27,7 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
-    private ItemStack stack;
+    private final ItemStack stack;
     private int stored;
     private int missing;
     private int processing;
@@ -43,55 +45,55 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(int x, int y, IElementDrawers drawers) {
+    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_MISSING);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_MISSING);
         } else if (processing > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_PROCESSING);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_PROCESSING);
         } else if (scheduled > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_SCHEDULED);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_SCHEDULED);
         } else if (crafting > 0) {
-            drawers.getOverlayDrawer().draw(x, y, COLOR_CRAFTING);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_CRAFTING);
         }
 
-        drawers.getItemDrawer().draw(x + 4, y + 6, stack);
+        drawers.getItemDrawer().draw(matrixStack, x + 4, y + 6, stack);
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, 1);
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
         int yy = y + 7;
 
         if (stored > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", stored));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", stored));
 
             yy += 7;
         }
 
         if (missing > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", missing));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", missing));
 
             yy += 7;
         }
 
         if (processing > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.processing", processing));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.processing", processing));
 
             yy += 7;
         }
 
         if (scheduled > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.scheduled", scheduled));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.scheduled", scheduled));
 
             yy += 7;
         }
 
         if (crafting > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", crafting));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", crafting));
         }
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     @Override
@@ -106,8 +108,8 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Nullable
     @Override
-    public String getTooltip() {
-        return String.join("\n", RenderUtils.getTooltipFromItem(this.stack));
+    public List<ITextComponent> getTooltip() {
+        return RenderUtils.getTooltipFromItem(this.stack);
     }
 
     @Override
@@ -154,5 +156,51 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
     @Override
     public int elementHashCode() {
         return API.instance().getItemStackHashCode(stack);
+    }
+
+    public static class Builder {
+        private final ItemStack stack;
+        private int stored;
+        private int missing;
+        private int processing;
+        private int scheduled;
+        private int crafting;
+
+        public Builder(ItemStack stack) {
+            this.stack = stack;
+        }
+
+        public Builder stored(int stored) {
+            this.stored = stored;
+            return this;
+        }
+
+        public Builder missing(int missing) {
+            this.missing = missing;
+            return this;
+        }
+
+        public Builder processing(int processing) {
+            this.processing = processing;
+            return this;
+        }
+
+        public Builder scheduled(int scheduled) {
+            this.scheduled = scheduled;
+            return this;
+        }
+
+        public Builder crafting(int crafting) {
+            this.crafting = crafting;
+            return this;
+        }
+
+        public ItemCraftingMonitorElement build() {
+            return new ItemCraftingMonitorElement(stack, stored, missing, processing, scheduled, crafting);
+        }
+
+        public static Builder forStack(ItemStack stack) {
+            return new Builder(stack);
+        }
     }
 }

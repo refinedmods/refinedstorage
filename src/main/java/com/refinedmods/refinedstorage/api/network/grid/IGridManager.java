@@ -21,13 +21,6 @@ public interface IGridManager {
     void add(ResourceLocation id, IGridFactory factory);
 
     /**
-     * @param id the id of the factory
-     * @return the factory, or null if no factory was found
-     */
-    @Nullable
-    IGridFactory get(ResourceLocation id);
-
-    /**
      * Opens a grid. Can only be called on the server.
      *
      * @param id     the grid factory id

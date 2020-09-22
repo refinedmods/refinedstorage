@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -21,15 +23,15 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     private static final int BAR_WIDTH = 16;
     private static final int BAR_HEIGHT = 70;
 
-    private String texture;
-    private TileDataParameter<Integer, ?> typeParameter;
-    private TileDataParameter<Integer, ?> redstoneModeParameter;
-    private TileDataParameter<Integer, ?> exactModeParameter;
-    private TileDataParameter<Integer, ?> whitelistBlacklistParameter;
-    private TileDataParameter<Integer, ?> priorityParameter;
-    private TileDataParameter<AccessType, ?> accessTypeParameter;
-    private Supplier<Long> storedSupplier;
-    private Supplier<Long> capacitySupplier;
+    private final String texture;
+    private final TileDataParameter<Integer, ?> typeParameter;
+    private final TileDataParameter<Integer, ?> redstoneModeParameter;
+    private final TileDataParameter<Integer, ?> exactModeParameter;
+    private final TileDataParameter<Integer, ?> whitelistBlacklistParameter;
+    private final TileDataParameter<Integer, ?> priorityParameter;
+    private final TileDataParameter<AccessType, ?> accessTypeParameter;
+    private final Supplier<Long> storedSupplier;
+    private final Supplier<Long> capacitySupplier;
 
     public StorageScreen(T container,
                          PlayerInventory inventory,
@@ -79,9 +81,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
 
         int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));
 
-        addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage.priority"), true, true, btn -> {
-            minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory));
-        });
+        addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, new TranslationTextComponent("misc.refinedstorage.priority"), true, true, btn -> minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory)));
     }
 
     @Override
@@ -89,25 +89,25 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, texture);
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
         int barHeightNew = (int) ((float) storedSupplier.get() / (float) capacitySupplier.get() * (float) BAR_HEIGHT);
 
-        blit(x + BAR_X, y + BAR_Y + BAR_HEIGHT - barHeightNew, 179, BAR_HEIGHT - barHeightNew, BAR_WIDTH, barHeightNew);
+        blit(matrixStack, x + BAR_X, y + BAR_Y + BAR_HEIGHT - barHeightNew, 179, BAR_HEIGHT - barHeightNew, BAR_WIDTH, barHeightNew);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, 42, capacitySupplier.get() == -1 ?
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, 42, capacitySupplier.get() == -1 ?
             I18n.format("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get())) :
             I18n.format("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get()), API.instance().getQuantityFormatter().formatWithUnits(capacitySupplier.get()))
         );
 
-        renderString(7, 129, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 129, I18n.format("container.inventory"));
 
         if (RenderUtils.inBounds(BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, mouseX, mouseY)) {
             int full = 0;
@@ -116,7 +116,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
                 full = (int) ((float) storedSupplier.get() / (float) capacitySupplier.get() * 100f);
             }
 
-            renderTooltip(mouseX, mouseY, (capacitySupplier.get() == -1 ?
+            renderTooltip(matrixStack, mouseX, mouseY, (capacitySupplier.get() == -1 ?
                 I18n.format("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get())) :
                 I18n.format("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get()), API.instance().getQuantityFormatter().format(capacitySupplier.get()))
             ) + "\n" + TextFormatting.GRAY + I18n.format("misc.refinedstorage.storage.full", full));

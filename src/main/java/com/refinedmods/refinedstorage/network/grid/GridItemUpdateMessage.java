@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 public class GridItemUpdateMessage {
     private INetwork network;
 
-    private boolean canCraft;
+    private final boolean canCraft;
     private List<IGridStack> stacks = new ArrayList<>();
 
     public GridItemUpdateMessage(boolean canCraft, List<IGridStack> stacks) {

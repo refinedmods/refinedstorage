@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.SecurityManagerContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -25,8 +24,6 @@ import javax.annotation.Nullable;
 public class SecurityManagerBlock extends NetworkNodeBlock {
     public SecurityManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "security_manager");
     }
 
     @Override

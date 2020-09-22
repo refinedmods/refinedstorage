@@ -13,8 +13,8 @@ public class FluidInventory {
 
     private final List<InventoryListener<FluidInventory>> listeners = new ArrayList<>();
 
-    private FluidStack[] fluids;
-    private int maxAmount;
+    private final FluidStack[] fluids;
+    private final int maxAmount;
     private boolean empty = true;
 
     public FluidInventory(int size, int maxAmount) {
@@ -61,8 +61,11 @@ public class FluidInventory {
 
         fluids[slot] = stack;
 
-        listeners.forEach(l -> l.onChanged(this, slot, false));
+        onChanged(slot);
+    }
 
+    public void onChanged(int slot) {
+        listeners.forEach(l -> l.onChanged(this, slot, false));
         updateEmptyState();
     }
 

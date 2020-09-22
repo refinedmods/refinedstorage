@@ -13,13 +13,13 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class PortableGridSettingsUpdateMessage {
-    private int viewType;
-    private int sortingDirection;
-    private int sortingType;
-    private int searchBoxMode;
-    private int size;
-    private int tabSelected;
-    private int tabPage;
+    private final int viewType;
+    private final int sortingDirection;
+    private final int sortingType;
+    private final int searchBoxMode;
+    private final int size;
+    private final int tabSelected;
+    private final int tabPage;
 
     public PortableGridSettingsUpdateMessage(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
         this.viewType = viewType;

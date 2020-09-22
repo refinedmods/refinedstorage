@@ -11,8 +11,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class WirelessCraftingMonitorSettingsUpdateMessage {
-    private Optional<UUID> tabSelected;
-    private int tabPage;
+    private final Optional<UUID> tabSelected;
+    private final int tabPage;
 
     public WirelessCraftingMonitorSettingsUpdateMessage(Optional<UUID> tabSelected, int tabPage) {
         this.tabSelected = tabSelected;

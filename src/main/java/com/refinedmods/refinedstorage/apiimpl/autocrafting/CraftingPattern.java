@@ -1,11 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
@@ -166,12 +165,17 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public ResourceLocation getCraftingTaskFactoryId() {
-        return RS.SERVER_CONFIG.getAutocrafting().useExperimentalAutocrafting() ? com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory.ID :
-            CraftingTaskFactory.ID;
+        return CraftingTaskFactory.ID;
     }
 
     @Override
-    public boolean canBeInChainWith(ICraftingPattern other) {
+    public boolean equals(Object otherObj) {
+        if (!(otherObj instanceof ICraftingPattern)) {
+            return false;
+        }
+
+        ICraftingPattern other = (ICraftingPattern) otherObj;
+
         if (other.isProcessing() != processing) {
             return false;
         }
@@ -241,7 +245,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public int getChainHashCode() {
+    public int hashCode() {
         int result = 0;
 
         result = 31 * result + (processing ? 1 : 0);
@@ -272,19 +276,6 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         return result;
-    }
-
-    @Override
-    public int hashCode() {
-        return getChainHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof CraftingPattern) {
-            return canBeInChainWith((CraftingPattern) obj);
-        }
-        return false;
     }
 
     public static class DummyCraftingInventory extends CraftingInventory {

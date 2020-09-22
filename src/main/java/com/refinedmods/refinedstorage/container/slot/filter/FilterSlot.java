@@ -13,7 +13,7 @@ public class FilterSlot extends BaseSlot {
     public static final int FILTER_ALLOW_BLOCKS = 2;
     public static final int FILTER_ALLOW_ALTERNATIVES = 4;
 
-    private int flags;
+    private final int flags;
 
     public FilterSlot(IItemHandler handler, int inventoryIndex, int x, int y, int flags) {
         super(handler, inventoryIndex, x, y);

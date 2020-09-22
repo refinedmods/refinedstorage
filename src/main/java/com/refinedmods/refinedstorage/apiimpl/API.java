@@ -39,20 +39,23 @@ import com.refinedmods.refinedstorage.apiimpl.util.Comparer;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
+import com.refinedmods.refinedstorage.util.StackUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,7 +95,7 @@ public class API implements IRSAPI {
 
         for (ModFileScanData.AnnotationData annotation : annotations) {
             try {
-                Class clazz = Class.forName(annotation.getClassType().getClassName());
+                Class<?> clazz = Class.forName(annotation.getClassType().getClassName());
                 Field field = clazz.getField(annotation.getMemberName());
 
                 if (field.getType() == IRSAPI.class) {
@@ -126,16 +129,12 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkNodeManager.NAME;
-
-        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(name, world), name);
+        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(NetworkNodeManager.NAME, world), NetworkNodeManager.NAME);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkManager.NAME;
-
-        return world.getSavedData().getOrCreate(() -> new NetworkManager(name, world), name);
+        return world.getSavedData().getOrCreate(() -> new NetworkManager(NetworkManager.NAME, world), NetworkManager.NAME);
     }
 
     @Override
@@ -195,7 +194,7 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().getWorld(DimensionType.OVERWORLD);
+        ServerWorld world = anyWorld.getServer().func_241755_D_(); // Get the overworld
 
         return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
     }
@@ -220,32 +219,32 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new ItemStorageDisk(world, capacity);
+        return new ItemStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new FluidStorageDisk(world, capacity);
+        return new FluidStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack) {
-        return new CraftingRequestInfo(stack);
+    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack, int count) {
+        return new CraftingRequestInfo(ItemHandlerHelper.copyStackWithSize(stack, count));
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack) {
-        return new CraftingRequestInfo(stack);
+    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack, int count) {
+        return new CraftingRequestInfo(StackUtils.copy(stack, count));
     }
 
     @Override
@@ -296,8 +295,8 @@ public class API implements IRSAPI {
     }
 
     private int getHashCode(ListNBT tag, int result) {
-        for (int i = 0; i < tag.size(); ++i) {
-            result = getHashCode(tag.get(i), result);
+        for (INBT tagItem : tag) {
+            result = getHashCode(tagItem, result);
         }
 
         return result;
@@ -317,7 +316,7 @@ public class API implements IRSAPI {
     @Override
     public int getNetworkNodeHashCode(INetworkNode node) {
         int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().getDimension().getType().getId();
+        result = 31 * result + node.getWorld().func_234923_W_().hashCode();
 
         return result;
     }
@@ -334,7 +333,7 @@ public class API implements IRSAPI {
 
         INetworkNode rightNode = (INetworkNode) right;
 
-        if (left.getWorld().getDimension().getType().getId() != rightNode.getWorld().getDimension().getType().getId()) {
+        if (left.getWorld().func_234923_W_() != rightNode.getWorld().func_234923_W_()) {
             return false;
         }
 

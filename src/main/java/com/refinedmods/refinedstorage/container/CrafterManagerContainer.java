@@ -28,10 +28,10 @@ import java.util.function.Predicate;
 
 public class CrafterManagerContainer extends BaseContainer {
     private IScreenInfoProvider screenInfoProvider;
-    private CrafterManagerNetworkNode crafterManager;
+    private final CrafterManagerNetworkNode crafterManager;
     private Map<String, Integer> containerData;
-    private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
-    private Map<String, Integer> headings = new HashMap<>();
+    private final Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
+    private final Map<String, Integer> headings = new HashMap<>();
     private int rows;
 
     public CrafterManagerContainer(CrafterManagerTile crafterManager, PlayerEntity player, int windowId) {
@@ -175,7 +175,9 @@ public class CrafterManagerContainer extends BaseContainer {
 
         if (slot.getHasStack()) {
             stack = slot.getStack();
-
+            if (!new PatternItemValidator(getPlayer().getEntityWorld()).test(stack)) {
+                return ItemStack.EMPTY;
+            }
             if (index < 9 * 4) {
                 if (!mergeItemStack(stack, 9 * 4, inventorySlots.size(), false)) {
                     return ItemStack.EMPTY;

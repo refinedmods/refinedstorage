@@ -13,26 +13,20 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridCraftingPreviewResponseMessage {
-    private ResourceLocation factoryId;
-    private List<ICraftingPreviewElement> stacks;
-    private UUID id;
-    private int quantity;
-    private boolean fluids;
+    private final List<ICraftingPreviewElement<?>> elements;
+    private final UUID id;
+    private final int quantity;
+    private final boolean fluids;
 
-    public GridCraftingPreviewResponseMessage(ResourceLocation factoryId, List<ICraftingPreviewElement> stacks, UUID id, int quantity, boolean fluids) {
-        this.factoryId = factoryId;
-        this.stacks = stacks;
+    public GridCraftingPreviewResponseMessage(List<ICraftingPreviewElement<?>> elements, UUID id, int quantity, boolean fluids) {
+        this.elements = elements;
         this.id = id;
         this.quantity = quantity;
         this.fluids = fluids;
     }
 
-    public ResourceLocation getFactoryId() {
-        return factoryId;
-    }
-
-    public List<ICraftingPreviewElement> getStacks() {
-        return stacks;
+    public List<ICraftingPreviewElement<?>> getElements() {
+        return elements;
     }
 
     public UUID getId() {
@@ -48,12 +42,11 @@ public class GridCraftingPreviewResponseMessage {
     }
 
     public static GridCraftingPreviewResponseMessage decode(PacketBuffer buf) {
-        ResourceLocation factoryId = buf.readResourceLocation();
         UUID id = buf.readUniqueId();
         int quantity = buf.readInt();
         boolean fluids = buf.readBoolean();
 
-        List<ICraftingPreviewElement> stacks = new LinkedList<>();
+        List<ICraftingPreviewElement<?>> stacks = new LinkedList<>();
 
         int size = buf.readInt();
 
@@ -62,17 +55,16 @@ public class GridCraftingPreviewResponseMessage {
             stacks.add(API.instance().getCraftingPreviewElementRegistry().get(type).apply(buf));
         }
 
-        return new GridCraftingPreviewResponseMessage(factoryId, stacks, id, quantity, fluids);
+        return new GridCraftingPreviewResponseMessage(stacks, id, quantity, fluids);
     }
 
     public static void encode(GridCraftingPreviewResponseMessage message, PacketBuffer buf) {
-        buf.writeResourceLocation(message.factoryId);
         buf.writeUniqueId(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.fluids);
-        buf.writeInt(message.stacks.size());
+        buf.writeInt(message.elements.size());
 
-        for (ICraftingPreviewElement stack : message.stacks) {
+        for (ICraftingPreviewElement<?> stack : message.elements) {
             buf.writeResourceLocation(stack.getId());
             stack.write(buf);
         }

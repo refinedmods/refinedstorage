@@ -1,11 +1,13 @@
 package com.refinedmods.refinedstorage.screen.grid.filtering;
 
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
+import net.minecraft.util.text.ITextComponent;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class TooltipGridFilter implements Predicate<IGridStack> {
-    private String tooltip;
+    private final String tooltip;
 
     public TooltipGridFilter(String tooltip) {
         this.tooltip = tooltip.toLowerCase();
@@ -13,14 +15,14 @@ public class TooltipGridFilter implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
-        String otherTooltip = stack.getTooltip().trim().toLowerCase();
+        List<ITextComponent> tooltip = stack.getTooltip();
 
-        if (!otherTooltip.contains("\n")) {
-            return false;
+        for (int i = 1; i < tooltip.size(); ++i) {
+            if (tooltip.get(i).getString().toLowerCase().contains(this.tooltip.toLowerCase())) {
+                return true;
+            }
         }
 
-        otherTooltip = otherTooltip.substring(otherTooltip.indexOf('\n') + 1); // Remove the first line as that states the item name
-
-        return otherTooltip.contains(tooltip);
+        return false;
     }
 }

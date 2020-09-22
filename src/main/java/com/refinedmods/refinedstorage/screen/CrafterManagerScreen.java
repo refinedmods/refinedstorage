@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
@@ -18,12 +19,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
 
-// TODO @MouseTweaksDisableWheelTweak
+@MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
-    private CrafterManagerNetworkNode crafterManager;
+    private final CrafterManagerNetworkNode crafterManager;
 
     private ScrollbarWidget scrollbar;
     private SearchWidget searchField;
@@ -76,10 +78,10 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/crafter_manager.png");
 
-        blit(x, y, 0, 0, xSize, getTopHeight());
+        blit(matrixStack, x, y, 0, 0, xSize, getTopHeight());
 
         int rows = getVisibleRows();
 
@@ -88,30 +90,30 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            blit(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), xSize, 18);
+            blit(matrixStack, x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), xSize, 18);
         }
 
         yy += 18;
 
-        blit(x, yy, 0, getTopHeight() + (18 * 3), xSize, getBottomHeight());
+        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), xSize, getBottomHeight());
 
         if (crafterManager.isActiveOnClient()) {
             for (Slot slot : container.inventorySlots) {
                 if (slot instanceof CrafterManagerSlot && slot.isEnabled()) {
-                    blit(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
+                    blit(matrixStack, x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
                 }
             }
         }
 
-        searchField.render(0, 0, 0);
+        searchField.render(matrixStack, 0, 0, 0);
 
-        scrollbar.render();
+        scrollbar.render(matrixStack);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
 
         if (container != null && crafterManager.isActiveOnClient()) {
             for (Map.Entry<String, Integer> heading : container.getHeadings().entrySet()) {
@@ -123,9 +125,9 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
                     bindTexture(RS.ID, "gui/crafter_manager.png");
 
-                    blit(7, y, 0, 174, 18 * 9, 18);
+                    blit(matrixStack, 7, y, 0, 174, 18 * 9, 18);
 
-                    renderString(7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
+                    renderString(matrixStack, 7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
                 }
             }
         }

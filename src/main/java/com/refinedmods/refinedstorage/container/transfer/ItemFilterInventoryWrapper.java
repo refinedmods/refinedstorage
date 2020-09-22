@@ -6,7 +6,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 class ItemFilterInventoryWrapper implements IInventoryWrapper {
-    private IItemHandlerModifiable filterInv;
+    private final IItemHandlerModifiable filterInv;
 
     ItemFilterInventoryWrapper(IItemHandlerModifiable filterInv) {
         this.filterInv = filterInv;

@@ -34,10 +34,10 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && !getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
@@ -85,7 +85,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed() == 0) {
+        if (canUpdate() && ticks % upgrades.getSpeed() == 0 && world.isBlockPresent(pos)) {
             if (type == IType.ITEMS) {
                 IItemHandler handler = WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
@@ -235,7 +235,6 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
         markDirty();
     }
-
 
     @Override
     public ResourceLocation getId() {

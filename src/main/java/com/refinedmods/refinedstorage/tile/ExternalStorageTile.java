@@ -49,7 +49,7 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
 
     public ExternalStorageTile() {
         super(RSTiles.EXTERNAL_STORAGE);
-        
+
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);

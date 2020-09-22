@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
@@ -13,6 +12,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -27,8 +27,6 @@ public class GridBlock extends NetworkNodeBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type == GridType.NORMAL ? "grid" : type.getName() + "_grid");
     }
 
     @Override

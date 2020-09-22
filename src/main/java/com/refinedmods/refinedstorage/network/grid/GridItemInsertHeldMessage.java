@@ -10,7 +10,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class GridItemInsertHeldMessage {
-    private boolean single;
+    private final boolean single;
 
     public GridItemInsertHeldMessage(boolean single) {
         this.single = single;

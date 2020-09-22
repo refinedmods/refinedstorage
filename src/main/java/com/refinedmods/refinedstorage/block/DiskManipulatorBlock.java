@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 public class DiskManipulatorBlock extends NetworkNodeBlock {
     public DiskManipulatorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "disk_manipulator");
     }
 
     @Nullable

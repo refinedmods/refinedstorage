@@ -19,8 +19,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class TransferManager {
-    private Map<IInventoryWrapper, List<IInventoryWrapper>> fromToMap = new HashMap<>();
-    private Container container;
+    private final Map<IInventoryWrapper, List<IInventoryWrapper>> fromToMap = new HashMap<>();
+    private final Container container;
 
     @Nullable
     private Function<Integer, ItemStack> notFoundHandler;

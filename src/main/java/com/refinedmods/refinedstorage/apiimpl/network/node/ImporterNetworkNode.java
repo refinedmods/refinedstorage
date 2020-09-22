@@ -36,10 +36,10 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FLuidFilters";
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK).addListener(new NetworkNodeInventoryListener(this));
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK).addListener(new NetworkNodeInventoryListener(this));
 
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
@@ -60,7 +60,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public void update() {
         super.update();
 
-        if (!canUpdate()) {
+        if (!canUpdate() || !world.isBlockPresent(pos)) {
             return;
         }
 

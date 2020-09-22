@@ -81,9 +81,9 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
 
     private static final String NBT_DISK_STATE = "DiskStates";
 
-    private LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getDisks());
+    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getDisks());
 
-    private DiskState[] diskState = new DiskState[8];
+    private final DiskState[] diskState = new DiskState[8];
 
     public DiskDriveTile() {
         super(RSTiles.DISK_DRIVE);

@@ -280,12 +280,8 @@
   "item.refinedstorage.security_card": "Sicherheitskarte",
   "item.refinedstorage.security_card.owner": "Besitzer: %s",
   "item.refinedstorage.processor_binding": "Prozessor Rohmaterial",
-
-  "commands.refinedstorage.createdisk.usage": "/createdisk <Spieler> <Item> <Metadaten> <ID>",
-  "commands.refinedstorage.createdisk.error.notADisk": "Das Item ist keine Speicherzelle.",
-  "commands.refinedstorage.createdisk.error.diskNotFound": "Speicherzelle %s konnte nicht gefunden werden.",
-  "commands.refinedstorage.createdisk.success": "Speicherzelle %s erfolgreich an %s gegeben.",
-
+  "commands.refinedstorage.disk.create.error.disk_not_found": "Speicherzelle %s konnte nicht gefunden werden.",
+  "commands.refinedstorage.disk.create.success": "Speicherzelle %s erfolgreich an %s gegeben.",
   "advancements.refinedstorage.controlling.description": "Stelle einen Kontrollblock her",
   "advancements.refinedstorage.connecting": "Verbinden",
   "advancements.refinedstorage.connecting.description": "Platziere zwei Geräte nebeneinander oder verwende ein Kabel um sie zu verbinden",
@@ -346,5 +342,5 @@
   "advancements.refinedstorage.interface_to_the_world": "Schnittstelle zur Welt",
   "advancements.refinedstorage.interface_to_the_world.description": "Benutze ein Interface, um gleichzeitig Items zu exportieren und zu importieren",
   "advancements.refinedstorage.storing_externally": "Speicher auslagern",
-  "advancements.refinedstorage.storing_externally.description": "Benutze einen externen Speicher um externe Itemquellen wie zum Beispiel Kisten anzubinden",
+  "advancements.refinedstorage.storing_externally.description": "Benutze einen externen Speicher um externe Itemquellen wie zum Beispiel Kisten anzubinden"
 }

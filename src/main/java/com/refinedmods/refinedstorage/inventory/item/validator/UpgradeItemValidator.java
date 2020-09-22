@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import java.util.function.Predicate;
 
 public class UpgradeItemValidator implements Predicate<ItemStack> {
-    private UpgradeItem.Type type;
+    private final UpgradeItem.Type type;
 
     public UpgradeItemValidator(UpgradeItem.Type type) {
         this.type = type;

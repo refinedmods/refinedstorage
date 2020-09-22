@@ -22,10 +22,10 @@ import com.refinedmods.refinedstorage.tile.config.IAccessType;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.StorageBlockUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +38,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     private static final String NBT_MODE = "Mode";
     public static final String NBT_ID = "Id";
 
-    private BaseItemHandler filters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final BaseItemHandler filters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
     private final ItemStorageType type;
 
@@ -103,7 +104,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
         if (storage == null) {
-            loadStorage();
+            loadStorage(null);
         }
 
         storages.add(storage);
@@ -135,15 +136,15 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         if (tag.hasUniqueId(NBT_ID)) {
             storageId = tag.getUniqueId(NBT_ID);
 
-            loadStorage();
+            loadStorage(null);
         }
     }
 
-    public void loadStorage() {
+    public void loadStorage(@Nullable PlayerEntity owner) {
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity()));
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity(), owner));
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 
@@ -231,36 +232,6 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     @Override
     public ITextComponent getTitle() {
         return new TranslationTextComponent("block.refinedstorage." + type.getName() + "_storage_block");
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getTypeParameter() {
-        return null;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return StorageTile.REDSTONE_MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getCompareParameter() {
-        return StorageTile.COMPARE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
-        return StorageTile.WHITELIST_BLACKLIST;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getPriorityParameter() {
-        return StorageTile.PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
-        return StorageTile.ACCESS_TYPE;
     }
 
     @Override

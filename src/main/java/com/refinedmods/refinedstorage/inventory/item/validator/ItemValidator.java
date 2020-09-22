@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import java.util.function.Predicate;
 
 public class ItemValidator implements Predicate<ItemStack> {
-    private Item item;
+    private final Item item;
 
     public ItemValidator(Item item) {
         this.item = item;

@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 public class DiskDriveBlock extends NetworkNodeBlock {
     public DiskDriveBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "disk_drive");
     }
 
     @Override

@@ -22,9 +22,9 @@ import com.refinedmods.refinedstorage.tile.config.IAccessType;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.FluidStorageBlockUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,9 +56,9 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     private static final String NBT_FILTERS = "Filters";
     public static final String NBT_ID = "Id";
 
-    private FluidInventory filters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final FluidInventory filters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private FluidStorageType type;
+    private final FluidStorageType type;
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
@@ -108,7 +109,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
         if (storage == null) {
-            loadStorage();
+            loadStorage(null);
         }
 
         storages.add(storage);
@@ -135,15 +136,15 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         if (tag.hasUniqueId(NBT_ID)) {
             storageId = tag.getUniqueId(NBT_ID);
 
-            loadStorage();
+            loadStorage(null);
         }
     }
 
-    public void loadStorage() {
+    public void loadStorage(@Nullable PlayerEntity owner) {
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity()));
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity(), owner));
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 
@@ -232,36 +233,6 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     @Override
     public ITextComponent getTitle() {
         return new TranslationTextComponent("block.refinedstorage." + type.getName() + "_fluid_storage_block");
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getTypeParameter() {
-        return null;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return FluidStorageTile.REDSTONE_MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getCompareParameter() {
-        return FluidStorageTile.COMPARE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
-        return FluidStorageTile.WHITELIST_BLACKLIST;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getPriorityParameter() {
-        return FluidStorageTile.PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
-        return FluidStorageTile.ACCESS_TYPE;
     }
 
     @Override

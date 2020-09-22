@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.function.Predicate;
 
 public class TagGridFilter implements Predicate<IGridStack> {
-    private String tagName;
+    private final String tagName;
 
     public TagGridFilter(String tagName) {
         this.tagName = tagName.toLowerCase();

@@ -13,10 +13,11 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class PortableItemStorageDisk implements IStorageDisk<ItemStack> {
-    private IStorageDisk<ItemStack> parent;
-    private IPortableGrid portableGrid;
+    private final IStorageDisk<ItemStack> parent;
+    private final IPortableGrid portableGrid;
 
     public PortableItemStorageDisk(IStorageDisk<ItemStack> parent, IPortableGrid portableGrid) {
         this.parent = parent;
@@ -26,6 +27,12 @@ public class PortableItemStorageDisk implements IStorageDisk<ItemStack> {
     @Override
     public int getCapacity() {
         return parent.getCapacity();
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return parent.getOwner();
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class ResultCraftingGridSlot extends CraftingResultSlot {
-    private IGrid grid;
+    private final IGrid grid;
 
     public ResultCraftingGridSlot(PlayerEntity player, IGrid grid, int inventoryIndex, int x, int y) {
         super(player, grid.getCraftingMatrix(), grid.getCraftingResult(), inventoryIndex, x, y);
@@ -23,7 +23,7 @@ public class ResultCraftingGridSlot extends CraftingResultSlot {
         onCrafting(stack);
 
         if (!player.getEntityWorld().isRemote) {
-            grid.onCrafted(player);
+            grid.onCrafted(player, null, null);
         }
 
         return ItemStack.EMPTY;

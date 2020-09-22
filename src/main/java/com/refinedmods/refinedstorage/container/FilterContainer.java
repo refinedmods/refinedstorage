@@ -14,7 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 public class FilterContainer extends BaseContainer {
-    private ItemStack stack;
+    private final ItemStack stack;
 
     public FilterContainer(PlayerEntity player, ItemStack stack, int windowId) {
         super(RSContainers.FILTER, null, player, windowId);

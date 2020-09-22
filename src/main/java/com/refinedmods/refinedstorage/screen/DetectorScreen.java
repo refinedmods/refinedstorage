@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class DetectorScreen extends BaseScreen<DetectorContainer> {
@@ -29,7 +31,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
 
         addSideButton(new ExactModeSideButton(this, DetectorTile.COMPARE));
 
-        amountField = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.FONT_HEIGHT, "");
+        amountField = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.FONT_HEIGHT, new StringTextComponent(""));
         amountField.setText(String.valueOf(DetectorTile.AMOUNT.getValue()));
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
@@ -58,16 +60,16 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/detector.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, 43, I18n.format("container.inventory"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, 43, I18n.format("container.inventory"));
     }
 
     @Override

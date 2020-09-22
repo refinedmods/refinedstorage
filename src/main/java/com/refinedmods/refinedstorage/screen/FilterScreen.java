@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
@@ -15,15 +16,17 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class FilterScreen extends BaseScreen<FilterContainer> {
-    private ItemStack stack;
+    private final ItemStack stack;
 
     private int compare;
     private int mode;
     private boolean modFilter;
-    private String name;
+    private final String name;
     private int type;
 
     private CheckboxWidget modFilterCheckBox;
@@ -44,19 +47,19 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addCheckBox(x + 7, y + 77, I18n.format("gui.refinedstorage.filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT, btn -> {
+        addCheckBox(x + 7, y + 77, new TranslationTextComponent("gui.refinedstorage.filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT, btn -> {
             compare ^= IComparer.COMPARE_NBT;
 
             sendUpdate();
         });
 
-        modFilterCheckBox = addCheckBox(0, y + 71 + 25, I18n.format("gui.refinedstorage.filter.mod_filter"), modFilter, btn -> {
+        modFilterCheckBox = addCheckBox(0, y + 71 + 25, new TranslationTextComponent("gui.refinedstorage.filter.mod_filter"), modFilter, btn -> {
             modFilter = !modFilter;
 
             sendUpdate();
         });
 
-        modeButton = addButton(x + 7, y + 71 + 21, 0, 20, "", true, true, btn -> {
+        modeButton = addButton(x + 7, y + 71 + 21, 0, 20, new StringTextComponent(""), true, true, btn -> {
             mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
 
             updateModeButton(mode);
@@ -66,7 +69,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
 
         updateModeButton(mode);
 
-        nameField = new TextFieldWidget(font, x + 34, y + 121, 137 - 6, font.FONT_HEIGHT, "");
+        nameField = new TextFieldWidget(font, x + 34, y + 121, 137 - 6, font.FONT_HEIGHT, new StringTextComponent(""));
         nameField.setText(name);
         nameField.setEnableBackgroundDrawing(false);
         nameField.setVisible(true);
@@ -81,9 +84,11 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     }
 
     private void updateModeButton(int mode) {
-        String text = mode == IFilter.MODE_WHITELIST ? I18n.format("sidebutton.refinedstorage.mode.whitelist") : I18n.format("sidebutton.refinedstorage.mode.blacklist");
+        ITextComponent text = mode == IFilter.MODE_WHITELIST
+            ? new TranslationTextComponent("sidebutton.refinedstorage.mode.whitelist")
+            : new TranslationTextComponent("sidebutton.refinedstorage.mode.blacklist");
 
-        modeButton.setWidth(font.getStringWidth(text) + 12);
+        modeButton.setWidth(font.getStringWidth(text.getString()) + 12);
         modeButton.setMessage(text);
         modFilterCheckBox.x = modeButton.x + modeButton.getWidth() + 4;
     }
@@ -108,16 +113,16 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/filter.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, 137, I18n.format("container.inventory"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, 137, I18n.format("container.inventory"));
     }
 
     public int getType() {

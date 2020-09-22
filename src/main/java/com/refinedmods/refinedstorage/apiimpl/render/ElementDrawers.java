@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ElementDrawers implements IElementDrawers {
-    protected BaseScreen screen;
-    private FontRenderer fontRenderer;
+    protected final BaseScreen screen;
+    private final FontRenderer fontRenderer;
 
     public ElementDrawers(BaseScreen screen, FontRenderer fontRenderer) {
         this.screen = screen;

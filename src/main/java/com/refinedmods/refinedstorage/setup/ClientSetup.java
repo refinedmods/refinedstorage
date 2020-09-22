@@ -5,6 +5,9 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.CrafterContainer;
 import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
+import com.refinedmods.refinedstorage.item.property.ControllerItemPropertyGetter;
+import com.refinedmods.refinedstorage.item.property.NetworkItemPropertyGetter;
+import com.refinedmods.refinedstorage.item.property.SecurityCardItemPropertyGetter;
 import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
@@ -20,6 +23,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -32,12 +36,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ClientSetup {
-    private BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
+    private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager instanceof IReloadableResourceManager) {
-            ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft != null) { // This is null in a runData environment.
+            IResourceManager resourceManager = minecraft.getResourceManager();
+            if (resourceManager instanceof IReloadableResourceManager) {
+                ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
+            }
         }
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "controller"), (base, registry) -> new FullbrightBakedModel(
@@ -139,6 +146,7 @@ public class ClientSetup {
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_connected"));
 
+
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
@@ -216,32 +224,46 @@ public class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
-        RenderTypeLookup.setRenderLayer(RSBlocks.CONTROLLER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CREATIVE_CONTROLLER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER_MANAGER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_MONITOR, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.DETECTOR, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.DISK_MANIPULATOR, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.GRID, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_GRID, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.PATTERN_GRID, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.FLUID_GRID, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_RECEIVER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_TRANSMITTER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.RELAY, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.SECURITY_MANAGER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.WIRELESS_TRANSMITTER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONTROLLER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CREATIVE_CONTROLLER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER_MANAGER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_MONITOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DETECTOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DISK_MANIPULATOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.GRID.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_GRID.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.PATTERN_GRID.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.FLUID_GRID.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_RECEIVER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_TRANSMITTER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.RELAY.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.SECURITY_MANAGER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.WIRELESS_TRANSMITTER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.getCutout());
 
         ClientRegistry.bindTileEntityRenderer(RSTiles.STORAGE_MONITOR, StorageMonitorTileRenderer::new);
 
-        e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN);
+        e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
+
+        ItemModelsProperties.func_239418_a_(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.CONTROLLER.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_CONTROLLER.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_CRAFTING_MONITOR.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
     }
 
     @SubscribeEvent

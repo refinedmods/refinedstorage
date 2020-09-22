@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class CraftingMonitorCancelMessage {
     @Nullable
-    private UUID taskId;
+    private final UUID taskId;
 
     public CraftingMonitorCancelMessage(@Nullable UUID taskId) {
         this.taskId = taskId;

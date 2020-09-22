@@ -13,14 +13,14 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class BaseGridView implements IGridView {
-    private GridScreen screen;
+    private final GridScreen screen;
     private boolean canCraft;
 
-    private IGridSorter defaultSorter;
-    private List<IGridSorter> sorters;
+    private final IGridSorter defaultSorter;
+    private final List<IGridSorter> sorters;
 
     private List<IGridStack> stacks = new ArrayList<>();
-    protected Map<UUID, IGridStack> map = new HashMap<>();
+    protected final Map<UUID, IGridStack> map = new HashMap<>();
 
     public BaseGridView(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.screen = screen;
@@ -63,15 +63,10 @@ public abstract class BaseGridView implements IGridView {
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
-            Iterator<IGridStack> it = stacks.iterator();
-
-            while (it.hasNext()) {
-                IGridStack stack = it.next();
-
-                if (this instanceof ItemGridView && stack instanceof FluidGridStack) {
-                   it.remove();
-                }
-
+            stacks.removeIf(stack -> {
+                    if (this instanceof ItemGridView && stack instanceof FluidGridStack) {
+                        return true;
+                    }
                 // If this is a crafting stack,
                 // and there is a regular matching stack in the view too,
                 // and we aren't in "view only craftables" mode,
@@ -80,19 +75,17 @@ public abstract class BaseGridView implements IGridView {
                     stack.isCraftable() &&
                     stack.getOtherId() != null &&
                     map.containsKey(stack.getOtherId())) {
-                    it.remove();
-
-                    continue;
+                    return true;
                 }
 
                 for (Predicate<IGridStack> filter : filters) {
                     if (!filter.test(stack)) {
-                        it.remove();
-
-                        break;
+                        return true;
                     }
                 }
-            }
+
+                return false;
+            });
 
             SortingDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? SortingDirection.DESCENDING : SortingDirection.ASCENDING;
 

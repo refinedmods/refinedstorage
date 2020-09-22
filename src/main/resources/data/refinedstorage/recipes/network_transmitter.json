@@ -3,7 +3,7 @@
   "pattern": [
     "EEE",
     "CMD",
-    "AAA"
+    "ANA"
   ],
   "key": {
     "E": {
@@ -20,6 +20,9 @@
     },
     "A": {
       "item": "refinedstorage:advanced_processor"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
     }
   },
   "result": {

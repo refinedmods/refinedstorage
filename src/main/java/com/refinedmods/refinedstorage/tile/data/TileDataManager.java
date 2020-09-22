@@ -12,14 +12,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TileDataManager {
     private static int LAST_ID = 0;
-    private static Map<Integer, TileDataParameter> REGISTRY = new HashMap<>();
+    private static final Map<Integer, TileDataParameter> REGISTRY = new HashMap<>();
 
-    private TileEntity tile;
+    private final TileEntity tile;
 
-    private List<TileDataParameter> parameters = new ArrayList<>();
-    private List<TileDataParameter> watchedParameters = new ArrayList<>();
+    private final List<TileDataParameter> parameters = new ArrayList<>();
+    private final List<TileDataParameter> watchedParameters = new ArrayList<>();
 
-    private List<TileDataWatcher> watchers = new CopyOnWriteArrayList<>();
+    private final List<TileDataWatcher> watchers = new CopyOnWriteArrayList<>();
 
     public TileDataManager(TileEntity tile) {
         this.tile = tile;

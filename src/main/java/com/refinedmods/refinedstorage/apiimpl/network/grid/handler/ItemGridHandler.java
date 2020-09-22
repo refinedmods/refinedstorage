@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid.handler;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
@@ -14,7 +14,6 @@ import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMess
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -25,7 +24,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
-    private INetwork network;
+    private final INetwork network;
 
     public ItemGridHandler(INetwork network) {
         this.network = network;
@@ -159,36 +158,27 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
-                ICraftingTask task = network.getCraftingManager().create(stack, quantity);
-                if (task == null) {
-                    return;
-                }
+                ICalculationResult result = network.getCraftingManager().create(stack, quantity);
 
-                ICraftingTaskError error = task.calculate();
-
-                ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
-
-                if (error != null) {
+                if (!result.isOk() && result.getType() != CalculationResultType.MISSING) {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
-                            factoryId,
-                            Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
+                            Collections.singletonList(new ErrorCraftingPreviewElement(result.getType(), result.getRecursedPattern() == null ? ItemStack.EMPTY : result.getRecursedPattern().getStack())),
                             id,
                             quantity,
                             false
                         )
                     );
-                } else if (noPreview && !task.hasMissing()) {
-                    network.getCraftingManager().add(task);
+                } else if (result.isOk() && noPreview) {
+                    network.getCraftingManager().start(result.getTask());
 
                     RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
-                            factoryId,
-                            task.getPreviewStacks(),
+                            result.getPreviewElements(),
                             id,
                             quantity,
                             false
@@ -210,14 +200,9 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
-            ICraftingTask task = network.getCraftingManager().create(stack, quantity);
-            if (task == null) {
-                return;
-            }
-
-            ICraftingTaskError error = task.calculate();
-            if (error == null && !task.hasMissing()) {
-                network.getCraftingManager().add(task);
+            ICalculationResult result = network.getCraftingManager().create(stack, quantity);
+            if (result.isOk()) {
+                network.getCraftingManager().start(result.getTask());
             }
         }
     }

@@ -2,17 +2,14 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskError;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
+import com.refinedmods.refinedstorage.api.autocrafting.task.*;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.calculator.CalculationResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -37,21 +34,21 @@ public class CraftingManager implements ICraftingManager {
     private static final String NBT_TASK_TYPE = "Type";
     private static final String NBT_TASK_DATA = "Task";
 
-    private INetwork network;
+    private final INetwork network;
 
-    private Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
-    private Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
+    private final Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
-    private List<ICraftingPattern> patterns = new ArrayList<>();
+    private final List<ICraftingPattern> patterns = new ArrayList<>();
 
-    private Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
-    private List<ICraftingTask> tasksToAdd = new ArrayList<>();
-    private List<UUID> tasksToCancel = new ArrayList<>();
+    private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
+    private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
+    private final List<UUID> tasksToCancel = new ArrayList<>();
     private ListNBT tasksToRead;
 
-    private Map<Object, Long> throttledRequesters = new HashMap<>();
+    private final Map<Object, Long> throttledRequesters = new HashMap<>();
 
-    private Set<ICraftingMonitorListener> listeners = new HashSet<>();
+    private final Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
     public CraftingManager(INetwork network) {
         this.network = network;
@@ -74,7 +71,8 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void add(@Nonnull ICraftingTask task) {
+    public void start(@Nonnull ICraftingTask task) {
+        task.start();
         tasksToAdd.add(task);
 
         network.markDirty();
@@ -92,40 +90,33 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    @Nullable
-    public ICraftingTask create(ItemStack stack, int quantity) {
+    public ICalculationResult create(ItemStack stack, int quantity) {
         ICraftingPattern pattern = getPattern(stack);
         if (pattern == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
         ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getCraftingTaskFactoryId());
         if (factory == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
-        return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
+        return factory.create(network, API.instance().createCraftingRequestInfo(stack, quantity), quantity, pattern);
     }
 
-    @Nullable
     @Override
-    public ICraftingTask create(FluidStack stack, int quantity) {
+    public ICalculationResult create(FluidStack stack, int quantity) {
         ICraftingPattern pattern = getPattern(stack);
         if (pattern == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
         ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getCraftingTaskFactoryId());
         if (factory == null) {
-            return null;
+            return new CalculationResult(CalculationResultType.NO_PATTERN);
         }
 
-        return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
-    }
-
-    @Override
-    public ICraftingPatternChainList createPatternChainList() {
-        return new CraftingPatternChainList(patterns);
+        return factory.create(network, API.instance().createCraftingRequestInfo(stack, quantity), quantity, pattern);
     }
 
     @Override
@@ -247,18 +238,10 @@ public class CraftingManager implements ICraftingManager {
         }
 
         if (amount > 0) {
-            ICraftingTask task = create(stack, amount);
+            ICalculationResult result = create(stack, amount);
 
-            if (task != null) {
-                ICraftingTaskError error = task.calculate();
-
-                if (error == null && !task.hasMissing()) {
-                    this.add(task);
-
-                    return task;
-                } else {
-                    throttle(source);
-                }
+            if (result.isOk()) {
+                start(result.getTask());
             } else {
                 throttle(source);
             }
@@ -283,18 +266,10 @@ public class CraftingManager implements ICraftingManager {
         }
 
         if (amount > 0) {
-            ICraftingTask task = create(stack, amount);
+            ICalculationResult result = create(stack, amount);
 
-            if (task != null) {
-                ICraftingTaskError error = task.calculate();
-
-                if (error == null && !task.hasMissing()) {
-                    this.add(task);
-
-                    return task;
-                } else {
-                    throttle(source);
-                }
+            if (result.isOk()) {
+                start(result.getTask());
             } else {
                 throttle(source);
             }
@@ -411,8 +386,8 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern) {
-        return patternToContainer.getOrDefault(pattern, new LinkedHashSet<>());
+    public Set<ICraftingPatternContainer> getAllContainers(ICraftingPattern pattern) {
+        return patternToContainer.getOrDefault(pattern, Collections.emptySet());
     }
 
     @Nullable

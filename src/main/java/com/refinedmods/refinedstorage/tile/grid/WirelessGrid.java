@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
@@ -23,12 +24,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     private ItemStack stack;
     @Nullable
     private final MinecraftServer server;
-    private final DimensionType nodeDimension;
+    private final RegistryKey<World> nodeDimension;
     private final BlockPos nodePos;
     private final int slotId;
 
@@ -51,9 +51,9 @@ public class WirelessGrid implements INetworkAwareGrid {
     private int tabPage;
     private int size;
 
-    private List<IFilter> filters = new ArrayList<>();
-    private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
         .addListener((handler, slot, reading) -> {
             if (!stack.hasTag()) {
                 stack.setTag(new CompoundNBT());
@@ -94,8 +94,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(server, nodeDimension, true, true);
-
+        World world = server.getWorld(nodeDimension);
         if (world != null) {
             return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getTileEntity(nodePos)));
         }
@@ -277,7 +276,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public void onCrafted(PlayerEntity player) {
+    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 

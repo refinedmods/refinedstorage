@@ -4,8 +4,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import net.minecraft.nbt.CompoundNBT;
 
-import javax.annotation.Nonnull;
-
 /**
  * A factory that creates a crafting task.
  * Register this factory in the {@link ICraftingTaskRegistry}.
@@ -18,10 +16,9 @@ public interface ICraftingTaskFactory {
      * @param requested the request info
      * @param pattern   the pattern
      * @param quantity  the quantity
-     * @return the crafting task
+     * @return the calculation result
      */
-    @Nonnull
-    ICraftingTask create(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern);
+    ICalculationResult create(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern);
 
     /**
      * Returns a crafting task for a given NBT tag.

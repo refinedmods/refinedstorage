@@ -8,8 +8,8 @@ public class UpgradeItemHandler extends BaseItemHandler {
     public UpgradeItemHandler(int size, UpgradeItem.Type... supportedUpgrades) {
         super(size);
 
-        for (int i = 0; i < supportedUpgrades.length; ++i) {
-            addValidator(new UpgradeItemValidator(supportedUpgrades[i]));
+        for (UpgradeItem.Type supportedUpgrade : supportedUpgrades) {
+            addValidator(new UpgradeItemValidator(supportedUpgrade));
         }
     }
 

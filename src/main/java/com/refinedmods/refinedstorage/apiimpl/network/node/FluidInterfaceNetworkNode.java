@@ -40,7 +40,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     private static final String NBT_TANK_OUT = "TankOut";
     private static final String NBT_OUT = "Out";
 
-    private FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
+    private final FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
         @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
@@ -52,14 +52,14 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
             markDirty();
         }
     };
-    private FluidTank tankOut = new FluidTank(TANK_CAPACITY);
+    private final FluidTank tankOut = new FluidTank(TANK_CAPACITY);
 
-    private ProxyFluidHandler tank = new ProxyFluidHandler(tankIn, tankOut);
+    private final ProxyFluidHandler tank = new ProxyFluidHandler(tankIn, tankOut);
 
-    private BaseItemHandler in = new BaseItemHandler(1).addListener(new NetworkNodeInventoryListener(this)).addValidator(stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
-    private FluidInventory out = new FluidInventory(1, TANK_CAPACITY).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler in = new BaseItemHandler(1).addListener(new NetworkNodeInventoryListener(this)).addValidator(stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
+    private final FluidInventory out = new FluidInventory(1, TANK_CAPACITY).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING).addListener(new NetworkNodeInventoryListener(this));
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING).addListener(new NetworkNodeInventoryListener(this));
 
     public FluidInterfaceNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -250,7 +250,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     private void onTankOutChanged() {
-        if (!world.isRemote) {
+        if (!world.isRemote && world.isBlockPresent(pos)) {
             ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
         }
 

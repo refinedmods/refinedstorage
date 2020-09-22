@@ -11,8 +11,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridItemPullMessage {
-    private UUID id;
-    private int flags;
+    private final UUID id;
+    private final int flags;
 
     public GridItemPullMessage(UUID id, int flags) {
         this.id = id;
@@ -44,7 +44,7 @@ public class GridItemPullMessage {
                 }
             });
         }
-        
+
         ctx.get().setPacketHandled(true);
     }
 }

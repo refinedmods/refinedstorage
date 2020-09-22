@@ -31,7 +31,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nullable;
 
 public class GridContainer extends BaseContainer implements ICraftingGridListener {
-    private IGrid grid;
+    private final IGrid grid;
     private IStorageCache cache;
     private IStorageCacheListener listener;
     private IScreenInfoProvider screenInfoProvider;

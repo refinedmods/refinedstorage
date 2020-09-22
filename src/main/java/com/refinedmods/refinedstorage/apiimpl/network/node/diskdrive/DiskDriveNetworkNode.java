@@ -54,13 +54,13 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private int ticksSinceBlockUpdateRequested;
     private boolean blockUpdateRequested;
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private IStorageDisk[] itemDisks = new IStorageDisk[8];
-    private IStorageDisk[] fluidDisks = new IStorageDisk[8];
+    private final IStorageDisk[] itemDisks = new IStorageDisk[8];
+    private final IStorageDisk[] fluidDisks = new IStorageDisk[8];
 
-    private BaseItemHandler disks = new BaseItemHandler(8)
+    private final BaseItemHandler disks = new BaseItemHandler(8)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {

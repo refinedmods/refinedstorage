@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.function.Predicate;
 
 public class ModGridFilter implements Predicate<IGridStack> {
-    private String inputModName;
+    private final String inputModName;
 
     public ModGridFilter(String inputModName) {
         this.inputModName = standardify(inputModName);

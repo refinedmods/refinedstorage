@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile;
@@ -24,8 +23,6 @@ import javax.annotation.Nullable;
 public class NetworkTransmitterBlock extends NetworkNodeBlock {
     public NetworkTransmitterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "network_transmitter");
     }
 
     @Nullable
