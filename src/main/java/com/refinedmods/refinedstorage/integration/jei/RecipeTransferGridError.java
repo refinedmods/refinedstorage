@@ -6,7 +6,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -46,13 +45,13 @@ public class RecipeTransferGridError implements IRecipeTransferError {
             if (ingredient.isCraftable()) {
                 ingredient.guiIngredient.drawHighlight(stack, HIGHLIGHT_AUTOCRAFT_COLOR.getRGB(), recipeX, recipeY);
                 if (!craftMessage) {
-                    message.add(new TranslationTextComponent(TextFormatting.BLUE + I18n.format("gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft")));
+                    message.add(new TranslationTextComponent("gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft").mergeStyle(TextFormatting.BLUE));
                     craftMessage = true;
                 }
             } else {
                 ingredient.guiIngredient.drawHighlight(stack, HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
                 if (!missingMessage) {
-                    message.add(new TranslationTextComponent(TextFormatting.RED + I18n.format("jei.tooltip.error.recipe.transfer.missing")));
+                    message.add(new TranslationTextComponent("jei.tooltip.error.recipe.transfer.missing").mergeStyle(TextFormatting.RED));
                     missingMessage = true;
                 }
             }
