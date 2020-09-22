@@ -160,4 +160,12 @@ public class ControllerBlock extends BaseBlock {
 
         return ActionResultType.SUCCESS;
     }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (newState.getBlock() instanceof ControllerBlock) {
+            return;
+        }
+        super.onReplaced(state, world, pos, newState, isMoving);
+    }
 }
