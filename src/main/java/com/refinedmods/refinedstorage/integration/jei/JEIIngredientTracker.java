@@ -5,50 +5,31 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class JEIIngredientTracker {
 
-    List<AvailableIngredient<?>> ingredients = new ArrayList<>();
-    List<AvailableIngredient<?>> ingredientsFluids = new ArrayList<>();
+    List<AvailableIngredient> ingredients = new ArrayList<>();
 
     public void init(IRecipeLayout recipeLayout) {
         for (IGuiIngredient<ItemStack> ingredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
             if (ingredient.isInput() && !ingredient.getAllIngredients().isEmpty()) {
-                ingredients.add(new AvailableIngredient<>(ingredient));
-            }
-        }
-
-        for (IGuiIngredient<FluidStack> ingredient : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
-            if (ingredient.isInput() && !ingredient.getAllIngredients().isEmpty()) {
-                ingredientsFluids.add(new AvailableIngredient<>(ingredient));
+                ingredients.add(new AvailableIngredient(ingredient));
             }
         }
     }
 
-    public Stream<AvailableIngredient<?>> getIngredients() {
-        return Stream.concat(ingredients.stream(), ingredientsFluids.stream());
+    public List<AvailableIngredient> getIngredients() {
+        return ingredients;
     }
 
-    public void checkIfStackIsNeeded(Object stack, boolean isCraftable) {
-        boolean isItem = stack instanceof ItemStack;
+    public void checkIfStackIsNeeded(ItemStack stack, boolean isCraftable) {
+        int available = stack.getCount();
 
-        List<AvailableIngredient<?>> availableIngredients;
-        int available;
-        if (isItem) {
-            available = ((ItemStack) stack).getCount();
-            availableIngredients = ingredients;
-        } else {
-            available = ((FluidStack) stack).getAmount();
-            availableIngredients = ingredientsFluids;
-        }
-
-        for (AvailableIngredient<?> ingredient : availableIngredients) {
+        for (AvailableIngredient ingredient : ingredients) {
             if (available == 0) {
                 return;
             }
@@ -57,14 +38,7 @@ public class JEIIngredientTracker {
                 continue;
             }
 
-            Optional<?> match = ingredient.guiIngredient.getAllIngredients().stream().filter(x -> {
-                if (isItem) {
-                    return API.instance().getComparer().isEqual((ItemStack) stack, (ItemStack) x, IComparer.COMPARE_NBT);
-                } else {
-                    return API.instance().getComparer().isEqual((FluidStack) stack, (FluidStack) x, IComparer.COMPARE_NBT);
-                }
-            }).findFirst();
-
+            Optional<?> match = ingredient.guiIngredient.getAllIngredients().stream().filter((ItemStack matchingStack) -> API.instance().getComparer().isEqual(matchingStack, matchingStack, IComparer.COMPARE_NBT)).findFirst();
             if (match.isPresent()) {
                 //craftables and non craftables are 2 different gridstacks
                 if (isCraftable) {
@@ -80,24 +54,18 @@ public class JEIIngredientTracker {
     }
 
     public boolean hasMissing() {
-        return ingredients.stream().anyMatch(x -> !x.isAvailable()) || ingredientsFluids.stream().anyMatch(x -> !x.isAvailable());
+        return ingredients.stream().anyMatch(x -> !x.isAvailable());
     }
 
-    static class AvailableIngredient<T> {
-        IGuiIngredient<T> guiIngredient;
+    static class AvailableIngredient {
+        IGuiIngredient<ItemStack> guiIngredient;
         boolean isCraftable;
         int required;
         int fulfilled;
 
-        public AvailableIngredient(IGuiIngredient<T> guiIngredient) {
+        public AvailableIngredient(IGuiIngredient<ItemStack> guiIngredient) {
             this.guiIngredient = guiIngredient;
-            Object stack;
-            stack = guiIngredient.getAllIngredients().get(0);
-            if (stack instanceof ItemStack) {
-                required = ((ItemStack) stack).getCount();
-            } else if (stack instanceof FluidStack) {
-                required = ((FluidStack) stack).getAmount();
-            }
+            required = guiIngredient.getAllIngredients().get(0).getCount();
         }
 
         public boolean isAvailable() {

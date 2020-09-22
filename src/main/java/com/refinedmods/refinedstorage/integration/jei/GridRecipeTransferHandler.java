@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.network.grid.GridTransferMessage;
 import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
@@ -106,7 +107,9 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
             // Check grid
             for (IGridStack gridStack : gridStacks) {
-                tracker.checkIfStackIsNeeded(gridStack.getIngredient(), gridStack.isCraftable());
+                if (gridStack instanceof ItemGridStack) {
+                    tracker.checkIfStackIsNeeded(((ItemGridStack) gridStack).getStack(), gridStack.isCraftable());
+                }
             }
 
             // Check inventory

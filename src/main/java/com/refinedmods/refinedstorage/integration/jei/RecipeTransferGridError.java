@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -42,13 +41,12 @@ public class RecipeTransferGridError implements IRecipeTransferError {
         TemporaryPortingUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 150, Minecraft.getInstance().fontRenderer);
     }
 
-    private void drawIngredientHighlight(MatrixStack stack, JEIIngredientTracker.AvailableIngredient<?> ingredient, int recipeX, int recipeY) {
+    private void drawIngredientHighlight(MatrixStack stack, JEIIngredientTracker.AvailableIngredient ingredient, int recipeX, int recipeY) {
         if (!ingredient.isAvailable()) {
             if (ingredient.isCraftable()) {
                 ingredient.guiIngredient.drawHighlight(stack, HIGHLIGHT_AUTOCRAFT_COLOR.getRGB(), recipeX, recipeY);
                 if (!craftMessage) {
                     message.add(new TranslationTextComponent(TextFormatting.BLUE + I18n.format("gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft")));
-                    message.add(new StringTextComponent(TextFormatting.BLUE + "Ctrl Click to request craftable items"));
                     craftMessage = true;
                 }
             } else {
