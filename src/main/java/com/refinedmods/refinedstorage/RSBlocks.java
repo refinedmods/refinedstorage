@@ -13,7 +13,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -54,6 +56,8 @@ public final class RSBlocks {
     public static final Map<DyeColor, RegistryObject<CrafterManagerBlock>> CRAFTER_MANAGER = new HashMap<>();
     public static final Map<DyeColor, RegistryObject<CraftingMonitorBlock>> CRAFTING_MONITOR = new HashMap<>();
     public static final Map<DyeColor, RegistryObject<DetectorBlock>> DETECTOR = new HashMap<>();
+
+    public static final List<RegistryObject<? extends Block>> COLORED_BLOCKS = new ArrayList<>();
 
     static {
         QUARTZ_ENRICHED_IRON = BLOCKS.register("quartz_enriched_iron_block", QuartzEnrichedIronBlock::new);
@@ -100,7 +104,9 @@ public final class RSBlocks {
     private static <T extends Block> void registerColoredBlocks(Map<DyeColor, RegistryObject<T>> blockMap, String name, Supplier<T> blockFactory) {
         for (DyeColor color : DyeColor.values()) {
             String prefix = color != DyeColor.LIGHT_BLUE ? color + "_" : "";
-            blockMap.put(color, BLOCKS.register(prefix + name, blockFactory));
+            RegistryObject<T> block = BLOCKS.register(prefix + name, blockFactory);
+            blockMap.put(color, block);
+            COLORED_BLOCKS.add(block);
         }
     }
 

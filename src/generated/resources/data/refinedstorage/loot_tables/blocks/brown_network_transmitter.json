@@ -6,12 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "refinedstorage:crafter",
-          "functions": [
-            {
-              "function": "refinedstorage:crafter"
-            }
-          ]
+          "name": "refinedstorage:brown_network_transmitter"
         }
       ],
       "conditions": [

@@ -19,6 +19,7 @@ public class DataGenerators {
                 RS.ID,
                 event.getExistingFileHelper())
             );
+            event.getGenerator().addProvider(new LootTableGenerator(event.getGenerator()));
         }
     }
 }
