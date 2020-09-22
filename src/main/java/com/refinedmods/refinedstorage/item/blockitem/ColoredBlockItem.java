@@ -1,11 +1,8 @@
 package com.refinedmods.refinedstorage.item.blockitem;
 
-import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.api.network.NetworkType;
-import com.refinedmods.refinedstorage.block.ControllerBlock;
+import com.refinedmods.refinedstorage.block.BaseBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
@@ -13,12 +10,13 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
 
-public class ControllerBlockItem extends EnergyBlockItem {
+
+public class ColoredBlockItem extends BaseBlockItem {
     private final DyeColor color;
     private final RegistryObject<? extends Block> blockForTranslation;
 
-    public ControllerBlockItem(ControllerBlock block, DyeColor color, RegistryObject<? extends Block> blockForTranslation) {
-        super(block, new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), block.getType() == NetworkType.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
+    public ColoredBlockItem(BaseBlock block, Properties builder, DyeColor color, RegistryObject<? extends Block> blockForTranslation) {
+        super(block, builder);
         this.color = color;
         this.blockForTranslation = blockForTranslation;
     }

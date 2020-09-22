@@ -2,12 +2,9 @@ package com.refinedmods.refinedstorage.item.blockitem;
 
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.BlockDirection;
-import com.refinedmods.refinedstorage.block.ColoredNetworkBlock;
-import com.refinedmods.refinedstorage.block.ControllerBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
 
 public class BaseBlockItem extends BlockItem {
     private final BaseBlock block;
