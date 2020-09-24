@@ -13,6 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.fml.RegistryObject;
+
+import java.util.Map;
 
 public class BlockModelGenerator extends BlockStateProvider {
     private final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
@@ -26,249 +29,275 @@ public class BlockModelGenerator extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        RSBlocks.GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.CRAFTING_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.PATTERN_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.FLUID_GRID.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.CRAFTING_MONITOR.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.CRAFTER_MANAGER.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.DISK_MANIPULATOR.forEach((color, block) -> genNorthCutoutModel(block.get(), color));
-        RSBlocks.CONTROLLER.forEach((color, block) -> genControllerModel(block.get(), block.get(), color));
-        RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> genControllerModel(block.get(), RSBlocks.CONTROLLER.get(color).get(), color));
-        RSBlocks.CRAFTER.forEach((color, block) -> genCrafterModel(block.get(), color));
-        RSBlocks.RELAY.forEach((color, block) -> genCubeAllCutoutModel(block.get(), color));
-        RSBlocks.NETWORK_TRANSMITTER.forEach((color, block) -> genCubeAllCutoutModel(block.get(), color));
-        RSBlocks.NETWORK_RECEIVER.forEach((color, block) -> genCubeAllCutoutModel(block.get(), color));
-        RSBlocks.SECURITY_MANAGER.forEach((color, block) -> genCubeCutoutModel(block.get(), color));
-        RSBlocks.DETECTOR.forEach((color, block) -> genDetectorModel(block.get(), color));
-        RSBlocks.WIRELESS_TRANSMITTER.forEach((color, block) -> genWirelessTransmitterModel(block.get(), color));
+        genNorthCutoutModels(RSBlocks.GRID);
+        genNorthCutoutModels(RSBlocks.CRAFTING_GRID);
+        genNorthCutoutModels(RSBlocks.PATTERN_GRID);
+        genNorthCutoutModels(RSBlocks.FLUID_GRID);
+        genNorthCutoutModels(RSBlocks.CRAFTING_MONITOR);
+        genNorthCutoutModels(RSBlocks.CRAFTER_MANAGER);
+        genNorthCutoutModels(RSBlocks.DISK_MANIPULATOR);
+        genControllerModels(RSBlocks.CONTROLLER);
+        genControllerModels(RSBlocks.CREATIVE_CONTROLLER);
+        genCrafterModels();
+        genCubeAllCutoutModels(RSBlocks.RELAY);
+        genCubeAllCutoutModels(RSBlocks.NETWORK_TRANSMITTER);
+        genCubeAllCutoutModels(RSBlocks.NETWORK_RECEIVER);
+        genSecurityManagerModels();
+        genDetectorModels();
+        genWirelessTransmitterModels();
     }
 
-    private void genWirelessTransmitterModel(Block block, DyeColor color) {
-        models.wirelessTransmitterBlock(block, state -> {
-            if (!state.get(NetworkNodeBlock.CONNECTED)) {
-                return models.createWirelessTransmitterModel(
-                    "block/" + getBlockName(block, color) + "/disconnected",
-                    resourceLocation(block, color, "cutouts/disconnected")
-                );
-            } else {
-                ModelFile model = models.createWirelessTransmitterModel(
-                    "block/" + getBlockName(block, color) + "/" + color,
-                    resourceLocation(block, color, "cutouts/" + color)
-                );
+    private void genWirelessTransmitterModels() {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = RSBlocks.WIRELESS_TRANSMITTER.get(color).get();
+            String folderName = RSBlocks.WIRELESS_TRANSMITTER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
 
-                simpleBlockItem(block, model);
-                return model;
-            }
-        }, 0);
-    }
+            models.wirelessTransmitterBlock(block, state -> {
+                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                    return models.createWirelessTransmitterModel(
+                        "block/" + folderName + "/disconnected",
+                        resourceLocation(folderName, "cutouts/disconnected")
+                    );
+                } else {
+                    ModelFile model = models.createWirelessTransmitterModel(
+                        "block/" + folderName + "/" + color,
+                        resourceLocation(folderName, "cutouts/" + color)
+                    );
 
-    private void genDetectorModel(Block block, DyeColor color) {
-        models.simpleBlockStateModel(block, state -> {
-            if (!state.get(DetectorBlock.POWERED)) {
-                return models.createDetectorModel(
-                    "block/" + getBlockName(block, color) + "/off",
-                    resourceLocation(block, color, "cutouts/off")
-                );
-            } else {
-                ModelFile model = models.createDetectorModel(
-                    "block/" + getBlockName(block, color) + "/" + color,
-                    resourceLocation(block, color, "cutouts/" + color)
-                );
-
-                simpleBlockItem(block, model);
-                return model;
-            }
-        });
-    }
-
-    private void genCubeCutoutModel(Block block, DyeColor color) {
-        models.horizontalRSBlock(block, state -> {
-            if (!state.get(NetworkNodeBlock.CONNECTED)) {
-                return models.createCubeCutoutModel(
-                    "block/" + getBlockName(block, color) + "/disconnected",
-                    BOTTOM,
-                    BOTTOM,
-                    resourceLocation(block, color, "top"),
-                    resourceLocation(block, color, "cutouts/top_disconnected"),
-                    resourceLocation(block, color, "right"),
-                    resourceLocation(block, color, "cutouts/right_disconnected"),
-                    resourceLocation(block, color, "left"),
-                    resourceLocation(block, color, "cutouts/left_disconnected"),
-                    resourceLocation(block, color, "front"),
-                    resourceLocation(block, color, "cutouts/front_disconnected"),
-                    resourceLocation(block, color, "back"),
-                    resourceLocation(block, color, "cutouts/back_disconnected")
-                );
-            } else {
-                ModelFile model = models.createCubeCutoutModel(
-                    "block/" + getBlockName(block, color) + "/" + color,
-                    BOTTOM,
-                    BOTTOM,
-                    resourceLocation(block, color, "top"),
-                    resourceLocation(block, color, "cutouts/top" + "_" + color),
-                    resourceLocation(block, color, "right"),
-                    resourceLocation(block, color, "cutouts/right" + "_" + color),
-                    resourceLocation(block, color, "left"),
-                    resourceLocation(block, color, "cutouts/left" + "_" + color),
-                    resourceLocation(block, color, "front"),
-                    resourceLocation(block, color, "cutouts/front" + "_" + color),
-                    resourceLocation(block, color, "back"),
-                    resourceLocation(block, color, "cutouts/back" + "_" + color)
-                );
-
-                simpleBlockItem(block, model);
-                return model;
-            }
-        }, 180);
-    }
-
-    private void genCubeAllCutoutModel(Block block, DyeColor color) {
-        models.simpleBlockStateModel(block, state -> {
-            if (state.get(NetworkNodeBlock.CONNECTED)) {
-                return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(block, color) + "/" + color,
-                    resourceLocation(block, color, getBlockName(block, color)),
-                    resourceLocation(block, color, getBlockName(block, color)),
-                    resourceLocation(block, color, "cutouts/" + color)
-                );
-            } else {
-                ModelFile model = models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(block, color) + "/disconnected",
-                    resourceLocation(block, color, getBlockName(block, color)),
-                    resourceLocation(block, color, getBlockName(block, color)),
-                    resourceLocation(block, color, "cutouts/disconnected")
-                );
-
-                simpleBlockItem(block, model);
-                return model;
-            }
-        });
-    }
-
-    private void genCrafterModel(Block block, DyeColor color) {
-        models.anyDirectionalRSBlock(block, state -> {
-            if (!state.get(NetworkNodeBlock.CONNECTED)) {
-                return models.createCubeCutoutModel(
-                    "block/" + getBlockName(block, color) + "/disconnected",
-                    BOTTOM,
-                    BOTTOM,
-                    resourceLocation(block, color, "top"),
-                    resourceLocation(block, color, "cutouts/top_disconnected"),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_disconnected"),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_disconnected"),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_disconnected"),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_disconnected")
-                );
-            } else {
-                ModelFile model = models.createCubeCutoutModel(
-                    "block/" + getBlockName(block, color) + "/" + color,
-                    BOTTOM,
-                    BOTTOM,
-                    resourceLocation(block, color, "top"),
-                    resourceLocation(block, color, "cutouts/top_" + color),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_" + color),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_" + color),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_" + color),
-                    resourceLocation(block, color, "side"),
-                    resourceLocation(block, color, "cutouts/side_" + color)
-                );
-
-                simpleBlockItem(block, model);
-                return model;
-            }
-        }, 180);
-    }
-
-    private void genControllerModel(Block block, Block modelBlock, DyeColor color) {
-        models.simpleBlockStateModel(block, state -> {
-            if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.OFF)) {
-                return models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(modelBlock, color) + "/off",
-                    resourceLocation(modelBlock, color, "off"),
-                    resourceLocation(modelBlock, color, "off"),
-                    resourceLocation(modelBlock, color, "cutouts/off")
-                );
-            } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_OFF)) {
-                return models.createControllerNearlyCutoutModel(
-                    "block/" + getBlockName(modelBlock, color) + "/nearly_off",
-                    resourceLocation(modelBlock, color, "off"),
-                    resourceLocation(modelBlock, color, "on"),
-                    resourceLocation(modelBlock, color, "cutouts/nearly_off"),
-                    resourceLocation(modelBlock, color, "cutouts/nearly_off_gray")
-                );
-            } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_ON)) {
-                return models.createControllerNearlyCutoutModel(
-                    "block/" + getBlockName(modelBlock, color) + "/nearly_on",
-                    resourceLocation(modelBlock, color, "off"),
-                    resourceLocation(modelBlock, color, "on"),
-                    resourceLocation(modelBlock, color, "cutouts/nearly_on"),
-                    resourceLocation(modelBlock, color, "cutouts/nearly_on_gray")
-                );
-            } else {
-                ModelFile model = models.createCubeAllCutoutModel(
-                    "block/" + getBlockName(modelBlock, color) + "/" + color,
-                    resourceLocation(modelBlock, color, "off"),
-                    resourceLocation(modelBlock, color, "on"),
-                    resourceLocation(modelBlock, color, "cutouts/" + color)
-                );
-
-                simpleBlockItem(block, model);
-                return model;
-            }
-        });
-    }
-
-    private void genNorthCutoutModel(Block block, DyeColor color) {
-        models.horizontalRSBlock(block, state -> {
-            if (!state.get(NetworkNodeBlock.CONNECTED)) {
-                return models.createCubeNorthCutoutModel(
-                    "block/" + getBlockName(block, color) + "/disconnected",
-                    BOTTOM,
-                    resourceLocation(block, color, "top"),
-                    resourceLocation(block, color, "front"),
-                    resourceLocation(block, color, "back"),
-                    resourceLocation(block, color, "right"),
-                    resourceLocation(block, color, "left"),
-                    resourceLocation(block, color, "right"),
-                    resourceLocation(block, color, "cutouts/disconnected")
-                );
-            } else {
-                ModelFile model = models.createCubeNorthCutoutModel(
-                    "block/" + getBlockName(block, color) + "/" + color,
-                    BOTTOM,
-                    resourceLocation(block, color, "top"),
-                    resourceLocation(block, color, "front"),
-                    resourceLocation(block, color, "back"),
-                    resourceLocation(block, color, "right"),
-                    resourceLocation(block, color, "left"),
-                    resourceLocation(block, color, "right"),
-                    resourceLocation(block, color, "cutouts/" + color)
-                );
-
-                simpleBlockItem(block, model);
-                return model;
-            }
-        }, 180);
-    }
-
-    private ResourceLocation resourceLocation(Block block, DyeColor color, String name) {
-        return new ResourceLocation(RS.ID, "block/" + getBlockName(block, color) + "/" + name);
-    }
-
-    private String getBlockName(Block block, DyeColor color) {
-        String name = block.getRegistryName().getPath();
-        if (color == BlockUtils.DEFAULT_COLOR) {
-            return name;
-        } else {
-            return name.substring(name.indexOf(color.getString()) + color.getString().length() + 1);
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            }, 0);
         }
+    }
+
+    private void genDetectorModels() {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = RSBlocks.DETECTOR.get(color).get();
+            String folderName = RSBlocks.DETECTOR.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+
+            models.simpleBlockStateModel(block, state -> {
+                if (!state.get(DetectorBlock.POWERED)) {
+                    return models.createDetectorModel(
+                        "block/" + folderName + "/off",
+                        resourceLocation(folderName, "cutouts/off")
+                    );
+                } else {
+                    ModelFile model = models.createDetectorModel(
+                        "block/" + folderName + "/" + color,
+                        resourceLocation(folderName, "cutouts/" + color)
+                    );
+
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            });
+        }
+    }
+
+    private void genSecurityManagerModels() {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = RSBlocks.SECURITY_MANAGER.get(color).get();
+            String folderName = RSBlocks.SECURITY_MANAGER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+
+            models.horizontalRSBlock(block, state -> {
+                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                    return models.createCubeCutoutModel(
+                        "block/" + folderName + "/disconnected",
+                        BOTTOM,
+                        BOTTOM,
+                        resourceLocation(folderName, "top"),
+                        resourceLocation(folderName, "cutouts/top_disconnected"),
+                        resourceLocation(folderName, "right"),
+                        resourceLocation(folderName, "cutouts/right_disconnected"),
+                        resourceLocation(folderName, "left"),
+                        resourceLocation(folderName, "cutouts/left_disconnected"),
+                        resourceLocation(folderName, "front"),
+                        resourceLocation(folderName, "cutouts/front_disconnected"),
+                        resourceLocation(folderName, "back"),
+                        resourceLocation(folderName, "cutouts/back_disconnected")
+                    );
+                } else {
+                    ModelFile model = models.createCubeCutoutModel(
+                        "block/" + folderName + "/" + color,
+                        BOTTOM,
+                        BOTTOM,
+                        resourceLocation(folderName, "top"),
+                        resourceLocation(folderName, "cutouts/top" + "_" + color),
+                        resourceLocation(folderName, "right"),
+                        resourceLocation(folderName, "cutouts/right" + "_" + color),
+                        resourceLocation(folderName, "left"),
+                        resourceLocation(folderName, "cutouts/left" + "_" + color),
+                        resourceLocation(folderName, "front"),
+                        resourceLocation(folderName, "cutouts/front" + "_" + color),
+                        resourceLocation(folderName, "back"),
+                        resourceLocation(folderName, "cutouts/back" + "_" + color)
+                    );
+
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            }, 180);
+        }
+    }
+
+    private <T extends Block> void genCubeAllCutoutModels(Map<DyeColor, RegistryObject<T>> blockMap) {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = blockMap.get(color).get();
+            String folderName = blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+
+            models.simpleBlockStateModel(block, state -> {
+                if (state.get(NetworkNodeBlock.CONNECTED)) {
+                    return models.createCubeAllCutoutModel(
+                        "block/" + folderName + "/" + color,
+                        resourceLocation(folderName, folderName),
+                        resourceLocation(folderName, folderName),
+                        resourceLocation(folderName, "cutouts/" + color)
+                    );
+                } else {
+                    ModelFile model = models.createCubeAllCutoutModel(
+                        "block/" + folderName + "/disconnected",
+                        resourceLocation(folderName, folderName),
+                        resourceLocation(folderName, folderName),
+                        resourceLocation(folderName, "cutouts/disconnected")
+                    );
+
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            });
+        }
+    }
+
+    private void genCrafterModels() {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = RSBlocks.CRAFTER.get(color).get();
+            String folderName = RSBlocks.CRAFTER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+
+            models.anyDirectionalRSBlock(block, state -> {
+                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                    return models.createCubeCutoutModel(
+                        "block/" + folderName + "/disconnected",
+                        BOTTOM,
+                        BOTTOM,
+                        resourceLocation(folderName, "top"),
+                        resourceLocation(folderName, "cutouts/top_disconnected"),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_disconnected"),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_disconnected"),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_disconnected"),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_disconnected")
+                    );
+                } else {
+                    ModelFile model = models.createCubeCutoutModel(
+                        "block/" + folderName + "/" + color,
+                        BOTTOM,
+                        BOTTOM,
+                        resourceLocation(folderName, "top"),
+                        resourceLocation(folderName, "cutouts/top_" + color),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_" + color),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_" + color),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_" + color),
+                        resourceLocation(folderName, "side"),
+                        resourceLocation(folderName, "cutouts/side_" + color)
+                    );
+
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            }, 180);
+        }
+    }
+
+    private <T extends Block> void genControllerModels(Map<DyeColor, RegistryObject<T>> blockMap) {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = blockMap.get(color).get();
+            String folderName = RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+
+            models.simpleBlockStateModel(block, state -> {
+                if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.OFF)) {
+                    return models.createCubeAllCutoutModel(
+                        "block/" + folderName + "/off",
+                        resourceLocation(folderName, "off"),
+                        resourceLocation(folderName, "off"),
+                        resourceLocation(folderName, "cutouts/off")
+                    );
+                } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_OFF)) {
+                    return models.createControllerNearlyCutoutModel(
+                        "block/" + folderName + "/nearly_off",
+                        resourceLocation(folderName, "off"),
+                        resourceLocation(folderName, "on"),
+                        resourceLocation(folderName, "cutouts/nearly_off"),
+                        resourceLocation(folderName, "cutouts/nearly_off_gray")
+                    );
+                } else if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_ON)) {
+                    return models.createControllerNearlyCutoutModel(
+                        "block/" + folderName + "/nearly_on",
+                        resourceLocation(folderName, "off"),
+                        resourceLocation(folderName, "on"),
+                        resourceLocation(folderName, "cutouts/nearly_on"),
+                        resourceLocation(folderName, "cutouts/nearly_on_gray")
+                    );
+                } else {
+                    ModelFile model = models.createCubeAllCutoutModel(
+                        "block/" + folderName + "/" + color,
+                        resourceLocation(folderName, "off"),
+                        resourceLocation(folderName, "on"),
+                        resourceLocation(folderName, "cutouts/" + color)
+                    );
+
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            });
+        }
+    }
+
+    private <T extends Block> void genNorthCutoutModels(Map<DyeColor, RegistryObject<T>> blockMap) {
+        for (DyeColor color : DyeColor.values()) {
+            Block block = blockMap.get(color).get();
+            String folderName = blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+
+            models.horizontalRSBlock(block, state -> {
+                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                    return models.createCubeNorthCutoutModel(
+                        "block/" + folderName + "/disconnected",
+                        BOTTOM,
+                        resourceLocation(folderName, "top"),
+                        resourceLocation(folderName, "front"),
+                        resourceLocation(folderName, "back"),
+                        resourceLocation(folderName, "right"),
+                        resourceLocation(folderName, "left"),
+                        resourceLocation(folderName, "right"),
+                        resourceLocation(folderName, "cutouts/disconnected")
+                    );
+                } else {
+                    ModelFile model = models.createCubeNorthCutoutModel(
+                        "block/" + folderName + "/" + color,
+                        BOTTOM,
+                        resourceLocation(folderName, "top"),
+                        resourceLocation(folderName, "front"),
+                        resourceLocation(folderName, "back"),
+                        resourceLocation(folderName, "right"),
+                        resourceLocation(folderName, "left"),
+                        resourceLocation(folderName, "right"),
+                        resourceLocation(folderName, "cutouts/" + color)
+                    );
+
+                    simpleBlockItem(block, model);
+                    return model;
+                }
+            }, 180);
+        }
+    }
+
+    private ResourceLocation resourceLocation(String folderName, String name) {
+        return new ResourceLocation(RS.ID, "block/" + folderName + "/" + name);
     }
 }
