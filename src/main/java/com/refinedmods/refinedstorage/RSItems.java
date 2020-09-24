@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
@@ -142,21 +143,21 @@ public final class RSItems {
         registerBlockItemFor(RSBlocks.CONSTRUCTOR);
         registerBlockItemFor(RSBlocks.DESTRUCTOR);
 
-        CONTROLLER.put(DyeColor.LIGHT_BLUE, ITEMS.register(RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE).get(), DyeColor.LIGHT_BLUE, RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE))));
-        CREATIVE_CONTROLLER.put(DyeColor.LIGHT_BLUE, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE).get(), DyeColor.LIGHT_BLUE, RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE))));
+        CONTROLLER.put(BlockUtils.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR).get(), BlockUtils.DEFAULT_COLOR, RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR))));
+        CREATIVE_CONTROLLER.put(BlockUtils.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(BlockUtils.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(BlockUtils.DEFAULT_COLOR).get(), BlockUtils.DEFAULT_COLOR, RSBlocks.CREATIVE_CONTROLLER.get(BlockUtils.DEFAULT_COLOR))));
 
-        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath())), CONTROLLER);
+        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(BlockUtils.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
 
         LATE_REGISTRATION.add(() -> {
             RSBlocks.CONTROLLER.forEach((color, block) -> {
-                if (color != DyeColor.LIGHT_BLUE) {
-                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE))));
+                if (color != BlockUtils.DEFAULT_COLOR) {
+                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR))));
                 }
             });
 
             RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
-                if (color != DyeColor.LIGHT_BLUE) {
-                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE))));
+                if (color != BlockUtils.DEFAULT_COLOR) {
+                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, RSBlocks.CREATIVE_CONTROLLER.get(BlockUtils.DEFAULT_COLOR))));
                 }
             });
         });
@@ -195,14 +196,14 @@ public final class RSItems {
     }
 
     private static <T extends BaseBlock> void registerColoredItemsFromBlocks(Map<DyeColor, RegistryObject<T>> blockMap, Map<DyeColor, RegistryObject<BlockItem>> itemMap) {
-        RegistryObject<T> originalBlock = blockMap.get(DyeColor.LIGHT_BLUE);
-        itemMap.put(DyeColor.LIGHT_BLUE, registerColoredBlockItemFor(originalBlock, DyeColor.LIGHT_BLUE, originalBlock));
+        RegistryObject<T> originalBlock = blockMap.get(BlockUtils.DEFAULT_COLOR);
+        itemMap.put(BlockUtils.DEFAULT_COLOR, registerColoredBlockItemFor(originalBlock, BlockUtils.DEFAULT_COLOR, originalBlock));
         LATE_REGISTRATION.add(() -> blockMap.forEach((color, block) -> {
-            if (color != DyeColor.LIGHT_BLUE) {
+            if (color != BlockUtils.DEFAULT_COLOR) {
                 itemMap.put(color, registerColoredBlockItemFor(block, color, originalBlock));
             }
         }));
-        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(DyeColor.LIGHT_BLUE).getId().getPath())), itemMap);
+        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath())), itemMap);
     }
 
     public static void register() {

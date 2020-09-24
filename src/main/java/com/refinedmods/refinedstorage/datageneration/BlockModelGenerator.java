@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.DyeColor;
@@ -264,7 +265,7 @@ public class BlockModelGenerator extends BlockStateProvider {
 
     private String getBlockName(Block block, DyeColor color) {
         String name = block.getRegistryName().getPath();
-        if (color == DyeColor.LIGHT_BLUE) {
+        if (color == BlockUtils.DEFAULT_COLOR) {
             return name;
         } else {
             return name.substring(name.indexOf(color.getString()) + color.getString().length() + 1);

@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.*;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.DyeColor;
 import net.minecraftforge.fml.RegistryObject;
@@ -103,7 +104,7 @@ public final class RSBlocks {
 
     private static <T extends Block> void registerColoredBlocks(Map<DyeColor, RegistryObject<T>> blockMap, String name, Supplier<T> blockFactory) {
         for (DyeColor color : DyeColor.values()) {
-            String prefix = color != DyeColor.LIGHT_BLUE ? color + "_" : "";
+            String prefix = color != BlockUtils.DEFAULT_COLOR ? color + "_" : "";
             RegistryObject<T> block = BLOCKS.register(prefix + name, blockFactory);
             blockMap.put(color, block);
             COLORED_BLOCKS.add(block);

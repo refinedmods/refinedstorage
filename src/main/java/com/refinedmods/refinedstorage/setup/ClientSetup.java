@@ -16,6 +16,7 @@ import com.refinedmods.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
 import com.refinedmods.refinedstorage.screen.factory.GridScreenFactory;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
@@ -51,7 +52,7 @@ public class ClientSetup {
             }
         }
 
-        addColoredOverrides("controller", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
+        forEachColorApply("controller", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             base,
             true,
             new ResourceLocation(RS.ID, "block/controller/cutouts/" + color),
@@ -59,22 +60,22 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"))
 
         ));
-        addColoredOverrides("creative_controller", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
+        forEachColorApply("creative_controller", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             base,
             true,
             new ResourceLocation(RS.ID, "block/controller/cutouts/" + color),
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"))
         ));
-        addColoredOverrides("grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/grid/cutouts/"))));
-        addColoredOverrides("crafting_grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/crafting_grid/cutouts/"))));
-        addColoredOverrides("pattern_grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/pattern_grid/cutouts/"))));
-        addColoredOverrides("fluid_grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/fluid_grid/cutouts/"))));
-        addColoredOverrides("network_receiver", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/network_receiver/cutouts/"))));
-        addColoredOverrides("network_transmitter", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/network_transmitter/cutouts/"))));
-        addColoredOverrides("relay", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/relay/cutouts/"))));
-        addColoredOverrides("detector", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/detector/cutouts/"))));
-        addColoredOverrides("security_manager", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
+        forEachColorApply("grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/grid/cutouts/"))));
+        forEachColorApply("crafting_grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/crafting_grid/cutouts/"))));
+        forEachColorApply("pattern_grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/pattern_grid/cutouts/"))));
+        forEachColorApply("fluid_grid", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/fluid_grid/cutouts/"))));
+        forEachColorApply("network_receiver", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/network_receiver/cutouts/"))));
+        forEachColorApply("network_transmitter", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/network_transmitter/cutouts/"))));
+        forEachColorApply("relay", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/relay/cutouts/"))));
+        forEachColorApply("detector", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/detector/cutouts/"))));
+        forEachColorApply("security_manager", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             base,
             true,
             getMultipleColoredModels(color, "block/security_manager/cutouts/top_",
@@ -83,7 +84,7 @@ public class ClientSetup {
                 "block/security_manager/cutouts/back_",
                 "block/security_manager/cutouts/right_")
         )));
-        addColoredOverrides("wireless_transmitter", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/wireless_transmitter/cutouts/"))));
+        forEachColorApply("wireless_transmitter", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/wireless_transmitter/cutouts/"))));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "destructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/destructor/cutouts/connected")));
 
@@ -99,7 +100,7 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/disks/leds")
         ));
 
-        addColoredOverrides("disk_manipulator", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
+        forEachColorApply("disk_manipulator", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             new DiskManipulatorBakedModel(
                 base,
                 registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected")),
@@ -127,14 +128,14 @@ public class ClientSetup {
             ));
         }
 
-        addColoredOverrides("crafter", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
+        forEachColorApply("crafter", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             base,
             true,
             getMultipleColoredModels(color, "block/crafter/cutouts/side_", "block/crafter/cutouts/top_")
         )));
 
-        addColoredOverrides("crafter_manager", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/crafter_manager/cutouts/"))));
-        addColoredOverrides("crafting_monitor", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModels(color, "block/crafting_monitor/cutouts/"))));
+        forEachColorApply("crafter_manager", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/crafter_manager/cutouts/"))));
+        forEachColorApply("crafting_monitor", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(base, true, getColoredModel(color, "block/crafting_monitor/cutouts/"))));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
@@ -191,16 +192,16 @@ public class ClientSetup {
     }
 
     private ResourceLocation[] getMultipleColoredModels(DyeColor color, String... paths) {
-        return Arrays.stream(paths).map(path -> getColoredModels(color, path)).toArray(ResourceLocation[]::new);
+        return Arrays.stream(paths).map(path -> getColoredModel(color, path)).toArray(ResourceLocation[]::new);
     }
 
-    private ResourceLocation getColoredModels(DyeColor color, String path) {
+    private ResourceLocation getColoredModel(DyeColor color, String path) {
         return new ResourceLocation(RS.ID, path + color);
     }
 
-    private void addColoredOverrides(String name, BiConsumer<ResourceLocation, DyeColor> consumer) {
+    private void forEachColorApply(String name, BiConsumer<ResourceLocation, DyeColor> consumer) {
         for (DyeColor color : DyeColor.values()) {
-            String prefix = color == DyeColor.LIGHT_BLUE ? "" : color + "_";
+            String prefix = color == BlockUtils.DEFAULT_COLOR ? "" : color + "_";
             consumer.accept(new ResourceLocation(RS.ID, prefix + name), color);
         }
     }

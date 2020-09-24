@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.item.group;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
-import net.minecraft.item.DyeColor;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -13,6 +13,6 @@ public class MainItemGroup extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(RSBlocks.CREATIVE_CONTROLLER.get(DyeColor.LIGHT_BLUE).get());
+        return new ItemStack(RSBlocks.CREATIVE_CONTROLLER.get(BlockUtils.DEFAULT_COLOR).get());
     }
 }

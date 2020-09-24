@@ -135,6 +135,7 @@ public class ControllerBlock extends BaseBlock {
         BlockState newState = type == NetworkType.CREATIVE ?
             RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
             RSBlocks.CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
+
         ActionResultType colorResult = BlockUtils.changeBlockColor(newState, player.getHeldItem(hand), world, pos, player);
         if (colorResult != ActionResultType.PASS) {
             return colorResult;

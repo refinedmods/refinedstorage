@@ -11,14 +11,16 @@ import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class DiskManipulatorBakedModel extends DelegateBakedModel {
     private static class CacheKey {
@@ -77,7 +79,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(DyeColor.LIGHT_BLUE).get().getDirection().getProperty());
+            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(BlockUtils.DEFAULT_COLOR).get().getDirection().getProperty());
             boolean connected = key.state.get(DiskManipulatorBlock.CONNECTED);
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
