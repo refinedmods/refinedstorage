@@ -76,7 +76,7 @@ public final class RSItems {
 
     public static final Map<Tags.IOptionalNamedTag<Item>, Map<DyeColor, RegistryObject<BlockItem>>> COLORED_ITEM_TAGS = new HashMap<>();
 
-    private static final List<Runnable> lateRegistration = new ArrayList<>();
+    private static final List<Runnable> LATE_REGISTRATION = new ArrayList<>();
 
     static {
         CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);
@@ -147,7 +147,7 @@ public final class RSItems {
 
         COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(DyeColor.LIGHT_BLUE).getId().getPath())), CONTROLLER);
 
-        lateRegistration.add(() -> {
+        LATE_REGISTRATION.add(() -> {
             RSBlocks.CONTROLLER.forEach((color, block) -> {
                 if (color != DyeColor.LIGHT_BLUE) {
                     CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, RSBlocks.CONTROLLER.get(DyeColor.LIGHT_BLUE))));
@@ -183,7 +183,7 @@ public final class RSItems {
         WIRELESS_CRAFTING_MONITOR = ITEMS.register("wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
         CREATIVE_WIRELESS_CRAFTING_MONITOR = ITEMS.register("creative_wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
 
-        lateRegistration.forEach(Runnable::run);
+        LATE_REGISTRATION.forEach(Runnable::run);
     }
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
@@ -197,7 +197,7 @@ public final class RSItems {
     private static <T extends BaseBlock> void registerColoredItemsFromBlocks(Map<DyeColor, RegistryObject<T>> blockMap, Map<DyeColor, RegistryObject<BlockItem>> itemMap) {
         RegistryObject<T> originalBlock = blockMap.get(DyeColor.LIGHT_BLUE);
         itemMap.put(DyeColor.LIGHT_BLUE, registerColoredBlockItemFor(originalBlock, DyeColor.LIGHT_BLUE, originalBlock));
-        lateRegistration.add(() -> blockMap.forEach((color, block) -> {
+        LATE_REGISTRATION.add(() -> blockMap.forEach((color, block) -> {
             if (color != DyeColor.LIGHT_BLUE) {
                 itemMap.put(color, registerColoredBlockItemFor(block, color, originalBlock));
             }

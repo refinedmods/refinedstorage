@@ -6,12 +6,12 @@
     ]
   },
   "criteria": {
-    "cobblestone": {
+    "refinedstorage:grid": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:cobblestone"
+            "item": "refinedstorage:grid"
           }
         ]
       }
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "cobblestone",
+      "refinedstorage:grid",
       "has_the_recipe"
     ]
   ]
