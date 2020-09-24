@@ -143,19 +143,19 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.simpleBlockStateModel(block, state -> {
-                if (state.get(NetworkNodeBlock.CONNECTED)) {
+                if (!state.get(NetworkNodeBlock.CONNECTED)) {
                     return models.createCubeAllCutoutModel(
-                        "block/" + folderName + "/" + color,
-                        resourceLocation(folderName, folderName),
-                        resourceLocation(folderName, folderName),
-                        resourceLocation(folderName, "cutouts/" + color)
-                    );
-                } else {
-                    ModelFile model = models.createCubeAllCutoutModel(
                         "block/" + folderName + "/disconnected",
                         resourceLocation(folderName, folderName),
                         resourceLocation(folderName, folderName),
                         resourceLocation(folderName, "cutouts/disconnected")
+                    );
+                } else {
+                    ModelFile model = models.createCubeAllCutoutModel(
+                        "block/" + folderName + "/" + color,
+                        resourceLocation(folderName, folderName),
+                        resourceLocation(folderName, folderName),
+                        resourceLocation(folderName, "cutouts/" + color)
                     );
 
                     simpleBlockItem(block, model);

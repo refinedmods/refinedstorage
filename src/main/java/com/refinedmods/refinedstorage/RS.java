@@ -9,9 +9,7 @@ import com.refinedmods.refinedstorage.network.NetworkHandler;
 import com.refinedmods.refinedstorage.setup.ClientSetup;
 import com.refinedmods.refinedstorage.setup.CommonSetup;
 import com.refinedmods.refinedstorage.setup.ServerSetup;
-import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
@@ -43,6 +41,7 @@ public final class RS {
         CommonSetup commonSetup = new CommonSetup();
         RSBlocks.register();
         RSItems.register();
+        RSLootFunctions.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, commonSetup::onRegisterTiles);

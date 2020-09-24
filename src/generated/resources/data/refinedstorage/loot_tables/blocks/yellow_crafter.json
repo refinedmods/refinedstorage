@@ -6,6 +6,11 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "refinedstorage:crafter"
+            }
+          ],
           "name": "refinedstorage:yellow_crafter"
         }
       ],
