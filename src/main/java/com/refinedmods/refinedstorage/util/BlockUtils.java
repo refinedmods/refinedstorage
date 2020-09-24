@@ -21,7 +21,7 @@ public class BlockUtils {
     public static final Block.Properties DEFAULT_GLASS_PROPERTIES = Block.Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.35F);
     public static final DyeColor DEFAULT_COLOR = DyeColor.LIGHT_BLUE;
 
-    public static <T extends BaseBlock> ActionResultType changeBlockColor(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
+    public static ActionResultType changeBlockColor(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
         if (!world.isRemote) {
             world.setBlockState(pos, newState);
             if (((ServerPlayerEntity) player).interactionManager.getGameType() != GameType.CREATIVE) {
