@@ -10,7 +10,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -143,21 +143,21 @@ public final class RSItems {
         registerBlockItemFor(RSBlocks.CONSTRUCTOR);
         registerBlockItemFor(RSBlocks.DESTRUCTOR);
 
-        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, new StringTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
-        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, new StringTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, new TranslationTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, new TranslationTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
 
         COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
 
         LATE_REGISTRATION.add(() -> {
             RSBlocks.CONTROLLER.forEach((color, block) -> {
                 if (color != ColorMap.DEFAULT_COLOR) {
-                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, new StringTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
                 }
             });
 
             RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
                 if (color != ColorMap.DEFAULT_COLOR) {
-                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, new StringTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
                 }
             });
         });
