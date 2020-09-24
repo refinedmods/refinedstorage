@@ -35,7 +35,7 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.DISK_MANIPULATOR, state, player.getHeldItem(hand), world, pos, player);
+        ActionResultType result = RSBlocks.DISK_MANIPULATOR.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }

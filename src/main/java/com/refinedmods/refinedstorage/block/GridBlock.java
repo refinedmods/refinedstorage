@@ -67,7 +67,7 @@ public class GridBlock extends ColoredNetworkBlock {
                 throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        ActionResultType result = BlockUtils.changeBlockColor(map, state, player.getHeldItem(hand), world, pos, player);
+        ActionResultType result = map.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }

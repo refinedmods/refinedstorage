@@ -40,7 +40,7 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.CRAFTING_MONITOR, state, player.getHeldItem(hand), world, pos, player);
+        ActionResultType result = RSBlocks.CRAFTING_MONITOR.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }

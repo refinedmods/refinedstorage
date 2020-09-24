@@ -76,7 +76,7 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.WIRELESS_TRANSMITTER, state, player.getHeldItem(hand), world, pos, player);
+        ActionResultType result = RSBlocks.WIRELESS_TRANSMITTER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }

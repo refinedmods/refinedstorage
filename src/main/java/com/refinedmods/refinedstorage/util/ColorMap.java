@@ -4,14 +4,23 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.block.BaseBlock;
+import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.item.blockitem.ColoredBlockItem;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.GameType;
+import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -86,5 +95,29 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
 
     private <S extends BaseBlock> RegistryObject<T> registerBlockItemFor(RegistryObject<S> block, DyeColor color, RegistryObject<S> translationBlock) {
         return (RegistryObject<T>) itemRegister.register(block.getId().getPath(), () -> new ColoredBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP), color, new StringTextComponent(translationBlock.get().getTranslationKey())));
+    }
+
+    public <S extends BaseBlock> ActionResultType changeBlockColor(BlockState state, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
+        DyeColor color = DyeColor.getColor(heldItem);
+        if (color == null) {
+            return ActionResultType.PASS;
+        }
+        return setBlockState(getNewState((RegistryObject<S>) colorMap.get(color), state), heldItem, world, pos, player);
+    }
+
+    private <S extends BaseBlock> BlockState getNewState(RegistryObject<S> block, BlockState state) {
+        return block.get().getDefaultState()
+            .with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED))
+            .with(block.get().getDirection().getProperty(), state.get(block.get().getDirection().getProperty()));
+    }
+
+    public ActionResultType setBlockState(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
+        if (!world.isRemote) {
+            world.setBlockState(pos, newState);
+            if (((ServerPlayerEntity) player).interactionManager.getGameType() != GameType.CREATIVE) {
+                heldItem.shrink(1);
+            }
+        }
+        return ActionResultType.SUCCESS;
     }
 }

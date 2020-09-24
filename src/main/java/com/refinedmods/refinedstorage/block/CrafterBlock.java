@@ -56,7 +56,7 @@ public class CrafterBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = BlockUtils.changeBlockColor(RSBlocks.CRAFTER, state, player.getHeldItem(hand), world, pos, player);
+        ActionResultType result = RSBlocks.CRAFTER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
