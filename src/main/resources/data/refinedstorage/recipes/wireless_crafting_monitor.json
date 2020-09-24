@@ -13,7 +13,7 @@
       "tag": "forge:ender_pearls"
     },
     "M": {
-      "item": "refinedstorage:crafting_monitor"
+      "tag": "refinedstorage:crafting_monitor"
     },
     "A": {
       "item": "refinedstorage:advanced_processor"

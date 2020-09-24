@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -124,6 +125,22 @@ public class ControllerBlock extends BaseBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, hit);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
+        DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
+
+        BlockState newState = type == NetworkType.CREATIVE ?
+            RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
+            RSBlocks.CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
+
+        ActionResultType colorResult = RSBlocks.CONTROLLER.setBlockState(newState, player.getHeldItem(hand), world, pos, player);
+        if (colorResult != ActionResultType.PASS) {
+            return colorResult;
+        }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
@@ -143,5 +160,13 @@ public class ControllerBlock extends BaseBlock {
         }
 
         return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (newState.getBlock() instanceof ControllerBlock) {
+            return;
+        }
+        super.onReplaced(state, world, pos, newState, isMoving);
     }
 }

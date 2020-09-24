@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.RelayContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.RelayTile;
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class RelayBlock extends NetworkNodeBlock {
+public class RelayBlock extends ColoredNetworkBlock {
     public RelayBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
     }
@@ -33,7 +34,12 @@ public class RelayBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.RELAY.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

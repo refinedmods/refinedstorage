@@ -5,18 +5,25 @@ import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class RSItems {
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RS.ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RS.ID);
 
     public static final RegistryObject<QuartzEnrichedIronItem> QUARTZ_ENRICHED_IRON;
     public static final RegistryObject<SiliconItem> SILICON;
@@ -27,8 +34,6 @@ public final class RSItems {
     public static final RegistryObject<StorageHousingItem> STORAGE_HOUSING;
     public static final RegistryObject<NetworkCardItem> NETWORK_CARD;
     public static final RegistryObject<SecurityCardItem> SECURITY_CARD;
-    public static final RegistryObject<ControllerBlockItem> CONTROLLER;
-    public static final RegistryObject<ControllerBlockItem> CREATIVE_CONTROLLER;
     public static final RegistryObject<CoreItem> CONSTRUCTION_CORE;
     public static final RegistryObject<CoreItem> DESTRUCTION_CORE;
     public static final RegistryObject<WirelessGridItem> WIRELESS_GRID;
@@ -39,6 +44,7 @@ public final class RSItems {
     public static final RegistryObject<PortableGridBlockItem> CREATIVE_PORTABLE_GRID;
     public static final RegistryObject<WirelessCraftingMonitorItem> WIRELESS_CRAFTING_MONITOR;
     public static final RegistryObject<WirelessCraftingMonitorItem> CREATIVE_WIRELESS_CRAFTING_MONITOR;
+    public static final RegistryObject<BlockItem> MACHINE_CASING;
 
     public static final Map<ProcessorItem.Type, RegistryObject<ProcessorItem>> PROCESSORS = new HashMap<>();
 
@@ -51,6 +57,27 @@ public final class RSItems {
     public static final Map<FluidStorageType, RegistryObject<FluidStorageBlockItem>> FLUID_STORAGE_BLOCKS = new HashMap<>();
 
     public static final Map<UpgradeItem.Type, RegistryObject<UpgradeItem>> UPGRADE_ITEMS = new HashMap<>();
+
+    public static final Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> COLORED_ITEM_TAGS = new HashMap<>();
+
+    private static final List<Runnable> LATE_REGISTRATION = new ArrayList<>();
+
+    public static final ColorMap<BlockItem> CRAFTER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> RELAY = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> NETWORK_TRANSMITTER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> NETWORK_RECEIVER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> CONTROLLER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> CREATIVE_CONTROLLER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> CRAFTING_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> PATTERN_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> FLUID_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> SECURITY_MANAGER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> WIRELESS_TRANSMITTER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> DISK_MANIPULATOR = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> CRAFTER_MANAGER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> CRAFTING_MONITOR = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> DETECTOR = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
 
     static {
         CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);
@@ -94,16 +121,10 @@ public final class RSItems {
         PORTABLE_GRID = ITEMS.register("portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.NORMAL));
         CREATIVE_PORTABLE_GRID = ITEMS.register("creative_portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
 
-        createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
-        CONTROLLER = ITEMS.register(RSBlocks.CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get()));
-        CREATIVE_CONTROLLER = ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get()));
-        createBlockItemFor(RSBlocks.MACHINE_CASING);
-        createBlockItemFor(RSBlocks.CABLE);
-        createBlockItemFor(RSBlocks.DISK_DRIVE);
-        createBlockItemFor(RSBlocks.GRID);
-        createBlockItemFor(RSBlocks.CRAFTING_GRID);
-        createBlockItemFor(RSBlocks.PATTERN_GRID);
-        createBlockItemFor(RSBlocks.FLUID_GRID);
+        registerBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
+        MACHINE_CASING = registerBlockItemFor(RSBlocks.MACHINE_CASING);
+        registerBlockItemFor(RSBlocks.CABLE);
+        registerBlockItemFor(RSBlocks.DISK_DRIVE);
 
         for (ItemStorageType type : ItemStorageType.values()) {
             STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.STORAGE_BLOCKS.get(type).getId().getPath(), () -> new StorageBlockItem(RSBlocks.STORAGE_BLOCKS.get(type).get())));
@@ -113,24 +134,48 @@ public final class RSItems {
             FLUID_STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).getId().getPath(), () -> new FluidStorageBlockItem(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).get())));
         }
 
-        createBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
-        createBlockItemFor(RSBlocks.IMPORTER);
-        createBlockItemFor(RSBlocks.EXPORTER);
-        createBlockItemFor(RSBlocks.NETWORK_RECEIVER);
-        createBlockItemFor(RSBlocks.NETWORK_TRANSMITTER);
-        createBlockItemFor(RSBlocks.RELAY);
-        createBlockItemFor(RSBlocks.DETECTOR);
-        createBlockItemFor(RSBlocks.SECURITY_MANAGER);
-        createBlockItemFor(RSBlocks.INTERFACE);
-        createBlockItemFor(RSBlocks.FLUID_INTERFACE);
-        createBlockItemFor(RSBlocks.WIRELESS_TRANSMITTER);
-        createBlockItemFor(RSBlocks.STORAGE_MONITOR);
-        createBlockItemFor(RSBlocks.CONSTRUCTOR);
-        createBlockItemFor(RSBlocks.DESTRUCTOR);
-        createBlockItemFor(RSBlocks.DISK_MANIPULATOR);
-        createBlockItemFor(RSBlocks.CRAFTER);
-        createBlockItemFor(RSBlocks.CRAFTER_MANAGER);
-        createBlockItemFor(RSBlocks.CRAFTING_MONITOR);
+        registerBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
+        registerBlockItemFor(RSBlocks.IMPORTER);
+        registerBlockItemFor(RSBlocks.EXPORTER);
+        registerBlockItemFor(RSBlocks.INTERFACE);
+        registerBlockItemFor(RSBlocks.FLUID_INTERFACE);
+        registerBlockItemFor(RSBlocks.STORAGE_MONITOR);
+        registerBlockItemFor(RSBlocks.CONSTRUCTOR);
+        registerBlockItemFor(RSBlocks.DESTRUCTOR);
+
+        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslatedName())));
+        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslatedName())));
+
+        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
+
+        LATE_REGISTRATION.add(() -> {
+            RSBlocks.CONTROLLER.forEach((color, block) -> {
+                if (color != ColorMap.DEFAULT_COLOR) {
+                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+                }
+            });
+
+            RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
+                if (color != ColorMap.DEFAULT_COLOR) {
+                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+                }
+            });
+        });
+
+        GRID.registerItemsFromBlocks(RSBlocks.GRID);
+        CRAFTING_GRID.registerItemsFromBlocks(RSBlocks.CRAFTING_GRID);
+        PATTERN_GRID.registerItemsFromBlocks(RSBlocks.PATTERN_GRID);
+        FLUID_GRID.registerItemsFromBlocks(RSBlocks.FLUID_GRID);
+        NETWORK_RECEIVER.registerItemsFromBlocks(RSBlocks.NETWORK_RECEIVER);
+        NETWORK_TRANSMITTER.registerItemsFromBlocks(RSBlocks.NETWORK_TRANSMITTER);
+        RELAY.registerItemsFromBlocks(RSBlocks.RELAY);
+        DETECTOR.registerItemsFromBlocks(RSBlocks.DETECTOR);
+        SECURITY_MANAGER.registerItemsFromBlocks(RSBlocks.SECURITY_MANAGER);
+        WIRELESS_TRANSMITTER.registerItemsFromBlocks(RSBlocks.WIRELESS_TRANSMITTER);
+        DISK_MANIPULATOR.registerItemsFromBlocks(RSBlocks.DISK_MANIPULATOR);
+        CRAFTER.registerItemsFromBlocks(RSBlocks.CRAFTER);
+        CRAFTER_MANAGER.registerItemsFromBlocks(RSBlocks.CRAFTER_MANAGER);
+        CRAFTING_MONITOR.registerItemsFromBlocks(RSBlocks.CRAFTING_MONITOR);
 
         WIRELESS_GRID = ITEMS.register("wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         CREATIVE_WIRELESS_GRID = ITEMS.register("creative_wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
@@ -138,9 +183,11 @@ public final class RSItems {
         CREATIVE_WIRELESS_FLUID_GRID = ITEMS.register("creative_wireless_fluid_grid", () -> new WirelessFluidGridItem(WirelessFluidGridItem.Type.CREATIVE));
         WIRELESS_CRAFTING_MONITOR = ITEMS.register("wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
         CREATIVE_WIRELESS_CRAFTING_MONITOR = ITEMS.register("creative_wireless_crafting_monitor", () -> new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
+
+        LATE_REGISTRATION.forEach(Runnable::run);
     }
 
-    private static <T extends BaseBlock> RegistryObject<BlockItem> createBlockItemFor(RegistryObject<T> block) {
+    private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
         return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP)));
     }
 

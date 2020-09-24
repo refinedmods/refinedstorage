@@ -39,6 +39,10 @@ public class CrafterLootFunction extends LootFunction {
         return RSLootFunctions.CRAFTER;
     }
 
+    public static LootFunction.Builder<?> builder() {
+        return builder(CrafterLootFunction::new);
+    }
+
     public static class Serializer extends LootFunction.Serializer<CrafterLootFunction> {
         @Override
         public CrafterLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {

@@ -201,16 +201,12 @@
   "sidebutton.refinedstorage.detector.mode.0": "Emit signal when under the amount",
   "sidebutton.refinedstorage.detector.mode.1": "Emit signal when on the amount",
   "sidebutton.refinedstorage.detector.mode.2": "Emit signal when above the amount",
-
   "sidebutton.refinedstorage.constructor.drop": "Drop blocks instead of placing",
-
   "sidebutton.refinedstorage.destructor.pickup": "Pickup items instead of breaking",
-
   "sidebutton.refinedstorage.access_type": "Access type",
   "sidebutton.refinedstorage.access_type.0": "Insert and extract",
   "sidebutton.refinedstorage.access_type.1": "Insert only",
   "sidebutton.refinedstorage.access_type.2": "Extract only",
-
   "block.refinedstorage.controller": "Controller",
   "block.refinedstorage.creative_controller": "Creative Controller",
   "block.refinedstorage.cable": "Cable",
@@ -252,7 +248,6 @@
   "block.refinedstorage.creative_portable_grid": "Creative Portable Grid",
   "block.refinedstorage.portable_grid.tooltip": "Sneak to place in the world.",
   "block.refinedstorage.crafter_manager": "Crafter Manager",
-
   "item.refinedstorage.1k_storage_disk": "1k Storage Disk",
   "item.refinedstorage.4k_storage_disk": "4k Storage Disk",
   "item.refinedstorage.16k_storage_disk": "16k Storage Disk",

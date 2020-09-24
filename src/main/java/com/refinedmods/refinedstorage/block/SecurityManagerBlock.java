@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.SecurityManagerContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class SecurityManagerBlock extends NetworkNodeBlock {
+public class SecurityManagerBlock extends ColoredNetworkBlock {
     public SecurityManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
     }
@@ -33,7 +34,12 @@ public class SecurityManagerBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.SECURITY_MANAGER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
         if (!world.isRemote) {
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

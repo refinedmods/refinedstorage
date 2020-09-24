@@ -10,7 +10,7 @@
       "item": "refinedstorage:advanced_processor"
     },
     "C": {
-      "item": "refinedstorage:crafter"
+      "tag": "refinedstorage:crafter"
     },
     "G": {
       "tag": "forge:glass"

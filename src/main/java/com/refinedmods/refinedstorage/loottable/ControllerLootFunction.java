@@ -37,6 +37,10 @@ public class ControllerLootFunction extends LootFunction {
         return RSLootFunctions.CONTROLLER;
     }
 
+    public static LootFunction.Builder<?> builder() {
+        return builder(ControllerLootFunction::new);
+    }
+
     public static class Serializer extends LootFunction.Serializer<ControllerLootFunction> {
         @Override
         public ControllerLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {

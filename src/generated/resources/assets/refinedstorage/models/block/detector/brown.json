@@ -1,0 +1,6 @@
+{
+  "parent": "refinedstorage:block/detector",
+  "textures": {
+    "torch": "refinedstorage:block/detector/cutouts/brown"
+  }
+}

@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.block.DetectorBlock;
@@ -65,7 +64,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
             wasPowered = powered;
 
             world.setBlockState(pos, world.getBlockState(pos).with(DetectorBlock.POWERED, powered));
-            world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR.get());
+            world.notifyNeighborsOfStateChange(pos, world.getBlockState(pos).getBlock());
         }
 
         if (canUpdate() && ticks % SPEED == 0) {
