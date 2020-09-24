@@ -6,9 +6,8 @@ import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.*;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.block.Block;
-import net.minecraft.item.DyeColor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -18,10 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public final class RSBlocks {
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
 
     public static final RegistryObject<ImporterBlock> IMPORTER;
     public static final RegistryObject<ExporterBlock> EXPORTER;
@@ -41,22 +39,22 @@ public final class RSBlocks {
     public static final RegistryObject<PortableGridBlock> PORTABLE_GRID;
     public static final RegistryObject<PortableGridBlock> CREATIVE_PORTABLE_GRID;
 
-    public static final Map<DyeColor, RegistryObject<CrafterBlock>> CRAFTER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<RelayBlock>> RELAY = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<NetworkTransmitterBlock>> NETWORK_TRANSMITTER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<NetworkReceiverBlock>> NETWORK_RECEIVER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<ControllerBlock>> CONTROLLER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<ControllerBlock>> CREATIVE_CONTROLLER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<GridBlock>> GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<GridBlock>> CRAFTING_GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<GridBlock>> PATTERN_GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<GridBlock>> FLUID_GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<SecurityManagerBlock>> SECURITY_MANAGER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<WirelessTransmitterBlock>> WIRELESS_TRANSMITTER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<DiskManipulatorBlock>> DISK_MANIPULATOR = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<CrafterManagerBlock>> CRAFTER_MANAGER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<CraftingMonitorBlock>> CRAFTING_MONITOR = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<DetectorBlock>> DETECTOR = new HashMap<>();
+    public static final ColorMap<CrafterBlock> CRAFTER = new ColorMap<>();
+    public static final ColorMap<RelayBlock> RELAY = new ColorMap<>();
+    public static final ColorMap<NetworkTransmitterBlock> NETWORK_TRANSMITTER = new ColorMap<>();
+    public static final ColorMap<NetworkReceiverBlock> NETWORK_RECEIVER = new ColorMap<>();
+    public static final ColorMap<ControllerBlock> CONTROLLER = new ColorMap<>();
+    public static final ColorMap<ControllerBlock> CREATIVE_CONTROLLER = new ColorMap<>();
+    public static final ColorMap<GridBlock> GRID = new ColorMap<>();
+    public static final ColorMap<GridBlock> CRAFTING_GRID = new ColorMap<>();
+    public static final ColorMap<GridBlock> PATTERN_GRID = new ColorMap<>();
+    public static final ColorMap<GridBlock> FLUID_GRID = new ColorMap<>();
+    public static final ColorMap<SecurityManagerBlock> SECURITY_MANAGER = new ColorMap<>();
+    public static final ColorMap<WirelessTransmitterBlock> WIRELESS_TRANSMITTER = new ColorMap<>();
+    public static final ColorMap<DiskManipulatorBlock> DISK_MANIPULATOR = new ColorMap<>();
+    public static final ColorMap<CrafterManagerBlock> CRAFTER_MANAGER = new ColorMap<>();
+    public static final ColorMap<CraftingMonitorBlock> CRAFTING_MONITOR = new ColorMap<>();
+    public static final ColorMap<DetectorBlock> DETECTOR = new ColorMap<>();
 
     public static final List<RegistryObject<? extends Block>> COLORED_BLOCKS = new ArrayList<>();
 
@@ -84,31 +82,22 @@ public final class RSBlocks {
             FLUID_STORAGE_BLOCKS.put(type, BLOCKS.register(type.getName() + "_fluid_storage_block", () -> new FluidStorageBlock(type)));
         }
 
-        registerColoredBlocks(GRID, "grid", () -> new GridBlock(GridType.NORMAL));
-        registerColoredBlocks(CRAFTING_GRID, GridType.CRAFTING.getString() + "_grid", () -> new GridBlock(GridType.CRAFTING));
-        registerColoredBlocks(PATTERN_GRID, GridType.PATTERN.getString() + "_grid", () -> new GridBlock(GridType.PATTERN));
-        registerColoredBlocks(FLUID_GRID, GridType.FLUID.getString() + "_grid", () -> new GridBlock(GridType.FLUID));
-        registerColoredBlocks(CONTROLLER, "controller", () -> new ControllerBlock(NetworkType.NORMAL));
-        registerColoredBlocks(CREATIVE_CONTROLLER, "creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
-        registerColoredBlocks(NETWORK_RECEIVER, "network_receiver", NetworkReceiverBlock::new);
-        registerColoredBlocks(NETWORK_TRANSMITTER, "network_transmitter", NetworkTransmitterBlock::new);
-        registerColoredBlocks(RELAY, "relay", RelayBlock::new);
-        registerColoredBlocks(SECURITY_MANAGER, "security_manager", SecurityManagerBlock::new);
-        registerColoredBlocks(WIRELESS_TRANSMITTER, "wireless_transmitter", WirelessTransmitterBlock::new);
-        registerColoredBlocks(DISK_MANIPULATOR, "disk_manipulator", DiskManipulatorBlock::new);
-        registerColoredBlocks(CRAFTER, "crafter", CrafterBlock::new);
-        registerColoredBlocks(CRAFTER_MANAGER, "crafter_manager", CrafterManagerBlock::new);
-        registerColoredBlocks(CRAFTING_MONITOR, "crafting_monitor", CraftingMonitorBlock::new);
-        registerColoredBlocks(DETECTOR, "detector", DetectorBlock::new);
-    }
-
-    private static <T extends Block> void registerColoredBlocks(Map<DyeColor, RegistryObject<T>> blockMap, String name, Supplier<T> blockFactory) {
-        for (DyeColor color : DyeColor.values()) {
-            String prefix = color != BlockUtils.DEFAULT_COLOR ? color + "_" : "";
-            RegistryObject<T> block = BLOCKS.register(prefix + name, blockFactory);
-            blockMap.put(color, block);
-            COLORED_BLOCKS.add(block);
-        }
+        GRID.registerColoredBlocks("grid", () -> new GridBlock(GridType.NORMAL));
+        CRAFTING_GRID.registerColoredBlocks(GridType.CRAFTING.getString() + "_grid", () -> new GridBlock(GridType.CRAFTING));
+        PATTERN_GRID.registerColoredBlocks(GridType.PATTERN.getString() + "_grid", () -> new GridBlock(GridType.PATTERN));
+        FLUID_GRID.registerColoredBlocks(GridType.FLUID.getString() + "_grid", () -> new GridBlock(GridType.FLUID));
+        CONTROLLER.registerColoredBlocks("controller", () -> new ControllerBlock(NetworkType.NORMAL));
+        CREATIVE_CONTROLLER.registerColoredBlocks("creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
+        NETWORK_RECEIVER.registerColoredBlocks("network_receiver", NetworkReceiverBlock::new);
+        NETWORK_TRANSMITTER.registerColoredBlocks("network_transmitter", NetworkTransmitterBlock::new);
+        RELAY.registerColoredBlocks("relay", RelayBlock::new);
+        SECURITY_MANAGER.registerColoredBlocks("security_manager", SecurityManagerBlock::new);
+        WIRELESS_TRANSMITTER.registerColoredBlocks("wireless_transmitter", WirelessTransmitterBlock::new);
+        DISK_MANIPULATOR.registerColoredBlocks("disk_manipulator", DiskManipulatorBlock::new);
+        CRAFTER.registerColoredBlocks("crafter", CrafterBlock::new);
+        CRAFTER_MANAGER.registerColoredBlocks("crafter_manager", CrafterManagerBlock::new);
+        CRAFTING_MONITOR.registerColoredBlocks("crafting_monitor", CraftingMonitorBlock::new);
+        DETECTOR.registerColoredBlocks("detector", DetectorBlock::new);
     }
 
     public static void register() {

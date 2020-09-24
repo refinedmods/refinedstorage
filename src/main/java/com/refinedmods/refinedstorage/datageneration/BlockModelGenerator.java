@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.DyeColor;
@@ -13,9 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
-
-import java.util.Map;
 
 public class BlockModelGenerator extends BlockStateProvider {
     private final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
@@ -141,7 +139,7 @@ public class BlockModelGenerator extends BlockStateProvider {
         }
     }
 
-    private <T extends Block> void genCubeAllCutoutModels(Map<DyeColor, RegistryObject<T>> blockMap) {
+    private <T extends Block> void genCubeAllCutoutModels(ColorMap<T> blockMap) {
         for (DyeColor color : DyeColor.values()) {
             Block block = blockMap.get(color).get();
             String folderName = blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
@@ -215,7 +213,7 @@ public class BlockModelGenerator extends BlockStateProvider {
         }
     }
 
-    private <T extends Block> void genControllerModels(Map<DyeColor, RegistryObject<T>> blockMap) {
+    private <T extends Block> void genControllerModels(ColorMap<T> blockMap) {
         for (DyeColor color : DyeColor.values()) {
             Block block = blockMap.get(color).get();
             String folderName = RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
@@ -259,7 +257,7 @@ public class BlockModelGenerator extends BlockStateProvider {
         }
     }
 
-    private <T extends Block> void genNorthCutoutModels(Map<DyeColor, RegistryObject<T>> blockMap) {
+    private <T extends Block> void genNorthCutoutModels(ColorMap<T> blockMap) {
         for (DyeColor color : DyeColor.values()) {
             Block block = blockMap.get(color).get();
             String folderName = blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath();

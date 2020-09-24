@@ -6,8 +6,8 @@ import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
 import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class RSItems {
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RS.ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RS.ID);
 
     public static final RegistryObject<QuartzEnrichedIronItem> QUARTZ_ENRICHED_IRON;
     public static final RegistryObject<SiliconItem> SILICON;
@@ -58,26 +58,26 @@ public final class RSItems {
 
     public static final Map<UpgradeItem.Type, RegistryObject<UpgradeItem>> UPGRADE_ITEMS = new HashMap<>();
 
-    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> RELAY = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> NETWORK_TRANSMITTER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> NETWORK_RECEIVER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> CONTROLLER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> CREATIVE_CONTROLLER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTING_GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> PATTERN_GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> FLUID_GRID = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> SECURITY_MANAGER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> WIRELESS_TRANSMITTER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> DISK_MANIPULATOR = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTER_MANAGER = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> CRAFTING_MONITOR = new HashMap<>();
-    public static final Map<DyeColor, RegistryObject<BlockItem>> DETECTOR = new HashMap<>();
+    public static final ColorMap<BlockItem> CRAFTER = new ColorMap<>();
+    public static final ColorMap<BlockItem> RELAY = new ColorMap<>();
+    public static final ColorMap<BlockItem> NETWORK_TRANSMITTER = new ColorMap<>();
+    public static final ColorMap<BlockItem> NETWORK_RECEIVER = new ColorMap<>();
+    public static final ColorMap<BlockItem> CONTROLLER = new ColorMap<>();
+    public static final ColorMap<BlockItem> CREATIVE_CONTROLLER = new ColorMap<>();
+    public static final ColorMap<BlockItem> GRID = new ColorMap<>();
+    public static final ColorMap<BlockItem> CRAFTING_GRID = new ColorMap<>();
+    public static final ColorMap<BlockItem> PATTERN_GRID = new ColorMap<>();
+    public static final ColorMap<BlockItem> FLUID_GRID = new ColorMap<>();
+    public static final ColorMap<BlockItem> SECURITY_MANAGER = new ColorMap<>();
+    public static final ColorMap<BlockItem> WIRELESS_TRANSMITTER = new ColorMap<>();
+    public static final ColorMap<BlockItem> DISK_MANIPULATOR = new ColorMap<>();
+    public static final ColorMap<BlockItem> CRAFTER_MANAGER = new ColorMap<>();
+    public static final ColorMap<BlockItem> CRAFTING_MONITOR = new ColorMap<>();
+    public static final ColorMap<BlockItem> DETECTOR = new ColorMap<>();
 
-    public static final Map<Tags.IOptionalNamedTag<Item>, Map<DyeColor, RegistryObject<BlockItem>>> COLORED_ITEM_TAGS = new HashMap<>();
+    public static final Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> COLORED_ITEM_TAGS = new HashMap<>();
 
-    private static final List<Runnable> LATE_REGISTRATION = new ArrayList<>();
+    public static final List<Runnable> LATE_REGISTRATION = new ArrayList<>();
 
     static {
         CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);
@@ -162,20 +162,20 @@ public final class RSItems {
             });
         });
 
-        registerColoredItemsFromBlocks(RSBlocks.GRID, GRID);
-        registerColoredItemsFromBlocks(RSBlocks.CRAFTING_GRID, CRAFTING_GRID);
-        registerColoredItemsFromBlocks(RSBlocks.PATTERN_GRID, PATTERN_GRID);
-        registerColoredItemsFromBlocks(RSBlocks.FLUID_GRID, FLUID_GRID);
-        registerColoredItemsFromBlocks(RSBlocks.NETWORK_RECEIVER, NETWORK_RECEIVER);
-        registerColoredItemsFromBlocks(RSBlocks.NETWORK_TRANSMITTER, NETWORK_TRANSMITTER);
-        registerColoredItemsFromBlocks(RSBlocks.RELAY, RELAY);
-        registerColoredItemsFromBlocks(RSBlocks.DETECTOR, DETECTOR);
-        registerColoredItemsFromBlocks(RSBlocks.SECURITY_MANAGER, SECURITY_MANAGER);
-        registerColoredItemsFromBlocks(RSBlocks.WIRELESS_TRANSMITTER, WIRELESS_TRANSMITTER);
-        registerColoredItemsFromBlocks(RSBlocks.DISK_MANIPULATOR, DISK_MANIPULATOR);
-        registerColoredItemsFromBlocks(RSBlocks.CRAFTER, CRAFTER);
-        registerColoredItemsFromBlocks(RSBlocks.CRAFTER_MANAGER, CRAFTER_MANAGER);
-        registerColoredItemsFromBlocks(RSBlocks.CRAFTING_MONITOR, CRAFTING_MONITOR);
+        GRID.registerColoredItemsFromBlocks(RSBlocks.GRID);
+        CRAFTING_GRID.registerColoredItemsFromBlocks(RSBlocks.CRAFTING_GRID);
+        PATTERN_GRID.registerColoredItemsFromBlocks(RSBlocks.PATTERN_GRID);
+        FLUID_GRID.registerColoredItemsFromBlocks(RSBlocks.FLUID_GRID);
+        NETWORK_RECEIVER.registerColoredItemsFromBlocks(RSBlocks.NETWORK_RECEIVER);
+        NETWORK_TRANSMITTER.registerColoredItemsFromBlocks(RSBlocks.NETWORK_TRANSMITTER);
+        RELAY.registerColoredItemsFromBlocks(RSBlocks.RELAY);
+        DETECTOR.registerColoredItemsFromBlocks(RSBlocks.DETECTOR);
+        SECURITY_MANAGER.registerColoredItemsFromBlocks(RSBlocks.SECURITY_MANAGER);
+        WIRELESS_TRANSMITTER.registerColoredItemsFromBlocks(RSBlocks.WIRELESS_TRANSMITTER);
+        DISK_MANIPULATOR.registerColoredItemsFromBlocks(RSBlocks.DISK_MANIPULATOR);
+        CRAFTER.registerColoredItemsFromBlocks(RSBlocks.CRAFTER);
+        CRAFTER_MANAGER.registerColoredItemsFromBlocks(RSBlocks.CRAFTER_MANAGER);
+        CRAFTING_MONITOR.registerColoredItemsFromBlocks(RSBlocks.CRAFTING_MONITOR);
 
         WIRELESS_GRID = ITEMS.register("wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         CREATIVE_WIRELESS_GRID = ITEMS.register("creative_wireless_grid", () -> new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
@@ -189,21 +189,6 @@ public final class RSItems {
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
         return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP)));
-    }
-
-    private static <T extends BaseBlock> RegistryObject<BlockItem> registerColoredBlockItemFor(RegistryObject<T> block, DyeColor color, RegistryObject<T> translationBlock) {
-        return ITEMS.register(block.getId().getPath(), () -> new ColoredBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP), color, translationBlock));
-    }
-
-    private static <T extends BaseBlock> void registerColoredItemsFromBlocks(Map<DyeColor, RegistryObject<T>> blockMap, Map<DyeColor, RegistryObject<BlockItem>> itemMap) {
-        RegistryObject<T> originalBlock = blockMap.get(BlockUtils.DEFAULT_COLOR);
-        itemMap.put(BlockUtils.DEFAULT_COLOR, registerColoredBlockItemFor(originalBlock, BlockUtils.DEFAULT_COLOR, originalBlock));
-        LATE_REGISTRATION.add(() -> blockMap.forEach((color, block) -> {
-            if (color != BlockUtils.DEFAULT_COLOR) {
-                itemMap.put(color, registerColoredBlockItemFor(block, color, originalBlock));
-            }
-        }));
-        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath())), itemMap);
     }
 
     public static void register() {
