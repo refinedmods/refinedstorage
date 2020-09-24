@@ -45,7 +45,7 @@ public class RecipeTransferGridError implements IRecipeTransferError {
             if (ingredient.isCraftable()) {
                 ingredient.guiIngredient.drawHighlight(stack, HIGHLIGHT_AUTOCRAFT_COLOR.getRGB(), recipeX, recipeY);
                 if (!craftMessage) {
-                    message.add(new TranslationTextComponent("gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft").mergeStyle(TextFormatting.BLUE));
+                    message.add(new TranslationTextComponent("gui.refinedstorage.jei.tooltip.error.recipe.transfer.missing.autocraft").mergeStyle(TextFormatting.BLUE));
                     craftMessage = true;
                 }
             } else {
