@@ -143,8 +143,8 @@ public final class RSItems {
         registerBlockItemFor(RSBlocks.CONSTRUCTOR);
         registerBlockItemFor(RSBlocks.DESTRUCTOR);
 
-        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, new TranslationTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
-        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, new TranslationTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslatedName())));
+        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslatedName())));
 
         COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
 
