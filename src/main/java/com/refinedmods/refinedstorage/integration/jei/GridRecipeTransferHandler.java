@@ -15,7 +15,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -31,11 +30,6 @@ import java.util.stream.Collectors;
 public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer> {
     public static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
     public static long LAST_TRANSFER_TIME;
-    IRecipeTransferHandlerHelper transferHelper;
-
-    public GridRecipeTransferHandler(IRecipeTransferHandlerHelper transferHelper) {
-        this.transferHelper = transferHelper;
-    }
 
     @Override
     public Class<GridContainer> getContainerClass() {
