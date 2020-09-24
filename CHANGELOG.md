@@ -1,8 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.9.6
-- Fixed Portable Grid losing enchantments when placing and breaking (raoulvdberge)
+- Added colored block variants (Darkere)
 - Added client config option to remember the Grid search query (raoulvdberge)
+- Fixed Portable Grid losing enchantments when placing and breaking (raoulvdberge)
 
 ### 1.9.5
 - Re-added the `/refinedstorage disk create <player> <id>` command (raoulvdberge)

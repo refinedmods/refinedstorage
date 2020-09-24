@@ -62,22 +62,22 @@ public final class RSItems {
 
     private static final List<Runnable> LATE_REGISTRATION = new ArrayList<>();
 
-    public static final ColorMap<BlockItem> CRAFTER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> RELAY = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> NETWORK_TRANSMITTER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> NETWORK_RECEIVER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> CONTROLLER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> CREATIVE_CONTROLLER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> CRAFTING_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> PATTERN_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> FLUID_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> SECURITY_MANAGER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> WIRELESS_TRANSMITTER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> DISK_MANIPULATOR = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> CRAFTER_MANAGER = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> CRAFTING_MONITOR = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
-    public static final ColorMap<BlockItem> DETECTOR = new ColorMap<>(ITEMS, LATE_REGISTRATION, COLORED_ITEM_TAGS);
+    public static final ColorMap<BlockItem> CRAFTER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> RELAY = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> NETWORK_TRANSMITTER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> NETWORK_RECEIVER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> CONTROLLER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> CREATIVE_CONTROLLER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> CRAFTING_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> PATTERN_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> FLUID_GRID = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> SECURITY_MANAGER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> WIRELESS_TRANSMITTER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> DISK_MANIPULATOR = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> CRAFTER_MANAGER = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> CRAFTING_MONITOR = new ColorMap<>(ITEMS, LATE_REGISTRATION);
+    public static final ColorMap<BlockItem> DETECTOR = new ColorMap<>(ITEMS, LATE_REGISTRATION);
 
     static {
         CONSTRUCTION_CORE = ITEMS.register("construction_core", CoreItem::new);

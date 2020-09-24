@@ -20,7 +20,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -37,19 +36,17 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
 
     private final Map<DyeColor, RegistryObject<T>> colorMap = new HashMap<>();
 
-    private DeferredRegister<Item> itemRegister = null;
-    private DeferredRegister<Block> blockRegister = null;
-    private List<Runnable> lateRegistration = null;
-    private Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> itemTags = null;
+    private DeferredRegister<Item> itemRegister;
+    private DeferredRegister<Block> blockRegister;
+    private List<Runnable> lateRegistration;
 
     public ColorMap(DeferredRegister<Block> blockRegister) {
         this.blockRegister = blockRegister;
     }
 
-    public ColorMap(DeferredRegister<Item> itemRegister, List<Runnable> lateRegistration, Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> itemTags) {
+    public ColorMap(DeferredRegister<Item> itemRegister, List<Runnable> lateRegistration) {
         this.itemRegister = itemRegister;
         this.lateRegistration = lateRegistration;
-        this.itemTags = itemTags;
     }
 
     public RegistryObject<T> get(DyeColor color) {
