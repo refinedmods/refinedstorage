@@ -6,7 +6,7 @@
     ]
   },
   "criteria": {
-    "refinedstorage:color": {
+    "refinedstorage:controller": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "refinedstorage:color",
+      "refinedstorage:controller",
       "has_the_recipe"
     ]
   ]

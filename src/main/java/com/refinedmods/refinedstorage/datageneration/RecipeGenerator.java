@@ -29,7 +29,7 @@ public class RecipeGenerator extends RecipeProvider {
                     .addIngredient(tag)
                     .addIngredient(color.getTag())
                     .setGroup(RS.ID)
-                    .addCriterion("refinedstorage:color", InventoryChangeTrigger.Instance.forItems(RSItems.CONTROLLER.get(DyeColor.LIGHT_BLUE).get()))
+                    .addCriterion("refinedstorage:controller", InventoryChangeTrigger.Instance.forItems(RSItems.CONTROLLER.get(DyeColor.LIGHT_BLUE).get()))
                     .build(consumer, new ResourceLocation(RS.ID, "coloring_recipes/" + item.getId().getPath()));
             });
         });
