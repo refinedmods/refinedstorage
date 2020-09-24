@@ -1,27 +1,24 @@
 package com.refinedmods.refinedstorage.item.blockitem;
 
 import com.refinedmods.refinedstorage.block.BaseBlock;
-import com.refinedmods.refinedstorage.util.BlockUtils;
-import net.minecraft.block.Block;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.RegistryObject;
 
 public class ColoredBlockItem extends BaseBlockItem {
-    private final IFormattableTextComponent displayName;
+    private final ITextComponent displayName;
 
-    public ColoredBlockItem(BaseBlock block, Properties builder, DyeColor color, RegistryObject<? extends Block> blockForTranslation) {
+    public ColoredBlockItem(BaseBlock block, Properties builder, DyeColor color, ITextComponent displayName) {
         super(block, builder);
 
-        IFormattableTextComponent name = new StringTextComponent(blockForTranslation.get().getTranslationKey());
-        if (color != BlockUtils.DEFAULT_COLOR) {
-            name = new TranslationTextComponent("color.minecraft." + color.getTranslationKey()).appendString(" ").append(name);
+        if (color != ColorMap.DEFAULT_COLOR) {
+            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey()).appendString(" ").append(displayName);
+        } else {
+            this.displayName = displayName;
         }
-        this.displayName = name;
+
     }
 
     @Override

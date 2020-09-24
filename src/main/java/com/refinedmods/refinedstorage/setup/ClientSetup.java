@@ -16,7 +16,7 @@ import com.refinedmods.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
 import com.refinedmods.refinedstorage.screen.factory.GridScreenFactory;
-import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
@@ -201,7 +201,7 @@ public class ClientSetup {
 
     private void forEachColorApply(String name, BiConsumer<ResourceLocation, DyeColor> consumer) {
         for (DyeColor color : DyeColor.values()) {
-            String prefix = color == BlockUtils.DEFAULT_COLOR ? "" : color + "_";
+            String prefix = color == ColorMap.DEFAULT_COLOR ? "" : color + "_";
             consumer.accept(new ResourceLocation(RS.ID, prefix + name), color);
         }
     }

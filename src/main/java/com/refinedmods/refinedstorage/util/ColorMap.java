@@ -11,59 +11,80 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
-    Map<DyeColor, RegistryObject<T>> colormap = new HashMap<>();
+    public static final DyeColor DEFAULT_COLOR = DyeColor.LIGHT_BLUE;
+
+    private final Map<DyeColor, RegistryObject<T>> colorMap = new HashMap<>();
+
+    private DeferredRegister<Item> itemRegister = null;
+    private DeferredRegister<Block> blockRegister = null;
+    private List<Runnable> lateRegistration = null;
+    private Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> itemTags = null;
+
+    public ColorMap(DeferredRegister<Block> blockRegister) {
+        this.blockRegister = blockRegister;
+    }
+
+    public ColorMap(DeferredRegister<Item> itemRegister, List<Runnable> lateRegistration, Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> itemTags) {
+        this.itemRegister = itemRegister;
+        this.lateRegistration = lateRegistration;
+        this.itemTags = itemTags;
+    }
 
     public RegistryObject<T> get(DyeColor color) {
-        return colormap.get(color);
+        return colorMap.get(color);
     }
 
     public Collection<RegistryObject<T>> values() {
-        return colormap.values();
+        return colorMap.values();
     }
 
     public void put(DyeColor color, RegistryObject<T> object) {
-        colormap.put(color, object);
+        colorMap.put(color, object);
     }
 
     public void forEach(BiConsumer<DyeColor, RegistryObject<T>> consumer) {
-        colormap.forEach(consumer);
+        colorMap.forEach(consumer);
     }
 
     public Block[] getBlocks() {
-        return colormap.values().stream().map(RegistryObject::get).toArray(Block[]::new);
+        return colorMap.values().stream().map(RegistryObject::get).toArray(Block[]::new);
     }
 
-    public <S extends Block> void registerColoredBlocks(String name, Supplier<S> blockFactory) {
+    public <S extends Block> void registerBlocks(String name, Supplier<S> blockFactory) {
         for (DyeColor color : DyeColor.values()) {
-            String prefix = color != BlockUtils.DEFAULT_COLOR ? color + "_" : "";
-            RegistryObject<S> block = RSBlocks.BLOCKS.register(prefix + name, blockFactory);
-            colormap.put(color, (RegistryObject<T>) block);
+            String prefix = color != DEFAULT_COLOR ? color + "_" : "";
+            RegistryObject<S> block = blockRegister.register(prefix + name, blockFactory);
+            colorMap.put(color, (RegistryObject<T>) block);
             RSBlocks.COLORED_BLOCKS.add(block);
         }
     }
 
-    public <S extends BaseBlock> void registerColoredItemsFromBlocks(ColorMap<S> blockMap) {
-        RegistryObject<S> originalBlock = blockMap.get(BlockUtils.DEFAULT_COLOR);
-        colormap.put(BlockUtils.DEFAULT_COLOR, registerColoredBlockItemFor(originalBlock, BlockUtils.DEFAULT_COLOR, originalBlock));
-        RSItems.LATE_REGISTRATION.add(() -> blockMap.forEach((color, block) -> {
-            if (color != BlockUtils.DEFAULT_COLOR) {
-                colormap.put(color, registerColoredBlockItemFor(block, color, originalBlock));
+    public <S extends BaseBlock> void registerItemsFromBlocks(ColorMap<S> blockMap) {
+        RegistryObject<S> originalBlock = blockMap.get(DEFAULT_COLOR);
+        colorMap.put(DEFAULT_COLOR, registerBlockItemFor(originalBlock, DEFAULT_COLOR, originalBlock));
+        lateRegistration.add(() -> blockMap.forEach((color, block) -> {
+            if (color != DEFAULT_COLOR) {
+                colorMap.put(color, registerBlockItemFor(block, color, originalBlock));
             }
         }));
-        RSItems.COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath())), (ColorMap<BlockItem>) this);
+        RSItems.COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(DEFAULT_COLOR).getId().getPath())), (ColorMap<BlockItem>) this);
     }
 
-    private <S extends BaseBlock> RegistryObject<T> registerColoredBlockItemFor(RegistryObject<S> block, DyeColor color, RegistryObject<S> translationBlock) {
-        return (RegistryObject<T>) RSItems.ITEMS.register(block.getId().getPath(), () -> new ColoredBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP), color, translationBlock));
+    private <S extends BaseBlock> RegistryObject<T> registerBlockItemFor(RegistryObject<S> block, DyeColor color, RegistryObject<S> translationBlock) {
+        return (RegistryObject<T>) itemRegister.register(block.getId().getPath(), () -> new ColoredBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP), color, new StringTextComponent(translationBlock.get().getTranslationKey())));
     }
 }

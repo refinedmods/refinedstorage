@@ -5,18 +5,16 @@ import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
-import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class BlockModelGenerator extends BlockStateProvider {
-    private final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
+    private static final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
 
     private final BlockModels models;
 
@@ -46,9 +44,9 @@ public class BlockModelGenerator extends BlockStateProvider {
     }
 
     private void genWirelessTransmitterModels() {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = RSBlocks.WIRELESS_TRANSMITTER.get(color).get();
-            String folderName = RSBlocks.WIRELESS_TRANSMITTER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        RSBlocks.WIRELESS_TRANSMITTER.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = RSBlocks.WIRELESS_TRANSMITTER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.wirelessTransmitterBlock(block, state -> {
                 if (!state.get(NetworkNodeBlock.CONNECTED)) {
@@ -66,13 +64,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             }, 0);
-        }
+        });
     }
 
     private void genDetectorModels() {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = RSBlocks.DETECTOR.get(color).get();
-            String folderName = RSBlocks.DETECTOR.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        RSBlocks.DETECTOR.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = RSBlocks.DETECTOR.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.simpleBlockStateModel(block, state -> {
                 if (!state.get(DetectorBlock.POWERED)) {
@@ -90,13 +88,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             });
-        }
+        });
     }
 
     private void genSecurityManagerModels() {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = RSBlocks.SECURITY_MANAGER.get(color).get();
-            String folderName = RSBlocks.SECURITY_MANAGER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        RSBlocks.SECURITY_MANAGER.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = RSBlocks.SECURITY_MANAGER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.horizontalRSBlock(block, state -> {
                 if (!state.get(NetworkNodeBlock.CONNECTED)) {
@@ -136,13 +134,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             }, 180);
-        }
+        });
     }
 
     private <T extends Block> void genCubeAllCutoutModels(ColorMap<T> blockMap) {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = blockMap.get(color).get();
-            String folderName = blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        blockMap.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.simpleBlockStateModel(block, state -> {
                 if (state.get(NetworkNodeBlock.CONNECTED)) {
@@ -164,13 +162,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             });
-        }
+        });
     }
 
     private void genCrafterModels() {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = RSBlocks.CRAFTER.get(color).get();
-            String folderName = RSBlocks.CRAFTER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        RSBlocks.CRAFTER.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = RSBlocks.CRAFTER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.anyDirectionalRSBlock(block, state -> {
                 if (!state.get(NetworkNodeBlock.CONNECTED)) {
@@ -210,13 +208,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             }, 180);
-        }
+        });
     }
 
     private <T extends Block> void genControllerModels(ColorMap<T> blockMap) {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = blockMap.get(color).get();
-            String folderName = RSBlocks.CONTROLLER.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        blockMap.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.simpleBlockStateModel(block, state -> {
                 if (state.get(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.OFF)) {
@@ -254,13 +252,13 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             });
-        }
+        });
     }
 
     private <T extends Block> void genNorthCutoutModels(ColorMap<T> blockMap) {
-        for (DyeColor color : DyeColor.values()) {
-            Block block = blockMap.get(color).get();
-            String folderName = blockMap.get(BlockUtils.DEFAULT_COLOR).getId().getPath();
+        blockMap.forEach((color, registryObject) -> {
+            Block block = registryObject.get();
+            String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.horizontalRSBlock(block, state -> {
                 if (!state.get(NetworkNodeBlock.CONNECTED)) {
@@ -292,7 +290,7 @@ public class BlockModelGenerator extends BlockStateProvider {
                     return model;
                 }
             }, 180);
-        }
+        });
     }
 
     private ResourceLocation resourceLocation(String folderName, String name) {
