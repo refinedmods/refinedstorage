@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
+import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -143,8 +144,22 @@ public final class RSItems {
         registerBlockItemFor(RSBlocks.CONSTRUCTOR);
         registerBlockItemFor(RSBlocks.DESTRUCTOR);
 
-        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslatedName())));
-        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(), ColorMap.DEFAULT_COLOR, RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslatedName())));
+        CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(
+            RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(),
+            () -> new ControllerBlockItem(
+                RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(),
+                ColorMap.DEFAULT_COLOR,
+                BlockUtils.getBlockTranslation(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get())
+            )
+        ));
+        CREATIVE_CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(
+            RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(),
+            () -> new ControllerBlockItem(
+                RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get(),
+                ColorMap.DEFAULT_COLOR,
+                BlockUtils.getBlockTranslation(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get())
+            )
+        ));
 
         COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
 

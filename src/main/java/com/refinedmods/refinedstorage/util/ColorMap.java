@@ -90,7 +90,15 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
     }
 
     private <S extends BaseBlock> RegistryObject<T> registerBlockItemFor(RegistryObject<S> block, DyeColor color, RegistryObject<S> translationBlock) {
-        return (RegistryObject<T>) itemRegister.register(block.getId().getPath(), () -> new ColoredBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP), color, translationBlock.get().getTranslatedName()));
+        return (RegistryObject<T>) itemRegister.register(
+            block.getId().getPath(),
+            () -> new ColoredBlockItem(
+                block.get(),
+                new Item.Properties().group(RS.MAIN_GROUP),
+                color,
+                BlockUtils.getBlockTranslation(translationBlock.get())
+            )
+        );
     }
 
     public <S extends BaseBlock> ActionResultType changeBlockColor(BlockState state, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
