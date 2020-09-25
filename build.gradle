@@ -16,6 +16,10 @@ repositories {
     maven {
         url "https://minecraft.curseforge.com/api/maven/"
     }
+    // TODO temporary for JEI - https://github.com/mezz/JustEnoughItems/issues/2095
+    maven {
+        url 'https://maven.latmod.com/'
+    }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -98,14 +102,17 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.37'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.3:7.3.2.34:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.3:7.3.2.34")
 
     compileOnly 'mouse-tweaks:MouseTweaks:2.13:mc1.16.2'
 
     runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.16.2:12.1.0')
+
+    // TODO temporary for JEI - https://github.com/mezz/JustEnoughItems/issues/2095
+    compile fg.deobf('com.feed_the_beast.mods:ftb-gui-library:1.0.0.18')
 }
 
 jar {

@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.9.6
+- Port to Minecraft 1.16.3 (raoulvdberge)
 - Added colored block variants (Darkere)
 - Added client config option to remember the Grid search query (raoulvdberge)
 - Fixed Portable Grid losing enchantments when placing and breaking (raoulvdberge)
