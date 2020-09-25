@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.refinedmods.refinedstorage.util.TemporaryPortingUtils;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import net.minecraft.client.Minecraft;
@@ -10,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class RecipeTransferGridError implements IRecipeTransferError {
     public void showError(MatrixStack stack, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
         List<ITextComponent> message = drawIngredientHighlights(stack, tracker, recipeX, recipeY);
         Screen currentScreen = Minecraft.getInstance().currentScreen;
-        TemporaryPortingUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 150, Minecraft.getInstance().fontRenderer);
+        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 150, Minecraft.getInstance().fontRenderer);
     }
 
     private List<ITextComponent> drawIngredientHighlights(MatrixStack stack, IngredientTracker tracker, int recipeX, int recipeY) {
