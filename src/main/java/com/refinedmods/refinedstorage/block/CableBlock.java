@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.tile.CableTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -8,8 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -57,7 +58,6 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     public CableBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "cable");
         this.setDefaultState(getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(WATERLOGGED, false));
     }
 
@@ -70,6 +70,10 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
+        return ShapeCache.getOrCreate(state, CableBlock::getCableShape);
+    }
+
+    protected static VoxelShape getCableShape(BlockState state) {
         VoxelShape shape = SHAPE_CORE;
 
         if (state.get(NORTH)) {
@@ -120,12 +124,13 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     }
 
     @Override
-    public IFluidState getFluidState(BlockState state) {
+    @SuppressWarnings("deprecation")
+    public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, IFluidState fluidStateIn) {
+    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
         return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
     }
 

@@ -9,8 +9,8 @@ public enum PortableGridDiskState implements IStringSerializable {
     DISCONNECTED(3, "disconnected"),
     NONE(4, "none");
 
-    private int id;
-    private String type;
+    private final int id;
+    private final String type;
 
     PortableGridDiskState(int id, String type) {
         this.id = id;
@@ -22,23 +22,13 @@ public enum PortableGridDiskState implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+    public String getString() {
         return type;
     }
 
     @Override
     public String toString() {
         return type;
-    }
-
-    public static PortableGridDiskState getById(int id) {
-        for (PortableGridDiskState diskState : values()) {
-            if (diskState.getId() == id) {
-                return diskState;
-            }
-        }
-
-        return NONE;
     }
 }
 

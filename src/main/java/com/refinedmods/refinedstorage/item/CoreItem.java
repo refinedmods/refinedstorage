@@ -9,9 +9,7 @@ public class CoreItem extends Item {
         DESTRUCTION
     }
 
-    public CoreItem(Type type) {
+    public CoreItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP));
-
-        this.setRegistryName(RS.ID, type == Type.CONSTRUCTION ? "construction_core" : "destruction_core");
     }
 }

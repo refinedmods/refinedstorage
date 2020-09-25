@@ -21,7 +21,7 @@ public class ConstructorTile extends NetworkNodeTile<ConstructorNetworkNode> {
 
     public ConstructorTile() {
         super(RSTiles.CONSTRUCTOR);
-        
+
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(DROP);

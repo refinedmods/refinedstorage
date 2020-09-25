@@ -15,10 +15,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
-    private DiskDriveNetworkNode diskDrive;
-    private IStorageDisk<ItemStack> parent;
+    private final DiskDriveNetworkNode diskDrive;
+    private final IStorageDisk<ItemStack> parent;
     private DiskState lastState;
 
     public ItemDriveWrapperStorageDisk(DiskDriveNetworkNode diskDrive, IStorageDisk<ItemStack> parent) {
@@ -83,6 +84,12 @@ public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
     @Override
     public int getCapacity() {
         return parent.getCapacity();
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return parent.getOwner();
     }
 
     @Override

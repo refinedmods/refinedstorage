@@ -17,10 +17,10 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class WirelessFluidGridNetworkItem implements INetworkItem {
-    private INetworkItemManager handler;
-    private PlayerEntity player;
-    private ItemStack stack;
-    private int slotId;
+    private final INetworkItemManager handler;
+    private final PlayerEntity player;
+    private final ItemStack stack;
+    private final int slotId;
 
     public WirelessFluidGridNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
         this.handler = handler;
@@ -78,6 +78,6 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
     }
 
     private void sendOutOfEnergyMessage() {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getTranslationKey())));
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getTranslationKey())), player.getUniqueID());
     }
 }

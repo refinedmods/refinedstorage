@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SecurityManager implements ISecurityManager {
-    private INetwork network;
-    private Map<UUID, ISecurityCard> cards = new HashMap<>();
+    private final INetwork network;
+    private final Map<UUID, ISecurityCard> cards = new HashMap<>();
     private ISecurityCard globalCard;
 
     public SecurityManager(INetwork network) {

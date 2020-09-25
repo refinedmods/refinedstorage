@@ -64,7 +64,7 @@ public class FluidStorageTracker implements IStorageTracker<FluidStack> {
         return list;
     }
 
-    private class Key {
+    private static class Key {
         private final FluidStack stack;
 
         public Key(FluidStack stack) {

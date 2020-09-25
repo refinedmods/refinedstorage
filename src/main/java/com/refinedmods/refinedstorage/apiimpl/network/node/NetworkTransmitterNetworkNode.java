@@ -8,13 +8,14 @@ import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.NetworkCardItem;
+import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -22,8 +23,8 @@ import javax.annotation.Nullable;
 public class NetworkTransmitterNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
-    private BaseItemHandler networkCard = new BaseItemHandler(1)
-        .addValidator(new ItemValidator(RSItems.NETWORK_CARD))
+    private final BaseItemHandler networkCard = new BaseItemHandler(1)
+        .addValidator(new ItemValidator(RSItems.NETWORK_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             ItemStack card = handler.getStackInSlot(slot);
@@ -42,7 +43,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
         });
 
     private BlockPos receiver;
-    private DimensionType receiverDimension;
+    private RegistryKey<World> receiverDimension;
 
     public NetworkTransmitterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -84,12 +85,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     @Nullable
-    public BlockPos getReceiver() {
-        return receiver;
-    }
-
-    @Nullable
-    public DimensionType getReceiverDimension() {
+    public RegistryKey<World> getReceiverDimension() {
         return receiverDimension;
     }
 
@@ -102,7 +98,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.getDimension().getType() == receiverDimension;
+        return world.func_234923_W_() == receiverDimension;
     }
 
     private boolean canTransmit() {
@@ -120,18 +116,16 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                return;
+                World dimensionWorld = world.getServer().getWorld(receiverDimension);
+
+                if (dimensionWorld != null && dimensionWorld.getTileEntity(receiver) instanceof NetworkReceiverTile) {
+                    operator.apply(dimensionWorld, receiver, null);
+                }
+            } else {
+                if (world.getTileEntity(receiver) instanceof NetworkReceiverTile) {
+                    operator.apply(world, receiver, null);
+                }
             }
-
-            // TODO if (!isSameDimension()) {
-            //    World dimensionWorld = DimensionManager.getWorld(world.getServer(), receiverDimension, true, true);
-
-            //if (dimensionWorld != null) {
-            //        operator.apply(dimensionWorld, receiver, null);
-            //    }
-            //} else {
-                operator.apply(world, receiver, null);
-            //}
         }
     }
 }

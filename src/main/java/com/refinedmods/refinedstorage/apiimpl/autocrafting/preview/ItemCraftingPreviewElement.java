@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -17,7 +17,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
-    private ItemStack stack;
+    private final ItemStack stack;
     private int available;
     private boolean missing;
     // If missing is true then toCraft is the missing amount
@@ -58,35 +58,35 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(int x, int y, IElementDrawers drawers) {
+    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing) {
-            drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
+            drawers.getOverlayDrawer().draw(matrixStack, x, y, 0xFFF2DEDE);
         }
 
         x += 5;
         y += 7;
 
-        drawers.getItemDrawer().draw(x, y, getElement());
+        drawers.getItemDrawer().draw(matrixStack, x, y, getElement());
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         y += 2;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, 1);
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, getToCraft()));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, getToCraft()));
 
             y += 7;
         }
 
         if (getAvailable() > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", getAvailable()));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", getAvailable()));
         }
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     public void addAvailable(int amount) {

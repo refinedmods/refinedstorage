@@ -1,5 +1,7 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.refinedmods.refinedstorage.container.CrafterContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -7,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class CrafterModeSideButton extends SideButton {
-    public CrafterModeSideButton(BaseScreen screen) {
+    public CrafterModeSideButton(BaseScreen<CrafterContainer> screen) {
         super(screen);
     }
 
@@ -17,8 +19,8 @@ public class CrafterModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, CrafterTile.MODE.getValue() * 16, 0, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, CrafterTile.MODE.getValue() * 16, 0, 16, 16);
     }
 
     @Override

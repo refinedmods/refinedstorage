@@ -1,5 +1,7 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.refinedmods.refinedstorage.container.ConstructorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.ConstructorTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -7,13 +9,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class ConstructorDropSideButton extends SideButton {
-    public ConstructorDropSideButton(BaseScreen screen) {
+    public ConstructorDropSideButton(BaseScreen<ConstructorContainer> screen) {
         super(screen);
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, 64 + (ConstructorTile.DROP.getValue() ? 16 : 0), 16, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, 64 + (ConstructorTile.DROP.getValue() ? 16 : 0), 16, 16, 16);
     }
 
     @Override

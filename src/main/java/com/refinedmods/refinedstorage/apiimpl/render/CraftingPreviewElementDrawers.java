@@ -3,21 +3,19 @@ package com.refinedmods.refinedstorage.apiimpl.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.screen.grid.CraftingPreviewScreen;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 
 public class CraftingPreviewElementDrawers extends ElementDrawers {
-    private CraftingPreviewScreen screen;
-    private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
+    private final IElementDrawer<Integer> overlayDrawer = (matrixStack, x, y, color) -> {
         RenderSystem.color4f(1, 1, 1, 1);
         RenderSystem.disableLighting();
 
-        screen.fill(x, y, x + 73, y + 29, colour);
+        AbstractGui.fill(matrixStack, x, y, x + 73, y + 29, color);
     };
 
     public CraftingPreviewElementDrawers(CraftingPreviewScreen screen, FontRenderer fontRenderer) {
         super(screen, fontRenderer);
-
-        this.screen = screen;
     }
 
     @Override

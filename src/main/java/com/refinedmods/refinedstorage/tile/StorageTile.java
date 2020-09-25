@@ -28,7 +28,7 @@ public class StorageTile extends NetworkNodeTile<StorageNetworkNode> {
         super(StorageBlockUtils.getTileEntityType(type));
 
         this.type = type;
-        
+
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);

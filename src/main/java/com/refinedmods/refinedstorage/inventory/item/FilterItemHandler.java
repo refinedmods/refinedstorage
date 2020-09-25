@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterItemHandler extends BaseItemHandler {
-    private List<IFilter> filters;
-    private List<IGridTab> tabs;
+    private final List<IFilter> filters;
+    private final List<IGridTab> tabs;
 
     public FilterItemHandler(List<IFilter> filters, List<IGridTab> tabs) {
         super(4);
@@ -29,7 +29,7 @@ public class FilterItemHandler extends BaseItemHandler {
         this.filters = filters;
         this.tabs = tabs;
 
-        this.addValidator(new ItemValidator(RSItems.FILTER));
+        this.addValidator(new ItemValidator(RSItems.FILTER.get()));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FilterItemHandler extends BaseItemHandler {
         FilterItemsItemHandler items = new FilterItemsItemHandler(filter);
 
         for (ItemStack stack : items.getFilteredItems()) {
-            if (stack.getItem() == RSItems.FILTER) {
+            if (stack.getItem() == RSItems.FILTER.get()) {
                 addFilter(stack);
             } else if (!stack.isEmpty()) {
                 filters.add(new ItemFilter(stack, compare, mode, modFilter));

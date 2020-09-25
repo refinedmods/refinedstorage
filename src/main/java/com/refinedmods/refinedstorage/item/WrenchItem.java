@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Rotation;
@@ -14,18 +15,12 @@ import net.minecraft.util.Rotation;
 public class WrenchItem extends Item {
     public WrenchItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "wrench");
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext ctx) {
-        if (!ctx.getPlayer().isCrouching()) {
-            return ActionResultType.FAIL;
-        }
-
+    public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext ctx) {
         if (ctx.getWorld().isRemote) {
-            return ActionResultType.SUCCESS;
+            return ActionResultType.CONSUME;
         }
 
         INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(ctx.getWorld().getTileEntity(ctx.getPos())));
@@ -37,8 +32,8 @@ public class WrenchItem extends Item {
 
         BlockState state = ctx.getWorld().getBlockState(ctx.getPos());
 
-        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(Rotation.CLOCKWISE_90));
+        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(ctx.getWorld(), ctx.getPos(), Rotation.CLOCKWISE_90));
 
-        return ActionResultType.SUCCESS;
+        return ActionResultType.CONSUME;
     }
 }

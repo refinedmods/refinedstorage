@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class FilterIconItemHandler extends ItemStackHandler {
-    private ItemStack stack;
+    private final ItemStack stack;
 
     public FilterIconItemHandler(ItemStack stack) {
         super(1);

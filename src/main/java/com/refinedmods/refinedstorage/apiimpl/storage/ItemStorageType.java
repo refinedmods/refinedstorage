@@ -7,8 +7,8 @@ public enum ItemStorageType {
     SIXTY_FOUR_K("64k", 64_000),
     CREATIVE("creative", -1);
 
-    private String name;
-    private int capacity;
+    private final String name;
+    private final int capacity;
 
     ItemStorageType(String name, int capacity) {
         this.name = name;

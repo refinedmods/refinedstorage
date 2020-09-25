@@ -14,7 +14,7 @@ public interface IWhitelistBlacklist {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
-    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer, T> createParameter() {
+    static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter() {
         return new TileDataParameter<>(DataSerializers.VARINT, 0, t -> ((IWhitelistBlacklist) t.getNode()).getWhitelistBlacklistMode(), (t, v) -> {
             if (v == WHITELIST || v == BLACKLIST) {
                 ((IWhitelistBlacklist) t.getNode()).setWhitelistBlacklistMode(v);

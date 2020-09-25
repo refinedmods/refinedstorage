@@ -28,11 +28,11 @@ import java.util.UUID;
 public class SecurityManagerNetworkNode extends NetworkNode implements ISecurityCardContainer {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "security_manager");
 
-    private List<ISecurityCard> cards = new ArrayList<>();
+    private final List<ISecurityCard> cards = new ArrayList<>();
     private ISecurityCard globalCard;
 
-    private BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
-        .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
+    private final BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
             if (!world.isRemote) {
@@ -44,8 +44,8 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
             }
         }));
 
-    private BaseItemHandler editCard = new BaseItemHandler(1)
-        .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
+    private final BaseItemHandler editCard = new BaseItemHandler(1)
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this));
 
     public SecurityManagerNetworkNode(World world, BlockPos pos) {

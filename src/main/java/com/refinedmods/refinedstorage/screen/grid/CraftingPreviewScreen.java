@@ -1,10 +1,11 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
@@ -12,7 +13,6 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingP
 import com.refinedmods.refinedstorage.apiimpl.render.CraftingPreviewElementDrawers;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartRequestMessage;
-import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.util.RenderUtils;
@@ -25,23 +25,22 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-public class CraftingPreviewScreen extends BaseScreen {
+public class CraftingPreviewScreen extends BaseScreen<Container> {
     private static final int VISIBLE_ROWS = 5;
 
-    private final List<ICraftingPreviewElement> stacks;
+    private final List<ICraftingPreviewElement<?>> stacks;
     private final Screen parent;
-    private final ResourceLocation factoryId;
 
     private final ScrollbarWidget scrollbar;
 
@@ -52,19 +51,18 @@ public class CraftingPreviewScreen extends BaseScreen {
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
 
-    private IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
+    private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
 
-    public CraftingPreviewScreen(Screen parent, ResourceLocation factoryId, List<ICraftingPreviewElement> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
+    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
         super(new Container(null, 0) {
             @Override
-            public boolean canInteractWith(PlayerEntity player) {
+            public boolean canInteractWith(@Nonnull PlayerEntity player) {
                 return false;
             }
         }, 254, 201, null, title);
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
-        this.factoryId = factoryId;
 
         this.id = id;
         this.quantity = quantity;
@@ -75,12 +73,10 @@ public class CraftingPreviewScreen extends BaseScreen {
 
     @Override
     public void onPostInit(int x, int y) {
-        int btnYPos = y + 201 - 20 - 7;
+        addButton(x + 55, y + 201 - 20 - 7, 50, 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
 
-        Button startButton = addButton(x + 7, btnYPos, 50, 20, I18n.format("misc.refinedstorage.start"), true, true, btn -> startRequest());
+        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, new TranslationTextComponent("misc.refinedstorage.start"), true, true, btn -> startRequest());
         startButton.active = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
-
-        addButton(startButton.x + startButton.getWidth() + 5, btnYPos, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -90,7 +86,7 @@ public class CraftingPreviewScreen extends BaseScreen {
     }
 
     @Nullable
-    private CraftingTaskErrorType getErrorType() {
+    private CalculationResultType getErrorType() {
         if (stacks.size() == 1 && stacks.get(0) instanceof ErrorCraftingPreviewElement) {
             return ((ErrorCraftingPreviewElement) stacks.get(0)).getType();
         }
@@ -99,23 +95,21 @@ public class CraftingPreviewScreen extends BaseScreen {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/crafting_preview.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
         if (getErrorType() != null) {
-            fill(x + 7, y + 20, x + 228, y + 169, 0xFFDBDBDB);
+            fill(matrixStack, x + 7, y + 20, x + 228, y + 169, 0xFFDBDBDB);
         }
 
-        scrollbar.render();
+        scrollbar.render(matrixStack);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-
-        font.drawStringWithShadow(factoryId.toString(), xSize - font.getStringWidth(factoryId.toString()) - 7, 201 - 21, RenderSettings.INSTANCE.getSecondaryColor());
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
 
         int x = 7;
         int y = 15;
@@ -123,35 +117,33 @@ public class CraftingPreviewScreen extends BaseScreen {
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         if (getErrorType() != null) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scalef(scale, scale, 1);
+            matrixStack.push();
+            matrixStack.scale(scale, scale, 1);
 
-            renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage.crafting_preview.error"));
+            renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage.crafting_preview.error"));
 
             switch (getErrorType()) {
                 case RECURSIVE: {
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.0"));
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.1"));
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.2"));
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.3"));
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.0"));
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.1"));
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.2"));
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.3"));
 
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
-
-                    RenderSystem.popMatrix();
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
 
                     ICraftingPattern pattern = PatternItem.fromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
 
                     int yy = 83;
                     for (ItemStack output : pattern.getOutputs()) {
                         if (output != null) {
-                            RenderSystem.pushMatrix();
-                            RenderSystem.scalef(scale, scale, 1);
-                            renderString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getFormattedText());
-                            RenderSystem.popMatrix();
+                            matrixStack.push();
+                            matrixStack.scale(scale, scale, 1);
+                            renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getString());
+                            matrixStack.pop();
 
-                            RenderSystem.setupGui3DDiffuseLighting();
+                            RenderHelper.setupGui3DDiffuseLighting();
                             RenderSystem.enableDepthTest();
-                            renderItem(x + 5, yy, output);
+                            renderItem(matrixStack, x + 5, yy, output);
                             RenderHelper.disableStandardItemLighting();
 
                             yy += 17;
@@ -161,18 +153,18 @@ public class CraftingPreviewScreen extends BaseScreen {
                     break;
                 }
                 case TOO_COMPLEX: {
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
-                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
-
-                    RenderSystem.popMatrix();
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
+                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
 
                     break;
                 }
             }
+
+            matrixStack.pop();
         } else {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
-            RenderSystem.setupGui3DDiffuseLighting();
+            RenderHelper.setupGui3DDiffuseLighting();
             RenderSystem.enableDepthTest();
 
             this.hoveringStack = null;
@@ -180,9 +172,9 @@ public class CraftingPreviewScreen extends BaseScreen {
 
             for (int i = 0; i < 3 * 5; ++i) {
                 if (slot < stacks.size()) {
-                    ICraftingPreviewElement stack = stacks.get(slot);
+                    ICraftingPreviewElement<?> stack = stacks.get(slot);
 
-                    stack.draw(x, y + 5, drawers);
+                    stack.draw(matrixStack, x, y + 5, drawers);
 
                     if (RenderUtils.inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
                         this.hoveringStack = stack.getId().equals(ItemCraftingPreviewElement.ID) ? (ItemStack) stack.getElement() : null;
@@ -206,21 +198,22 @@ public class CraftingPreviewScreen extends BaseScreen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (hoveringStack != null) {
             renderTooltip(
+                matrixStack,
                 hoveringStack,
                 mouseX,
                 mouseY,
                 hoveringStack.getTooltip(
                     Minecraft.getInstance().player,
                     Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL
-                ).stream().map(ITextComponent::getFormattedText).collect(Collectors.toList())
+                )
             );
         } else if (hoveringFluid != null) {
-            renderTooltip(mouseX, mouseY, hoveringFluid.getDisplayName().getFormattedText());
+            renderTooltip(matrixStack, mouseX, mouseY, hoveringFluid.getDisplayName().getString());
         }
     }
 

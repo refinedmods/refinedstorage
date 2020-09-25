@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.container.slot.filter;
 import com.refinedmods.refinedstorage.container.slot.BaseSlot;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.util.StackUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -12,8 +13,8 @@ public class FluidFilterSlot extends BaseSlot {
     public static final int FILTER_ALLOW_SIZE = 1;
     public static final int FILTER_ALLOW_ALTERNATIVES = 2;
 
-    private int flags;
-    private FluidInventory fluidInventory;
+    private final int flags;
+    private final FluidInventory fluidInventory;
 
     public FluidFilterSlot(FluidInventory inventory, int inventoryIndex, int x, int y, int flags) {
         super(new ItemStackHandler(inventory.getSlots()), inventoryIndex, x, y);
@@ -33,6 +34,11 @@ public class FluidFilterSlot extends BaseSlot {
 
     public void onContainerClicked(@Nonnull ItemStack stack) {
         fluidInventory.setFluid(getSlotIndex(), StackUtils.getFluid(stack, true).getValue());
+    }
+
+    @Override
+    public boolean canTakeStack(PlayerEntity playerIn) {
+        return false;
     }
 
     public boolean isSizeAllowed() {

@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.network;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeGraph;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
@@ -37,6 +38,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -79,10 +81,15 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
     private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    private boolean redstonePowered = false;
 
+    private boolean amILoaded = false;
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
+    private int ticks;
+    private long[] tickTimes = new long[100];
+    private int tickCounter = 0;
 
     public Network(World world, BlockPos pos, NetworkType type) {
         this.pos = pos;
@@ -113,7 +120,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
+        return amILoaded && energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(redstonePowered);
+    }
+
+    public void setRedstonePowered(boolean redstonePowered) {
+        this.redstonePowered = redstonePowered;
     }
 
     @Override
@@ -134,6 +145,16 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            long tickStart = Util.nanoTime();
+
+            if (ticks == 0) {
+                redstonePowered = world.isBlockPowered(pos);
+            }
+
+            ++ticks;
+
+            amILoaded = world.isBlockPresent(pos);
+
             updateEnergyUsage();
 
             if (canRun()) {
@@ -183,6 +204,9 @@ public class Network implements INetwork, IRedstoneConfigurable {
                     world.setBlockState(pos, state.with(ControllerBlock.ENERGY_TYPE, energyType));
                 }
             }
+
+            tickTimes[tickCounter % tickTimes.length] = Util.nanoTime() - tickStart;
+            tickCounter++;
         }
     }
 
@@ -203,6 +227,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void onRemoved() {
+        for (ICraftingTask task : craftingManager.getTasks()) {
+            task.onCancelled();
+        }
+
         nodeGraph.disconnectAll();
     }
 
@@ -322,7 +350,6 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
         return newStack;
     }
-
 
     @Override
     @Nonnull
@@ -482,6 +509,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     @Override
+    public long[] getTickTimes() {
+        return tickTimes;
+    }
+
+    @Override
     public void markDirty() {
         API.instance().getNetworkManager((ServerWorld) world).markForSaving();
     }
@@ -491,7 +523,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     public ControllerBlock.EnergyType getEnergyType() {
-        if (!redstoneMode.isEnabled(world, pos)) {
+        if (!redstoneMode.isEnabled(redstonePowered)) {
             return ControllerBlock.EnergyType.OFF;
         }
 
@@ -525,7 +557,12 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     private void updateEnergyUsage() {
-        int usage = redstoneMode.isEnabled(world, pos) ? RS.SERVER_CONFIG.getController().getBaseUsage() : 0;
+        if (!redstoneMode.isEnabled(redstonePowered)) {
+            this.lastEnergyUsage = 0;
+            return;
+        }
+
+        int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.isActive()) {

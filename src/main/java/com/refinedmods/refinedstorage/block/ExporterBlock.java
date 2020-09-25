@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ExporterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.ExporterTile;
@@ -59,8 +60,6 @@ public class ExporterBlock extends CableBlock {
 
     public ExporterBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "exporter");
     }
 
     @Override
@@ -70,11 +69,13 @@ public class ExporterBlock extends CableBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        VoxelShape shape = super.getShape(state, world, pos, ctx);
+        return ShapeCache.getOrCreate(state, s -> {
+            VoxelShape shape = getCableShape(s);
 
-        shape = VoxelShapes.or(shape, getLineShape(state));
+            shape = VoxelShapes.or(shape, getLineShape(s));
 
-        return shape;
+            return shape;
+        });
     }
 
     private VoxelShape getLineShape(BlockState state) {

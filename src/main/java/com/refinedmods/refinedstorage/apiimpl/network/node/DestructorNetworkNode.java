@@ -31,7 +31,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ServerWorld;
@@ -58,14 +58,12 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     private static final int BASE_SPEED = 20;
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
         .addListener(new NetworkNodeInventoryListener(this))
-        .addListener((handler, slot, reading) -> {
-            tool = createTool();
-        });
+        .addListener((handler, slot, reading) -> tool = createTool());
 
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
@@ -86,7 +84,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
+        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0 && world.isBlockPresent(pos)) {
             if (type == IType.ITEMS) {
                 if (pickupItem) {
                     pickupItems();
@@ -129,7 +127,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         Block frontBlock = frontBlockState.getBlock();
         ItemStack frontStack = frontBlock.getPickBlock(
             frontBlockState,
-            new BlockRayTraceResult(Vec3d.ZERO, getDirection().getOpposite(), front, false),
+            new BlockRayTraceResult(Vector3d.ZERO, getDirection().getOpposite(), front, false),
             world,
             front,
             WorldUtils.getFakePlayer((ServerWorld) world, getOwner())
@@ -314,10 +312,6 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     public IItemHandler getUpgrades() {
         return upgrades;
-    }
-
-    public IItemHandler getInventory() {
-        return itemFilters;
     }
 
     @Override

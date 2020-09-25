@@ -30,10 +30,21 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Nullable
     protected INetwork network;
+    // @Volatile: Mental note. At this moment world instances are retained in Minecraft (since 1.16).
+    // This means that during the entire server lifetime, all worlds are present and will not change their instance.
+    // However, due to the memory footprint of worlds and modded minecraft having the tendency to have lots of worlds,
+    // Forge is planning to unload (aka remove) worlds so their instances will change.
+    // This is problematic as this attribute will target the wrong world in that case.
+    // Idea: possibly change to a getter based on RegistryKey<World>?
+    // Another note: this attribute isn't the *real* problem. Because network nodes are in WorldSavedData in a tick handler,
+    // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
+    // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
+    // having multiple different instances of the same network node.
     protected World world;
     protected BlockPos pos;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    private boolean redstonePowered = false;
     @Nullable
     protected UUID owner;
     protected String version;
@@ -72,7 +83,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        // TODO This doesn't work crossdim.
         return new ItemStack(Item.BLOCK_TO_ITEM.get(world.getBlockState(pos).getBlock()), 1);
     }
 
@@ -103,7 +113,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public boolean isActive() {
-        return redstoneMode.isEnabled(world, pos);
+        return redstoneMode.isEnabled(redstonePowered);
     }
 
     protected final boolean canUpdate() {
@@ -122,8 +132,16 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return 4;
     }
 
+    public void setRedstonePowered(boolean redstonePowered) {
+        this.redstonePowered = redstonePowered;
+    }
+
     @Override
     public void update() {
+        if (ticks == 0) {
+            redstonePowered = world.isBlockPowered(pos);
+        }
+
         ++ticks;
 
         boolean canUpdate = canUpdate();

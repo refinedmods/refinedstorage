@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
@@ -7,9 +8,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class RedstoneModeSideButton extends SideButton {
-    private TileDataParameter<Integer, ?> parameter;
+    private final TileDataParameter<Integer, ?> parameter;
 
-    public RedstoneModeSideButton(BaseScreen screen, TileDataParameter<Integer, ?> parameter) {
+    public RedstoneModeSideButton(BaseScreen<?> screen, TileDataParameter<Integer, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;
@@ -21,8 +22,8 @@ public class RedstoneModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, parameter.getValue() * 16, 0, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, parameter.getValue() * 16, 0, 16, 16);
     }
 
     @Override

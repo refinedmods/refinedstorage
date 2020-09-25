@@ -27,8 +27,6 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
     public WirelessCraftingMonitorItem(Type type) {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
 
-        this.setRegistryName(RS.ID, (type == Type.CREATIVE ? "creative_" : "") + "wireless_crafting_monitor");
-
         this.type = type;
     }
 

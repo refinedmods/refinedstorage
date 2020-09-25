@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.DetectorTile;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class DetectorBlock extends NetworkNodeBlock {
+public class DetectorBlock extends ColoredNetworkBlock {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 5, 16);
@@ -35,7 +35,6 @@ public class DetectorBlock extends NetworkNodeBlock {
     public DetectorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "detector");
         this.setDefaultState(this.getStateContainer().getBaseState().with(POWERED, false));
     }
 
@@ -68,7 +67,12 @@ public class DetectorBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.DETECTOR.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

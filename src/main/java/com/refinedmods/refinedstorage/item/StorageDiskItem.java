@@ -38,18 +38,16 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_storage_disk");
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (!world.isRemote && !stack.hasTag()) {
+        if (!world.isRemote && !stack.hasTag() && entity instanceof PlayerEntity) {
             UUID id = UUID.randomUUID();
 
-            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultItemDisk((ServerWorld) world, getCapacity(stack)));
+            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultItemDisk((ServerWorld) world, getCapacity(stack), (PlayerEntity) entity));
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
             setId(stack, id);
@@ -91,13 +89,13 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type), diskStack.getCount());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
                 }
 
                 API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));
                 API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING.get()));
             }
         }
 

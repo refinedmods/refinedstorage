@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.api.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,11 +37,11 @@ public interface ICraftingManager {
     Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
-     * Adds a crafting task.
+     * Starts a crafting task.
      *
-     * @param task the task to add
+     * @param task the task to start
      */
-    void add(@Nonnull ICraftingTask task);
+    void start(@Nonnull ICraftingTask task);
 
     /**
      * Cancels a crafting task.
@@ -54,25 +55,18 @@ public interface ICraftingManager {
      *
      * @param stack    the stack to craft
      * @param quantity the quantity to craft
-     * @return the crafting task, or null if no pattern was found for the given stack
+     * @return the calculation result
      */
-    @Nullable
-    ICraftingTask create(ItemStack stack, int quantity);
+    ICalculationResult create(ItemStack stack, int quantity);
 
     /**
      * Creates a crafting task for a given stack, but doesn't add it to the list.
      *
      * @param stack    the stack to craft
      * @param quantity the quantity to craft
-     * @return the crafting task, or null if no pattern was found for the given stack
+     * @return the calculation result
      */
-    @Nullable
-    ICraftingTask create(FluidStack stack, int quantity);
-
-    /**
-     * @return a new pattern chain list
-     */
-    ICraftingPatternChainList createPatternChainList();
+    ICalculationResult create(FluidStack stack, int quantity);
 
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
@@ -170,9 +164,8 @@ public interface ICraftingManager {
     void onTaskChanged();
 
     /**
-     * @param pattern to look for
-     * @return a LinkedHashSet with all container that have this pattern
+     * @param pattern pattern to look for
+     * @return a set with all containers that have this pattern
      */
-
-    Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern);
+    Set<ICraftingPatternContainer> getAllContainers(ICraftingPattern pattern);
 }

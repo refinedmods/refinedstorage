@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Represents a storage disk.
@@ -16,6 +17,12 @@ public interface IStorageDisk<T> extends IStorage<T> {
      * @return the capacity of this storage disk
      */
     int getCapacity();
+
+    /**
+     * @return the id of the owner, or null if not present
+     */
+    @Nullable
+    UUID getOwner();
 
     /**
      * When this storage disk is inserted into a storage disk container, it has to adjust to the container's settings

@@ -24,8 +24,6 @@ public class WirelessGridItem extends NetworkItem {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessGrid().getCapacity());
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, (type == Type.CREATIVE ? "creative_" : "") + "wireless_grid");
     }
 
     public Type getType() {

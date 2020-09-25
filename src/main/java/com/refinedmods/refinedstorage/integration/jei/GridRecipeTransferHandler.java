@@ -14,26 +14,26 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GridRecipeTransferHandler implements IRecipeTransferHandler {
+public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer> {
     public static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
     public static long LAST_TRANSFER_TIME;
 
     @Override
-    public Class<? extends Container> getContainerClass() {
+    public Class<GridContainer> getContainerClass() {
         return GridContainer.class;
     }
 
     @Override
-    public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
-        IGrid grid = ((GridContainer) container).getGrid();
+    public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
+        IGrid grid = container.getGrid();
 
         if (doTransfer) {
             LAST_TRANSFER_TIME = System.currentTimeMillis();

@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -27,10 +26,6 @@ public class SecurityCardItem extends Item {
 
     public SecurityCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "security_card");
-
-        addPropertyOverride(new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -88,7 +83,7 @@ public class SecurityCardItem extends Item {
 
         for (Permission permission : Permission.values()) {
             if (hasPermission(stack, permission)) {
-                tooltip.add(new StringTextComponent("- ").appendSibling(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
+                tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
             }
         }
     }

@@ -26,15 +26,15 @@ import java.util.List;
 
 public abstract class BaseContainer extends Container {
     @Nullable
-    private BaseTile tile;
+    private final BaseTile tile;
     @Nullable
     private TileDataWatcher listener;
-    private PlayerEntity player;
+    private final PlayerEntity player;
 
-    protected TransferManager transferManager = new TransferManager(this);
+    protected final TransferManager transferManager = new TransferManager(this);
 
-    private List<FluidFilterSlot> fluidSlots = new ArrayList<>();
-    private List<FluidStack> fluids = new ArrayList<>();
+    private final List<FluidFilterSlot> fluidSlots = new ArrayList<>();
+    private final List<FluidStack> fluids = new ArrayList<>();
 
     public BaseContainer(@Nullable ContainerType<?> type, @Nullable BaseTile tile, PlayerEntity player, int windowId) {
         super(type, windowId);
@@ -162,7 +162,6 @@ public abstract class BaseContainer extends Container {
 
     private boolean isTileStillThere() {
         if (tile != null) {
-            // @Volatile: Logic from LockableLootTileEntity#isUsableByPlayer
             return tile.getWorld().getTileEntity(tile.getPos()) == tile;
         }
 

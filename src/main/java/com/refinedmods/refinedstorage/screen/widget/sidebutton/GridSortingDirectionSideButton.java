@@ -1,14 +1,16 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class GridSortingDirectionSideButton extends SideButton {
-    private IGrid grid;
+    private final IGrid grid;
 
-    public GridSortingDirectionSideButton(BaseScreen screen, IGrid grid) {
+    public GridSortingDirectionSideButton(BaseScreen<GridContainer> screen, IGrid grid) {
         super(screen);
 
         this.grid = grid;
@@ -20,8 +22,8 @@ public class GridSortingDirectionSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, grid.getSortingDirection() * 16, 16, 16, 16);
+    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+        screen.blit(matrixStack, x, y, grid.getSortingDirection() * 16, 16, 16, 16);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.container.StorageContainer;
@@ -31,8 +30,6 @@ public class StorageBlock extends NetworkNodeBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_storage_block");
     }
 
     public ItemStorageType getType() {
@@ -48,7 +45,7 @@ public class StorageBlock extends NetworkNodeBlock {
                 storage.setStorageId(stack.getTag().getUniqueId(StorageNetworkNode.NBT_ID));
             }
 
-            storage.loadStorage();
+            storage.loadStorage(entity instanceof PlayerEntity ? (PlayerEntity) entity : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.

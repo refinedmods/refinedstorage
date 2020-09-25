@@ -11,10 +11,10 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridCraftingPreviewRequestMessage {
-    private UUID id;
-    private int quantity;
-    private boolean noPreview;
-    private boolean fluids;
+    private final UUID id;
+    private final int quantity;
+    private final boolean noPreview;
+    private final boolean fluids;
 
     public GridCraftingPreviewRequestMessage(UUID id, int quantity, boolean noPreview, boolean fluids) {
         this.id = id;

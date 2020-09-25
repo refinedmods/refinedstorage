@@ -9,9 +9,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class TileDataParameterMessage {
-    private TileEntity tile;
-    private TileDataParameter parameter;
-    private boolean initial;
+    private final TileEntity tile;
+    private final TileDataParameter parameter;
+    private final boolean initial;
 
     public TileDataParameterMessage(TileEntity tile, TileDataParameter parameter, boolean initial) {
         this.tile = tile;

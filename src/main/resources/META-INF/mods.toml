@@ -1,14 +1,26 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[33,)"
 issueTrackerURL="https://github.com/refinedmods/refinedstorage"
+license="MIT"
 [[mods]]
 modId="refinedstorage"
 version="${version}"
 displayName="Refined Storage"
-updateJSONURL="https://refinedstorage.raoulvdberge.com/update"
-displayURL="https://refinedstorage.raoulvdberge.com"
+updateJSONURL="https://refinedmods.com/refined-storage/update.json"
+displayURL="https://refinedmods.com/refined-storage"
 logoFile="logo.png"
 authors="Refined Mods"
 description='''
 An elegant solution to your hoarding problem
 '''
+[[dependencies.refinedstorage]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    mandatory=true #mandatory
+    # The version range of the dependency
+    versionRange="[33.0.20,)" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT or SERVER
+    side="BOTH"

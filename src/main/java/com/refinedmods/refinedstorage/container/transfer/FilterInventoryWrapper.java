@@ -8,9 +8,9 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import java.util.function.Supplier;
 
 class FilterInventoryWrapper implements IInventoryWrapper {
-    private ItemFilterInventoryWrapper item;
-    private FluidFilterInventoryWrapper fluid;
-    private Supplier<Integer> typeGetter;
+    private final ItemFilterInventoryWrapper item;
+    private final FluidFilterInventoryWrapper fluid;
+    private final Supplier<Integer> typeGetter;
 
     FilterInventoryWrapper(IItemHandlerModifiable itemTo, FluidInventory fluidTo, Supplier<Integer> typeGetter) {
         this.item = new ItemFilterInventoryWrapper(itemTo);

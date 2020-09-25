@@ -24,5 +24,5 @@ public interface IExternalStorage<T> extends IStorage<T> {
     /**
      * @return the capacity of the connected storage
      */
-    int getCapacity();
+    long getCapacity();
 }

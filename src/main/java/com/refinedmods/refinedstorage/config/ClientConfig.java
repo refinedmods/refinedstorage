@@ -3,11 +3,11 @@ package com.refinedmods.refinedstorage.config;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ClientConfig {
-    private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-    private ForgeConfigSpec spec;
+    private final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+    private final ForgeConfigSpec spec;
 
-    private Grid grid;
-    private CrafterManager crafterManager;
+    private final Grid grid;
+    private final CrafterManager crafterManager;
 
     public ClientConfig() {
         grid = new Grid();
@@ -33,6 +33,7 @@ public class ClientConfig {
         private final ForgeConfigSpec.BooleanValue detailedTooltip;
         private final ForgeConfigSpec.BooleanValue largeFont;
         private final ForgeConfigSpec.BooleanValue preventSortingWhileShiftIsDown;
+        private final ForgeConfigSpec.BooleanValue rememberSearchQuery;
 
         public Grid() {
             builder.push("grid");
@@ -41,6 +42,7 @@ public class ClientConfig {
             detailedTooltip = builder.comment("Whether the Grid should display a detailed tooltip when hovering over an item or fluid").define("detailedTooltip", true);
             largeFont = builder.comment("Whether the Grid should use a large font for stack quantity display").define("largeFont", false);
             preventSortingWhileShiftIsDown = builder.comment("Whether the Grid should prevent sorting while the shift key is held down").define("preventSortingWhileShiftIsDown", true);
+            rememberSearchQuery = builder.comment("Whether the Grid should remember the search query when closing and re-opening the Grid").define("rememberSearchQuery", false);
 
             builder.pop();
         }
@@ -59,6 +61,10 @@ public class ClientConfig {
 
         public boolean getPreventSortingWhileShiftIsDown() {
             return preventSortingWhileShiftIsDown.get();
+        }
+
+        public boolean getRememberSearchQuery() {
+            return rememberSearchQuery.get();
         }
     }
 

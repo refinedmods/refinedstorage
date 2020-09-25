@@ -18,7 +18,7 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
 
     public ImporterTile() {
         super(RSTiles.IMPORTER);
-        
+
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);

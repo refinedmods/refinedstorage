@@ -1,13 +1,18 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
+import com.refinedmods.refinedstorage.network.SetFilterSlotMessage;
+import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
+import com.refinedmods.refinedstorage.util.StackUtils;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
                         public void accept(I ingredient) {
                             slot.putStack((ItemStack) ingredient);
 
-                            // RS.INSTANCE.network.sendToServer(new MessageSlotFilterSet(slot.slotNumber, (ItemStack) ingredient));
+                            RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(slot.slotNumber, (ItemStack) ingredient));
                         }
                     });
                 }
@@ -51,7 +56,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
                         @Override
                         public void accept(I ingredient) {
-                            // RS.INSTANCE.network.sendToServer(new MessageSlotFilterSetFluid(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, Fluid.BUCKET_VOLUME)));
+                            RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, FluidAttributes.BUCKET_VOLUME)));
                         }
                     });
                 }

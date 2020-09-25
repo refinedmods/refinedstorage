@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
-    private ServerPlayerEntity player;
-    private INetwork network;
+    private final ServerPlayerEntity player;
+    private final INetwork network;
 
     public FluidGridStorageCacheListener(ServerPlayerEntity player, INetwork network) {
         this.player = player;

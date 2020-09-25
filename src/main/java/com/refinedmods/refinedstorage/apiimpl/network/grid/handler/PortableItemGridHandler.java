@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class PortableItemGridHandler implements IItemGridHandler {
-    private IPortableGrid portableGrid;
-    private IGrid grid;
+    private final IPortableGrid portableGrid;
+    private final IGrid grid;
 
     public PortableItemGridHandler(IPortableGrid portableGrid, IGrid grid) {
         this.portableGrid = portableGrid;

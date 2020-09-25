@@ -16,9 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PortableItemStorageCache implements IStorageCache<ItemStack> {
-    private IPortableGrid portableGrid;
-    private IStackList<ItemStack> list = API.instance().createItemStackList();
-    private List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
+    private final IPortableGrid portableGrid;
+    private final IStackList<ItemStack> list = API.instance().createItemStackList();
+    private final List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
 
     public PortableItemStorageCache(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;

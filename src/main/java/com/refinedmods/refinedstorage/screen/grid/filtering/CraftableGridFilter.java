@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.function.Predicate;
 
 public class CraftableGridFilter implements Predicate<IGridStack> {
-    private boolean craftable;
+    private final boolean craftable;
 
     public CraftableGridFilter(boolean craftable) {
         this.craftable = craftable;

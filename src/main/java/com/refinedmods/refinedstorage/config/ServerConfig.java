@@ -3,39 +3,39 @@ package com.refinedmods.refinedstorage.config;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ServerConfig {
-    private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-    private ForgeConfigSpec spec;
+    private final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+    private final ForgeConfigSpec spec;
 
-    private Upgrades upgrades;
-    private Controller controller;
-    private Cable cable;
-    private Grid grid;
-    private DiskDrive diskDrive;
-    private StorageBlock storageBlock;
-    private FluidStorageBlock fluidStorageBlock;
-    private ExternalStorage externalStorage;
-    private Importer importer;
-    private Exporter exporter;
-    private NetworkReceiver networkReceiver;
-    private NetworkTransmitter networkTransmitter;
-    private Relay relay;
-    private Detector detector;
-    private SecurityManager securityManager;
-    private Interface _interface;
-    private FluidInterface fluidInterface;
-    private WirelessTransmitter wirelessTransmitter;
-    private StorageMonitor storageMonitor;
-    private WirelessGrid wirelessGrid;
-    private WirelessFluidGrid wirelessFluidGrid;
-    private Constructor constructor;
-    private Destructor destructor;
-    private DiskManipulator diskManipulator;
-    private PortableGrid portableGrid;
-    private Crafter crafter;
-    private CrafterManager crafterManager;
-    private CraftingMonitor craftingMonitor;
-    private WirelessCraftingMonitor wirelessCraftingMonitor;
-    private Autocrafting autocrafting;
+    private final Upgrades upgrades;
+    private final Controller controller;
+    private final Cable cable;
+    private final Grid grid;
+    private final DiskDrive diskDrive;
+    private final StorageBlock storageBlock;
+    private final FluidStorageBlock fluidStorageBlock;
+    private final ExternalStorage externalStorage;
+    private final Importer importer;
+    private final Exporter exporter;
+    private final NetworkReceiver networkReceiver;
+    private final NetworkTransmitter networkTransmitter;
+    private final Relay relay;
+    private final Detector detector;
+    private final SecurityManager securityManager;
+    private final Interface _interface;
+    private final FluidInterface fluidInterface;
+    private final WirelessTransmitter wirelessTransmitter;
+    private final StorageMonitor storageMonitor;
+    private final WirelessGrid wirelessGrid;
+    private final WirelessFluidGrid wirelessFluidGrid;
+    private final Constructor constructor;
+    private final Destructor destructor;
+    private final DiskManipulator diskManipulator;
+    private final PortableGrid portableGrid;
+    private final Crafter crafter;
+    private final CrafterManager crafterManager;
+    private final CraftingMonitor craftingMonitor;
+    private final WirelessCraftingMonitor wirelessCraftingMonitor;
+    private final Autocrafting autocrafting;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -920,19 +920,15 @@ public class ServerConfig {
 
     public class Autocrafting {
         private final ForgeConfigSpec.IntValue calculationTimeoutMs;
-        private final ForgeConfigSpec.BooleanValue useExperimental;
 
         public Autocrafting() {
             builder.push("autocrafting");
 
-            useExperimental = builder.comment("Use the experimental autocrafting engine").define("useExperimental", true);
             calculationTimeoutMs = builder.comment("The autocrafting calculation timeout in milliseconds, crafting tasks taking longer than this to calculate are cancelled to avoid server strain").defineInRange("calculationTimeoutMs", 5000, 5000, Integer.MAX_VALUE);
 
             builder.pop();
         }
-        public boolean useExperimentalAutocrafting(){
-            return useExperimental.get();
-        }
+
         public int getCalculationTimeoutMs() {
             return calculationTimeoutMs.get();
         }

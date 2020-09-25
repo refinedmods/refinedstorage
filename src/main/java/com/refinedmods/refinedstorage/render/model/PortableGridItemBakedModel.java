@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,10 @@ public class PortableGridItemBakedModel implements IBakedModel {
     }
 
     @Override
+    @Nonnull
     @SuppressWarnings("deprecation")
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-        List<BakedQuad> quads = new ArrayList<>();
-
-        quads.addAll(base.getQuads(state, side, rand));
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
+        List<BakedQuad> quads = new ArrayList<>(base.getQuads(state, side, rand));
 
         if (disk != null) {
             quads.addAll(disk.getQuads(state, side, rand));

@@ -31,8 +31,6 @@ public class FluidStorageBlock extends NetworkNodeBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_fluid_storage_block");
     }
 
     public FluidStorageType getType() {
@@ -48,7 +46,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
                 storage.setStorageId(stack.getTag().getUniqueId(FluidStorageNetworkNode.NBT_ID));
             }
 
-            storage.loadStorage();
+            storage.loadStorage(player instanceof PlayerEntity ? (PlayerEntity) player : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.

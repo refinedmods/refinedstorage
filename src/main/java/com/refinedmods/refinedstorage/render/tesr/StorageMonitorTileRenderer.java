@@ -11,7 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -23,6 +22,7 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.model.TransformationHelper;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -38,7 +38,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
 
         BlockState state = tile.getWorld().getBlockState(tile.getPos());
         if (state.getBlock() instanceof StorageMonitorBlock) {
-            direction = state.get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
+            direction = state.get(RSBlocks.STORAGE_MONITOR.get().getDirection().getProperty());
         }
 
         final int light = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(direction.getDirectionVec()));
@@ -97,6 +97,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         matrixStack.pop();
     }
 
+    @SuppressWarnings("deprecation")
     private void renderItem(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, Direction direction, float rotation, int light, ItemStack itemStack) {
         matrixStack.push();
 
@@ -141,25 +142,25 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         final int colorAlpha = fluidColor >> 24 & 0xFF;
 
         buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -0.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMinU(), sprite.getMinV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMinU(), sprite.getMinV())
+            .lightmap(light)
+            .endVertex();
         buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -0.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMaxU(), sprite.getMinV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMaxU(), sprite.getMinV())
+            .lightmap(light)
+            .endVertex();
         buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -1.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMaxU(), sprite.getMaxV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMaxU(), sprite.getMaxV())
+            .lightmap(light)
+            .endVertex();
         buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -1.5F, 0F)
-                .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMinU(), sprite.getMaxV())
-                .lightmap(light)
-                .endVertex();
+            .color(colorRed, colorGreen, colorBlue, colorAlpha)
+            .tex(sprite.getMinU(), sprite.getMaxV())
+            .lightmap(light)
+            .endVertex();
 
         matrixStack.pop();
     }

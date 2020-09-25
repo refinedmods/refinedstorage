@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridBlockGridFactory;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
@@ -40,7 +39,6 @@ public class PortableGridBlock extends BaseBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setRegistryName(RS.ID, (type == PortableGridBlockItem.Type.CREATIVE ? "creative_" : "") + "portable_grid");
         this.setDefaultState(getDefaultState().with(DISK_STATE, PortableGridDiskState.NONE).with(ACTIVE, false));
     }
 

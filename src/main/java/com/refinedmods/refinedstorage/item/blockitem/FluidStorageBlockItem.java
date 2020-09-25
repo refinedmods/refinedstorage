@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageN
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.block.FluidStorageBlock;
 import com.refinedmods.refinedstorage.item.FluidStoragePartItem;
+import com.refinedmods.refinedstorage.item.ProcessorItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,8 +38,6 @@ public class FluidStorageBlockItem extends BaseBlockItem {
         super(block, new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = block.getType();
-
-        this.setRegistryName(block.getRegistryName());
     }
 
     @Override
@@ -83,19 +82,19 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                 ItemStack fluidStoragePart = new ItemStack(FluidStoragePartItem.getByType(type));
 
                 if (!player.inventory.addItemStackToInventory(fluidStoragePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidStoragePart);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), fluidStoragePart);
                 }
 
-                ItemStack processor = new ItemStack(RSItems.BASIC_PROCESSOR);
+                ItemStack processor = new ItemStack(RSItems.PROCESSORS.get(ProcessorItem.Type.BASIC).get());
 
                 if (!player.inventory.addItemStackToInventory(processor.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), processor);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), processor);
                 }
 
                 ItemStack bucket = new ItemStack(Items.BUCKET);
 
                 if (!player.inventory.addItemStackToInventory(bucket.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), bucket);
+                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), bucket);
                 }
 
                 if (disk != null) {
@@ -103,7 +102,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                     API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
                 }
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING.get()));
             }
         }
 

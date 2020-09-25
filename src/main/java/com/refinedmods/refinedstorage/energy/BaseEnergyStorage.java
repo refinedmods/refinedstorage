@@ -8,14 +8,12 @@ public class BaseEnergyStorage extends EnergyStorage {
     }
 
     // @Volatile: Impl from EnergyStorage#extractEnergy, without the canExtract check
-    public int extractEnergyBypassCanExtract(int maxExtract, boolean simulate) {
+    public void extractEnergyBypassCanExtract(int maxExtract, boolean simulate) {
         int energyExtracted = Math.min(energy, maxExtract);
 
         if (!simulate) {
             energy -= energyExtracted;
         }
-
-        return energyExtracted;
     }
 
     public void setStored(int energy) {

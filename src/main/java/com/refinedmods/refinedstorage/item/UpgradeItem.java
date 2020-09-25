@@ -82,8 +82,6 @@ public class UpgradeItem extends Item {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type == Type.NORMAL ? "upgrade" : type.getName() + "_upgrade");
     }
 
     @Override
@@ -93,8 +91,8 @@ public class UpgradeItem extends Item {
         if (type.getFortuneLevel() > 0) {
             tooltip.add(
                 new TranslationTextComponent("enchantment.minecraft.fortune")
-                    .appendText(" ")
-                    .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
+                    .appendString(" ")
+                    .append(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
                     .setStyle(Styles.GRAY)
             );
         }

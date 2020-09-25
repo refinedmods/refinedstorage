@@ -81,6 +81,16 @@ public class ItemStackList implements IStackList<ItemStack> {
     }
 
     @Override
+    public int getCount(@Nonnull ItemStack stack, int flags) {
+        ItemStack found = get(stack, flags);
+        if (found == null) {
+            return 0;
+        }
+
+        return found.getCount();
+    }
+
+    @Override
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         for (StackListEntry<ItemStack> entry : stacks.get(stack.getItem())) {

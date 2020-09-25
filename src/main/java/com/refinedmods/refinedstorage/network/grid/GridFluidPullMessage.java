@@ -11,8 +11,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridFluidPullMessage {
-    private UUID id;
-    private boolean shift;
+    private final UUID id;
+    private final boolean shift;
 
     public GridFluidPullMessage(UUID id, boolean shift) {
         this.id = id;

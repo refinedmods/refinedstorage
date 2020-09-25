@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.block.Block;
@@ -15,6 +16,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 public abstract class NetworkNodeBlock extends BaseBlock {
@@ -25,6 +27,19 @@ public abstract class NetworkNodeBlock extends BaseBlock {
 
         if (hasConnectedState()) {
             this.setDefaultState(this.getStateContainer().getBaseState().with(CONNECTED, false));
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+
+        if (!world.isRemote) {
+            INetworkNode node = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos);
+            if (node instanceof NetworkNode) {
+                ((NetworkNode) node).setRedstonePowered(world.isBlockPowered(pos));
+            }
         }
     }
 
@@ -80,7 +95,7 @@ public abstract class NetworkNodeBlock extends BaseBlock {
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
-    
+
     public boolean hasConnectedState() {
         return false;
     }

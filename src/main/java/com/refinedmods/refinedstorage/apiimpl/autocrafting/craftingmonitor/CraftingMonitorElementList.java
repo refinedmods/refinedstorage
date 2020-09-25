@@ -7,12 +7,11 @@ import net.minecraft.util.ResourceLocation;
 import java.util.*;
 
 public class CraftingMonitorElementList implements ICraftingMonitorElementList {
-    private List<ICraftingMonitorElement> elements = new LinkedList<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
-
+    private final List<ICraftingMonitorElement> elements = new LinkedList<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
 
     @Override
     public void directAdd(ICraftingMonitorElement element) {
@@ -28,8 +27,8 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (craftingElements != null) {
             ICraftingMonitorElement existingElement = craftingElements.get(element.baseElementHashCode());
             if (existingElement != null) {
-                if(existingElement instanceof ErrorCraftingMonitorElement){
-                    ((ErrorCraftingMonitorElement)existingElement).mergeBases(element);
+                if (existingElement instanceof ErrorCraftingMonitorElement) {
+                    ((ErrorCraftingMonitorElement) existingElement).mergeBases(element);
                 } else {
                     existingElement.merge(element);
                 }
@@ -39,8 +38,8 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (processingElements != null) {
             ICraftingMonitorElement existingElement = processingElements.get(element.baseElementHashCode());
             if (existingElement != null) {
-                if(existingElement instanceof ErrorCraftingMonitorElement){
-                    ((ErrorCraftingMonitorElement)existingElement).mergeBases(element);
+                if (existingElement instanceof ErrorCraftingMonitorElement) {
+                    ((ErrorCraftingMonitorElement) existingElement).mergeBases(element);
                 } else {
                     existingElement.merge(element);
                 }
@@ -115,7 +114,7 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
 
     @Override
     public List<ICraftingMonitorElement> getElements() {
-        if (!currentLists.isEmpty()||!currentCraftingLists.isEmpty() || !currentProcessingLists.isEmpty() || !currentStorageLists.isEmpty()) {
+        if (!currentLists.isEmpty() || !currentCraftingLists.isEmpty() || !currentProcessingLists.isEmpty() || !currentStorageLists.isEmpty()) {
             commit();
         }
 

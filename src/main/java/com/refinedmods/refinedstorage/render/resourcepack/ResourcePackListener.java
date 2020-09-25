@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.render.resourcepack;
 
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.ClientResourcePackInfo;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.ResourcePackInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +17,7 @@ public class ResourcePackListener extends ReloadListener<RSResourcePackSection> 
 
     @Override
     protected RSResourcePackSection prepare(IResourceManager resourceManager, IProfiler profiler) {
-        for (ClientResourcePackInfo info : Minecraft.getInstance().getResourcePackList().getEnabledPacks()) {
+        for (ResourcePackInfo info : Minecraft.getInstance().getResourcePackList().getEnabledPacks()) {
             try {
                 RSResourcePackSection section = info.getResourcePack().getMetadata(RSResourcePackSection.DESERIALIZER);
 

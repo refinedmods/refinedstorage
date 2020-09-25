@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.ConstructorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ConstructorDropSideButton;
@@ -31,15 +32,15 @@ public class ConstructorScreen extends BaseScreen<ConstructorContainer> {
     }
 
     @Override
-    public void renderBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/constructor.png");
 
-        blit(x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, title.getFormattedText());
-        renderString(7, 43, I18n.format("container.inventory"));
+    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+        renderString(matrixStack, 7, 7, title.getString());
+        renderString(matrixStack, 7, 43, I18n.format("container.inventory"));
     }
 }

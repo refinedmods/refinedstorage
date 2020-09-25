@@ -20,7 +20,7 @@ public class GridTransferMessage {
     private Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs;
     private List<Slot> slots;
 
-    private ItemStack[][] recipe = new ItemStack[9][];
+    private final ItemStack[][] recipe = new ItemStack[9][];
 
     public GridTransferMessage() {
     }

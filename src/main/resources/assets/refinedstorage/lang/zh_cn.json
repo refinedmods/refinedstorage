@@ -1,10 +1,8 @@
 {
-	"itemGroup.refinedstorage": "Refined Storage",
+    "itemGroup.refinedstorage": "Refined Storage",
     "itemGroup.refinedstorage.covers": "Refined Storage 伪装板",
-
     "key.refinedstorage.focusSearchBar": "跳转终端搜索条",
     "key.refinedstorage.clearGridCraftingMatrix": "清空合成网格",
-
     "key.refinedstorage.openWirelessGrid": "打开无线面板",
     "key.refinedstorage.openWirelessFluidGrid": "打开无线流体面板",
     "key.refinedstorage.openPortableGrid": "打开便携面板",
@@ -246,11 +244,9 @@
     "block.refinedstorage.creative_portable_grid": "创造便携式终端",
     "block.refinedstorage.portable_grid.tooltip": "Shift进行放置",
     "block.refinedstorage.crafter_manager": "合成管理器",
-
-
-	"item.refinedstorage.raw_basic_processor": "未处理基础处理器",
-	"item.refinedstorage.raw_improved_processor": "未处理进阶处理器",
-	"item.refinedstorage.raw_advanced_processor": "未处理高级处理器",
+    "item.refinedstorage.raw_basic_processor": "未处理基础处理器",
+    "item.refinedstorage.raw_improved_processor": "未处理进阶处理器",
+    "item.refinedstorage.raw_advanced_processor": "未处理高级处理器",
     "item.refinedstorage.1k_storage_disk": "1k 存储磁盘",
     "item.refinedstorage.4k_storage_disk": "4k 存储磁盘",
     "item.refinedstorage.16k_storage_disk": "16k 存储磁盘",
@@ -304,12 +300,8 @@
     "item.refinedstorage.cover": "伪装板",
     "item.refinedstorage.hollow_cover": "空心伪装板",
     "item.refinedstorage.processor_binding": "处理器粘合物",
-
-    "commands.refinedstorage.createdisk.usage": "/createdisk <玩家> <物品> <metadata> <id>",
-    "commands.refinedstorage.createdisk.error.notADisk": "该物品不是磁盘.",
-    "commands.refinedstorage.createdisk.error.diskNotFound": "磁盘 %s 未找到.",
-    "commands.refinedstorage.createdisk.success": "成功把磁盘 %s 给了 %s.",
-
+    "commands.refinedstorage.disk.create.error.disk_not_found": "磁盘 %s 未找到.",
+    "commands.refinedstorage.disk.create.success": "成功把磁盘 %s 给了 %s.",
     "advancements.refinedstorage.controlling.description": "合成了控制器",
     "advancements.refinedstorage.connecting": "连接",
     "advancements.refinedstorage.connecting.description": "您可以将所有设备放在一起或者使用【线缆】以将它们连接起来",

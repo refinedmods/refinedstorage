@@ -4,22 +4,20 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public enum RedstoneMode {
     IGNORE, HIGH, LOW;
 
     private static final String NBT = "RedstoneMode";
 
-    public boolean isEnabled(World world, BlockPos pos) {
+    public boolean isEnabled(boolean powered) {
         switch (this) {
             case IGNORE:
                 return true;
             case HIGH:
-                return world.isBlockPowered(pos);
+                return powered;
             case LOW:
-                return !world.isBlockPowered(pos);
+                return !powered;
             default:
                 return false;
         }

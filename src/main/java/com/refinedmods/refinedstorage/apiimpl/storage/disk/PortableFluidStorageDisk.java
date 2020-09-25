@@ -13,10 +13,11 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class PortableFluidStorageDisk implements IStorageDisk<FluidStack> {
-    private IStorageDisk<FluidStack> parent;
-    private IPortableGrid portableGrid;
+    private final IStorageDisk<FluidStack> parent;
+    private final IPortableGrid portableGrid;
 
     public PortableFluidStorageDisk(IStorageDisk<FluidStack> parent, IPortableGrid portableGrid) {
         this.parent = parent;
@@ -26,6 +27,12 @@ public class PortableFluidStorageDisk implements IStorageDisk<FluidStack> {
     @Override
     public int getCapacity() {
         return parent.getCapacity();
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return parent.getOwner();
     }
 
     @Override
