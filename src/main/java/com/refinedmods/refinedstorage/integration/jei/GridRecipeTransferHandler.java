@@ -38,24 +38,22 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     @Override
     public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
-        IngredientTracker tracker = trackItems(container, recipeLayout, player);
+        IngredientTracker tracker = createTracker(container, recipeLayout, player);
 
-        if (tracker.hasMissing()) {
-            if (doTransfer && Screen.hasControlDown()) {
-                tracker.getCraftingRequests().forEach((id, count) -> {
-                    RS.NETWORK_HANDLER.sendToServer(new GridCraftingPreviewRequestMessage(id, count, Screen.hasShiftDown(), false));
-                });
-            } else if (doTransfer) {
-                moveItems(container, recipeLayout);
-            } else {
-                return new RecipeTransferGridError(tracker);
-            }
+        if (tracker.hasMissing() && !doTransfer) {
+            return new RecipeTransferGridError(tracker);
+        } else if (tracker.hasMissing() && doTransfer && Screen.hasControlDown()) {
+            tracker.getCraftingRequests().forEach((id, count) -> {
+                RS.NETWORK_HANDLER.sendToServer(new GridCraftingPreviewRequestMessage(id, count, Screen.hasShiftDown(), false));
+            });
+        } else if (doTransfer) {
+            moveItems(container, recipeLayout);
         }
 
         return null;
     }
 
-    private IngredientTracker trackItems(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player) {
+    private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player) {
         IngredientTracker tracker = new IngredientTracker(recipeLayout);
         if (!(container.getScreenInfoProvider() instanceof GridScreen)) {
             return tracker;
@@ -139,6 +137,4 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
             ));
         }
     }
-
 }
-

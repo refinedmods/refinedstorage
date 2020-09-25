@@ -3,6 +3,8 @@
 ### 1.9.6
 - Port to Minecraft 1.16.3 (raoulvdberge)
 - Added colored block variants (Darkere)
+- Added functionality to show missing items in the JEI transfer screen (Darkere)
+- Added functionality to request missing items from autocrafting in the JEI transfer screen (Darkere)
 - Added client config option to remember the Grid search query (raoulvdberge)
 - Fixed Portable Grid losing enchantments when placing and breaking (raoulvdberge)
 

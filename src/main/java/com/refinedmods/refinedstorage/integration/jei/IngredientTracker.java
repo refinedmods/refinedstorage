@@ -67,5 +67,4 @@ public class IngredientTracker {
 
         return toRequest;
     }
-
 }
