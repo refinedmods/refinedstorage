@@ -38,7 +38,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     @Override
     public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
-        JEIIngredientTracker tracker = trackItems(container, recipeLayout, player);
+        IngredientTracker tracker = trackItems(container, recipeLayout, player);
 
         if (tracker.hasMissing()) {
             if (doTransfer && Screen.hasControlDown()) {
@@ -55,8 +55,8 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private JEIIngredientTracker trackItems(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player) {
-        JEIIngredientTracker tracker = new JEIIngredientTracker(recipeLayout);
+    private IngredientTracker trackItems(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player) {
+        IngredientTracker tracker = new IngredientTracker(recipeLayout);
         if (!(container.getScreenInfoProvider() instanceof GridScreen)) {
             return tracker;
         }
@@ -69,14 +69,14 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         // Check grid
         for (IGridStack gridStack : gridStacks) {
             if (gridStack instanceof ItemGridStack) {
-                tracker.checkIfStackIsNeeded(((ItemGridStack) gridStack).getStack(), gridStack);
+                tracker.addAvailableStack(((ItemGridStack) gridStack).getStack(), gridStack);
             }
         }
 
         // Check inventory
         for (int inventorySlot = 0; inventorySlot < player.inventory.getSizeInventory(); inventorySlot++) {
             if (!player.inventory.getStackInSlot(inventorySlot).isEmpty()) {
-                tracker.checkIfStackIsNeeded(player.inventory.getStackInSlot(inventorySlot), null);
+                tracker.addAvailableStack(player.inventory.getStackInSlot(inventorySlot), null);
             }
         }
 
@@ -86,7 +86,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
             if (craftingMatrix != null) {
                 for (int matrixSlot = 0; matrixSlot < craftingMatrix.getSizeInventory(); matrixSlot++) {
                     if (!craftingMatrix.getStackInSlot(matrixSlot).isEmpty()) {
-                        tracker.checkIfStackIsNeeded(craftingMatrix.getStackInSlot(matrixSlot), null);
+                        tracker.addAvailableStack(craftingMatrix.getStackInSlot(matrixSlot), null);
                     }
                 }
             }
