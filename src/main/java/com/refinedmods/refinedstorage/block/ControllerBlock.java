@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.container.ControllerContainer;
 import com.refinedmods.refinedstorage.tile.ControllerTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -130,15 +131,13 @@ public class ControllerBlock extends BaseBlock {
             return result;
         }
 
+        ColorMap<ControllerBlock> colorMap = type == NetworkType.CREATIVE ? RSBlocks.CREATIVE_CONTROLLER : RSBlocks.CONTROLLER;
         DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
 
-        BlockState newState = type == NetworkType.CREATIVE ?
-            RSBlocks.CREATIVE_CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE)) :
-            RSBlocks.CONTROLLER.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
+        if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
+            BlockState newState = colorMap.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
 
-        ActionResultType colorResult = RSBlocks.CONTROLLER.setBlockState(newState, player.getHeldItem(hand), world, pos, player);
-        if (colorResult != ActionResultType.PASS) {
-            return colorResult;
+            return RSBlocks.CONTROLLER.setBlockState(newState, player.getHeldItem(hand), world, pos, player);
         }
 
         if (!world.isRemote) {

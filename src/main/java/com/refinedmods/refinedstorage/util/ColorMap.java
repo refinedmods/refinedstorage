@@ -103,9 +103,10 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
 
     public <S extends BaseBlock> ActionResultType changeBlockColor(BlockState state, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
         DyeColor color = DyeColor.getColor(heldItem);
-        if (color == null) {
+        if (color == null || state.getBlock().equals(colorMap.get(color).get())) {
             return ActionResultType.PASS;
         }
+
         return setBlockState(getNewState((RegistryObject<S>) colorMap.get(color), state), heldItem, world, pos, player);
     }
 
@@ -122,6 +123,7 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
                 heldItem.shrink(1);
             }
         }
+
         return ActionResultType.SUCCESS;
     }
 }

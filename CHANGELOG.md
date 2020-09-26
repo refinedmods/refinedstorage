@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.9.7
+- Fixed crash when opening Controller GUI (Darkere)
+- Fixed dye being consumed without effect in some cases (Darkere)  
+
 ### 1.9.6
 - Port to Minecraft 1.16.3 (raoulvdberge)
 - Added colored block variants (Darkere)
