@@ -533,6 +533,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
                 doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
             }
+
             if (isOverInventory(x - guiLeft, y - guiTop)) {
                 if (grid.getGridType() != GridType.FLUID && hoveredSlot != null) {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
@@ -542,11 +543,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                     RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : new UUID(0, 0), hasShiftDown(), hasControlDown(), delta > 0));
                 }
             }
+
             return super.mouseScrolled(x, y, delta);
         } else {
             return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
         }
-
     }
 
     private boolean isOverInventory(double x, double y) {
