@@ -32,10 +32,10 @@ public class PortableItemGridHandler implements IItemGridHandler {
         if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
+
         if (portableGrid.getItemCache().getList().getEntry(stack, IComparer.COMPARE_NBT) != null) {
             onExtract(player, portableGrid.getItemCache().getList().getEntry(stack, IComparer.COMPARE_NBT).getId(), preferredSlot, flags);
         }
-
     }
 
     @Override
@@ -103,6 +103,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
                             took.setCount(remainder.getCount());
                         }
                     }
+
                     if (!took.isEmpty()) {
                         if (ItemHandlerHelper.insertItemStacked(playerInventory, took, true).isEmpty()) {
                             took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
@@ -111,7 +112,6 @@ public class PortableItemGridHandler implements IItemGridHandler {
                         }
                     }
                 }
-
             } else {
                 took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
 

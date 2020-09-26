@@ -178,6 +178,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         } else {
             onIncrementButtonClicked(-1);
         }
+
         return super.mouseScrolled(x, y, delta);
     }
 
