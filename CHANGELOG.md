@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.9.7
+- Changed JEI transfer error mechanics (raoulvdberge)
 - Fixed crash when opening Controller GUI (Darkere)
 - Fixed dye being consumed without effect in some cases (Darkere)  
 

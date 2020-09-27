@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import java.util.UUID;
 
 class Ingredient {
-    private IGuiIngredient<ItemStack> guiIngredient;
+    private final IGuiIngredient<ItemStack> guiIngredient;
     private UUID craftStackId;
-    private int required;
+    private final int required;
     private int fulfilled;
 
     public Ingredient(IGuiIngredient<ItemStack> guiIngredient) {

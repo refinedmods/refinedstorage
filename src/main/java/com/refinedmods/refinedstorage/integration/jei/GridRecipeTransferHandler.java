@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
 
 public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer> {
     public static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
-    public static long LAST_TRANSFER_TIME;
+
+    public static long lastTransferTime;
 
     @Override
     public Class<GridContainer> getContainerClass() {
@@ -38,16 +39,55 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     @Override
     public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
+        if (!(container.getScreenInfoProvider() instanceof GridScreen)) {
+            return null;
+        }
+
+        GridType type = container.getGrid().getGridType();
+
+        if (type == GridType.CRAFTING) {
+            return transferRecipeForCraftingGrid(container, recipeLayout, player, doTransfer);
+        } else if (type == GridType.PATTERN) {
+            return transferRecipeForPatternGrid(container, recipeLayout, player, doTransfer);
+        }
+
+        return null;
+    }
+
+    private RecipeTransferCraftingGridError transferRecipeForCraftingGrid(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
         IngredientTracker tracker = createTracker(container, recipeLayout, player);
 
-        if (tracker.hasMissing() && !doTransfer) {
-            return new RecipeTransferGridError(tracker);
-        } else if (tracker.hasMissing() && doTransfer && Screen.hasControlDown()) {
-            tracker.getCraftingRequests().forEach((id, count) -> {
-                RS.NETWORK_HANDLER.sendToServer(new GridCraftingPreviewRequestMessage(id, count, Screen.hasShiftDown(), false));
-            });
-        } else if (doTransfer) {
+        if (doTransfer) {
+            if (tracker.hasMissingButAutocraftingAvailable() && Screen.hasControlDown()) {
+                tracker.createCraftingRequests().forEach((id, count) -> RS.NETWORK_HANDLER.sendToServer(
+                    new GridCraftingPreviewRequestMessage(
+                        id,
+                        count,
+                        Screen.hasShiftDown(),
+                        false
+                    )
+                ));
+            } else {
+                moveItems(container, recipeLayout);
+            }
+        } else {
+            if (tracker.hasMissing()) {
+                return new RecipeTransferCraftingGridError(tracker);
+            }
+        }
+
+        return null;
+    }
+
+    private IRecipeTransferError transferRecipeForPatternGrid(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
+        IngredientTracker tracker = createTracker(container, recipeLayout, player);
+
+        if (doTransfer) {
             moveItems(container, recipeLayout);
+        } else {
+            if (tracker.isAutocraftingAvailable()) {
+                return new RecipeTransferPatternGridError(tracker);
+            }
         }
 
         return null;
@@ -55,9 +95,6 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player) {
         IngredientTracker tracker = new IngredientTracker(recipeLayout);
-        if (!(container.getScreenInfoProvider() instanceof GridScreen)) {
-            return tracker;
-        }
 
         // Using IGridView#getStacks will return a *filtered* list of items in the view,
         // which will cause problems - especially if the user uses JEI synchronised searching.
@@ -96,7 +133,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private void moveItems(GridContainer gridContainer, IRecipeLayout recipeLayout) {
         IGrid grid = gridContainer.getGrid();
 
-        LAST_TRANSFER_TIME = System.currentTimeMillis();
+        lastTransferTime = System.currentTimeMillis();
 
         if (grid.getGridType() == GridType.PATTERN && !recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
             List<ItemStack> inputs = new LinkedList<>();

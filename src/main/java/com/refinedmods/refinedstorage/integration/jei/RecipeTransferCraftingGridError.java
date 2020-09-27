@@ -15,12 +15,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeTransferGridError implements IRecipeTransferError {
-    private static final Color HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
-    private static final Color HIGHLIGHT_AUTOCRAFT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);
-    IngredientTracker tracker;
+public class RecipeTransferCraftingGridError implements IRecipeTransferError {
+    private static final Color MISSING_HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+    protected static final Color AUTOCRAFTING_HIGHLIGHT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);
 
-    public RecipeTransferGridError(IngredientTracker tracker) {
+    protected final IngredientTracker tracker;
+
+    public RecipeTransferCraftingGridError(IngredientTracker tracker) {
         this.tracker = tracker;
     }
 
@@ -31,24 +32,26 @@ public class RecipeTransferGridError implements IRecipeTransferError {
 
     @Override
     public void showError(MatrixStack stack, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
-        List<ITextComponent> message = drawIngredientHighlights(stack, tracker, recipeX, recipeY);
+        List<ITextComponent> message = drawIngredientHighlights(stack, recipeX, recipeY);
+
         Screen currentScreen = Minecraft.getInstance().currentScreen;
         GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 150, Minecraft.getInstance().fontRenderer);
     }
 
-    private List<ITextComponent> drawIngredientHighlights(MatrixStack stack, IngredientTracker tracker, int recipeX, int recipeY) {
+    protected List<ITextComponent> drawIngredientHighlights(MatrixStack stack, int recipeX, int recipeY) {
         List<ITextComponent> message = new ArrayList<>();
         message.add(new TranslationTextComponent("jei.tooltip.transfer"));
+
         boolean craftMessage = false;
         boolean missingMessage = false;
 
         for (Ingredient ingredient : tracker.getIngredients()) {
             if (!ingredient.isAvailable()) {
                 if (ingredient.isCraftable()) {
-                    ingredient.getGuiIngredient().drawHighlight(stack, HIGHLIGHT_AUTOCRAFT_COLOR.getRGB(), recipeX, recipeY);
+                    ingredient.getGuiIngredient().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
                     craftMessage = true;
                 } else {
-                    ingredient.getGuiIngredient().drawHighlight(stack, HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
+                    ingredient.getGuiIngredient().drawHighlight(stack, MISSING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
                     missingMessage = true;
                 }
             }
@@ -59,7 +62,7 @@ public class RecipeTransferGridError implements IRecipeTransferError {
         }
 
         if (craftMessage) {
-            message.add(new TranslationTextComponent("gui.refinedstorage.jei.tooltip.error.recipe.transfer.missing.autocraft").mergeStyle(TextFormatting.BLUE));
+            message.add(new TranslationTextComponent("gui.refinedstorage.jei.transfer.request_autocrafting").mergeStyle(TextFormatting.BLUE));
         }
 
         return message;

@@ -32,17 +32,19 @@ public class IngredientTracker {
                 return;
             }
 
-            if (ingredient.isAvailable()) {
-                continue;
-            }
+            Optional<ItemStack> match = ingredient
+                .getGuiIngredient()
+                .getAllIngredients()
+                .stream()
+                .filter(s -> API.instance().getComparer().isEqual(stack, s, IComparer.COMPARE_NBT))
+                .findFirst();
 
-            Optional<?> match = ingredient.getGuiIngredient().getAllIngredients().stream().filter((ItemStack matchingStack) -> API.instance().getComparer().isEqual(stack, matchingStack, IComparer.COMPARE_NBT)).findFirst();
             if (match.isPresent()) {
-                //craftables and non-craftables are 2 different gridstacks
-                //as such we need to ignore craftable stacks as they are not actual items
+                // Craftables and non-craftables are 2 different gridstacks
+                // As such we need to ignore craftable stacks as they are not actual items
                 if (gridStack != null && gridStack.isCraftable()) {
                     ingredient.setCraftStackId(gridStack.getId());
-                } else {
+                } else if (!ingredient.isAvailable()) {
                     int needed = ingredient.getMissingAmount();
                     int used = Math.min(available, needed);
                     ingredient.fulfill(used);
@@ -56,7 +58,15 @@ public class IngredientTracker {
         return ingredients.stream().anyMatch(ingredient -> !ingredient.isAvailable());
     }
 
-    public Map<UUID, Integer> getCraftingRequests() {
+    public boolean hasMissingButAutocraftingAvailable() {
+        return ingredients.stream().anyMatch(ingredient -> !ingredient.isAvailable() && ingredient.isCraftable());
+    }
+
+    public boolean isAutocraftingAvailable() {
+        return ingredients.stream().anyMatch(Ingredient::isCraftable);
+    }
+
+    public Map<UUID, Integer> createCraftingRequests() {
         Map<UUID, Integer> toRequest = new HashMap<>();
 
         for (Ingredient ingredient : ingredients) {
