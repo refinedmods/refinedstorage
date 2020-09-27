@@ -7,6 +7,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class IngredientTracker {
@@ -24,7 +25,7 @@ public class IngredientTracker {
         return ingredients;
     }
 
-    public void addAvailableStack(ItemStack stack, IGridStack gridStack) {
+    public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
         int available = stack.getCount();
 
         for (Ingredient ingredient : ingredients) {
