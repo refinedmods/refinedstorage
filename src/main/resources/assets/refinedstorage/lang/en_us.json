@@ -88,17 +88,16 @@
   "gui.refinedstorage.crafter_manager": "Crafter Manager",
   "gui.refinedstorage.alternatives": "Alternatives",
   "gui.refinedstorage.alternatives.apply": "Apply",
-
+  "gui.refinedstorage.jei.transfer.autocrafting_available": "Autocrafting available",
+  "gui.refinedstorage.jei.transfer.request_autocrafting": "CTRL + CLICK to request autocrafting",
   "misc.refinedstorage.energy_stored": "%d / %d FE",
   "misc.refinedstorage.energy_usage": "Usage: %d FE/t",
   "misc.refinedstorage.energy_usage_minimal": "%d FE/t",
-
   "misc.refinedstorage.storage.stored": "Stored: %s",
   "misc.refinedstorage.storage.stored_capacity": "Stored: %s / %s",
   "misc.refinedstorage.storage.stored_minimal": "%s",
   "misc.refinedstorage.storage.stored_capacity_minimal": "%s / %s",
   "misc.refinedstorage.storage.full": "%d%% full",
-
   "misc.refinedstorage.network_item.tooltip": "Linked to %d, %d, %d.",
   "misc.refinedstorage.network_item.out_of_range": "There is no Wireless Transmitter in range.",
   "misc.refinedstorage.network_item.not_found": "Network not found.",
