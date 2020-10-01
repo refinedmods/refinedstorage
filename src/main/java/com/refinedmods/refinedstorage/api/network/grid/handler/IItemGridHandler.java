@@ -81,4 +81,25 @@ public interface IItemGridHandler {
      * @param id     the task id, or null to cancel all tasks that are in the network currently
      */
     void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id);
+
+    /**
+     * Called when a player shift or ctrl scrolls in the player inventory
+     *
+     * @param player player that is scrolling
+     * @param slot   slot the mouse is hovering over
+     * @param shift  if true shift is pressed, if false ctrl is pressed
+     * @param up     whether the player is scrolling up or down
+     */
+    void onInventoryScrollMessage(ServerPlayerEntity player, int slot, boolean shift, boolean up);
+
+    /**
+     * Called when a player shift or ctrl scrolls in the Grid View
+     *
+     * @param player player that is scrolling
+     * @param id     UUID of the GridStack that the mouse is hovering over or UUID(0,0) if not over a stack
+     * @param shift  true if shift is pressed
+     * @param ctrl   true if ctrl is pressed
+     * @param up     whether the player is scrolling up or down
+     */
+    void onGridScrollMessage(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up);
 }

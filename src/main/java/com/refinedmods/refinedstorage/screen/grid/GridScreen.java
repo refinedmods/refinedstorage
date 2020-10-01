@@ -68,7 +68,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     public GridScreen(GridContainer container, IGrid grid, PlayerInventory inventory, ITextComponent title) {
         super(container, 227, 0, inventory, title);
-        this.doSort = true;
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isGridActive();
@@ -89,6 +88,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     @Override
     protected void onPreInit() {
         super.onPreInit();
+        doSort = true;
         this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
     }
 
