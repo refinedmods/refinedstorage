@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile;
@@ -21,11 +21,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class NetworkTransmitterBlock extends NetworkNodeBlock {
+public class NetworkTransmitterBlock extends ColoredNetworkBlock {
     public NetworkTransmitterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "network_transmitter");
     }
 
     @Nullable
@@ -36,7 +34,12 @@ public class NetworkTransmitterBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.NETWORK_TRANSMITTER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,

@@ -38,18 +38,16 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_storage_disk");
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (!world.isRemote && !stack.hasTag()) {
+        if (!world.isRemote && !stack.hasTag() && entity instanceof PlayerEntity) {
             UUID id = UUID.randomUUID();
 
-            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultItemDisk((ServerWorld) world, getCapacity(stack)));
+            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultItemDisk((ServerWorld) world, getCapacity(stack), (PlayerEntity) entity));
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
             setId(stack, id);
@@ -68,14 +66,14 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
             StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).func_230530_a_(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).setStyle(Styles.GRAY));
                 } else {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).func_230530_a_(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).setStyle(Styles.GRAY));
                 }
             }
 
             if (flag.isAdvanced()) {
-                tooltip.add(new StringTextComponent(id.toString()).func_230530_a_(Styles.GRAY));
+                tooltip.add(new StringTextComponent(id.toString()).setStyle(Styles.GRAY));
             }
         }
     }
@@ -97,7 +95,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
                 API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));
                 API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING.get()));
             }
         }
 

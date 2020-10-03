@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -14,8 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.Map;
 
 public class FluidCraftingPreviewElement implements ICraftingPreviewElement<FluidStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
@@ -75,8 +72,8 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
 
         y += 2;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, 1);
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
@@ -89,7 +86,7 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
             drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(getAvailable())));
         }
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     public void addAvailable(int amount) {

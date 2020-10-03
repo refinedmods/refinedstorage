@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.screen.grid.view;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +12,8 @@ public interface IGridView {
 
     @Nullable
     IGridStack get(UUID id);
+
+    Collection<IGridStack> getAllStacks();
 
     void setStacks(List<IGridStack> stacks);
 

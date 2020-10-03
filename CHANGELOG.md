@@ -1,5 +1,45 @@
 # Refined Storage Changelog
 
+### 1.9.7
+- Added functionality to move items in the Grid with shift/ctrl + scrolling (Darkere)
+- Changed JEI transfer error mechanics (raoulvdberge)
+- Fixed crash when opening Controller GUI (Darkere)
+- Fixed dye being consumed without effect in some cases (Darkere)
+
+### 1.9.6
+- Port to Minecraft 1.16.3 (raoulvdberge)
+- Added colored block variants (Darkere)
+- Added functionality to show missing items in the JEI transfer screen (Darkere)
+- Added functionality to request missing items from autocrafting in the JEI transfer screen (Darkere)
+- Added client config option to remember the Grid search query (raoulvdberge)
+- Fixed Portable Grid losing enchantments when placing and breaking (raoulvdberge)
+
+### 1.9.5
+- Re-added the `/refinedstorage disk create <player> <id>` command (raoulvdberge)
+- Added the `/refinedstorage disk list` command (raoulvdberge)
+- Added the `/refinedstorage disk list <player>` command (raoulvdberge)
+- Added the `/refinedstorage network list <dimension>` command (raoulvdberge)
+- Added the `/refinedstorage network get <dimension> <pos>` command (raoulvdberge)
+- Added the `/refinedstorage network get <dimension> <pos> autocrafting list` command (raoulvdberge)
+- Added the `/refinedstorage network get <dimension> <pos> autocrafting get <id>` command (raoulvdberge)
+- Added the `/refinedstorage network get <dimension> <pos> autocrafting cancel` command (raoulvdberge)
+- Added the `/refinedstorage network get <dimension> <pos> autocrafting cancel <id>` command (raoulvdberge)
+- Added JEI ghost ingredient dragging support (raoulvdberge)
+- Fixed text field not being focused in amount specifying screens (raoulvdberge)
+
+### 1.9.4
+- Fixed JEI recipes/usages keys not working in Grids (raoulvdberge)
+
+### 1.9.3
+- Port to Minecraft 1.16.2 (raoulvdberge)
+- Fixed duplication bug with the Constructor (Darkere)
+- Updated Japanese translation (a2y4)
+- Updated Taiwanese translation (ForFunPenguin)
+- Refactored autocrafting code (raoulvdberge)
+
+### 1.9.2b
+Fixed duplication bug with the Constructor (Darkere, raoulvdberge)
+
 ### 1.9.2
 - Fixed crash with Forge version 67 (Darkere)
 - Fixed cases where Refined Storage unwillingly acts like a chunkloader (raoulvdberge)

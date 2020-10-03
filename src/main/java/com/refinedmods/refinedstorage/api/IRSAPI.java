@@ -22,12 +22,14 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -154,34 +156,38 @@ public interface IRSAPI {
     /**
      * @param world    the world
      * @param capacity the capacity
+     * @param owner    the owner or null if no owner
      * @return a storage disk
      */
     @Nonnull
-    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity);
+    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner);
 
     /**
      * @param world    the world
      * @param capacity the capacity in mB
+     * @param owner    the owner or null if no owner
      * @return a fluid storage disk
      */
     @Nonnull
-    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity);
+    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner);
 
     /**
      * Creates crafting request info for an item.
      *
      * @param stack the stack
+     * @param count the count
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack);
+    ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack, int count);
 
     /**
      * Creates crafting request info for a fluid.
      *
      * @param stack the stack
+     * @param count the count
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack);
+    ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack, int count);
 
     /**
      * Creates crafting request info from NBT.

@@ -4,7 +4,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
-import java.util.function.Supplier;
 
 /**
  * Provides an external storage handler to the external storage block.

@@ -10,7 +10,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.util.function.Supplier;
 
 public class FluidExternalStorageProvider implements IExternalStorageProvider<FluidStack> {
     @Override

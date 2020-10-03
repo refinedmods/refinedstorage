@@ -14,7 +14,6 @@ import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -284,7 +283,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         @Override
         public void render(MatrixStack matrixStack, int x, int y) {
-            RenderSystem.color4f(1,1,1,1);
+            RenderSystem.color4f(1, 1, 1, 1);
             renderItem(matrixStack, x + 3, y + 2, item);
             renderString(matrixStack, x + 4 + 19, y + 7, item.getDisplayName().getString());
         }

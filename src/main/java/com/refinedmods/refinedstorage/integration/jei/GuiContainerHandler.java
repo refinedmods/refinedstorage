@@ -2,18 +2,18 @@ package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.container.BaseContainer;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
-public class GuiContainerHandler implements IGuiContainerHandler<BaseScreen> {
+public class GuiContainerHandler implements IGuiContainerHandler<ContainerScreen<?>> {
     @Nullable
     @Override
-    public Object getIngredientUnderMouse(BaseScreen screen, double mouseX, double mouseY) {
+    public Object getIngredientUnderMouse(ContainerScreen screen, double mouseX, double mouseY) {
         mouseX -= screen.getGuiLeft();
         mouseY -= screen.getGuiTop();
 

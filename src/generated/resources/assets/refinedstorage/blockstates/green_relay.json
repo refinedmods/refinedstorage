@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "connected=false": {
+      "model": "refinedstorage:block/relay/disconnected"
+    },
+    "connected=true": {
+      "model": "refinedstorage:block/relay/green"
+    }
+  }
+}

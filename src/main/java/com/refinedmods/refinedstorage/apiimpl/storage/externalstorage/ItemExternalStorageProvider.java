@@ -13,7 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
-import java.util.function.Supplier;
 
 public class ItemExternalStorageProvider implements IExternalStorageProvider<ItemStack> {
     @Override

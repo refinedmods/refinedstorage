@@ -60,8 +60,6 @@ public class ImporterBlock extends CableBlock {
 
     public ImporterBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "importer");
     }
 
     @Override

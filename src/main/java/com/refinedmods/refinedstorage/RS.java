@@ -3,14 +3,13 @@ package com.refinedmods.refinedstorage;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.config.ClientConfig;
 import com.refinedmods.refinedstorage.config.ServerConfig;
+import com.refinedmods.refinedstorage.datageneration.DataGenerators;
 import com.refinedmods.refinedstorage.item.group.MainItemGroup;
 import com.refinedmods.refinedstorage.network.NetworkHandler;
 import com.refinedmods.refinedstorage.setup.ClientSetup;
 import com.refinedmods.refinedstorage.setup.CommonSetup;
 import com.refinedmods.refinedstorage.setup.ServerSetup;
-import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
@@ -40,20 +39,16 @@ public final class RS {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 
         CommonSetup commonSetup = new CommonSetup();
+        RSBlocks.register();
+        RSItems.register();
+        RSLootFunctions.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onCommonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, commonSetup::onRegisterBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, commonSetup::onRegisterTiles);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, commonSetup::onRegisterItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, commonSetup::onRegisterRecipeSerializers);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, commonSetup::onRegisterContainers);
+        FMLJavaModLoadingContext.get().getModEventBus().register(new DataGenerators());
 
         API.deliver();
     }
-
-    /* TODO
-    @EventHandler
-    public void onServerStarting(FMLServerStartingEvent e) {
-        e.registerServerCommand(new CommandCreateDisk());
-    }*/
 }

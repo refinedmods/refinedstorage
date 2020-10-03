@@ -14,7 +14,6 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**

@@ -64,7 +64,7 @@ public abstract class EnergyItem extends Item {
         super.addInformation(stack, world, tooltip, flag);
 
         if (!creative) {
-            stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(energy -> tooltip.add(new TranslationTextComponent("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()).func_230530_a_(Styles.GRAY)));
+            stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(energy -> tooltip.add(new TranslationTextComponent("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()).setStyle(Styles.GRAY)));
         }
     }
 }

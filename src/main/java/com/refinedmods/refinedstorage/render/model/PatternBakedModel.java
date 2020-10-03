@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 

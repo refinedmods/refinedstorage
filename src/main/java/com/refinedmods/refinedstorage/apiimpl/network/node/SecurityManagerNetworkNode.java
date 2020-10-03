@@ -32,7 +32,7 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     private ISecurityCard globalCard;
 
     private final BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
-        .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
             if (!world.isRemote) {
@@ -45,7 +45,7 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
         }));
 
     private final BaseItemHandler editCard = new BaseItemHandler(1)
-        .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this));
 
     public SecurityManagerNetworkNode(World world, BlockPos pos) {

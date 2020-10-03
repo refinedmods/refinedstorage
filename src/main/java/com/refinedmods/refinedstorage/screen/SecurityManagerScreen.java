@@ -69,7 +69,8 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> 
         for (int i = 0; i < permissions.length; ++i) {
             CheckboxWidget permission = permissions[i];
 
-            if (RenderUtils.inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
+            // getWidth_CLASH => getHeight
+            if (RenderUtils.inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getWidth_CLASH(), mouseX, mouseY)) {
                 renderTooltip(matrixStack, mouseX, mouseY, I18n.format("gui.refinedstorage.security_manager.permission." + i + ".tooltip"));
             }
         }

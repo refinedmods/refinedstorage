@@ -41,8 +41,6 @@ public class ExternalStorageBlock extends CableBlock {
 
     public ExternalStorageBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "external_storage");
     }
 
     @Override

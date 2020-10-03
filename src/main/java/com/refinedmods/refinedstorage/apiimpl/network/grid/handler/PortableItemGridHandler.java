@@ -28,7 +28,18 @@ public class PortableItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, int flags) {
+    public void onExtract(ServerPlayerEntity player, ItemStack stack, int preferredSlot, int flags) {
+        if (portableGrid.getStorage() == null || !grid.isGridActive()) {
+            return;
+        }
+
+        if (portableGrid.getItemCache().getList().getEntry(stack, IComparer.COMPARE_NBT) != null) {
+            onExtract(player, portableGrid.getItemCache().getList().getEntry(stack, IComparer.COMPARE_NBT).getId(), preferredSlot, flags);
+        }
+    }
+
+    @Override
+    public void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags) {
         if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
@@ -83,11 +94,23 @@ public class PortableItemGridHandler implements IItemGridHandler {
         if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+                if (playerInventory != null) {
+                    if (preferredSlot != -1) {
+                        ItemStack remainder = playerInventory.insertItem(preferredSlot, took, true);
+                        if (remainder.getCount() != took.getCount()) {
+                            ItemStack inserted = portableGrid.getItemStorage().extract(item, size - remainder.getCount(), IComparer.COMPARE_NBT, Action.PERFORM);
+                            playerInventory.insertItem(preferredSlot, inserted, false);
+                            took.setCount(remainder.getCount());
+                        }
+                    }
 
-                if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
-                    took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
+                    if (!took.isEmpty()) {
+                        if (ItemHandlerHelper.insertItemStacked(playerInventory, took, true).isEmpty()) {
+                            took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
 
-                    ItemHandlerHelper.insertItem(playerInventory, took, false);
+                            ItemHandlerHelper.insertItemStacked(playerInventory, took, false);
+                        }
+                    }
                 }
             } else {
                 took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
@@ -107,14 +130,22 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
+    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single) {
         if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return stack;
         }
 
         portableGrid.getItemStorageTracker().changed(player, stack.copy());
-
-        ItemStack remainder = portableGrid.getItemStorage().insert(stack, stack.getCount(), Action.PERFORM);
+        ItemStack remainder;
+        if (single) {
+            if (portableGrid.getItemStorage().insert(stack, 1, Action.SIMULATE).isEmpty()) {
+                portableGrid.getItemStorage().insert(stack, 1, Action.PERFORM);
+                stack.shrink(1);
+            }
+            remainder = stack;
+        } else {
+            remainder = portableGrid.getItemStorage().insert(stack, stack.getCount(), Action.PERFORM);
+        }
 
         portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
 
@@ -160,5 +191,15 @@ public class PortableItemGridHandler implements IItemGridHandler {
     @Override
     public void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id) {
         // NO OP
+    }
+
+    @Override
+    public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+        ItemGridHandler.onInventoryScroll(this, player, slot, shift, up, null);
+    }
+
+    @Override
+    public void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
+        ItemGridHandler.onGridScroll(this, player, id, shift, ctrl, up, null);
     }
 }

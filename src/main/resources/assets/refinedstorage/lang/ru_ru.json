@@ -305,12 +305,8 @@
   "item.refinedstorage.security_card": "Карта безопасности",
   "item.refinedstorage.security_card.owner": "Привязана к %s",
   "item.refinedstorage.processor_binding": "Связующий процессорный компонент",
-
-  "commands.refinedstorage.createdisk.usage": "/createdisk <игрок> <предмет> <метаданные> <id>",
-  "commands.refinedstorage.createdisk.error.notADisk": "Данный предмет не является диском.",
-  "commands.refinedstorage.createdisk.error.diskNotFound": "Диск %s не был найден.",
-  "commands.refinedstorage.createdisk.success": "Диск %s успешно выдан %s.",
-
+  "commands.refinedstorage.disk.create.error.disk_not_found": "Диск %s не был найден.",
+  "commands.refinedstorage.disk.create.success": "Диск %s успешно выдан %s.",
   "advancements.refinedstorage.controlling.description": "Создайте контроллер",
   "advancements.refinedstorage.connecting": "Соединение",
   "advancements.refinedstorage.connecting.description": "Вы можете разместить все устройства вплотную друг с другом или использовать кабели, чтобы соединить их",

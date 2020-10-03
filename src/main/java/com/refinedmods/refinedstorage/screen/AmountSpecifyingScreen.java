@@ -5,7 +5,6 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
@@ -68,7 +67,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
         addButton(amountField);
 
-        setFocused(amountField);
+        setListener(amountField);
 
         int[] increments = getIncrements();
 
@@ -170,6 +169,17 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
     protected void onOkButtonPressed(boolean shiftDown) {
         // NO OP
+    }
+
+    @Override
+    public boolean mouseScrolled(double x, double y, double delta) {
+        if (delta > 0) {
+            onIncrementButtonClicked(1);
+        } else {
+            onIncrementButtonClicked(-1);
+        }
+
+        return super.mouseScrolled(x, y, delta);
     }
 
     public void close() {

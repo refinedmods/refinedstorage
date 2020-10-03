@@ -79,8 +79,8 @@ public class CraftingTask implements ICraftingTask, NodeListener {
         this.id = UUID.randomUUID();
         this.nodes = nodes;
 
-        this.internalStorage = new ItemStorageDisk(null, -1);
-        this.internalFluidStorage = new FluidStorageDisk(null, -1);
+        this.internalStorage = new ItemStorageDisk(null, -1, null);
+        this.internalFluidStorage = new FluidStorageDisk(null, -1, null);
 
         this.toExtractInitial = toExtractInitial;
         this.toExtractInitialFluids = toExtractInitialFluids;

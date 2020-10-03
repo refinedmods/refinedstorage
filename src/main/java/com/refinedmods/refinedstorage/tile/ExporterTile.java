@@ -16,7 +16,7 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
 
     public ExporterTile() {
         super(RSTiles.EXPORTER);
-        
+
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
     }

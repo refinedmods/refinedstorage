@@ -26,8 +26,6 @@ public class SecurityCardItem extends Item {
 
     public SecurityCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "security_card");
     }
 
     @Override
@@ -80,12 +78,12 @@ public class SecurityCardItem extends Item {
         super.addInformation(stack, world, tooltip, flag);
 
         if (stack.hasTag() && stack.getTag().contains(NBT_OWNER_NAME)) {
-            tooltip.add(new TranslationTextComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).func_230530_a_(Styles.GRAY));
+            tooltip.add(new TranslationTextComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).setStyle(Styles.GRAY));
         }
 
         for (Permission permission : Permission.values()) {
             if (hasPermission(stack, permission)) {
-                tooltip.add(new StringTextComponent("- ").func_230529_a_(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).func_230530_a_(Styles.GRAY));
+                tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
             }
         }
     }

@@ -78,7 +78,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         super.addInformation(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).func_230530_a_(Styles.GRAY));
+            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
         }
     }
 

@@ -32,6 +32,11 @@ public abstract class BaseGridView implements IGridView {
         return stacks;
     }
 
+    @Override
+    public Collection<IGridStack> getAllStacks() {
+        return map.values();
+    }
+
     @Nullable
     @Override
     public IGridStack get(UUID id) {

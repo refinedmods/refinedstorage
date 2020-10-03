@@ -8,8 +8,6 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 
-import javax.annotation.Nullable;
-
 public abstract class BaseTile extends TileEntity {
     protected final TileDataManager dataManager = new TileDataManager(this);
 

@@ -21,25 +21,29 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     public static final String NBT_VERSION = "Version";
     public static final String NBT_CAPACITY = "Capacity";
     public static final String NBT_ITEMS = "Items";
+    public static final String NBT_OWNER = "Owner";
     public static final int VERSION = 1;
 
     @Nullable
     private final ServerWorld world;
     private final int capacity;
     private final Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private final UUID owner;
 
     @Nullable
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public ItemStorageDisk(@Nullable ServerWorld world, int capacity) {
+    public ItemStorageDisk(@Nullable ServerWorld world, int capacity, @Nullable UUID owner) {
         this.world = world;
         this.capacity = capacity;
+        this.owner = owner;
     }
 
     @Override
@@ -55,6 +59,10 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
         tag.putInt(NBT_VERSION, VERSION);
         tag.put(NBT_ITEMS, list);
         tag.putInt(NBT_CAPACITY, capacity);
+
+        if (owner != null) {
+            tag.putUniqueId(NBT_OWNER, owner);
+        }
 
         return tag;
     }
@@ -177,6 +185,12 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     @Override
     public int getCapacity() {
         return capacity;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
     }
 
     @Override

@@ -117,7 +117,8 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_ENERGY = "Energy";
-    private static final String NBT_ENCHANTMENTS = "ench"; // @Volatile: minecraft specific nbt key
+    private static final String NBT_ENCHANTMENTS = "Enchantments"; // @Volatile: Minecraft specific nbt key, see EnchantmentHelper
+
     private EnergyStorage energyStorage = createEnergyStorage(0);
     private final LazyOptional<EnergyStorage> energyStorageCap = LazyOptional.of(() -> energyStorage);
 

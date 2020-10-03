@@ -60,8 +60,6 @@ public class ExporterBlock extends CableBlock {
 
     public ExporterBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "exporter");
     }
 
     @Override

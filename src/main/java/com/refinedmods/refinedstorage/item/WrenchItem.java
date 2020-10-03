@@ -15,8 +15,6 @@ import net.minecraft.util.Rotation;
 public class WrenchItem extends Item {
     public WrenchItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "wrench");
     }
 
     @Override
@@ -34,7 +32,7 @@ public class WrenchItem extends Item {
 
         BlockState state = ctx.getWorld().getBlockState(ctx.getPos());
 
-        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(Rotation.CLOCKWISE_90));
+        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(ctx.getWorld(), ctx.getPos(), Rotation.CLOCKWISE_90));
 
         return ActionResultType.CONSUME;
     }

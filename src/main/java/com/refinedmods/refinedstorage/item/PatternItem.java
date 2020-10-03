@@ -50,8 +50,6 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public PatternItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).setISTER(() -> PatternItemStackTileRenderer::new));
-
-        this.setRegistryName(RS.ID, "pattern");
     }
 
     public static CraftingPattern fromCache(World world, ItemStack stack) {
@@ -74,12 +72,12 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
         if (pattern.isValid()) {
             if (ContainerScreen.hasShiftDown() || isProcessing(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").func_230530_a_(Styles.YELLOW));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> i.size() > 0 ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
                 RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs().stream().map(i -> i.size() > 0 ? i.get(0) : FluidStack.EMPTY).collect(Collectors.toList()));
 
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.outputs").func_230530_a_(Styles.YELLOW));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.outputs").setStyle(Styles.YELLOW));
             }
 
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
@@ -94,7 +92,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                             "misc.refinedstorage.pattern.allowed_item_tag",
                             tag.toString(),
                             pattern.getInputs().get(i).get(0).getDisplayName()
-                        ).func_230530_a_(Styles.AQUA));
+                        ).setStyle(Styles.AQUA));
                     }
                 }
 
@@ -106,28 +104,28 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                             "misc.refinedstorage.pattern.allowed_fluid_tag",
                             tag.toString(),
                             pattern.getFluidInputs().get(i).get(0).getDisplayName()
-                        ).func_230530_a_(Styles.AQUA));
+                        ).setStyle(Styles.AQUA));
                     }
                 }
             }
 
             if (isExact(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").func_230530_a_(Styles.BLUE));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").setStyle(Styles.BLUE));
             }
 
             if (isProcessing(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.processing").func_230530_a_(Styles.BLUE));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.processing").setStyle(Styles.BLUE));
             }
         } else {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").func_230530_a_(Styles.RED));
-            tooltip.add(pattern.getErrorMessage().copyRaw().func_230530_a_(Styles.GRAY));
+            tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
+            tooltip.add(pattern.getErrorMessage().copyRaw().setStyle(Styles.GRAY));
         }
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         if (!world.isRemote && player.isCrouching()) {
-            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN, player.getHeldItem(hand).getCount()));
+            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getHeldItem(hand).getCount()));
         }
 
         return new ActionResult<>(ActionResultType.PASS, player.getHeldItem(hand));

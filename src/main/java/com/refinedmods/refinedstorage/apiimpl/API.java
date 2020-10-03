@@ -39,6 +39,8 @@ import com.refinedmods.refinedstorage.apiimpl.util.Comparer;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
+import com.refinedmods.refinedstorage.util.StackUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -47,11 +49,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -215,32 +219,32 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new ItemStorageDisk(world, capacity);
+        return new ItemStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new FluidStorageDisk(world, capacity);
+        return new FluidStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack) {
-        return new CraftingRequestInfo(stack);
+    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack, int count) {
+        return new CraftingRequestInfo(ItemHandlerHelper.copyStackWithSize(stack, count));
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack) {
-        return new CraftingRequestInfo(stack);
+    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack, int count) {
+        return new CraftingRequestInfo(StackUtils.copy(stack, count));
     }
 
     @Override

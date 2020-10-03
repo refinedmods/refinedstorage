@@ -15,9 +15,9 @@ public final class RSLootFunctions {
     public static LootFunctionType CONTROLLER;
 
     public static void register() {
-        STORAGE_BLOCK = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
-        PORTABLE_GRID = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
-        CRAFTER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
-        CONTROLLER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
+        STORAGE_BLOCK = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
+        PORTABLE_GRID = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
+        CRAFTER = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
+        CONTROLLER = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
     }
 }

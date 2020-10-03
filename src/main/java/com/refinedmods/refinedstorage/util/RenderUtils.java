@@ -59,10 +59,10 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new StringTextComponent(amount + "x ").func_230529_a_(data);
+                    data = new StringTextComponent(amount + "x ").append(data);
                 }
 
-                tooltip.add(data.func_230530_a_(Styles.GRAY));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -87,10 +87,10 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").func_230529_a_(data);
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
                 }
 
-                tooltip.add(data.func_230530_a_(Styles.GRAY));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -118,7 +118,7 @@ public final class RenderUtils {
             RenderSystem.disableDepthTest();
             int tooltipTextWidth = 0;
 
-            for (ITextProperties  textLine : textLines) {
+            for (ITextProperties textLine : textLines) {
                 int textLineWidth = font.getStringWidth(textLine.getString());
                 if (textLineWidth > tooltipTextWidth)
                     tooltipTextWidth = textLineWidth;
@@ -161,8 +161,8 @@ public final class RenderUtils {
                 int wrappedTooltipWidth = 0;
                 List<ITextProperties> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
-                    ITextProperties  textLine = textLines.get(i);
-                    List<ITextProperties> wrappedLine = font.func_238425_b_(textLine, tooltipTextWidth);
+                    ITextProperties textLine = textLines.get(i);
+                    List<ITextProperties> wrappedLine = font.func_238420_b_().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
                     if (i == 0)
                         titleLinesCount = wrappedLine.size();
 
@@ -235,7 +235,7 @@ public final class RenderUtils {
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 ITextProperties line = textLines.get(lineNumber);
                 if (line != null)
-                    font.func_238416_a_(line, (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
+                    font.func_238416_a_(LanguageMap.getInstance().func_241870_a(line), (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
 
                 if (lineNumber + 1 == titleLinesCount)
                     tooltipY += 2;

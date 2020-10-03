@@ -38,6 +38,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -87,6 +88,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
     private int ticks;
+    private long[] tickTimes = new long[100];
+    private int tickCounter = 0;
 
     public Network(World world, BlockPos pos, NetworkType type) {
         this.pos = pos;
@@ -142,6 +145,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            long tickStart = Util.nanoTime();
+
             if (ticks == 0) {
                 redstonePowered = world.isBlockPowered(pos);
             }
@@ -199,6 +204,9 @@ public class Network implements INetwork, IRedstoneConfigurable {
                     world.setBlockState(pos, state.with(ControllerBlock.ENERGY_TYPE, energyType));
                 }
             }
+
+            tickTimes[tickCounter % tickTimes.length] = Util.nanoTime() - tickStart;
+            tickCounter++;
         }
     }
 
@@ -498,6 +506,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
         tag.put(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         return tag;
+    }
+
+    @Override
+    public long[] getTickTimes() {
+        return tickTimes;
     }
 
     @Override

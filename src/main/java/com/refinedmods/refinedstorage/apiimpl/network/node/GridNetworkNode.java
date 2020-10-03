@@ -56,7 +56,10 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
@@ -135,7 +138,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             return stack;
         }
     }
-        .addValidator(new ItemValidator(RSItems.PATTERN))
+        .addValidator(new ItemValidator(RSItems.PATTERN.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
             ItemStack pattern = handler.getStackInSlot(slot);
@@ -452,7 +455,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 patterns.extractItem(0, 1, false);
             }
 
-            ItemStack pattern = new ItemStack(RSItems.PATTERN);
+            ItemStack pattern = new ItemStack(RSItems.PATTERN.get());
 
             PatternItem.setToCurrentVersion(pattern);
             PatternItem.setProcessing(pattern, processingPattern);
