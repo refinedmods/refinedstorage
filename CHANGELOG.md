@@ -5,6 +5,7 @@
 - Changed JEI transfer error mechanics (raoulvdberge)
 - Fixed crash when opening Controller GUI (Darkere)
 - Fixed dye being consumed without effect in some cases (Darkere)
+- Fixed deadlock caused by portable grid (Darkere)
 
 ### 1.9.6
 - Port to Minecraft 1.16.3 (raoulvdberge)
