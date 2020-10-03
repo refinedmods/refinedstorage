@@ -171,7 +171,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
     private ListNBT enchants = null;
 
-    private final List<Runnable> onTick = new ArrayList<>();
+    private boolean loadNextTick;
 
     public PortableGridTile(PortableGridBlockItem.Type type) {
         super(type == PortableGridBlockItem.Type.CREATIVE ? RSTiles.CREATIVE_PORTABLE_GRID : RSTiles.PORTABLE_GRID);
@@ -228,10 +228,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
         this.loadStorage();
 
-        onTick.add(() -> {
-            active = isGridActive();
-            diskState = getDiskState();
-        });
+        loadNextTick = true;
     }
 
     public void applyDataFromItemToTile(ItemStack stack) {
@@ -757,9 +754,10 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
     @Override
     public void tick() {
-        if (!onTick.isEmpty()) {
-            onTick.forEach(Runnable::run);
-            onTick.clear();
+        if (loadNextTick) {
+            active = isGridActive();
+            diskState = getDiskState();
+            loadNextTick = false;
         }
     }
 }
