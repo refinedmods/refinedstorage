@@ -50,7 +50,6 @@ import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
@@ -59,6 +58,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -77,7 +77,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortableGridTile extends BaseTile implements ITickable, IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
+public class PortableGridTile extends BaseTile implements ITickableTileEntity, IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
     public static final TileDataParameter<Integer, PortableGridTile> REDSTONE_MODE = RedstoneMode.createParameter();
     private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
@@ -757,7 +757,9 @@ public class PortableGridTile extends BaseTile implements ITickable, IGrid, IPor
 
     @Override
     public void tick() {
-        onTick.forEach(Runnable::run);
-        onTick.clear();
+        if (!onTick.isEmpty()) {
+            onTick.forEach(Runnable::run);
+            onTick.clear();
+        }
     }
 }
