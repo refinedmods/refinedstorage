@@ -227,11 +227,15 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         super.onLoad();
 
         this.loadStorage();
-
-        onTick.add(() -> {
+        if (world.isRemote()) {
             active = isGridActive();
             diskState = getDiskState();
-        });
+        } else {
+            onTick.add(() -> {
+                active = isGridActive();
+                diskState = getDiskState();
+            });
+        }
     }
 
     public void applyDataFromItemToTile(ItemStack stack) {
