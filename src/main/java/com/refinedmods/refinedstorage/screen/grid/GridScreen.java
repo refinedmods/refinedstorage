@@ -606,7 +606,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     public boolean canSort() {
-        return doSort || !hasShiftDown();
+        return doSort || !hasShiftDown() && !hasControlDown();
     }
 
     public static List<IGridSorter> getSorters() {

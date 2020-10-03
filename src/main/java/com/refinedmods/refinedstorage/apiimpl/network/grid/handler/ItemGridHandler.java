@@ -329,7 +329,7 @@ public class ItemGridHandler implements IItemGridHandler {
             if (!up && id != null) { //scroll down, extract hovering item
                 gridHandler.onExtract(player, id, -1, flags);
 
-            } else if (up && player.inventory.getItemStack() != ItemStack.EMPTY) { // insert stack from cursor
+            } else if (up && !player.inventory.getItemStack().isEmpty()) { // insert stack from cursor
                 gridHandler.onInsert(player, player.inventory.getItemStack(), true);
                 player.updateHeldItem();
             }
