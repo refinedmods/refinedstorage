@@ -292,7 +292,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
+    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean ctrl, boolean up) {
         onGridScroll(this, player, id, shift, ctrl, up, network);
     }
 
