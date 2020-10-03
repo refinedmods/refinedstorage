@@ -58,6 +58,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -76,7 +77,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
+public class PortableGridTile extends BaseTile implements ITickableTileEntity, IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
     public static final TileDataParameter<Integer, PortableGridTile> REDSTONE_MODE = RedstoneMode.createParameter();
     private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
@@ -170,6 +171,8 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
     private ListNBT enchants = null;
 
+    private boolean loadNextTick;
+
     public PortableGridTile(PortableGridBlockItem.Type type) {
         super(type == PortableGridBlockItem.Type.CREATIVE ? RSTiles.CREATIVE_PORTABLE_GRID : RSTiles.PORTABLE_GRID);
 
@@ -225,8 +228,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
         this.loadStorage();
 
-        active = isGridActive();
-        diskState = getDiskState();
+        loadNextTick = true;
     }
 
     public void applyDataFromItemToTile(ItemStack stack) {
@@ -748,5 +750,14 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     @Override
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
+    }
+
+    @Override
+    public void tick() {
+        if (loadNextTick) {
+            active = isGridActive();
+            diskState = getDiskState();
+            loadNextTick = false;
+        }
     }
 }
