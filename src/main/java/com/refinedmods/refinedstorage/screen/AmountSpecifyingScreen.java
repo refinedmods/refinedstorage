@@ -171,6 +171,17 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         // NO OP
     }
 
+    @Override
+    public boolean mouseScrolled(double x, double y, double delta) {
+        if (delta > 0) {
+            onIncrementButtonClicked(1);
+        } else {
+            onIncrementButtonClicked(-1);
+        }
+
+        return super.mouseScrolled(x, y, delta);
+    }
+
     public void close() {
         minecraft.displayGuiScreen(parent);
     }

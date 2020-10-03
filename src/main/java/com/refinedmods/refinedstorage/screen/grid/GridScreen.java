@@ -40,10 +40,13 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
+@MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
     private static String searchQuery = "";
 
@@ -528,7 +531,29 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+        if (hasShiftDown() || hasControlDown()) {
+            if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
+                doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
+            }
+
+            if (isOverInventory(x - guiLeft, y - guiTop)) {
+                if (grid.getGridType() != GridType.FLUID && hoveredSlot != null) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
+                }
+            } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
+                if (grid.getGridType() != GridType.FLUID) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : new UUID(0, 0), hasShiftDown(), hasControlDown(), delta > 0));
+                }
+            }
+
+            return super.mouseScrolled(x, y, delta);
+        } else {
+            return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+        }
+    }
+
+    private boolean isOverInventory(double x, double y) {
+        return RenderUtils.inBounds(8, getYPlayerInventory(), 9 * 18 - 2, 4 * 18 + 2, x, y);
     }
 
     @Override

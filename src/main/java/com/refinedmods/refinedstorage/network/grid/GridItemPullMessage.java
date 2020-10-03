@@ -39,7 +39,7 @@ public class GridItemPullMessage {
                     IGrid grid = ((GridContainer) container).getGrid();
 
                     if (grid.getItemHandler() != null) {
-                        grid.getItemHandler().onExtract(player, message.id, message.flags);
+                        grid.getItemHandler().onExtract(player, message.id, -1, message.flags);
                     }
                 }
             });
