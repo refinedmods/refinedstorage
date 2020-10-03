@@ -296,7 +296,7 @@ public class ItemGridHandler implements IItemGridHandler {
         onGridScroll(this, player, id, shift, ctrl, up, network);
     }
 
-    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up, @Nullable INetwork network) {
+    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean ctrl, boolean up, @Nullable INetwork network) {
         if (player == null || !(player.openContainer instanceof GridContainer)) {
             return;
         }
@@ -309,7 +309,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         int flags = EXTRACT_SINGLE;
 
-        if (!id.equals(new UUID(0, 0))) { //isOverStack
+        if (id != null) { //isOverStack
             if (shift && !ctrl) { //shift
                 flags |= EXTRACT_SHIFT;
 

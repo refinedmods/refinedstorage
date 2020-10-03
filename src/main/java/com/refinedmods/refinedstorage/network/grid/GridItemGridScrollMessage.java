@@ -21,11 +21,16 @@ public class GridItemGridScrollMessage {
     }
 
     public static GridItemGridScrollMessage decode(PacketBuffer buf) {
-        return new GridItemGridScrollMessage(buf.readUniqueId(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+        return new GridItemGridScrollMessage(buf.readBoolean() ? buf.readUniqueId() : null, buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
     }
 
     public static void encode(GridItemGridScrollMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        boolean hasId = message.id != null;
+        buf.writeBoolean(hasId);
+        if (hasId) {
+            buf.writeUniqueId(message.id);
+        }
+
         buf.writeBoolean(message.shift);
         buf.writeBoolean(message.ctrl);
         buf.writeBoolean(message.up);
