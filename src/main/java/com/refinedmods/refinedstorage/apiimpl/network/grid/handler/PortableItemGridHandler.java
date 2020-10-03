@@ -199,7 +199,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
-        ItemGridHandler.onGridScroll(this, player, id, shift, ctrl, up, null);
+    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up) {
+        ItemGridHandler.onGridScroll(this, player, id, shift, up, null);
     }
 }
