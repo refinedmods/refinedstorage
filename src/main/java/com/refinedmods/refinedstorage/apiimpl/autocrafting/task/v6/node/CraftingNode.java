@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Queue;
 
 public class CraftingNode extends Node {
-
     public CraftingNode(ICraftingPattern pattern, boolean root, CraftingPatternInputs inputs) {
         super(pattern, root, inputs);
     }

@@ -35,12 +35,16 @@ public final class IoUtil {
                     if (action == Action.PERFORM) {
                         throw new IllegalStateException("The internal crafting inventory reported that " + listEntry.getStack() + " was available but we got " + result);
                     }
+
                     return null;
                 }
+
                 queue.add(result);
             }
+
             extracted.put(entry.getKey(), queue);
         }
+
         return extracted;
     }
 
@@ -55,12 +59,16 @@ public final class IoUtil {
                     if (action == Action.PERFORM) {
                         throw new IllegalStateException("The internal crafting inventory reported that " + listEntry.getStack() + " was available but we got " + result);
                     }
+
                     return null;
                 }
+
                 queue.add(result);
             }
+
             extracted.put(entry.getKey(), queue);
         }
+
         return extracted;
     }
 

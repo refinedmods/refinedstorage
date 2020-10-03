@@ -44,7 +44,7 @@ public class CraftingPatternInputs {
             if (matchingIngredient == null) {
                 itemIngredients.add(new Ingredient<>(inputsForSlot, inputsForSlot.get(0).getCount(), i));
             } else {
-                matchingIngredient.increaseCount(i, inputsForSlot.get(0).getCount());
+                matchingIngredient.increaseCount(inputsForSlot.get(0).getCount(), i);
             }
         }
     }

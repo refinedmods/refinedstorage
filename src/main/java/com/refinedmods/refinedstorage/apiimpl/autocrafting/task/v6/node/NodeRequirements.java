@@ -12,7 +12,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Queue;
 
 public class NodeRequirements {
     private static final String NBT_ITEMS_TO_USE = "ItemsToUse";
@@ -32,6 +35,7 @@ public class NodeRequirements {
         for (Ingredient<ItemStack> itemIngredient : inputs.getItemIngredients()) {
             itemRequirements.put(id++, itemIngredient);
         }
+
         id = 0;
         for (Ingredient<FluidStack> fluidIngredient : inputs.getFluidIngredients()) {
             fluidRequirements.put(id++, fluidIngredient);
@@ -43,6 +47,7 @@ public class NodeRequirements {
         for (int i = 0; i < itemNbt.size(); i++) {
             itemRequirements.put(itemNbt.getCompound(i).getInt(NBT_INGREDIENT_ID), new Ingredient<>(true, itemNbt.getCompound(i).getCompound(NBT_INGREDIENT)));
         }
+
         ListNBT fluidNbt = tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < fluidNbt.size(); i++) {
             fluidRequirements.put(fluidNbt.getCompound(i).getInt(NBT_INGREDIENT_ID), new Ingredient<>(false, fluidNbt.getCompound(i).getCompound(NBT_INGREDIENT)));
@@ -55,6 +60,7 @@ public class NodeRequirements {
         for (Ingredient<ItemStack> ingredient : itemRequirements.values()) {
             maxItemSlot = Math.max(maxItemSlot, ingredient.getSlotCounts().keySet().stream().max(Integer::compareTo).get());
         }
+
         for (Ingredient<FluidStack> ingredient : fluidRequirements.values()) {
             maxFluidSlot = Math.max(maxFluidSlot, ingredient.getSlotCounts().keySet().stream().max(Integer::compareTo).get());
         }
@@ -94,6 +100,7 @@ public class NodeRequirements {
         if (extracted.isEmpty()) {
             return NonNullList.create();
         }
+
         NonNullList<ItemStack> toReturn = NonNullList.withSize(maxItemSlot + 1, ItemStack.EMPTY);
         extracted.forEach((id, queue) -> itemRequirements.get(id).getSlotCounts().forEach((slot, count) -> {
             int needed = count;
@@ -102,6 +109,7 @@ public class NodeRequirements {
                 if (queue.isEmpty()) {
                     throw new IllegalStateException("Recipe requires more items than extracted");
                 }
+
                 ItemStack queueStack = queue.peek();
                 ItemStack stack = queueStack.copy();
                 if (stack.getCount() > needed) {
@@ -112,6 +120,7 @@ public class NodeRequirements {
                     needed -= stack.getCount();
                     queue.poll();
                 }
+
                 if (first) {
                     toReturn.set(slot, stack);
                     first = false;
@@ -119,12 +128,12 @@ public class NodeRequirements {
                     // if 2 items need to go into the same slot squeeze it in
                     toReturn.add(slot, stack);
                 }
-
             }
         }));
         if (removeEmpty) {
             toReturn.removeIf(ItemStack::isEmpty);
         }
+
         return toReturn;
     }
 
@@ -132,6 +141,7 @@ public class NodeRequirements {
         if (extracted.isEmpty()) {
             return NonNullList.create();
         }
+
         NonNullList<FluidStack> toReturn = NonNullList.withSize(maxFluidSlot + 1, FluidStack.EMPTY);
         extracted.forEach((id, queue) -> fluidRequirements.get(id).getSlotCounts().forEach((slot, count) -> {
             int needed = count;
@@ -140,6 +150,7 @@ public class NodeRequirements {
                 if (queue.isEmpty()) {
                     throw new IllegalStateException("Recipe requires more fluids than extracted");
                 }
+
                 FluidStack queueStack = queue.peek();
                 FluidStack stack = queueStack.copy();
                 if (stack.getAmount() > needed) {
@@ -150,6 +161,7 @@ public class NodeRequirements {
                     needed -= stack.getAmount();
                     queue.poll();
                 }
+
                 if (first) {
                     toReturn.set(slot, stack);
                     first = false;
@@ -157,7 +169,6 @@ public class NodeRequirements {
                     // if 2 fluids need to go into the same slot squeeze it in
                     toReturn.add(slot + 1, stack);
                 }
-
             }
         }));
         toReturn.removeIf(FluidStack::isEmpty);
