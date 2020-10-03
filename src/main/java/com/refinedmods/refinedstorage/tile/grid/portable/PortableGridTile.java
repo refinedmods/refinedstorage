@@ -50,6 +50,7 @@ import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
@@ -76,7 +77,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
+public class PortableGridTile extends BaseTile implements ITickable, IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
     public static final TileDataParameter<Integer, PortableGridTile> REDSTONE_MODE = RedstoneMode.createParameter();
     private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
@@ -170,6 +171,8 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
     private ListNBT enchants = null;
 
+    private final List<Runnable> onTick = new ArrayList<>();
+
     public PortableGridTile(PortableGridBlockItem.Type type) {
         super(type == PortableGridBlockItem.Type.CREATIVE ? RSTiles.CREATIVE_PORTABLE_GRID : RSTiles.PORTABLE_GRID);
 
@@ -225,8 +228,10 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
         this.loadStorage();
 
-        active = isGridActive();
-        diskState = getDiskState();
+        onTick.add(() -> {
+            active = isGridActive();
+            diskState = getDiskState();
+        });
     }
 
     public void applyDataFromItemToTile(ItemStack stack) {
@@ -748,5 +753,11 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     @Override
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
+    }
+
+    @Override
+    public void tick() {
+        onTick.forEach(Runnable::run);
+        onTick.clear();
     }
 }
