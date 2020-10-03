@@ -254,11 +254,15 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+        onInventoryScroll(this, player, slot, shift, up, network);
+    }
+
+    public static void onInventoryScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, int slot, boolean shift, boolean up, @Nullable INetwork network) {
         if (player == null || !(player.openContainer instanceof GridContainer)) {
             return;
         }
 
-        if (up && !network.getSecurityManager().hasPermission(Permission.INSERT, player) || !up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
             return;
         }
 
@@ -269,20 +273,19 @@ public class ItemGridHandler implements IItemGridHandler {
         if (shift) { // shift
             flags |= EXTRACT_SHIFT;
             if (up) { // scroll up
-                player.inventory.setInventorySlotContents(slot, onInsert(player, stackInSlot, true));
+                player.inventory.setInventorySlotContents(slot, gridHandler.onInsert(player, stackInSlot, true));
             } else { // scroll down
-                onExtract(player, stackInSlot, slot, flags);
+                gridHandler.onExtract(player, stackInSlot, slot, flags);
             }
-
         } else { //ctrl
             if (up) { // scroll up
-                onInsert(player, stackOnCursor, true);
+                gridHandler.onInsert(player, stackOnCursor, true);
                 player.updateHeldItem();
             } else { //scroll down
                 if (stackOnCursor.isEmpty()) {
-                    onExtract(player, stackInSlot, -1, flags);
+                    gridHandler.onExtract(player, stackInSlot, -1, flags);
                 } else {
-                    onExtract(player, stackOnCursor, -1, flags);
+                    gridHandler.onExtract(player, stackOnCursor, -1, flags);
                 }
             }
         }
@@ -290,11 +293,15 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
+        onGridScroll(this, player, id, shift, ctrl, up, network);
+    }
+
+    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up, @Nullable INetwork network) {
         if (player == null || !(player.openContainer instanceof GridContainer)) {
             return;
         }
 
-        if (up && !network.getSecurityManager().hasPermission(Permission.INSERT, player) || !up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
             return;
         }
 
@@ -319,25 +326,25 @@ public class ItemGridHandler implements IItemGridHandler {
 
                     int slot = player.inventory.getSlotFor(stack);
                     if (slot != -1) {
-                        onInsert(player, player.inventory.getStackInSlot(slot), true);
+                        gridHandler.onInsert(player, player.inventory.getStackInSlot(slot), true);
                         return;
                     }
 
                 } else { //scroll down, extract hovering item
-                    onExtract(player, id, -1, flags);
+                    gridHandler.onExtract(player, id, -1, flags);
                     return;
                 }
 
             } else if (!shift && ctrl) { //ctrl
                 if (!up) { //scroll down, extract hovering item
-                    onExtract(player, id, -1, flags);
+                    gridHandler.onExtract(player, id, -1, flags);
                     return;
                 }
             }
         }
 
         if (up) { //scroll up, insert item from cursor
-            onInsert(player, player.inventory.getItemStack(), true);
+            gridHandler.onInsert(player, player.inventory.getItemStack(), true);
             player.updateHeldItem();
         }
     }

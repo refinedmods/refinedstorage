@@ -192,4 +192,14 @@ public class PortableItemGridHandler implements IItemGridHandler {
     public void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id) {
         // NO OP
     }
+
+    @Override
+    public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+        ItemGridHandler.onInventoryScroll(this, player, slot, shift, up, null);
+    }
+
+    @Override
+    public void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
+        ItemGridHandler.onGridScroll(this, player, id, shift, ctrl, up, null);
+    }
 }
