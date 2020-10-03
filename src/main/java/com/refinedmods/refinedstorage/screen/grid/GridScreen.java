@@ -471,12 +471,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             }
 
             if (isOverSlotWithStack()) {
-                boolean isMiddleClickPulling = !held.isEmpty() && clickedButton == 2;
-                boolean isPulling = held.isEmpty() || isMiddleClickPulling;
-
                 IGridStack stack = view.getStacks().get(slotNumber);
 
-                if (isPulling) {
+                if (held.isEmpty()) {
                     if (view.canCraft() && stack.isCraftable()) {
                         minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, stack));
                     } else if (view.canCraft() && !stack.isCraftable() && stack.getOtherId() != null && hasShiftDown() && hasControlDown()) {
@@ -492,10 +489,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
                         if (hasShiftDown()) {
                             flags |= IItemGridHandler.EXTRACT_SHIFT;
-                        }
-
-                        if (clickedButton == 2) {
-                            flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
                         RS.NETWORK_HANDLER.sendToServer(new GridItemPullMessage(stack.getId(), flags));
