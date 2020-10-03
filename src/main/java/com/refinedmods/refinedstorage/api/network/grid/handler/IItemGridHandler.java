@@ -97,9 +97,8 @@ public interface IItemGridHandler {
      *
      * @param player player that is scrolling
      * @param id     UUID of the GridStack that the mouse is hovering over or null
-     * @param shift  true if shift is pressed
-     * @param ctrl   true if ctrl is pressed
+     * @param shift  if true shift is pressed, if false ctrl is pressed
      * @param up     whether the player is scrolling up or down
      */
-    void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean ctrl, boolean up);
+    void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up);
 }

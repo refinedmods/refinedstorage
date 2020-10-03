@@ -292,11 +292,11 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean ctrl, boolean up) {
-        onGridScroll(this, player, id, shift, ctrl, up, network);
+    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up) {
+        onGridScroll(this, player, id, shift, up, network);
     }
 
-    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean ctrl, boolean up, @Nullable INetwork network) {
+    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up, @Nullable INetwork network) {
         if (player == null || !(player.openContainer instanceof GridContainer)) {
             return;
         }
@@ -309,43 +309,30 @@ public class ItemGridHandler implements IItemGridHandler {
 
         int flags = EXTRACT_SINGLE;
 
-        if (id != null) { //isOverStack
-            if (shift && !ctrl) { //shift
-                flags |= EXTRACT_SHIFT;
-
-                if (up) { //scroll up, insert hovering stack pulled from Inventory
-                    ItemStorageCache cache = (ItemStorageCache) grid.getStorageCache();
-                    if (cache == null) {
-                        return;
-                    }
-
-                    ItemStack stack = cache.getList().get(id);
-                    if (stack == null) {
-                        return;
-                    }
-
-                    int slot = player.inventory.getSlotFor(stack);
-                    if (slot != -1) {
-                        gridHandler.onInsert(player, player.inventory.getStackInSlot(slot), true);
-                        return;
-                    }
-
-                } else { //scroll down, extract hovering item
-                    gridHandler.onExtract(player, id, -1, flags);
+        if (shift && id != null) {
+            flags |= EXTRACT_SHIFT;
+            if (up) { //scroll up, insert hovering stack pulled from Inventory
+                ItemStorageCache cache = (ItemStorageCache) grid.getStorageCache();
+                if (cache == null || cache.getList().get(id) == null) {
                     return;
                 }
 
-            } else if (!shift && ctrl) { //ctrl
-                if (!up) { //scroll down, extract hovering item
-                    gridHandler.onExtract(player, id, -1, flags);
-                    return;
+                int slot = player.inventory.getSlotFor(cache.getList().get(id));
+                if (slot != -1) {
+                    gridHandler.onInsert(player, player.inventory.getStackInSlot(slot), true);
                 }
+
+            } else { //scroll down, extract hovering item
+                gridHandler.onExtract(player, id, -1, flags);
             }
-        }
+        } else { //ctrl
+            if (!up && id != null) { //scroll down, extract hovering item
+                gridHandler.onExtract(player, id, -1, flags);
 
-        if (up) { //scroll up, insert item from cursor
-            gridHandler.onInsert(player, player.inventory.getItemStack(), true);
-            player.updateHeldItem();
+            } else if (up && player.inventory.getItemStack() != ItemStack.EMPTY) { // insert stack from cursor
+                gridHandler.onInsert(player, player.inventory.getItemStack(), true);
+                player.updateHeldItem();
+            }
         }
     }
 }
