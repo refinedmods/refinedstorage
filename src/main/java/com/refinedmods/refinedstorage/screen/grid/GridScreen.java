@@ -44,7 +44,6 @@ import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 @MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
@@ -542,7 +541,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 }
             } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
                 if (grid.getGridType() != GridType.FLUID) {
-                    RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : new UUID(0, 0), hasShiftDown(), hasControlDown(), delta > 0));
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : null, hasShiftDown(), hasControlDown(), delta > 0));
                 }
             }
 
