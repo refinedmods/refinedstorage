@@ -90,7 +90,7 @@ public interface IItemGridHandler {
      * @param shift  if true shift is pressed, if false ctrl is pressed
      * @param up     whether the player is scrolling up or down
      */
-    void onInventoryScrollMessage(ServerPlayerEntity player, int slot, boolean shift, boolean up);
+    void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up);
 
     /**
      * Called when a player shift or ctrl scrolls in the Grid View
@@ -101,5 +101,5 @@ public interface IItemGridHandler {
      * @param ctrl   true if ctrl is pressed
      * @param up     whether the player is scrolling up or down
      */
-    void onGridScrollMessage(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up);
+    void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up);
 }

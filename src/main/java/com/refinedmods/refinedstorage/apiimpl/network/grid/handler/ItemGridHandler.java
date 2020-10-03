@@ -253,7 +253,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onInventoryScrollMessage(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+    public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
         if (player == null || !(player.openContainer instanceof GridContainer)) {
             return;
         }
@@ -289,7 +289,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onGridScrollMessage(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
+    public void onGridScroll(ServerPlayerEntity player, UUID id, boolean shift, boolean ctrl, boolean up) {
         if (player == null || !(player.openContainer instanceof GridContainer)) {
             return;
         }

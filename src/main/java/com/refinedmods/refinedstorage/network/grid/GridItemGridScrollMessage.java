@@ -34,7 +34,7 @@ public class GridItemGridScrollMessage {
     public static void handle(GridItemGridScrollMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getSender() != null && ctx.get().getSender().openContainer instanceof GridContainer) {
-                ((GridContainer) ctx.get().getSender().openContainer).getGrid().getItemHandler().onGridScrollMessage(ctx.get().getSender(), message.id, message.shift, message.ctrl, message.up);
+                ((GridContainer) ctx.get().getSender().openContainer).getGrid().getItemHandler().onGridScroll(ctx.get().getSender(), message.id, message.shift, message.ctrl, message.up);
             }
         });
         ctx.get().setPacketHandled(true);
