@@ -141,15 +141,22 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public List<ITextComponent> getTooltip() {
-        if (cachedTooltip == null) {
+    public List<ITextComponent> getTooltip(boolean bypassCache) {
+        if (bypassCache || cachedTooltip == null) {
+            List<ITextComponent> tooltip;
             try {
-                cachedTooltip = RenderUtils.getTooltipFromItem(stack);
+                tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item tooltip of " + stack.getItem().toString(), t);
 
-                cachedTooltip = new ArrayList<>();
-                cachedTooltip.add(new StringTextComponent("<Error>"));
+                tooltip = new ArrayList<>();
+                tooltip.add(new StringTextComponent("<Error>"));
+            }
+
+            if (bypassCache) {
+                return tooltip;
+            } else {
+                cachedTooltip = tooltip;
             }
         }
 

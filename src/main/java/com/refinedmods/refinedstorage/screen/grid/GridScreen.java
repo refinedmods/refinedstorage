@@ -410,7 +410,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     private void drawGridTooltip(MatrixStack matrixStack, IGridStack gridStack, int mouseX, int mouseY) {
-        List<ITextComponent> textLines = gridStack.getTooltip();
+        List<ITextComponent> textLines = gridStack.getTooltip(true);
         List<String> smallTextLines = Lists.newArrayList();
 
         if (!gridStack.isCraftable()) {
