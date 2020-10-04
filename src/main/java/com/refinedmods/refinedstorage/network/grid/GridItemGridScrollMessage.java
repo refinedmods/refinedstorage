@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.container.GridContainer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -12,7 +13,7 @@ public class GridItemGridScrollMessage {
     private final boolean shift;
     private final boolean up;
 
-    public GridItemGridScrollMessage(UUID id, boolean shift, boolean up) {
+    public GridItemGridScrollMessage(@Nullable UUID id, boolean shift, boolean up) {
         this.id = id;
         this.shift = shift;
         this.up = up;

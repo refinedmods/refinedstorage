@@ -529,7 +529,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             }
 
             if (isOverInventory(x - guiLeft, y - guiTop)) {
-                if (grid.getGridType() != GridType.FLUID && hoveredSlot != null) {
+                if (grid.getGridType() != GridType.FLUID && hoveredSlot != null && hoveredSlot.getHasStack()) {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
                 }
             } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
@@ -599,7 +599,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     public boolean canSort() {
-        return doSort || !hasShiftDown() && !hasControlDown();
+        return doSort || (!hasShiftDown() && !hasControlDown());
     }
 
     public static List<IGridSorter> getSorters() {

@@ -7,12 +7,12 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
+import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
-import com.refinedmods.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
@@ -105,12 +105,11 @@ public class ItemGridHandler implements IItemGridHandler {
                             took.setCount(remainder.getCount());
                         }
                     }
-                    if (!took.isEmpty()) {
-                        if (ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, true).isEmpty()) {
-                            took = network.extractItem(item, size, Action.PERFORM);
 
-                            ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, false);
-                        }
+                    if (!took.isEmpty() && ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, true).isEmpty()) {
+                        took = network.extractItem(item, size, Action.PERFORM);
+
+                        ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, false);
                     }
                 }
             } else {
@@ -272,15 +271,20 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (shift) { // shift
             flags |= EXTRACT_SHIFT;
-            if (up) { // scroll up
-                player.inventory.setInventorySlotContents(slot, gridHandler.onInsert(player, stackInSlot, true));
-            } else { // scroll down
-                gridHandler.onExtract(player, stackInSlot, slot, flags);
+
+            if (!stackInSlot.isEmpty()) {
+                if (up) { // scroll up
+                    player.inventory.setInventorySlotContents(slot, gridHandler.onInsert(player, stackInSlot, true));
+                } else { // scroll down
+                    gridHandler.onExtract(player, stackInSlot, slot, flags);
+                }
             }
         } else { //ctrl
             if (up) { // scroll up
-                gridHandler.onInsert(player, stackOnCursor, true);
-                player.updateHeldItem();
+                if (!stackOnCursor.isEmpty()) {
+                    gridHandler.onInsert(player, stackOnCursor, true);
+                    player.updateHeldItem();
+                }
             } else { //scroll down
                 if (stackOnCursor.isEmpty()) {
                     gridHandler.onExtract(player, stackInSlot, -1, flags);
@@ -312,7 +316,7 @@ public class ItemGridHandler implements IItemGridHandler {
         if (shift && id != null) {
             flags |= EXTRACT_SHIFT;
             if (up) { //scroll up, insert hovering stack pulled from Inventory
-                ItemStorageCache cache = (ItemStorageCache) grid.getStorageCache();
+                IStorageCache<ItemStack> cache = grid.getStorageCache();
                 if (cache == null || cache.getList().get(id) == null) {
                     return;
                 }
