@@ -6,6 +6,7 @@
 - Fixed crash when opening Controller GUI (Darkere)
 - Fixed dye being consumed without effect in some cases (Darkere)
 - Fixed deadlock caused by Portable Grid (Darkere)
+- Fixed custom tooltips not working in the Grid (Darkere)
 
 ### 1.9.6
 - Port to Minecraft 1.16.3 (raoulvdberge)
