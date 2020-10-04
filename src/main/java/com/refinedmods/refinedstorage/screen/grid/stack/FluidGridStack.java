@@ -130,14 +130,21 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public List<ITextComponent> getTooltip() {
-        if (cachedTooltip == null) {
+    public List<ITextComponent> getTooltip(boolean bypassCache) {
+        if (bypassCache || cachedTooltip == null) {
+            List<ITextComponent> tooltip;
             try {
-                cachedTooltip = Arrays.asList(stack.getDisplayName());
+                tooltip = Arrays.asList(stack.getDisplayName());
             } catch (Throwable t) {
                 logger.warn("Could not retrieve fluid tooltip of " + stack.getFluid().getRegistryName().toString(), t);
 
-                cachedTooltip = Arrays.asList(new StringTextComponent("<Error>"));
+                tooltip = Arrays.asList(new StringTextComponent("<Error>"));
+            }
+
+            if (bypassCache) {
+                return tooltip;
+            } else {
+                cachedTooltip = tooltip;
             }
         }
 
