@@ -17,9 +17,8 @@ import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import com.refinedmods.refinedstorage.screen.grid.sorting.*;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
-import com.refinedmods.refinedstorage.screen.grid.view.FluidGridView;
+import com.refinedmods.refinedstorage.screen.grid.view.GridViewImpl;
 import com.refinedmods.refinedstorage.screen.grid.view.IGridView;
-import com.refinedmods.refinedstorage.screen.grid.view.ItemGridView;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
@@ -70,7 +69,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         super(container, 227, 0, inventory, title);
 
         this.grid = grid;
-        this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
+        this.view = new GridViewImpl(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isGridActive();
         this.tabs = new TabListWidget<>(this, new ElementDrawers<>(this), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabListWidget.ITabListListener() {
