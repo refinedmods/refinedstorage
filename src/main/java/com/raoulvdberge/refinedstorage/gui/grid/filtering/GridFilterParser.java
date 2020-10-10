@@ -16,7 +16,7 @@ public final class GridFilterParser {
         String[] orParts = query.split("\\|");
 
         if (orParts.length == 1) {
-            gridFilters = getFilters(query);
+            gridFilters = getFilters(orParts[0]);
         } else {
             List<Predicate<IGridStack>> orPartFilters = new LinkedList<>();
 
