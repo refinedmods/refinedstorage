@@ -68,7 +68,6 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     public IMessage onMessage(MessageGridFluidDelta message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
             grid.getView().postChange(message.gridStack, message.delta);
-            grid.getView().sort();
         });
 
         return null;

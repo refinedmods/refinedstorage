@@ -89,13 +89,23 @@ public class GridViewImpl implements IGridView {
             stack.setQuantity(delta);
 
             map.put(stack.getHash(), stack);
+            existing = stack;
         } else {
+            stacks.remove(existing);
             existing.setQuantity(existing.getQuantity() + delta);
             if (existing.getQuantity() <= 0) {
                 map.remove(existing.getHash());
             }
 
             existing.setTrackerEntry(stack.getTrackerEntry());
+        }
+
+        if (getActiveFilters().test(existing)) {
+            int insertionPos = Collections.binarySearch(stacks, existing, getActiveSort());
+            if (insertionPos < 0) {
+                insertionPos = -insertionPos - 1;
+            }
+            stacks.add(insertionPos, existing);
         }
     }
 

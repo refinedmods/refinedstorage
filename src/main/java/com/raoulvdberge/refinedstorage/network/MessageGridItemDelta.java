@@ -82,8 +82,6 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public IMessage onMessage(MessageGridItemDelta message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
             message.gridStacks.forEach(p -> grid.getView().postChange(p.getLeft(), p.getRight()));
-
-            grid.getView().sort();
         });
 
         return null;
