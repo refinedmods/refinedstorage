@@ -84,6 +84,7 @@ public class GridViewImpl implements IGridView {
     @Override
     public void postChange(IGridStack stack, int delta) {
         IGridStack existing = map.get(stack.getHash());
+        boolean stillExists = true;
 
         if (existing == null) {
             stack.setQuantity(delta);
@@ -95,12 +96,13 @@ public class GridViewImpl implements IGridView {
             existing.setQuantity(existing.getQuantity() + delta);
             if (existing.getQuantity() <= 0) {
                 map.remove(existing.getHash());
+                stillExists = false;
             }
 
             existing.setTrackerEntry(stack.getTrackerEntry());
         }
 
-        if (getActiveFilters().test(existing)) {
+        if (stillExists && getActiveFilters().test(existing)) {
             int insertionPos = Collections.binarySearch(stacks, existing, getActiveSort());
             if (insertionPos < 0) {
                 insertionPos = -insertionPos - 1;
