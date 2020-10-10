@@ -9,6 +9,8 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class GridViewBase implements IGridView {
     private GuiGrid gui;
@@ -33,47 +35,35 @@ public abstract class GridViewBase implements IGridView {
 
     @Override
     public void sort() {
-        List<IGridStack> stacks = new ArrayList<>();
-
         if (gui.getGrid().isActive()) {
-            stacks.addAll(map.values());
+            this.stacks = map.values().stream()
+                    .filter(getActiveFilters())
+                    .sorted(getActiveSort())
+                    .collect(Collectors.toList());
+        } else {
+            this.stacks = Collections.emptyList();
+        }
 
-            IGrid grid = gui.getGrid();
+        this.gui.updateScrollbar();
+    }
 
-            List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
+    private Predicate<IGridStack> getActiveFilters() {
+        IGrid grid = gui.getGrid();
+        return GridFilterParser.getFilters(
                 grid,
                 gui.getSearchField() != null ? gui.getSearchField().getText() : "",
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
-            );
+        );
+    }
 
-            Iterator<IGridStack> it = stacks.iterator();
+    private Comparator<IGridStack> getActiveSort() {
+        IGrid grid = gui.getGrid();
+        GridSorterDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? GridSorterDirection.DESCENDING : GridSorterDirection.ASCENDING;
 
-            while (it.hasNext()) {
-                IGridStack stack = it.next();
-
-                for (Predicate<IGridStack> filter : filters) {
-                    if (!filter.test(stack)) {
-                        it.remove();
-
-                        break;
-                    }
-                }
-            }
-
-            GridSorterDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? GridSorterDirection.DESCENDING : GridSorterDirection.ASCENDING;
-
-            stacks.sort((left, right) -> defaultSorter.compare(left, right, sortingDirection));
-
-            for (IGridSorter sorter : sorters) {
-                if (sorter.isApplicable(grid)) {
-                    stacks.sort((left, right) -> sorter.compare(left, right, sortingDirection));
-                }
-            }
-        }
-
-        this.stacks = stacks;
-
-        this.gui.updateScrollbar();
+        return Stream.concat(Stream.of(defaultSorter), sorters.stream().filter(s -> s.isApplicable(grid)))
+                .map(sorter -> (Comparator<IGridStack>) (o1, o2) -> sorter.compare(o1, o2, sortingDirection))
+                .reduce((l, r) -> r.thenComparing(l))
+                .orElseThrow(IllegalStateException::new);
     }
 
     @Override

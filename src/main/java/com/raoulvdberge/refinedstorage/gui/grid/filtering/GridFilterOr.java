@@ -6,22 +6,30 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class GridFilterOr implements Predicate<IGridStack> {
-    private List<List<Predicate<IGridStack>>> orPartFilters;
+    private List<Predicate<IGridStack>> orPartFilters;
 
-    public GridFilterOr(List<List<Predicate<IGridStack>>> orPartFilters) {
+    private GridFilterOr(List<Predicate<IGridStack>> orPartFilters) {
         this.orPartFilters = orPartFilters;
     }
 
     @Override
     public boolean test(IGridStack gridStack) {
-        for (List<Predicate<IGridStack>> orPart : orPartFilters) {
-            for (Predicate<IGridStack> part : orPart) {
-                if (part.test(gridStack)) {
-                    return true;
-                }
+        for (Predicate<IGridStack> part : orPartFilters) {
+            if (part.test(gridStack)) {
+                return true;
             }
         }
 
         return false;
+    }
+
+    public static Predicate<IGridStack> of(List<Predicate<IGridStack>> filters) {
+        if (filters.isEmpty()) {
+            return t -> false;
+        }
+        if (filters.size() == 1) {
+            return filters.get(0);
+        }
+        return new GridFilterOr(filters);
     }
 }

@@ -134,7 +134,7 @@ public class ContainerCrafterManager extends ContainerBase {
         int y = 19 + 18 - display.getCurrentOffset() * 18;
         int x = 8;
 
-        List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(null, display.getSearchFieldText(), Collections.emptyList());
+        Predicate<IGridStack> filters = GridFilterParser.getFilters(null, display.getSearchFieldText(), Collections.emptyList());
 
         for (Map.Entry<String, Integer> category : containerData.entrySet()) {
             IItemHandlerModifiable dummy;
@@ -181,11 +181,9 @@ public class ContainerCrafterManager extends ContainerBase {
                         for (ItemStack output : pattern.getOutputs()) {
                             GridStackItem outputConverted = new GridStackItem(output);
 
-                            for (Predicate<IGridStack> filter : filters) {
-                                if (filter.test(outputConverted)) {
-                                    visible = true;
-                                    break;
-                                }
+                            if (filters.test(outputConverted)) {
+                                visible = true;
+                                break;
                             }
                         }
                     }
