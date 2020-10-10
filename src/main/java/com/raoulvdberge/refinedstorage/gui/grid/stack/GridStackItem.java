@@ -70,8 +70,7 @@ public class GridStackItem implements IGridStack {
         return displayCraftText;
     }
 
-    @Override
-    public void setDisplayCraftText(boolean displayCraftText) {
+    private void setDisplayCraftText(boolean displayCraftText) {
         this.displayCraftText = displayCraftText;
 
         if (displayCraftText) {
@@ -152,6 +151,20 @@ public class GridStackItem implements IGridStack {
     @Override
     public int getQuantity() {
         return doesDisplayCraftText() ? 0 : stack.getCount();
+    }
+
+    @Override
+    public void setQuantity(int amount) {
+        if (amount <= 0) {
+            if (isCraftable()) {
+                setDisplayCraftText(true);
+            } else {
+                stack.setCount(0);
+            }
+        } else {
+            setDisplayCraftText(false);
+            stack.setCount(amount);
+        }
     }
 
     @Override

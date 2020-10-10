@@ -41,8 +41,7 @@ public class GridStackFluid implements IGridStack {
         return displayCraftText;
     }
 
-    @Override
-    public void setDisplayCraftText(boolean displayCraftText) {
+    private void setDisplayCraftText(boolean displayCraftText) {
         this.displayCraftText = displayCraftText;
     }
 
@@ -95,6 +94,19 @@ public class GridStackFluid implements IGridStack {
     @Override
     public int getQuantity() {
         return stack.amount;
+    }
+
+    @Override
+    public void setQuantity(int amount) {
+        if (amount <= 0) {
+            if (isCraftable()) {
+                setDisplayCraftText(true);
+            }
+            stack.amount = 0;
+        } else {
+            setDisplayCraftText(false);
+            stack.amount = amount;
+        }
     }
 
     @Override

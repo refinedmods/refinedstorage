@@ -20,6 +20,8 @@ public interface IGridStack {
 
     int getQuantity();
 
+    void setQuantity(int amount);
+
     String getFormattedFullQuantity();
 
     void draw(GuiBase gui, int x, int y);
@@ -34,6 +36,4 @@ public interface IGridStack {
     boolean isCraftable();
 
     boolean doesDisplayCraftText();
-
-    void setDisplayCraftText(boolean displayCraftText);
 }

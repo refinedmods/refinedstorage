@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewImpl;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.FluidStack;
@@ -101,7 +101,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
     @Override
     public IMessage onMessage(MessageGridFluidUpdate message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
-            grid.setView(new GridViewFluid(grid, GuiGrid.getDefaultSorter(), GuiGrid.getSorters()));
+            grid.setView(new GridViewImpl(grid, GuiGrid.getDefaultSorter(), GuiGrid.getSorters()));
             grid.getView().setCanCraft(message.canCraft);
             grid.getView().setStacks(message.stacks);
             grid.getView().sort();

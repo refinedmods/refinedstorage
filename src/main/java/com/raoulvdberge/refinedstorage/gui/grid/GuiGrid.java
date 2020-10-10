@@ -15,8 +15,7 @@ import com.raoulvdberge.refinedstorage.gui.control.*;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.*;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
-import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
+import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewImpl;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -60,7 +59,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         super(container, 227, 0);
 
         this.grid = grid;
-        this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, getDefaultSorter(), getSorters()) : new GridViewItem(this, getDefaultSorter(), getSorters());
+        this.view = new GridViewImpl(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isActive();
         this.tabs = new TabList(this, new ElementDrawers(), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabList.ITabListListener() {

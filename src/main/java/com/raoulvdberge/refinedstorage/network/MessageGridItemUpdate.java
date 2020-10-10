@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
+import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewImpl;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
@@ -92,7 +92,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     @Override
     public IMessage onMessage(MessageGridItemUpdate message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
-            grid.setView(new GridViewItem(grid, GuiGrid.getDefaultSorter(), GuiGrid.getSorters()));
+            grid.setView(new GridViewImpl(grid, GuiGrid.getDefaultSorter(), GuiGrid.getSorters()));
             grid.getView().setCanCraft(message.canCraft);
             grid.getView().setStacks(message.stacks);
             grid.getView().sort();

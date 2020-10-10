@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSorterDirection;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.IGridSorter;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 
 import java.util.*;
@@ -12,7 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class GridViewBase implements IGridView {
+public class GridViewImpl implements IGridView {
     private GuiGrid gui;
     private boolean canCraft;
 
@@ -22,7 +23,7 @@ public abstract class GridViewBase implements IGridView {
     private List<IGridStack> stacks = new ArrayList<>();
     protected Map<Integer, IGridStack> map = new HashMap<>();
 
-    public GridViewBase(GuiGrid gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
+    public GridViewImpl(GuiGrid gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.gui = gui;
         this.defaultSorter = defaultSorter;
         this.sorters = sorters;
@@ -77,6 +78,24 @@ public abstract class GridViewBase implements IGridView {
             }
 
             map.put(stack.getHash(), stack);
+        }
+    }
+
+    @Override
+    public void postChange(IGridStack stack, int delta) {
+        IGridStack existing = map.get(stack.getHash());
+
+        if (existing == null) {
+            stack.setQuantity(delta);
+
+            map.put(stack.getHash(), stack);
+        } else {
+            existing.setQuantity(existing.getQuantity() + delta);
+            if (existing.getQuantity() <= 0) {
+                map.remove(existing.getHash());
+            }
+
+            existing.setTrackerEntry(stack.getTrackerEntry());
         }
     }
 
