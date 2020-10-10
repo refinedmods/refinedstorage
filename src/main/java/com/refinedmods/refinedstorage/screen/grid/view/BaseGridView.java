@@ -10,6 +10,8 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class BaseGridView implements IGridView {
     private final GridScreen screen;
@@ -49,48 +51,53 @@ public abstract class BaseGridView implements IGridView {
             return;
         }
 
-        List<IGridStack> newStacks = new ArrayList<>();
-
         if (screen.getGrid().isGridActive()) {
-            newStacks.addAll(map.values());
+            this.stacks = map.values().stream()
+                    .filter(getActiveFilters())
+                    .sorted(getActiveSort())
+                    .collect(Collectors.toList());
+        } else {
+            this.stacks = Collections.emptyList();
+        }
 
-            IGrid grid = screen.getGrid();
+        this.screen.updateScrollbar();
+    }
 
-            Predicate<IGridStack> filters = GridFilterParser.getFilters(
+    private Comparator<IGridStack> getActiveSort() {
+        IGrid grid = screen.getGrid();
+        SortingDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? SortingDirection.DESCENDING : SortingDirection.ASCENDING;
+        return Stream.concat(Stream.of(defaultSorter), sorters.stream().filter(s -> s.isApplicable(grid)))
+                .map(sorter -> (Comparator<IGridStack>) (o1, o2) -> sorter.compare(o1, o2, sortingDirection))
+                .reduce((l, r) -> r.thenComparing(l))
+                .orElseThrow(IllegalStateException::new);  // There is at least 1 value in the stream (i.e. defaultSorter)
+    }
+
+    private Predicate<IGridStack> getActiveFilters() {
+        IGrid grid = screen.getGrid();
+
+        Predicate<IGridStack> filters = GridFilterParser.getFilters(
                 grid,
                 screen.getSearchFieldText(),
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
-            );
+        );
 
-            newStacks.removeIf(stack -> {
+        if (screen.getGrid().getViewType() != IGrid.VIEW_TYPE_CRAFTABLES) {
+            return stack -> {
                 // If this is a crafting stack,
                 // and there is a regular matching stack in the view too,
                 // and we aren't in "view only craftables" mode,
                 // we don't want the duplicate stacks and we will remove this stack.
-                if (screen.getGrid().getViewType() != IGrid.VIEW_TYPE_CRAFTABLES &&
-                    stack.isCraftable() &&
-                    stack.getOtherId() != null &&
-                    map.containsKey(stack.getOtherId())) {
-                    return true;
+                if (stack.isCraftable() &&
+                        stack.getOtherId() != null &&
+                        map.containsKey(stack.getOtherId())) {
+                    return false;
                 }
 
-                return !filters.test(stack);
-            });
-
-            SortingDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? SortingDirection.DESCENDING : SortingDirection.ASCENDING;
-
-            newStacks.sort((left, right) -> defaultSorter.compare(left, right, sortingDirection));
-
-            for (IGridSorter sorter : sorters) {
-                if (sorter.isApplicable(grid)) {
-                    newStacks.sort((left, right) -> sorter.compare(left, right, sortingDirection));
-                }
-            }
+                return filters.test(stack);
+            };
+        } else {
+            return filters;
         }
-
-        this.stacks = newStacks;
-
-        this.screen.updateScrollbar();
     }
 
     @Override
