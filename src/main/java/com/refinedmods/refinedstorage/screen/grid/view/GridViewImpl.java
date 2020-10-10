@@ -133,18 +133,36 @@ public class GridViewImpl implements IGridView {
         }
 
         IGridStack existing = map.get(stack.getId());
+        boolean stillExists = true;
+        boolean shouldSort = screen.canSort();
 
         if (existing == null) {
             stack.setQuantity(delta);
 
             map.put(stack.getId(), stack);
+            existing = stack;
         } else {
+            if (shouldSort) {
+                stacks.remove(existing);
+            }
             existing.setQuantity(existing.getQuantity() + delta);
             if (existing.getQuantity() <= 0) {
                 map.remove(existing.getId());
+                stillExists = false;
             }
 
             existing.setTrackerEntry(stack.getTrackerEntry());
+        }
+
+        if (shouldSort) {
+            if (stillExists && getActiveFilters().test(existing)) {
+                int insertionPos = Collections.binarySearch(stacks, existing, getActiveSort());
+                if (insertionPos < 0) {
+                    insertionPos = -insertionPos - 1;
+                }
+                stacks.add(insertionPos, existing);
+            }
+            this.screen.updateScrollbar();
         }
     }
 
