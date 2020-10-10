@@ -76,15 +76,24 @@ public interface IStackList<T> {
     /**
      * Returns a stack.
      *
+     * {@code flags} is assumed to contain at least {@code COMPARE_NBT}, because
+     * otherwise there may be multiple candidates to return.
+     *
      * @param stack the stack to search for
      * @param flags the flags to compare on, see {@link IComparer}
      * @return the stack, or null if no stack was found
      */
     @Nullable
-    T get(@Nonnull T stack, int flags);
+    default T get(@Nonnull T stack, int flags) {
+        StackListEntry<T> entry = getEntry(stack, flags);
+        return entry == null ? null : entry.getStack();
+    }
 
     /**
      * Returns a stack entry.
+     *
+     * {@code flags} is assumed to contain at least {@code COMPARE_NBT}, because
+     * otherwise there may be multiple candidates to return.
      *
      * @param stack the stack to search for
      * @param flags the flags to compare on, see {@link IComparer}

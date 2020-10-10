@@ -92,20 +92,6 @@ public class FluidStackList implements IStackList<FluidStack> {
         return found.getAmount();
     }
 
-    @Override
-    @Nullable
-    public FluidStack get(@Nonnull FluidStack stack, int flags) {
-        for (StackListEntry<FluidStack> entry : stacks.get(stack.getFluid())) {
-            FluidStack otherStack = entry.getStack();
-
-            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
-                return otherStack;
-            }
-        }
-
-        return null;
-    }
-
     @Nullable
     @Override
     public StackListEntry<FluidStack> getEntry(@Nonnull FluidStack stack, int flags) {
