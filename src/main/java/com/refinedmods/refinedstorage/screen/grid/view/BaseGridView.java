@@ -56,7 +56,7 @@ public abstract class BaseGridView implements IGridView {
 
             IGrid grid = screen.getGrid();
 
-            List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
+            Predicate<IGridStack> filters = GridFilterParser.getFilters(
                 grid,
                 screen.getSearchFieldText(),
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
@@ -74,13 +74,7 @@ public abstract class BaseGridView implements IGridView {
                     return true;
                 }
 
-                for (Predicate<IGridStack> filter : filters) {
-                    if (!filter.test(stack)) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return !filters.test(stack);
             });
 
             SortingDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? SortingDirection.DESCENDING : SortingDirection.ASCENDING;
