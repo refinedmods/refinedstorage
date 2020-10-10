@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,22 +25,14 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     private IStorageTracker<ItemStack> storageTracker;
 
     private List<Pair<ItemStack, Integer>> deltas;
-    @Nullable
-    private ItemStack stack;
-    private int delta;
-
-    @Nullable
-    private GridStackItem gridStack;
     private List<Pair<GridStackItem, Integer>> gridStacks;
 
+    @SuppressWarnings("unused")
     public MessageGridItemDelta() {
     }
 
     public MessageGridItemDelta(@Nullable INetwork network, IStorageTracker<ItemStack> storageTracker, ItemStack stack, int delta) {
-        this.network = network;
-        this.storageTracker = storageTracker;
-        this.stack = stack;
-        this.delta = delta;
+        this(network, storageTracker, Arrays.asList(Pair.of(stack, delta)));
     }
 
     public MessageGridItemDelta(@Nullable INetwork network, IStorageTracker<ItemStack> storageTracker, List<Pair<ItemStack, Integer>> deltas) {
@@ -52,59 +45,43 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public void fromBytes(ByteBuf buf) {
         int size = buf.readInt();
 
-        if (size == 1) {
-            gridStack = new GridStackItem(buf);
-            delta = buf.readInt();
-        } else {
-            gridStacks = new LinkedList<>();
+        List<Pair<GridStackItem, Integer>> gridStacks = new LinkedList<>();
 
-            for (int i = 0; i < size; ++i) {
-                gridStacks.add(Pair.of(new GridStackItem(buf), buf.readInt()));
-            }
+        for (int i = 0; i < size; ++i) {
+            GridStackItem stack = new GridStackItem(buf);
+            int delta = buf.readInt();
+            gridStacks.add(Pair.of(stack, delta));
         }
+
+        this.gridStacks = gridStacks;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        if (stack != null) {
-            buf.writeInt(1);
+        buf.writeInt(deltas.size());
 
-            StackUtils.writeItemStack(buf, stack, network, false);
-
-            IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(stack);
-            buf.writeBoolean(entry != null);
-            if (entry != null) {
-                buf.writeLong(entry.getTime());
-                ByteBufUtils.writeUTF8String(buf, entry.getName());
-            }
-
-            buf.writeInt(delta);
-        } else {
-            buf.writeInt(deltas.size());
-
-            for (Pair<ItemStack, Integer> delta : deltas) {
-                StackUtils.writeItemStack(buf, delta.getLeft(), network, false);
-
-                IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(delta.getLeft());
-                buf.writeBoolean(entry != null);
-                if (entry != null) {
-                    buf.writeLong(entry.getTime());
-                    ByteBufUtils.writeUTF8String(buf, entry.getName());
-                }
-
-                buf.writeInt(delta.getRight());
-            }
+        for (Pair<ItemStack, Integer> deltaPair : deltas) {
+            writeSingleItem(buf, deltaPair.getLeft(), deltaPair.getRight());
         }
+    }
+
+    private void writeSingleItem(ByteBuf buf, ItemStack stack, Integer delta) {
+        StackUtils.writeItemStack(buf, stack, network, false);
+
+        IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(stack);
+        buf.writeBoolean(entry != null);
+        if (entry != null) {
+            buf.writeLong(entry.getTime());
+            ByteBufUtils.writeUTF8String(buf, entry.getName());
+        }
+
+        buf.writeInt(delta);
     }
 
     @Override
     public IMessage onMessage(MessageGridItemDelta message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
-            if (message.gridStack != null) {
-                grid.getView().postChange(message.gridStack, message.delta);
-            } else {
-                message.gridStacks.forEach(p -> grid.getView().postChange(p.getLeft(), p.getRight()));
-            }
+            message.gridStacks.forEach(p -> grid.getView().postChange(p.getLeft(), p.getRight()));
 
             grid.getView().sort();
         });
