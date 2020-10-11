@@ -123,13 +123,16 @@ public class GridViewImpl implements IGridView {
         // This causes the .updateOtherId() to fail with a NPE because the map is still empty or the IDs mismatch.
         // We could use !map.isEmpty() here too. But if we have 2 "old" delta packets, it would rightfully ignore the first one. But this method mutates the map and would put an entry.
         // This means that on the second delta packet it would still crash because the map wouldn't be empty anymore.
+        IGridStack craftingStack;
         if (!stack.isCraftable() &&
                 stack.getOtherId() != null &&
                 map.containsKey(stack.getOtherId())) {
-            IGridStack craftingStack = map.get(stack.getOtherId());
+            craftingStack = map.get(stack.getOtherId());
 
             craftingStack.updateOtherId(stack.getId());
             craftingStack.setTrackerEntry(stack.getTrackerEntry());
+        } else {
+            craftingStack = null;
         }
 
         IGridStack existing = map.get(stack.getId());
@@ -141,6 +144,10 @@ public class GridViewImpl implements IGridView {
 
             map.put(stack.getId(), stack);
             existing = stack;
+
+            if (craftingStack != null && shouldSort) {
+                stacks.remove(craftingStack);
+            }
         } else {
             if (shouldSort) {
                 stacks.remove(existing);
@@ -149,6 +156,10 @@ public class GridViewImpl implements IGridView {
             if (existing.getQuantity() <= 0) {
                 map.remove(existing.getId());
                 stillExists = false;
+
+                if (craftingStack != null && shouldSort && getActiveFilters().test(craftingStack)) {
+                    addStack(craftingStack);
+                }
             }
 
             existing.setTrackerEntry(stack.getTrackerEntry());
@@ -156,14 +167,18 @@ public class GridViewImpl implements IGridView {
 
         if (shouldSort) {
             if (stillExists && getActiveFilters().test(existing)) {
-                int insertionPos = Collections.binarySearch(stacks, existing, getActiveSort());
-                if (insertionPos < 0) {
-                    insertionPos = -insertionPos - 1;
-                }
-                stacks.add(insertionPos, existing);
+                addStack(existing);
             }
             this.screen.updateScrollbar();
         }
+    }
+
+    private void addStack(IGridStack stack) {
+        int insertionPos = Collections.binarySearch(stacks, stack, getActiveSort());
+        if (insertionPos < 0) {
+            insertionPos = -insertionPos - 1;
+        }
+        stacks.add(insertionPos, stack);
     }
 
     @Override
