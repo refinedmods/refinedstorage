@@ -322,7 +322,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
 
                 for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
-                    if (API.instance().getComparer().isEqual(player.inventory.getStackInSlot(i), cache.getList().get(id))) {
+                    if (API.instance().getComparer().isEqual(player.inventory.getStackInSlot(i), cache.getList().get(id), IComparer.COMPARE_NBT)) {
                         gridHandler.onInsert(player, player.inventory.getStackInSlot(i), true);
                         break;
                     }
