@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.9.8
+- Fixed server crash when scrolling in Grid (Darkere)
+
 ### 1.9.7
 - Added functionality to move items in the Grid with shift/ctrl + scrolling (Darkere)
 - Changed JEI transfer error mechanics (raoulvdberge)

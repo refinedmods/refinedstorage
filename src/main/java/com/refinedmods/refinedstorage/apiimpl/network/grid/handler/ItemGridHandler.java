@@ -321,9 +321,11 @@ public class ItemGridHandler implements IItemGridHandler {
                     return;
                 }
 
-                int slot = player.inventory.getSlotFor(cache.getList().get(id));
-                if (slot != -1) {
-                    gridHandler.onInsert(player, player.inventory.getStackInSlot(slot), true);
+                for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
+                    if (API.instance().getComparer().isEqual(player.inventory.getStackInSlot(i), cache.getList().get(id), IComparer.COMPARE_NBT)) {
+                        gridHandler.onInsert(player, player.inventory.getStackInSlot(i), true);
+                        break;
+                    }
                 }
 
             } else { //scroll down, extract hovering item
