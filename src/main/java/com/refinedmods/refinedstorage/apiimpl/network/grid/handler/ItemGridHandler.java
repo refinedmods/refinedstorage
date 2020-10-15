@@ -327,6 +327,7 @@ public class ItemGridHandler implements IItemGridHandler {
                         break;
                     }
                 }
+
             } else { //scroll down, extract hovering item
                 gridHandler.onExtract(player, id, -1, flags);
             }
