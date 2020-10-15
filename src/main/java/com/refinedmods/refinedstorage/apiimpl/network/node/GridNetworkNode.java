@@ -429,7 +429,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onClear(PlayerEntity player) {
-        if (type == GridType.CRAFTING && network != null && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+        if (type == GridType.CRAFTING && network != null && network.getSecurityManager().hasPermission(Permission.INSERT, player) && network.canRun()) {
             for (int i = 0; i < matrix.getSizeInventory(); ++i) {
                 ItemStack slot = matrix.getStackInSlot(i);
 
@@ -438,6 +438,16 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
                     network.getItemStorageTracker().changed(player, slot.copy());
                 }
+            }
+        } else if (network == null || !network.canRun()) {
+            for (int i = 0; i < matrix.getSizeInventory(); i++) {
+                ItemStack slot = matrix.getStackInSlot(i);
+
+                if (!slot.isEmpty()) {
+                    player.inventory.addItemStackToInventory(matrix.getStackInSlot(i));
+                }
+
+                onCraftingMatrixChanged();
             }
         } else if (type == GridType.PATTERN) {
             clearMatrix();
