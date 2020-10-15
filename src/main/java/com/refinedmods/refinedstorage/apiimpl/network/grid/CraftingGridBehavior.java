@@ -92,7 +92,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int maxCrafted = crafted.getMaxStackSize();
 
         int amountCrafted = 0;
-        boolean useNetwork = network != null;
+        boolean useNetwork = network != null && grid.isGridActive();
 
         IStackList<ItemStack> availableItems = null;
         if (useNetwork) {
@@ -170,7 +170,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
                 if (grid.getGridType() == GridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
-                    if (network != null) {
+                    if (network != null && grid.isGridActive()) {
                         if (!network.insertItem(slot, slot.getCount(), Action.SIMULATE).isEmpty()) {
                             return;
                         } else {
@@ -200,7 +200,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     boolean found = false;
 
                     // If we are connected, first try to get the possibilities from the network
-                    if (network != null) {
+                    if (network != null && grid.isGridActive()) {
                         for (ItemStack possibility : possibilities) {
                             ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT, Action.PERFORM);
 

@@ -36,7 +36,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     public void onExtract(ServerPlayerEntity player, UUID id, boolean shift) {
         FluidStack stack = network.getFluidStorageCache().getList().get(id);
 
-        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
             return;
         }
 
@@ -63,7 +63,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     @Override
     @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
-        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return container;
         }
 

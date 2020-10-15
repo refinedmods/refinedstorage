@@ -48,7 +48,7 @@ public class ItemGridHandler implements IItemGridHandler {
     public void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(id);
 
-        if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
             return;
         }
 
@@ -133,7 +133,7 @@ public class ItemGridHandler implements IItemGridHandler {
     @Override
     @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single) {
-        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return stack;
         }
 
@@ -157,7 +157,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+        if (player.inventory.getItemStack().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return;
         }
 
