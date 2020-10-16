@@ -429,29 +429,32 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onClear(PlayerEntity player) {
-        if (type == GridType.CRAFTING && network != null && network.getSecurityManager().hasPermission(Permission.INSERT, player) && network.canRun()) {
-            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                ItemStack slot = matrix.getStackInSlot(i);
+        if (type == GridType.CRAFTING) {
+            if (network != null && network.canRun() && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+                for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                    ItemStack slot = matrix.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    matrix.setInventorySlotContents(i, network.insertItem(slot, slot.getCount(), Action.PERFORM));
+                    if (!slot.isEmpty()) {
+                        matrix.setInventorySlotContents(i, network.insertItem(slot, slot.getCount(), Action.PERFORM));
 
-                    network.getItemStorageTracker().changed(player, slot.copy());
+                        network.getItemStorageTracker().changed(player, slot.copy());
+                    }
                 }
-            }
-        } else if (network == null || !network.canRun()) {
-            for (int i = 0; i < matrix.getSizeInventory(); i++) {
-                ItemStack slot = matrix.getStackInSlot(i);
+            } else {
+                for (int i = 0; i < matrix.getSizeInventory(); i++) {
+                    ItemStack slot = matrix.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    player.inventory.addItemStackToInventory(matrix.getStackInSlot(i));
+                    if (!slot.isEmpty()) {
+                        player.inventory.addItemStackToInventory(matrix.getStackInSlot(i));
+                    }
+
+                    onCraftingMatrixChanged();
                 }
-
-                onCraftingMatrixChanged();
             }
         } else if (type == GridType.PATTERN) {
             clearMatrix();
         }
+
     }
 
     @Override
