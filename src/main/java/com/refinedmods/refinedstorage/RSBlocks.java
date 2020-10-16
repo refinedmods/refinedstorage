@@ -14,12 +14,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public final class RSBlocks {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
+
+    private static final String GRID_SUFFIX = "_grid";
 
     public static final RegistryObject<ImporterBlock> IMPORTER;
     public static final RegistryObject<ExporterBlock> EXPORTER;
@@ -29,8 +31,8 @@ public final class RSBlocks {
     public static final RegistryObject<CableBlock> CABLE;
     public static final RegistryObject<DiskDriveBlock> DISK_DRIVE;
     public static final RegistryObject<ExternalStorageBlock> EXTERNAL_STORAGE;
-    public static final Map<ItemStorageType, RegistryObject<StorageBlock>> STORAGE_BLOCKS = new HashMap<>();
-    public static final Map<FluidStorageType, RegistryObject<FluidStorageBlock>> FLUID_STORAGE_BLOCKS = new HashMap<>();
+    public static final Map<ItemStorageType, RegistryObject<StorageBlock>> STORAGE_BLOCKS = new EnumMap<>(ItemStorageType.class);
+    public static final Map<FluidStorageType, RegistryObject<FluidStorageBlock>> FLUID_STORAGE_BLOCKS = new EnumMap<>(FluidStorageType.class);
     public static final RegistryObject<InterfaceBlock> INTERFACE;
     public static final RegistryObject<FluidInterfaceBlock> FLUID_INTERFACE;
     public static final RegistryObject<StorageMonitorBlock> STORAGE_MONITOR;
@@ -83,9 +85,9 @@ public final class RSBlocks {
         }
 
         GRID.registerBlocks("grid", () -> new GridBlock(GridType.NORMAL));
-        CRAFTING_GRID.registerBlocks(GridType.CRAFTING.getString() + "_grid", () -> new GridBlock(GridType.CRAFTING));
-        PATTERN_GRID.registerBlocks(GridType.PATTERN.getString() + "_grid", () -> new GridBlock(GridType.PATTERN));
-        FLUID_GRID.registerBlocks(GridType.FLUID.getString() + "_grid", () -> new GridBlock(GridType.FLUID));
+        CRAFTING_GRID.registerBlocks(GridType.CRAFTING.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.CRAFTING));
+        PATTERN_GRID.registerBlocks(GridType.PATTERN.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.PATTERN));
+        FLUID_GRID.registerBlocks(GridType.FLUID.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.FLUID));
         CONTROLLER.registerBlocks("controller", () -> new ControllerBlock(NetworkType.NORMAL));
         CREATIVE_CONTROLLER.registerBlocks("creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
         NETWORK_RECEIVER.registerBlocks("network_receiver", NetworkReceiverBlock::new);
@@ -98,6 +100,9 @@ public final class RSBlocks {
         CRAFTER_MANAGER.registerBlocks("crafter_manager", CrafterManagerBlock::new);
         CRAFTING_MONITOR.registerBlocks("crafting_monitor", CraftingMonitorBlock::new);
         DETECTOR.registerBlocks("detector", DetectorBlock::new);
+    }
+
+    private RSBlocks() {
     }
 
     public static void register() {
