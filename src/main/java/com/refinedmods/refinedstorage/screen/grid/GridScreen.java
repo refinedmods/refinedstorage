@@ -449,15 +449,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
             return true;
+        } else if (clickedClear) {
+            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+            RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
+
+            return true;
         } else if (grid.isGridActive()) {
-            if (clickedClear) {
-                minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-
-                RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
-
-                return true;
-            }
-
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {

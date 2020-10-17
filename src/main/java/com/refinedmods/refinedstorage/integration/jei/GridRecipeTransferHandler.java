@@ -102,9 +102,11 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         Collection<IGridStack> gridStacks = ((GridScreen) container.getScreenInfoProvider()).getView().getAllStacks();
 
         // Check grid
-        for (IGridStack gridStack : gridStacks) {
-            if (gridStack instanceof ItemGridStack) {
-                tracker.addAvailableStack(((ItemGridStack) gridStack).getStack(), gridStack);
+        if (container.getGrid().isGridActive()) {
+            for (IGridStack gridStack : gridStacks) {
+                if (gridStack instanceof ItemGridStack) {
+                    tracker.addAvailableStack(((ItemGridStack) gridStack).getStack(), gridStack);
+                }
             }
         }
 

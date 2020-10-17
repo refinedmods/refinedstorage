@@ -2,6 +2,7 @@
 
 ### 1.9.8
 - Fixed server crash when scrolling in Grid (Darkere)
+- Fixed various issues of things working without power (Darkere)
 
 ### 1.9.7
 - Added functionality to move items in the Grid with shift/ctrl + scrolling (Darkere)
