@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.api.autocrafting.task.*;
 import com.refinedmods.refinedstorage.api.network.INetwork;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.calculator.CalculationResult;
@@ -393,9 +393,9 @@ public class CraftingManager implements ICraftingManager {
     private List<ICraftingPatternContainer> getContainers() {
         List<ICraftingPatternContainer> containers = new ArrayList<>();
 
-        for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ICraftingPatternContainer && node.isActive()) {
-                containers.add((ICraftingPatternContainer) node);
+        for (INetworkNodeGraphEntry entry : network.getNodeGraph().all()) {
+            if (entry.getNode() instanceof ICraftingPatternContainer && entry.getNode().isActive()) {
+                containers.add((ICraftingPatternContainer) entry.getNode());
             }
         }
 

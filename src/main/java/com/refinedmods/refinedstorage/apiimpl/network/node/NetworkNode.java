@@ -279,14 +279,4 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     public UUID getOwner() {
         return owner;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        return API.instance().isNetworkNodeEqual(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return API.instance().getNetworkNodeHashCode(this);
-    }
 }

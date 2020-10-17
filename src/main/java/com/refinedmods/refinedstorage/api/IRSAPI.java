@@ -10,7 +10,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistr
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.refinedmods.refinedstorage.api.storage.StorageType;
@@ -218,17 +217,4 @@ public interface IRSAPI {
      * @return a hashcode for the given stack
      */
     int getFluidStackHashCode(FluidStack stack);
-
-    /**
-     * @param node the node
-     * @return the hashcode
-     */
-    int getNetworkNodeHashCode(INetworkNode node);
-
-    /**
-     * @param left  the first network node
-     * @param right the second network node
-     * @return true if the two network nodes are equal, false otherwise
-     */
-    boolean isNetworkNodeEqual(INetworkNode left, Object right);
 }

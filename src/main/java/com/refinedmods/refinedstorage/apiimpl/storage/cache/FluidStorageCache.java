@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.storage.cache;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.IStorage;
 import com.refinedmods.refinedstorage.api.storage.IStorageProvider;
@@ -44,7 +45,10 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
 
         storages.clear();
 
-        network.getNodeGraph().all().stream()
+        network.getNodeGraph()
+            .all()
+            .stream()
+            .map(INetworkNodeGraphEntry::getNode)
             .filter(node -> node.isActive() && node instanceof IStorageProvider)
             .forEach(node -> ((IStorageProvider) node).addFluidStorages(storages));
 

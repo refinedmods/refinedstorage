@@ -19,6 +19,9 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class NetworkUtils {
+    private NetworkUtils() {
+    }
+
     @Nullable
     public static INetworkNode getNodeFromTile(@Nullable TileEntity tile) {
         if (tile != null) {

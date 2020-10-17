@@ -50,41 +50,41 @@ public class InvalidCraftingPattern implements ICraftingPattern {
 
     @Override
     public List<NonNullList<ItemStack>> getInputs() {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public NonNullList<ItemStack> getOutputs() {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public ItemStack getOutput(NonNullList<ItemStack> took) {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public NonNullList<ItemStack> getByproducts() {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took) {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public List<NonNullList<FluidStack>> getFluidInputs() {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public NonNullList<FluidStack> getFluidOutputs() {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public ResourceLocation getCraftingTaskFactoryId() {
-        throw new IllegalStateException(EXCEPTION_MESSAGE);
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 }

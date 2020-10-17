@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
-import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -108,15 +107,5 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
         for (Direction facing : Direction.values()) {
             operator.apply(world, pos.offset(facing), facing.getOpposite());
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return API.instance().isNetworkNodeEqual(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return API.instance().getNetworkNodeHashCode(this);
     }
 }

@@ -12,7 +12,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistr
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.refinedmods.refinedstorage.api.storage.StorageType;
@@ -311,32 +310,5 @@ public class API implements IRSAPI {
         }
 
         return result;
-    }
-
-    @Override
-    public int getNetworkNodeHashCode(INetworkNode node) {
-        int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().func_234923_W_().hashCode();
-
-        return result;
-    }
-
-    @Override
-    public boolean isNetworkNodeEqual(INetworkNode left, Object right) {
-        if (!(right instanceof INetworkNode)) {
-            return false;
-        }
-
-        if (left == right) {
-            return true;
-        }
-
-        INetworkNode rightNode = (INetworkNode) right;
-
-        if (left.getWorld().func_234923_W_() != rightNode.getWorld().func_234923_W_()) {
-            return false;
-        }
-
-        return left.getPos().equals(rightNode.getPos());
     }
 }

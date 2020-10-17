@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network.item;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.network.IWirelessTransmitter;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
@@ -26,7 +27,9 @@ public class NetworkItemManager implements INetworkItemManager {
     public void open(PlayerEntity player, ItemStack stack, int slotId) {
         boolean inRange = false;
 
-        for (INetworkNode node : network.getNodeGraph().all()) {
+        for (INetworkNodeGraphEntry entry : network.getNodeGraph().all()) {
+            INetworkNode node = entry.getNode();
+
             if (node instanceof IWirelessTransmitter &&
                 network.canRun() &&
                 node.isActive() &&

@@ -1,10 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network;
 
 import com.google.common.collect.Sets;
-import com.refinedmods.refinedstorage.api.network.INetwork;
-import com.refinedmods.refinedstorage.api.network.INetworkNodeGraph;
-import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphListener;
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor;
+import com.refinedmods.refinedstorage.api.network.*;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -20,7 +17,7 @@ import java.util.function.Consumer;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private final INetwork network;
-    private Set<INetworkNode> nodes = Sets.newConcurrentHashSet();
+    private Set<INetworkNodeGraphEntry> entries = Sets.newConcurrentHashSet();
     private final List<INetworkNodeGraphListener> listeners = new LinkedList<>();
 
     private final Set<Consumer<INetwork>> actions = new HashSet<>();
@@ -47,21 +44,21 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             currentVisitor.visit(operator);
         }
 
-        this.nodes = operator.foundNodes;
+        this.entries = operator.foundNodes;
 
         if (action == Action.PERFORM) {
-            for (INetworkNode node : operator.newNodes) {
-                node.onConnected(network);
+            for (INetworkNodeGraphEntry entry : operator.newEntries) {
+                entry.getNode().onConnected(network);
             }
 
-            for (INetworkNode node : operator.previousNodes) {
-                node.onDisconnected(network);
+            for (INetworkNodeGraphEntry entry : operator.previousEntries) {
+                entry.getNode().onDisconnected(network);
             }
 
             actions.forEach(h -> h.accept(network));
             actions.clear();
 
-            if (!operator.newNodes.isEmpty() || !operator.previousNodes.isEmpty()) {
+            if (!operator.newEntries.isEmpty() || !operator.previousEntries.isEmpty()) {
                 listeners.forEach(INetworkNodeGraphListener::onChanged);
             }
         }
@@ -79,8 +76,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     @Override
-    public Collection<INetworkNode> all() {
-        return nodes;
+    public Collection<INetworkNodeGraphEntry> all() {
+        return entries;
     }
 
     @Override
@@ -90,8 +87,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     @Override
     public void disconnectAll() {
-        nodes.forEach(n -> n.onDisconnected(network));
-        nodes.clear();
+        entries.forEach(entry -> entry.getNode().onDisconnected(network));
+        entries.clear();
 
         listeners.forEach(INetworkNodeGraphListener::onChanged);
     }
@@ -101,10 +98,10 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     private class Operator implements INetworkNodeVisitor.Operator {
-        private final Set<INetworkNode> foundNodes = Sets.newConcurrentHashSet(); // All scanned nodes
+        private final Set<INetworkNodeGraphEntry> foundNodes = Sets.newConcurrentHashSet(); // All scanned entries
 
-        private final Set<INetworkNode> newNodes = Sets.newConcurrentHashSet(); // All scanned new nodes, that didn't appear in the list before
-        private final Set<INetworkNode> previousNodes = Sets.newConcurrentHashSet(nodes); // All unscanned nodes (nodes that were in the previous list, but not in the new list)
+        private final Set<INetworkNodeGraphEntry> newEntries = Sets.newConcurrentHashSet(); // All scanned new entries, that didn't appear in the list before
+        private final Set<INetworkNodeGraphEntry> previousEntries = Sets.newConcurrentHashSet(entries); // All unscanned entries (entries that were in the previous list, but not in the new list)
 
         private final Queue<Visitor> toCheck = new ArrayDeque<>();
 
@@ -119,8 +116,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             TileEntity tile = world.getTileEntity(pos);
 
             INetworkNode otherNode = NetworkUtils.getNodeFromTile(tile);
-
             if (otherNode != null) {
+                NetworkNodeGraphEntry otherNodeItem = new NetworkNodeGraphEntry(otherNode);
+
                 if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
                     if (action == Action.PERFORM) {
                         dropConflictingBlock(world, pos);
@@ -129,15 +127,15 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                     return;
                 }
 
-                if (foundNodes.add(otherNode)) {
-                    if (!nodes.contains(otherNode)) {
+                if (foundNodes.add(otherNodeItem)) {
+                    if (!entries.contains(otherNodeItem)) {
                         // We can't let the node connect immediately
                         // We can only let the node connect AFTER the nodes list has changed in the graph
                         // This is so that storage nodes can refresh the item/fluid cache, and the item/fluid cache will notice it then (otherwise not)
-                        newNodes.add(otherNode);
+                        newEntries.add(otherNodeItem);
                     }
 
-                    previousNodes.remove(otherNode);
+                    previousEntries.remove(otherNodeItem);
 
                     toCheck.add(new Visitor(otherNode, world, pos, side, tile));
                 }

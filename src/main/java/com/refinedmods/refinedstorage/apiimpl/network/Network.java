@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeGraph;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityManager;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.IStorage;
@@ -564,9 +564,9 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
         int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
-        for (INetworkNode node : nodeGraph.all()) {
-            if (node.isActive()) {
-                usage += node.getEnergyUsage();
+        for (INetworkNodeGraphEntry entry : nodeGraph.all()) {
+            if (entry.getNode().isActive()) {
+                usage += entry.getNode().getEnergyUsage();
             }
         }
 
