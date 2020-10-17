@@ -111,7 +111,7 @@ public final class IoUtil {
         boolean success = current == null && stacks.isEmpty();
 
         if (!success && action == Action.PERFORM) {
-            LOGGER.warn("Inventory unexpectedly didn't accept " + (current != null ? current.getTranslationKey() : null) + ", the remainder has been voided!");
+            LOGGER.warn("Inventory unexpectedly didn't accept {}, the remainder has been voided!", current != null ? current.getTranslationKey() : null);
         }
 
         return success;
@@ -123,7 +123,7 @@ public final class IoUtil {
 
             if (filled != entry.getStack().getAmount()) {
                 if (action == Action.PERFORM) {
-                    LOGGER.warn("Inventory unexpectedly didn't accept all of " + entry.getStack().getTranslationKey() + ", the remainder has been voided!");
+                    LOGGER.warn("Inventory unexpectedly didn't accept all of {}, the remainder has been voided!", entry.getStack().getTranslationKey());
                 }
 
                 return false;

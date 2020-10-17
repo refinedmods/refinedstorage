@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 public class CraftingCalculatorException extends Exception {
     private final CalculationResultType type;
     @Nullable
-    private final ICraftingPattern recursedPattern;
+    private final transient ICraftingPattern recursedPattern;
 
     public CraftingCalculatorException(CalculationResultType type) {
         this.type = type;

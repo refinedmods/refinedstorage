@@ -24,12 +24,12 @@ public abstract class Node {
 
     protected final NodeRequirements requirements = new NodeRequirements();
 
-    public Node(ICraftingPattern pattern, boolean root) {
+    protected Node(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
         this.root = root;
     }
 
-    public Node(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    protected Node(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
         this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());

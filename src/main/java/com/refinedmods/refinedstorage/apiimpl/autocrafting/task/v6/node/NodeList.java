@@ -40,11 +40,7 @@ public class NodeList {
     }
 
     public Node createOrAddToExistingNode(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe, int qty) {
-        Node node = nodes.get(pattern);
-        if (node == null) {
-            nodes.put(pattern, node = createNode(pattern, root, recipe));
-        }
-
+        Node node = nodes.computeIfAbsent(pattern, key -> createNode(key, root, recipe));
         node.addQuantity(qty);
 
         return node;

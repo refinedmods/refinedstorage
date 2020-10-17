@@ -21,6 +21,9 @@ public class SerializationUtil {
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
+    private SerializationUtil() {
+    }
+
     public static ListNBT writeItemStackList(IStackList<ItemStack> stacks) {
         ListNBT list = new ListNBT();
 

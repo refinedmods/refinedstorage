@@ -35,11 +35,7 @@ public class NodeRequirements {
             itemsNeededPerCraft.put(ingredientNumber, perCraft);
         }
 
-        IStackList<ItemStack> list = itemRequirements.get(ingredientNumber);
-        if (list == null) {
-            itemRequirements.put(ingredientNumber, list = API.instance().createItemStackList());
-        }
-
+        IStackList<ItemStack> list = itemRequirements.computeIfAbsent(ingredientNumber, key -> API.instance().createItemStackList());
         list.add(stack, size);
     }
 
@@ -48,11 +44,7 @@ public class NodeRequirements {
             fluidsNeededPerCraft.put(ingredientNumber, perCraft);
         }
 
-        IStackList<FluidStack> list = fluidRequirements.get(ingredientNumber);
-        if (list == null) {
-            fluidRequirements.put(ingredientNumber, list = API.instance().createFluidStackList());
-        }
-
+        IStackList<FluidStack> list = fluidRequirements.computeIfAbsent(ingredientNumber, key -> API.instance().createFluidStackList());
         list.add(stack, size);
     }
 
@@ -133,41 +125,41 @@ public class NodeRequirements {
     }
 
     public void readFromNbt(CompoundNBT tag) throws CraftingTaskReadException {
-        ListNBT itemRequirements = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
-        for (int i = 0; i < itemRequirements.size(); i++) {
-            this.itemRequirements.put(i, SerializationUtil.readItemStackList(itemRequirements.getList(i)));
+        ListNBT itemRequirementsTag = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
+        for (int i = 0; i < itemRequirementsTag.size(); i++) {
+            itemRequirements.put(i, SerializationUtil.readItemStackList(itemRequirementsTag.getList(i)));
         }
 
-        List<Integer> itemsNeededPerCraft = Ints.asList(tag.getIntArray(NBT_ITEMS_NEEDED_PER_CRAFT));
-        for (int i = 0; i < itemsNeededPerCraft.size(); i++) {
-            this.itemsNeededPerCraft.put(i, itemsNeededPerCraft.get(i));
+        List<Integer> itemsNeededPerCraftTag = Ints.asList(tag.getIntArray(NBT_ITEMS_NEEDED_PER_CRAFT));
+        for (int i = 0; i < itemsNeededPerCraftTag.size(); i++) {
+            itemsNeededPerCraft.put(i, itemsNeededPerCraftTag.get(i));
         }
 
-        ListNBT fluidRequirements = tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_LIST);
-        for (int i = 0; i < fluidRequirements.size(); i++) {
-            this.fluidRequirements.put(i, SerializationUtil.readFluidStackList(fluidRequirements.getList(i)));
+        ListNBT fluidRequirementsTag = tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_LIST);
+        for (int i = 0; i < fluidRequirementsTag.size(); i++) {
+            fluidRequirements.put(i, SerializationUtil.readFluidStackList(fluidRequirementsTag.getList(i)));
         }
 
-        List<Integer> fluidsNeededPerCraft = Ints.asList(tag.getIntArray(NBT_FLUIDS_NEEDED_PER_CRAFT));
-        for (int i = 0; i < fluidsNeededPerCraft.size(); i++) {
-            this.fluidsNeededPerCraft.put(i, fluidsNeededPerCraft.get(i));
+        List<Integer> fluidsNeededPerCraftTag = Ints.asList(tag.getIntArray(NBT_FLUIDS_NEEDED_PER_CRAFT));
+        for (int i = 0; i < fluidsNeededPerCraftTag.size(); i++) {
+            fluidsNeededPerCraft.put(i, fluidsNeededPerCraftTag.get(i));
         }
     }
 
     public CompoundNBT writeToNbt(CompoundNBT tag) {
-        ListNBT itemRequirements = new ListNBT();
-        for (IStackList<ItemStack> list : this.itemRequirements.values()) {
-            itemRequirements.add(SerializationUtil.writeItemStackList(list));
+        ListNBT itemRequirementsTag = new ListNBT();
+        for (IStackList<ItemStack> list : itemRequirements.values()) {
+            itemRequirementsTag.add(SerializationUtil.writeItemStackList(list));
         }
-        tag.put(NBT_ITEMS_TO_USE, itemRequirements);
+        tag.put(NBT_ITEMS_TO_USE, itemRequirementsTag);
 
         tag.putIntArray(NBT_ITEMS_NEEDED_PER_CRAFT, Ints.toArray(itemsNeededPerCraft.values()));
 
-        ListNBT fluidRequirements = new ListNBT();
-        for (IStackList<FluidStack> list : this.fluidRequirements.values()) {
-            fluidRequirements.add(SerializationUtil.writeFluidStackList(list));
+        ListNBT fluidRequirementsTag = new ListNBT();
+        for (IStackList<FluidStack> list : fluidRequirements.values()) {
+            fluidRequirementsTag.add(SerializationUtil.writeFluidStackList(list));
         }
-        tag.put(NBT_FLUIDS_TO_USE, fluidRequirements);
+        tag.put(NBT_FLUIDS_TO_USE, fluidRequirementsTag);
 
         tag.putIntArray(NBT_FLUIDS_NEEDED_PER_CRAFT, Ints.toArray(fluidsNeededPerCraft.values()));
 
