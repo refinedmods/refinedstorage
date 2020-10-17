@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
+import com.refinedmods.refinedstorage.api.network.grid.GridFactoryType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
@@ -70,13 +71,10 @@ public class GridManager implements IGridManager {
         IGrid grid = null;
         TileEntity tile = factory.getRelevantTile(player.world, pos);
 
-        switch (factory.getType()) {
-            case STACK:
-                grid = factory.createFromStack(player, stack, slotId);
-                break;
-            case BLOCK:
-                grid = factory.createFromBlock(player, pos);
-                break;
+        if (factory.getType() == GridFactoryType.STACK) {
+            grid = factory.createFromStack(player, stack, slotId);
+        } else if (factory.getType() == GridFactoryType.BLOCK) {
+            grid = factory.createFromBlock(player, pos);
         }
 
         if (grid == null) {

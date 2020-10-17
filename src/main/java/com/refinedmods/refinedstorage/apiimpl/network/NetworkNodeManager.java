@@ -67,7 +67,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                         this.nodes.put(pos, node);
                     }
                 } else {
-                    logger.warn("Factory for " + id + " not found in network node registry");
+                    logger.warn("Factory for {} not found in network node registry", id);
                 }
             }
         }

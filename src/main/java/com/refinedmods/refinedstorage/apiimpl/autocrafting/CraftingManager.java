@@ -123,54 +123,15 @@ public class CraftingManager implements ICraftingManager {
     public void update() {
         if (network.canRun()) {
             if (tasksToRead != null) {
-                for (int i = 0; i < tasksToRead.size(); ++i) {
-                    CompoundNBT taskTag = tasksToRead.getCompound(i);
-
-                    ResourceLocation taskType = new ResourceLocation(taskTag.getString(NBT_TASK_TYPE));
-                    CompoundNBT taskData = taskTag.getCompound(NBT_TASK_DATA);
-
-                    ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
-                    if (factory != null) {
-                        try {
-                            ICraftingTask task = factory.createFromNbt(network, taskData);
-
-                            tasks.put(task.getId(), task);
-                        } catch (CraftingTaskReadException e) {
-                            LOGGER.error("Could not deserialize crafting task", e);
-                        }
-                    }
-                }
-
-                this.tasksToRead = null;
+                readTasks();
             }
 
             boolean changed = !tasksToCancel.isEmpty() || !tasksToAdd.isEmpty();
 
-            for (UUID idToCancel : tasksToCancel) {
-                if (this.tasks.containsKey(idToCancel)) {
-                    this.tasks.get(idToCancel).onCancelled();
-                    this.tasks.remove(idToCancel);
-                }
-            }
-            this.tasksToCancel.clear();
+            processTasksToCancel();
+            processTasksToAdd();
 
-            for (ICraftingTask task : this.tasksToAdd) {
-                this.tasks.put(task.getId(), task);
-            }
-            this.tasksToAdd.clear();
-
-            boolean anyFinished = false;
-
-            Iterator<Map.Entry<UUID, ICraftingTask>> it = tasks.entrySet().iterator();
-            while (it.hasNext()) {
-                ICraftingTask task = it.next().getValue();
-
-                if (task.update()) {
-                    anyFinished = true;
-
-                    it.remove();
-                }
-            }
+            boolean anyFinished = updateTasks();
 
             if (changed || anyFinished) {
                 onTaskChanged();
@@ -180,6 +141,62 @@ public class CraftingManager implements ICraftingManager {
                 network.markDirty();
             }
         }
+    }
+
+    private void processTasksToCancel() {
+        for (UUID idToCancel : tasksToCancel) {
+            if (this.tasks.containsKey(idToCancel)) {
+                this.tasks.get(idToCancel).onCancelled();
+                this.tasks.remove(idToCancel);
+            }
+        }
+        this.tasksToCancel.clear();
+    }
+
+    private void processTasksToAdd() {
+        for (ICraftingTask task : this.tasksToAdd) {
+            this.tasks.put(task.getId(), task);
+        }
+        this.tasksToAdd.clear();
+    }
+
+    private boolean updateTasks() {
+        boolean anyFinished = false;
+
+        Iterator<Map.Entry<UUID, ICraftingTask>> it = tasks.entrySet().iterator();
+        while (it.hasNext()) {
+            ICraftingTask task = it.next().getValue();
+
+            if (task.update()) {
+                anyFinished = true;
+
+                it.remove();
+            }
+        }
+
+        return anyFinished;
+    }
+
+    private void readTasks() {
+        for (int i = 0; i < tasksToRead.size(); ++i) {
+            CompoundNBT taskTag = tasksToRead.getCompound(i);
+
+            ResourceLocation taskType = new ResourceLocation(taskTag.getString(NBT_TASK_TYPE));
+            CompoundNBT taskData = taskTag.getCompound(NBT_TASK_DATA);
+
+            ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
+            if (factory != null) {
+                try {
+                    ICraftingTask task = factory.createFromNbt(network, taskData);
+
+                    tasks.put(task.getId(), task);
+                } catch (CraftingTaskReadException e) {
+                    LOGGER.error("Could not deserialize crafting task", e);
+                }
+            }
+        }
+
+        this.tasksToRead = null;
     }
 
     @Override
@@ -230,10 +247,8 @@ public class CraftingManager implements ICraftingManager {
         }
 
         for (ICraftingTask task : getTasks()) {
-            if (task.getRequested().getItem() != null) {
-                if (API.instance().getComparer().isEqualNoQuantity(task.getRequested().getItem(), stack)) {
-                    amount -= task.getQuantity();
-                }
+            if (task.getRequested().getItem() != null && API.instance().getComparer().isEqualNoQuantity(task.getRequested().getItem(), stack)) {
+                amount -= task.getQuantity();
             }
         }
 
@@ -242,6 +257,8 @@ public class CraftingManager implements ICraftingManager {
 
             if (result.isOk()) {
                 start(result.getTask());
+
+                return result.getTask();
             } else {
                 throttle(source);
             }
@@ -258,10 +275,8 @@ public class CraftingManager implements ICraftingManager {
         }
 
         for (ICraftingTask task : getTasks()) {
-            if (task.getRequested().getFluid() != null) {
-                if (API.instance().getComparer().isEqual(task.getRequested().getFluid(), stack, IComparer.COMPARE_NBT)) {
-                    amount -= task.getQuantity();
-                }
+            if (task.getRequested().getFluid() != null && API.instance().getComparer().isEqual(task.getRequested().getFluid(), stack, IComparer.COMPARE_NBT)) {
+                amount -= task.getQuantity();
             }
         }
 
@@ -270,6 +285,8 @@ public class CraftingManager implements ICraftingManager {
 
             if (result.isOk()) {
                 start(result.getTask());
+
+                return result.getTask();
             } else {
                 throttle(source);
             }
@@ -345,15 +362,7 @@ public class CraftingManager implements ICraftingManager {
         this.containerInventories.clear();
         this.patternToContainer.clear();
 
-        List<ICraftingPatternContainer> containers = new ArrayList<>();
-
-        for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ICraftingPatternContainer && node.isActive()) {
-                containers.add((ICraftingPatternContainer) node);
-            }
-        }
-
-        containers.sort((a, b) -> b.getPosition().compareTo(a.getPosition()));
+        List<ICraftingPatternContainer> containers = getContainers();
 
         for (ICraftingPatternContainer container : containers) {
             for (ICraftingPattern pattern : container.getPatterns()) {
@@ -367,12 +376,8 @@ public class CraftingManager implements ICraftingManager {
                     network.getFluidStorageCache().getCraftablesList().add(output);
                 }
 
-                Set<ICraftingPatternContainer> list = this.patternToContainer.get(pattern);
-                if (list == null) {
-                    list = new LinkedHashSet<>();
-                }
-                list.add(container);
-                this.patternToContainer.put(pattern, list);
+                Set<ICraftingPatternContainer> containersForPattern = this.patternToContainer.computeIfAbsent(pattern, (key) -> new LinkedHashSet<>());
+                containersForPattern.add(container);
             }
 
             IItemHandlerModifiable handler = container.getPatternInventory();
@@ -383,6 +388,20 @@ public class CraftingManager implements ICraftingManager {
 
         this.network.getItemStorageCache().reAttachListeners();
         this.network.getFluidStorageCache().reAttachListeners();
+    }
+
+    private List<ICraftingPatternContainer> getContainers() {
+        List<ICraftingPatternContainer> containers = new ArrayList<>();
+
+        for (INetworkNode node : network.getNodeGraph().all()) {
+            if (node instanceof ICraftingPatternContainer && node.isActive()) {
+                containers.add((ICraftingPatternContainer) node);
+            }
+        }
+
+        containers.sort((a, b) -> b.getPosition().compareTo(a.getPosition()));
+
+        return containers;
     }
 
     @Override
