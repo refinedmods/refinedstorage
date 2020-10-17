@@ -22,87 +22,45 @@ public class CraftingPreviewElementFactory {
         for (StackListEntry<ItemStack> stack : info.getMissing().getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack.getStack());
 
-            ItemCraftingPreviewElement previewStack = map.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new ItemCraftingPreviewElement(stack.getStack());
-            }
-
+            ItemCraftingPreviewElement previewStack = map.computeIfAbsent(hash, key -> new ItemCraftingPreviewElement(stack.getStack()));
             previewStack.setMissing(true);
             previewStack.addToCraft(stack.getStack().getCount());
-
-            map.put(hash, previewStack);
         }
 
         for (StackListEntry<FluidStack> stack : info.getMissingFluids().getStacks()) {
             int hash = API.instance().getFluidStackHashCode(stack.getStack());
 
-            FluidCraftingPreviewElement previewStack = mapFluids.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new FluidCraftingPreviewElement(stack.getStack());
-            }
-
+            FluidCraftingPreviewElement previewStack = mapFluids.computeIfAbsent(hash, key -> new FluidCraftingPreviewElement(stack.getStack()));
             previewStack.setMissing(true);
             previewStack.addToCraft(stack.getStack().getAmount());
-
-            mapFluids.put(hash, previewStack);
         }
 
         for (ItemStack stack : ImmutableList.copyOf(info.getToCraft()).reverse()) {
             int hash = API.instance().getItemStackHashCode(stack);
 
-            ItemCraftingPreviewElement previewStack = map.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new ItemCraftingPreviewElement(stack.getStack());
-            }
-
+            ItemCraftingPreviewElement previewStack = map.computeIfAbsent(hash, key -> new ItemCraftingPreviewElement(stack.getStack()));
             previewStack.addToCraft(stack.getCount());
-
-            map.put(hash, previewStack);
         }
 
         for (FluidStack stack : ImmutableList.copyOf(info.getToCraftFluids()).reverse()) {
             int hash = API.instance().getFluidStackHashCode(stack);
 
-            FluidCraftingPreviewElement previewStack = mapFluids.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new FluidCraftingPreviewElement(stack);
-            }
-
+            FluidCraftingPreviewElement previewStack = mapFluids.computeIfAbsent(hash, key -> new FluidCraftingPreviewElement(stack));
             previewStack.addToCraft(stack.getAmount());
-
-            mapFluids.put(hash, previewStack);
         }
 
         for (StackListEntry<ItemStack> stack : info.getToTake().getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack.getStack());
 
-            ItemCraftingPreviewElement previewStack = map.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new ItemCraftingPreviewElement(stack.getStack());
-            }
-
+            ItemCraftingPreviewElement previewStack = map.computeIfAbsent(hash, key -> new ItemCraftingPreviewElement(stack.getStack()));
             previewStack.addAvailable(stack.getStack().getCount());
-
-            map.put(hash, previewStack);
         }
 
         for (StackListEntry<FluidStack> stack : info.getToTakeFluids().getStacks()) {
             int hash = API.instance().getFluidStackHashCode(stack.getStack());
 
-            FluidCraftingPreviewElement previewStack = mapFluids.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new FluidCraftingPreviewElement(stack.getStack());
-            }
-
+            FluidCraftingPreviewElement previewStack = mapFluids.computeIfAbsent(hash, key -> new FluidCraftingPreviewElement(stack.getStack()));
             previewStack.addAvailable(stack.getStack().getAmount());
-
-            mapFluids.put(hash, previewStack);
         }
 
         List<ICraftingPreviewElement<?>> elements = new ArrayList<>();

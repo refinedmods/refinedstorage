@@ -100,14 +100,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         return network.getWorld();
     }
 
-    private void dropConflictingBlock(World world, BlockPos pos) {
-        if (!network.getPosition().equals(pos)) {
-            Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos));
-
-            world.removeBlock(pos, false);
-        }
-    }
-
     private class Operator implements INetworkNodeVisitor.Operator {
         private final Set<INetworkNode> foundNodes = Sets.newConcurrentHashSet(); // All scanned nodes
 
@@ -149,6 +141,14 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                     toCheck.add(new Visitor(otherNode, world, pos, side, tile));
                 }
+            }
+        }
+
+        private void dropConflictingBlock(World world, BlockPos pos) {
+            if (!network.getPosition().equals(pos)) {
+                Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos));
+
+                world.removeBlock(pos, false);
             }
         }
 

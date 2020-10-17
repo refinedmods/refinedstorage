@@ -214,17 +214,17 @@ public class ProcessingNode extends Node {
     }
 
     public void updateFinishedQuantity() {
-        int quantityFinished = totalQuantity;
+        int tempQuantityFinished = totalQuantity;
 
         for (StackListEntry<ItemStack> toReceive : singleItemSetToReceive.getStacks()) {
             if (itemsReceived.get(toReceive.getStack()) != null) {
                 int ratioReceived = itemsReceived.get(toReceive.getStack()).getCount() / toReceive.getStack().getCount();
 
-                if (quantityFinished > ratioReceived) {
-                    quantityFinished = ratioReceived;
+                if (tempQuantityFinished > ratioReceived) {
+                    tempQuantityFinished = ratioReceived;
                 }
             } else {
-                quantityFinished = 0;
+                tempQuantityFinished = 0;
             }
         }
 
@@ -232,15 +232,15 @@ public class ProcessingNode extends Node {
             if (fluidsReceived.get(toReceive.getStack()) != null) {
                 int ratioReceived = fluidsReceived.get(toReceive.getStack()).getAmount() / toReceive.getStack().getAmount();
 
-                if (quantityFinished > ratioReceived) {
-                    quantityFinished = ratioReceived;
+                if (tempQuantityFinished > ratioReceived) {
+                    tempQuantityFinished = ratioReceived;
                 }
             } else {
-                quantityFinished = 0;
+                tempQuantityFinished = 0;
             }
         }
 
-        this.quantityFinished = quantityFinished;
+        this.quantityFinished = tempQuantityFinished;
 
         if (this.quantityFinished == this.totalQuantity) {
             this.state = ProcessingState.PROCESSED;
