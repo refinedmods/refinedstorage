@@ -207,19 +207,19 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     }
 
     private ItemStack createTool() {
-        ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+        ItemStack newTool = new ItemStack(Items.DIAMOND_PICKAXE);
 
         if (upgrades.hasUpgrade(UpgradeItem.Type.SILK_TOUCH)) {
-            tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
+            newTool.addEnchantment(Enchantments.SILK_TOUCH, 1);
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.FORTUNE_3)) {
-            tool.addEnchantment(Enchantments.FORTUNE, 3);
+            newTool.addEnchantment(Enchantments.FORTUNE, 3);
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.FORTUNE_2)) {
-            tool.addEnchantment(Enchantments.FORTUNE, 2);
+            newTool.addEnchantment(Enchantments.FORTUNE, 2);
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.FORTUNE_1)) {
-            tool.addEnchantment(Enchantments.FORTUNE, 1);
+            newTool.addEnchantment(Enchantments.FORTUNE, 1);
         }
 
-        return tool;
+        return newTool;
     }
 
     @Override

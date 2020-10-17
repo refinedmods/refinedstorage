@@ -243,7 +243,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return getUpgrades();
     }
 
     @Override

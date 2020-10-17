@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BaseBlock extends Block {
-    public BaseBlock(Properties properties) {
+    protected BaseBlock(Properties properties) {
         super(properties);
     }
 

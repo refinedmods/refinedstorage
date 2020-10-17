@@ -53,7 +53,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     private int sideButtonY;
 
-    public BaseScreen(T container, int xSize, int ySize, PlayerInventory inventory, ITextComponent title) {
+    protected BaseScreen(T container, int xSize, int ySize, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
 
         this.xSize = xSize;

@@ -23,7 +23,7 @@ public abstract class EnergyBlockItem extends BaseBlockItem {
     private final Supplier<Integer> energyCapacity;
     private final boolean creative;
 
-    public EnergyBlockItem(BaseBlock block, Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
+    protected EnergyBlockItem(BaseBlock block, Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
         super(block, properties);
 
         this.creative = creative;

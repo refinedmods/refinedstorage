@@ -22,7 +22,7 @@ public abstract class EnergyItem extends Item {
     private final Supplier<Integer> energyCapacity;
     private final boolean creative;
 
-    public EnergyItem(Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
+    protected EnergyItem(Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
         super(properties);
 
         this.creative = creative;

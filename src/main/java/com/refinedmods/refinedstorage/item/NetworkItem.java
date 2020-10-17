@@ -29,7 +29,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     private static final String NBT_NODE_Z = "NodeZ";
     private static final String NBT_DIMENSION = "Dimension";
 
-    public NetworkItem(Item.Properties item, boolean creative, Supplier<Integer> energyCapacity) {
+    protected NetworkItem(Item.Properties item, boolean creative, Supplier<Integer> energyCapacity) {
         super(item, creative, energyCapacity);
     }
 

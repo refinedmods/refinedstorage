@@ -61,7 +61,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
 
-    public NetworkNode(World world, BlockPos pos) {
+    protected NetworkNode(World world, BlockPos pos) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }

@@ -29,7 +29,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
 
     private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
 
-    public NetworkNodeTile(TileEntityType<?> tileType) {
+    protected NetworkNodeTile(TileEntityType<?> tileType) {
         super(tileType);
 
         dataManager.addWatchedParameter(REDSTONE_MODE);

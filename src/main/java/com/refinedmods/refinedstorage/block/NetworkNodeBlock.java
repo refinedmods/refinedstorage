@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.InventoryHelper;
@@ -22,7 +23,7 @@ import net.minecraftforge.items.IItemHandler;
 public abstract class NetworkNodeBlock extends BaseBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-    public NetworkNodeBlock(Block.Properties props) {
+    protected NetworkNodeBlock(AbstractBlock.Properties props) {
         super(props);
 
         if (hasConnectedState()) {

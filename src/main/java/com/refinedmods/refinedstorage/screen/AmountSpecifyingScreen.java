@@ -20,7 +20,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     protected Button okButton;
     protected Button cancelButton;
 
-    public AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
+    protected AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
         super(container, width, height, playerInventory, title);
 
         this.parent = parent;

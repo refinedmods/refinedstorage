@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntityType;
 public abstract class BaseTile extends TileEntity {
     protected final TileDataManager dataManager = new TileDataManager(this);
 
-    public BaseTile(TileEntityType<?> tileType) {
+    protected BaseTile(TileEntityType<?> tileType) {
         super(tileType);
     }
 
