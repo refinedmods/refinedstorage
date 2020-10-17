@@ -199,15 +199,12 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             if (disk != null) {
                 StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
 
-                switch (type) {
-                    case ITEM:
-                        this.storage = new PortableItemStorageDisk(disk, this);
-                        this.cache = new PortableItemStorageCache(this);
-                        break;
-                    case FLUID:
-                        this.storage = new PortableFluidStorageDisk(disk, this);
-                        this.cache = new PortableFluidStorageCache(this);
-                        break;
+                if (type == StorageType.ITEM) {
+                    this.storage = new PortableItemStorageDisk(disk, this);
+                    this.cache = new PortableItemStorageCache(this);
+                } else if (type == StorageType.FLUID) {
+                    this.storage = new PortableFluidStorageDisk(disk, this);
+                    this.cache = new PortableFluidStorageCache(this);
                 }
 
                 this.storage.setSettings(PortableGridTile.this::updateState, PortableGridTile.this);

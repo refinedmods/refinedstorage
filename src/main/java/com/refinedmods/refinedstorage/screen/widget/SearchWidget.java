@@ -30,7 +30,7 @@ public class SearchWidget extends TextFieldWidget {
 
     public void updateJei() {
         if (JeiIntegration.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            RSJeiPlugin.RUNTIME.getIngredientFilter().setFilterText(getText());
+            RSJeiPlugin.getRuntime().getIngredientFilter().setFilterText(getText());
         }
     }
 

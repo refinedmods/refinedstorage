@@ -132,7 +132,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         addSideButton(new GridSortingDirectionSideButton(this, grid));
         addSideButton(new GridSortingTypeSideButton(this, grid));
         addSideButton(new GridSearchBoxModeSideButton(this));
-        addSideButton(new GridSizeSideButton(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
+        addSideButton(new GridSizeSideButton(this, grid::getSize, grid::onSizeChanged));
 
         if (grid.getGridType() == GridType.PATTERN) {
             processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslationTextComponent("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {

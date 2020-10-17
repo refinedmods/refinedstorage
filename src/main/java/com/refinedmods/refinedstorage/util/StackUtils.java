@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
+import com.refinedmods.refinedstorage.api.storage.StorageType;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
@@ -169,15 +170,12 @@ public final class StackUtils {
             IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(diskStack);
 
             if (disk != null) {
-                switch (((IStorageDiskProvider) diskStack.getItem()).getType()) {
-                    case ITEM: {
-                        itemDisks[slot] = itemDiskWrapper.apply(disk);
-                        break;
-                    }
-                    case FLUID: {
-                        fluidDisks[slot] = fluidDiskWrapper.apply(disk);
-                        break;
-                    }
+                StorageType type = ((IStorageDiskProvider) diskStack.getItem()).getType();
+
+                if (type == StorageType.ITEM) {
+                    itemDisks[slot] = itemDiskWrapper.apply(disk);
+                } else if (type == StorageType.FLUID) {
+                    fluidDisks[slot] = fluidDiskWrapper.apply(disk);
                 }
             } else {
                 itemDisks[slot] = null;

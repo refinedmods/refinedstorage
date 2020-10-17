@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
-import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMessage;
 import com.refinedmods.refinedstorage.network.grid.GridProcessingTransferMessage;
@@ -28,9 +27,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer> {
-    public static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
+    public static final GridRecipeTransferHandler INSTANCE = new GridRecipeTransferHandler();
 
-    public static long lastTransferTime;
+    private static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
+
+    private long lastTransferTimeMs;
+
+    private GridRecipeTransferHandler() {
+    }
 
     @Override
     public Class<GridContainer> getContainerClass() {
@@ -132,48 +136,66 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return tracker;
     }
 
+    public boolean hasTransferredRecently() {
+        return System.currentTimeMillis() - lastTransferTimeMs <= TRANSFER_SCROLLBAR_DELAY_MS;
+    }
+
     private void moveItems(GridContainer gridContainer, IRecipeLayout recipeLayout) {
-        IGrid grid = gridContainer.getGrid();
+        this.lastTransferTimeMs = System.currentTimeMillis();
 
-        lastTransferTime = System.currentTimeMillis();
-
-        if (grid.getGridType() == GridType.PATTERN && !recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-            List<ItemStack> inputs = new LinkedList<>();
-            List<ItemStack> outputs = new LinkedList<>();
-
-            List<FluidStack> fluidInputs = new LinkedList<>();
-            List<FluidStack> fluidOutputs = new LinkedList<>();
-
-            for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
-                if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
-                    ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
-
-                    if (guiIngredient.isInput()) {
-                        inputs.add(ingredient);
-                    } else {
-                        outputs.add(ingredient);
-                    }
-                }
-            }
-
-            for (IGuiIngredient<FluidStack> guiIngredient : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
-                if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
-                    FluidStack ingredient = guiIngredient.getDisplayedIngredient().copy();
-
-                    if (guiIngredient.isInput()) {
-                        fluidInputs.add(ingredient);
-                    } else {
-                        fluidOutputs.add(ingredient);
-                    }
-                }
-            }
-
-            RS.NETWORK_HANDLER.sendToServer(new GridProcessingTransferMessage(inputs, outputs, fluidInputs, fluidOutputs));
+        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
+            moveForProcessing(recipeLayout);
         } else {
-            RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
-                recipeLayout.getItemStacks().getGuiIngredients(),
-                gridContainer.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList())
-            ));
+            move(gridContainer, recipeLayout);
+        }
+    }
+
+    private void move(GridContainer gridContainer, IRecipeLayout recipeLayout) {
+        RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
+            recipeLayout.getItemStacks().getGuiIngredients(),
+            gridContainer.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList())
+        ));
+    }
+
+    private void moveForProcessing(IRecipeLayout recipeLayout) {
+        List<ItemStack> inputs = new LinkedList<>();
+        List<ItemStack> outputs = new LinkedList<>();
+
+        List<FluidStack> fluidInputs = new LinkedList<>();
+        List<FluidStack> fluidOutputs = new LinkedList<>();
+
+        for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
+            handleItemIngredient(inputs, outputs, guiIngredient);
+        }
+
+        for (IGuiIngredient<FluidStack> guiIngredient : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
+            handleFluidIngredient(fluidInputs, fluidOutputs, guiIngredient);
+        }
+
+        RS.NETWORK_HANDLER.sendToServer(new GridProcessingTransferMessage(inputs, outputs, fluidInputs, fluidOutputs));
+    }
+
+    private void handleFluidIngredient(List<FluidStack> fluidInputs, List<FluidStack> fluidOutputs, IGuiIngredient<FluidStack> guiIngredient) {
+        if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
+            FluidStack ingredient = guiIngredient.getDisplayedIngredient().copy();
+
+            if (guiIngredient.isInput()) {
+                fluidInputs.add(ingredient);
+            } else {
+                fluidOutputs.add(ingredient);
+            }
+        }
+    }
+
+    private void handleItemIngredient(List<ItemStack> inputs, List<ItemStack> outputs, IGuiIngredient<ItemStack> guiIngredient) {
+        if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
+            ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
+
+            if (guiIngredient.isInput()) {
+                inputs.add(ingredient);
+            } else {
+                outputs.add(ingredient);
+            }
         }
     }
 }

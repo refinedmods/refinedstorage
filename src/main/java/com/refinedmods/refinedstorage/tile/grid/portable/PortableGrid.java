@@ -112,15 +112,12 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     if (disk != null) {
                         StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
 
-                        switch (type) {
-                            case ITEM:
-                                storage = new PortableItemStorageDisk(disk, PortableGrid.this);
-                                cache = new PortableItemStorageCache(PortableGrid.this);
-                                break;
-                            case FLUID:
-                                storage = new PortableFluidStorageDisk(disk, PortableGrid.this);
-                                cache = new PortableFluidStorageCache(PortableGrid.this);
-                                break;
+                        if (type == StorageType.ITEM) {
+                            storage = new PortableItemStorageDisk(disk, PortableGrid.this);
+                            cache = new PortableItemStorageCache(PortableGrid.this);
+                        } else if (type == StorageType.FLUID) {
+                            storage = new PortableFluidStorageDisk(disk, PortableGrid.this);
+                            cache = new PortableFluidStorageCache(PortableGrid.this);
                         }
 
                         storage.setSettings(null, PortableGrid.this);

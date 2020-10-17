@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 public class RSJeiPlugin implements IModPlugin {
     private static final ResourceLocation ID = new ResourceLocation(RS.ID, "plugin");
 
-    public static IJeiRuntime RUNTIME;
+    private static IJeiRuntime runtime;
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -22,7 +22,7 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addUniversalRecipeTransferHandler(new GridRecipeTransferHandler());
+        registration.addUniversalRecipeTransferHandler(GridRecipeTransferHandler.INSTANCE);
     }
 
     @Override
@@ -33,6 +33,10 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime runtime) {
-        RUNTIME = runtime;
+        RSJeiPlugin.runtime = runtime;
+    }
+
+    public static IJeiRuntime getRuntime() {
+        return runtime;
     }
 }

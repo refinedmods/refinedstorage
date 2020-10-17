@@ -45,7 +45,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     public void onPostInit(int x, int y) {
         addSideButton(new RedstoneModeSideButton(this, CrafterManagerTile.REDSTONE_MODE));
         addSideButton(new CrafterManagerSearchBoxModeSideButton(this));
-        addSideButton(new GridSizeSideButton(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
+        addSideButton(new GridSizeSideButton(this, crafterManager::getSize, size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
         this.scrollbar.addListener((oldOffset, newOffset) -> container.initSlots(null));

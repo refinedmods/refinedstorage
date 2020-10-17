@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Set;
 
 public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
+    private static final int VISIBLE_ROWS = 5;
+
     private final Screen parent;
     private final ScrollbarWidget scrollbar;
 
@@ -126,7 +128,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         int yy = 20;
 
         for (int i = 0; i < lines.size(); ++i) {
-            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
+            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
                 lines.get(i).layoutDependantControls(true, guiLeft + xx + 3, guiTop + yy + 3);
@@ -141,16 +143,12 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
     @Override
     public void tick(int x, int y) {
-        scrollbar.setEnabled(getRows() > getVisibleRows());
-        scrollbar.setMaxOffset(getRows() - getVisibleRows());
+        scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
+        scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
     }
 
     private int getRows() {
         return lines.size();
-    }
-
-    private int getVisibleRows() {
-        return 5;
     }
 
     @Override
@@ -170,7 +168,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         int y = 20;
 
         for (int i = 0; i < lines.size(); ++i) {
-            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
+            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
                 lines.get(i).layoutDependantControls(true, guiLeft + x + 3, guiTop + y + 3);
@@ -186,7 +184,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         y = 20;
 
         for (int i = 0; i < lines.size(); ++i) {
-            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
+            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
                 lines.get(i).renderTooltip(matrixStack, x, y, mouseX, mouseY);
