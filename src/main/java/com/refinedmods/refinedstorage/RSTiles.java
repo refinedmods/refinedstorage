@@ -85,4 +85,7 @@ public final class RSTiles {
     public static final TileEntityType<CrafterManagerTile> CRAFTER_MANAGER = null;
     @ObjectHolder("crafting_monitor")
     public static final TileEntityType<CraftingMonitorTile> CRAFTING_MONITOR = null;
+
+    private RSTiles() {
+    }
 }

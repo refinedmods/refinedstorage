@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainers;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterManagerNetworkNode;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
@@ -114,7 +114,7 @@ public class CrafterManagerContainer extends BaseContainer {
                     if (stack.isEmpty()) {
                         visible = false;
                     } else {
-                        CraftingPattern pattern = PatternItem.fromCache(crafterManager.getWorld(), stack);
+                        ICraftingPattern pattern = PatternItem.fromCache(crafterManager.getWorld(), stack);
 
                         visible = false;
 

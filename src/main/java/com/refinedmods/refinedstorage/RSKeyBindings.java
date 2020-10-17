@@ -12,7 +12,7 @@ public final class RSKeyBindings {
         KeyConflictContext.GUI,
         InputMappings.Type.KEYSYM,
         GLFW.GLFW_KEY_TAB,
-        "Refined Storage"
+        RS.NAME
     );
 
     public static final KeyBinding CLEAR_GRID_CRAFTING_MATRIX = new KeyBinding(
@@ -21,34 +21,37 @@ public final class RSKeyBindings {
         KeyModifier.CONTROL,
         InputMappings.Type.KEYSYM,
         GLFW.GLFW_KEY_X,
-        "Refined Storage"
+        RS.NAME
     );
 
     public static final KeyBinding OPEN_WIRELESS_GRID = new KeyBinding(
         "key.refinedstorage.openWirelessGrid",
         KeyConflictContext.IN_GAME,
         InputMappings.INPUT_INVALID,
-        "Refined Storage"
+        RS.NAME
     );
 
     public static final KeyBinding OPEN_WIRELESS_FLUID_GRID = new KeyBinding(
         "key.refinedstorage.openWirelessFluidGrid",
         KeyConflictContext.IN_GAME,
         InputMappings.INPUT_INVALID,
-        "Refined Storage"
+        RS.NAME
     );
 
     public static final KeyBinding OPEN_WIRELESS_CRAFTING_MONITOR = new KeyBinding(
         "key.refinedstorage.openWirelessCraftingMonitor",
         KeyConflictContext.IN_GAME,
         InputMappings.INPUT_INVALID,
-        "Refined Storage"
+        RS.NAME
     );
 
     public static final KeyBinding OPEN_PORTABLE_GRID = new KeyBinding(
         "key.refinedstorage.openPortableGrid",
         KeyConflictContext.IN_GAME,
         InputMappings.INPUT_INVALID,
-        "Refined Storage"
+        RS.NAME
     );
+
+    private RSKeyBindings() {
+    }
 }

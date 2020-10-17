@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.render.tesr;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 public class PatternItemStackTileRenderer extends ItemStackTileEntityRenderer {
     @Override
     public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_239207_5_, int p_239207_6_) {
-        CraftingPattern pattern = PatternItem.fromCache(null, stack);
+        ICraftingPattern pattern = PatternItem.fromCache(null, stack);
 
         ItemStack outputStack = pattern.getOutputs().get(0);
 

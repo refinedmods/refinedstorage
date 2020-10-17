@@ -75,7 +75,7 @@ public class API implements IRSAPI {
     private final ICraftingGridBehavior craftingGridBehavior = new CraftingGridBehavior();
     private final IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private final IStorageDiskSync storageDiskSync = new StorageDiskSync();
-    private final Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
+    private final Map<StorageType, TreeSet<IExternalStorageProvider<?>>> externalStorageProviders = new EnumMap<>(StorageType.class);
     private final List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
@@ -206,13 +206,13 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public void addExternalStorageProvider(StorageType type, IExternalStorageProvider provider) {
+    public void addExternalStorageProvider(StorageType type, IExternalStorageProvider<?> provider) {
         externalStorageProviders.computeIfAbsent(type, k -> new TreeSet<>((a, b) -> Integer.compare(b.getPriority(), a.getPriority()))).add(provider);
     }
 
     @Override
-    public Set<IExternalStorageProvider> getExternalStorageProviders(StorageType type) {
-        TreeSet<IExternalStorageProvider> providers = externalStorageProviders.get(type);
+    public Set<IExternalStorageProvider<?>> getExternalStorageProviders(StorageType type) {
+        TreeSet<IExternalStorageProvider<?>> providers = externalStorageProviders.get(type);
 
         return providers == null ? Collections.emptySet() : providers;
     }

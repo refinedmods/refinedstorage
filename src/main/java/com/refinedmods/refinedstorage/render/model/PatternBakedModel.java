@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.render.model;
 
 import com.google.common.collect.ImmutableList;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -27,7 +27,7 @@ public class PatternBakedModel extends DelegateBakedModel {
             @Override
             public IBakedModel func_239290_a_(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
                 if (entity != null) {
-                    CraftingPattern pattern = PatternItem.fromCache(entity.world, stack);
+                    ICraftingPattern pattern = PatternItem.fromCache(entity.world, stack);
 
                     if (canDisplayOutput(stack, pattern)) {
                         ItemStack outputToRender = pattern.getOutputs().get(0);
@@ -46,7 +46,7 @@ public class PatternBakedModel extends DelegateBakedModel {
         };
     }
 
-    public static boolean canDisplayOutput(ItemStack patternStack, CraftingPattern pattern) {
+    public static boolean canDisplayOutput(ItemStack patternStack, ICraftingPattern pattern) {
         if (pattern.isValid() && pattern.getOutputs().size() == 1) {
             for (ICraftingPatternRenderHandler renderHandler : API.instance().getPatternRenderHandlers()) {
                 if (renderHandler.canRenderOutput(patternStack)) {

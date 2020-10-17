@@ -14,6 +14,9 @@ public final class RSLootFunctions {
     public static LootFunctionType CRAFTER;
     public static LootFunctionType CONTROLLER;
 
+    private RSLootFunctions() {
+    }
+
     public static void register() {
         STORAGE_BLOCK = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
         PORTABLE_GRID = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));

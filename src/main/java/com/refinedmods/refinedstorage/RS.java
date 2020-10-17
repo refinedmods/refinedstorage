@@ -24,6 +24,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(RS.ID)
 public final class RS {
     public static final String ID = "refinedstorage";
+    public static final String NAME = "Refined Storage";
 
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
     public static final ItemGroup MAIN_GROUP = new MainItemGroup();

@@ -4,8 +4,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.AllowedTagList;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.command.CommandSource;
@@ -30,7 +30,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
             boolean exact = PatternItem.isExact(stack);
             AllowedTagList allowedTagList = PatternItem.getAllowedTags(stack);
 
-            CraftingPattern pattern = PatternItem.fromCache(context.getSource().getWorld(), stack);
+            ICraftingPattern pattern = PatternItem.fromCache(context.getSource().getWorld(), stack);
 
             context.getSource().sendFeedback(new StringTextComponent("Crafting task factory ID: ").setStyle(Styles.YELLOW).append(new StringTextComponent(pattern.getCraftingTaskFactoryId().toString()).setStyle(Styles.WHITE)), false);
 

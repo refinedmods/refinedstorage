@@ -19,36 +19,23 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CraftingPattern implements ICraftingPattern {
-    private final ICraftingPatternContainer container;
-    private final ItemStack stack;
+    private final CraftingPatternContext context;
     private final boolean processing;
     private final boolean exact;
-    private final boolean valid;
-    @Nullable
-    private final ITextComponent errorMessage;
     @Nullable
     private final ICraftingRecipe recipe;
-    private final List<NonNullList<ItemStack>> inputs;
-    private final NonNullList<ItemStack> outputs;
-    private final NonNullList<ItemStack> byproducts;
-    private final List<NonNullList<FluidStack>> fluidInputs;
-    private final NonNullList<FluidStack> fluidOutputs;
+    private final CraftingPatternInputs inputs;
+    private final CraftingPatternOutputs outputs;
     @Nullable
     private final AllowedTagList allowedTagList;
 
-    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable ITextComponent errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTagList allowedTagList) {
-        this.container = container;
-        this.stack = stack;
+    public CraftingPattern(CraftingPatternContext context, boolean processing, boolean exact, @Nullable ICraftingRecipe recipe, CraftingPatternInputs inputs, CraftingPatternOutputs outputs, @Nullable AllowedTagList allowedTagList) {
+        this.context = context;
         this.processing = processing;
         this.exact = exact;
-        this.valid = valid;
-        this.errorMessage = errorMessage;
         this.recipe = recipe;
         this.inputs = inputs;
         this.outputs = outputs;
-        this.byproducts = byproducts;
-        this.fluidInputs = fluidInputs;
-        this.fluidOutputs = fluidOutputs;
         this.allowedTagList = allowedTagList;
     }
 
@@ -59,23 +46,23 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public ICraftingPatternContainer getContainer() {
-        return container;
+        return context.getContainer();
     }
 
     @Override
     public ItemStack getStack() {
-        return stack;
+        return context.getStack();
     }
 
     @Override
     public boolean isValid() {
-        return valid;
+        return true;
     }
 
     @Nullable
     @Override
     public ITextComponent getErrorMessage() {
-        return errorMessage;
+        return null;
     }
 
     @Override
@@ -85,12 +72,12 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public List<NonNullList<ItemStack>> getInputs() {
-        return inputs;
+        return inputs.getInputs();
     }
 
     @Override
     public NonNullList<ItemStack> getOutputs() {
-        return outputs;
+        return outputs.getOutputs();
     }
 
     public ItemStack getOutput(NonNullList<ItemStack> took) {
@@ -98,8 +85,8 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalStateException("Cannot get crafting output from processing pattern");
         }
 
-        if (took.size() != inputs.size()) {
-            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
+        if (took.size() != inputs.getInputs().size()) {
+            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
         CraftingInventory inv = new DummyCraftingInventory();
@@ -122,7 +109,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalStateException("Cannot get byproduct outputs from processing pattern");
         }
 
-        return byproducts;
+        return outputs.getByproducts();
     }
 
     @Override
@@ -131,8 +118,8 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalStateException("Cannot get byproduct outputs from processing pattern");
         }
 
-        if (took.size() != inputs.size()) {
-            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
+        if (took.size() != inputs.getInputs().size()) {
+            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
         CraftingInventory inv = new DummyCraftingInventory();
@@ -155,12 +142,12 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public List<NonNullList<FluidStack>> getFluidInputs() {
-        return fluidInputs;
+        return inputs.getFluidInputs();
     }
 
     @Override
     public NonNullList<FluidStack> getFluidOutputs() {
-        return fluidOutputs;
+        return outputs.getFluidOutputs();
     }
 
     @Override
@@ -180,62 +167,62 @@ public class CraftingPattern implements ICraftingPattern {
             return false;
         }
 
-        if ((other.getInputs().size() != inputs.size()) ||
-            (other.getFluidInputs().size() != fluidInputs.size()) ||
-            (other.getOutputs().size() != outputs.size()) ||
-            (other.getFluidOutputs().size() != fluidOutputs.size())) {
+        if ((other.getInputs().size() != inputs.getInputs().size()) ||
+            (other.getFluidInputs().size() != inputs.getFluidInputs().size()) ||
+            (other.getOutputs().size() != outputs.getOutputs().size()) ||
+            (other.getFluidOutputs().size() != outputs.getFluidOutputs().size())) {
             return false;
         }
 
-        if (!processing && other.getByproducts().size() != byproducts.size()) {
+        if (!processing && other.getByproducts().size() != outputs.getByproducts().size()) {
             return false;
         }
 
-        for (int i = 0; i < inputs.size(); ++i) {
-            List<ItemStack> inputs = this.inputs.get(i);
-            List<ItemStack> otherInputs = other.getInputs().get(i);
+        for (int i = 0; i < inputs.getInputs().size(); ++i) {
+            List<ItemStack> inputsForSlot = inputs.getInputs().get(i);
+            List<ItemStack> otherInputsForSlot = other.getInputs().get(i);
 
-            if (inputs.size() != otherInputs.size()) {
+            if (inputsForSlot.size() != otherInputsForSlot.size()) {
                 return false;
             }
 
-            for (int j = 0; j < inputs.size(); ++j) {
-                if (!API.instance().getComparer().isEqual(inputs.get(j), otherInputs.get(j))) {
+            for (int j = 0; j < inputsForSlot.size(); ++j) {
+                if (!API.instance().getComparer().isEqual(inputsForSlot.get(j), otherInputsForSlot.get(j))) {
                     return false;
                 }
             }
         }
 
-        for (int i = 0; i < fluidInputs.size(); ++i) {
-            List<FluidStack> inputs = this.fluidInputs.get(i);
-            List<FluidStack> otherInputs = other.getFluidInputs().get(i);
+        for (int i = 0; i < inputs.getFluidInputs().size(); ++i) {
+            List<FluidStack> inputsForSlot = inputs.getFluidInputs().get(i);
+            List<FluidStack> otherInputsForSlot = other.getFluidInputs().get(i);
 
-            if (inputs.size() != otherInputs.size()) {
+            if (inputsForSlot.size() != otherInputsForSlot.size()) {
                 return false;
             }
 
-            for (int j = 0; j < inputs.size(); ++j) {
-                if (!API.instance().getComparer().isEqual(inputs.get(j), otherInputs.get(j), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+            for (int j = 0; j < inputsForSlot.size(); ++j) {
+                if (!API.instance().getComparer().isEqual(inputsForSlot.get(j), otherInputsForSlot.get(j), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
                     return false;
                 }
             }
         }
 
-        for (int i = 0; i < outputs.size(); ++i) {
-            if (!API.instance().getComparer().isEqual(outputs.get(i), other.getOutputs().get(i))) {
+        for (int i = 0; i < outputs.getOutputs().size(); ++i) {
+            if (!API.instance().getComparer().isEqual(outputs.getOutputs().get(i), other.getOutputs().get(i))) {
                 return false;
             }
         }
 
-        for (int i = 0; i < fluidOutputs.size(); ++i) {
-            if (!API.instance().getComparer().isEqual(fluidOutputs.get(i), other.getFluidOutputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+        for (int i = 0; i < outputs.getFluidOutputs().size(); ++i) {
+            if (!API.instance().getComparer().isEqual(outputs.getFluidOutputs().get(i), other.getFluidOutputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
                 return false;
             }
         }
 
         if (!processing) {
-            for (int i = 0; i < byproducts.size(); ++i) {
-                if (!API.instance().getComparer().isEqual(byproducts.get(i), other.getByproducts().get(i))) {
+            for (int i = 0; i < outputs.getByproducts().size(); ++i) {
+                if (!API.instance().getComparer().isEqual(outputs.getByproducts().get(i), other.getByproducts().get(i))) {
                     return false;
                 }
             }
@@ -251,27 +238,27 @@ public class CraftingPattern implements ICraftingPattern {
         result = 31 * result + (processing ? 1 : 0);
         result = 31 * result + (exact ? 1 : 0);
 
-        for (List<ItemStack> inputs : this.inputs) {
-            for (ItemStack input : inputs) {
+        for (List<ItemStack> inputsForSlot : inputs.getInputs()) {
+            for (ItemStack input : inputsForSlot) {
                 result = 31 * result + API.instance().getItemStackHashCode(input);
             }
         }
 
-        for (List<FluidStack> inputs : this.fluidInputs) {
-            for (FluidStack input : inputs) {
+        for (List<FluidStack> inputsForSlot : inputs.getFluidInputs()) {
+            for (FluidStack input : inputsForSlot) {
                 result = 31 * result + API.instance().getFluidStackHashCode(input);
             }
         }
 
-        for (ItemStack output : this.outputs) {
+        for (ItemStack output : outputs.getOutputs()) {
             result = 31 * result + API.instance().getItemStackHashCode(output);
         }
 
-        for (FluidStack output : this.fluidOutputs) {
+        for (FluidStack output : outputs.getFluidOutputs()) {
             result = 31 * result + API.instance().getFluidStackHashCode(output);
         }
 
-        for (ItemStack byproduct : this.byproducts) {
+        for (ItemStack byproduct : outputs.getByproducts()) {
             result = 31 * result + API.instance().getItemStackHashCode(byproduct);
         }
 
