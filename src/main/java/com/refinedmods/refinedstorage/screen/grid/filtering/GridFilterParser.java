@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public final class GridFilterParser {
+    private GridFilterParser() {
+    }
+
     public static List<Predicate<IGridStack>> getFilters(@Nullable IGrid grid, String query, List<IFilter> filters) {
         List<Predicate<IGridStack>> gridFilters;
 

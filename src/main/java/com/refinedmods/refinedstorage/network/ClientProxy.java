@@ -11,6 +11,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ClientProxy {
+    private ClientProxy() {
+    }
+
     public static void onReceivedCraftingPreviewResponseMessage(GridCraftingPreviewResponseMessage message) {
         Screen screen = Minecraft.getInstance().currentScreen;
 

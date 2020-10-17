@@ -44,6 +44,9 @@ public final class StackUtils {
 
     private static final Logger LOGGER = LogManager.getLogger(StackUtils.class);
 
+    private StackUtils() {
+    }
+
     // @Volatile: from PacketBuffer#writeItemStack, with some tweaks to allow int stack counts
     public static void writeItemStack(PacketBuffer buf, @Nonnull ItemStack stack) {
         if (stack.isEmpty()) {

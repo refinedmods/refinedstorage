@@ -11,4 +11,7 @@ public final class Styles {
     public static final Style RED = Style.EMPTY.setColor(Color.func_240744_a_(TextFormatting.RED));
     public static final Style BLUE = Style.EMPTY.setColor(Color.func_240744_a_(TextFormatting.BLUE));
     public static final Style AQUA = Style.EMPTY.setColor(Color.func_240744_a_(TextFormatting.AQUA));
+
+    private Styles() {
+    }
 }

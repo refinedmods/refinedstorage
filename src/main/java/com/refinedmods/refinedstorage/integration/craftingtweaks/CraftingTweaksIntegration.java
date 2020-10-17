@@ -13,6 +13,9 @@ import java.util.function.Predicate;
 public final class CraftingTweaksIntegration {
     private static final String ID = "craftingtweaks";
 
+    private CraftingTweaksIntegration() {
+    }
+
     public static boolean isLoaded() {
         return ModList.get().isLoaded(ID);
     }

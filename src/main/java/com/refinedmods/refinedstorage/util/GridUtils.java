@@ -8,6 +8,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 
 public class GridUtils {
+    private GridUtils() {
+    }
+
     public static ResourceLocation getNetworkNodeId(GridType type) {
         switch (type) {
             case NORMAL:

@@ -30,6 +30,9 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public final class WorldUtils {
+    private WorldUtils() {
+    }
+
     public static void updateBlock(@Nullable World world, BlockPos pos) {
         if (world != null && world.isBlockPresent(pos)) {
             BlockState state = world.getBlockState(pos);

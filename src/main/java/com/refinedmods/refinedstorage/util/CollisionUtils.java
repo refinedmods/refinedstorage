@@ -6,6 +6,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 
 public final class CollisionUtils {
+    private CollisionUtils() {
+    }
+
     public static boolean isInBounds(VoxelShape shape, BlockPos pos, Vector3d hit) {
         AxisAlignedBB aabb = shape.getBoundingBox().offset(pos);
 

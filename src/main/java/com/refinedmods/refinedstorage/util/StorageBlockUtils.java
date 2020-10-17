@@ -8,6 +8,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 
 public class StorageBlockUtils {
+    private StorageBlockUtils() {
+    }
+
     public static ResourceLocation getNetworkNodeId(ItemStorageType type) {
         switch (type) {
             case ONE_K:

@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Random;
 
 public final class QuadTransformer {
+    private QuadTransformer() {
+    }
+
     public static List<BakedQuad> getTransformedQuads(IBakedModel model, Direction facing, @Nullable Vector3f translation, BlockState state, Random rand, Direction side) {
         double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
 

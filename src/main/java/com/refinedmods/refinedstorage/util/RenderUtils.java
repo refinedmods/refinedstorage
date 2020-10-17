@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Set;
 
 public final class RenderUtils {
+    private RenderUtils() {
+    }
+
     public static String shorten(String text, int length) {
         if (text.length() > length) {
             text = text.substring(0, length) + "...";

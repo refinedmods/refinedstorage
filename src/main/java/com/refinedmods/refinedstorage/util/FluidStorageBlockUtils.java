@@ -8,6 +8,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 
 public class FluidStorageBlockUtils {
+    private FluidStorageBlockUtils() {
+    }
+
     public static ResourceLocation getNetworkNodeId(FluidStorageType type) {
         switch (type) {
             case SIXTY_FOUR_K:

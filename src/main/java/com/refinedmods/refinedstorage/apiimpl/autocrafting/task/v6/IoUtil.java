@@ -21,8 +21,10 @@ import java.util.stream.IntStream;
 
 public final class IoUtil {
     private static final Logger LOGGER = LogManager.getLogger(IoUtil.class);
-
     private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT;
+
+    private IoUtil() {
+    }
 
     public static IStackList<ItemStack> extractFromInternalItemStorage(IStackList<ItemStack> list, IStorageDisk<ItemStack> storage, Action action) {
         IStackList<ItemStack> extracted = API.instance().createItemStackList();
