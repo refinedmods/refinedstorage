@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.CrafterManagerSea
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.GridSizeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
@@ -43,7 +44,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, CrafterManagerTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
         addSideButton(new CrafterManagerSearchBoxModeSideButton(this));
         addSideButton(new GridSizeSideButton(this, crafterManager::getSize, size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
 

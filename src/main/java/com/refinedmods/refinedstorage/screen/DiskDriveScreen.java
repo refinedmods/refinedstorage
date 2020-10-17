@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.container.DiskDriveContainer;
 import com.refinedmods.refinedstorage.tile.DiskDriveTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -15,7 +16,7 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainer> {
             title,
             "gui/disk_drive.png",
             DiskDriveTile.TYPE,
-            DiskDriveTile.REDSTONE_MODE,
+            NetworkNodeTile.REDSTONE_MODE,
             DiskDriveTile.COMPARE,
             DiskDriveTile.WHITELIST_BLACKLIST,
             DiskDriveTile.PRIORITY,

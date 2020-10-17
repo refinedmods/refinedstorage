@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
-import com.refinedmods.refinedstorage.block.DiskManipulatorBlock;
+import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.block.BlockState;
@@ -80,7 +80,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
-            boolean connected = key.state.get(DiskManipulatorBlock.CONNECTED);
+            boolean connected = key.state.get(NetworkNodeBlock.CONNECTED);
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
                 connected ? baseConnected : baseDisconnected,

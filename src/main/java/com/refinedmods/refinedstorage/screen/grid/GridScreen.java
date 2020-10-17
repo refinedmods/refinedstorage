@@ -25,6 +25,7 @@ import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
@@ -101,7 +102,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof GridNetworkNode || grid instanceof PortableGridTile) {
-            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : PortableGridTile.REDSTONE_MODE));
+            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? NetworkNodeTile.REDSTONE_MODE : PortableGridTile.REDSTONE_MODE));
         }
 
         int sx = x + 80 + 1;

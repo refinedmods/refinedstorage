@@ -31,6 +31,7 @@ public abstract class BaseBlock extends Block {
     }
 
     protected void onDirectionChanged(World world, BlockPos pos, Direction newDirection) {
+        // NO OP
     }
 
     @Override

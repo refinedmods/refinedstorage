@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DestructorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
 import com.refinedmods.refinedstorage.tile.DestructorTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -16,7 +17,7 @@ public class DestructorScreen extends BaseScreen<DestructorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, DestructorTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
 
         addSideButton(new TypeSideButton(this, DestructorTile.TYPE));
 

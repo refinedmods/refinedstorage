@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.item.SecurityCardItem;
 import com.refinedmods.refinedstorage.network.SecurityManagerUpdateMessage;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.SecurityManagerTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
@@ -28,7 +29,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> 
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, SecurityManagerTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
 
         int padding = 15;
 

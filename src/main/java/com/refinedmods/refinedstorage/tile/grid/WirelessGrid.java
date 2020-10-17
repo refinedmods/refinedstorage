@@ -11,6 +11,7 @@ import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
+import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.network.grid.WirelessGridSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -65,8 +66,8 @@ public class WirelessGrid implements INetworkAwareGrid {
     public WirelessGrid(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
         this.stack = stack;
         this.server = server;
-        this.nodeDimension = WirelessGridItem.getDimension(stack);
-        this.nodePos = new BlockPos(WirelessGridItem.getX(stack), WirelessGridItem.getY(stack), WirelessGridItem.getZ(stack));
+        this.nodeDimension = NetworkItem.getDimension(stack);
+        this.nodePos = new BlockPos(NetworkItem.getX(stack), NetworkItem.getY(stack), NetworkItem.getZ(stack));
         this.slotId = slotId;
 
         this.viewType = WirelessGridItem.getViewType(stack);

@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
 import com.refinedmods.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
@@ -39,8 +40,8 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.server = server;
         this.slotId = slotId;
 
-        this.nodeDimension = WirelessCraftingMonitorItem.getDimension(stack);
-        this.nodePos = new BlockPos(WirelessCraftingMonitorItem.getX(stack), WirelessCraftingMonitorItem.getY(stack), WirelessCraftingMonitorItem.getZ(stack));
+        this.nodeDimension = NetworkItem.getDimension(stack);
+        this.nodePos = new BlockPos(NetworkItem.getX(stack), NetworkItem.getY(stack), NetworkItem.getZ(stack));
         this.tabPage = WirelessCraftingMonitorItem.getTabPage(stack);
         this.tabSelected = WirelessCraftingMonitorItem.getTabSelected(stack);
     }

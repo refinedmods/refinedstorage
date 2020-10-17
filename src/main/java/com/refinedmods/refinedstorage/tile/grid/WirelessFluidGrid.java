@@ -11,6 +11,7 @@ import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
+import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.WirelessFluidGridItem;
 import com.refinedmods.refinedstorage.network.grid.WirelessFluidGridSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -64,8 +65,8 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     public WirelessFluidGrid(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
         this.stack = stack;
         this.server = server;
-        this.nodeDimension = WirelessFluidGridItem.getDimension(stack);
-        this.nodePos = new BlockPos(WirelessFluidGridItem.getX(stack), WirelessFluidGridItem.getY(stack), WirelessFluidGridItem.getZ(stack));
+        this.nodeDimension = NetworkItem.getDimension(stack);
+        this.nodePos = new BlockPos(NetworkItem.getX(stack), NetworkItem.getY(stack), NetworkItem.getZ(stack));
         this.slotId = slotId;
 
         this.sortingType = WirelessFluidGridItem.getSortingType(stack);

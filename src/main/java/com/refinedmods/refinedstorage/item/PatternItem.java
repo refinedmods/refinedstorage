@@ -11,7 +11,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPatternFactor
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -71,7 +71,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         ICraftingPattern pattern = fromCache(world, stack);
 
         if (pattern.isValid()) {
-            if (ContainerScreen.hasShiftDown() || isProcessing(stack)) {
+            if (Screen.hasShiftDown() || isProcessing(stack)) {
                 tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
