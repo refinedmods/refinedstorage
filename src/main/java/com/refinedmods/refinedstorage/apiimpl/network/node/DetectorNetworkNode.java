@@ -21,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nullable;
+
 public class DetectorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "detector");
 
@@ -114,7 +116,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
         this.powered = powered;
     }
 
-    private boolean isPowered(Integer size) {
+    private boolean isPowered(@Nullable Integer size) {
         if (size != null) {
             switch (mode) {
                 case MODE_UNDER:
@@ -123,18 +125,16 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
                     return size == amount;
                 case MODE_ABOVE:
                     return size > amount;
+                default:
+                    return false;
             }
         } else {
             if (mode == MODE_UNDER && amount != 0) {
                 return true;
-            } else if (mode == MODE_EQUAL && amount == 0) {
-                return true;
-            } else {
-                return false;
             }
-        }
 
-        return false;
+            return mode == MODE_EQUAL && amount == 0;
+        }
     }
 
     @Override

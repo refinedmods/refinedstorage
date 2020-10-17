@@ -66,7 +66,6 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         }
     }
 
-    private final IBakedModel base;
     private final IBakedModel disk;
     private final IBakedModel diskNearCapacity;
     private final IBakedModel diskFull;
@@ -80,7 +79,8 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(base, facing, null, key.state, key.random, key.side));
 
-            int x = 0, y = 0;
+            int x = 0;
+            int y = 0;
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
                     IBakedModel diskModel = getDiskModel(key.diskState[i]);
@@ -113,7 +113,6 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
                                IBakedModel diskDisconnected) {
         super(base);
 
-        this.base = base;
         this.disk = disk;
         this.diskNearCapacity = diskNearCapacity;
         this.diskFull = diskFull;

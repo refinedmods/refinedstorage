@@ -4,13 +4,13 @@ import com.refinedmods.refinedstorage.api.network.security.ISecurityCard;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class SecurityCard implements ISecurityCard {
     private final UUID owner;
-    private final Map<Permission, Boolean> permissions = new HashMap<>();
+    private final Map<Permission, Boolean> permissions = new EnumMap<>(Permission.class);
 
     public SecurityCard(@Nullable UUID owner) {
         this.owner = owner;

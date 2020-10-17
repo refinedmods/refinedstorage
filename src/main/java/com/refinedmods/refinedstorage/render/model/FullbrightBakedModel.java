@@ -110,11 +110,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
                 return false;
             }
 
-            if (!state.equals(cacheKey.state)) {
-                return false;
-            }
-
-            return true;
+            return state.equals(cacheKey.state);
         }
 
         @Override

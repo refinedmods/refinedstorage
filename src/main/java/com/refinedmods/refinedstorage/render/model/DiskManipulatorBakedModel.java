@@ -91,7 +91,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
                 key.side
             ));
 
-            int x = 0, y = 0;
+            int x = 0;
+            int y = 0;
             for (int i = 0; i < 6; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
                     IBakedModel diskModel = getDiskModel(key.diskState[i]);

@@ -116,83 +116,102 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
-        if (getErrorType() != null) {
-            matrixStack.push();
-            matrixStack.scale(scale, scale, 1);
+        CalculationResultType errorType = getErrorType();
+        if (errorType != null) {
+            renderError(matrixStack, x, y, scale, errorType);
+        } else {
+            renderPreview(matrixStack, mouseX, mouseY, x, y);
+        }
+    }
 
-            renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage.crafting_preview.error"));
+    private void renderPreview(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y) {
+        int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
-            switch (getErrorType()) {
-                case RECURSIVE: {
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.0"));
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.1"));
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.2"));
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.3"));
+        RenderHelper.setupGui3DDiffuseLighting();
+        RenderSystem.enableDepthTest();
 
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
+        this.hoveringStack = null;
+        this.hoveringFluid = null;
 
-                    ICraftingPattern pattern = PatternItem.fromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
-
-                    int yy = 83;
-                    for (ItemStack output : pattern.getOutputs()) {
-                        if (output != null) {
-                            matrixStack.push();
-                            matrixStack.scale(scale, scale, 1);
-                            renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getString());
-                            matrixStack.pop();
-
-                            RenderHelper.setupGui3DDiffuseLighting();
-                            RenderSystem.enableDepthTest();
-                            renderItem(matrixStack, x + 5, yy, output);
-                            RenderHelper.disableStandardItemLighting();
-
-                            yy += 17;
-                        }
-                    }
-
-                    break;
-                }
-                case TOO_COMPLEX: {
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
-                    renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
-
-                    break;
-                }
+        for (int i = 0; i < 3 * 5; ++i) {
+            if (slot < stacks.size()) {
+                renderElement(matrixStack, mouseX, mouseY, x, y, stacks.get(slot));
             }
 
-            matrixStack.pop();
-        } else {
-            int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
+            if ((i + 1) % 3 == 0) {
+                x = 7;
+                y += 30;
+            } else {
+                x += 74;
+            }
 
-            RenderHelper.setupGui3DDiffuseLighting();
-            RenderSystem.enableDepthTest();
+            slot++;
+        }
+    }
 
-            this.hoveringStack = null;
-            this.hoveringFluid = null;
+    private void renderElement(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, ICraftingPreviewElement<?> element) {
+        element.draw(matrixStack, x, y + 5, drawers);
 
-            for (int i = 0; i < 3 * 5; ++i) {
-                if (slot < stacks.size()) {
-                    ICraftingPreviewElement<?> stack = stacks.get(slot);
+        if (RenderUtils.inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
+            this.hoveringStack = element.getId().equals(ItemCraftingPreviewElement.ID) ? (ItemStack) element.getElement() : null;
 
-                    stack.draw(matrixStack, x, y + 5, drawers);
+            if (this.hoveringStack == null) {
+                this.hoveringFluid = element.getId().equals(FluidCraftingPreviewElement.ID) ? (FluidStack) element.getElement() : null;
+            }
+        }
+    }
 
-                    if (RenderUtils.inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
-                        this.hoveringStack = stack.getId().equals(ItemCraftingPreviewElement.ID) ? (ItemStack) stack.getElement() : null;
+    private void renderError(MatrixStack matrixStack, int x, int y, float scale, CalculationResultType errorType) {
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
-                        if (this.hoveringStack == null) {
-                            this.hoveringFluid = stack.getId().equals(FluidCraftingPreviewElement.ID) ? (FluidStack) stack.getElement() : null;
-                        }
-                    }
-                }
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage.crafting_preview.error"));
 
-                if ((i + 1) % 3 == 0) {
-                    x = 7;
-                    y += 30;
-                } else {
-                    x += 74;
-                }
+        switch (errorType) {
+            case RECURSIVE:
+                renderRecursiveError(matrixStack, x, y, scale);
+                break;
+            case OK:
+            case MISSING:
+            case NO_PATTERN:
+                break;
+            case TOO_COMPLEX:
+                renderTooComplexError(matrixStack, x, y, scale);
+                break;
+        }
 
-                slot++;
+        matrixStack.pop();
+    }
+
+    private void renderTooComplexError(MatrixStack matrixStack, int x, int y, float scale) {
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
+    }
+
+    private void renderRecursiveError(MatrixStack matrixStack, int x, int y, float scale) {
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.0"));
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.1"));
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.2"));
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.3"));
+
+        renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
+
+        ICraftingPattern pattern = PatternItem.fromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
+
+        int yy = 83;
+        for (ItemStack output : pattern.getOutputs()) {
+            if (output != null) {
+                matrixStack.push();
+                matrixStack.scale(scale, scale, 1);
+                renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getString());
+                matrixStack.pop();
+
+                RenderHelper.setupGui3DDiffuseLighting();
+                RenderSystem.enableDepthTest();
+                renderItem(matrixStack, x + 5, yy, output);
+                RenderHelper.disableStandardItemLighting();
+
+                yy += 17;
             }
         }
     }
