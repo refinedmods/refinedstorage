@@ -1,5 +1,8 @@
 package com.refinedmods.refinedstorage.apiimpl.util;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
@@ -19,6 +22,7 @@ import java.util.UUID;
 
 public class ItemStackList implements IStackList<ItemStack> {
     private final Map<ItemMeta, StackListEntry<ItemStack>> stacks = new HashMap<>();
+    private final Multimap<Item, ItemMeta> itemsByType = LinkedHashMultimap.create();
     private final Map<UUID, ItemStack> index = new HashMap<>();
 
     @Override
@@ -27,7 +31,8 @@ public class ItemStackList implements IStackList<ItemStack> {
             throw new IllegalArgumentException("Cannot accept empty stack");
         }
 
-        StackListEntry<ItemStack> entry = stacks.get(new ItemMeta(stack));
+        ItemMeta itemMeta = new ItemMeta(stack);
+        StackListEntry<ItemStack> entry = stacks.get(itemMeta);
         if (entry != null) {
             ItemStack otherStack = entry.getStack();
 
@@ -42,8 +47,9 @@ public class ItemStackList implements IStackList<ItemStack> {
 
         StackListEntry<ItemStack> newEntry = new StackListEntry<>(ItemHandlerHelper.copyStackWithSize(stack, size));
 
-        stacks.put(new ItemMeta(stack), newEntry);
+        stacks.put(itemMeta, newEntry);
         index.put(newEntry.getId(), newEntry.getStack());
+        itemsByType.put(itemMeta.getItem(), itemMeta);
 
         return new StackListResult<>(newEntry.getStack(), newEntry.getId(), size);
     }
@@ -63,6 +69,7 @@ public class ItemStackList implements IStackList<ItemStack> {
             if (otherStack.getCount() - size <= 0) {
                 stacks.remove(itemMeta);
                 index.remove(entry.getId());
+                itemsByType.remove(itemMeta.getItem(), itemMeta);
 
                 return new StackListResult<>(otherStack, entry.getId(), -otherStack.getCount());
             } else {
@@ -93,10 +100,19 @@ public class ItemStackList implements IStackList<ItemStack> {
     @Nullable
     @Override
     public StackListEntry<ItemStack> getEntry(@Nonnull ItemStack stack, int flags) {
-        StackListEntry<ItemStack> entry = stacks.get(new ItemMeta(stack));
-        if (entry != null) {
-            if (API.instance().getComparer().isEqual(entry.getStack(), stack, flags)) {
+        IComparer comparer = API.instance().getComparer();
+        if ((flags & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT) {
+            // Fast path for NBT-aware comparison
+            StackListEntry<ItemStack> entry = stacks.get(new ItemMeta(stack));
+            if (entry != null && comparer.isEqual(entry.getStack(), stack, flags)) {
                 return entry;
+            }
+        } else {
+            for (ItemMeta meta : itemsByType.get(stack.getItem())) {
+                StackListEntry<ItemStack> entry = stacks.get(meta);
+                if (comparer.isEqual(entry.getStack(), stack, flags)) {
+                    return entry;
+                }
             }
         }
 
@@ -113,6 +129,7 @@ public class ItemStackList implements IStackList<ItemStack> {
     public void clear() {
         stacks.clear();
         index.clear();
+        itemsByType.clear();
     }
 
     @Override
@@ -136,8 +153,10 @@ public class ItemStackList implements IStackList<ItemStack> {
             ItemStack newStack = entry.getStack().copy();
 
             // Can reuse key because it is immutable
-            list.stacks.put(pair.getKey(), new StackListEntry<>(entry.getId(), newStack));
+            ItemMeta itemMeta = pair.getKey();
+            list.stacks.put(itemMeta, new StackListEntry<>(entry.getId(), newStack));
             list.index.put(entry.getId(), newStack);
+            list.itemsByType.put(itemMeta.getItem(), itemMeta);
         }
 
         return list;
@@ -158,6 +177,10 @@ public class ItemStackList implements IStackList<ItemStack> {
             item = template.getItem();
             CompoundNBT originalNbt = template.getTag();
             nbt = originalNbt == null ? null : originalNbt.copy();
+        }
+
+        public Item getItem() {
+            return item;
         }
 
         @Override

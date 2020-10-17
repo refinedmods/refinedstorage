@@ -76,9 +76,6 @@ public interface IStackList<T> {
     /**
      * Returns a stack.
      *
-     * {@code flags} is assumed to contain at least {@code COMPARE_NBT}, because
-     * otherwise there may be multiple candidates to return.
-     *
      * @param stack the stack to search for
      * @param flags the flags to compare on, see {@link IComparer}
      * @return the stack, or null if no stack was found
@@ -91,9 +88,6 @@ public interface IStackList<T> {
 
     /**
      * Returns a stack entry.
-     *
-     * {@code flags} is assumed to contain at least {@code COMPARE_NBT}, because
-     * otherwise there may be multiple candidates to return.
      *
      * @param stack the stack to search for
      * @param flags the flags to compare on, see {@link IComparer}
