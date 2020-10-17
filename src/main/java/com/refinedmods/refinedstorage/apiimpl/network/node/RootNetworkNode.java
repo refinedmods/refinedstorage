@@ -34,7 +34,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void setOwner(@Nullable UUID owner) {
-
+        // NO OP
     }
 
     @Nullable
@@ -61,10 +61,12 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void onConnected(INetwork network) {
+        // NO OP
     }
 
     @Override
     public void onDisconnected(INetwork network) {
+        // NO OP
     }
 
     @Override
@@ -79,7 +81,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void update() {
-
+        // NO OP
     }
 
     @Override
@@ -99,7 +101,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void markDirty() {
-
+        // NO OP
     }
 
     @Override

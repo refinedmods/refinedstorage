@@ -366,10 +366,6 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         this.markDirty();
     }
 
-    public IItemHandler getPatternItems() {
-        return patternsInventory;
-    }
-
     public IItemHandler getUpgrades() {
         return upgrades;
     }

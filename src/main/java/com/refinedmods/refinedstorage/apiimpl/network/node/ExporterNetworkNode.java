@@ -296,7 +296,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return getUpgrades();
     }
 
     @Override

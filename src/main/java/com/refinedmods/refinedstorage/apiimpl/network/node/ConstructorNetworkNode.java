@@ -277,28 +277,28 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
         @Override
         public int getTanks() {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Nonnull
         @Override
         public FluidStack getFluidInTank(int tank) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public int getTankCapacity(int tank) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public int fill(FluidStack resource, FluidAction action) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Nonnull
