@@ -14,3 +14,4 @@ run/
 .idea/
 out/
 /bin/
+logs/
