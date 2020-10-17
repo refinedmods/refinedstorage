@@ -376,7 +376,7 @@ public class CraftingManager implements ICraftingManager {
                     network.getFluidStorageCache().getCraftablesList().add(output);
                 }
 
-                Set<ICraftingPatternContainer> containersForPattern = this.patternToContainer.computeIfAbsent(pattern, (key) -> new LinkedHashSet<>());
+                Set<ICraftingPatternContainer> containersForPattern = this.patternToContainer.computeIfAbsent(pattern, key -> new LinkedHashSet<>());
                 containersForPattern.add(container);
             }
 

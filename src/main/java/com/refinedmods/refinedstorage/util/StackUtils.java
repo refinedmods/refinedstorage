@@ -332,7 +332,7 @@ public final class StackUtils {
             item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString(NBT_ITEM_ID)));
 
             if (item == null) {
-                LOGGER.warn("Could not deserialize item from string ID, it no longer exists: " + tag.getString(NBT_ITEM_ID));
+                LOGGER.warn("Could not deserialize item from string ID {}, it no longer exists", tag.getString(NBT_ITEM_ID));
             }
         } else {
             throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_ID + " tag was found!");

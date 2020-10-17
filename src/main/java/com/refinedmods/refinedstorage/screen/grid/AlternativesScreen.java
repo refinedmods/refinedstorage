@@ -307,7 +307,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         public TagLine(ResourceLocation tagName, boolean checked) {
             this.tagName = tagName;
-            this.widget = addCheckBox(-100, -100, new StringTextComponent(RenderUtils.shorten(tagName.toString(), 22)), checked, (btn) -> {
+            this.widget = addCheckBox(-100, -100, new StringTextComponent(RenderUtils.shorten(tagName.toString(), 22)), checked, btn -> {
+                // NO OP
             });
 
             widget.setFGColor(0xFF373737);

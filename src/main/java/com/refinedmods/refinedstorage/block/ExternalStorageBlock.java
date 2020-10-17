@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;

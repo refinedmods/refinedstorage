@@ -273,7 +273,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void bindTexture(String namespace, String filenameInTexturesFolder) {
-        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, (newId) -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
+        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
     }
 
     public void renderItem(MatrixStack matrixStack, int x, int y, ItemStack stack) {
@@ -298,7 +298,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                 renderQuantity(matrixStack, x, y, text, textColor);
             }
         } catch (Throwable t) {
-            logger.warn("Couldn't render stack: " + stack.getItem().toString(), t);
+            logger.warn("Couldn't render stack: {}", stack.getItem().getRegistryName());
         }
     }
 

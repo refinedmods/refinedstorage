@@ -15,10 +15,6 @@ public class TagGenerator extends ItemTagsProvider {
 
     @Override
     protected void registerTags() {
-        RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> {
-            map.values().forEach(item -> {
-                getOrCreateBuilder(tag).add(item.get());
-            });
-        });
+        RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> map.values().forEach(item -> getOrCreateBuilder(tag).add(item.get())));
     }
 }

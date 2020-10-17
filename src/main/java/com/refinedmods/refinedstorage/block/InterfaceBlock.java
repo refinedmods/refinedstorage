@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.InterfaceContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;

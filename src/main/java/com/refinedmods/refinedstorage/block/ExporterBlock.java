@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ExporterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;

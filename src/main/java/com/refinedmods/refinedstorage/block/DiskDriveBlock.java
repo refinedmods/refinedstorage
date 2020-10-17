@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DiskDriveContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.DiskDriveTile;

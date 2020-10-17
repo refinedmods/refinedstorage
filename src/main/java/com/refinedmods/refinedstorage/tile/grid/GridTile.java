@@ -56,7 +56,7 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, (screen) -> screen.resize(screen.getMinecraft(), screen.width, screen.height)));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
     public static final TileDataParameter<Integer, GridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();

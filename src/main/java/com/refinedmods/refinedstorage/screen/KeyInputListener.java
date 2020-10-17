@@ -27,13 +27,13 @@ public class KeyInputListener {
             PlayerInventory inv = Minecraft.getInstance().player.inventory;
 
             if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_GRID.get(), RSItems.CREATIVE_WIRELESS_GRID.get());
+                findAndOpen(inv, error -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_GRID.get(), RSItems.CREATIVE_WIRELESS_GRID.get());
             } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_FLUID_GRID.get(), RSItems.CREATIVE_WIRELESS_FLUID_GRID.get());
+                findAndOpen(inv, error -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_FLUID_GRID.get(), RSItems.CREATIVE_WIRELESS_FLUID_GRID.get());
             } else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.PORTABLE_GRID.get(), RSItems.CREATIVE_PORTABLE_GRID.get());
+                findAndOpen(inv, error -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.PORTABLE_GRID.get(), RSItems.CREATIVE_PORTABLE_GRID.get());
             } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
-                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_CRAFTING_MONITOR.get(), RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get());
+                findAndOpen(inv, error -> Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID), RSItems.WIRELESS_CRAFTING_MONITOR.get(), RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get());
             }
         }
     }

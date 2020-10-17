@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.container.FluidStorageContainer;
