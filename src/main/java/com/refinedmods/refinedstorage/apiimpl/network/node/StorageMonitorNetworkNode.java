@@ -198,10 +198,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
-            if (!result.isEmpty()) {
-                if (!player.inventory.addItemStackToInventory(result.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), result);
-                }
+            if (!result.isEmpty() && !player.inventory.addItemStackToInventory(result.copy())) {
+                InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), result);
             }
         }
     }

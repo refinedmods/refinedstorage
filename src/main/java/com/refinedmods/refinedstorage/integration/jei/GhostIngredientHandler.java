@@ -30,36 +30,32 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
             Rectangle2d bounds = new Rectangle2d(gui.getGuiLeft() + slot.xPos, gui.getGuiTop() + slot.yPos, 17, 17);
 
-            if (ingredient instanceof ItemStack) {
-                if (slot instanceof LegacyFilterSlot || slot instanceof FilterSlot) {
-                    targets.add(new Target<I>() {
-                        @Override
-                        public Rectangle2d getArea() {
-                            return bounds;
-                        }
+            if (ingredient instanceof ItemStack && (slot instanceof LegacyFilterSlot || slot instanceof FilterSlot)) {
+                targets.add(new Target<I>() {
+                    @Override
+                    public Rectangle2d getArea() {
+                        return bounds;
+                    }
 
-                        @Override
-                        public void accept(I ingredient) {
-                            slot.putStack((ItemStack) ingredient);
+                    @Override
+                    public void accept(I ingredient) {
+                        slot.putStack((ItemStack) ingredient);
 
-                            RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(slot.slotNumber, (ItemStack) ingredient));
-                        }
-                    });
-                }
-            } else if (ingredient instanceof FluidStack) {
-                if (slot instanceof FluidFilterSlot) {
-                    targets.add(new Target<I>() {
-                        @Override
-                        public Rectangle2d getArea() {
-                            return bounds;
-                        }
+                        RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(slot.slotNumber, (ItemStack) ingredient));
+                    }
+                });
+            } else if (ingredient instanceof FluidStack && slot instanceof FluidFilterSlot) {
+                targets.add(new Target<I>() {
+                    @Override
+                    public Rectangle2d getArea() {
+                        return bounds;
+                    }
 
-                        @Override
-                        public void accept(I ingredient) {
-                            RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, FluidAttributes.BUCKET_VOLUME)));
-                        }
-                    });
-                }
+                    @Override
+                    public void accept(I ingredient) {
+                        RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, FluidAttributes.BUCKET_VOLUME)));
+                    }
+                });
             }
         }
 

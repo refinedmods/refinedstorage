@@ -356,13 +356,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     public abstract void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY);
 
     public static <T> void executeLater(Class<T> clazz, Consumer<T> callback) {
-        Queue<Consumer> queue = ACTIONS.get(clazz);
-
-        if (queue == null) {
-            ACTIONS.put(clazz, queue = new ArrayDeque<>());
-        }
-
-        queue.add(callback);
+        ACTIONS.computeIfAbsent(clazz, eky -> new ArrayDeque<>()).add(callback);
     }
 
     public static void executeLater(Consumer<ContainerScreen> callback) {

@@ -188,16 +188,16 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     private void loadStorage() {
-        ItemStack diskStack = getDisk().getStackInSlot(0);
+        ItemStack diskStack = getDiskInventory().getStackInSlot(0);
 
         if (diskStack.isEmpty()) {
             this.storage = null;
             this.cache = null;
         } else {
-            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDisk().getStackInSlot(0));
+            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDiskInventory().getStackInSlot(0));
 
             if (disk != null) {
-                StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();
+                StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
 
                 switch (type) {
                     case ITEM:
@@ -311,7 +311,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     private GridType getServerGridType() {
-        return (getDisk().getStackInSlot(0).isEmpty() || ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType() == StorageType.ITEM) ? GridType.NORMAL : GridType.FLUID;
+        return (getDiskInventory().getStackInSlot(0).isEmpty() || ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType() == StorageType.ITEM) ? GridType.NORMAL : GridType.FLUID;
     }
 
     @Nullable
@@ -625,7 +625,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public BaseItemHandler getDisk() {
+    public BaseItemHandler getDiskInventory() {
         return disk;
     }
 

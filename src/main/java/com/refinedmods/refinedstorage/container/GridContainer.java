@@ -76,11 +76,10 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         transferManager.setNotFoundHandler(slotIndex -> {
             if (!getPlayer().getEntityWorld().isRemote) {
                 Slot slot = inventorySlots.get(slotIndex);
-                if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler) {
-                    if (((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDisk())) {
-                        return ItemStack.EMPTY;
-                    }
+                if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDiskInventory())) {
+                    return ItemStack.EMPTY;
                 }
+
                 if (slot.getHasStack()) {
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());
@@ -122,9 +121,9 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     private void addPortableGridSlots() {
-        addSlot(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6));
+        addSlot(new SlotItemHandler(((IPortableGrid) grid).getDiskInventory(), 0, 204, 6));
 
-        transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDisk());
+        transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDiskInventory());
     }
 
     private void addFilterSlots() {

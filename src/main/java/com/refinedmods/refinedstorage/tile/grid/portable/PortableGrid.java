@@ -107,10 +107,10 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDisk().getStackInSlot(0));
+                    IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDiskInventory().getStackInSlot(0));
 
                     if (disk != null) {
-                        StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();
+                        StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
 
                         switch (type) {
                             case ITEM:
@@ -209,7 +209,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public BaseItemHandler getDisk() {
+    public BaseItemHandler getDiskInventory() {
         return disk;
     }
 
@@ -219,7 +219,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public GridType getGridType() {
-        return (getDisk().getStackInSlot(0).isEmpty() || ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType() == StorageType.ITEM) ? GridType.NORMAL : GridType.FLUID;
+        return (getDiskInventory().getStackInSlot(0).isEmpty() || ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType() == StorageType.ITEM) ? GridType.NORMAL : GridType.FLUID;
     }
 
     @Nullable

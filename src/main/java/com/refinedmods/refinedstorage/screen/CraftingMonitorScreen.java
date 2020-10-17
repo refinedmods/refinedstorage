@@ -72,7 +72,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         @Override
         public List<IFilter> getFilters() {
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -203,7 +203,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         if (cancelAllButton != null) {
-            cancelAllButton.active = tasks.size() > 0;
+            cancelAllButton.active = !tasks.isEmpty();
         }
     }
 

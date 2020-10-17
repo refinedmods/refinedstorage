@@ -76,7 +76,7 @@ public class CheckboxWidget extends CheckboxButton {
         }
 
         if (shadow) {
-            super.drawString(matrixStack, fontrenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
+            drawString(matrixStack, fontrenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
         } else {
             fontrenderer.drawString(matrixStack, this.getMessage().getString(), this.x + 13, this.y + (this.height - 8) / 2F, color);
         }

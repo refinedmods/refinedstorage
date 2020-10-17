@@ -79,15 +79,14 @@ public class PortableGridBlockItem extends EnergyBlockItem {
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        if (oldStack.getItem() == newStack.getItem()) {
-            if (WirelessGridItem.getSortingDirection(oldStack) == WirelessGridItem.getSortingDirection(newStack) &&
-                WirelessGridItem.getSortingType(oldStack) == WirelessGridItem.getSortingType(newStack) &&
-                WirelessGridItem.getSearchBoxMode(oldStack) == WirelessGridItem.getSearchBoxMode(newStack) &&
-                WirelessGridItem.getTabSelected(oldStack) == WirelessGridItem.getTabSelected(newStack) &&
-                WirelessGridItem.getTabPage(oldStack) == WirelessGridItem.getTabPage(newStack) &&
-                WirelessGridItem.getSize(oldStack) == WirelessGridItem.getSize(newStack)) {
-                return false;
-            }
+        if (oldStack.getItem() == newStack.getItem() &&
+            WirelessGridItem.getSortingDirection(oldStack) == WirelessGridItem.getSortingDirection(newStack) &&
+            WirelessGridItem.getSortingType(oldStack) == WirelessGridItem.getSortingType(newStack) &&
+            WirelessGridItem.getSearchBoxMode(oldStack) == WirelessGridItem.getSearchBoxMode(newStack) &&
+            WirelessGridItem.getTabSelected(oldStack) == WirelessGridItem.getTabSelected(newStack) &&
+            WirelessGridItem.getTabPage(oldStack) == WirelessGridItem.getTabPage(newStack) &&
+            WirelessGridItem.getSize(oldStack) == WirelessGridItem.getSize(newStack)) {
+            return false;
         }
 
         return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);

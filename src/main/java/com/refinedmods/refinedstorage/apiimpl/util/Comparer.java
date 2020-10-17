@@ -17,16 +17,12 @@ public class Comparer implements IComparer {
             return false;
         }
 
-        if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (!ItemStack.areItemStackTagsEqual(left, right)) {
-                return false;
-            }
+        if ((flags & COMPARE_NBT) == COMPARE_NBT && !ItemStack.areItemStackTagsEqual(left, right)) {
+            return false;
         }
 
-        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
-            if (left.getCount() != right.getCount()) {
-                return false;
-            }
+        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY && left.getCount() != right.getCount()) {
+            return false;
         }
 
         return true;
@@ -42,16 +38,12 @@ public class Comparer implements IComparer {
             return false;
         }
 
-        if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (!FluidStack.areFluidStackTagsEqual(left, right)) {
-                return false;
-            }
+        if ((flags & COMPARE_NBT) == COMPARE_NBT && !FluidStack.areFluidStackTagsEqual(left, right)) {
+            return false;
         }
 
-        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
-            if (left.getAmount() != right.getAmount()) {
-                return false;
-            }
+        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY && left.getAmount() != right.getAmount()) {
+            return false;
         }
 
         return true;

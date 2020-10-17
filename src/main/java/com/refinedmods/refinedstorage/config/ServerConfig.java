@@ -21,7 +21,7 @@ public class ServerConfig {
     private final Relay relay;
     private final Detector detector;
     private final SecurityManager securityManager;
-    private final Interface _interface;
+    private final Interface iface;
     private final FluidInterface fluidInterface;
     private final WirelessTransmitter wirelessTransmitter;
     private final StorageMonitor storageMonitor;
@@ -53,7 +53,7 @@ public class ServerConfig {
         relay = new Relay();
         detector = new Detector();
         securityManager = new SecurityManager();
-        _interface = new Interface();
+        iface = new Interface();
         fluidInterface = new FluidInterface();
         wirelessTransmitter = new WirelessTransmitter();
         storageMonitor = new StorageMonitor();
@@ -137,7 +137,7 @@ public class ServerConfig {
     }
 
     public Interface getInterface() {
-        return _interface;
+        return iface;
     }
 
     public FluidInterface getFluidInterface() {

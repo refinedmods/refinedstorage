@@ -38,10 +38,8 @@ public class CrafterTile extends NetworkNodeTile<CrafterNetworkNode> {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (direction != null && !direction.equals(this.getNode().getDirection())) {
-                return patternsCapability.cast();
-            }
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && direction != null && !direction.equals(this.getNode().getDirection())) {
+            return patternsCapability.cast();
         }
 
         return super.getCapability(cap, direction);

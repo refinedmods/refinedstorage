@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 import net.minecraft.util.text.ITextComponent;
 
 public class CraftingPatternFactoryException extends Exception {
-    private final ITextComponent errorMessage;
+    private final transient ITextComponent errorMessage;
 
     public CraftingPatternFactoryException(ITextComponent errorMessage) {
         this.errorMessage = errorMessage;

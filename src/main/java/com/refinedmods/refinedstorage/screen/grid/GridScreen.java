@@ -526,12 +526,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
             }
 
-            if (isOverInventory(x - guiLeft, y - guiTop)) {
-                if (grid.getGridType() != GridType.FLUID && hoveredSlot != null && hoveredSlot.getHasStack()) {
+            if (grid.getGridType() != GridType.FLUID) {
+                if (isOverInventory(x - guiLeft, y - guiTop) && hoveredSlot != null && hoveredSlot.getHasStack()) {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
-                }
-            } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
-                if (grid.getGridType() != GridType.FLUID) {
+                } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : null, hasShiftDown(), delta > 0));
                 }
             }

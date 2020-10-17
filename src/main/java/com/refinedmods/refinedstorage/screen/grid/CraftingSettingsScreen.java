@@ -61,6 +61,7 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
         return Integer.MAX_VALUE;
     }
 
+    @Override
     protected void onOkButtonPressed(boolean shiftDown) {
         try {
             int quantity = Integer.parseInt(amountField.getText());

@@ -104,12 +104,10 @@ public class PortableItemGridHandler implements IItemGridHandler {
                         }
                     }
 
-                    if (!took.isEmpty()) {
-                        if (ItemHandlerHelper.insertItemStacked(playerInventory, took, true).isEmpty()) {
-                            took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
+                    if (!took.isEmpty() && ItemHandlerHelper.insertItemStacked(playerInventory, took, true).isEmpty()) {
+                        took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
 
-                            ItemHandlerHelper.insertItemStacked(playerInventory, took, false);
-                        }
+                        ItemHandlerHelper.insertItemStacked(playerInventory, took, false);
                     }
                 }
             } else {

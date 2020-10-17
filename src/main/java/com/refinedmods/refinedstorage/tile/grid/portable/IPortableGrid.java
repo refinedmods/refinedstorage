@@ -37,7 +37,7 @@ public interface IPortableGrid {
 
     int getEnergy();
 
-    BaseItemHandler getDisk();
+    BaseItemHandler getDiskInventory();
 
     IItemHandlerModifiable getFilter();
 

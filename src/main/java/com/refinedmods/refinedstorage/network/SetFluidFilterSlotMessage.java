@@ -31,32 +31,36 @@ public class SetFluidFilterSlotMessage {
     }
 
     public static void handle(SetFluidFilterSlotMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        if (!message.stack.isEmpty()) {
+            PlayerEntity player = ctx.get().getSender();
 
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                Container container = player.openContainer;
+            if (player != null) {
+                ctx.get().enqueueWork(() -> {
+                    Container container = player.openContainer;
 
-                if (container != null) {
-                    if (message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
-                        Slot slot = container.getSlot(message.containerSlot);
-
-                        if (slot instanceof FluidFilterSlot) {
-                            FluidFilterSlot fluidFilterSlot = (FluidFilterSlot) slot;
-
-                            // Avoid resetting allowed tag list in the pattern grid.
-                            if (API.instance().getComparer().isEqual(fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()), message.stack, IComparer.COMPARE_NBT)) {
-                                fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()).setAmount(message.stack.getAmount());
-                                fluidFilterSlot.getFluidInventory().onChanged(slot.getSlotIndex());
-                            } else {
-                                fluidFilterSlot.getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
-                            }
-                        }
+                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
+                        handle(message, container);
                     }
-                }
-            });
+                });
+            }
         }
 
         ctx.get().setPacketHandled(true);
+    }
+
+    private static void handle(SetFluidFilterSlotMessage message, Container container) {
+        Slot slot = container.getSlot(message.containerSlot);
+
+        if (slot instanceof FluidFilterSlot) {
+            FluidFilterSlot fluidFilterSlot = (FluidFilterSlot) slot;
+
+            // Avoid resetting allowed tag list in the pattern grid.
+            if (API.instance().getComparer().isEqual(fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()), message.stack, IComparer.COMPARE_NBT)) {
+                fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()).setAmount(message.stack.getAmount());
+                fluidFilterSlot.getFluidInventory().onChanged(slot.getSlotIndex());
+            } else {
+                fluidFilterSlot.getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
+            }
+        }
     }
 }

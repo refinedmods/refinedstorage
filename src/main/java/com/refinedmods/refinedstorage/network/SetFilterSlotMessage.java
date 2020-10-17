@@ -40,34 +40,36 @@ public class SetFilterSlotMessage {
                 ctx.get().enqueueWork(() -> {
                     Container container = player.openContainer;
 
-                    if (container != null) {
-                        if (message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
-                            Slot slot = container.getSlot(message.containerSlot);
-
-                            if (slot instanceof FilterSlot || slot instanceof LegacyFilterSlot) {
-                                // Avoid resetting allowed tag list in the pattern grid.
-                                if (API.instance().getComparer().isEqualNoQuantity(slot.getStack(), message.stack)) {
-                                    slot.getStack().setCount(message.stack.getCount());
-
-                                    if (slot instanceof FilterSlot) {
-                                        IItemHandler itemHandler = ((FilterSlot) slot).getItemHandler();
-
-                                        if (itemHandler instanceof BaseItemHandler) {
-                                            ((BaseItemHandler) itemHandler).onChanged(slot.getSlotIndex());
-                                        }
-                                    } else {
-                                        slot.inventory.markDirty();
-                                    }
-                                } else {
-                                    slot.putStack(message.stack);
-                                }
-                            }
-                        }
+                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
+                        handle(message, container);
                     }
                 });
             }
         }
 
         ctx.get().setPacketHandled(true);
+    }
+
+    private static void handle(SetFilterSlotMessage message, Container container) {
+        Slot slot = container.getSlot(message.containerSlot);
+
+        if (slot instanceof FilterSlot || slot instanceof LegacyFilterSlot) {
+            // Avoid resetting allowed tag list in the pattern grid.
+            if (API.instance().getComparer().isEqualNoQuantity(slot.getStack(), message.stack)) {
+                slot.getStack().setCount(message.stack.getCount());
+
+                if (slot instanceof FilterSlot) {
+                    IItemHandler itemHandler = ((FilterSlot) slot).getItemHandler();
+
+                    if (itemHandler instanceof BaseItemHandler) {
+                        ((BaseItemHandler) itemHandler).onChanged(slot.getSlotIndex());
+                    }
+                } else {
+                    slot.inventory.markDirty();
+                }
+            } else {
+                slot.putStack(message.stack);
+            }
+        }
     }
 }
