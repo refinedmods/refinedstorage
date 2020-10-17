@@ -30,13 +30,18 @@ public class SearchWidget extends TextFieldWidget {
     }
 
     public void updateJei() {
-        if (canSyncWithJEINow()) {
+        if (canSyncToJEINow()) {
             RSJeiPlugin.getRuntime().getIngredientFilter().setFilterText(getText());
         }
     }
 
-    private boolean canSyncWithJEINow() {
-        return (this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)
+    private boolean canSyncToJEINow() {
+        return IGrid.doesSearchBoxModeUseJEI(this.mode) && JeiIntegration.isLoaded();
+    }
+
+    private boolean canSyncFromJEINow() {
+        return (this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
+                this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED)
                 && JeiIntegration.isLoaded();
     }
 
@@ -155,7 +160,7 @@ public class SearchWidget extends TextFieldWidget {
         this.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode));
         this.setFocused(IGrid.isSearchBoxModeWithAutoselection(mode));
 
-        if (canSyncWithJEINow()) {
+        if (canSyncFromJEINow()) {
             setTextFromJEI();
         }
     }
@@ -169,7 +174,7 @@ public class SearchWidget extends TextFieldWidget {
 
     @Override
     public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
-        if (canSyncWithJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
+        if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
             setTextFromJEI();
         }
         super.renderButton(p_230431_1_, p_230431_2_, p_230431_3_, p_230431_4_);
