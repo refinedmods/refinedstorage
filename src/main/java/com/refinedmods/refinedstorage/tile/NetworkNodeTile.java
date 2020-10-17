@@ -62,7 +62,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         INetworkNode node = manager.getNode(pos);
 
         if (node == null) {
-            throw new RuntimeException("No network node present at " + pos.toString() + ", consider removing the block at this position");
+            throw new IllegalStateException("No network node present at " + pos.toString() + ", consider removing the block at this position");
         }
 
         return (N) node;

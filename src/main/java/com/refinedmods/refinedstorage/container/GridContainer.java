@@ -157,7 +157,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
 
-        addSlot(craftingResultSlot = new ResultCraftingGridSlot(getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
+        craftingResultSlot = new ResultCraftingGridSlot(getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22);
+        addSlot(craftingResultSlot);
     }
 
     private void addPatternSlots() {
@@ -216,7 +217,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
 
-        addSlot(patternResultSlot = (new LegacyDisabledSlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern())));
+        patternResultSlot = new LegacyDisabledSlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern());
+        addSlot(patternResultSlot);
     }
 
     public IGrid getGrid() {

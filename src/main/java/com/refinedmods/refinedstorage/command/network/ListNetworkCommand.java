@@ -51,6 +51,14 @@ public class ListNetworkCommand implements Command<CommandSource> {
             this.tickTime = mean(network.getTickTimes()) * 1.0E-6D;
             this.tps = Math.min(1000.0 / tickTime, 20);
         }
+
+        private long mean(long[] values) {
+            long sum = 0L;
+            for (long v : values) {
+                sum += v;
+            }
+            return sum / values.length;
+        }
     }
 
     public static void sendInfo(CommandContext<CommandSource> context, NetworkInList listItem, boolean detailed) {
@@ -82,13 +90,5 @@ public class ListNetworkCommand implements Command<CommandSource> {
                 new StringTextComponent(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
             ), false);
         }
-    }
-
-    private static long mean(long[] values) {
-        long sum = 0L;
-        for (long v : values) {
-            sum += v;
-        }
-        return sum / values.length;
     }
 }

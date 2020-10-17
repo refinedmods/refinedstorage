@@ -12,16 +12,16 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContainer> {
     private final int containerSlot;
     private final FluidStack stack;
     private final int maxAmount;
     @Nullable
-    private final Function<Screen, Screen> alternativesScreenFactory;
+    private final UnaryOperator<Screen> alternativesScreenFactory;
 
-    public FluidAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount, @Nullable Function<Screen, Screen> alternativesScreenFactory) {
+    public FluidAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
         super(parent, new FluidAmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.fluid_amount"));
 
         this.containerSlot = containerSlot;

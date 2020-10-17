@@ -98,7 +98,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
         LOGGER.debug("Connectivity state of item storage block at {} changed to {} due to {}", pos, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
     }
 
     @Override
@@ -144,7 +144,9 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity(), owner));
+            disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity(), owner);
+
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk);
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 

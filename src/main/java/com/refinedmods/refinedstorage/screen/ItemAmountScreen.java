@@ -12,16 +12,16 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
     private final int containerSlot;
     private final ItemStack stack;
     private final int maxAmount;
     @Nullable
-    private final Function<Screen, Screen> alternativesScreenFactory;
+    private final UnaryOperator<Screen> alternativesScreenFactory;
 
-    public ItemAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount, @Nullable Function<Screen, Screen> alternativesScreenFactory) {
+    public ItemAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
         super(parent, new AmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.item_amount"));
 
         this.containerSlot = containerSlot;

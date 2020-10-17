@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TileDataManager {
-    private static int LAST_ID = 0;
+    private static int lastId = 0;
     private static final Map<Integer, TileDataParameter> REGISTRY = new HashMap<>();
 
     private final TileEntity tile;
@@ -60,9 +60,9 @@ public class TileDataManager {
     }
 
     public static void registerParameter(TileDataParameter parameter) {
-        parameter.setId(LAST_ID);
+        parameter.setId(lastId);
 
-        REGISTRY.put(LAST_ID++, parameter);
+        REGISTRY.put(lastId++, parameter);
     }
 
     public static TileDataParameter getParameter(int id) {

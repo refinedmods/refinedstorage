@@ -55,7 +55,7 @@ public class PortableItemStorageCache implements IStorageCache<ItemStack> {
 
     @Override
     public void flush() {
-        throw new UnsupportedOperationException("Cannot flush portable grid storage cache");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -87,7 +87,7 @@ public class PortableItemStorageCache implements IStorageCache<ItemStack> {
 
     @Override
     public IStackList<ItemStack> getCraftablesList() {
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperationException();
     }
 
     @Override

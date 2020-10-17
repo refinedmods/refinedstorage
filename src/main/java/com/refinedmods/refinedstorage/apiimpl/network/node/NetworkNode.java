@@ -26,7 +26,7 @@ import java.util.UUID;
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_VERSION = "Version";
-    private static final int VERSION = 1;
+    private static final int CURRENT_VERSION = 1;
 
     @Nullable
     protected INetwork network;
@@ -179,7 +179,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             tag.putUniqueId(NBT_OWNER, owner);
         }
 
-        tag.putInt(NBT_VERSION, VERSION);
+        tag.putInt(NBT_VERSION, CURRENT_VERSION);
 
         writeConfiguration(tag);
 

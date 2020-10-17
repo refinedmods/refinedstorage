@@ -98,7 +98,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
 
         LOGGER.debug("Connectivity state of fluid storage block at {} changed to {} due to {}", pos, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
     }
 
     @Override
@@ -144,7 +144,9 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity(), owner));
+            disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity(), owner);
+
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk);
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 

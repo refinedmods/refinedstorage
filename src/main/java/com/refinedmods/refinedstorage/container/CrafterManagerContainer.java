@@ -82,7 +82,7 @@ public class CrafterManagerContainer extends BaseContainer {
             if (data == null) { // We're only resizing, get the previous inventory...
                 dummy = dummyInventories.get(category.getKey());
             } else {
-                dummyInventories.put(category.getKey(), dummy = new BaseItemHandler(category.getValue()) {
+                dummy = new BaseItemHandler(category.getValue()) {
                     @Override
                     public int getSlotLimit(int slot) {
                         return 1;
@@ -97,7 +97,9 @@ public class CrafterManagerContainer extends BaseContainer {
 
                         return stack;
                     }
-                });
+                };
+
+                dummyInventories.put(category.getKey(), dummy);
             }
 
             boolean foundItemsInCategory = false;

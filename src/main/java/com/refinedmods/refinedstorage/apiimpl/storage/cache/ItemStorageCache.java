@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ItemStorageCache implements IStorageCache<ItemStack> {
-    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE = cause -> network -> network.getItemStorageCache().invalidate(cause);
+    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE_ACTION = cause -> network -> network.getItemStorageCache().invalidate(cause);
 
     private static final Logger LOGGER = LogManager.getLogger(ItemStorageCache.class);
 

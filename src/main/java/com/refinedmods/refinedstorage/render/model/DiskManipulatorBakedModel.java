@@ -116,6 +116,33 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
 
             return quads;
         }
+
+        private IBakedModel getDiskModel(DiskState diskState) {
+            switch (diskState) {
+                case DISCONNECTED:
+                    return diskDisconnected;
+                case NEAR_CAPACITY:
+                    return diskNearCapacity;
+                case FULL:
+                    return diskFull;
+                default:
+                    return disk;
+            }
+        }
+
+        private Vector3f getDiskTranslation(Direction facing, int x, int y) {
+            Vector3f translation = new Vector3f();
+
+            if (facing == Direction.NORTH || facing == Direction.SOUTH) {
+                translation.add((2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
+            } else if (facing == Direction.EAST || facing == Direction.WEST) {
+                translation.add(0, 0, (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
+            }
+
+            translation.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
+
+            return translation;
+        }
     });
 
     public DiskManipulatorBakedModel(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
@@ -127,33 +154,6 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         this.diskNearCapacity = diskNearCapacity;
         this.diskFull = diskFull;
         this.diskDisconnected = diskDisconnected;
-    }
-
-    private IBakedModel getDiskModel(DiskState diskState) {
-        switch (diskState) {
-            case DISCONNECTED:
-                return diskDisconnected;
-            case NEAR_CAPACITY:
-                return diskNearCapacity;
-            case FULL:
-                return diskFull;
-            default:
-                return disk;
-        }
-    }
-
-    private Vector3f getDiskTranslation(Direction facing, int x, int y) {
-        Vector3f translation = new Vector3f();
-
-        if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-            translation.add((2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
-        } else if (facing == Direction.EAST || facing == Direction.WEST) {
-            translation.add(0, 0, (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
-        }
-
-        translation.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
-
-        return translation;
     }
 
     @Override
