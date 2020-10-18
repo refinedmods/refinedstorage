@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CraftingPreviewElementFactory {
-    public List<ICraftingPreviewElement<?>> getElements(CraftingPreviewInfo info) {
+    public List<ICraftingPreviewElement> getElements(CraftingPreviewInfo info) {
         Map<Integer, ItemCraftingPreviewElement> map = new LinkedHashMap<>();
         Map<Integer, FluidCraftingPreviewElement> mapFluids = new LinkedHashMap<>();
 
@@ -63,7 +63,7 @@ public class CraftingPreviewElementFactory {
             previewStack.addAvailable(stack.getStack().getAmount());
         }
 
-        List<ICraftingPreviewElement<?>> elements = new ArrayList<>();
+        List<ICraftingPreviewElement> elements = new ArrayList<>();
 
         elements.addAll(map.values());
         elements.addAll(mapFluids.values());

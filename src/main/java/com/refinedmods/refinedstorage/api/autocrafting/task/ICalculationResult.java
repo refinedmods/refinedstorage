@@ -16,9 +16,9 @@ public interface ICalculationResult {
     CalculationResultType getType();
 
     /**
-     * @return get a list of {@link ICraftingPreviewElement}s
+     * @return get a list of preview elements
      */
-    List<ICraftingPreviewElement<?>> getPreviewElements();
+    List<ICraftingPreviewElement> getPreviewElements();
 
     /**
      * @return the task if the calculation {@link #isOk()}, otherwise null

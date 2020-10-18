@@ -76,7 +76,7 @@ public class CraftingCalculator {
             craftingPreviewInfo.getToCraftFluids().add(StackUtils.copy(requested.getFluid(), qty * qtyPerCraft));
         }
 
-        List<ICraftingPreviewElement<?>> previewElements = new CraftingPreviewElementFactory().getElements(craftingPreviewInfo);
+        List<ICraftingPreviewElement> previewElements = new CraftingPreviewElementFactory().getElements(craftingPreviewInfo);
 
         if (craftingPreviewInfo.hasMissing()) {
             return new CalculationResult(CalculationResultType.MISSING, previewElements, null);

@@ -10,12 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 /**
  * Represents a crafting preview element.
  */
-public interface ICraftingPreviewElement<T> {
-    /**
-     * @return the underlying element to display
-     */
-    T getElement();
-
+public interface ICraftingPreviewElement {
     /**
      * @param matrixStack the matrix stack
      * @param x           position on the x axis to render
@@ -26,21 +21,9 @@ public interface ICraftingPreviewElement<T> {
     void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers);
 
     /**
-     * @return available amount of the {@link #getElement()}
+     * @return true when this crafting preview elements signifies an error that disables starting a task
      */
-    int getAvailable();
-
-    /**
-     * @return the amount to craft or missing (depends on {@link #hasMissing()} amount of the {@link #getElement()}
-     */
-    int getToCraft();
-
-    /**
-     * When this is true {@link #getToCraft()} will be the missing items.
-     *
-     * @return true when items are missing, false otherwise
-     */
-    boolean hasMissing();
+    boolean doesDisableTaskStarting();
 
     /**
      * @param buf buffer to write to

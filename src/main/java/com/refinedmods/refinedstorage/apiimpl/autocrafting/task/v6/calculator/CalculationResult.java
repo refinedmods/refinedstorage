@@ -13,7 +13,7 @@ import java.util.List;
 public class CalculationResult implements ICalculationResult {
     private final CalculationResultType type;
     private final ICraftingPattern recursedPattern;
-    private final List<ICraftingPreviewElement<?>> previewElements;
+    private final List<ICraftingPreviewElement> previewElements;
     private final ICraftingTask craftingTask;
 
     public CalculationResult(CalculationResultType type) {
@@ -30,7 +30,7 @@ public class CalculationResult implements ICalculationResult {
         this.craftingTask = null;
     }
 
-    public CalculationResult(CalculationResultType type, List<ICraftingPreviewElement<?>> previewElements, @Nullable ICraftingTask craftingTask) {
+    public CalculationResult(CalculationResultType type, List<ICraftingPreviewElement> previewElements, @Nullable ICraftingTask craftingTask) {
         this.type = type;
         this.recursedPattern = null;
         this.previewElements = previewElements;
@@ -43,7 +43,7 @@ public class CalculationResult implements ICalculationResult {
     }
 
     @Override
-    public List<ICraftingPreviewElement<?>> getPreviewElements() {
+    public List<ICraftingPreviewElement> getPreviewElements() {
         return previewElements;
     }
 

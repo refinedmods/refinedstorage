@@ -150,7 +150,7 @@ public interface IRSAPI {
      * @param type the type
      * @return a set of external storage providers
      */
-    Set<IExternalStorageProvider<?>> getExternalStorageProviders(StorageType type);
+    <T> Set<IExternalStorageProvider<T>> getExternalStorageProviders(StorageType type);
 
     /**
      * @param world    the world

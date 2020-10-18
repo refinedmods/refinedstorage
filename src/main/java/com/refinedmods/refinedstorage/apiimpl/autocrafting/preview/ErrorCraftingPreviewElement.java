@@ -9,20 +9,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
+public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
 
     private final CalculationResultType type;
-    private final ItemStack stack;
+    private final ItemStack recursedPattern;
 
-    public ErrorCraftingPreviewElement(CalculationResultType type, ItemStack stack) {
+    public ErrorCraftingPreviewElement(CalculationResultType type, ItemStack recursedPattern) {
         this.type = type;
-        this.stack = stack;
+        this.recursedPattern = recursedPattern;
     }
 
-    @Override
-    public ItemStack getElement() {
-        return stack;
+    public ItemStack getRecursedPattern() {
+        return recursedPattern;
     }
 
     @Override
@@ -31,24 +30,14 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<Item
     }
 
     @Override
-    public int getAvailable() {
-        return 0;
-    }
-
-    @Override
-    public int getToCraft() {
-        return 0;
-    }
-
-    @Override
-    public boolean hasMissing() {
-        return false;
+    public boolean doesDisableTaskStarting() {
+        return true;
     }
 
     @Override
     public void write(PacketBuffer buf) {
         buf.writeInt(type.ordinal());
-        buf.writeItemStack(stack);
+        buf.writeItemStack(recursedPattern);
     }
 
     public CalculationResultType getType() {

@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
+public class ItemCraftingPreviewElement implements ICraftingPreviewElement {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
     private final ItemStack stack;
@@ -32,6 +32,10 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
         this.available = available;
         this.missing = missing;
         this.toCraft = toCraft;
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 
     @Override
@@ -52,11 +56,6 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
     }
 
     @Override
-    public ItemStack getElement() {
-        return stack;
-    }
-
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing) {
@@ -66,7 +65,7 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
         x += 5;
         y += 7;
 
-        drawers.getItemDrawer().draw(matrixStack, x, y, getElement());
+        drawers.getItemDrawer().draw(matrixStack, x, y, stack);
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
@@ -75,15 +74,15 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
         matrixStack.push();
         matrixStack.scale(scale, scale, 1);
 
-        if (getToCraft() > 0) {
-            String format = hasMissing() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, getToCraft()));
+        if (toCraft > 0) {
+            String format = doesDisableTaskStarting() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, toCraft));
 
             y += 7;
         }
 
-        if (getAvailable() > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", getAvailable()));
+        if (available > 0) {
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", available));
         }
 
         matrixStack.pop();
@@ -93,18 +92,8 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
         this.available += amount;
     }
 
-    @Override
-    public int getAvailable() {
-        return available;
-    }
-
     public void addToCraft(int amount) {
         this.toCraft += amount;
-    }
-
-    @Override
-    public int getToCraft() {
-        return this.toCraft;
     }
 
     public void setMissing(boolean missing) {
@@ -112,7 +101,7 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemS
     }
 
     @Override
-    public boolean hasMissing() {
+    public boolean doesDisableTaskStarting() {
         return missing;
     }
 

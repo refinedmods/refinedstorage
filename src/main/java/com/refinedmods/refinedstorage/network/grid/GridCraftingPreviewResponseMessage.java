@@ -13,19 +13,19 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridCraftingPreviewResponseMessage {
-    private final List<ICraftingPreviewElement<?>> elements;
+    private final List<ICraftingPreviewElement> elements;
     private final UUID id;
     private final int quantity;
     private final boolean fluids;
 
-    public GridCraftingPreviewResponseMessage(List<ICraftingPreviewElement<?>> elements, UUID id, int quantity, boolean fluids) {
+    public GridCraftingPreviewResponseMessage(List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids) {
         this.elements = elements;
         this.id = id;
         this.quantity = quantity;
         this.fluids = fluids;
     }
 
-    public List<ICraftingPreviewElement<?>> getElements() {
+    public List<ICraftingPreviewElement> getElements() {
         return elements;
     }
 
@@ -46,16 +46,16 @@ public class GridCraftingPreviewResponseMessage {
         int quantity = buf.readInt();
         boolean fluids = buf.readBoolean();
 
-        List<ICraftingPreviewElement<?>> stacks = new LinkedList<>();
+        List<ICraftingPreviewElement> elements = new LinkedList<>();
 
         int size = buf.readInt();
 
         for (int i = 0; i < size; i++) {
             ResourceLocation type = buf.readResourceLocation();
-            stacks.add(API.instance().getCraftingPreviewElementRegistry().get(type).apply(buf));
+            elements.add(API.instance().getCraftingPreviewElementRegistry().get(type).apply(buf));
         }
 
-        return new GridCraftingPreviewResponseMessage(stacks, id, quantity, fluids);
+        return new GridCraftingPreviewResponseMessage(elements, id, quantity, fluids);
     }
 
     public static void encode(GridCraftingPreviewResponseMessage message, PacketBuffer buf) {
@@ -64,9 +64,9 @@ public class GridCraftingPreviewResponseMessage {
         buf.writeBoolean(message.fluids);
         buf.writeInt(message.elements.size());
 
-        for (ICraftingPreviewElement<?> stack : message.elements) {
-            buf.writeResourceLocation(stack.getId());
-            stack.write(buf);
+        for (ICraftingPreviewElement element : message.elements) {
+            buf.writeResourceLocation(element.getId());
+            element.write(buf);
         }
     }
 
