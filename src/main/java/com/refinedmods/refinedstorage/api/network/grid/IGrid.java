@@ -36,6 +36,8 @@ public interface IGrid {
     int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
+    int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY = 4;
+    int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED = 5;
 
     int VIEW_TYPE_NORMAL = 0;
     int VIEW_TYPE_NON_CRAFTABLES = 1;
@@ -255,11 +257,22 @@ public interface IGrid {
         return mode == SEARCH_BOX_MODE_NORMAL ||
             mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
             mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
     }
 
     static boolean isSearchBoxModeWithAutoselection(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
+    }
+
+    static boolean doesSearchBoxModeUseJEI(int mode) {
+        return mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
     }
 
     static boolean isValidSortingType(int type) {

@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
@@ -29,9 +30,19 @@ public class SearchWidget extends TextFieldWidget {
     }
 
     public void updateJei() {
-        if (JeiIntegration.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+        if (canSyncToJEINow()) {
             RSJeiPlugin.getRuntime().getIngredientFilter().setFilterText(getText());
         }
+    }
+
+    private boolean canSyncToJEINow() {
+        return IGrid.doesSearchBoxModeUseJEI(this.mode) && JeiIntegration.isLoaded();
+    }
+
+    private boolean canSyncFromJEINow() {
+        return (this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
+                this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED)
+                && JeiIntegration.isLoaded();
     }
 
     @Override
@@ -148,5 +159,24 @@ public class SearchWidget extends TextFieldWidget {
 
         this.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode));
         this.setFocused(IGrid.isSearchBoxModeWithAutoselection(mode));
+
+        if (canSyncFromJEINow()) {
+            setTextFromJEI();
+        }
+    }
+
+    private void setTextFromJEI() {
+        final String filterText = RSJeiPlugin.getRuntime().getIngredientFilter().getFilterText();
+        if (!getText().equals(filterText)) {
+            setText(filterText);
+        }
+    }
+
+    @Override
+    public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
+            setTextFromJEI();
+        }
+        super.renderButton(p_230431_1_, p_230431_2_, p_230431_3_, p_230431_4_);
     }
 }
