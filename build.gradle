@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "3.0"
+    id 'info.solidsoft.pitest' version '1.5.1'
 }
 
 repositories {
@@ -33,6 +34,11 @@ sonarqube {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'info.solidsoft.pitest'
+
+pitest {
+    junit5PluginVersion = "0.12"
+}
 
 version = '1.9.8'
 def env = System.getenv()
@@ -118,6 +124,10 @@ dependencies {
     compileOnly 'mouse-tweaks:MouseTweaks:2.13:mc1.16.2'
 
     runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.16.2:12.1.0')
+
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
 }
 
 jar {
@@ -158,6 +168,10 @@ artifacts {
     archives sourcesJar
     archives deobfJar
     archives apiJar
+}
+
+test {
+    useJUnitPlatform()
 }
 
 publishing {

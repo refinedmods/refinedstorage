@@ -155,4 +155,9 @@ public class ItemStackList implements IStackList<ItemStack> {
 
         return list;
     }
+
+    @Override
+    public int size() {
+        return stacks.size();
+    }
 }

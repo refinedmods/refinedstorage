@@ -157,4 +157,9 @@ public class FluidStackList implements IStackList<FluidStack> {
 
         return list;
     }
+
+    @Override
+    public int size() {
+        return stacks.size();
+    }
 }

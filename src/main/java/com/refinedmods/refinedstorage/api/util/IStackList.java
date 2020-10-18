@@ -123,4 +123,9 @@ public interface IStackList<T> {
      */
     @Nonnull
     IStackList<T> copy();
+
+    /**
+     * @return the amount of elements in this list
+     */
+    int size();
 }
