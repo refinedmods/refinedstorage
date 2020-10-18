@@ -15,8 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nullable;
-
 public class WirelessTransmitterNetworkNode extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
@@ -77,7 +75,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
     }
 
     @Override
-    public boolean canConduct(@Nullable Direction direction) {
+    protected boolean canConduct(Direction direction) {
         return Direction.DOWN.equals(direction);
     }
 

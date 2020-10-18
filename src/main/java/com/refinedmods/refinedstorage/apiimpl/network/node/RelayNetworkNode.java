@@ -7,8 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class RelayNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "relay");
 
@@ -39,7 +37,7 @@ public class RelayNetworkNode extends NetworkNode {
     }
 
     @Override
-    public boolean canConduct(@Nullable Direction direction) {
+    protected boolean canConduct(Direction direction) {
         return canUpdate();
     }
 

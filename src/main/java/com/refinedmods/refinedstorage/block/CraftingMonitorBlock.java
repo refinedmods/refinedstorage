@@ -48,7 +48,7 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
         if (!world.isRemote) {
             CraftingMonitorTile tile = (CraftingMonitorTile) world.getTileEntity(pos);
 
-            return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new CraftingMonitorContainerProvider(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile),
                 pos

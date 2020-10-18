@@ -264,7 +264,7 @@ public final class RenderUtils {
                     smallTextStack.translate(0.0D, 0.0D, zLevel);
                     smallTextStack.scale(textScale, textScale, 1);
 
-                    IRenderTypeBuffer.Impl lvt_7_1_ = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+                    IRenderTypeBuffer.Impl renderTypeBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
                     font.renderString(
                         TextFormatting.GRAY + smallTextLines.get(i),
                         RenderUtils.getOffsetOnScale(tooltipX, textScale),
@@ -272,13 +272,13 @@ public final class RenderUtils {
                         -1,
                         true,
                         smallTextStack.getLast().getMatrix(),
-                        lvt_7_1_,
+                        renderTypeBuffer,
                         false,
                         0,
                         15728880
                     );
 
-                    lvt_7_1_.finish();
+                    renderTypeBuffer.finish();
 
                     y -= 9;
                 }

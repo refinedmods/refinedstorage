@@ -41,7 +41,7 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, rayTraceResult.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DiskManipulatorTile>(
                     new TranslationTextComponent("gui.refinedstorage.disk_manipulator"),

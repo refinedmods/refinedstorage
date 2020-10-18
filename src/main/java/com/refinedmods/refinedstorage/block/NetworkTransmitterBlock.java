@@ -41,7 +41,7 @@ public class NetworkTransmitterBlock extends ColoredNetworkBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<NetworkTransmitterTile>(
                     new TranslationTextComponent("gui.refinedstorage.network_transmitter"),

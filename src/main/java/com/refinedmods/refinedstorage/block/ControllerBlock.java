@@ -141,7 +141,7 @@ public class ControllerBlock extends BaseBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new INamedContainerProvider() {
                     @Override

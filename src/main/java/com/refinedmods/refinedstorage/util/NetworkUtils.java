@@ -11,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -44,11 +43,11 @@ public class NetworkUtils {
         return null;
     }
 
-    public static ActionResultType attemptModify(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action) {
-        return attempt(world, pos, facing, player, action, Permission.MODIFY);
+    public static ActionResultType attemptModify(World world, BlockPos pos, PlayerEntity player, Runnable action) {
+        return attempt(world, pos, player, action, Permission.MODIFY);
     }
 
-    public static ActionResultType attempt(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
+    public static ActionResultType attempt(World world, BlockPos pos, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
         if (world.isRemote) {
             return ActionResultType.SUCCESS;
         }

@@ -74,7 +74,7 @@ public class DetectorBlock extends ColoredNetworkBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DetectorTile>(
                     new TranslationTextComponent("gui.refinedstorage.detector"),

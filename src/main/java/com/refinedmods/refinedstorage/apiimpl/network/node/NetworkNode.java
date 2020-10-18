@@ -224,7 +224,11 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world;
     }
 
-    public boolean canConduct(@Nullable Direction direction) {
+    /**
+     * @param direction the direction
+     * @return whether a network signal can be conducted in the given direction.
+     */
+    protected boolean canConduct(Direction direction) {
         return true;
     }
 

@@ -73,7 +73,7 @@ public class GridBlock extends ColoredNetworkBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
+            return NetworkUtils.attemptModify(world, pos, player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
         }
 
         return ActionResultType.SUCCESS;

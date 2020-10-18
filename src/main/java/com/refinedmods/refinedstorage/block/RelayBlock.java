@@ -41,7 +41,7 @@ public class RelayBlock extends ColoredNetworkBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<RelayTile>(
                     new TranslationTextComponent("gui.refinedstorage.relay"),

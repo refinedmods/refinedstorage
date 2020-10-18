@@ -54,7 +54,7 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
             if (player.getGameProfile().getId().equals(((SecurityManagerTile) world.getTileEntity(pos)).getNode().getOwner())) {
                 action.run();
             } else {
-                return NetworkUtils.attempt(world, pos, hit.getFace(), player, action, Permission.MODIFY, Permission.SECURITY);
+                return NetworkUtils.attempt(world, pos, player, action, Permission.MODIFY, Permission.SECURITY);
             }
         }
 

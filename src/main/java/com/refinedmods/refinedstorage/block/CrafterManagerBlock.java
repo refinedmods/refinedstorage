@@ -45,7 +45,7 @@ public class CrafterManagerBlock extends ColoredNetworkBlock {
         }
 
         if (!world.isRemote) {
-            return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new CrafterManagerContainerProvider((CrafterManagerTile) world.getTileEntity(pos)),
                 buf -> CrafterManagerContainerProvider.writeToBuffer(buf, world, pos)

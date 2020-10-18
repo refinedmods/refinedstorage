@@ -43,7 +43,7 @@ public class TileDataParameterMessage {
         message.parameter.getSerializer().write(buf, message.parameter.getValueProducer().apply(message.tile));
     }
 
-    public static void handle(TileDataParameterMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().setPacketHandled(true);
     }
 }
