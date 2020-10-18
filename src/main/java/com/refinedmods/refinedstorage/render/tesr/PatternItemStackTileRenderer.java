@@ -10,11 +10,11 @@ import net.minecraft.item.ItemStack;
 
 public class PatternItemStackTileRenderer extends ItemStackTileEntityRenderer {
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_239207_5_, int p_239207_6_) {
+    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int combinedLight, int combinedOverlay) {
         ICraftingPattern pattern = PatternItem.fromCache(null, stack);
 
         ItemStack outputStack = pattern.getOutputs().get(0);
 
-        outputStack.getItem().getItemStackTileEntityRenderer().func_239207_a_(outputStack, transformType, matrixStack, renderTypeBuffer, p_239207_5_, p_239207_6_);
+        outputStack.getItem().getItemStackTileEntityRenderer().func_239207_a_(outputStack, transformType, matrixStack, renderTypeBuffer, combinedLight, combinedOverlay);
     }
 }

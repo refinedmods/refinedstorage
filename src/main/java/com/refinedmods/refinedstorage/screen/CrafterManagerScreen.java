@@ -153,12 +153,12 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     }
 
     @Override
-    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-        if (searchField.charTyped(p_charTyped_1_, p_charTyped_2_)) {
+    public boolean charTyped(char unknown1, int unknown2) {
+        if (searchField.charTyped(unknown1, unknown2)) {
             return true;
         }
 
-        return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+        return super.charTyped(unknown1, unknown2);
     }
 
     @Override

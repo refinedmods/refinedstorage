@@ -75,27 +75,27 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     protected static VoxelShape getCableShape(BlockState state) {
         VoxelShape shape = SHAPE_CORE;
 
-        if (state.get(NORTH)) {
+        if (Boolean.TRUE.equals(state.get(NORTH))) {
             shape = VoxelShapes.or(shape, SHAPE_NORTH);
         }
 
-        if (state.get(EAST)) {
+        if (Boolean.TRUE.equals(state.get(EAST))) {
             shape = VoxelShapes.or(shape, SHAPE_EAST);
         }
 
-        if (state.get(SOUTH)) {
+        if (Boolean.TRUE.equals(state.get(SOUTH))) {
             shape = VoxelShapes.or(shape, SHAPE_SOUTH);
         }
 
-        if (state.get(WEST)) {
+        if (Boolean.TRUE.equals(state.get(WEST))) {
             shape = VoxelShapes.or(shape, SHAPE_WEST);
         }
 
-        if (state.get(UP)) {
+        if (Boolean.TRUE.equals(state.get(UP))) {
             shape = VoxelShapes.or(shape, SHAPE_UP);
         }
 
-        if (state.get(DOWN)) {
+        if (Boolean.TRUE.equals(state.get(DOWN))) {
             shape = VoxelShapes.or(shape, SHAPE_DOWN);
         }
 
@@ -125,7 +125,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return Boolean.TRUE.equals(state.get(WATERLOGGED)) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override

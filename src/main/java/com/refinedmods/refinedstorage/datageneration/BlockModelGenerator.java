@@ -49,7 +49,7 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = RSBlocks.WIRELESS_TRANSMITTER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.wirelessTransmitterBlock(block, state -> {
-                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                if (Boolean.FALSE.equals(state.get(NetworkNodeBlock.CONNECTED))) {
                     return models.createWirelessTransmitterModel(
                         "block/" + folderName + "/disconnected",
                         resourceLocation(folderName, "cutouts/disconnected")
@@ -73,7 +73,7 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = RSBlocks.DETECTOR.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.simpleBlockStateModel(block, state -> {
-                if (!state.get(DetectorBlock.POWERED)) {
+                if (Boolean.FALSE.equals(state.get(DetectorBlock.POWERED))) {
                     return models.createDetectorModel(
                         "block/" + folderName + "/off",
                         resourceLocation(folderName, "cutouts/off")
@@ -97,7 +97,7 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = RSBlocks.SECURITY_MANAGER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.horizontalRSBlock(block, state -> {
-                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                if (Boolean.FALSE.equals(state.get(NetworkNodeBlock.CONNECTED))) {
                     return models.createCubeCutoutModel(
                         "block/" + folderName + "/disconnected",
                         BOTTOM,
@@ -143,7 +143,7 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.simpleBlockStateModel(block, state -> {
-                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                if (Boolean.FALSE.equals(state.get(NetworkNodeBlock.CONNECTED))) {
                     return models.createCubeAllCutoutModel(
                         "block/" + folderName + "/disconnected",
                         resourceLocation(folderName, folderName),
@@ -171,7 +171,7 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = RSBlocks.CRAFTER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.anyDirectionalRSBlock(block, state -> {
-                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                if (Boolean.FALSE.equals(state.get(NetworkNodeBlock.CONNECTED))) {
                     return models.createCubeCutoutModel(
                         "block/" + folderName + "/disconnected",
                         BOTTOM,
@@ -261,7 +261,7 @@ public class BlockModelGenerator extends BlockStateProvider {
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
             models.horizontalRSBlock(block, state -> {
-                if (!state.get(NetworkNodeBlock.CONNECTED)) {
+                if (Boolean.FALSE.equals(state.get(NetworkNodeBlock.CONNECTED))) {
                     return models.createCubeNorthCutoutModel(
                         "block/" + folderName + "/disconnected",
                         BOTTOM,

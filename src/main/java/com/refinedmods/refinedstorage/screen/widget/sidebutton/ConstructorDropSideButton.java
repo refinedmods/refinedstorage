@@ -15,12 +15,12 @@ public class ConstructorDropSideButton extends SideButton {
 
     @Override
     protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
-        screen.blit(matrixStack, x, y, 64 + (ConstructorTile.DROP.getValue() ? 16 : 0), 16, 16, 16);
+        screen.blit(matrixStack, x, y, 64 + (Boolean.TRUE.equals(ConstructorTile.DROP.getValue()) ? 16 : 0), 16, 16, 16);
     }
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.constructor.drop") + "\n" + TextFormatting.GRAY + I18n.format(ConstructorTile.DROP.getValue() ? "gui.yes" : "gui.no");
+        return I18n.format("sidebutton.refinedstorage.constructor.drop") + "\n" + TextFormatting.GRAY + I18n.format(Boolean.TRUE.equals(ConstructorTile.DROP.getValue()) ? "gui.yes" : "gui.no");
     }
 
     @Override

@@ -555,20 +555,24 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
-    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-        if (searchField.charTyped(p_charTyped_1_, p_charTyped_2_)) {
+    public boolean charTyped(char unknown1, int unknown2) {
+        if (searchField.charTyped(unknown1, unknown2)) {
             return true;
         }
 
-        return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+        return super.charTyped(unknown1, unknown2);
     }
 
     @Override
-    public boolean keyReleased(int key, int p_223281_2_, int p_223281_3_) {
-        if (key == GLFW.GLFW_KEY_LEFT_SHIFT || key == GLFW.GLFW_KEY_RIGHT_SHIFT || key == GLFW.GLFW_KEY_LEFT_CONTROL || key == GLFW.GLFW_KEY_RIGHT_CONTROL) {
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT ||
+            keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT ||
+            keyCode == GLFW.GLFW_KEY_LEFT_CONTROL ||
+            keyCode == GLFW.GLFW_KEY_RIGHT_CONTROL) {
             view.sort();
         }
-        return super.keyReleased(key, p_223281_2_, p_223281_3_);
+
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override

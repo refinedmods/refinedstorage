@@ -100,11 +100,11 @@ public class BlockModels {
             .texture("cutout_up", upCutout);
     }
 
-    public BlockModelBuilder createControllerNearlyCutoutModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation cutout_gray, ResourceLocation cutout) {
+    public BlockModelBuilder createControllerNearlyCutoutModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation grayCutout, ResourceLocation cutout) {
         return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "block/controller_nearly"))
             .texture("particle", particle)
             .texture("all", all)
-            .texture("cutout_gray", cutout_gray)
+            .texture("cutout_gray", grayCutout)
             .texture("cutout", cutout);
     }
 

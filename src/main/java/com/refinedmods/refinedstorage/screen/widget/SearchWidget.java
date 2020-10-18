@@ -173,10 +173,10 @@ public class SearchWidget extends TextFieldWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
             setTextFromJEI();
         }
-        super.renderButton(p_230431_1_, p_230431_2_, p_230431_3_, p_230431_4_);
+        super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
     }
 }
