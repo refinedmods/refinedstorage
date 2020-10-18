@@ -4,6 +4,8 @@
 - Fixed server crash when scrolling in Grid (Darkere)
 - Fixed various issues with Grid interactions working without power (Darkere)
 - Added a JEI synchronized (two-way) search box mode to the Grid (ScoreUnder)
+- Added a nag message when a player joins the world that asks the player to enable the experimental Forge lighting
+  pipeline to ensure correct rendering (raoulvdberge)
 
 ### 1.9.7
 - Added functionality to move items in the Grid with shift/ctrl + scrolling (Darkere)

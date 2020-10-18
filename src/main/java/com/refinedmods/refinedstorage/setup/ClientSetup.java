@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.item.property.ControllerItemPropertyGetter
 import com.refinedmods.refinedstorage.item.property.NetworkItemPropertyGetter;
 import com.refinedmods.refinedstorage.item.property.SecurityCardItemPropertyGetter;
 import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
+import com.refinedmods.refinedstorage.render.ExperimentalLightingPipelineNagger;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
@@ -166,6 +167,7 @@ public class ClientSetup {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
+        MinecraftForge.EVENT_BUS.addListener(new ExperimentalLightingPipelineNagger()::onPlayerLoggedIn);
 
         API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
 
