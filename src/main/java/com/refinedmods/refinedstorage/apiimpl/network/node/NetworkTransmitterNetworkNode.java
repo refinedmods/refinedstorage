@@ -81,7 +81,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
     @Override
     public IItemHandler getDrops() {
-        return networkCard;
+        return getNetworkCard();
     }
 
     @Nullable

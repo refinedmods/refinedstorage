@@ -29,6 +29,7 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

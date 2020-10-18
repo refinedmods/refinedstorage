@@ -49,6 +49,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
+    private static final ITextComponent ALTERNATIVES_TEXT = new TranslationTextComponent("gui.refinedstorage.alternatives");
+
     private final Logger logger = LogManager.getLogger(getClass());
 
     private int sideButtonY;
@@ -187,7 +189,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     minecraft.displayGuiScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
-                        new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                        ALTERNATIVES_TEXT,
                         slot.getStack(),
                         slot.getSlotIndex()
                     ));
@@ -201,7 +203,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         ((FilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             parent,
                             minecraft.player,
-                            new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                            ALTERNATIVES_TEXT,
                             slot.getStack(),
                             slot.getSlotIndex()
                         )) : null
@@ -216,7 +218,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     minecraft.displayGuiScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
-                        new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                        ALTERNATIVES_TEXT,
                         stack,
                         slot.getSlotIndex()
                     ));
@@ -230,7 +232,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         ((FluidFilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             this,
                             minecraft.player,
-                            new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                            ALTERNATIVES_TEXT,
                             stack,
                             slot.getSlotIndex()
                         )) : null

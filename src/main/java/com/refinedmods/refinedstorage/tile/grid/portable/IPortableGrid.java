@@ -15,22 +15,22 @@ public interface IPortableGrid {
     IStorageCache getCache();
 
     default IStorageCache<ItemStack> getItemCache() {
-        return (IStorageCache<ItemStack>) getCache();
+        return getCache();
     }
 
     default IStorageCache<FluidStack> getFluidCache() {
-        return (IStorageCache<FluidStack>) getCache();
+        return getCache();
     }
 
     @Nullable
     IStorageDisk getStorage();
 
     default IStorageDisk<ItemStack> getItemStorage() {
-        return (IStorageDisk<ItemStack>) getStorage();
+        return getStorage();
     }
 
     default IStorageDisk<FluidStack> getFluidStorage() {
-        return (IStorageDisk<FluidStack>) getStorage();
+        return getStorage();
     }
 
     void drainEnergy(int energy);

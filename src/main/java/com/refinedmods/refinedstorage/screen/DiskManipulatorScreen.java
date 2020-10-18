@@ -26,7 +26,7 @@ public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainer> 
 
     @Override
     public void tick(int x, int y) {
-
+        // NO OP
     }
 
     @Override

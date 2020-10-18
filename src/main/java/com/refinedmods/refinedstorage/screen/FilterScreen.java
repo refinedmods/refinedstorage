@@ -110,6 +110,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

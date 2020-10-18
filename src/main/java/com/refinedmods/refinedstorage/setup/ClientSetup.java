@@ -41,6 +41,13 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 public class ClientSetup {
+    private static final ResourceLocation DISK_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk");
+    private static final ResourceLocation DISK_NEAR_CAPACITY_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity");
+    private static final ResourceLocation DISK_FULL_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_full");
+    private static final ResourceLocation DISK_DISCONNECTED_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_disconnected");
+
+    private static final ResourceLocation CONNECTED = new ResourceLocation("connected");
+
     private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
@@ -91,10 +98,10 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
                 base,
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
+                registry.get(DISK_RESOURCE),
+                registry.get(DISK_NEAR_CAPACITY_RESOURCE),
+                registry.get(DISK_FULL_RESOURCE),
+                registry.get(DISK_DISCONNECTED_RESOURCE)
             ),
             false,
             new ResourceLocation(RS.ID, "block/disks/leds")
@@ -104,10 +111,10 @@ public class ClientSetup {
             new DiskManipulatorBakedModel(
                 base,
                 registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
-                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
+                registry.get(DISK_RESOURCE),
+                registry.get(DISK_NEAR_CAPACITY_RESOURCE),
+                registry.get(DISK_FULL_RESOURCE),
+                registry.get(DISK_DISCONNECTED_RESOURCE)
             ),
             false,
             new ResourceLocation(RS.ID, "block/disks/leds"), new ResourceLocation(RS.ID, "block/disk_manipulator/cutouts/" + color)
@@ -139,10 +146,10 @@ public class ClientSetup {
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_full"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"));
+        ModelLoader.addSpecialModel(DISK_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_FULL_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
 
@@ -274,14 +281,14 @@ public class ClientSetup {
         RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.func_239418_a_(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
         RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.func_239418_a_(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_CRAFTING_MONITOR.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), new ResourceLocation("connected"), new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
     }
 
     @SubscribeEvent

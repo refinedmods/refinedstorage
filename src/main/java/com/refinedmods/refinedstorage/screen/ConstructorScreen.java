@@ -30,6 +30,7 @@ public class ConstructorScreen extends BaseScreen<ConstructorContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

@@ -31,6 +31,7 @@ public class ImporterScreen extends BaseScreen<ImporterContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

@@ -25,6 +25,7 @@ public class InterfaceScreen extends BaseScreen<InterfaceContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

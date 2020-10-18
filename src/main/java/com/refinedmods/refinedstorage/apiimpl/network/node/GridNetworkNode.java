@@ -646,12 +646,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public IItemHandlerModifiable getItemFilters() {
-        return processingMatrix;
+        return getProcessingMatrix();
     }
 
     @Override
     public FluidInventory getFluidFilters() {
-        return processingMatrixFluids;
+        return getProcessingMatrixFluids();
     }
 
     @Override

@@ -132,10 +132,10 @@ public class FluidRenderer {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferBuilder.pos(matrix, xCoord, yCoord + 16, zLevel).tex((float) uMin, (float) vMax).endVertex();
-        bufferBuilder.pos(matrix, xCoord + 16 - maskRight, yCoord + 16, zLevel).tex((float) uMax, (float) vMax).endVertex();
-        bufferBuilder.pos(matrix, xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex((float) uMax, (float) vMin).endVertex();
-        bufferBuilder.pos(matrix, xCoord, yCoord + maskTop, zLevel).tex((float) uMin, (float) vMin).endVertex();
+        bufferBuilder.pos(matrix, xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
+        bufferBuilder.pos(matrix, xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
+        bufferBuilder.pos(matrix, xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
+        bufferBuilder.pos(matrix, xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
         tessellator.draw();
     }
 }

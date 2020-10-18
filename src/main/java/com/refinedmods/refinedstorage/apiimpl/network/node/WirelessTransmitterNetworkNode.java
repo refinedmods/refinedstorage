@@ -71,7 +71,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return getUpgrades();
     }
 
     @Override

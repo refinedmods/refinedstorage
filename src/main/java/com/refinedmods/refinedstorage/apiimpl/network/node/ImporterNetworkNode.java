@@ -210,7 +210,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return getUpgrades();
     }
 
     @Override

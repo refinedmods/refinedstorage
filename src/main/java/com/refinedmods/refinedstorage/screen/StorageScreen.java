@@ -77,6 +77,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

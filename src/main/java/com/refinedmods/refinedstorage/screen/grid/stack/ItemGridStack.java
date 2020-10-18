@@ -199,7 +199,7 @@ public class ItemGridStack implements IGridStack {
 
     @Override
     public Object getIngredient() {
-        return stack;
+        return getStack();
     }
 
     @Nullable

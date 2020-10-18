@@ -109,10 +109,6 @@ public class Network implements INetwork, IRedstoneConfigurable {
         return root;
     }
 
-    public BaseEnergyStorage getEnergy() {
-        return energy;
-    }
-
     @Override
     public BlockPos getPosition() {
         return pos;

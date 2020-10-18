@@ -57,6 +57,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

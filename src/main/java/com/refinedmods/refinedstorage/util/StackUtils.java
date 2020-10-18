@@ -41,6 +41,7 @@ public final class StackUtils {
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
+    private static final String NBT_FORGE_CAPS = "ForgeCaps"; // @Volatile
 
     private static final Logger LOGGER = LogManager.getLogger(StackUtils.class);
 
@@ -317,13 +318,12 @@ public final class StackUtils {
             itemTag.put(NBT_ITEM_NBT, stack.getTag());
         }
 
+        // @Volatile
         stack.write(dummy);
-
-        if (dummy.contains("ForgeCaps")) {
-            itemTag.put(NBT_ITEM_CAPS, dummy.get("ForgeCaps"));
+        if (dummy.contains(NBT_FORGE_CAPS)) {
+            itemTag.put(NBT_ITEM_CAPS, dummy.get(NBT_FORGE_CAPS));
         }
-
-        dummy.remove("ForgeCaps");
+        dummy.remove(NBT_FORGE_CAPS);
 
         return itemTag;
     }

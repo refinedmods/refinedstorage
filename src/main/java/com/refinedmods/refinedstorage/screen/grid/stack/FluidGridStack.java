@@ -188,7 +188,7 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public Object getIngredient() {
-        return stack;
+        return getStack();
     }
 
     @Nullable

@@ -15,10 +15,12 @@ public class CrafterScreen extends BaseScreen<CrafterContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
+        // NO OP
     }
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

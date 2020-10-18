@@ -350,6 +350,6 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
     @Override
     public IItemHandler getDrops() {
-        return disks;
+        return getDisks();
     }
 }

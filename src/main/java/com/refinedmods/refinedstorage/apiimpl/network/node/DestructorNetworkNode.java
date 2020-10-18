@@ -316,7 +316,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return getUpgrades();
     }
 
     @Override
