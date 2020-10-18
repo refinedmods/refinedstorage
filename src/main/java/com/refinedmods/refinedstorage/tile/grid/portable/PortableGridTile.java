@@ -194,16 +194,16 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             this.storage = null;
             this.cache = null;
         } else {
-            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDiskInventory().getStackInSlot(0));
+            IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDiskInventory().getStackInSlot(0));
 
-            if (disk != null) {
-                StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
+            if (diskInSlot != null) {
+                StorageType diskType = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
 
-                if (type == StorageType.ITEM) {
-                    this.storage = new PortableItemStorageDisk(disk, this);
+                if (diskType == StorageType.ITEM) {
+                    this.storage = new PortableItemStorageDisk(diskInSlot, this);
                     this.cache = new PortableItemStorageCache(this);
-                } else if (type == StorageType.FLUID) {
-                    this.storage = new PortableFluidStorageDisk(disk, this);
+                } else if (diskType == StorageType.FLUID) {
+                    this.storage = new PortableFluidStorageDisk(diskInSlot, this);
                     this.cache = new PortableFluidStorageCache(this);
                 }
 
@@ -236,9 +236,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         this.tabPage = WirelessGridItem.getTabPage(stack);
         this.size = WirelessGridItem.getSize(stack);
 
-        IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY).orElse(null);
-
-        this.energyStorage = createEnergyStorage(energyStorage != null ? energyStorage.getEnergyStored() : 0);
+        this.energyStorage = createEnergyStorage(stack.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0));
 
         if (stack.hasTag()) {
             for (int i = 0; i < 4; ++i) {

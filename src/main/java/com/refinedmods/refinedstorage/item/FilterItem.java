@@ -59,17 +59,14 @@ public class FilterItem extends Item {
                     return new TranslationTextComponent("gui.refinedstorage.filter");
                 }
 
-                @Nullable
                 @Override
                 public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
                     return new FilterContainer(player, inventory.getCurrentItem(), windowId);
                 }
             });
-
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
 
-        return new ActionResult<>(ActionResultType.PASS, stack);
+        return new ActionResult<>(ActionResultType.CONSUME, stack);
     }
 
     @Override

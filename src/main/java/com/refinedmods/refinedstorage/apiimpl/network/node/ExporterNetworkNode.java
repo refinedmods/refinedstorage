@@ -44,19 +44,19 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 boolean changed = false;
 
                 for (int i = 0; i < itemFilters.getSlots(); ++i) {
-                    ItemStack filterSlot = itemFilters.getStackInSlot(i);
+                    ItemStack filteredItem = itemFilters.getStackInSlot(i);
 
-                    if (filterSlot.getCount() > 1) {
-                        filterSlot.setCount(1);
+                    if (filteredItem.getCount() > 1) {
+                        filteredItem.setCount(1);
                         changed = true;
                     }
                 }
 
                 for (int i = 0; i < fluidFilters.getSlots(); ++i) {
-                    FluidStack filterSlot = fluidFilters.getFluid(i);
+                    FluidStack filteredFluid = fluidFilters.getFluid(i);
 
-                    if (!filterSlot.isEmpty() && filterSlot.getAmount() != FluidAttributes.BUCKET_VOLUME) {
-                        filterSlot.setAmount(FluidAttributes.BUCKET_VOLUME);
+                    if (!filteredFluid.isEmpty() && filteredFluid.getAmount() != FluidAttributes.BUCKET_VOLUME) {
+                        filteredFluid.setAmount(FluidAttributes.BUCKET_VOLUME);
                         changed = true;
                     }
                 }

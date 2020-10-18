@@ -107,16 +107,16 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDiskInventory().getStackInSlot(0));
+                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDiskInventory().getStackInSlot(0));
 
-                    if (disk != null) {
+                    if (diskInSlot != null) {
                         StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
 
                         if (type == StorageType.ITEM) {
-                            storage = new PortableItemStorageDisk(disk, PortableGrid.this);
+                            storage = new PortableItemStorageDisk(diskInSlot, PortableGrid.this);
                             cache = new PortableItemStorageCache(PortableGrid.this);
                         } else if (type == StorageType.FLUID) {
-                            storage = new PortableFluidStorageDisk(disk, PortableGrid.this);
+                            storage = new PortableFluidStorageDisk(diskInSlot, PortableGrid.this);
                             cache = new PortableFluidStorageCache(PortableGrid.this);
                         }
 
@@ -186,20 +186,17 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Override
     public void drainEnergy(int energy) {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() && ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE) {
-            IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
-
-            if (storage != null) {
-                storage.extractEnergy(energy, false);
-            }
+            stack.getCapability(CapabilityEnergy.ENERGY, null)
+                .ifPresent(energyStorage -> energyStorage.extractEnergy(energy, false));
         }
     }
 
     @Override
     public int getEnergy() {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() && ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE) {
-            IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
-
-            return storage == null ? RS.SERVER_CONFIG.getPortableGrid().getCapacity() : storage.getEnergyStored();
+            return stack.getCapability(CapabilityEnergy.ENERGY, null)
+                .map(IEnergyStorage::getEnergyStored)
+                .orElse(RS.SERVER_CONFIG.getPortableGrid().getCapacity());
         }
 
         return RS.SERVER_CONFIG.getPortableGrid().getCapacity();

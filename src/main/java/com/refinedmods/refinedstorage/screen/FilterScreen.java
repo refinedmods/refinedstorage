@@ -76,7 +76,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
         nameField.setCanLoseFocus(true);
         nameField.setFocused2(false);
         nameField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
-        nameField.setResponder(name -> sendUpdate());
+        nameField.setResponder(content -> sendUpdate());
 
         addButton(nameField);
 

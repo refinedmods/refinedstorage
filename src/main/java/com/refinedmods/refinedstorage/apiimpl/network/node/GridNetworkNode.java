@@ -113,7 +113,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             }
         });
 
-    private boolean reading;
+    private boolean readingInventory;
 
     private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
@@ -381,7 +381,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
         craftingListeners.forEach(ICraftingGridListener::onCraftingMatrixChanged);
 
-        if (!reading) {
+        if (!readingInventory) {
             markDirty();
         }
     }
@@ -662,7 +662,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             allowedTagList.readFromNbt(tag.getCompound(NBT_ALLOWED_TAGS));
         }
 
-        reading = true;
+        readingInventory = true;
 
         StackUtils.readItems(matrix, 0, tag);
         StackUtils.readItems(patterns, 1, tag);
@@ -681,7 +681,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             tabPage = tag.getInt(NBT_TAB_PAGE);
         }
 
-        reading = false;
+        readingInventory = false;
     }
 
     @Override

@@ -32,8 +32,8 @@ import javax.annotation.Nullable;
 
 public class GridContainer extends BaseContainer implements ICraftingGridListener {
     private final IGrid grid;
-    private IStorageCache cache;
-    private IStorageCacheListener listener;
+    private IStorageCache storageCache;
+    private IStorageCacheListener storageCacheListener;
     private IScreenInfoProvider screenInfoProvider;
 
     private ResultCraftingGridSlot craftingResultSlot;
@@ -247,18 +247,18 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             // The grid is offline.
             if (grid.getStorageCache() == null) {
                 // The grid just went offline, there is still a listener.
-                if (listener != null) {
+                if (storageCacheListener != null) {
                     // Remove it from the previous cache and clean up.
-                    cache.removeListener(listener);
+                    storageCache.removeListener(storageCacheListener);
 
-                    listener = null;
-                    cache = null;
+                    storageCacheListener = null;
+                    storageCache = null;
                 }
-            } else if (listener == null) { // The grid came online.
-                listener = grid.createListener((ServerPlayerEntity) getPlayer());
-                cache = grid.getStorageCache();
+            } else if (storageCacheListener == null) { // The grid came online.
+                storageCacheListener = grid.createListener((ServerPlayerEntity) getPlayer());
+                storageCache = grid.getStorageCache();
 
-                cache.addListener(listener);
+                storageCache.addListener(storageCacheListener);
             }
         }
 
@@ -272,8 +272,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         if (!player.getEntityWorld().isRemote) {
             grid.onClosed(player);
 
-            if (cache != null && listener != null) {
-                cache.removeListener(listener);
+            if (storageCache != null && storageCacheListener != null) {
+                storageCache.removeListener(storageCacheListener);
             }
         }
 

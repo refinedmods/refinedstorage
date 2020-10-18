@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FluidStorageCache implements IStorageCache<FluidStack> {
-    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE_ACTION = cause -> network -> network.getFluidStorageCache().invalidate(cause);
+    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE_ACTION = cause -> invalidatedNetwork -> invalidatedNetwork.getFluidStorageCache().invalidate(cause);
 
     private static final Logger LOGGER = LogManager.getLogger(FluidStorageCache.class);
 

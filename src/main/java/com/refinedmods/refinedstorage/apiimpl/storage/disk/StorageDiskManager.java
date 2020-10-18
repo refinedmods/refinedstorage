@@ -115,19 +115,19 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        ListNBT disks = new ListNBT();
+        ListNBT disksTag = new ListNBT();
 
-        for (Map.Entry<UUID, IStorageDisk> entry : this.disks.entrySet()) {
+        for (Map.Entry<UUID, IStorageDisk> entry : disks.entrySet()) {
             CompoundNBT diskTag = new CompoundNBT();
 
             diskTag.putUniqueId(NBT_DISK_ID, entry.getKey());
             diskTag.put(NBT_DISK_DATA, entry.getValue().writeToNbt());
             diskTag.putString(NBT_DISK_TYPE, entry.getValue().getFactoryId().toString());
 
-            disks.add(diskTag);
+            disksTag.add(diskTag);
         }
 
-        tag.put(NBT_DISKS, disks);
+        tag.put(NBT_DISKS, disksTag);
 
         return tag;
     }

@@ -49,10 +49,10 @@ public abstract class BaseGridView implements IGridView {
             return;
         }
 
-        List<IGridStack> stacks = new ArrayList<>();
+        List<IGridStack> newStacks = new ArrayList<>();
 
         if (screen.getGrid().isGridActive()) {
-            stacks.addAll(map.values());
+            newStacks.addAll(map.values());
 
             IGrid grid = screen.getGrid();
 
@@ -62,7 +62,7 @@ public abstract class BaseGridView implements IGridView {
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
-            stacks.removeIf(stack -> {
+            newStacks.removeIf(stack -> {
                 // If this is a crafting stack,
                 // and there is a regular matching stack in the view too,
                 // and we aren't in "view only craftables" mode,
@@ -85,16 +85,16 @@ public abstract class BaseGridView implements IGridView {
 
             SortingDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? SortingDirection.DESCENDING : SortingDirection.ASCENDING;
 
-            stacks.sort((left, right) -> defaultSorter.compare(left, right, sortingDirection));
+            newStacks.sort((left, right) -> defaultSorter.compare(left, right, sortingDirection));
 
             for (IGridSorter sorter : sorters) {
                 if (sorter.isApplicable(grid)) {
-                    stacks.sort((left, right) -> sorter.compare(left, right, sortingDirection));
+                    newStacks.sort((left, right) -> sorter.compare(left, right, sortingDirection));
                 }
             }
         }
 
-        this.stacks = stacks;
+        this.stacks = newStacks;
 
         this.screen.updateScrollbar();
     }

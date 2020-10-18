@@ -85,7 +85,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
                 ItemListLine line = new ItemListLine();
 
-                for (Item item : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                for (Item itemInTag : ItemTags.getCollection().get(owningTag).getAllElements()) {
                     if (itemCount > 0 && itemCount % 8 == 0) {
                         lines.add(line);
                         line = new ItemListLine();
@@ -93,7 +93,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
                     itemCount++;
 
-                    line.addItem(new ItemStack(item));
+                    line.addItem(new ItemStack(itemInTag));
                 }
 
                 lines.add(line);
@@ -108,7 +108,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
                 FluidListLine line = new FluidListLine();
 
-                for (Fluid fluid : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                for (Fluid fluidInTag : FluidTags.getCollection().get(owningTag).getAllElements()) {
                     if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();
@@ -116,7 +116,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
                     fluidCount++;
 
-                    line.addFluid(new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME));
+                    line.addFluid(new FluidStack(fluidInTag, FluidAttributes.BUCKET_VOLUME));
                 }
 
                 lines.add(line);
@@ -332,8 +332,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         @Override
         public void render(MatrixStack matrixStack, int x, int y) {
-            for (ItemStack item : items) {
-                renderItem(matrixStack, x + 3, y, item);
+            for (ItemStack itemInList : items) {
+                renderItem(matrixStack, x + 3, y, itemInList);
 
                 x += 17;
             }
@@ -341,9 +341,9 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         @Override
         public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
-            for (ItemStack item : items) {
+            for (ItemStack itemInList : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(matrixStack, item, mx, my, RenderUtils.getTooltipFromItem(item));
+                    AlternativesScreen.this.renderTooltip(matrixStack, itemInList, mx, my, RenderUtils.getTooltipFromItem(itemInList));
                 }
 
                 x += 17;
@@ -360,8 +360,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         @Override
         public void render(MatrixStack matrixStack, int x, int y) {
-            for (FluidStack fluid : fluids) {
-                FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluid);
+            for (FluidStack fluidInList : fluids) {
+                FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluidInList);
 
                 x += 17;
             }
@@ -369,9 +369,9 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         @Override
         public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
-            for (FluidStack fluid : fluids) {
+            for (FluidStack fluidInList : fluids) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(matrixStack, mx, my, fluid.getDisplayName().getString());
+                    AlternativesScreen.this.renderTooltip(matrixStack, mx, my, fluidInList.getDisplayName().getString());
                 }
 
                 x += 17;
