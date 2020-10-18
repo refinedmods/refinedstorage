@@ -9,13 +9,14 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TabListWidget {
+public class TabListWidget<T extends Container> {
     public interface ITabListListener {
         void onSelectionChanged(int tab);
 
@@ -23,7 +24,7 @@ public class TabListWidget {
     }
 
     private final BaseScreen<?> screen;
-    private final ElementDrawers drawers;
+    private final ElementDrawers<T> drawers;
 
     private final Supplier<List<IGridTab>> tabs;
     private int tabHovering;
@@ -38,7 +39,7 @@ public class TabListWidget {
     private Button left;
     private Button right;
 
-    public TabListWidget(BaseScreen<?> screen, ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
+    public TabListWidget(BaseScreen<T> screen, ElementDrawers<T> drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.screen = screen;
         this.drawers = drawers;
         this.tabs = tabs;

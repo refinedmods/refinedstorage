@@ -102,7 +102,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     private final ICraftingMonitor craftingMonitor;
 
     private List<IGridTab> tasks = Collections.emptyList();
-    private final TabListWidget tabs;
+    private final TabListWidget<CraftingMonitorContainer> tabs;
 
     private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, ITEM_WIDTH, ITEM_HEIGHT);
 
@@ -111,7 +111,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         this.craftingMonitor = container.getCraftingMonitor();
 
-        this.tabs = new TabListWidget(this, new ElementDrawers<>(this), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
+        this.tabs = new TabListWidget<>(this, new ElementDrawers<>(this), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();
 
             if (tab == null) {
