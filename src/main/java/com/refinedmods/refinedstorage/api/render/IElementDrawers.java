@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.api.render;
 
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -30,20 +29,15 @@ public interface IElementDrawers {
     }
 
     /**
-     * @return an overlay drawer, color will be the element
+     * @return an overlay drawer
      */
     default IElementDrawer<Integer> getOverlayDrawer() {
         return getNullDrawer();
     }
 
-    default IElementDrawer<?> getErrorDrawer() {
+    default IElementDrawer<Void> getErrorDrawer() {
         return getNullDrawer();
     }
-
-    /**
-     * @return the font renderer
-     */
-    FontRenderer getFontRenderer();
 
     /**
      * DO NOT OVERRIDE!

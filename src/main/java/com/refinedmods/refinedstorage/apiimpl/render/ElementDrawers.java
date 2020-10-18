@@ -4,17 +4,15 @@ import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ElementDrawers implements IElementDrawers {
-    protected final BaseScreen screen;
-    private final FontRenderer fontRenderer;
+public class ElementDrawers<T extends Container> implements IElementDrawers {
+    protected final BaseScreen<T> screen;
 
-    public ElementDrawers(BaseScreen screen, FontRenderer fontRenderer) {
+    public ElementDrawers(BaseScreen<T> screen) {
         this.screen = screen;
-        this.fontRenderer = fontRenderer;
     }
 
     @Override
@@ -30,10 +28,5 @@ public class ElementDrawers implements IElementDrawers {
     @Override
     public IElementDrawer<String> getStringDrawer() {
         return screen::renderString;
-    }
-
-    @Override
-    public FontRenderer getFontRenderer() {
-        return fontRenderer;
     }
 }

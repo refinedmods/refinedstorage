@@ -50,7 +50,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
 
-    private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
+    private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this);
 
     public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids, ITextComponent title) {
         super(new Container(null, 0) {

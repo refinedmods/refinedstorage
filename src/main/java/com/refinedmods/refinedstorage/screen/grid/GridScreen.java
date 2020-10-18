@@ -72,7 +72,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isGridActive();
-        this.tabs = new TabListWidget(this, new ElementDrawers(this, font), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
+        this.tabs = new TabListWidget(this, new ElementDrawers<>(this), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabListWidget.ITabListListener() {
             @Override
             public void onSelectionChanged(int tab) {
