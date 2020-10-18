@@ -2,7 +2,8 @@
 
 ### 1.9.8
 - Fixed server crash when scrolling in Grid (Darkere)
-- Fixed various issues of things working without power (Darkere)
+- Fixed various issues with Grid interactions working without power (Darkere)
+- Added a JEI synchronized (two-way) search box mode to the Grid (ScoreUnder)
 
 ### 1.9.7
 - Added functionality to move items in the Grid with shift/ctrl + scrolling (Darkere)
