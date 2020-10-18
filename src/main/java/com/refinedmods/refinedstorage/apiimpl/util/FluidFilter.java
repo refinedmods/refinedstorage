@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.util;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FluidFilter implements IFilter<FluidStack> {
+public class FluidFilter implements IFilter {
     private final FluidStack stack;
     private final int compare;
     private final int mode;
@@ -17,7 +17,7 @@ public class FluidFilter implements IFilter<FluidStack> {
     }
 
     @Override
-    public FluidStack getStack() {
+    public Object getStack() {
         return stack;
     }
 

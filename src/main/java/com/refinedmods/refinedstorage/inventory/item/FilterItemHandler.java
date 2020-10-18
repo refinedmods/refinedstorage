@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.GridTab;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidFilter;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemFilter;
-import com.refinedmods.refinedstorage.inventory.fluid.FilterFluidInventory;
+import com.refinedmods.refinedstorage.inventory.fluid.ConfiguredFluidsInFilterItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -40,10 +40,9 @@ public class FilterItemHandler extends BaseItemHandler {
         tabs.clear();
 
         for (int i = 0; i < getSlots(); ++i) {
-            ItemStack filter = getStackInSlot(i);
-
-            if (!filter.isEmpty()) {
-                addFilter(filter);
+            ItemStack filterItem = getStackInSlot(i);
+            if (!filterItem.isEmpty()) {
+                handleFilterItem(filterItem);
             }
         }
 
@@ -52,36 +51,31 @@ public class FilterItemHandler extends BaseItemHandler {
         }
     }
 
-    private void addFilter(ItemStack filter) {
-        int compare = FilterItem.getCompare(filter);
-        int mode = FilterItem.getMode(filter);
-        boolean modFilter = FilterItem.isModFilter(filter);
+    private void handleFilterItem(ItemStack filterItem) {
+        ItemStack icon = FilterItem.getIcon(filterItem);
+        FluidStack fluidIcon = FilterItem.getFluidIcon(filterItem);
+        int compare = FilterItem.getCompare(filterItem);
+        int mode = FilterItem.getMode(filterItem);
+        boolean modFilter = FilterItem.isModFilter(filterItem);
 
-        List<IFilter> filters = new ArrayList<>();
+        List<IFilter> foundFilters = new ArrayList<>();
 
-        FilterItemsItemHandler items = new FilterItemsItemHandler(filter);
-
-        for (ItemStack stack : items.getFilteredItems()) {
+        for (ItemStack stack : new ConfiguredItemsInFilterItemHandler(filterItem).getConfiguredItems()) {
             if (stack.getItem() == RSItems.FILTER.get()) {
-                addFilter(stack);
+                handleFilterItem(stack);
             } else if (!stack.isEmpty()) {
-                filters.add(new ItemFilter(stack, compare, mode, modFilter));
+                foundFilters.add(new ItemFilter(stack, compare, mode, modFilter));
             }
         }
 
-        FilterFluidInventory fluids = new FilterFluidInventory(filter);
-
-        for (FluidStack stack : fluids.getFilteredFluids()) {
-            filters.add(new FluidFilter(stack, compare, mode, modFilter));
+        for (FluidStack stack : new ConfiguredFluidsInFilterItemHandler(filterItem).getConfiguredFluids()) {
+            foundFilters.add(new FluidFilter(stack, compare, mode, modFilter));
         }
 
-        ItemStack icon = FilterItem.getIcon(filter);
-        FluidStack fluidIcon = FilterItem.getFluidIcon(filter);
-
         if (icon.isEmpty() && fluidIcon.isEmpty()) {
-            this.filters.addAll(filters);
+            filters.addAll(foundFilters);
         } else {
-            tabs.add(new GridTab(filters, FilterItem.getName(filter), icon, fluidIcon));
+            tabs.add(new GridTab(foundFilters, FilterItem.getName(filterItem), icon, fluidIcon));
         }
     }
 }

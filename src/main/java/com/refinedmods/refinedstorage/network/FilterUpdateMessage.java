@@ -47,11 +47,11 @@ public class FilterUpdateMessage {
 
         if (player != null && player.openContainer instanceof FilterContainer) {
             ctx.get().enqueueWork(() -> {
-                FilterItem.setCompare(((FilterContainer) player.openContainer).getStack(), message.compare);
-                FilterItem.setMode(((FilterContainer) player.openContainer).getStack(), message.mode);
-                FilterItem.setModFilter(((FilterContainer) player.openContainer).getStack(), message.modFilter);
-                FilterItem.setName(((FilterContainer) player.openContainer).getStack(), message.name);
-                FilterItem.setType(((FilterContainer) player.openContainer).getStack(), message.type);
+                FilterItem.setCompare(((FilterContainer) player.openContainer).getFilterItem(), message.compare);
+                FilterItem.setMode(((FilterContainer) player.openContainer).getFilterItem(), message.mode);
+                FilterItem.setModFilter(((FilterContainer) player.openContainer).getFilterItem(), message.modFilter);
+                FilterItem.setName(((FilterContainer) player.openContainer).getFilterItem(), message.name);
+                FilterItem.setType(((FilterContainer) player.openContainer).getFilterItem(), message.type);
             });
         }
 

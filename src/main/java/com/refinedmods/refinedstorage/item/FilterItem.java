@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.container.FilterContainer;
-import com.refinedmods.refinedstorage.inventory.fluid.FilterFluidInventory;
-import com.refinedmods.refinedstorage.inventory.item.FilterItemsItemHandler;
+import com.refinedmods.refinedstorage.inventory.fluid.ConfiguredFluidsInFilterItemHandler;
+import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItemHandler;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.RenderUtils;
@@ -82,13 +82,8 @@ public class FilterItem extends Item {
             tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
         }
 
-        FilterItemsItemHandler items = new FilterItemsItemHandler(stack);
-
-        RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
-
-        FilterFluidInventory fluids = new FilterFluidInventory(stack);
-
-        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, fluids.getFilteredFluids());
+        RenderUtils.addCombinedItemsToTooltip(tooltip, false, new ConfiguredItemsInFilterItemHandler(stack).getConfiguredItems());
+        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, new ConfiguredFluidsInFilterItemHandler(stack).getConfiguredFluids());
     }
 
     @Override

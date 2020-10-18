@@ -6,10 +6,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class FilterItemsItemHandler extends ItemStackHandler {
+public class ConfiguredItemsInFilterItemHandler extends ItemStackHandler {
     private final ItemStack stack;
 
-    public FilterItemsItemHandler(ItemStack stack) {
+    public ConfiguredItemsInFilterItemHandler(ItemStack stack) {
         super(27);
 
         this.stack = stack;
@@ -30,7 +30,7 @@ public class FilterItemsItemHandler extends ItemStackHandler {
         StackUtils.writeItems(this, 0, stack.getTag());
     }
 
-    public NonNullList<ItemStack> getFilteredItems() {
+    public NonNullList<ItemStack> getConfiguredItems() {
         return stacks;
     }
 }
