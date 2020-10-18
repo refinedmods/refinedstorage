@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class NetworkUtils {
+public final class NetworkUtils {
     private NetworkUtils() {
     }
 

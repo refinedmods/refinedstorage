@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.util;
 
 import net.minecraft.network.PacketBuffer;
 
-public class PacketBufferUtils {
+public final class PacketBufferUtils {
     private PacketBufferUtils() {
     }
 
