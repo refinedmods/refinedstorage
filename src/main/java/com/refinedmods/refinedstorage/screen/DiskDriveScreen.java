@@ -15,12 +15,14 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainer> {
             inventory,
             title,
             "gui/disk_drive.png",
-            DiskDriveTile.TYPE,
-            NetworkNodeTile.REDSTONE_MODE,
-            DiskDriveTile.COMPARE,
-            DiskDriveTile.WHITELIST_BLACKLIST,
-            DiskDriveTile.PRIORITY,
-            DiskDriveTile.ACCESS_TYPE,
+            new StorageScreenTileDataParameters(
+                DiskDriveTile.TYPE,
+                NetworkNodeTile.REDSTONE_MODE,
+                DiskDriveTile.COMPARE,
+                DiskDriveTile.WHITELIST_BLACKLIST,
+                DiskDriveTile.PRIORITY,
+                DiskDriveTile.ACCESS_TYPE
+            ),
             DiskDriveTile.STORED::getValue,
             DiskDriveTile.CAPACITY::getValue
         );

@@ -34,7 +34,7 @@ public class ControllerLootFunction extends LootFunction {
 
     @Override
     public LootFunctionType func_230425_b_() {
-        return RSLootFunctions.CONTROLLER;
+        return RSLootFunctions.getController();
     }
 
     public static LootFunction.Builder<?> builder() {

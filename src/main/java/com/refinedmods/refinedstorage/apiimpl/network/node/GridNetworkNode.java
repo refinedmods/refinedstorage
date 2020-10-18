@@ -287,7 +287,11 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     @Nullable
     @Override
     public IStorageCache getStorageCache() {
-        return network != null ? (type == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache()) : null;
+        if (network != null) {
+            return type == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache();
+        }
+
+        return null;
     }
 
     @Nullable

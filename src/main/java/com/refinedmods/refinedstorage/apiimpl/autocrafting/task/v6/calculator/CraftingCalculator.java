@@ -125,7 +125,7 @@ public class CraftingCalculator {
         } else if (node instanceof ProcessingNode) {
             ProcessingNode processing = (ProcessingNode) node;
 
-            calculateForFluids(qty, storageSource, fluidStorageSource, results, fluidResults, pattern, inputs, fluidsToExtract, processing);
+            calculateForFluids(qty, storageSource, fluidStorageSource, results, fluidResults, inputs, fluidsToExtract, processing);
 
             for (ItemStack output : pattern.getOutputs()) {
                 results.add(output, output.getCount() * qty);
@@ -241,7 +241,6 @@ public class CraftingCalculator {
                                     IStackList<FluidStack> fluidStorageSource,
                                     IStackList<ItemStack> results,
                                     IStackList<FluidStack> fluidResults,
-                                    ICraftingPattern pattern,
                                     CraftingPatternInputs inputs,
                                     IStackList<FluidStack> fluidsToExtract,
                                     ProcessingNode node) throws CraftingCalculatorException {
@@ -335,22 +334,36 @@ public class CraftingCalculator {
     }
 
     private int getQuantityPerCraft(@Nullable ItemStack item, @Nullable FluidStack fluid, ICraftingPattern pattern) {
+        if (item != null) {
+            return getQuantityPerCraftForItem(item, pattern);
+        } else if (fluid != null) {
+            return getQuantityPerCraftForFluid(fluid, pattern);
+        } else {
+            return 0;
+        }
+    }
+
+    private int getQuantityPerCraftForFluid(FluidStack fluid, ICraftingPattern pattern) {
         int qty = 0;
 
-        if (item != null) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (API.instance().getComparer().isEqualNoQuantity(output, item)) {
-                    qty += output.getCount();
-
-                    if (!pattern.isProcessing()) {
-                        break;
-                    }
-                }
+        for (FluidStack output : pattern.getFluidOutputs()) {
+            if (API.instance().getComparer().isEqual(output, fluid, IComparer.COMPARE_NBT)) {
+                qty += output.getAmount();
             }
-        } else if (fluid != null) {
-            for (FluidStack output : pattern.getFluidOutputs()) {
-                if (API.instance().getComparer().isEqual(output, fluid, IComparer.COMPARE_NBT)) {
-                    qty += output.getAmount();
+        }
+
+        return qty;
+    }
+
+    private int getQuantityPerCraftForItem(ItemStack item, ICraftingPattern pattern) {
+        int qty = 0;
+
+        for (ItemStack output : pattern.getOutputs()) {
+            if (API.instance().getComparer().isEqualNoQuantity(output, item)) {
+                qty += output.getCount();
+
+                if (!pattern.isProcessing()) {
+                    break;
                 }
             }
         }

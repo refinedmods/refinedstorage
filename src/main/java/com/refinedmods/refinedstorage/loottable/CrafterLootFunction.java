@@ -36,7 +36,7 @@ public class CrafterLootFunction extends LootFunction {
 
     @Override
     public LootFunctionType func_230425_b_() {
-        return RSLootFunctions.CRAFTER;
+        return RSLootFunctions.getCrafter();
     }
 
     public static LootFunction.Builder<?> builder() {

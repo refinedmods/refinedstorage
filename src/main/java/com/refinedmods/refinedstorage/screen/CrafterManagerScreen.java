@@ -91,7 +91,16 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            blit(matrixStack, x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), xSize, 18);
+            int yTextureStart = getTopHeight();
+            if (i > 0) {
+                if (i == rows - 1) {
+                    yTextureStart += 18 * 2;
+                } else {
+                    yTextureStart += 18;
+                }
+            }
+
+            blit(matrixStack, x, yy, 0, yTextureStart, xSize, 18);
         }
 
         yy += 18;

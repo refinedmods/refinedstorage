@@ -30,7 +30,7 @@ public class PortableGridBlockLootFunction extends LootFunction {
 
     @Override
     public LootFunctionType func_230425_b_() {
-        return RSLootFunctions.PORTABLE_GRID;
+        return RSLootFunctions.getPortableGrid();
     }
 
     public static class Serializer extends LootFunction.Serializer<PortableGridBlockLootFunction> {

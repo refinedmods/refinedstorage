@@ -51,7 +51,7 @@ public class StorageBlockLootFunction extends LootFunction {
 
     @Override
     public LootFunctionType func_230425_b_() {
-        return RSLootFunctions.STORAGE_BLOCK;
+        return RSLootFunctions.getStorageBlock();
     }
 
     public static class Serializer extends LootFunction.Serializer<StorageBlockLootFunction> {

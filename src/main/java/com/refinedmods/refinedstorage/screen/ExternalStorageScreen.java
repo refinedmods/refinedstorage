@@ -13,12 +13,14 @@ public class ExternalStorageScreen extends StorageScreen<ExternalStorageContaine
             inventory,
             title,
             "gui/storage.png",
-            ExternalStorageTile.TYPE,
-            NetworkNodeTile.REDSTONE_MODE,
-            ExternalStorageTile.COMPARE,
-            ExternalStorageTile.WHITELIST_BLACKLIST,
-            ExternalStorageTile.PRIORITY,
-            ExternalStorageTile.ACCESS_TYPE,
+            new StorageScreenTileDataParameters(
+                ExternalStorageTile.TYPE,
+                NetworkNodeTile.REDSTONE_MODE,
+                ExternalStorageTile.COMPARE,
+                ExternalStorageTile.WHITELIST_BLACKLIST,
+                ExternalStorageTile.PRIORITY,
+                ExternalStorageTile.ACCESS_TYPE
+            ),
             ExternalStorageTile.STORED::getValue,
             ExternalStorageTile.CAPACITY::getValue
         );

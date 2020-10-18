@@ -13,12 +13,14 @@ public class StorageBlockScreen extends StorageScreen<StorageContainer> {
             inventory,
             title,
             "gui/storage.png",
-            null,
-            NetworkNodeTile.REDSTONE_MODE,
-            StorageTile.COMPARE,
-            StorageTile.WHITELIST_BLACKLIST,
-            StorageTile.PRIORITY,
-            StorageTile.ACCESS_TYPE,
+            new StorageScreenTileDataParameters(
+                null,
+                NetworkNodeTile.REDSTONE_MODE,
+                StorageTile.COMPARE,
+                StorageTile.WHITELIST_BLACKLIST,
+                StorageTile.PRIORITY,
+                StorageTile.ACCESS_TYPE
+            ),
             StorageTile.STORED::getValue,
             () -> (long) ((StorageTile) container.getTile()).getItemStorageType().getCapacity()
         );

@@ -25,7 +25,7 @@ public abstract class SearchBoxModeSideButton extends SideButton {
         return MODE_ROTATION.get(MODE_ROTATION.indexOf(oldMode) + 1);
     }
 
-    public SearchBoxModeSideButton(BaseScreen<?> screen) {
+    protected SearchBoxModeSideButton(BaseScreen<?> screen) {
         super(screen);
     }
 

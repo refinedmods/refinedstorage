@@ -27,9 +27,18 @@ public class BlockModels {
         generator.getVariantBuilder(block)
             .forAllStates(state -> {
                 Direction dir = state.get(BlockDirection.ANY.getProperty());
+
+                int xRotation = 0;
+                if (dir == Direction.DOWN) {
+                    xRotation = 180;
+                }
+                if (dir.getAxis().isHorizontal()) {
+                    xRotation = 90;
+                }
+
                 return ConfiguredModel.builder()
                     .modelFile(modelFunc.apply(state))
-                    .rotationX(dir == Direction.DOWN ? 180 : dir.getAxis().isHorizontal() ? 90 : 0)
+                    .rotationX(xRotation)
                     .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + angleOffset) % 360)
                     .build();
             });
@@ -39,9 +48,17 @@ public class BlockModels {
         generator.getVariantBuilder(block)
             .forAllStates(state -> {
                 Direction dir = state.get(BlockDirection.ANY.getProperty());
+
+                int xRotation;
+                if (dir.getAxis() == Direction.Axis.Y) {
+                    xRotation = dir == Direction.UP ? 180 : 0;
+                } else {
+                    xRotation = dir.getAxis().isHorizontal() ? 90 : 0;
+                }
+
                 return ConfiguredModel.builder()
                     .modelFile(modelFunc.apply(state))
-                    .rotationX(dir.getAxis() == Direction.Axis.Y ? (dir == Direction.UP ? 180 : 0) : dir.getAxis().isHorizontal() ? 90 : 0)
+                    .rotationX(xRotation)
                     .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + angleOffset) % 360)
                     .build();
             });

@@ -2,10 +2,8 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,7 +12,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class StorageScreen<T extends Container> extends BaseScreen<T> {
@@ -24,12 +21,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     private static final int BAR_HEIGHT = 70;
 
     private final String texture;
-    private final TileDataParameter<Integer, ?> typeParameter;
-    private final TileDataParameter<Integer, ?> redstoneModeParameter;
-    private final TileDataParameter<Integer, ?> exactModeParameter;
-    private final TileDataParameter<Integer, ?> whitelistBlacklistParameter;
-    private final TileDataParameter<Integer, ?> priorityParameter;
-    private final TileDataParameter<AccessType, ?> accessTypeParameter;
+    private final StorageScreenTileDataParameters dataParameters;
     private final Supplier<Long> storedSupplier;
     private final Supplier<Long> capacitySupplier;
 
@@ -37,51 +29,50 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
                          PlayerInventory inventory,
                          ITextComponent title,
                          String texture,
-                         @Nullable TileDataParameter<Integer, ?> typeParameter,
-                         @Nullable TileDataParameter<Integer, ?> redstoneModeParameter,
-                         @Nullable TileDataParameter<Integer, ?> exactModeParameter,
-                         @Nullable TileDataParameter<Integer, ?> whitelistBlacklistParameter,
-                         TileDataParameter<Integer, ?> priorityParameter,
-                         @Nullable TileDataParameter<AccessType, ?> accessTypeParameter,
-                         Supplier<Long> storedSupplier, Supplier<Long> capacitySupplier) {
+                         StorageScreenTileDataParameters dataParameters,
+                         Supplier<Long> storedSupplier,
+                         Supplier<Long> capacitySupplier) {
         super(container, 176, 223, inventory, title);
 
         this.texture = texture;
-        this.typeParameter = typeParameter;
-        this.redstoneModeParameter = redstoneModeParameter;
-        this.exactModeParameter = exactModeParameter;
-        this.whitelistBlacklistParameter = whitelistBlacklistParameter;
-        this.priorityParameter = priorityParameter;
-        this.accessTypeParameter = accessTypeParameter;
+        this.dataParameters = dataParameters;
         this.storedSupplier = storedSupplier;
         this.capacitySupplier = capacitySupplier;
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        if (redstoneModeParameter != null) {
-            addSideButton(new RedstoneModeSideButton(this, redstoneModeParameter));
+        if (dataParameters.getRedstoneModeParameter() != null) {
+            addSideButton(new RedstoneModeSideButton(this, dataParameters.getRedstoneModeParameter()));
         }
 
-        if (typeParameter != null) {
-            addSideButton(new TypeSideButton(this, typeParameter));
+        if (dataParameters.getTypeParameter() != null) {
+            addSideButton(new TypeSideButton(this, dataParameters.getTypeParameter()));
         }
 
-        if (whitelistBlacklistParameter != null) {
-            addSideButton(new WhitelistBlacklistSideButton(this, whitelistBlacklistParameter));
+        if (dataParameters.getWhitelistBlacklistParameter() != null) {
+            addSideButton(new WhitelistBlacklistSideButton(this, dataParameters.getWhitelistBlacklistParameter()));
         }
 
-        if (exactModeParameter != null) {
-            addSideButton(new ExactModeSideButton(this, exactModeParameter));
+        if (dataParameters.getExactModeParameter() != null) {
+            addSideButton(new ExactModeSideButton(this, dataParameters.getExactModeParameter()));
         }
 
-        if (accessTypeParameter != null) {
-            addSideButton(new AccessTypeSideButton(this, accessTypeParameter));
+        if (dataParameters.getAccessTypeParameter() != null) {
+            addSideButton(new AccessTypeSideButton(this, dataParameters.getAccessTypeParameter()));
         }
 
         int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));
 
-        addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, new TranslationTextComponent("misc.refinedstorage.priority"), true, true, btn -> minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory)));
+        addButton(
+            x + 169 - buttonWidth,
+            y + 41, buttonWidth,
+            20,
+            new TranslationTextComponent("misc.refinedstorage.priority"),
+            true,
+            true,
+            btn -> minecraft.displayGuiScreen(new PriorityScreen(this, dataParameters.getPriorityParameter(), playerInventory))
+        );
     }
 
     @Override
