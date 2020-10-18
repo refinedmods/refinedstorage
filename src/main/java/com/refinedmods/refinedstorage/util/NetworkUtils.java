@@ -24,8 +24,7 @@ public class NetworkUtils {
     @Nullable
     public static INetworkNode getNodeFromTile(@Nullable TileEntity tile) {
         if (tile != null) {
-            INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
-
+            INetworkNodeProxy<?> proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
             if (proxy != null) {
                 return proxy.getNode();
             }

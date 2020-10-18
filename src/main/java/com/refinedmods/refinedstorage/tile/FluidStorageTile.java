@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.tile;
 
+import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
@@ -9,7 +10,7 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import com.refinedmods.refinedstorage.util.FluidStorageBlockUtils;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -25,7 +26,7 @@ public class FluidStorageTile extends NetworkNodeTile<FluidStorageNetworkNode> {
     private final FluidStorageType type;
 
     public FluidStorageTile(FluidStorageType type) {
-        super(FluidStorageBlockUtils.getTileEntityType(type));
+        super(getType(type));
 
         this.type = type;
 
@@ -34,6 +35,23 @@ public class FluidStorageTile extends NetworkNodeTile<FluidStorageNetworkNode> {
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(ACCESS_TYPE);
+    }
+
+    public static TileEntityType<FluidStorageTile> getType(FluidStorageType type) {
+        switch (type) {
+            case SIXTY_FOUR_K:
+                return RSTiles.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK;
+            case TWO_HUNDRED_FIFTY_SIX_K:
+                return RSTiles.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK;
+            case THOUSAND_TWENTY_FOUR_K:
+                return RSTiles.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK;
+            case FOUR_THOUSAND_NINETY_SIX_K:
+                return RSTiles.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK;
+            case CREATIVE:
+                return RSTiles.CREATIVE_FLUID_STORAGE_BLOCK;
+            default:
+                throw new IllegalArgumentException("Unknown storage type " + type);
+        }
     }
 
     public FluidStorageType getFluidStorageType() {

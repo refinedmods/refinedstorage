@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.tile.grid;
 
+import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
@@ -9,8 +10,8 @@ import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import com.refinedmods.refinedstorage.util.GridUtils;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -91,7 +92,7 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
 
     public GridTile(GridType type) {
-        super(GridUtils.getTileEntityType(type));
+        super(getType(type));
 
         this.type = type;
 
@@ -107,6 +108,21 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         dataManager.addWatchedParameter(PROCESSING_TYPE);
         dataManager.addParameter(ALLOWED_ITEM_TAGS);
         dataManager.addParameter(ALLOWED_FLUID_TAGS);
+    }
+
+    public static TileEntityType<GridTile> getType(GridType type) {
+        switch (type) {
+            case NORMAL:
+                return RSTiles.GRID;
+            case CRAFTING:
+                return RSTiles.CRAFTING_GRID;
+            case PATTERN:
+                return RSTiles.PATTERN_GRID;
+            case FLUID:
+                return RSTiles.FLUID_GRID;
+            default:
+                throw new IllegalArgumentException("Unknown grid type " + type);
+        }
     }
 
     @Override

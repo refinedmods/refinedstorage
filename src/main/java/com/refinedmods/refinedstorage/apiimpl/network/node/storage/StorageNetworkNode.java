@@ -24,7 +24,6 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.StorageBlockUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -74,6 +73,23 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         this.type = type;
     }
 
+    public static ResourceLocation getId(ItemStorageType type) {
+        switch (type) {
+            case ONE_K:
+                return ONE_K_STORAGE_BLOCK_ID;
+            case FOUR_K:
+                return FOUR_K_STORAGE_BLOCK_ID;
+            case SIXTEEN_K:
+                return SIXTEEN_K_STORAGE_BLOCK_ID;
+            case SIXTY_FOUR_K:
+                return SIXTY_FOUR_K_STORAGE_BLOCK_ID;
+            case CREATIVE:
+                return CREATIVE_STORAGE_BLOCK_ID;
+            default:
+                throw new IllegalArgumentException("Unknown storage type " + type);
+        }
+    }
+
     @Override
     public int getEnergyUsage() {
         switch (type) {
@@ -117,7 +133,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
     @Override
     public ResourceLocation getId() {
-        return StorageBlockUtils.getNetworkNodeId(type);
+        return getId(type);
     }
 
     @Override

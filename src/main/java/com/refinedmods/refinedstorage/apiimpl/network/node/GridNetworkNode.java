@@ -27,7 +27,6 @@ import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
-import com.refinedmods.refinedstorage.util.GridUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -197,6 +196,21 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         super(world, pos);
 
         this.type = type;
+    }
+
+    public static ResourceLocation getId(GridType type) {
+        switch (type) {
+            case NORMAL:
+                return ID;
+            case CRAFTING:
+                return CRAFTING_ID;
+            case PATTERN:
+                return PATTERN_ID;
+            case FLUID:
+                return FLUID_ID;
+            default:
+                throw new IllegalArgumentException("Unknown grid type " + type);
+        }
     }
 
     public AllowedTagList getAllowedTagList() {
@@ -686,7 +700,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public ResourceLocation getId() {
-        return GridUtils.getNetworkNodeId(type);
+        return getId(type);
     }
 
     @Override

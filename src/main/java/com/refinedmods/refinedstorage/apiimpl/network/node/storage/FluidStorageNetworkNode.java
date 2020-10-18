@@ -23,7 +23,6 @@ import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
-import com.refinedmods.refinedstorage.util.FluidStorageBlockUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -74,6 +73,23 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         this.type = type;
     }
 
+    public static ResourceLocation getId(FluidStorageType type) {
+        switch (type) {
+            case SIXTY_FOUR_K:
+                return SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID;
+            case TWO_HUNDRED_FIFTY_SIX_K:
+                return TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID;
+            case THOUSAND_TWENTY_FOUR_K:
+                return THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID;
+            case FOUR_THOUSAND_NINETY_SIX_K:
+                return FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID;
+            case CREATIVE:
+                return CREATIVE_FLUID_STORAGE_BLOCK_ID;
+            default:
+                throw new IllegalArgumentException("Unknown storage type " + type);
+        }
+    }
+
     @Override
     public int getEnergyUsage() {
         switch (type) {
@@ -117,7 +133,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
 
     @Override
     public ResourceLocation getId() {
-        return FluidStorageBlockUtils.getNetworkNodeId(type);
+        return getId(type);
     }
 
     @Override
