@@ -32,7 +32,7 @@ public class ProcessingNode extends Node {
     private IStackList<ItemStack> itemsReceived = API.instance().createItemStackList();
     private IStackList<FluidStack> fluidsReceived = API.instance().createFluidStackList();
 
-    private ProcessingState state;
+    private ProcessingState state = ProcessingState.READY;
 
     private int quantityFinished;
 
