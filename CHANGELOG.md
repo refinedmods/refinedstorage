@@ -3,7 +3,7 @@
 ### 1.9.8
 - Fixed server crash when scrolling in Grid (Darkere)
 - Fixed various issues with Grid interactions working without power (Darkere)
-- Fixed rotation not updating blocks (Darkere)
+- Fixed changing rotation not updating blocks (Darkere)
 - Added a JEI synchronized (two-way) search box mode to the Grid (ScoreUnder)
 - Added a nag message when a player joins the world that asks the player to enable the experimental Forge lighting
   pipeline to ensure correct rendering (raoulvdberge)
