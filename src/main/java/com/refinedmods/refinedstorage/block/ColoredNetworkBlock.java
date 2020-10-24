@@ -9,19 +9,14 @@ public class ColoredNetworkBlock extends NetworkNodeBlock {
         super(props);
     }
 
+    // Don't do block drops if we change the color.
     @Override
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock().getClass().equals(newState.getBlock().getClass())) {
-            //From BaseBlock#onReplaced as this gets skipped otherwise
-            if (getDirection() != BlockDirection.NONE &&
-                state.getBlock() == newState.getBlock() &&
-                state.get(getDirection().getProperty()) != newState.get(getDirection().getProperty())) {
-                onDirectionChanged(world, pos, newState.get(getDirection().getProperty()));
-            }
-            return;
+            checkIfDirectionHasChanged(state, world, pos, newState);
+        } else {
+            super.onReplaced(state, world, pos, newState, isMoving);
         }
-
-        super.onReplaced(state, world, pos, newState, isMoving);
     }
 }
 
