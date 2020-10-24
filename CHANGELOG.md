@@ -1,6 +1,11 @@
 # Refined Storage Changelog
 
+### 1.9.9
+
+- Fixed Refined Storage sidebuttons displaying over the JEI bookmark pagination buttons (raoulvdberge)
+
 ### 1.9.8
+
 - Fixed server crash when scrolling in Grid (Darkere)
 - Fixed various issues with Grid interactions working without power (Darkere)
 - Fixed changing rotation not updating blocks (Darkere)
