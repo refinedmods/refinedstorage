@@ -11,6 +11,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainer> {
     private final IGridStack stack;
@@ -63,13 +66,16 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
 
     @Override
     protected void onOkButtonPressed(boolean shiftDown) {
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("JavaScript");
+        
         try {
-            int quantity = Integer.parseInt(amountField.getText());
+            int quantity = scriptEngine.eval(amountField.getText());
 
             RS.NETWORK_HANDLER.sendToServer(new GridCraftingPreviewRequestMessage(stack.getId(), quantity, shiftDown, stack instanceof FluidGridStack));
 
             okButton.active = false;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e | ScriptException s) {
             // NO OP
         }
     }
