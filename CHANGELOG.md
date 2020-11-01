@@ -3,6 +3,7 @@
 ### 1.9.9
 
 - Fixed Refined Storage sidebuttons displaying over the JEI bookmark pagination buttons (raoulvdberge)
+- Fixed Issue where Crafters may fail to recognize an inventory/tank for some Patterns (Darkere) 
 
 ### 1.9.8
 
