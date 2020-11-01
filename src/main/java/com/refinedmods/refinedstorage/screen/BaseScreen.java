@@ -51,6 +51,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     private static final ITextComponent ALTERNATIVES_TEXT = new TranslationTextComponent("gui.refinedstorage.alternatives");
 
+    private final List<SideButton> sideButtons = new ArrayList<>();
+
     private final Logger logger = LogManager.getLogger(getClass());
 
     private int sideButtonY;
@@ -95,6 +97,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
 
         sideButtonY = 6;
+        sideButtons.clear();
 
         onPostInit(guiLeft, guiTop);
 
@@ -271,7 +274,12 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         sideButtonY += button.getHeight() + 2;
 
+        sideButtons.add(button);
         this.addButton(button);
+    }
+
+    public List<SideButton> getSideButtons() {
+        return sideButtons;
     }
 
     public void bindTexture(String namespace, String filenameInTexturesFolder) {

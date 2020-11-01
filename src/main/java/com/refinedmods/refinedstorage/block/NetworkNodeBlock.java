@@ -46,9 +46,9 @@ public abstract class NetworkNodeBlock extends BaseBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tile = worldIn.getTileEntity(pos);
+            TileEntity tile = world.getTileEntity(pos);
 
             if (tile instanceof NetworkNodeTile) {
                 IItemHandler handler = ((NetworkNodeTile) tile).getNode().getDrops();
@@ -60,13 +60,13 @@ public abstract class NetworkNodeBlock extends BaseBlock {
                         drops.add(handler.getStackInSlot(i));
                     }
 
-                    InventoryHelper.dropItems(worldIn, pos, drops);
+                    InventoryHelper.dropItems(world, pos, drops);
                 }
             }
         }
 
         // Call onReplaced after the drops check so the tile still exists
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onReplaced(state, world, pos, newState, isMoving);
     }
 
     @Override
