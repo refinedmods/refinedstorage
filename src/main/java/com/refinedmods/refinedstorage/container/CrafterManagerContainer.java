@@ -120,13 +120,15 @@ public class CrafterManagerContainer extends BaseContainer {
 
                         visible = false;
 
-                        for (ItemStack output : pattern.getOutputs()) {
-                            ItemGridStack outputConverted = new ItemGridStack(output);
+                        if (pattern.isValid()) {
+                            for (ItemStack output : pattern.getOutputs()) {
+                                ItemGridStack outputConverted = new ItemGridStack(output);
 
-                            for (Predicate<IGridStack> filter : filters) {
-                                if (filter.test(outputConverted)) {
-                                    visible = true;
-                                    break;
+                                for (Predicate<IGridStack> filter : filters) {
+                                    if (filter.test(outputConverted)) {
+                                        visible = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
