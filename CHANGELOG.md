@@ -6,6 +6,7 @@
 - Fixed issue where Crafters may fail to recognize an inventory/tank for some patterns (Darkere) 
 - Fixed issue where the Crafter Manager can crash on invalid patterns (raoulvdberge)
 - Fixed issue where alternatives in the Pattern Grid weren't being saved properly (raoulvdberge)
+- Fixed not being able to change the Exporter filter slot count with regulator mode without closing and re-opening the container (raoulvdberge)
 
 ### 1.9.8
 
