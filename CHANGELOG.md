@@ -5,6 +5,7 @@
 - Fixed Refined Storage sidebuttons displaying over the JEI bookmark pagination buttons (raoulvdberge)
 - Fixed issue where Crafters may fail to recognize an inventory/tank for some patterns (Darkere) 
 - Fixed issue where the Crafter Manager can crash on invalid patterns (raoulvdberge)
+- Fixed issue where alternatives in the Pattern Grid weren't being saved properly (raoulvdberge)
 
 ### 1.9.8
 

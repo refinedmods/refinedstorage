@@ -94,6 +94,18 @@ public class AllowedTagList {
         notifyListener();
     }
 
+    public void setAllowedItemTags(int slot, Set<ResourceLocation> allowedItemTags) {
+        this.allowedItemTags.set(slot, allowedItemTags);
+
+        notifyListener();
+    }
+
+    public void setAllowedFluidTags(int slot, Set<ResourceLocation> allowedFluidTags) {
+        this.allowedFluidTags.set(slot, allowedFluidTags);
+
+        notifyListener();
+    }
+
     public void clearItemTags(int slot) {
         this.allowedItemTags.get(slot).clear();
 

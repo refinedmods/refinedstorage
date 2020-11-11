@@ -1,15 +1,19 @@
 package com.refinedmods.refinedstorage.network;
 
-import com.refinedmods.refinedstorage.api.util.IComparer;
-import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.api.network.grid.IGrid;
+import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class SetFluidFilterSlotMessage {
@@ -52,15 +56,26 @@ public class SetFluidFilterSlotMessage {
         Slot slot = container.getSlot(message.containerSlot);
 
         if (slot instanceof FluidFilterSlot) {
-            FluidFilterSlot fluidFilterSlot = (FluidFilterSlot) slot;
+            Runnable postAction = () -> {
+            };
 
-            // Avoid resetting allowed tag list in the pattern grid.
-            if (API.instance().getComparer().isEqual(fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()), message.stack, IComparer.COMPARE_NBT)) {
-                fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()).setAmount(message.stack.getAmount());
-                fluidFilterSlot.getFluidInventory().onChanged(slot.getSlotIndex());
-            } else {
-                fluidFilterSlot.getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
+            // Prevent the grid crafting matrix inventory listener from resetting the list.
+            if (container instanceof GridContainer) {
+                IGrid grid = ((GridContainer) container).getGrid();
+                if (grid instanceof GridNetworkNode) {
+                    Set<ResourceLocation> list = new HashSet<>(((GridNetworkNode) grid).getAllowedTagList().getAllowedFluidTags().get(slot.getSlotIndex()));
+
+                    postAction = () -> {
+                        ((GridNetworkNode) grid).getAllowedTagList().setAllowedFluidTags(slot.getSlotIndex(), list);
+                        ((GridNetworkNode) grid).markDirty();
+                    };
+                }
             }
+
+            FluidFilterSlot fluidSlot = (FluidFilterSlot) slot;
+
+            fluidSlot.getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
+            postAction.run();
         }
     }
 }
