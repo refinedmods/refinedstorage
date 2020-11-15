@@ -1,0 +1,16 @@
+name: 'Unsupported versions'
+on:
+  issues:
+    types: [ labeled, unlabeled, reopened ]
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/support-requests@v2
+        with:
+          github-token: ${{ github.token }}
+          support-label: 'Unsupported'
+          issue-comment: >
+            :wave: @{issue-author}, this version of Minecraft is no longer supported. Please see https://refinedmods.com/refined-storage/wiki/minecraft-version-support.html
+          close-issue: true
+          lock-issue: false
