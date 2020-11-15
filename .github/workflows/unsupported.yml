@@ -11,6 +11,7 @@ jobs:
           github-token: ${{ github.token }}
           support-label: 'Unsupported'
           issue-comment: >
-            :wave: @{issue-author}, this version of Minecraft is no longer supported. Please see https://refinedmods.com/refined-storage/wiki/minecraft-version-support.html
+            :wave: @{issue-author}, we no longer support this version of Minecraft.
+            Please see https://refinedmods.com/refined-storage/wiki/minecraft-version-support.html
           close-issue: true
           lock-issue: false
