@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.block.BaseBlock;
+import com.refinedmods.refinedstorage.block.BlockDirection;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.item.blockitem.ColoredBlockItem;
 import net.minecraft.block.Block;
@@ -111,9 +112,15 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
     }
 
     private <S extends BaseBlock> BlockState getNewState(RegistryObject<S> block, BlockState state) {
-        return block.get().getDefaultState()
-            .with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED))
-            .with(block.get().getDirection().getProperty(), state.get(block.get().getDirection().getProperty()));
+        if (block.get().getDirection() == BlockDirection.NONE) {
+            return block.get().getDefaultState()
+                .with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED));
+        } else {
+            return block.get().getDefaultState()
+                .with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED))
+                .with(block.get().getDirection().getProperty(), state.get(block.get().getDirection().getProperty()));
+        }
+
     }
 
     public ActionResultType setBlockState(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
