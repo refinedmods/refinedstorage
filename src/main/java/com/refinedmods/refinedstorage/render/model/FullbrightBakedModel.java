@@ -23,6 +23,10 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         }
     });
 
+    public static void invalidateCache() {
+        CACHE.invalidateAll();
+    }
+
     private final Set<ResourceLocation> textures;
     private final boolean doCaching;
 
