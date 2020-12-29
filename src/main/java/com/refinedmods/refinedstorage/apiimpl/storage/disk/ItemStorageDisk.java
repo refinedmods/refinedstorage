@@ -35,7 +35,8 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     private final int capacity;
     private final Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private final UUID owner;
-    private boolean isFull;
+    private boolean changed;
+    private int itemCount;
 
     @Nullable
     private IStorageDiskListener listener;
@@ -81,7 +82,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     @Override
     @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (stack.isEmpty() || isFull) {
+        if (stack.isEmpty() || (!changed && itemCount == capacity)) {
             return stack;
         }
 
@@ -91,7 +92,6 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        isFull = true;
                         return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
@@ -118,7 +118,6 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                isFull = true;
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -172,10 +171,12 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
 
     @Override
     public int getStored() {
-        if (isFull) {
-            return getCapacity();
+        if (changed) {
+            itemCount = stacks.values().stream().mapToInt(ItemStack::getCount).sum();
+            changed = false;
         }
-        return stacks.values().stream().mapToInt(ItemStack::getCount).sum();
+
+        return itemCount;
     }
 
     @Override
@@ -219,7 +220,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     }
 
     private void onChanged() {
-        isFull = false;
+        changed = true;
         if (listener != null) {
             listener.onChanged();
         }
