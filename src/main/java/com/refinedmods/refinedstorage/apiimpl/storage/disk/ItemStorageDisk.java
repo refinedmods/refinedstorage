@@ -35,7 +35,6 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     private final int capacity;
     private final Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private final UUID owner;
-    private boolean changed;
     private int itemCount;
 
     @Nullable
@@ -82,7 +81,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     @Override
     @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (stack.isEmpty() || (!changed && itemCount == capacity)) {
+        if (stack.isEmpty() || itemCount == capacity) {
             return stack;
         }
 
@@ -97,7 +96,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
 
                     if (action == Action.PERFORM) {
                         otherStack.grow(remainingSpace);
-
+                        itemCount += remainingSpace;
                         onChanged();
                     }
 
@@ -105,6 +104,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
                 } else {
                     if (action == Action.PERFORM) {
                         otherStack.grow(size);
+                        itemCount += size;
 
                         onChanged();
                     }
@@ -123,7 +123,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
 
             if (action == Action.PERFORM) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
-
+                itemCount += remainingSpace;
                 onChanged();
             }
 
@@ -131,6 +131,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
         } else {
             if (action == Action.PERFORM) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, size));
+                itemCount += size;
 
                 onChanged();
             }
@@ -159,6 +160,8 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
                         otherStack.shrink(size);
                     }
 
+                    itemCount -= size;
+
                     onChanged();
                 }
 
@@ -171,11 +174,6 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
 
     @Override
     public int getStored() {
-        if (changed) {
-            itemCount = stacks.values().stream().mapToInt(ItemStack::getCount).sum();
-            changed = false;
-        }
-
         return itemCount;
     }
 
@@ -220,7 +218,6 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     }
 
     private void onChanged() {
-        changed = true;
         if (listener != null) {
             listener.onChanged();
         }
@@ -228,5 +225,9 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
         if (world != null) {
             API.instance().getStorageDiskManager(world).markForSaving();
         }
+    }
+
+    public void updateItemCount() {
+        itemCount = stacks.values().stream().mapToInt(ItemStack::getCount).sum();
     }
 }
