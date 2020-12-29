@@ -1,0 +1,49 @@
+package com.refinedmods.refinedstorage.apiimpl.util;
+
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.util.SharedConstants;
+import net.minecraft.world.storage.WorldSavedData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+
+
+public abstract class RSWorldSavedData extends WorldSavedData {
+    private final Logger LOGGER = LogManager.getLogger(RSWorldSavedData.class);
+
+    public RSWorldSavedData(String name) {
+        super(name);
+    }
+
+    @Override
+    public abstract void read(CompoundNBT nbt);
+
+    @Override
+    public abstract CompoundNBT write(CompoundNBT compound);
+
+    @Override
+    public void save(File fileIn) {
+        //@Volatile Mostly Copied from WorldSavedData
+        if (this.isDirty()) {
+            File tempFile = fileIn.toPath().getParent().resolve(fileIn.getName() + ".temp").toFile();
+
+            CompoundNBT compoundnbt = new CompoundNBT();
+            compoundnbt.put("data", this.write(new CompoundNBT()));
+            compoundnbt.putInt("DataVersion", SharedConstants.getVersion().getWorldVersion());
+
+            try {
+                CompressedStreamTools.func_244264_a(compoundnbt, tempFile);
+                if (fileIn.delete()) {
+                    tempFile.renameTo(fileIn);
+                }
+            } catch (IOException ioexception) {
+                LOGGER.error("Could not save data {}", this, ioexception);
+            }
+
+            this.setDirty(false);
+        }
+    }
+}
