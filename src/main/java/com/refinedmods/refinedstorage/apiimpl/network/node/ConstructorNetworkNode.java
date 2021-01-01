@@ -101,7 +101,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                 network.getCraftingManager().request(this, stack, FluidAttributes.BUCKET_VOLUME);
             }
-        } else {
+        } else if (!world.getBlockState(front).getFluidState().isSource()) {
             FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
         }
     }
