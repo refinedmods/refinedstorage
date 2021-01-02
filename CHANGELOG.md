@@ -1,12 +1,27 @@
 # Refined Storage Changelog
 
+### 1.9.10
+
+- Improve performance of the Grid view (ScoreUnder)
+- Fixed Disk Manipulator model glitches (Darkere)
+- Improve performance of the Disk Manipulator (Darkere)
+- Fixed being unable to set quantity in output slots of the Pattern Grid (Darkere)
+- Fixed External Storage in fluid mode losing track of fluids sometimes (Darkere)
+- Added code to avoid / minimize data corruption issues caused by Minecraft (Darkere)
+- Fixed processing autocrafting orders stealing items from each other (Darkere)
+- Fixed Constructor in fluid mode voiding fluid source blocks in front of it (Darkere)
+- Update Japanese translation (alyxferrari)
+- Fixed crash when recoloring blocks that have no rotation component (Darkere)
+- Fixed reloading resource packs breaking Refined Storage textures (Darkere)
+
 ### 1.9.9
 
 - Fixed Refined Storage sidebuttons displaying over the JEI bookmark pagination buttons (raoulvdberge)
-- Fixed issue where Crafters may fail to recognize an inventory/tank for some patterns (Darkere) 
+- Fixed issue where Crafters may fail to recognize an inventory/tank for some patterns (Darkere)
 - Fixed issue where the Crafter Manager can crash on invalid patterns (raoulvdberge)
 - Fixed issue where alternatives in the Pattern Grid weren't being saved properly (raoulvdberge)
-- Fixed not being able to change the Exporter filter slot count with regulator mode without closing and re-opening the container (raoulvdberge)
+- Fixed not being able to change the Exporter filter slot count with regulator mode without closing and re-opening the
+  container (raoulvdberge)
 
 ### 1.9.8
 
