@@ -11,10 +11,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ItemStackList implements IStackList<ItemStack> {
     private final ArrayListMultimap<Item, StackListEntry<ItemStack>> stacks = ArrayListMultimap.create();
@@ -139,6 +136,12 @@ public class ItemStackList implements IStackList<ItemStack> {
     @Override
     public Collection<StackListEntry<ItemStack>> getStacks() {
         return stacks.values();
+    }
+
+    @Override
+    @Nonnull
+    public Collection<StackListEntry<ItemStack>> getStacks(@Nonnull ItemStack stack) {
+        return stacks.get(stack.getItem());
     }
 
     @Override
