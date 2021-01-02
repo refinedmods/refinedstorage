@@ -119,6 +119,12 @@ public interface IStackList<T> {
     Collection<StackListEntry<T>> getStacks();
 
     /**
+     * @return a collection of stacks matching the given type (ignoring NBT)
+     */
+    @Nonnull
+    Collection<StackListEntry<T>> getStacks(@Nonnull T stack);
+
+    /**
      * @return a new copy of this list, with the stacks in it copied as well
      */
     @Nonnull

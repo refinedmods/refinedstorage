@@ -6,14 +6,12 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FluidStackList implements IStackList<FluidStack> {
     private final ArrayListMultimap<Fluid, StackListEntry<FluidStack>> stacks = ArrayListMultimap.create();
@@ -141,6 +139,12 @@ public class FluidStackList implements IStackList<FluidStack> {
     @Override
     public Collection<StackListEntry<FluidStack>> getStacks() {
         return stacks.values();
+    }
+
+    @Override
+    @Nonnull
+    public Collection<StackListEntry<FluidStack>> getStacks(@Nonnull FluidStack stack) {
+        return stacks.get(stack.getFluid());
     }
 
     @Override
