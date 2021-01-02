@@ -90,6 +90,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         if (canUpdate() && world.isBlockPresent(pos)) {
             if (networkTicks++ == 0) {
                 updateStorage(network, InvalidateCause.INITIAL_TICK_INVALIDATION);
+                connectedBlockState = world.getBlockState(pos.offset(getDirection()));
 
                 return;
             }
