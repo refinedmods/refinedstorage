@@ -39,6 +39,8 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
             }
         }
 
+        disk.updateItemCount();
+
         return disk;
     }
 
