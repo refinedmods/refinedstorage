@@ -22,7 +22,7 @@ public class FluidExternalStorageCache {
             cache = new ArrayList<>();
 
             for (int i = 0; i < handler.getTanks(); ++i) {
-                cache.add(handler.getFluidInTank(i));
+                cache.add(handler.getFluidInTank(i).copy());
             }
 
             return;
