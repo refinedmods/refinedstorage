@@ -110,7 +110,7 @@ public class ClientSetup {
 
         forEachColorApply("disk_manipulator", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             new DiskManipulatorBakedModel(
-                base,
+                registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color)),
                 registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected")),
                 registry.get(DISK_RESOURCE),
                 registry.get(DISK_NEAR_CAPACITY_RESOURCE),
