@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import com.refinedmods.refinedstorage.screen.grid.view.FluidGridView;
+import com.refinedmods.refinedstorage.screen.grid.view.GridViewImpl;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.network.PacketBuffer;
@@ -52,7 +52,7 @@ public class PortableGridFluidUpdateMessage {
 
     public static void handle(PortableGridFluidUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         BaseScreen.executeLater(GridScreen.class, grid -> {
-            grid.setView(new FluidGridView(grid, GridScreen.getDefaultSorter(), GridScreen.getSorters()));
+            grid.setView(new GridViewImpl(grid, GridScreen.getDefaultSorter(), GridScreen.getSorters()));
             grid.getView().setStacks(message.stacks);
             grid.getView().sort();
         });

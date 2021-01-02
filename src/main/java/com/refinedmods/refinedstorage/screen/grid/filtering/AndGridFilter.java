@@ -5,31 +5,31 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class OrGridFilter implements Predicate<IGridStack> {
-    private final List<Predicate<IGridStack>> orPartFilters;
+public class AndGridFilter implements Predicate<IGridStack> {
+    private final List<Predicate<IGridStack>> andPartFilters;
 
-    private OrGridFilter(List<Predicate<IGridStack>> orPartFilters) {
-        this.orPartFilters = orPartFilters;
+    private AndGridFilter(List<Predicate<IGridStack>> andPartFilters) {
+        this.andPartFilters = andPartFilters;
     }
 
     @Override
     public boolean test(IGridStack gridStack) {
-        for (Predicate<IGridStack> part : orPartFilters) {
-            if (part.test(gridStack)) {
-                return true;
+        for (Predicate<IGridStack> part : andPartFilters) {
+            if (!part.test(gridStack)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     public static Predicate<IGridStack> of(List<Predicate<IGridStack>> filters) {
         if (filters.isEmpty()) {
-            return t -> false;
+            return t -> true;
         }
         if (filters.size() == 1) {
             return filters.get(0);
         }
-        return new OrGridFilter(filters);
+        return new AndGridFilter(filters);
     }
 }

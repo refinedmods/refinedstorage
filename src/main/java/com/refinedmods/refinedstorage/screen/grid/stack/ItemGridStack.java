@@ -168,7 +168,16 @@ public class ItemGridStack implements IGridStack {
     @Override
     public int getQuantity() {
         // The isCraftable check is needed so sorting is applied correctly
-        return isCraftable() ? 0 : stack.getCount();
+        return isCraftable() || zeroed ? 0 : stack.getCount();
+    }
+
+    @Override
+    public void setQuantity(int amount) {
+        if (amount <= 0) {
+            setZeroed(true);
+        } else {
+            stack.setCount(amount);
+        }
     }
 
     @Override
