@@ -36,9 +36,15 @@ public abstract class RSWorldSavedData extends WorldSavedData {
 
             try {
                 CompressedStreamTools.func_244264_a(compoundnbt, tempFile);
-                if (fileIn.delete()) {
-                    tempFile.renameTo(fileIn);
+                if (fileIn.exists()) {
+                    if (!fileIn.delete()) {
+                        LOGGER.error("Failed To delete " + fileIn.getName());
+                    }
                 }
+                if (!tempFile.renameTo(fileIn)) {
+                    LOGGER.error("Failed to rename " + tempFile.getName());
+                }
+
             } catch (IOException ioexception) {
                 LOGGER.error("Could not save data {}", this, ioexception);
             }
