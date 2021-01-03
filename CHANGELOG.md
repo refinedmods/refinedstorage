@@ -2,9 +2,10 @@
 
 ### 1.9.11
 
-- Fixed Disks and Nodes not loading when they did not previously exist
-- If you are affected by this please go to the world/data/ folder and remove the ".temp" ending from the files before
-  launching
+- Fixed disks and network devices not loading when they did not previously exist
+
+If you are affected by this please go to the world/data/ folder and remove the ".temp" ending from the files before
+launching.
 
 ### 1.9.10
 
