@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 public class GridViewImpl implements IGridView {
     private final GridScreen screen;
     private boolean canCraft;
+    private boolean active = false;
 
     private final IGridSorter defaultSorter;
     private final List<IGridSorter> sorters;
@@ -56,8 +57,10 @@ public class GridViewImpl implements IGridView {
                     .filter(getActiveFilters())
                     .sorted(getActiveSort())
                     .collect(Collectors.toList());
+            this.active = true;
         } else {
             this.stacks = new ArrayList<>();
+            this.active = false;
         }
 
         this.screen.updateScrollbar();
@@ -111,6 +114,9 @@ public class GridViewImpl implements IGridView {
 
     @Override
     public void postChange(IGridStack stack, int delta) {
+        if (!this.active) {
+            return;
+        }
         // COMMENT 1 (about this if check in general)
         // Update the other id reference if needed.
         // Taking a stack out - and then re-inserting it - gives the new stack a new ID
