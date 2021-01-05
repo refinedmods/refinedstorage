@@ -57,7 +57,7 @@ public class GridViewImpl implements IGridView {
                     .sorted(getActiveSort())
                     .collect(Collectors.toList());
         } else {
-            this.stacks = Collections.emptyList();
+            this.stacks = new ArrayList<>();
         }
 
         this.screen.updateScrollbar();
