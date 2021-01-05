@@ -56,7 +56,7 @@ public class GridViewImpl implements IGridView {
             this.stacks = map.values().stream()
                     .filter(getActiveFilters())
                     .sorted(getActiveSort())
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toCollection(ArrayList::new));
             this.active = true;
         } else {
             this.stacks = new ArrayList<>();
