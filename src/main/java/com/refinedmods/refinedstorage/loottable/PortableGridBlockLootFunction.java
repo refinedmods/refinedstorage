@@ -33,6 +33,10 @@ public class PortableGridBlockLootFunction extends LootFunction {
         return RSLootFunctions.getPortableGrid();
     }
 
+    public static LootFunction.Builder<?> builder() {
+        return builder(PortableGridBlockLootFunction::new);
+    }
+
     public static class Serializer extends LootFunction.Serializer<PortableGridBlockLootFunction> {
         @Override
         public PortableGridBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {

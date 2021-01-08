@@ -6,12 +6,12 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "refinedstorage:portable_grid"
+            }
+          ],
           "name": "refinedstorage:portable_grid"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
         }
       ]
     }
