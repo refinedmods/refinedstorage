@@ -1,21 +1,21 @@
 {
   "replace": false,
   "values": [
-    "refinedstorage:pink_crafter_manager",
-    "refinedstorage:gray_crafter_manager",
+    "refinedstorage:white_crafter_manager",
     "refinedstorage:orange_crafter_manager",
-    "refinedstorage:cyan_crafter_manager",
     "refinedstorage:magenta_crafter_manager",
     "refinedstorage:crafter_manager",
-    "refinedstorage:light_gray_crafter_manager",
-    "refinedstorage:brown_crafter_manager",
-    "refinedstorage:black_crafter_manager",
-    "refinedstorage:white_crafter_manager",
+    "refinedstorage:yellow_crafter_manager",
     "refinedstorage:lime_crafter_manager",
+    "refinedstorage:pink_crafter_manager",
+    "refinedstorage:gray_crafter_manager",
+    "refinedstorage:light_gray_crafter_manager",
+    "refinedstorage:cyan_crafter_manager",
     "refinedstorage:purple_crafter_manager",
-    "refinedstorage:red_crafter_manager",
-    "refinedstorage:green_crafter_manager",
     "refinedstorage:blue_crafter_manager",
-    "refinedstorage:yellow_crafter_manager"
+    "refinedstorage:brown_crafter_manager",
+    "refinedstorage:green_crafter_manager",
+    "refinedstorage:red_crafter_manager",
+    "refinedstorage:black_crafter_manager"
   ]
 }
