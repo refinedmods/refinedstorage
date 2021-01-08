@@ -49,9 +49,9 @@ public class LootTableGenerator extends LootTableProvider {
     private static class RSBlockLootTables extends BlockLootTables {
         @Override
         protected void addTables() {
-            RSBlocks.CONTROLLER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), ControllerLootFunction.builder()));
+            RSBlocks.CONTROLLER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), ControllerLootFunction.builder(), true));
             RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.CRAFTER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), CrafterLootFunction.builder()));
+            RSBlocks.CRAFTER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), CrafterLootFunction.builder(), true));
             RSBlocks.GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
             RSBlocks.CRAFTING_GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
             RSBlocks.FLUID_GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
@@ -65,8 +65,8 @@ public class LootTableGenerator extends LootTableProvider {
             RSBlocks.CRAFTING_MONITOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
             RSBlocks.CRAFTER_MANAGER.values().forEach(block -> registerDropSelfLootTable(block.get()));
             RSBlocks.DETECTOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.STORAGE_BLOCKS.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), StorageBlockLootFunction.builder()));
-            RSBlocks.FLUID_STORAGE_BLOCKS.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), StorageBlockLootFunction.builder()));
+            RSBlocks.STORAGE_BLOCKS.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), StorageBlockLootFunction.builder(), false));
+            RSBlocks.FLUID_STORAGE_BLOCKS.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), StorageBlockLootFunction.builder(), false));
 
             RSBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get).forEach(block -> {
                 if (!(block instanceof ColoredNetworkBlock) && !(block instanceof StorageBlock) && !(block instanceof FluidStorageBlock)) {
@@ -80,13 +80,13 @@ public class LootTableGenerator extends LootTableProvider {
             return RSBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;
         }
 
-        private void genBlockItemLootTableWithFunction(Block block, ILootFunction.IBuilder builder) {
-            registerLootTable(block, LootTable.builder().addLootPool(
-                LootPool.builder()
+        private void genBlockItemLootTableWithFunction(Block block, ILootFunction.IBuilder builder, boolean survivesExplosion) {
+            LootPool.Builder poolBuilder = LootPool.builder()
                     .rolls(ConstantRange.of(1))
                     .addEntry(ItemLootEntry.builder(block)
-                        .acceptFunction(builder))
-                    .acceptCondition(SurvivesExplosion.builder())));
+                            .acceptFunction(builder));
+            if (survivesExplosion) poolBuilder.acceptCondition(SurvivesExplosion.builder());
+            registerLootTable(block, LootTable.builder().addLootPool(poolBuilder));
         }
     }
 }

@@ -13,11 +13,6 @@
           ],
           "name": "refinedstorage:1024k_fluid_storage_block"
         }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
       ]
     }
   ]
