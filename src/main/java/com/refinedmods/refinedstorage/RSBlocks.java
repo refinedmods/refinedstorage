@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class RSBlocks {
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
 
     private static final String GRID_SUFFIX = "_grid";
 

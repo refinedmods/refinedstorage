@@ -3,8 +3,12 @@ package com.refinedmods.refinedstorage.datageneration;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import com.refinedmods.refinedstorage.RSBlocks;
+import com.refinedmods.refinedstorage.block.ColoredNetworkBlock;
+import com.refinedmods.refinedstorage.block.FluidStorageBlock;
+import com.refinedmods.refinedstorage.block.StorageBlock;
 import com.refinedmods.refinedstorage.loottable.ControllerLootFunction;
 import com.refinedmods.refinedstorage.loottable.CrafterLootFunction;
+import com.refinedmods.refinedstorage.loottable.StorageBlockLootFunction;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
@@ -61,11 +65,19 @@ public class LootTableGenerator extends LootTableProvider {
             RSBlocks.CRAFTING_MONITOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
             RSBlocks.CRAFTER_MANAGER.values().forEach(block -> registerDropSelfLootTable(block.get()));
             RSBlocks.DETECTOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
+            RSBlocks.STORAGE_BLOCKS.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), StorageBlockLootFunction.builder()));
+            RSBlocks.FLUID_STORAGE_BLOCKS.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), StorageBlockLootFunction.builder()));
+
+            RSBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get).forEach(block -> {
+                if (!(block instanceof ColoredNetworkBlock) && !(block instanceof StorageBlock) && !(block instanceof FluidStorageBlock)) {
+                    registerDropSelfLootTable(block);
+                }
+            });
         }
 
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return RSBlocks.COLORED_BLOCKS.stream().map(RegistryObject::get).collect(Collectors.toList());
+            return RSBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;
         }
 
         private void genBlockItemLootTableWithFunction(Block block, ILootFunction.IBuilder builder) {

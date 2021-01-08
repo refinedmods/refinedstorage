@@ -54,6 +54,10 @@ public class StorageBlockLootFunction extends LootFunction {
         return RSLootFunctions.getStorageBlock();
     }
 
+    public static LootFunction.Builder<?> builder() {
+        return builder(StorageBlockLootFunction::new);
+    }
+
     public static class Serializer extends LootFunction.Serializer<StorageBlockLootFunction> {
         @Override
         public StorageBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {
