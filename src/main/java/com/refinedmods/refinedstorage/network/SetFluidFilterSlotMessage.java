@@ -62,7 +62,7 @@ public class SetFluidFilterSlotMessage {
             // Prevent the grid crafting matrix inventory listener from resetting the list.
             if (container instanceof GridContainer) {
                 IGrid grid = ((GridContainer) container).getGrid();
-                if (grid instanceof GridNetworkNode) {
+                if (grid instanceof GridNetworkNode && slot.getSlotIndex() < ((GridNetworkNode) grid).getAllowedTagList().getAllowedFluidTags().size()) {
                     Set<ResourceLocation> list = new HashSet<>(((GridNetworkNode) grid).getAllowedTagList().getAllowedFluidTags().get(slot.getSlotIndex()));
 
                     postAction = () -> {
