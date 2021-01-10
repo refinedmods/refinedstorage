@@ -112,7 +112,7 @@ public class ItemGridStack implements IGridStack {
                 cachedModId = ERROR_PLACEHOLDER;
             }
 
-            cachedModId = cachedModId.toLowerCase(Locale.ROOT);
+            cachedModId = cachedModId.toLowerCase();
         }
 
         return cachedModId;
