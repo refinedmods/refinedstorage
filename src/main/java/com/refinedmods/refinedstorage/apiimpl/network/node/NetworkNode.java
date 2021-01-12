@@ -3,10 +3,14 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
+import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.util.Action;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.item.FluidStorageDiskItem;
+import com.refinedmods.refinedstorage.item.StorageDiskItem;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -146,6 +150,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
         boolean canUpdate = canUpdate();
 
+        setDrivesUUIDs(network);
+
         if (couldUpdate != canUpdate) {
             ++ticksSinceUpdateChanged;
 
@@ -162,7 +168,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
                 if (network != null) {
                     onConnectedStateChange(network, canUpdate, ConnectivityStateChangeCause.REDSTONE_MODE_OR_NETWORK_ENERGY_CHANGE);
-
                     if (shouldRebuildGraphOnChange()) {
                         network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());
                     }
@@ -170,6 +175,36 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             }
         } else {
             ticksSinceUpdateChanged = 0;
+        }
+    }
+
+    public void setDrivesUUIDs(INetwork network) {
+        IStorageCache<ItemStack> cache = network.getItemStorageCache();
+        for (StackListEntry<ItemStack> itemStackList : cache.getList().getStacks()) {
+            ItemStack stack = itemStackList.getStack();
+            Item item = stack.getItem();
+            if (item instanceof StorageDiskItem) {
+                StorageDiskItem diskItem = (StorageDiskItem) item;
+                if (!stack.hasTag()) {
+                    UUID id = UUID.randomUUID();
+
+                    API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultItemDisk((ServerWorld) world, diskItem.getCapacity(stack), null));
+                    API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+
+                    diskItem.setId(stack, id);
+                }
+            }
+            if (item instanceof FluidStorageDiskItem) {
+                FluidStorageDiskItem diskItem = (FluidStorageDiskItem) item;
+                if (!stack.hasTag()) {
+                    UUID id = UUID.randomUUID();
+
+                    API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultFluidDisk((ServerWorld) world, diskItem.getCapacity(stack), null));
+                    API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+
+                    diskItem.setId(stack, id);
+                }
+            }
         }
     }
 
