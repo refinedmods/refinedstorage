@@ -111,6 +111,8 @@ public class ItemGridStack implements IGridStack {
             if (cachedModId == null) {
                 cachedModId = ERROR_PLACEHOLDER;
             }
+
+            cachedModId = cachedModId.toLowerCase().replace(" ", "");
         }
 
         return cachedModId;
