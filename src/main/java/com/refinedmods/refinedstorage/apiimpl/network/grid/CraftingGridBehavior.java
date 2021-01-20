@@ -54,7 +54,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     matrix.setInventorySlotContents(i, remainder.get(i).copy());
                 }
             } else if (!slot.isEmpty()) { // We don't have a remainder, but the slot is not empty.
-                if (slot.getCount() == 1 && network != null) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
+                if (slot.getCount() == 1 && network != null && grid.isGridActive()) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
                     ItemStack refill;
                     if (availableItems == null) { // for regular crafting
                         refill = network.extractItem(slot, 1, Action.PERFORM);
@@ -94,11 +94,11 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int amountCrafted = 0;
         boolean useNetwork = network != null && grid.isGridActive();
 
-        IStackList<ItemStack> availableItems = null;
+        IStackList<ItemStack> availableItems = API.instance().createItemStackList();
         if (useNetwork) {
             // We need a modifiable list of the items in storage that are relevant for this craft.
             // For performance reason we extract these into an extra list
-            availableItems = createFilteredItemList(network, matrix);
+            filterDuplicateStacks(network, matrix, availableItems);
         }
 
         //A second list to remember which items have been extracted
@@ -141,8 +141,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         ForgeHooks.setCraftingPlayer(null);
     }
 
-    private IStackList<ItemStack> createFilteredItemList(INetwork network, CraftingInventory matrix) {
-        IStackList<ItemStack> availableItems = API.instance().createItemStackList();
+    private void filterDuplicateStacks(INetwork network, CraftingInventory matrix, IStackList<ItemStack> availableItems) {
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack stack = network.getItemStorageCache().getList().get(matrix.getStackInSlot(i));
 
@@ -151,7 +150,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 availableItems.add(stack);
             }
         }
-        return availableItems;
     }
 
     @Override
