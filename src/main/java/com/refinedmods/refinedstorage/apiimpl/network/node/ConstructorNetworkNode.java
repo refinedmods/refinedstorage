@@ -129,7 +129,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private void extractAndDropItem(ItemStack stack) {
-        ItemStack took = network.extractItem(stack, upgrades.getStackInteractCount(), Action.PERFORM);
+        ItemStack took = network.extractItem(stack, upgrades.getStackInteractCount(), compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
             DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
@@ -139,7 +139,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private void extractAndSpawnFireworks(ItemStack stack) {
-        ItemStack took = network.extractItem(stack, 1, Action.PERFORM);
+        ItemStack took = network.extractItem(stack, 1, compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
             world.addEntity(new FireworkRocketEntity(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
@@ -304,13 +304,13 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         @Nonnull
         @Override
         public FluidStack drain(FluidStack resource, FluidAction action) {
-            return network.extractFluid(resource, resource.getAmount(), action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
+            return network.extractFluid(resource, resource.getAmount(), compare, action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
         }
 
         @Nonnull
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
-            return network.extractFluid(resource, resource.getAmount(), action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
+            return network.extractFluid(resource, resource.getAmount(), compare, action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
         }
     }
 
