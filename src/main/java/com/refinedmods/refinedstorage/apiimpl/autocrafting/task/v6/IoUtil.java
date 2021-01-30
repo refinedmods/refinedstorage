@@ -172,7 +172,7 @@ public final class IoUtil {
             FluidStack result = network.extractFluid(toExtract.getStack(), toExtract.getStack().getAmount(), Action.PERFORM);
 
             if (!result.isEmpty()) {
-                internalStorage.insert(toExtract.getStack(), result.getAmount(), Action.PERFORM);
+                internalStorage.insert(result, result.getAmount(), Action.PERFORM);
 
                 toRemove.add(result);
             }
