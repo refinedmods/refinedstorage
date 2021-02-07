@@ -1,5 +1,16 @@
 # Refined Storage Changelog
 
+### 1.9.12
+
+- Fixed some issues when using the Grid when it's offline (Darkere)
+- Fixed crafting events not being fired in some cases in the Grid (Darkere)
+- Fixed not being able to set fluid filter slot output quantity (Darkere)
+- Fixed mod id search not working for Industrial Foregoing (Darkere)
+- Fixed fluid autocrafting duplicating fluids (Darkere)
+- Fixed some Grid crashes (ScoreUnder)
+- Fixed constructor not using compare mode correctly in some cases (ScoreUnder)
+- Fixed duplication bug in the Interface (Darkere)
+
 ### 1.9.11
 
 - Fixed disks and network devices not loading when they did not previously exist
