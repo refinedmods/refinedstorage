@@ -40,7 +40,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
         if (data != null && data.hasProperty(CoverManager.PROPERTY)) {
             CoverManager manager = data.getData(CoverManager.PROPERTY);
             addCover(quads, manager.getCover(Direction.NORTH), Direction.NORTH, side, rand, manager, state, true);
-            addCover(quads, manager.getCover(Direction.DOWN), Direction.SOUTH, side, rand, manager, state, true);
+            addCover(quads, manager.getCover(Direction.SOUTH), Direction.SOUTH, side, rand, manager, state, true);
             addCover(quads, manager.getCover(Direction.EAST), Direction.EAST, side, rand, manager, state, true);
             addCover(quads, manager.getCover(Direction.WEST), Direction.WEST, side, rand, manager, state, true);
             addCover(quads, manager.getCover(Direction.DOWN), Direction.DOWN, side, rand, manager, state, true);
