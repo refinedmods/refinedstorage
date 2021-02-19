@@ -1,9 +1,20 @@
 package com.refinedmods.refinedstorage.render;
 
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.render.collision.CollisionGroup;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 
 import javax.annotation.Nonnull;
 
@@ -63,5 +74,24 @@ public class ConstantsCable {
                 return null;
         }
     }
-    
+
+    public static VoxelShape addCoverVoxelShapes(VoxelShape shape, IBlockReader world, BlockPos pos){
+        if (world != null){
+            TileEntity entity = world.getTileEntity(pos);
+            if (entity instanceof NetworkNodeTile && ((NetworkNodeTile<?>) entity).getNode() instanceof ICoverable){
+                CoverManager coverManager = ((ICoverable) ((NetworkNodeTile<?>) entity).getNode()).getCoverManager();
+                for (Direction value : Direction.values()) {
+                    Cover cover = coverManager.getCover(value);
+                    if (cover != null){
+                        shape = VoxelShapes.or(shape, VoxelShapes.create(ConstantsCable.getCoverBounds(value)));
+                        if (cover.getType() == CoverType.NORMAL){
+                            shape = VoxelShapes.or(shape, VoxelShapes.create(ConstantsCable.getHolderBounds(value)));
+                        }
+                    }
+                }
+            }
+        }
+        return shape;
+    }
+
 }
