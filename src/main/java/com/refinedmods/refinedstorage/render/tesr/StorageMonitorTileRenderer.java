@@ -71,9 +71,9 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
         matrixStack.translate(
-            ((float) direction.getXOffset() * 0.5F) + (direction.getZOffset() * stringOffset),
+            ((float) direction.getXOffset() * 0.501F) + (direction.getZOffset() * stringOffset),
             -0.275,
-            ((float) direction.getZOffset() * 0.5F) - (direction.getXOffset() * stringOffset)
+            ((float) direction.getZOffset() * 0.501F) - (direction.getXOffset() * stringOffset)
         );
 
         matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(direction.getXOffset() * 180, 0, direction.getZOffset() * 180), true));
