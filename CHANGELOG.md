@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.9.13
+
+- Calculate vertex data step size in FullbrightBakedModel (ylou)
+
 ### 1.9.12
 
 - Fixed some issues when using the Grid when it's offline (Darkere)
