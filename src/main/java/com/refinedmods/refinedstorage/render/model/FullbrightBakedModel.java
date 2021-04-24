@@ -67,12 +67,13 @@ public class FullbrightBakedModel extends DelegateBakedModel {
 
     private static BakedQuad transformQuad(BakedQuad quad) {
         int[] vertexData = quad.getVertexData().clone();
+        int step = vertexData.length / 4;
 
         // Set lighting to fullbright on all vertices
         vertexData[6] = 0x00F000F0;
-        vertexData[6 + 8] = 0x00F000F0;
-        vertexData[6 + 8 + 8] = 0x00F000F0;
-        vertexData[6 + 8 + 8 + 8] = 0x00F000F0;
+        vertexData[6 + step] = 0x00F000F0;
+        vertexData[6 + 2 * step] = 0x00F000F0;
+        vertexData[6 + 3 * step] = 0x00F000F0;
 
         return new BakedQuad(
             vertexData,
