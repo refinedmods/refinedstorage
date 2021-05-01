@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
+import com.refinedmods.refinedstorage.util.EquationEvaluator;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -37,6 +38,25 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     protected abstract boolean canAmountGoNegative();
 
     protected abstract int getMaxAmount();
+
+    protected int getMinAmount() {
+        if (canAmountGoNegative()) {
+            return -getMaxAmount();
+        }
+        return 1;
+    }
+
+    protected int parseAmount() {
+        return (int) Math.ceil(EquationEvaluator.evaluate(amountField.getText()));
+    }
+
+    protected int clampAmount(int amount) {
+        return Math.max(getMinAmount(), Math.min(getMaxAmount(), amount));
+    }
+
+    protected boolean isAmountInBounds(int amount) {
+        return getMinAmount() <= amount && amount <= getMaxAmount();
+    }
 
     protected Pair<Integer, Integer> getAmountPos() {
         return Pair.of(7 + 2, 50 + 1);
@@ -137,28 +157,31 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     private void onIncrementButtonClicked(int increment) {
-        int oldAmount = 0;
-
         try {
-            oldAmount = Integer.parseInt(amountField.getValue());
-        } catch (NumberFormatException e) {
+            int oldAmount = parseAmount();
+            int newAmount = oldAmount + increment;
+            if (!canAmountGoNegative() && oldAmount == 1) {
+                newAmount--;
+            }
+            amountField.setText(String.valueOf(clampAmount(newAmount)));
+        } catch (IllegalArgumentException e) {
             // NO OP
         }
-
-        int newAmount = increment;
-
-        if (!canAmountGoNegative()) {
-            newAmount = Math.max(1, ((oldAmount == 1 && newAmount != 1) ? 0 : oldAmount) + newAmount);
-        } else {
-            newAmount = oldAmount + newAmount;
-        }
-
-        if (newAmount > getMaxAmount()) {
-            newAmount = getMaxAmount();
-        }
-
-        amountField.setValue(String.valueOf(newAmount));
     }
+
+    private void onOkButtonPressed(boolean shiftDown) {
+        try {
+            int amount = parseAmount();
+            if (isAmountInBounds(amount)) {
+                onValidAmountSave(shiftDown, amount);
+                close();
+            }
+        } catch (IllegalArgumentException e) {
+            // NO OP
+        }
+    }
+
+    protected void onValidAmountSave(boolean shiftDown, int amount) {}
 
     @Override
     public void tick(int x, int y) {
@@ -179,9 +202,6 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         renderString(poseStack, 7, 7, title.getString());
     }
 
-    protected void onOkButtonPressed(boolean shiftDown) {
-        // NO OP
-    }
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
