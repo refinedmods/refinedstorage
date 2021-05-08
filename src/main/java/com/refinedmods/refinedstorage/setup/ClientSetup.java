@@ -141,27 +141,10 @@ public class ClientSetup {
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
-        ModelLoader.addSpecialModel(DISK_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_FULL_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
-
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
-
-        for (DyeColor color : DyeColor.values()) {
-            ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
-        }
-
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
-
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
         MinecraftForge.EVENT_BUS.addListener(new ExperimentalLightingPipelineNagger()::onPlayerLoggedIn);
+        MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
 
         API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
 
@@ -212,6 +195,24 @@ public class ClientSetup {
     @SubscribeEvent
     public void onClientSetup(FMLClientSetupEvent e) {
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
+
+        ModelLoader.addSpecialModel(DISK_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_FULL_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
+
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
+
+        for (DyeColor color : DyeColor.values()) {
+            ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
+        }
+
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
 
         ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
         ScreenManager.registerFactory(RSContainers.CONTROLLER, ControllerScreen::new);
