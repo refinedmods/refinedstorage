@@ -352,7 +352,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public static boolean isKeyDown(KeyBinding keybinding) {
-        return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
+        return !keybinding.isInvalid() && InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
             keybinding.getKeyConflictContext().isActive() &&
             keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }
