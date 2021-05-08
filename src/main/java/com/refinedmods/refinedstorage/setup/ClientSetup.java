@@ -33,6 +33,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -52,13 +53,6 @@ public class ClientSetup {
     private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft != null) { // This is null in a runData environment.
-            IResourceManager resourceManager = minecraft.getResourceManager();
-            if (resourceManager instanceof IReloadableResourceManager) {
-                ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
-            }
-        }
 
         forEachColorApply("controller", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             base,
@@ -291,6 +285,11 @@ public class ClientSetup {
 
         ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
         ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+    }
+
+    @SubscribeEvent
+    public void addReloadListener(AddReloadListenerEvent event){
+        event.addListener(new ResourcePackListener());
     }
 
     @SubscribeEvent
