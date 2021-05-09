@@ -2,6 +2,8 @@
 
 ### 1.9.13
 
+- fixed unbound keybinds causing log spam (Darkere)
+- fixed custom banners from other mods not loading (Darkere)
 - Calculate vertex data step size in FullbrightBakedModel (ylou)
 
 ### 1.9.12
