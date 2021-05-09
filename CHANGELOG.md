@@ -2,6 +2,7 @@
 
 ### 1.9.13
 
+- fixed capacity rendering for creative storage (Darkere)
 - fixed unbound keybinds causing log spam (Darkere)
 - fixed custom banners from other mods not loading (Darkere)
 - Calculate vertex data step size in FullbrightBakedModel (ylou)
