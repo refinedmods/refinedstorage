@@ -2,6 +2,8 @@
 
 ### 1.9.13
 
+- fixed pathfinding not working over cables (Darkere)
+- fixed JEI tooltip overlapping crafting grid (Darkere)
 - fixed dismantling of multiple storage blocks only giving back one part (Darkere)
 - fixed portable grid no longer opening after some use (Darkere)
 - fixed capacity rendering for creative storage (Darkere)
