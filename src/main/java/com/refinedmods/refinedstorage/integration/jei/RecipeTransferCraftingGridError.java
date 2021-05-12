@@ -35,7 +35,7 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         List<ITextComponent> message = drawIngredientHighlights(stack, recipeX, recipeY);
 
         Screen currentScreen = Minecraft.getInstance().currentScreen;
-        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 150, Minecraft.getInstance().fontRenderer);
+        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 200, Minecraft.getInstance().fontRenderer);
     }
 
     protected List<ITextComponent> drawIngredientHighlights(MatrixStack stack, int recipeX, int recipeY) {
