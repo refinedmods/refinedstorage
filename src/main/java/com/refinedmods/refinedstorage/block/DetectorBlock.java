@@ -5,11 +5,13 @@ import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.DetectorTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -68,9 +70,13 @@ public class DetectorBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = RSBlocks.DETECTOR.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
-        if (result != ActionResultType.PASS) {
-            return result;
+        ColorMap<DetectorBlock> colorMap = RSBlocks.DETECTOR;
+        DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
+
+        if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
+            BlockState newState = colorMap.get(color).get().getDefaultState().with(POWERED, state.get(POWERED));
+
+            return RSBlocks.DETECTOR.setBlockState(newState, player.getHeldItem(hand), world, pos, player);
         }
 
         if (!world.isRemote) {
