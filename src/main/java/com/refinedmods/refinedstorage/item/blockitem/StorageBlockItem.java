@@ -64,6 +64,7 @@ public class StorageBlockItem extends BaseBlockItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack storageStack = player.getHeldItem(hand);
+        int count = storageStack.getCount();
 
         if (!world.isRemote && player.isCrouching() && type != ItemStorageType.CREATIVE) {
             UUID diskId = null;
@@ -77,6 +78,7 @@ public class StorageBlockItem extends BaseBlockItem {
             // Newly created storages won't have a tag yet, so allow invalid disks as well.
             if (disk == null || disk.getStored() == 0) {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type));
+                storagePart.setCount(count);
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
@@ -87,7 +89,9 @@ public class StorageBlockItem extends BaseBlockItem {
                     API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
                 }
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING.get()));
+                ItemStack stack = new ItemStack(RSBlocks.MACHINE_CASING.get());
+                stack.setCount(count);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
 
