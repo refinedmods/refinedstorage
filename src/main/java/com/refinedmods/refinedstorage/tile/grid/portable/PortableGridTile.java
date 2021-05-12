@@ -285,8 +285,12 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         stack.getTag().putInt(GridNetworkNode.NBT_TAB_SELECTED, tabSelected);
         stack.getTag().putInt(GridNetworkNode.NBT_TAB_PAGE, tabPage);
 
-        stack.getTag().putUniqueId(PortableGrid.NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
-        stack.getTag().putUniqueId(PortableGrid.NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
+        if (itemStorageTrackerId != null) {
+            stack.getTag().putUniqueId(PortableGrid.NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
+        }
+        if (fluidStorageTrackerId != null) {
+            stack.getTag().putUniqueId(PortableGrid.NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
+        }
 
         if (enchants != null) {
             stack.getTag().put(NBT_ENCHANTMENTS, enchants);

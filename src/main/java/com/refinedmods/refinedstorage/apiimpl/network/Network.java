@@ -514,7 +514,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         }
 
         if (tag.contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
-            this.fluidStorageTrackerId = tag.getUniqueId(NBT_ITEM_STORAGE_TRACKER_ID);
+            this.fluidStorageTrackerId = tag.getUniqueId(NBT_FLUID_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
                 getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
