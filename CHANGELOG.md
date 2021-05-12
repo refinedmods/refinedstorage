@@ -2,6 +2,7 @@
 
 ### 1.9.13
 
+- fixed dismantling of multiple storage blocks only giving back one part (Darkere)
 - fixed portable grid no longer opening after some use (Darkere)
 - fixed capacity rendering for creative storage (Darkere)
 - fixed unbound keybinds causing log spam (Darkere)
