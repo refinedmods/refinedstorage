@@ -6,12 +6,14 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class IngredientTracker {
     private final List<Ingredient> ingredients = new ArrayList<>();
+    private final Map<ResourceLocation, Integer> storedItems = new HashMap<>();
 
     public IngredientTracker(IRecipeLayout recipeLayout) {
         for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
@@ -27,6 +29,7 @@ public class IngredientTracker {
 
     public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
         int available = stack.getCount();
+        storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
 
         for (Ingredient ingredient : ingredients) {
             if (available == 0) {
@@ -77,5 +80,20 @@ public class IngredientTracker {
         }
 
         return toRequest;
+    }
+
+    public ItemStack findBestMatch(List<ItemStack> list) {
+        ItemStack stack = ItemStack.EMPTY;
+        int count = 0;
+
+        for (ItemStack itemStack : list) {
+            Integer stored = storedItems.get(itemStack.getItem().getRegistryName());
+            if (stored != null && stored > count) {
+                stack = itemStack;
+                count = stored;
+            }
+        }
+
+        return stack;
     }
 }

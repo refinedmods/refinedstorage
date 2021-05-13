@@ -22,6 +22,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
@@ -192,6 +194,11 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
             if (recipe[i] != null) {
                 ItemStack[] possibilities = recipe[i];
+
+                if (network != null && grid.isGridActive()) {
+                    // sort by the number of items in storage
+                    Arrays.sort(possibilities, Comparator.comparingInt((ItemStack a) -> network.extractItem(a, Integer.MAX_VALUE, IComparer.COMPARE_NBT, Action.SIMULATE).getCount()).reversed());
+                }
 
                 // If we are a crafting grid
                 if (grid.getGridType() == GridType.CRAFTING) {

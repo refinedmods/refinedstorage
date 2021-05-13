@@ -72,7 +72,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
                     )
                 ));
             } else {
-                moveItems(container, recipeLayout);
+                moveItems(container, recipeLayout, tracker);
             }
         } else {
             if (tracker.hasMissing()) {
@@ -87,7 +87,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         IngredientTracker tracker = createTracker(container, recipeLayout, player);
 
         if (doTransfer) {
-            moveItems(container, recipeLayout);
+            moveItems(container, recipeLayout, tracker);
         } else {
             if (tracker.isAutocraftingAvailable()) {
                 return new RecipeTransferPatternGridError(tracker);
@@ -140,11 +140,11 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return System.currentTimeMillis() - lastTransferTimeMs <= TRANSFER_SCROLLBAR_DELAY_MS;
     }
 
-    private void moveItems(GridContainer gridContainer, IRecipeLayout recipeLayout) {
+    private void moveItems(GridContainer gridContainer, IRecipeLayout recipeLayout, IngredientTracker tracker) {
         this.lastTransferTimeMs = System.currentTimeMillis();
 
         if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-            moveForProcessing(recipeLayout);
+            moveForProcessing(recipeLayout, tracker);
         } else {
             move(gridContainer, recipeLayout);
         }
@@ -157,7 +157,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         ));
     }
 
-    private void moveForProcessing(IRecipeLayout recipeLayout) {
+    private void moveForProcessing(IRecipeLayout recipeLayout, IngredientTracker tracker) {
         List<ItemStack> inputs = new LinkedList<>();
         List<ItemStack> outputs = new LinkedList<>();
 
@@ -165,7 +165,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         List<FluidStack> fluidOutputs = new LinkedList<>();
 
         for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
-            handleItemIngredient(inputs, outputs, guiIngredient);
+            handleItemIngredient(inputs, outputs, guiIngredient, tracker);
         }
 
         for (IGuiIngredient<FluidStack> guiIngredient : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
@@ -187,9 +187,13 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         }
     }
 
-    private void handleItemIngredient(List<ItemStack> inputs, List<ItemStack> outputs, IGuiIngredient<ItemStack> guiIngredient) {
+    private void handleItemIngredient(List<ItemStack> inputs, List<ItemStack> outputs, IGuiIngredient<ItemStack> guiIngredient, IngredientTracker tracker) {
         if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
-            ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
+            ItemStack ingredient = tracker.findBestMatch(guiIngredient.getAllIngredients()).copy();
+
+            if (ingredient == ItemStack.EMPTY) {
+                ingredient = guiIngredient.getDisplayedIngredient().copy();
+            }
 
             if (guiIngredient.isInput()) {
                 inputs.add(ingredient);
