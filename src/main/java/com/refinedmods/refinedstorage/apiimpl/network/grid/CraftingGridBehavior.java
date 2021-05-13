@@ -195,9 +195,12 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             if (recipe[i] != null) {
                 ItemStack[] possibilities = recipe[i];
 
-                if (network != null && grid.isGridActive()) {
+                if (network != null && grid.isGridActive() && network.getItemStorageCache() != null) {
                     // sort by the number of items in storage
-                    Arrays.sort(possibilities, Comparator.comparingInt((ItemStack a) -> network.extractItem(a, Integer.MAX_VALUE, IComparer.COMPARE_NBT, Action.SIMULATE).getCount()).reversed());
+                    Arrays.sort(possibilities, Comparator.comparingInt((ItemStack a) -> {
+                        ItemStack stack = network.getItemStorageCache().getList().get(a);
+                        return stack == null ? 0 : stack.getCount();
+                    }).reversed());
                 }
 
                 // If we are a crafting grid
