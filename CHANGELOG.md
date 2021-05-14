@@ -2,6 +2,11 @@
 
 ### 1.9.13
 
+- fixed crash when dyeing detector (Darkere)
+- when transferring items from JEI RS will now pick the most common item from your system (Darkere)
+- craftingmonitor will now display crafting time even when longer than 60 min (Darkere)
+- fixed disconnect when packetdata for grid contents get too large (Darkere)
+- fixed inserting patterns into crafter potentially causing lag (Darkere)
 - fixed pathfinding not working over cables (Darkere)
 - fixed JEI tooltip overlapping crafting grid (Darkere)
 - fixed dismantling of multiple storage blocks only giving back one part (Darkere)
