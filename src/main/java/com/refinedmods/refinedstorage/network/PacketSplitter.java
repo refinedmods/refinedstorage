@@ -191,9 +191,6 @@ public class PacketSplitter {
 
             PacketBuffer buffer = new PacketBuffer(Unpooled.wrappedBuffer(packetData));
 
-            //Packets come in with with writer Index at 1 skipping the packet index
-            //   buffer.readerIndex(1);
-
             //remove data from cache
             packageCache.remove(comId);
             return buffer;
