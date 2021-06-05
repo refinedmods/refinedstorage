@@ -12,6 +12,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,6 +31,11 @@ public class NodeRequirements {
     private final Map<Integer, IStackList<FluidStack>> fluidRequirements = new LinkedHashMap<>();
     private final Map<Integer, Integer> fluidsNeededPerCraft = new LinkedHashMap<>();
 
+    @Nullable
+    private IStackList<ItemStack> cachedSimulatedItemRequirementSet = null;
+    @Nullable
+    private IStackList<FluidStack> cachedSimulatedFluidRequirementSet = null;
+
     public void addItemRequirement(int ingredientNumber, ItemStack stack, int size, int perCraft) {
         if (!itemsNeededPerCraft.containsKey(ingredientNumber)) {
             itemsNeededPerCraft.put(ingredientNumber, perCraft);
@@ -37,6 +43,7 @@ public class NodeRequirements {
 
         IStackList<ItemStack> list = itemRequirements.computeIfAbsent(ingredientNumber, key -> API.instance().createItemStackList());
         list.add(stack, size);
+        cachedSimulatedItemRequirementSet = null;
     }
 
     public void addFluidRequirement(int ingredientNumber, FluidStack stack, int size, int perCraft) {
@@ -46,9 +53,15 @@ public class NodeRequirements {
 
         IStackList<FluidStack> list = fluidRequirements.computeIfAbsent(ingredientNumber, key -> API.instance().createFluidStackList());
         list.add(stack, size);
+        cachedSimulatedFluidRequirementSet = null;
     }
 
     public IStackList<ItemStack> getSingleItemRequirementSet(boolean simulate) {
+        IStackList<ItemStack> cached = cachedSimulatedItemRequirementSet;
+        if (simulate && cached != null) {
+            return cached;
+        }
+
         IStackList<ItemStack> toReturn = API.instance().createItemStackList();
 
         for (int i = 0; i < itemRequirements.size(); i++) {
@@ -83,10 +96,17 @@ public class NodeRequirements {
             }
         }
 
+        cachedSimulatedItemRequirementSet = simulate ? toReturn : null;
+
         return toReturn;
     }
 
     public IStackList<FluidStack> getSingleFluidRequirementSet(boolean simulate) {
+        IStackList<FluidStack> cached = cachedSimulatedFluidRequirementSet;
+        if (simulate && cached != null) {
+            return cached;
+        }
+
         IStackList<FluidStack> toReturn = API.instance().createFluidStackList();
 
         for (int i = 0; i < fluidRequirements.size(); i++) {
@@ -120,6 +140,8 @@ public class NodeRequirements {
                 throw new IllegalStateException("Bad!");
             }
         }
+
+        cachedSimulatedFluidRequirementSet = simulate ? toReturn : null;
 
         return toReturn;
     }
