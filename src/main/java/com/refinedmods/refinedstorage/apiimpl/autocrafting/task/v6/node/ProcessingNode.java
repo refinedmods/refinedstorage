@@ -132,6 +132,8 @@ public class ProcessingNode extends Node {
                         if (canInsertFullAmount) {
                             canInsertFullAmount = IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
                         }
+                    } else {
+                        break;
                     }
 
                     if (hasAllRequirements && !canInsertFullAmount) {
