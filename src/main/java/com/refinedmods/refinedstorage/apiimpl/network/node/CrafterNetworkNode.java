@@ -464,7 +464,9 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public boolean insertIntoInventory(@Nullable IItemHandler dest, Collection<StackListEntry<ItemStack>> toInsert, Action action) {
+    public boolean insertItemsIntoInventory(Collection<StackListEntry<ItemStack>> toInsert, Action action) {
+        IItemHandler dest = getConnectedInventory();
+
         if (dest == null) {
             return false;
         }
@@ -518,7 +520,13 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public boolean insertIntoInventory(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action) {
+    public boolean insertFluidsIntoInventory(Collection<StackListEntry<FluidStack>> toInsert, Action action) {
+        IFluidHandler dest = getConnectedFluidInventory();
+
+        if (dest == null) {
+            return false;
+        }
+
         for (StackListEntry<FluidStack> entry : toInsert) {
             int filled = dest.fill(entry.getStack(), action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
 
@@ -532,5 +540,15 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         }
 
         return true;
+    }
+
+    @Override
+    public boolean hasConnectedInventory() {
+        return getConnectedInventory() != null;
+    }
+
+    @Override
+    public boolean hasConnectedFluidInventory() {
+        return getConnectedFluidInventory() != null;
     }
 }

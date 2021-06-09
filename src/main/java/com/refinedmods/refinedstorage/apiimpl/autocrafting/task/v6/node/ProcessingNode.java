@@ -104,8 +104,8 @@ public class ProcessingNode extends Node {
                         allLocked = false;
                     }
 
-                    if ((!singleItemSetToRequire.isEmpty() && container.getConnectedInventory() == null) ||
-                        (!singleFluidSetToRequire.isEmpty() && container.getConnectedFluidInventory() == null)) {
+                    if ((!singleItemSetToRequire.isEmpty() && container.hasConnectedInventory()) ||
+                        (!singleFluidSetToRequire.isEmpty() && container.hasConnectedFluidInventory())) {
                         if (allMissingMachine) {
                             this.state = ProcessingState.MACHINE_NONE;
                         }
@@ -128,9 +128,9 @@ public class ProcessingNode extends Node {
 
                     boolean canInsertFullAmount = false;
                     if (hasAllRequirements) {
-                        canInsertFullAmount = container.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        canInsertFullAmount = container.insertItemsIntoInventory(extractedItems.getStacks(), Action.SIMULATE);
                         if (canInsertFullAmount) {
-                            canInsertFullAmount = container.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                            canInsertFullAmount = container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.SIMULATE);
                         }
                     }
 
@@ -150,8 +150,8 @@ public class ProcessingNode extends Node {
                         extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
                         extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
 
-                        container.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
-                        container.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
+                        container.insertItemsIntoInventory(extractedItems.getStacks(), Action.PERFORM);
+                        container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.PERFORM);
 
                         next();
 

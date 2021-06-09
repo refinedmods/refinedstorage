@@ -134,21 +134,29 @@ public interface ICraftingPatternContainer {
      * Called when the autocrafting system wants to insert items. Will be called with Action.SIMULATE first and if that
      * succeeds will be called again with Action.PERFORM
      *
-     * @param dest     The ItemHandler to insert into
      * @param toInsert A collection of items that should be inserted.
      * @param action   Action to take
      * @return whether the insertion was successful
      */
-    boolean insertIntoInventory(@Nullable IItemHandler dest, Collection<StackListEntry<ItemStack>> toInsert, Action action);
+    boolean insertItemsIntoInventory(Collection<StackListEntry<ItemStack>> toInsert, Action action);
 
     /**
      * Called when the autocrafting system wants to insert fluids. Will be called with Action.SIMULATE first and if that
      * succeeds will be called again with Action.PERFORM
      *
-     * @param dest     The FluidHandler to insert into
      * @param toInsert A collection of fluids that should be inserted.
      * @param action   Action to take
      * @return whether the insertion was successful
      */
-    boolean insertIntoInventory(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action);
+    boolean insertFluidsIntoInventory(Collection<StackListEntry<FluidStack>> toInsert, Action action);
+
+    /**
+     * @return whether the container is successfully connected to the inventory it wants to insert to
+     */
+    boolean hasConnectedInventory();
+
+    /**
+     * @return whether the container is successfully connected to the fluid inventory it wants to insert to
+     */
+    boolean hasConnectedFluidInventory();
 }
