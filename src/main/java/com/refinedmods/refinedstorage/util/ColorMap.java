@@ -112,15 +112,16 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
     }
 
     private <S extends BaseBlock> BlockState getNewState(RegistryObject<S> block, BlockState state) {
-        if (block.get().getDirection() == BlockDirection.NONE) {
-            return block.get().getDefaultState()
-                .with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED));
-        } else {
-            return block.get().getDefaultState()
-                .with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED))
-                .with(block.get().getDirection().getProperty(), state.get(block.get().getDirection().getProperty()));
+        BlockState newState = block.get().getDefaultState();
+
+        if (((NetworkNodeBlock) block.get()).hasConnectedState()) {
+            newState = newState.with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED));
+        }
+        if (block.get().getDirection() != BlockDirection.NONE) {
+            newState = newState.with(block.get().getDirection().getProperty(), state.get(block.get().getDirection().getProperty()));
         }
 
+        return newState;
     }
 
     public ActionResultType setBlockState(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
