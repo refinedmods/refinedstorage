@@ -1,14 +1,19 @@
 package com.refinedmods.refinedstorage.api.autocrafting;
 
+import com.refinedmods.refinedstorage.api.util.Action;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -124,4 +129,26 @@ public interface ICraftingPatternContainer {
      */
     default void onUsedForProcessing() {
     }
+
+    /**
+     * Called when the autocrafting system wants to insert items. Will be called with Action.SIMULATE first and if that
+     * succeeds will be called again with Action.PERFORM
+     *
+     * @param dest     The ItemHandler to insert into
+     * @param toInsert A collection of items that should be inserted.
+     * @param action   Action to take
+     * @return whether the insertion was successful
+     */
+    boolean insertIntoInventory(@Nullable IItemHandler dest, Collection<StackListEntry<ItemStack>> toInsert, Action action);
+
+    /**
+     * Called when the autocrafting system wants to insert fluids. Will be called with Action.SIMULATE first and if that
+     * succeeds will be called again with Action.PERFORM
+     *
+     * @param dest     The FluidHandler to insert into
+     * @param toInsert A collection of fluids that should be inserted.
+     * @param action   Action to take
+     * @return whether the insertion was successful
+     */
+    boolean insertIntoInventory(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action);
 }

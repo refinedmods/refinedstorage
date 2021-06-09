@@ -128,9 +128,9 @@ public class ProcessingNode extends Node {
 
                     boolean canInsertFullAmount = false;
                     if (hasAllRequirements) {
-                        canInsertFullAmount = IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        canInsertFullAmount = container.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
                         if (canInsertFullAmount) {
-                            canInsertFullAmount = IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                            canInsertFullAmount = container.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
                         }
                     }
 
@@ -150,8 +150,8 @@ public class ProcessingNode extends Node {
                         extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
                         extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
 
-                        IoUtil.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
-                        IoUtil.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
+                        container.insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
+                        container.insertIntoInventory(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
 
                         next();
 
