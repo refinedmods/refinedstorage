@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
@@ -29,7 +30,12 @@ public class IngredientTracker {
 
     public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
         int available = stack.getCount();
-        storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
+        if (stack.getItem() instanceof PatternItem) {
+            ItemStack outputStack = PatternItem.getOutputSlot(stack, 0);
+            storedItems.merge(outputStack.getItem().getRegistryName(), available, Integer::sum);
+        } else {
+            storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
+        }
 
         for (Ingredient ingredient : ingredients) {
             if (available == 0) {
