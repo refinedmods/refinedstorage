@@ -3,6 +3,7 @@
 ### 1.9.13
 
 - Allow simple math input in AmountSpecifyingScreen (mooofins)
+<<<<<<< HEAD
 - Fixed count on Storage Monitor having Z fighting (tivec)
 - Fixed items on Storage Monitor not being flat (raoulvdberge)
 - Removed experimental pipeline nagging message (raoulvdberge)
@@ -20,6 +21,9 @@
 - Fixed empty keybinding causing GL errors (Darkere)
 - Fixed some parts of the Japanese translation (akihironagai)
 - Fixed rendering issue on blocks when using OptiFine (mooofins)
+=======
+- Calculate vertex data step size in FullbrightBakedModel (mooofins)
+>>>>>>> 0e6d95d03 (Attempt translations for evaluate in other langs)
 
 ### 1.9.12
 
