@@ -87,7 +87,7 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainerMenu
     }
 
     @Override
-    protected void onValidAmountSave(boolean shiftDown, int amount) {
+    protected void onValidAmountSaved(boolean shiftDown, int amount) {
         RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(containerSlot, ItemHandlerHelper.copyStackWithSize(stack, amount)));
     }
 }

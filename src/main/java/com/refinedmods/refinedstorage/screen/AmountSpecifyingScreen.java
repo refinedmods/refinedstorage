@@ -20,6 +20,7 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     protected EditBox amountField;
     protected Button okButton;
     protected Button cancelButton;
+    protected Button evaluateButton;
 
     protected AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, Inventory playerInventory, Component title) {
         super(container, width, height, playerInventory, title);
@@ -63,22 +64,36 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     protected Pair<Integer, Integer> getOkCancelPos() {
-        return Pair.of(114, 33);
+        return Pair.of(114, 20);
     }
 
     protected int getOkCancelButtonWidth() {
         return 50;
     }
 
+    protected int getOkCancelButtonHeight() {
+        return 20;
+    }
+
+    public Button addActionButton(Pair<Integer, Integer> absolutePos, int xOffset, int yOffset, ITextComponent text,
+            IPressable onPress) {
+        return addButton(absolutePos.getLeft() + xOffset, absolutePos.getRight() + yOffset, getOkCancelButtonWidth(),
+                getOkCancelButtonHeight(), text, true, true, onPress);
+    }
+
     @Override
     public void onPostInit(int x, int y) {
         Pair<Integer, Integer> pos = getOkCancelPos();
+        Pair<Integer, Integer> absolutePos = Pair.of(x + pos.getLeft(), y + pos.getRight());
 
-        okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
+        okButton = addActionButton(absolutePos, 0, 0, getOkButtonText(), btn -> onOkButtonPressed(hasShiftDown()));
+        cancelButton = addActionButton(absolutePos, 0, 24, new TranslationTextComponent("gui.cancel"), btn -> close());
+        evaluateButton = addActionButton(absolutePos, 0, 48, new TranslationTextComponent("misc.refinedstorage.evaluate"),
+                btn -> onEvaluateButtonPressed(hasShiftDown()));
 
-        amountField = new EditBox(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new TextComponent(""));
-        amountField.setBordered(false);
+        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6,
+                font.FONT_HEIGHT, new StringTextComponent(""));
+        amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setValue(String.valueOf(getDefaultAmount()));
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
@@ -173,7 +188,7 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         try {
             int amount = parseAmount();
             if (isAmountInBounds(amount)) {
-                onValidAmountSave(shiftDown, amount);
+                onValidAmountSaved(shiftDown, amount);
                 close();
             }
         } catch (IllegalArgumentException e) {
@@ -181,7 +196,16 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         }
     }
 
-    protected void onValidAmountSave(boolean shiftDown, int amount) {}
+    private void onEvaluateButtonPressed(boolean shiftDown) {
+        try {
+            amountField.setText(String.valueOf(clampAmount(parseAmount())));
+        } catch (IllegalArgumentException e) {
+            // NO OP
+        }
+    }  
+
+    protected void onValidAmountSaved(boolean shiftDown, int amount) {
+    }
 
     @Override
     public void tick(int x, int y) {
@@ -201,7 +225,6 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
         renderString(poseStack, 7, 7, title.getString());
     }
-
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
