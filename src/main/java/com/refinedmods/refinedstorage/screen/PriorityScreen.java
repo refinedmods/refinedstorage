@@ -67,7 +67,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
     }
 
     @Override
-    protected void onValidAmountSave(boolean shiftDown, int amount) {
+    protected void onValidAmountSaved(boolean shiftDown, int amount) {
         TileDataManager.setParameter(priority, amount);
     }
 }
