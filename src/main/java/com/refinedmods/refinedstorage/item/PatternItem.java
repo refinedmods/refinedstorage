@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPatternFactory;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.render.tesr.PatternItemStackTileRenderer;
+import com.refinedmods.refinedstorage.util.ItemStackKey;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,25 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PatternItem extends Item implements ICraftingPatternProvider {
-    private static final Map<StackCacheKey, ICraftingPattern> CACHE = new HashMap<>();
-
-    private static final class StackCacheKey {
-        public final ItemStack stack;
-
-        private StackCacheKey(ItemStack stack) {
-            this.stack = stack;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return this == o || o != null && getClass() == o.getClass() && ItemStack.areItemStacksEqual(stack, ((StackCacheKey) o).stack);
-        }
-
-        @Override
-        public int hashCode() {
-            return 961 * stack.getCount() + 31 * stack.getItem().hashCode() + (stack.hasTag() ? stack.getTag().hashCode() : 0);
-        }
-    }
+    private static final Map<ItemStackKey, ICraftingPattern> CACHE = new HashMap<>();
 
     private static final String NBT_VERSION = "Version";
     private static final String NBT_INPUT_SLOT = "Input_%d";
@@ -72,8 +55,8 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static ICraftingPattern fromCache(World world, ItemStack stack) {
         ICraftingPattern pattern = CACHE.computeIfAbsent(
-            new StackCacheKey(stack),
-            s -> CraftingPatternFactory.INSTANCE.create(world, null, s.stack)
+            new ItemStackKey(stack),
+            s -> CraftingPatternFactory.INSTANCE.create(world, null, s.getStack())
         );
 
         // A number that is not too crazy but hopefully is not normally reachable,
