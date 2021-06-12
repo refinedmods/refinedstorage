@@ -144,7 +144,6 @@ public class GridViewImpl implements IGridView {
         IGridStack existing = map.get(stack.getId());
         boolean stillExists = true;
         boolean shouldSort = screen.canSort();
-        boolean shouldDisplay = getActiveFilters().test(existing);
 
         if (existing == null) {
             stack.setQuantity(delta);
@@ -152,7 +151,7 @@ public class GridViewImpl implements IGridView {
             map.put(stack.getId(), stack);
             existing = stack;
 
-            if (craftingStack != null && shouldSort && shouldDisplay) {
+            if (craftingStack != null && shouldSort) {
                 stacks.remove(craftingStack);
             }
         } else {
@@ -164,7 +163,7 @@ public class GridViewImpl implements IGridView {
                 map.remove(existing.getId());
                 stillExists = false;
 
-                if (craftingStack != null && shouldSort && shouldDisplay && getActiveFilters().test(craftingStack)) {
+                if (craftingStack != null && shouldSort && getActiveFilters().test(craftingStack)) {
                     addStack(craftingStack);
                 }
             }
@@ -173,7 +172,7 @@ public class GridViewImpl implements IGridView {
         }
 
         if (shouldSort) {
-            if (stillExists && shouldDisplay) {
+            if (stillExists && getActiveFilters().test(existing)) {
                 addStack(existing);
             }
             this.screen.updateScrollbar();

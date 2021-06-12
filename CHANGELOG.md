@@ -4,7 +4,6 @@
 
 - Removed experimental pipeline nagging message (raoulvdberge)
 - Fixed crash when using an External Storage on a fluid inventory (jeremiahwinsley)
-- Fixed craftable stacks not being visible using the "craftable only" view (BlueAgent)
 - Added some performance improvements for autocrafting (necauqua, Darkere)
 - Fixed a memory leak in the pattern cache (necauqua)
 - Fixed Detector crashing when dyed (Darkere)
