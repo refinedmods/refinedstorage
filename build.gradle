@@ -131,6 +131,9 @@ dependencies {
 
     compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3330406')
 
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2:api")
+
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.16.1'

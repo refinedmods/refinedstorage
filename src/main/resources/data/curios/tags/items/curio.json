@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:wireless_grid",
+    "refinedstorage:creative_wireless_grid",
+    "refinedstorage:wireless_fluid_grid",
+    "refinedstorage:creative_wireless_fluid_grid",
+    "refinedstorage:wireless_crafting_monitor",
+    "refinedstorage:creative_wireless_crafting_monitor"
+  ]
+}
