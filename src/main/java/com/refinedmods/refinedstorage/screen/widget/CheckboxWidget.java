@@ -47,7 +47,7 @@ public class CheckboxWidget extends CheckboxButton {
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         minecraft.getTextureManager().bindTexture(TEXTURE);
         RenderSystem.enableDepthTest();

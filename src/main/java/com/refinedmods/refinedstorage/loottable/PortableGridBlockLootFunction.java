@@ -29,7 +29,7 @@ public class PortableGridBlockLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType func_230425_b_() {
+    public LootFunctionType getFunctionType() {
         return RSLootFunctions.getPortableGrid();
     }
 

@@ -126,7 +126,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        func_230459_a_(matrixStack, mouseX, mouseY);
+        renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override

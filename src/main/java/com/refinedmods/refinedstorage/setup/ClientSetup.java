@@ -253,19 +253,19 @@ public class ClientSetup {
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
 
-        ItemModelsProperties.func_239418_a_(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
 
-        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.func_239418_a_(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
-        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.func_239418_a_(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.registerProperty(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.registerProperty(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
     }
 
     @SubscribeEvent

@@ -17,7 +17,7 @@ public class ControllerBlockItem extends EnergyBlockItem {
         super(block, new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), block.getType() == NetworkType.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
 
         if (color != ColorMap.DEFAULT_COLOR) {
-            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey()).appendString(" ").append(displayName);
+            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey()).appendString(" ").appendSibling(displayName);
         } else {
             this.displayName = displayName;
         }

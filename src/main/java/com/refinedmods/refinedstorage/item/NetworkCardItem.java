@@ -41,7 +41,7 @@ public class NetworkCardItem extends Item {
             tag.putInt(NBT_RECEIVER_X, ctx.getPos().getX());
             tag.putInt(NBT_RECEIVER_Y, ctx.getPos().getY());
             tag.putInt(NBT_RECEIVER_Z, ctx.getPos().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().func_234923_W_().func_240901_a_().toString());
+            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimensionKey().getLocation().toString());
 
             ctx.getPlayer().getHeldItem(ctx.getHand()).setTag(tag);
 
@@ -64,7 +64,7 @@ public class NetworkCardItem extends Item {
                 pos.getX(),
                 pos.getY(),
                 pos.getZ(),
-                type.func_240901_a_().toString()
+                type.getLocation().toString()
             ).setStyle(Styles.GRAY));
         }
     }
@@ -93,7 +93,7 @@ public class NetworkCardItem extends Item {
                 return null;
             }
 
-            return RegistryKey.func_240903_a_(Registry.WORLD_KEY, name);
+            return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, name);
         }
 
         return null;

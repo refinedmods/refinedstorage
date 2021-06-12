@@ -8,6 +8,8 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class BaseBlock extends Block {
     protected BaseBlock(Properties properties) {
         super(properties);

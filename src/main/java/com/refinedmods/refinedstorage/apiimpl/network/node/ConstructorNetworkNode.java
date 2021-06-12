@@ -43,6 +43,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 public class ConstructorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "constructor");
 

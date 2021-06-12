@@ -35,7 +35,7 @@ public abstract class RSWorldSavedData extends WorldSavedData {
             compoundnbt.putInt("DataVersion", SharedConstants.getVersion().getWorldVersion());
 
             try {
-                CompressedStreamTools.func_244264_a(compoundnbt, tempFile);
+                CompressedStreamTools.writeCompressed(compoundnbt, tempFile);
                 if (fileIn.exists()) {
                     if (!fileIn.delete()) {
                         LOGGER.error("Failed To delete " + fileIn.getName());

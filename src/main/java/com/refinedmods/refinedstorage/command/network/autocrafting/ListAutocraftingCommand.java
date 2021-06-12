@@ -26,11 +26,11 @@ public class ListAutocraftingCommand extends NetworkCommand {
     public static void addInfo(CommandContext<CommandSource> context, ICraftingTask task) {
         context.getSource().sendFeedback(
             new StringTextComponent(getAmount(task.getRequested()) + "x ")
-                .append(getName(task.getRequested()).deepCopy().setStyle(Styles.YELLOW))
+                .appendSibling(getName(task.getRequested()).deepCopy().setStyle(Styles.YELLOW))
                 .appendString(" ")
                 .appendString("(" + task.getCompletionPercentage() + "%)")
                 .appendString(" ")
-                .append(new StringTextComponent("[" + task.getId().toString() + "]").setStyle(Styles.GRAY)),
+                .appendSibling(new StringTextComponent("[" + task.getId().toString() + "]").setStyle(Styles.GRAY)),
             false
         );
     }

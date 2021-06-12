@@ -62,7 +62,7 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new StringTextComponent(amount + "x ").append(data);
+                    data = new StringTextComponent(amount + "x ").appendSibling(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -90,7 +90,7 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -165,7 +165,7 @@ public final class RenderUtils {
                 List<ITextProperties> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
                     ITextProperties textLine = textLines.get(i);
-                    List<ITextProperties> wrappedLine = font.func_238420_b_().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
+                    List<ITextProperties> wrappedLine = font.getCharacterManager().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
                     if (i == 0)
                         titleLinesCount = wrappedLine.size();
 
@@ -238,7 +238,7 @@ public final class RenderUtils {
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 ITextProperties line = textLines.get(lineNumber);
                 if (line != null)
-                    font.func_238416_a_(LanguageMap.getInstance().func_241870_a(line), (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
+                    font.drawEntityText(LanguageMap.getInstance().func_241870_a(line), (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
 
                 if (lineNumber + 1 == titleLinesCount)
                     tooltipY += 2;
@@ -259,7 +259,7 @@ public final class RenderUtils {
 
                     RenderSystem.enableAlphaTest();
 
-                    // FontRenderer#drawStringWithShadow - call to func_228078_a_ (private)
+                    // FontRenderer#drawStringWithShadow - call to renderString (private)
                     MatrixStack smallTextStack = new MatrixStack();
                     smallTextStack.translate(0.0D, 0.0D, zLevel);
                     smallTextStack.scale(textScale, textScale, 1);
