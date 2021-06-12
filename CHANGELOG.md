@@ -2,6 +2,8 @@
 
 ### 1.9.13
 
+- Fixed count on Storage Monitor having Z fighting (tivec)
+- Fixed items on Storage Monitor not being flat (raoulvdberge)
 - Removed experimental pipeline nagging message (raoulvdberge)
 - Fixed crash when using an External Storage on a fluid inventory (jeremiahwinsley)
 - Added some performance improvements for autocrafting (necauqua, Darkere)
