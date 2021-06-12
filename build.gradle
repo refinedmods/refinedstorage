@@ -27,14 +27,6 @@ repositories {
     }
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "refinedmods_refinedstorage"
-        property "sonar.organization", "refinedmods"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
-}
-
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
