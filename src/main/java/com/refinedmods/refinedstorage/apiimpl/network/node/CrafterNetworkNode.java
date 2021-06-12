@@ -30,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,16 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         @Override
         public int getSlotLimit(int slot) {
             return 1;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            if (!stacks.get(slot).isEmpty()) {
+                return stack;
+            }
+
+            return super.insertItem(slot, stack, simulate);
         }
     }
         .addValidator(new PatternItemValidator(world))
