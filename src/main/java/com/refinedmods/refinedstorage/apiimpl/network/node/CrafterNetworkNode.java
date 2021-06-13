@@ -552,14 +552,4 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
 
         return true;
     }
-
-    @Override
-    public boolean hasConnectedInventory() {
-        return getConnectedInventory() != null;
-    }
-
-    @Override
-    public boolean hasConnectedFluidInventory() {
-        return getConnectedFluidInventory() != null;
-    }
 }

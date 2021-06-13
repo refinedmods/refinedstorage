@@ -153,10 +153,14 @@ public interface ICraftingPatternContainer {
     /**
      * @return whether the container is successfully connected to the inventory it wants to insert to
      */
-    boolean hasConnectedInventory();
+    default boolean hasConnectedInventory() {
+        return getConnectedInventory() != null;
+    }
 
     /**
      * @return whether the container is successfully connected to the fluid inventory it wants to insert to
      */
-    boolean hasConnectedFluidInventory();
+    default boolean hasConnectedFluidInventory() {
+        return getConnectedFluidInventory() != null;
+    }
 }
