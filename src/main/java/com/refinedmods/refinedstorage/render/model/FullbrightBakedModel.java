@@ -80,7 +80,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
             quad.getTintIndex(),
             quad.getFace(),
             quad.getSprite(),
-            quad.applyDiffuseLighting() // shouldApplyDiffuseLighting
+            quad.applyDiffuseLighting()
         );
     }
 

@@ -1,16 +1,14 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
 
 plugins {
-    id "org.sonarqube" version "3.0"
     id 'info.solidsoft.pitest' version '1.5.1'
 }
 
@@ -54,7 +52,7 @@ if (env.BUILD_NUMBER) {
 group = 'com.refinedmods'
 archivesBaseName = 'refinedstorage'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
     mappings channel: 'snapshot', version: '20210309-1.16.5'
@@ -122,7 +120,7 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.1.31'
 
     compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.106:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.106")
