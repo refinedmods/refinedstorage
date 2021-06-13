@@ -18,8 +18,6 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import mezz.jei.api.gui.handlers.IGhostIngredientHandler.Target;
-
 public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScreen> {
     @Override
     public <I> List<Target<I>> getTargets(BaseScreen gui, I ingredient, boolean doStart) {

@@ -15,8 +15,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import mezz.jei.api.recipe.transfer.IRecipeTransferError.Type;
-
 public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     private static final Color MISSING_HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
     protected static final Color AUTOCRAFTING_HIGHLIGHT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);

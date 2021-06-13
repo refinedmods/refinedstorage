@@ -15,8 +15,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
-
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private final INetwork network;
     private Set<INetworkNodeGraphEntry> entries = Sets.newConcurrentHashSet();

@@ -16,8 +16,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
-
 public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     private final INetwork network;
     private final World world;

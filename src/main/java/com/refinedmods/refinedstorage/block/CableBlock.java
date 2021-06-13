@@ -26,8 +26,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     private static final BooleanProperty NORTH = BooleanProperty.create("north");
     private static final BooleanProperty EAST = BooleanProperty.create("east");

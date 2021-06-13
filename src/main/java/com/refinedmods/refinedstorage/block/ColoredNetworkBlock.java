@@ -4,8 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ColoredNetworkBlock extends NetworkNodeBlock {
     public ColoredNetworkBlock(Properties props) {
         super(props);

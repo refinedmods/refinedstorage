@@ -15,8 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
-
 public class WirelessTransmitterNetworkNode extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
