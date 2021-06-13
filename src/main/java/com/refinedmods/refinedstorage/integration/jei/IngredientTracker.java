@@ -6,7 +6,9 @@ import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -31,8 +33,10 @@ public class IngredientTracker {
     public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
         int available = stack.getCount();
         if (stack.getItem() instanceof PatternItem) {
-            ItemStack outputStack = PatternItem.getOutputSlot(stack, 0);
-            storedItems.merge(outputStack.getItem().getRegistryName(), available, Integer::sum);
+            NonNullList<ItemStack> outputStacks = PatternItem.fromCache(Minecraft.getInstance().world,stack).getOutputs();
+            for (ItemStack outputStack : outputStacks) {
+                storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);
+            }
         } else {
             storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
         }
