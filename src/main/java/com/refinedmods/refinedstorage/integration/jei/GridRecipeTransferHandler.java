@@ -59,7 +59,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     private RecipeTransferCraftingGridError transferRecipeForCraftingGrid(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
-        IngredientTracker tracker = createTracker(container, recipeLayout, player);
+        IngredientTracker tracker = createTracker(container, recipeLayout, player, doTransfer);
 
         if (doTransfer) {
             if (tracker.hasMissingButAutocraftingAvailable() && Screen.hasControlDown()) {
@@ -84,7 +84,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     private IRecipeTransferError transferRecipeForPatternGrid(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
-        IngredientTracker tracker = createTracker(container, recipeLayout, player);
+        IngredientTracker tracker = createTracker(container, recipeLayout, player, doTransfer);
 
         if (doTransfer) {
             moveItems(container, recipeLayout, tracker);
@@ -97,8 +97,8 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player) {
-        IngredientTracker tracker = new IngredientTracker(recipeLayout);
+    private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
+        IngredientTracker tracker = new IngredientTracker(recipeLayout, doTransfer);
 
         // Using IGridView#getStacks will return a *filtered* list of items in the view,
         // which will cause problems - especially if the user uses JEI synchronised searching.

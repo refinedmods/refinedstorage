@@ -17,13 +17,15 @@ import java.util.*;
 public class IngredientTracker {
     private final List<Ingredient> ingredients = new ArrayList<>();
     private final Map<ResourceLocation, Integer> storedItems = new HashMap<>();
+    private boolean doTransfer;
 
-    public IngredientTracker(IRecipeLayout recipeLayout) {
+    public IngredientTracker(IRecipeLayout recipeLayout, boolean doTransfer) {
         for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
             if (guiIngredient.isInput() && !guiIngredient.getAllIngredients().isEmpty()) {
                 ingredients.add(new Ingredient(guiIngredient));
             }
         }
+        this.doTransfer = doTransfer;
     }
 
     public Collection<Ingredient> getIngredients() {
@@ -32,13 +34,15 @@ public class IngredientTracker {
 
     public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
         int available = stack.getCount();
-        if (stack.getItem() instanceof PatternItem) {
-            NonNullList<ItemStack> outputStacks = PatternItem.fromCache(Minecraft.getInstance().world,stack).getOutputs();
-            for (ItemStack outputStack : outputStacks) {
-                storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);
+        if (doTransfer) {
+            if (stack.getItem() instanceof PatternItem) {
+                NonNullList<ItemStack> outputStacks = PatternItem.fromCache(Minecraft.getInstance().world, stack).getOutputs();
+                for (ItemStack outputStack : outputStacks) {
+                    storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);
+                }
+            } else {
+                storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
             }
-        } else {
-            storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
         }
 
         for (Ingredient ingredient : ingredients) {
