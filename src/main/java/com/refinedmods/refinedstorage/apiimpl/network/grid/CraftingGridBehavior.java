@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
@@ -24,7 +25,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
@@ -258,7 +258,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     }
 
     private Comparator<ItemStack> compareByItemStackCounts(PlayerEntity player, INetwork network, AtomicReference<Map<Item, ItemStack>> playerItems) {
-        AtomicInteger s = new AtomicInteger();
         return Comparator.comparingInt((ItemStack itemStack) -> {
 
             ItemStack stack = network.getItemStorageCache().getList().get(itemStack);
@@ -272,8 +271,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
 
             if (playerItems.get() == null) {
                 playerItems.set(makePlayerInventoryMap(player, network));
-            } else {
-                System.out.println(s.incrementAndGet());
             }
 
             ItemStack onPlayer = playerItems.get().get(itemStack.getItem());
@@ -290,10 +287,12 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             ItemStack inventoryStack = player.inventory.getStackInSlot(j);
 
             if (inventoryStack.getItem() instanceof PatternItem) {
-                NonNullList<ItemStack> patternOutput = PatternItem.fromCache(network.getWorld(), inventoryStack).getOutputs();
-                for (ItemStack stack : patternOutput) {
-                    if (!stack.isEmpty()) {
-                        playerItems.put(stack.getItem(), stack);
+                ICraftingPattern pattern = PatternItem.fromCache(network.getWorld(), inventoryStack);
+                if (pattern.isValid()) {
+                    for (ItemStack stack : pattern.getOutputs()) {
+                        if (!stack.isEmpty()) {
+                            playerItems.put(stack.getItem(), stack);
+                        }
                     }
                 }
             } else {

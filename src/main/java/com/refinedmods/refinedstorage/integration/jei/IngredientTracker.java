@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.item.PatternItem;
@@ -8,7 +9,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -36,10 +36,13 @@ public class IngredientTracker {
         int available = stack.getCount();
         if (doTransfer) {
             if (stack.getItem() instanceof PatternItem) {
-                NonNullList<ItemStack> outputStacks = PatternItem.fromCache(Minecraft.getInstance().world, stack).getOutputs();
-                for (ItemStack outputStack : outputStacks) {
-                    storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);
+                ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().world, stack);
+                if (pattern.isValid()) {
+                    for (ItemStack outputStack : pattern.getOutputs()) {
+                        storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);
+                    }
                 }
+
             } else {
                 storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
             }
