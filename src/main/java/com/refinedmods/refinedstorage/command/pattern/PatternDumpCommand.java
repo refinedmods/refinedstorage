@@ -32,14 +32,14 @@ public class PatternDumpCommand implements Command<CommandSource> {
 
             ICraftingPattern pattern = PatternItem.fromCache(context.getSource().getWorld(), stack);
 
-            context.getSource().sendFeedback(new StringTextComponent("Crafting task factory ID: ").setStyle(Styles.YELLOW).append(new StringTextComponent(pattern.getCraftingTaskFactoryId().toString()).setStyle(Styles.WHITE)), false);
+            context.getSource().sendFeedback(new StringTextComponent("Crafting task factory ID: ").setStyle(Styles.YELLOW).appendSibling(new StringTextComponent(pattern.getCraftingTaskFactoryId().toString()).setStyle(Styles.WHITE)), false);
 
             if (!pattern.isValid()) {
-                context.getSource().sendErrorMessage(new StringTextComponent("Pattern is invalid! Reason: ").append(pattern.getErrorMessage()));
+                context.getSource().sendErrorMessage(new StringTextComponent("Pattern is invalid! Reason: ").appendSibling(pattern.getErrorMessage()));
             } else {
-                context.getSource().sendFeedback(new StringTextComponent("Processing: ").setStyle(Styles.YELLOW).append(new StringTextComponent(String.valueOf(processing)).setStyle(Styles.WHITE)), false);
-                context.getSource().sendFeedback(new StringTextComponent("Exact: ").setStyle(Styles.YELLOW).append(new StringTextComponent(String.valueOf(exact)).setStyle(Styles.WHITE)), false);
-                context.getSource().sendFeedback(new StringTextComponent("Has allowed tag list: ").setStyle(Styles.YELLOW).append(new StringTextComponent(String.valueOf(allowedTagList != null)).setStyle(Styles.WHITE)), false);
+                context.getSource().sendFeedback(new StringTextComponent("Processing: ").setStyle(Styles.YELLOW).appendSibling(new StringTextComponent(String.valueOf(processing)).setStyle(Styles.WHITE)), false);
+                context.getSource().sendFeedback(new StringTextComponent("Exact: ").setStyle(Styles.YELLOW).appendSibling(new StringTextComponent(String.valueOf(exact)).setStyle(Styles.WHITE)), false);
+                context.getSource().sendFeedback(new StringTextComponent("Has allowed tag list: ").setStyle(Styles.YELLOW).appendSibling(new StringTextComponent(String.valueOf(allowedTagList != null)).setStyle(Styles.WHITE)), false);
 
                 if (pattern.isProcessing()) {
                     for (int i = 0; i < pattern.getInputs().size(); ++i) {
@@ -47,7 +47,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
                             context.getSource().sendFeedback(new StringTextComponent("Item inputs in slot " + i + ":").setStyle(Styles.YELLOW), false);
 
                             for (int j = 0; j < pattern.getInputs().get(i).size(); ++j) {
-                                context.getSource().sendFeedback(new StringTextComponent("- Possibility #" + j + ": " + pattern.getInputs().get(i).get(j).getCount() + "x ").append(pattern.getInputs().get(i).get(j).getDisplayName()), false);
+                                context.getSource().sendFeedback(new StringTextComponent("- Possibility #" + j + ": " + pattern.getInputs().get(i).get(j).getCount() + "x ").appendSibling(pattern.getInputs().get(i).get(j).getDisplayName()), false);
                             }
                         }
 
@@ -63,7 +63,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
                             context.getSource().sendFeedback(new StringTextComponent("Fluid inputs in slot " + i + ":").setStyle(Styles.YELLOW), false);
 
                             for (int j = 0; j < pattern.getFluidInputs().get(i).size(); ++j) {
-                                context.getSource().sendFeedback(new StringTextComponent("- Possibility #" + j + ": " + pattern.getFluidInputs().get(i).get(j).getAmount() + " mB ").append(pattern.getFluidInputs().get(i).get(j).getDisplayName()), false);
+                                context.getSource().sendFeedback(new StringTextComponent("- Possibility #" + j + ": " + pattern.getFluidInputs().get(i).get(j).getAmount() + " mB ").appendSibling(pattern.getFluidInputs().get(i).get(j).getDisplayName()), false);
                             }
                         }
 
@@ -76,12 +76,12 @@ public class PatternDumpCommand implements Command<CommandSource> {
 
                     context.getSource().sendFeedback(new StringTextComponent("Outputs").setStyle(Styles.YELLOW), false);
                     for (ItemStack output : pattern.getOutputs()) {
-                        context.getSource().sendFeedback(new StringTextComponent("- " + output.getCount() + "x ").append(output.getDisplayName()), false);
+                        context.getSource().sendFeedback(new StringTextComponent("- " + output.getCount() + "x ").appendSibling(output.getDisplayName()), false);
                     }
 
                     context.getSource().sendFeedback(new StringTextComponent("Fluid outputs").setStyle(Styles.YELLOW), false);
                     for (FluidStack output : pattern.getFluidOutputs()) {
-                        context.getSource().sendFeedback(new StringTextComponent("- " + output.getAmount() + " mB ").append(output.getDisplayName()), false);
+                        context.getSource().sendFeedback(new StringTextComponent("- " + output.getAmount() + " mB ").appendSibling(output.getDisplayName()), false);
                     }
                 } else {
                     for (int i = 0; i < pattern.getInputs().size(); ++i) {
@@ -89,14 +89,14 @@ public class PatternDumpCommand implements Command<CommandSource> {
                             context.getSource().sendFeedback(new StringTextComponent("Inputs in slot " + i + ":").setStyle(Styles.YELLOW), false);
 
                             for (int j = 0; j < pattern.getInputs().get(i).size(); ++j) {
-                                context.getSource().sendFeedback(new StringTextComponent("- Possibility #" + j + ": " + pattern.getInputs().get(i).get(j).getCount() + "x ").append(pattern.getInputs().get(i).get(j).getDisplayName()), false);
+                                context.getSource().sendFeedback(new StringTextComponent("- Possibility #" + j + ": " + pattern.getInputs().get(i).get(j).getCount() + "x ").appendSibling(pattern.getInputs().get(i).get(j).getDisplayName()), false);
                             }
                         }
                     }
 
                     context.getSource().sendFeedback(new StringTextComponent("Outputs").setStyle(Styles.YELLOW), false);
                     for (ItemStack output : pattern.getOutputs()) {
-                        context.getSource().sendFeedback(new StringTextComponent("- " + output.getCount() + "x ").append(output.getDisplayName()), false);
+                        context.getSource().sendFeedback(new StringTextComponent("- " + output.getCount() + "x ").appendSibling(output.getDisplayName()), false);
                     }
 
                     boolean anyByproducts = false;
@@ -109,7 +109,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
                                 anyByproducts = true;
                             }
 
-                            context.getSource().sendFeedback(new StringTextComponent("- " + byproduct.getCount() + "x ").append(byproduct.getDisplayName()), false);
+                            context.getSource().sendFeedback(new StringTextComponent("- " + byproduct.getCount() + "x ").appendSibling(byproduct.getDisplayName()), false);
                         }
                     }
                 }

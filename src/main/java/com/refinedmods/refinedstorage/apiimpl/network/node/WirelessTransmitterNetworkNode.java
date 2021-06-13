@@ -62,7 +62,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public RegistryKey<World> getDimension() {
-        return world.func_234923_W_();
+        return world.getDimensionKey();
     }
 
     public BaseItemHandler getUpgrades() {

@@ -159,7 +159,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
         blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
-        amountField.renderButton(matrixStack, 0, 0, 0);
+        amountField.renderWidget(matrixStack, 0, 0, 0);
     }
 
     @Override

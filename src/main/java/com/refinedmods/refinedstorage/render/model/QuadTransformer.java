@@ -34,7 +34,7 @@ public final class QuadTransformer {
         }
 
         for (BakedQuad quad : model.getQuads(state, side, rand, EmptyModelData.INSTANCE)) {
-            BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
+            BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
             TRSRTransformer transformer = new TRSRTransformer(builder, transformation.blockCenterToCorner());
 
             quad.pipe(transformer);

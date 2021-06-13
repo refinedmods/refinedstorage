@@ -110,7 +110,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     private class CustomItemOverrideList extends ItemOverrideList {
         @Nullable
         @Override
-        public IBakedModel func_239290_a_(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+        public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
             PortableGrid portableGrid = new PortableGrid(null, stack, -1);
 
             if (portableGrid.isGridActive()) {

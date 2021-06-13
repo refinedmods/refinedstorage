@@ -194,7 +194,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.contains(NBT_DISPLAY_NAME)) {
-            displayName = ITextComponent.Serializer.func_240643_a_(tag.getString(NBT_DISPLAY_NAME));
+            displayName = ITextComponent.Serializer.getComponentFromJson(tag.getString(NBT_DISPLAY_NAME));
         }
 
         if (tag.hasUniqueId(NBT_UUID)) {
