@@ -83,7 +83,7 @@ public class SecurityCardItem extends Item {
 
         for (Permission permission : Permission.values()) {
             if (hasPermission(stack, permission)) {
-                tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
+                tooltip.add(new StringTextComponent("- ").appendSibling(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
             }
         }
     }

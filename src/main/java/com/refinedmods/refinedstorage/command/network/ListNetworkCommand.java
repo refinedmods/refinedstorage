@@ -70,7 +70,7 @@ public class ListNetworkCommand implements Command<CommandSource> {
                 listItem.network.getPosition().getZ()
             )
                 .appendString(" [")
-                .append(new TranslationTextComponent(
+                .appendSibling(new TranslationTextComponent(
                     "commands.refinedstorage.network.list.tick_times",
                     new StringTextComponent(TIME_FORMATTER.format(listItem.tickTime)).setStyle(Styles.YELLOW),
                     new StringTextComponent(TIME_FORMATTER.format(listItem.tps)).setStyle(Styles.YELLOW)

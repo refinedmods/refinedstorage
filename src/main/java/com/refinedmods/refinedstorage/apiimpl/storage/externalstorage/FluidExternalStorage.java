@@ -83,8 +83,11 @@ public class FluidExternalStorage implements IExternalStorage<FluidStack> {
             return stack;
         }
 
-        if (context.acceptsFluid(stack)) {
-            int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), action == Action.PERFORM ? IFluidHandler.FluidAction.EXECUTE : IFluidHandler.FluidAction.SIMULATE);
+        IFluidHandler handler = handlerSupplier.get();
+
+        if (context.acceptsFluid(stack) && handler != null) {
+
+            int filled = handler.fill(StackUtils.copy(stack, size), action == Action.PERFORM ? IFluidHandler.FluidAction.EXECUTE : IFluidHandler.FluidAction.SIMULATE);
 
             if (filled == size) {
                 return FluidStack.EMPTY;

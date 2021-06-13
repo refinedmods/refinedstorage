@@ -132,9 +132,11 @@ public class ProcessingNode extends Node {
                         if (canInsertFullAmount) {
                             canInsertFullAmount = container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.SIMULATE);
                         }
+                    } else {
+                        break;
                     }
 
-                    if (hasAllRequirements && !canInsertFullAmount) {
+                    if (!canInsertFullAmount) {
                         if (allRejected) {
                             this.state = ProcessingState.MACHINE_DOES_NOT_ACCEPT;
                         }
@@ -144,21 +146,19 @@ public class ProcessingNode extends Node {
                         allRejected = false;
                     }
 
-                    if (hasAllRequirements && canInsertFullAmount) {
-                        this.state = ProcessingState.READY;
+                    this.state = ProcessingState.READY;
 
-                        extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
-                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
+                    extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
+                    extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
 
-                        container.insertItemsIntoInventory(extractedItems.getStacks(), Action.PERFORM);
-                        container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.PERFORM);
+                    container.insertItemsIntoInventory(extractedItems.getStacks(), Action.PERFORM);
+                    container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.PERFORM);
 
-                        next();
+                    next();
 
-                        listener.onSingleDone(this);
+                    listener.onSingleDone(this);
 
-                        container.onUsedForProcessing();
-                    }
+                    container.onUsedForProcessing();
                 }
             }
         }

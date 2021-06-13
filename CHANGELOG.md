@@ -2,7 +2,23 @@
 
 ### 1.9.13
 
-- Calculate vertex data step size in FullbrightBakedModel (ylou)
+- Fixed count on Storage Monitor having Z fighting (tivec)
+- Fixed items on Storage Monitor not being flat (raoulvdberge)
+- Removed experimental pipeline nagging message (raoulvdberge)
+- Fixed crash when using an External Storage on a fluid inventory (jeremiahwinsley)
+- Added some performance improvements for autocrafting (necauqua, Darkere)
+- Fixed a memory leak in the pattern cache (necauqua)
+- Fixed Detector crashing when dyed (Darkere)
+- Fixed autocrafting being stuck after clicking "Start" (necauqua)
+- Fixed Crafting Monitor not being able to show hours (Darkere)
+- Fixed capacity rendering of infinite storages (Darkere)
+- Fixed wrong alignment for the JEI request autocrafting tooltip (Darkere)
+- Fixed mobs getting stuck in Refined Storage cables (Darkere)
+- Fixed dismantling storage blocks ignoring stack size (Darkere)
+- Fixed Ice and Fire banners breaking with Refined Storage (Darkere, necauqua)
+- Fixed empty keybinding causing GL errors (Darkere)
+- Fixed some parts of the Japanese translation (akihironagai)
+- Fixed rendering issue on blocks when using OptiFine (ylou)
 
 ### 1.9.12
 
