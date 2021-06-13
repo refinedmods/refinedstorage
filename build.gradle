@@ -120,7 +120,6 @@ dependencies {
     compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3202662')
 
     compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3330406')
-    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3330406')
 
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2:api")
