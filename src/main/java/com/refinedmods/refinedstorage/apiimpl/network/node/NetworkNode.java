@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
+
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_VERSION = "Version";
