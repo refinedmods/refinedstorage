@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridGridFactory;
 import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import net.minecraft.client.Minecraft;
+import com.refinedmods.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -27,7 +27,7 @@ public class OpenNetworkItemMessage {
     }
 
     public static OpenNetworkItemMessage decode(PacketBuffer buf) {
-        return new OpenNetworkItemMessage(buf.readInt(), buf.readString(32767));
+        return new OpenNetworkItemMessage(buf.readInt(), PacketBufferUtils.readString(buf));
     }
 
     public static void encode(OpenNetworkItemMessage message, PacketBuffer buf) {
@@ -40,26 +40,14 @@ public class OpenNetworkItemMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                ItemStack stack = null;
-                if (message.curioSlot.isEmpty()) {
-                    stack = player.inventory.getStackInSlot(message.slotId);
-                } else {
-                    LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(player);
-                    if (curiosHandler.isPresent()) {
-                        Optional<ICurioStacksHandler> stacksHandler = curiosHandler.resolve().get().getStacksHandler(message.curioSlot);
-                        if (stacksHandler.isPresent()) {
-                            stack = stacksHandler.get().getStacks().getStackInSlot(message.slotId);
-                        }
-                    }
-                }
+                ItemStack stack = getStackFromSlot(player, message.slotId, message.curioSlot);
 
                 if (stack == null) {
                     return;
                 }
 
                 if (stack.getItem() instanceof NetworkItem) {
-                    ItemStack finalStack = stack;
-                    ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, finalStack, message.slotId), err -> player.sendMessage(err, player.getUniqueID()));
+                    ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack, message.slotId), err -> player.sendMessage(err, player.getUniqueID()));
                 } else if (stack.getItem() instanceof PortableGridBlockItem) {
                     API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, player, stack, message.slotId);
                 }
@@ -67,5 +55,25 @@ public class OpenNetworkItemMessage {
         }
 
         ctx.get().setPacketHandled(true);
+    }
+
+    private static ItemStack getStackFromSlot(ServerPlayerEntity player, int slotId, String curioSlot) {
+        if (curioSlot.isEmpty()) {
+            return player.inventory.getStackInSlot(slotId);
+        } else {
+
+            LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(player);
+
+            Optional<ICurioStacksHandler> stacksHandler = curiosHandler.resolve().flatMap((handler ->
+                handler.getStacksHandler(curioSlot)
+            ));
+
+            Optional<ItemStack> stack = stacksHandler.map(handler -> handler.getStacks().getStackInSlot(slotId));
+            if (stack.isPresent()) {
+                return stack.get();
+            }
+        }
+
+        return null;
     }
 }
