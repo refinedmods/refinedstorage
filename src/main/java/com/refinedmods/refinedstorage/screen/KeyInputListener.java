@@ -12,16 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class KeyInputListener {
@@ -59,10 +56,10 @@ public class KeyInputListener {
         }
 
         if (CuriosIntegration.isLoaded() && slotFound == -1) {
-            Pair<Integer, String> curioSlot = findMatchingCurio(validItems);
+            Optional<ImmutableTriple<String, Integer, ItemStack>> curio = CuriosApi.getCuriosHelper().findEquippedCurio(stack -> validItems.contains(stack.getItem()), Minecraft.getInstance().player);
 
-            if (curioSlot != null) {
-                RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(curioSlot.getKey(), curioSlot.getValue()));
+            if (curio.isPresent()) {
+                RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(curio.get().getMiddle(), curio.get().getLeft()));
                 return;
             }
         }
@@ -72,27 +69,6 @@ public class KeyInputListener {
         } else {
             RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(slotFound, ""));
         }
-    }
-
-    private Pair<Integer, String> findMatchingCurio(Set<Item> validItems) {
-        LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(Minecraft.getInstance().player);
-
-        if (curiosHandler.isPresent()) {
-            ICuriosItemHandler curiosItemHandler = curiosHandler.resolve().get();
-            Map<String, ICurioStacksHandler> curios = curiosItemHandler.getCurios();
-
-            for (Map.Entry<String, ICurioStacksHandler> curioStackHandler : curios.entrySet()) {
-                for (int i = 0; i < curioStackHandler.getValue().getSlots(); i++) {
-                    ItemStack stack = curioStackHandler.getValue().getStacks().getStackInSlot(i);
-
-                    if (validItems.contains(stack.getItem())) {
-                        return Pair.of(i, curioStackHandler.getKey());
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     public void sendError(TranslationTextComponent error) {
