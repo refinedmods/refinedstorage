@@ -480,7 +480,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         API.instance().getCraftingGridBehavior().onCraftedShift(this, player);
     }
 
-    public void onCreatePattern() {
+    public void onCreatePattern(ServerPlayerEntity player) {
         if (canCreatePattern()) {
             if (patterns.getStackInSlot(1).isEmpty()) {
                 patterns.extractItem(0, 1, false);
@@ -490,7 +490,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
             PatternItem.setToCurrentVersion(pattern);
             PatternItem.setProcessing(pattern, processingPattern);
-
+            PatternItem.setPatternCreator(pattern, player.getGameProfile().getId());
+            
             if (!processingPattern) {
                 PatternItem.setExact(pattern, exactPattern);
             } else {
