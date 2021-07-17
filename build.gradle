@@ -25,6 +25,13 @@ repositories {
     maven {
         url = "https://maven.theillusivec4.top/"
     }
+	
+	maven {
+        url = "https://redsnake-games.de/maven/"
+		content {
+            includeGroup "redsnakegames.mcenderdragon"
+        }
+    }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -123,6 +130,9 @@ dependencies {
 
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2:api")
+
+	runtimeOnly fg.deobf("redsnakegames.mcenderdragon:futurepack:1.16.4-31.2.6865")  { transitive = false }
+	compileOnly fg.deobf("redsnakegames.mcenderdragon:futurepack:1.16.4-31.2.6865-api")  { transitive = false }
 
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')

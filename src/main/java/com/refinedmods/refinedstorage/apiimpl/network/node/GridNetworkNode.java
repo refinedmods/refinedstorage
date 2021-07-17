@@ -17,6 +17,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridSt
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.block.GridBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
@@ -81,7 +82,16 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags);
 
-    private final Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
+    
+    private class DummyContainer extends Container
+    {
+    	protected DummyContainer()
+    	{
+			super(ContainerType.CRAFTING, 0);
+		}
+
+		public PlayerEntity owner = null;
+    	
         @Override
         public boolean canInteractWith(PlayerEntity player) {
             return false;
@@ -93,7 +103,10 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 onCraftingMatrixChanged();
             }
         }
-    };
+    }
+    
+    private final DummyContainer craftingContainer = new DummyContainer();
+    
     private ICraftingRecipe currentRecipe;
     private final CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private final CraftResultInventory result = new CraftResultInventory();
@@ -322,6 +335,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void addCraftingListener(ICraftingGridListener listener) {
+        
+    	System.out.println(listener);
+        
+        if(listener instanceof GridContainer)
+        {
+        	this.craftingContainer.owner = ((GridContainer) listener).getPlayer();
+        }
         craftingListeners.add(listener);
     }
 
@@ -383,7 +403,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftingMatrixChanged() {
-        if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
+    
+    	System.out.println(this.craftingContainer.owner);
+    	if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
             currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null);
         }
 
@@ -402,6 +424,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
+    	craftingContainer.owner = player;
         API.instance().getCraftingGridBehavior().onRecipeTransfer(this, player, recipe);
     }
 
@@ -442,11 +465,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+    	craftingContainer.owner = player;
         API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player, availableItems, usedItems);
     }
 
     @Override
     public void onClear(PlayerEntity player) {
+    	craftingContainer.owner = player;
         if (type == GridType.CRAFTING) {
             if (network != null && network.canRun() && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
                 for (int i = 0; i < matrix.getSizeInventory(); ++i) {
@@ -477,10 +502,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftedShift(PlayerEntity player) {
+    	craftingContainer.owner = player;
         API.instance().getCraftingGridBehavior().onCraftedShift(this, player);
     }
 
     public void onCreatePattern(ServerPlayerEntity player) {
+    	craftingContainer.owner = player;
         if (canCreatePattern()) {
             if (patterns.getStackInSlot(1).isEmpty()) {
                 patterns.extractItem(0, 1, false);
