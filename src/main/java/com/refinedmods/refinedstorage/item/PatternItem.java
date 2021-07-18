@@ -287,16 +287,14 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         if (!pattern.hasTag() || !pattern.getTag().contains(NBT_PATTERN_CREATOR)) {
             return null;
         }
-
         return pattern.getTag().getUniqueId(NBT_PATTERN_CREATOR);
     }
     
     @Nullable
     public static void setPatternCreator(ItemStack pattern, UUID creator) {
-    	if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+        if (!pattern.hasTag()) {
+                pattern.setTag(new CompoundNBT());
         }
-    	
-    	pattern.getTag().putUniqueId(NBT_PATTERN_CREATOR, creator);
+        pattern.getTag().putUniqueId(NBT_PATTERN_CREATOR, creator);
     }
 }

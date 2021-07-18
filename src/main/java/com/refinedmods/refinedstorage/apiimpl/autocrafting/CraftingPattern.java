@@ -271,9 +271,9 @@ public class CraftingPattern implements ICraftingPattern {
 
     public static class DummyCraftingInventory extends CraftingInventory 
     {
-    	public final CraftingPatternContext context;
-    	public final UUID requester;
-    	
+        public final CraftingPatternContext context;
+        public final UUID requester;
+        
         public DummyCraftingInventory(CraftingPatternContext context) {
             super(new Container(null, 0) {
                 @Override
@@ -282,7 +282,7 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }, 3, 3);
             this.context = context;
-            this.requester = PatternItem.getPatternCreator(context.getStack());          		
+            this.requester = PatternItem.getPatternCreator(context.getStack());
         }
     }
 }
