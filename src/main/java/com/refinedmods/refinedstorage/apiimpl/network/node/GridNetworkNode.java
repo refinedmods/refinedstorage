@@ -398,7 +398,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftingMatrixChanged() {
-    
         if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
             currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null);
         }

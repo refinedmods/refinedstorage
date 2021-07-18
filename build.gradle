@@ -25,7 +25,6 @@ repositories {
     maven {
         url = "https://maven.theillusivec4.top/"
     }
-	
 }
 
 apply plugin: 'net.minecraftforge.gradle'
