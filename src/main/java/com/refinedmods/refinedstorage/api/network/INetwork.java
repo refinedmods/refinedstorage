@@ -8,7 +8,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityManager;
 import com.refinedmods.refinedstorage.api.storage.IStorage;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
@@ -274,9 +273,4 @@ public interface INetwork {
      * Marks the network dirty.
      */
     void markDirty();
-    
-    /**
-     * @return the root Node of this network
-     */
-    public INetworkNode getRoot();
 }
