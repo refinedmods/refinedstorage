@@ -290,7 +290,6 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         return pattern.getTag().getUniqueId(NBT_PATTERN_CREATOR);
     }
     
-    @Nullable
     public static void setPatternCreator(ItemStack pattern, UUID creator) {
         if (!pattern.hasTag()) {
                 pattern.setTag(new CompoundNBT());

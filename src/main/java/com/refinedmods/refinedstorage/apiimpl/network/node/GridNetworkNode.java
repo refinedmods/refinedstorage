@@ -83,8 +83,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags);
 
     
-    private class DummyContainer extends Container
-    {
+    private class DummyContainer extends Container {
         protected DummyContainer() {
             super(ContainerType.CRAFTING, 0);
         }
