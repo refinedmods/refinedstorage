@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.9.15
+
+- Fixed Refined Storage Addons compatibility (Darkere)
+
 ### 1.9.14
 
 - Implemented Curios support (Darkere)
