@@ -37,7 +37,8 @@ public class KeyInputListener {
         }
     }
 
-    public void findAndOpen(Item... items) {
+    //These are static to be accessible from RSAddons
+    public static void findAndOpen(Item... items) {
         Set<Item> validItems = new HashSet<>(Arrays.asList(items));
         IInventory inv = Minecraft.getInstance().player.inventory;
         int slotFound = -1;
@@ -71,7 +72,7 @@ public class KeyInputListener {
         }
     }
 
-    public void sendError(TranslationTextComponent error) {
+    public static void sendError(TranslationTextComponent error) {
         Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID);
     }
 
