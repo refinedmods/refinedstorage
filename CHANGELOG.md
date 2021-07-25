@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.9.14
+
+- Implemented Curios support (Darkere)
+
 ### 1.9.13
 
 - Fixed count on Storage Monitor having Z fighting (tivec)
