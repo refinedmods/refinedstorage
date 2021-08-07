@@ -38,7 +38,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), player.inventory.currentItem), err -> player.sendMessage(err, player.getUniqueID()));
+            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack, hand == Hand.OFF_HAND ? 40 : player.inventory.currentItem), err -> player.sendMessage(err, player.getUniqueID()));
         }
 
         return ActionResult.resultSuccess(stack);
