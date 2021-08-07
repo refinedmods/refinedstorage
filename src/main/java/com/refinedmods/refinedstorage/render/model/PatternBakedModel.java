@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.model.ItemOverride;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -47,10 +48,13 @@ public class PatternBakedModel extends DelegateBakedModel {
     }
 
     public static boolean canDisplayOutput(ItemStack patternStack, ICraftingPattern pattern) {
-        if (pattern.isValid() && pattern.getOutputs().size() == 1) {
-            for (ICraftingPatternRenderHandler renderHandler : API.instance().getPatternRenderHandlers()) {
-                if (renderHandler.canRenderOutput(patternStack)) {
-                    return true;
+        if (pattern.isValid() && pattern.getOutputs().size() == 1 && Minecraft.getInstance().player != null) {
+            PlayerInventory inventory = Minecraft.getInstance().player.inventory;
+            if (inventory.mainInventory.contains(patternStack) || inventory.offHandInventory.contains(patternStack) || inventory.armorInventory.contains(patternStack)) {
+                for (ICraftingPatternRenderHandler renderHandler : API.instance().getPatternRenderHandlers()) {
+                    if (renderHandler.canRenderOutput(patternStack)) {
+                        return true;
+                    }
                 }
             }
         }
