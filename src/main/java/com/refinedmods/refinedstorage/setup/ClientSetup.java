@@ -144,7 +144,7 @@ public class ClientSetup {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelRegistry);
         MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
 
-        API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
+        API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown() && Minecraft.getInstance().player.openContainer.getInventory().contains(pattern));
 
         API.instance().addPatternRenderHandler(pattern -> {
             Container container = Minecraft.getInstance().player.openContainer;
