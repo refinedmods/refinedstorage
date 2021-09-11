@@ -301,6 +301,8 @@
   "item.refinedstorage.security_card": "Security Card",
   "item.refinedstorage.security_card.owner": "Bound to: %s",
   "item.refinedstorage.processor_binding": "Processor Binding",
+  "item.refinedstorage.cover": "Cover",
+  "item.refinedstorage.hollow_cover": "Hollow Cover",
   "commands.refinedstorage.disk.create.error.disk_not_found": "Disk %s was not found.",
   "commands.refinedstorage.disk.create.success": "Successfully gave disk %s to %s.",
   "commands.refinedstorage.network.list.pos": "Network at X: %d, Y: %d, Z: %d",

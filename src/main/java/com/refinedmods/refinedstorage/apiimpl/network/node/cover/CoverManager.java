@@ -37,26 +37,6 @@ public class CoverManager {
         this.node = node;
     }
 
-    public boolean canConduct(Direction direction) {
-        Cover cover = getCover(direction);
-        if (cover != null && cover.getType() != CoverType.HOLLOW) {
-            return false;
-        }
-
-        if (node.getWorld() instanceof ServerWorld){
-            INetworkNode neighbor = API.instance().getNetworkNodeManager((ServerWorld) node.getWorld()).getNode(node.getPos().offset(direction));
-            if (neighbor instanceof ICoverable) {
-                cover = ((ICoverable) neighbor).getCoverManager().getCover(direction.getOpposite());
-
-                if (cover != null && cover.getType() != CoverType.HOLLOW) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     @Nullable
     public Cover getCover(Direction facing) {
         return covers.get(facing);
@@ -154,7 +134,7 @@ public class CoverManager {
 
         BlockState state = getBlockState(item);
 
-        return block != null && state != null && ((isModelSupported(state) && !block.ticksRandomly(state) && !block.hasTileEntity(state)) || block instanceof GlassBlock || block instanceof StainedGlassBlock); //Removed is top solid as it needs world param
+        return block != null && state != null && ((isModelSupported(state) && !block.ticksRandomly(state) && !block.hasTileEntity(state) && !state.isTransparent())); //Removed is top solid as it needs world param
     }
 
     private static boolean isModelSupported(BlockState state) {
