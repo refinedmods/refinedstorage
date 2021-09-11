@@ -23,6 +23,7 @@ import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -92,19 +93,17 @@ public class BakedModelCableCover extends DelegateBakedModel{
             hasWest = manager.hasCover(Direction.WEST);
         }
 
-        TextureAtlasSprite sprite = RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(coverState), coverState, side, rand);
-
         switch (cover.getType()) {
             case NORMAL:
-                addNormalCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, handle);
+                addNormalCover(quads, coverState, coverSide, hasUp, hasDown, hasEast, hasWest, handle, rand);
                 break;
             case HOLLOW:
-                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, getHollowCoverSize(state, coverSide));
+                addHollowCover(quads, coverState, coverSide, hasUp, hasDown, hasEast, hasWest, getHollowCoverSize(state, coverSide), rand);
                 break;
         }
     }
 
-    private static void addNormalCover(List<BakedQuad> quads, TextureAtlasSprite sprite, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
+    private static void addNormalCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle, Random random) {
         AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
@@ -138,7 +137,8 @@ public class BakedModelCableCover extends DelegateBakedModel{
             }
         }
 
-        quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, sprite)).bake());
+        HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();
+        quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random)))).bake());
 
         if (handle) {
             if (BORDER_SPRITE == null) {
@@ -154,7 +154,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
         }
     }
 
-    private static void addHollowCover(List<BakedQuad> quads, TextureAtlasSprite sprite, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size) {
+    private static void addHollowCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size, Random random) {
         AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
@@ -197,11 +197,11 @@ public class BakedModelCableCover extends DelegateBakedModel{
             from.setZ(16 - size);
             to.setZ(16);
         }
-
+        HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();
         quads.addAll(new CubeBuilder()
                 .from(from.getX(), from.getY(), from.getZ())
                 .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, sprite))
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
                 .bake()
         );
 
@@ -236,7 +236,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
         quads.addAll(new CubeBuilder()
                 .from(from.getX(), from.getY(), from.getZ())
                 .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, sprite))
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
                 .bake()
         );
 
@@ -296,7 +296,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
         quads.addAll(new CubeBuilder()
                 .from(from.getX(), from.getY(), from.getZ())
                 .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, sprite))
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
                 .bake()
         );
 
@@ -356,7 +356,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
         quads.addAll(new CubeBuilder()
                 .from(from.getX(), from.getY(), from.getZ())
                 .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, sprite))
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
                 .bake()
         );
     }
