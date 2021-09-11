@@ -72,6 +72,22 @@ public class CoverManager {
         return false;
     }
 
+    @Nullable
+    public Cover removeCover(Direction direction){
+        if (hasCover(direction)){
+            Cover cover = covers.remove(direction);
+
+            node.markDirty();
+
+            if (node.getNetwork() != null) {
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
+            }
+
+            return cover;
+        }
+        return null;
+    }
+
     public void readFromNbt(CompoundNBT nbt) {
         covers.clear();
         System.out.println(nbt);

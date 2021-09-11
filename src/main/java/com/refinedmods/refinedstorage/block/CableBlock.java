@@ -123,6 +123,12 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         super.onDirectionChanged(world, pos, newDirection);
     }
 
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        world.setBlockState(pos, getState(world.getBlockState(pos), world, pos));
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
