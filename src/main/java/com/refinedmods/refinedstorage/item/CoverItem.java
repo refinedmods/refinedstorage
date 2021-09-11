@@ -73,17 +73,16 @@ public class CoverItem extends Item {
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-
-        //if (RS.INSTANCE.config.hideCovers) {
-        //    ItemStack stack = new ItemStack(this);
-
-        //setItem(stack, HIDDEN_COVER_ALTERNATIVE);
-
-        //items.add(stack);
-
-        //return;
-        //}
         if (this.isInGroup(group)) {
+            if (!RS.CLIENT_CONFIG.getCover().showAllRecipesInJEI()) {
+                ItemStack stack = new ItemStack(this);
+
+                setItem(stack, HIDDEN_COVER_ALTERNATIVE);
+
+                items.add(stack);
+
+                return;
+            }
             for (Block block : ForgeRegistries.BLOCKS.getValues()) {
                 Item item = Item.getItemFromBlock(block);
 
