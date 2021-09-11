@@ -35,6 +35,8 @@ import com.refinedmods.refinedstorage.container.factory.*;
 import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.refinedmods.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
+import com.refinedmods.refinedstorage.recipe.CoverRecipe;
+import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.refinedmods.refinedstorage.tile.*;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
@@ -46,6 +48,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -141,6 +144,8 @@ public class CommonSetup {
     @SubscribeEvent
     public void onRegisterRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> e) {
         e.getRegistry().register(new UpgradeWithEnchantedBookRecipeSerializer().setRegistryName(RS.ID, "upgrade_with_enchanted_book"));
+        e.getRegistry().register(CoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "cover_recipe")));
+        e.getRegistry().register(HollowCoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "hollow_cover_recipe")));
     }
 
     @SubscribeEvent

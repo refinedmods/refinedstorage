@@ -21,6 +21,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -45,8 +47,9 @@ public class CoverItem extends Item {
         if (!cover.hasTag()) {
             cover.setTag(new CompoundNBT());
         }
-
-        cover.getTag().put(NBT_ITEM, item.serializeNBT());
+        ItemStack result = item.copy();
+        result.setCount(1);
+        cover.getTag().put(NBT_ITEM, result.serializeNBT());
     }
 
     @Nonnull
@@ -64,7 +67,7 @@ public class CoverItem extends Item {
         ItemStack item = getItem(stack);
 
         if (!item.isEmpty()) {
-            tooltip.add(item.getItem().getDisplayName(item));
+            tooltip.add(((TextComponent)item.getItem().getDisplayName(item)).mergeStyle(TextFormatting.GRAY));
         }
     }
 
