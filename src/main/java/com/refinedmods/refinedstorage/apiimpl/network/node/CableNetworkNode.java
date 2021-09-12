@@ -41,12 +41,6 @@ public class CableNetworkNode extends NetworkNode implements ICoverable {
     }
 
     @Override
-    public void update() {
-        super.update();
-        //WorldUtils.updateBlock(world, pos);
-    }
-
-    @Override
     public CompoundNBT write(CompoundNBT tag) {
         tag.put("Cover", this.coverManager.writeToNbt());
         return super.write(tag);

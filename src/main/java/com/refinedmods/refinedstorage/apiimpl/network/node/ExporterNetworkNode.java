@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
@@ -27,7 +29,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ExporterNetworkNode extends NetworkNode implements IComparable, IType {
+public class ExporterNetworkNode extends NetworkNode implements IComparable, IType, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "exporter");
 
     private static final String NBT_COMPARE = "Compare";
@@ -72,8 +74,11 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     private int filterSlot;
 
+    private CoverManager coverManager;
+
     public ExporterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
+        this.coverManager = new CoverManager(this);
     }
 
     @Override
@@ -244,9 +249,8 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
-
+        tag.put("Cover", this.coverManager.writeToNbt());
         StackUtils.writeItems(upgrades, 1, tag);
-
         return tag;
     }
 
@@ -267,7 +271,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
-
+        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
         StackUtils.readItems(upgrades, 1, tag);
     }
 
@@ -319,5 +323,10 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     @Override
     public FluidInventory getFluidFilters() {
         return fluidFilters;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }

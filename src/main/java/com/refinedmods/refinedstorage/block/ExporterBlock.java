@@ -69,14 +69,15 @@ public class ExporterBlock extends CableBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        return ShapeCache.getOrCreate(state, s -> {
+        return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, s -> {
             VoxelShape shape = getCableShape(s);
 
             shape = VoxelShapes.or(shape, getLineShape(s));
 
-            return ConstantsCable.addCoverVoxelShapes(shape, world, pos);
-        });
+            return shape;
+        }), world, pos);
     }
+
 
     private VoxelShape getLineShape(BlockState state) {
         Direction direction = state.get(getDirection().getProperty());
