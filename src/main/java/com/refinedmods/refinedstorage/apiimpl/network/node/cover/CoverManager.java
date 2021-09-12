@@ -90,7 +90,6 @@ public class CoverManager {
 
     public void readFromNbt(CompoundNBT nbt) {
         covers.clear();
-        System.out.println(nbt);
         for (String s : nbt.keySet()) {
             CompoundNBT tag = nbt.getCompound(s);
             if (tag.contains(NBT_DIRECTION) && tag.contains(NBT_ITEM)) {

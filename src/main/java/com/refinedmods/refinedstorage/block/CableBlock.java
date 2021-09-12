@@ -169,7 +169,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         if (tile == null){
             return false;
         }
-        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode).map(iNetworkNode -> iNetworkNode instanceof ICoverable && (!((ICoverable) iNetworkNode).getCoverManager().hasCover(direction) || ((ICoverable) iNetworkNode).getCoverManager().getCover(direction).getType() == CoverType.HOLLOW)).orElse(false);
+        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode).map(iNetworkNode -> !(iNetworkNode instanceof ICoverable) || (!((ICoverable) iNetworkNode).getCoverManager().hasCover(direction) || ((ICoverable) iNetworkNode).getCoverManager().getCover(direction).getType() == CoverType.HOLLOW)).orElse(false);
     }
 
     private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {
