@@ -157,7 +157,7 @@ public class CoverManager {
             return false;
         }
 
-        return state.isSolid() && state.isSolidSide(Minecraft.getInstance().world, new BlockPos(0,0,0), Direction.UP); //I dont trust this
+        return state.isSolid();
     }
 
     @Nullable
