@@ -344,16 +344,16 @@ public final class RenderUtils {
                 ForgeHooksClient.setRenderLayer(layer);
 
                 for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
-                    return bakedQuad.func_187508_a();
+                    return bakedQuad.getSprite();
                 }
 
                 for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
                     if (sprite == null) {
-                        sprite = bakedQuad.func_187508_a();
+                        sprite = bakedQuad.getSprite();
                     }
 
                     if (bakedQuad.getFace() == facing) {
-                        return bakedQuad.func_187508_a();
+                        return bakedQuad.getSprite();
                     }
                 }
             }

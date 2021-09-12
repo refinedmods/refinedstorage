@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.IStorage;
 import com.refinedmods.refinedstorage.api.storage.IStorageProvider;
@@ -12,6 +13,7 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
@@ -39,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ExternalStorageNetworkNode extends NetworkNode implements IStorageProvider, IStorageScreen, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IExternalStorageContext {
+public class ExternalStorageNetworkNode extends NetworkNode implements IStorageProvider, IStorageScreen, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IExternalStorageContext, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "external_storage");
 
     private static final Logger LOGGER = LogManager.getLogger(ExternalStorageNetworkNode.class);
@@ -63,8 +65,11 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private final List<IExternalStorage<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
     private final List<IExternalStorage<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
 
+    private CoverManager coverManager;
+
     public ExternalStorageNetworkNode(World world, BlockPos pos) {
         super(world, pos);
+        this.coverManager = new CoverManager(this);
     }
 
     @Override
@@ -318,5 +323,28 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     public List<IExternalStorage<FluidStack>> getFluidStorages() {
         return fluidStorages;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
+    }
+
+    @Override
+    public void read(CompoundNBT tag) {
+        super.read(tag);
+
+        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+    }
+
+
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag) {
+        super.write(tag);
+
+        tag.put("Cover", this.coverManager.writeToNbt());
+
+        return tag;
     }
 }

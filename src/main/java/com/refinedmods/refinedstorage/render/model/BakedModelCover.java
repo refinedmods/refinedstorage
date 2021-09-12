@@ -100,7 +100,7 @@ public class BakedModelCover extends BakedModelCableCover{
     public ItemOverrideList getOverrides() {
         return new ItemOverrideList() {
             @Override
-            public IBakedModel func_239290_a_(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+            public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
                 return new BakedModelCover(stack, type);
             }
         };
@@ -152,7 +152,7 @@ public class BakedModelCover extends BakedModelCableCover{
     }
 
     @Override
-    public boolean func_230044_c_() {
+    public boolean isSideLit() {
         return true;
     }
 }

@@ -44,6 +44,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(PICKUP);
+        dataManager.addWatchedParameter(COVER_MANAGER);
     }
 
     @Override

@@ -4,12 +4,20 @@ import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.tile.config.*;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
+import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
+import com.refinedmods.refinedstorage.util.WorldUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -47,6 +55,15 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
         return capacity;
     });
 
+    public static final TileDataParameter<CompoundNBT, ExternalStorageTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
+            t -> t.getNode().getCoverManager().writeToNbt(),
+            (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
+            (initial, p) -> Minecraft.getInstance().enqueue(() -> {}));
+
+    static {
+        TileDataManager.registerParameter(COVER_MANAGER);
+    }
+
     public ExternalStorageTile() {
         super(RSTiles.EXTERNAL_STORAGE);
 
@@ -57,11 +74,38 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
         dataManager.addWatchedParameter(CAPACITY);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(ACCESS_TYPE);
+        dataManager.addWatchedParameter(COVER_MANAGER);
     }
 
     @Override
     @Nonnull
     public ExternalStorageNetworkNode createNode(World world, BlockPos pos) {
         return new ExternalStorageNetworkNode(world, pos);
+    }
+
+    @Nonnull
+    @Override
+    public IModelData getModelData() {
+        return new ModelDataMap.Builder().withInitial(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
+    }
+
+    @Override
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
+        super.writeUpdate(tag);
+
+        tag.put("Covers", this.getNode().getCoverManager().writeToNbt());
+
+        return tag;
+    }
+
+    @Override
+    public void readUpdate(CompoundNBT tag) {
+        super.readUpdate(tag);
+
+        this.getNode().getCoverManager().readFromNbt(tag.getCompound("Covers"));
+
+        requestModelDataUpdate();
+
+        WorldUtils.updateBlock(world, pos);
     }
 }
