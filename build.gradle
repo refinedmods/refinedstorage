@@ -97,6 +97,20 @@ sourceSets {
     main.resources.srcDirs += 'src/generated/resources'
 }
 
+processResources {
+    inputs.property 'version', project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+
+        expand 'version': project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.31'
 
