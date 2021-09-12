@@ -73,7 +73,7 @@ public class CoverItem extends Item {
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+        if (this.isInGroup(group)) { //Changed from 1.12: to use 1.16 configs
             if (!RS.CLIENT_CONFIG.getCover().showAllRecipesInJEI()) {
                 ItemStack stack = new ItemStack(this);
 

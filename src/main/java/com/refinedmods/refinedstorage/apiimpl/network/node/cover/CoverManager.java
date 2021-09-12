@@ -149,7 +149,7 @@ public class CoverManager {
 
         BlockState state = getBlockState(item);
 
-        return block != null && state != null && ((isModelSupported(state) && !block.ticksRandomly(state) && !block.hasTileEntity(state) && !state.isTransparent())); //Removed is top solid as it needs world param
+        return block != null && state != null && ((isModelSupported(state) && !block.ticksRandomly(state) && !block.hasTileEntity(state) && !state.isTransparent())); //Changed from 1.12: to use 1.16 methods
     }
 
     private static boolean isModelSupported(BlockState state) {

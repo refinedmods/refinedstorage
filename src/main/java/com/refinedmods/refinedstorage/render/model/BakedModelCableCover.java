@@ -137,7 +137,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
             }
         }
 
-        HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();
+        HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();  //Changed from 1.12: to improve sprite getting for each side
         quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random)))).bake());
 
         if (handle) {
@@ -197,7 +197,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
             from.setZ(16 - size);
             to.setZ(16);
         }
-        HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();
+        HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>(); //Changed from 1.12: to improve sprite getting for each side
         quads.addAll(new CubeBuilder()
                 .from(from.getX(), from.getY(), from.getZ())
                 .to(to.getX(), to.getY(), to.getZ())
