@@ -98,7 +98,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.func_234923_W_() == receiverDimension;
+        return world.getDimensionKey() == receiverDimension;
     }
 
     private boolean canTransmit() {

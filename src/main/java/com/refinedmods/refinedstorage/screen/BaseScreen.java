@@ -126,7 +126,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        func_230459_a_(matrixStack, mouseX, mouseY);
+        renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
@@ -352,7 +352,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public static boolean isKeyDown(KeyBinding keybinding) {
-        return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
+        return !keybinding.isInvalid() && InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
             keybinding.getKeyConflictContext().isActive() &&
             keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }

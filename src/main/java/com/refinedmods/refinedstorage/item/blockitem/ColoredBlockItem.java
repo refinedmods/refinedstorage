@@ -14,7 +14,9 @@ public class ColoredBlockItem extends BaseBlockItem {
         super(block, builder);
 
         if (color != ColorMap.DEFAULT_COLOR) {
-            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey()).appendString(" ").append(displayName);
+            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey())
+                    .appendString(" ")
+                    .appendSibling(displayName);
         } else {
             this.displayName = displayName;
         }

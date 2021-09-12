@@ -22,9 +22,4 @@ node {
   stage('Publish artifacts') {
     sh "./gradlew publish"
   }
-  stage('SonarQube analysis') {
-    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-      sh "./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN"
-    }
-  }
 }

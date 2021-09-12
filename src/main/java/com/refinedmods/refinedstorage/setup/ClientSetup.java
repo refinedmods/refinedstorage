@@ -10,7 +10,6 @@ import com.refinedmods.refinedstorage.item.property.ControllerItemPropertyGetter
 import com.refinedmods.refinedstorage.item.property.NetworkItemPropertyGetter;
 import com.refinedmods.refinedstorage.item.property.SecurityCardItemPropertyGetter;
 import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
-import com.refinedmods.refinedstorage.render.ExperimentalLightingPipelineNagger;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
@@ -35,8 +34,10 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -56,13 +57,6 @@ public class ClientSetup {
     private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft != null) { // This is null in a runData environment.
-            IResourceManager resourceManager = minecraft.getResourceManager();
-            if (resourceManager instanceof IReloadableResourceManager) {
-                ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
-            }
-        }
 
         forEachColorApply("controller", (name, color) -> bakedModelOverrideRegistry.add(name, (base, registry) -> new FullbrightBakedModel(
             base,
@@ -156,28 +150,11 @@ public class ClientSetup {
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
-        ModelLoader.addSpecialModel(DISK_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_FULL_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
-
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
-
-        for (DyeColor color : DyeColor.values()) {
-            ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
-        }
-
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
-
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelRegistry);
+        MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitch);
-        MinecraftForge.EVENT_BUS.addListener(new ExperimentalLightingPipelineNagger()::onPlayerLoggedIn);
 
         API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
 
@@ -288,19 +265,45 @@ public class ClientSetup {
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
 
-        ItemModelsProperties.func_239418_a_(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
 
-        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.func_239418_a_(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
-        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.func_239418_a_(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.registerProperty(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.registerProperty(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.func_239418_a_(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.func_239418_a_(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+    }
+
+    @SubscribeEvent
+    public void addReloadListener(AddReloadListenerEvent event){
+        event.addListener(new ResourcePackListener());
+    }
+
+    @SubscribeEvent
+    public void onModelRegistry(ModelRegistryEvent e) {
+        ModelLoader.addSpecialModel(DISK_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_FULL_RESOURCE);
+        ModelLoader.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
+
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
+
+        for (DyeColor color : DyeColor.values()) {
+            ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
+        }
+
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
     }
 
     @SubscribeEvent

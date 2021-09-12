@@ -92,7 +92,7 @@ public class UpgradeItem extends Item {
             tooltip.add(
                 new TranslationTextComponent("enchantment.minecraft.fortune")
                     .appendString(" ")
-                    .append(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
+                    .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
                     .setStyle(Styles.GRAY)
             );
         }

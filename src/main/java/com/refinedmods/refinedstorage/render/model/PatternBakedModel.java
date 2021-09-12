@@ -25,7 +25,7 @@ public class PatternBakedModel extends DelegateBakedModel {
         return new ItemOverrideList() {
             @Nullable
             @Override
-            public IBakedModel func_239290_a_(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+            public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
                 if (entity != null) {
                     ICraftingPattern pattern = PatternItem.fromCache(entity.world, stack);
 
@@ -36,7 +36,7 @@ public class PatternBakedModel extends DelegateBakedModel {
                     }
                 }
 
-                return super.func_239290_a_(model, stack, world, entity);
+                return super.getOverrideModel(model, stack, world, entity);
             }
 
             @Override

@@ -60,11 +60,18 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             List<String> smallTextLines = Lists.newArrayList();
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
+            int hours = totalSecs / 3600;
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
             smallTextLines.add(I18n.format("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
-            smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+
+            if (hours > 0) {
+                smallTextLines.add(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+            } else {
+                smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+            }
+
             smallTextLines.add(String.format("%d%%", completionPercentage));
 
             RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);

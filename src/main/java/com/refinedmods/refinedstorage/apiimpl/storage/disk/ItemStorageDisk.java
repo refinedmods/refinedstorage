@@ -82,7 +82,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         if (stack.isEmpty() || itemCount == capacity) {
-            return stack;
+            return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
         for (ItemStack otherStack : stacks.get(stack.getItem())) {

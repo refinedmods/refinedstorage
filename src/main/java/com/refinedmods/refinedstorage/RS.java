@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.config.ClientConfig;
 import com.refinedmods.refinedstorage.config.ServerConfig;
 import com.refinedmods.refinedstorage.datageneration.DataGenerators;
+import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
 import com.refinedmods.refinedstorage.item.group.MainItemGroup;
 import com.refinedmods.refinedstorage.network.NetworkHandler;
 import com.refinedmods.refinedstorage.setup.ClientSetup;
@@ -49,6 +50,7 @@ public final class RS {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, commonSetup::onRegisterRecipeSerializers);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, commonSetup::onRegisterContainers);
         FMLJavaModLoadingContext.get().getModEventBus().register(new DataGenerators());
+        FMLJavaModLoadingContext.get().getModEventBus().register(new CuriosIntegration());
 
         API.deliver();
     }

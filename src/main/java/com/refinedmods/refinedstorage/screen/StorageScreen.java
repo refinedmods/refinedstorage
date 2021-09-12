@@ -86,7 +86,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
 
         blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
-        int barHeightNew = (int) ((float) storedSupplier.get() / (float) capacitySupplier.get() * (float) BAR_HEIGHT);
+        int barHeightNew = capacitySupplier.get() < 0 ? 0 : (int) ((float) storedSupplier.get() / (float) capacitySupplier.get() * (float) BAR_HEIGHT);
 
         blit(matrixStack, x + BAR_X, y + BAR_Y + BAR_HEIGHT - barHeightNew, 179, BAR_HEIGHT - barHeightNew, BAR_WIDTH, barHeightNew);
     }

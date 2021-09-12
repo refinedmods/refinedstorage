@@ -99,40 +99,36 @@ public class FluidGridHandler implements IFluidGridHandler {
         FluidStack stack = network.getFluidStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
-            Thread calculationThread = new Thread(() -> {
-                ICalculationResult result = network.getCraftingManager().create(stack, quantity);
-                if (result == null) {
-                    return;
-                }
+            ICalculationResult result = network.getCraftingManager().create(stack, quantity);
+            if (result == null) {
+                return;
+            }
 
-                if (!result.isOk() && result.getType() != CalculationResultType.MISSING) {
-                    RS.NETWORK_HANDLER.sendTo(
-                        player,
-                        new GridCraftingPreviewResponseMessage(
-                            Collections.singletonList(new ErrorCraftingPreviewElement(result.getType(), result.getRecursedPattern() == null ? ItemStack.EMPTY : result.getRecursedPattern().getStack())),
-                            id,
-                            quantity,
-                            true
-                        )
-                    );
-                } else if (result.isOk() && noPreview) {
-                    network.getCraftingManager().start(result.getTask());
+            if (!result.isOk() && result.getType() != CalculationResultType.MISSING) {
+                RS.NETWORK_HANDLER.sendTo(
+                    player,
+                    new GridCraftingPreviewResponseMessage(
+                        Collections.singletonList(new ErrorCraftingPreviewElement(result.getType(), result.getRecursedPattern() == null ? ItemStack.EMPTY : result.getRecursedPattern().getStack())),
+                        id,
+                        quantity,
+                        true
+                    )
+                );
+            } else if (result.isOk() && noPreview) {
+                network.getCraftingManager().start(result.getTask());
 
-                    RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
-                } else {
-                    RS.NETWORK_HANDLER.sendTo(
-                        player,
-                        new GridCraftingPreviewResponseMessage(
-                            result.getPreviewElements(),
-                            id,
-                            quantity,
-                            true
-                        )
-                    );
-                }
-            }, "RS crafting preview calculation");
-
-            calculationThread.start();
+                RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
+            } else {
+                RS.NETWORK_HANDLER.sendTo(
+                    player,
+                    new GridCraftingPreviewResponseMessage(
+                        result.getPreviewElements(),
+                        id,
+                        quantity,
+                        true
+                    )
+                );
+            }
         }
     }
 

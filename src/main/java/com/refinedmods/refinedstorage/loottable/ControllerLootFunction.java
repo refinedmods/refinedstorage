@@ -33,7 +33,7 @@ public class ControllerLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType func_230425_b_() {
+    public LootFunctionType getFunctionType() {
         return RSLootFunctions.getController();
     }
 

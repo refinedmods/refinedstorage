@@ -97,7 +97,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             tag.putInt(NBT_NODE_X, network.getPosition().getX());
             tag.putInt(NBT_NODE_Y, network.getPosition().getY());
             tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().func_234923_W_().func_240901_a_().toString());
+            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimensionKey().getLocation().toString());
 
             stack.setTag(tag);
 
@@ -115,7 +115,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
                 return null;
             }
 
-            return RegistryKey.func_240903_a_(Registry.WORLD_KEY, name);
+            return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, name);
         }
 
         return null;
