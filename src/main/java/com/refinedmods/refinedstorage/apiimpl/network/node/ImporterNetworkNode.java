@@ -153,7 +153,9 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
+
         if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+
         StackUtils.readItems(upgrades, 1, tag);
     }
 
@@ -165,7 +167,9 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
+
         tag.put("Cover", this.coverManager.writeToNbt());
+
         StackUtils.writeItems(upgrades, 1, tag);
 
         return tag;

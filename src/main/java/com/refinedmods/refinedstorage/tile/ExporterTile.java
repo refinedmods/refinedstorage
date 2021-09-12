@@ -23,8 +23,7 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
     public static final TileDataParameter<CompoundNBT, ExporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> Minecraft.getInstance().enqueue(() -> {
-            }));
+            (initial, p) -> Minecraft.getInstance().enqueue(() -> {}));
 
     public static final TileDataParameter<Integer, ExporterTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, ExporterTile> TYPE = IType.createParameter();

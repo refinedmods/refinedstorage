@@ -52,13 +52,13 @@ public class DestructorBlock extends CableBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        return ShapeCache.getOrCreate(state, s -> {
+        return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, s -> {
             VoxelShape shape = getCableShape(s);
 
             shape = VoxelShapes.or(shape, getHeadShape(s));
 
-            return ConstantsCable.addCoverVoxelShapes(shape, world, pos);
-        });
+            return shape;
+        }), world, pos);
     }
 
     private VoxelShape getHeadShape(BlockState state) {

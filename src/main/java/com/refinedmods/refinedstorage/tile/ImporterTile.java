@@ -27,13 +27,11 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
     public static final TileDataParameter<CompoundNBT, ImporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> Minecraft.getInstance().enqueue(() -> {
-            }));
+            (initial, p) -> Minecraft.getInstance().enqueue(() -> {}));
 
     static {
         TileDataManager.registerParameter(COVER_MANAGER);
     }
-
 
     public ImporterTile() {
         super(RSTiles.IMPORTER);
@@ -50,7 +48,6 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
         return new ImporterNetworkNode(world, pos);
     }
 
-
     @Nonnull
     @Override
     public IModelData getModelData() {
@@ -60,6 +57,7 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
     @Override
     public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
+
         tag.put("Covers", this.getNode().getCoverManager().writeToNbt());
 
         return tag;

@@ -33,8 +33,7 @@ public class CableTile extends NetworkNodeTile<CableNetworkNode> {
     public static final TileDataParameter<CompoundNBT, CableTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> Minecraft.getInstance().enqueue(() -> {
-        }));
+            (initial, p) -> Minecraft.getInstance().enqueue(() -> {}));
 
     static {
         TileDataManager.registerParameter(COVER_MANAGER);
