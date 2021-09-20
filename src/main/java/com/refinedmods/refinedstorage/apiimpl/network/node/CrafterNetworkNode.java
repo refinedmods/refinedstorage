@@ -478,12 +478,13 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     public boolean insertItemsIntoInventory(Collection<StackListEntry<ItemStack>> toInsert, Action action) {
         IItemHandler dest = getConnectedInventory();
 
-        if (dest == null) {
-            return false;
-        }
 
         if (toInsert.isEmpty()) {
             return true;
+        }
+
+        if (dest == null) {
+            return false;
         }
 
         Deque<StackListEntry<ItemStack>> stacks = new ArrayDeque<>(toInsert);
@@ -533,6 +534,10 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     @Override
     public boolean insertFluidsIntoInventory(Collection<StackListEntry<FluidStack>> toInsert, Action action) {
         IFluidHandler dest = getConnectedFluidInventory();
+
+        if (toInsert.isEmpty()) {
+            return true;
+        }
 
         if (dest == null) {
             return false;

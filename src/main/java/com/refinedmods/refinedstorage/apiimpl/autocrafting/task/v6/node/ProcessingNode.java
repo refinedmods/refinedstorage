@@ -104,8 +104,8 @@ public class ProcessingNode extends Node {
                         allLocked = false;
                     }
 
-                    if ((!singleItemSetToRequire.isEmpty() && container.hasConnectedInventory()) ||
-                        (!singleFluidSetToRequire.isEmpty() && container.hasConnectedFluidInventory())) {
+                    if ((!singleItemSetToRequire.isEmpty() && !container.hasConnectedInventory()) ||
+                        (!singleFluidSetToRequire.isEmpty() && !container.hasConnectedFluidInventory())) {
                         if (allMissingMachine) {
                             this.state = ProcessingState.MACHINE_NONE;
                         }
