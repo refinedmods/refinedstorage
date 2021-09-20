@@ -93,7 +93,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingInventory inv = new DummyCraftingInventory(this.context);
+        CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -126,7 +126,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingInventory inv = new DummyCraftingInventory(this.context);
+        CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -271,18 +271,13 @@ public class CraftingPattern implements ICraftingPattern {
 
     public static class DummyCraftingInventory extends CraftingInventory 
     {
-        public final CraftingPatternContext context;
-        public final UUID requester;
-        
-        public DummyCraftingInventory(CraftingPatternContext context) {
+        public DummyCraftingInventory() {
             super(new Container(null, 0) {
                 @Override
                 public boolean canInteractWith(PlayerEntity player) {
                     return true;
                 }
             }, 3, 3);
-            this.context = context;
-            this.requester = PatternItem.getPatternCreator(context.getStack());
         }
     }
 }

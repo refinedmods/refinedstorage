@@ -3,6 +3,8 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.item.PatternItem;
+import com.refinedmods.refinedstorage.util.WorldUtils;
+
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
@@ -15,6 +17,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -48,13 +53,18 @@ public class CraftingPatternFactory {
                     throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
-                CraftingInventory inv = new CraftingPattern.DummyCraftingInventory(context);
-
+                CraftingInventory inv = new CraftingPattern.DummyCraftingInventory();
+                if(!world.isRemote)
+                {
+                	FakePlayer pl = WorldUtils.getFakePlayer((ServerWorld) world, PatternItem.getPatternCreator(stack));
+                	ForgeHooks.setCraftingPlayer(pl);
+                }
                 for (int i = 0; i < 9; ++i) {
                     fillCraftingInputs(inv, stack, inputs, i);
                 }
 
                 Optional<ICraftingRecipe> foundRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);
+                ForgeHooks.setCraftingPlayer(null);
                 if (foundRecipe.isPresent()) {
                     recipe = foundRecipe.get();
 
