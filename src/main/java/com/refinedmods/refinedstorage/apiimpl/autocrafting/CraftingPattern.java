@@ -93,7 +93,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingInventory inv = new DummyCraftingInventory();
+        CraftingInventory inv = new DummyCraftingInventory(this.context);
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -126,7 +126,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingInventory inv = new DummyCraftingInventory();
+        CraftingInventory inv = new DummyCraftingInventory(this.context);
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -271,13 +271,21 @@ public class CraftingPattern implements ICraftingPattern {
 
     public static class DummyCraftingInventory extends CraftingInventory 
     {
-        public DummyCraftingInventory() {
+        public final CraftingPatternContext context;
+        /**
+         * this is added so the currently crafting player is also available on the client side. The alternative is to create a ClietnSide FakePlayer (since the ForgeHooks.setCraftingPlayer only accepts real players)
+         */
+        public final UUID requester;
+
+        public DummyCraftingInventory(CraftingPatternContext context) {
             super(new Container(null, 0) {
                 @Override
                 public boolean canInteractWith(PlayerEntity player) {
                     return true;
                 }
             }, 3, 3);
+            this.context = context;
+            this.requester = PatternItem.getPatternCreator(context.getStack());
         }
     }
 }

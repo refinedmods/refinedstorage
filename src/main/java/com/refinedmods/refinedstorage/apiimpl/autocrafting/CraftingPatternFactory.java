@@ -5,6 +5,8 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer
 import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
@@ -18,12 +20,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class CraftingPatternFactory {
     public static final CraftingPatternFactory INSTANCE = new CraftingPatternFactory();
@@ -53,7 +58,7 @@ public class CraftingPatternFactory {
                     throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
-                CraftingInventory inv = new CraftingPattern.DummyCraftingInventory();
+                CraftingInventory inv = new CraftingPattern.DummyCraftingInventory(context);
                 if(!world.isRemote)
                 {
                 	FakePlayer pl = WorldUtils.getFakePlayer((ServerWorld) world, PatternItem.getPatternCreator(stack));
