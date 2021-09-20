@@ -83,14 +83,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags);
 
+    /**
+     * the Player who first opens the gui, to set the crafting player for the forge hook. See {@link GridNetworkNode#onCraftingMatrixChanged()}
+     */
+    private PlayerEntity containerOpeningPlayer = null;
     
-    private class DummyContainer extends Container {
-        protected DummyContainer() {
-            super(ContainerType.CRAFTING, 0);
-        }
-
-        public PlayerEntity owner = null;
-        
+    private final Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
         public boolean canInteractWith(PlayerEntity player) {
             return false;
@@ -102,9 +100,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 onCraftingMatrixChanged();
             }
         }
-    }
-    
-    private final DummyContainer craftingContainer = new DummyContainer();
+    };
     
     private ICraftingRecipe currentRecipe;
     private final CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
@@ -336,7 +332,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     public void addCraftingListener(ICraftingGridListener listener) {
         
         if(listener instanceof GridContainer) {
-            this.craftingContainer.owner = ((GridContainer) listener).getPlayer();
+           this.containerOpeningPlayer = ((GridContainer) listener).getPlayer();
         }
         craftingListeners.add(listener);
     }
@@ -399,7 +395,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftingMatrixChanged() {
-    	ForgeHooks.setCraftingPlayer(this.craftingContainer.owner);
+        ForgeHooks.setCraftingPlayer(this.containerOpeningPlayer);
         if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
             currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null);
         }
@@ -420,7 +416,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
-        craftingContainer.owner = player;
+        containerOpeningPlayer = player;
         API.instance().getCraftingGridBehavior().onRecipeTransfer(this, player, recipe);
     }
 
@@ -461,13 +457,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
-        craftingContainer.owner = player;
+        containerOpeningPlayer = player;
         API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player, availableItems, usedItems);
     }
 
     @Override
     public void onClear(PlayerEntity player) {
-        craftingContainer.owner = player;
+        containerOpeningPlayer = player;
         if (type == GridType.CRAFTING) {
             if (network != null && network.canRun() && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
                 for (int i = 0; i < matrix.getSizeInventory(); ++i) {
@@ -498,12 +494,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftedShift(PlayerEntity player) {
-        craftingContainer.owner = player;
+        containerOpeningPlayer = player;
         API.instance().getCraftingGridBehavior().onCraftedShift(this, player);
     }
 
     public void onCreatePattern(ServerPlayerEntity player) {
-        craftingContainer.owner = player;
+        containerOpeningPlayer = player;
         if (canCreatePattern()) {
             if (patterns.getStackInSlot(1).isEmpty()) {
                 patterns.extractItem(0, 1, false);
