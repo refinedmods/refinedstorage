@@ -47,6 +47,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
@@ -398,6 +399,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftingMatrixChanged() {
+    	ForgeHooks.setCraftingPlayer(this.craftingContainer.owner);
         if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
             currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null);
         }
@@ -413,6 +415,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         if (!readingInventory) {
             markDirty();
         }
+        ForgeHooks.setCraftingPlayer(null);
     }
 
     @Override
