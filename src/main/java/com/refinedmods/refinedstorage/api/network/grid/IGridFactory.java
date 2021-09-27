@@ -18,7 +18,7 @@ public interface IGridFactory {
      *
      * @param player the player
      * @param stack  the stack
-     * @param slot   the slot, if applicable, otherwise -1
+     * @param slot   the slot in the players inventory,or curio slot, otherwise -1
      * @return the grid, or null if a problem occurred
      */
     @Nullable

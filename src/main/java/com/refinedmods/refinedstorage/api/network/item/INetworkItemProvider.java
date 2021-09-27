@@ -16,7 +16,7 @@ public interface INetworkItemProvider {
      * @param handler the network item handler
      * @param player  the player
      * @param stack   the stack
-     * @param slot    the slot in the players inventory or -1
+     * @param slot    the slot in the players inventory,or curio slot, otherwise -1
      * @return the network item
      */
     @Nonnull
