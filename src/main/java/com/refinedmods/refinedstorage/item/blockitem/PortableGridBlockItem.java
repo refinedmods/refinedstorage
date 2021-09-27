@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridGridFactory;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.util.ITooltipFlag;
@@ -50,7 +51,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, player.inventory.currentItem);
+            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, PlayerSlot.getSlotForHand(player, hand));
         }
 
         return ActionResult.resultSuccess(stack);

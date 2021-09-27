@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.network.OpenNetworkItemMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
@@ -60,7 +61,7 @@ public class KeyInputListener {
             Optional<ImmutableTriple<String, Integer, ItemStack>> curio = CuriosApi.getCuriosHelper().findEquippedCurio(stack -> validItems.contains(stack.getItem()), Minecraft.getInstance().player);
 
             if (curio.isPresent()) {
-                RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(curio.get().getMiddle(), curio.get().getLeft()));
+                RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(new PlayerSlot(curio.get().getMiddle(), curio.get().getLeft())));
                 return;
             }
         }
@@ -68,7 +69,7 @@ public class KeyInputListener {
         if (slotFound == -1) {
             sendError(new TranslationTextComponent("misc.refinedstorage.network_item.shortcut_not_found", new TranslationTextComponent(items[0].getTranslationKey())));
         } else {
-            RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(slotFound, ""));
+            RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(new PlayerSlot(slotFound)));
         }
     }
 

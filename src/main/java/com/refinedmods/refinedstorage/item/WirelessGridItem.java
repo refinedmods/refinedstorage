@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.apiimpl.network.item.WirelessGridNetworkItem;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,8 +33,8 @@ public class WirelessGridItem extends NetworkItem {
 
     @Override
     @Nonnull
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
-        return new WirelessGridNetworkItem(handler, player, stack, slotId);
+    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+        return new WirelessGridNetworkItem(handler, player, stack, slot);
     }
 
     public static int getViewType(ItemStack stack) {

@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
 import com.refinedmods.refinedstorage.container.factory.GridContainerProvider;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,16 +29,16 @@ public class GridManager implements IGridManager {
 
     @Override
     public void openGrid(ResourceLocation id, ServerPlayerEntity player, BlockPos pos) {
-        openGrid(id, player, null, pos, -1);
+        openGrid(id, player, null, pos, new PlayerSlot(-1));
     }
 
     @Override
-    public void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, int slotId) {
-        openGrid(id, player, stack, null, slotId);
+    public void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, PlayerSlot slot) {
+        openGrid(id, player, stack, null, slot);
     }
 
-    private void openGrid(ResourceLocation id, ServerPlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
-        Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos, slotId);
+    private void openGrid(ResourceLocation id, ServerPlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, PlayerSlot slot) {
+        Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos, slot);
         if (grid == null) {
             return;
         }
@@ -55,13 +56,13 @@ public class GridManager implements IGridManager {
                 buf.writeItemStack(stack);
             }
 
-            buf.writeInt(slotId);
+            slot.writePlayerSlot(buf);
         });
     }
 
     @Override
     @Nullable
-    public Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
+    public Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, PlayerSlot slot) {
         IGridFactory factory = factories.get(id);
 
         if (factory == null) {
@@ -72,7 +73,7 @@ public class GridManager implements IGridManager {
         TileEntity tile = factory.getRelevantTile(player.world, pos);
 
         if (factory.getType() == GridFactoryType.STACK) {
-            grid = factory.createFromStack(player, stack, slotId);
+            grid = factory.createFromStack(player, stack, slot);
         } else if (factory.getType() == GridFactoryType.BLOCK) {
             grid = factory.createFromBlock(player, pos);
         }

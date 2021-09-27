@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.network.item;
 
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
@@ -15,9 +16,9 @@ public interface INetworkItemManager {
      *
      * @param player the player that opened the network item
      * @param stack  the stack that has been opened
-     * @param slotId the slot id, if applicable, otherwise -1
+     * @param slot   the slot in the players inventory, otherwise -1
      */
-    void open(PlayerEntity player, ItemStack stack, int slotId);
+    void open(PlayerEntity player, ItemStack stack, PlayerSlot slot);
 
     /**
      * Called when the player closes a network item.

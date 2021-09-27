@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,9 +36,9 @@ public interface IGridManager {
      * @param id     the grid factory id
      * @param player the player
      * @param stack  the stack
-     * @param slotId the slot id, if applicable, otherwise -1
+     * @param slot   the slot
      */
-    void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, int slotId);
+    void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, PlayerSlot slot);
 
     /**
      * Creates a grid.
@@ -46,9 +47,9 @@ public interface IGridManager {
      * @param player the player
      * @param stack  the stack, if there is one
      * @param pos    the block position, if there is one
-     * @param slotId the slot id, if applicable, otherwise -1
+     * @param slot   the slot, if applicable, otherwise -1
      * @return a grid, or null if an error has occurred
      */
     @Nullable
-    Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId);
+    Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, PlayerSlot slot);
 }

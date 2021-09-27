@@ -33,6 +33,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.network.grid.PortableGridSettingsUpdateMessage;
@@ -73,7 +74,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Nullable
     private PlayerEntity player;
     private ItemStack stack;
-    private final int slotId;
+    private final PlayerSlot slot;
 
     private int sortingType;
     private int sortingDirection;
@@ -135,10 +136,10 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             }
         }));
 
-    public PortableGrid(@Nullable PlayerEntity player, ItemStack stack, int slotId) {
+    public PortableGrid(@Nullable PlayerEntity player, ItemStack stack, PlayerSlot slot) {
         this.player = player;
         this.stack = stack;
-        this.slotId = slotId;
+        this.slot = slot;
 
         this.sortingType = WirelessGridItem.getSortingType(stack);
         this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
@@ -435,7 +436,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public int getSlotId() {
-        return slotId;
+        return slot.getSlotIdInPlayerInventory();
     }
 
     @Nullable
