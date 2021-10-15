@@ -36,7 +36,7 @@ public interface IGridManager {
      * @param id     the grid factory id
      * @param player the player
      * @param stack  the stack
-     * @param slot   the slot in the players inventory,or curio slot, otherwise -1
+     * @param slot   the slot in the players inventory or curio slot, otherwise -1
      */
     void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, PlayerSlot slot);
 

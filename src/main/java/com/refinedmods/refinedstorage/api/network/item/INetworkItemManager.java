@@ -16,7 +16,7 @@ public interface INetworkItemManager {
      *
      * @param player the player that opened the network item
      * @param stack  the stack that has been opened
-     * @param slot   the slot in the players inventory,or curio slot, otherwise -1
+     * @param slot   the slot in the players inventory or curio slot, otherwise -1
      */
     void open(PlayerEntity player, ItemStack stack, PlayerSlot slot);
 
