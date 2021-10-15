@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemProvider;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
@@ -24,7 +25,7 @@ public class NetworkItemManager implements INetworkItemManager {
     }
 
     @Override
-    public void open(PlayerEntity player, ItemStack stack, int slotId) {
+    public void open(PlayerEntity player, ItemStack stack, PlayerSlot slot) {
         boolean inRange = false;
 
         for (INetworkNodeGraphEntry entry : network.getNodeGraph().all()) {
@@ -54,7 +55,7 @@ public class NetworkItemManager implements INetworkItemManager {
             return;
         }
 
-        INetworkItem item = ((INetworkItemProvider) stack.getItem()).provide(this, player, stack, slotId);
+        INetworkItem item = ((INetworkItemProvider) stack.getItem()).provide(this, player, stack, slot);
 
         if (item.onOpen(network)) {
             items.put(player, item);

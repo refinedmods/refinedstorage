@@ -2,9 +2,11 @@ package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemProvider;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -38,7 +40,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), player.inventory.currentItem), err -> player.sendMessage(err, player.getUniqueID()));
+            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUniqueID()));
         }
 
         return ActionResult.resultSuccess(stack);
@@ -80,6 +82,11 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         if (isValid(stack)) {
             tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
         }
+    }
+
+    @Override
+    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        return super.itemInteractionForEntity(stack, playerIn, target, hand);
     }
 
     @Override

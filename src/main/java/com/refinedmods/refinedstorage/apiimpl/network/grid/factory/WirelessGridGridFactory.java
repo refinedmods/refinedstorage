@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridFactoryType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,8 +20,8 @@ public class WirelessGridGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId) {
-        return new WirelessGrid(stack, player.getServer(), slotId);
+    public IGrid createFromStack(PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+        return new WirelessGrid(stack, player.getServer(), slot);
     }
 
     @Nullable

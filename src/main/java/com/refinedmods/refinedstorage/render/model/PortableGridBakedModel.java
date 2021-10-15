@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.PortableGridBlock;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGrid;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridDiskState;
 import net.minecraft.block.BlockState;
@@ -111,7 +112,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Nullable
         @Override
         public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-            PortableGrid portableGrid = new PortableGrid(null, stack, -1);
+            PortableGrid portableGrid = new PortableGrid(null, stack, new PlayerSlot(-1));
 
             if (portableGrid.isGridActive()) {
                 return new PortableGridItemBakedModel(baseConnected, getDiskModel(portableGrid.getDiskState()));

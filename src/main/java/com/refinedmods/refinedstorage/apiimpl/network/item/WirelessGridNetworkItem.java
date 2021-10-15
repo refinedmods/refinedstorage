@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.WirelessGridGridFactory;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,13 +21,13 @@ public class WirelessGridNetworkItem implements INetworkItem {
     private final INetworkItemManager handler;
     private final PlayerEntity player;
     private final ItemStack stack;
-    private final int slotId;
+    private final PlayerSlot slot;
 
-    public WirelessGridNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
+    public WirelessGridNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
-        this.slotId = slotId;
+        this.slot = slot;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class WirelessGridNetworkItem implements INetworkItem {
             return false;
         }
 
-        API.instance().getGridManager().openGrid(WirelessGridGridFactory.ID, (ServerPlayerEntity) player, stack, slotId);
+        API.instance().getGridManager().openGrid(WirelessGridGridFactory.ID, (ServerPlayerEntity) player, stack, slot);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessGrid().getOpenUsage());
 

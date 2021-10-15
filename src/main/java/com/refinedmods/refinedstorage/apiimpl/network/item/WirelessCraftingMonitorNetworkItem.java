@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.factory.CraftingMonitorContainerProvider;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import com.refinedmods.refinedstorage.util.WorldUtils;
@@ -22,13 +23,13 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
     private final INetworkItemManager handler;
     private final PlayerEntity player;
     private final ItemStack stack;
-    private final int slotId;
+    private final PlayerSlot slot;
 
-    public WirelessCraftingMonitorNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
+    public WirelessCraftingMonitorNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
-        this.slotId = slotId;
+        this.slot = slot;
     }
 
     @Override
@@ -56,13 +57,11 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
             return false;
         }
 
-        WirelessCraftingMonitor wirelessCraftingMonitor = new WirelessCraftingMonitor(stack, player.getServer(), slotId);
+        WirelessCraftingMonitor wirelessCraftingMonitor = new WirelessCraftingMonitor(stack, player.getServer(), slot);
 
         NetworkHooks.openGui(
             (ServerPlayerEntity) player,
-            new CraftingMonitorContainerProvider(RSContainers.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null),
-            buf -> buf.writeInt(slotId)
-        );
+            new CraftingMonitorContainerProvider(RSContainers.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null), slot::writePlayerSlot);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessCraftingMonitor().getOpenUsage());
 

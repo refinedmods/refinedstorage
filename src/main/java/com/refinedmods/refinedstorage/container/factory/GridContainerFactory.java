@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.container.factory;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.BaseTile;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -29,9 +30,9 @@ public class GridContainerFactory implements IContainerFactory<GridContainer> {
             stack = data.readItemStack();
         }
 
-        int slotId = data.readInt();
+        PlayerSlot slot = new PlayerSlot(data);
 
-        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos, slotId);
+        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos, slot);
 
         return new GridContainer(grid.getLeft(), grid.getRight() instanceof BaseTile ? (BaseTile) grid.getRight() : null, inv.player, windowId);
     }

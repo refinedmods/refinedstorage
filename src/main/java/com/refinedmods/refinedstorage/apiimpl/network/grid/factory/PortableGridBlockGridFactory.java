@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridFactoryType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,7 +20,7 @@ public class PortableGridBlockGridFactory implements IGridFactory {
 
     @Override
     @Nullable
-    public IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId) {
+    public IGrid createFromStack(PlayerEntity player, ItemStack stack, PlayerSlot slot) {
         return null;
     }
 
