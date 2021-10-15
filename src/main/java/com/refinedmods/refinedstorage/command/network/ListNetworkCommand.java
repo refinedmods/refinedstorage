@@ -15,6 +15,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 
 import java.text.DecimalFormat;
+import java.util.Comparator;
 
 public class ListNetworkCommand implements Command<CommandSource> {
     private static final DecimalFormat TIME_FORMATTER = new DecimalFormat("########0.000");
@@ -34,7 +35,7 @@ public class ListNetworkCommand implements Command<CommandSource> {
             .all()
             .stream()
             .map(NetworkInList::new)
-            .sorted((a, b) -> Double.compare(b.tickTime, a.tickTime))
+            .sorted(Comparator.comparingDouble(network -> network.tickTime))
             .forEach(listItem -> sendInfo(context, listItem, false));
 
         return 0;
