@@ -1,5 +1,19 @@
 # Refined Storage Changelog
 
+### 1.9.16
+
+- Added Covers for all cable types! (Buuz135)
+- Improved JEI integration to pick the best option when transferring items (Darkere)
+- Fixed an issue where too many items in a grid would kick the player (Darkere)
+- Fixed an issue where the portable grid does not open from Inventory anymore after some use (Darkere)
+- Fixed craftable view in grids not showing items that were already in storage (BlueAgent)
+- Fixed Wireless Crafting Monitor not working as Curio (Darkere)
+- Fixed wrong slot being locked in some cases when opening Wireless Item (Darkere)
+- Slightly sped up External Storage item look up (necauqua)
+- Added Polish translation (joker876)
+- Added Italian translation (maicol07)
+- Addons can now override how Crafters insert items (Darkere)
+
 ### 1.9.15
 
 - Fixed Refined Storage Addons compatibility (Darkere)
