@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternContainer {
+
     public enum CrafterMode {
         IGNORE,
         SIGNAL_UNLOCKS_AUTOCRAFTING,
@@ -467,4 +468,5 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             markDirty();
         }
     }
+
 }

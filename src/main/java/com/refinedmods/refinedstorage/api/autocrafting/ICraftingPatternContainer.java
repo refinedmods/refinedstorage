@@ -1,16 +1,22 @@
 package com.refinedmods.refinedstorage.api.autocrafting;
 
+import com.refinedmods.refinedstorage.api.util.Action;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Represents a network node that contains crafting patterns.
@@ -123,5 +129,115 @@ public interface ICraftingPatternContainer {
      * Called when this container is used by a processing pattern to insert items or fluids in the connected inventory.
      */
     default void onUsedForProcessing() {
+    }
+
+    /**
+     * @return whether the container is successfully connected to the inventory it wants to insert to
+     */
+    default boolean hasConnectedInventory() {
+        return getConnectedInventory() != null;
+    }
+
+    /**
+     * @return whether the container is successfully connected to the fluid inventory it wants to insert to
+     */
+    default boolean hasConnectedFluidInventory() {
+        return getConnectedFluidInventory() != null;
+    }
+
+    /**
+     * Called by Autocrafting when it uses this crafter in a processing recipe that has items as input
+     *
+     * @param toInsert Collection of Itemstack stacklist entries to insert into the inventory
+     * @param action   action to perform
+     * @return whether insertion was successful
+     */
+    default boolean insertItemsIntoInventory(Collection<StackListEntry<ItemStack>> toInsert, Action action) {
+        IItemHandler dest = getConnectedInventory();
+
+
+        if (toInsert.isEmpty()) {
+            return true;
+        }
+
+        if (dest == null) {
+            return false;
+        }
+
+        Deque<StackListEntry<ItemStack>> stacks = new ArrayDeque<>(toInsert);
+
+        StackListEntry<ItemStack> currentEntry = stacks.poll();
+
+        ItemStack current = currentEntry != null ? currentEntry.getStack() : null;
+
+        List<Integer> availableSlots = IntStream.range(0, dest.getSlots()).boxed().collect(Collectors.toList());
+
+        while (current != null && !availableSlots.isEmpty()) {
+            ItemStack remainder = ItemStack.EMPTY;
+
+            for (int i = 0; i < availableSlots.size(); ++i) {
+                int slot = availableSlots.get(i);
+
+                // .copy() is mandatory!
+                remainder = dest.insertItem(slot, current.copy(), action == Action.SIMULATE);
+
+                // If we inserted *something*
+                if (remainder.isEmpty() || current.getCount() != remainder.getCount()) {
+                    availableSlots.remove(i);
+                    break;
+                }
+            }
+
+            if (remainder.isEmpty()) { // If we inserted successfully, get a next stack.
+                currentEntry = stacks.poll();
+
+                current = currentEntry != null ? currentEntry.getStack() : null;
+            } else if (current.getCount() == remainder.getCount()) { // If we didn't insert anything over ALL these slots, stop here.
+                break;
+            } else { // If we didn't insert all, continue with other slots and use our remainder.
+                current = remainder;
+            }
+        }
+
+        boolean success = current == null && stacks.isEmpty();
+
+        if (!success && action == Action.PERFORM) {
+            LogManager.getLogger().warn("Inventory unexpectedly didn't accept {}, the remainder has been voided!", current != null ? current.getTranslationKey() : null);
+        }
+
+        return success;
+    }
+
+    /**
+     * Called by Autocrafting when it uses this crafter in a processing recipe that has fluids as input
+     *
+     * @param toInsert Collection of Fluidstack stacklist entries to insert into the inventory
+     * @param action   action to perform
+     * @return whether insertion was successful
+     */
+    default boolean insertFluidsIntoInventory(Collection<StackListEntry<FluidStack>> toInsert, Action action) {
+        IFluidHandler dest = getConnectedFluidInventory();
+
+        if (toInsert.isEmpty()) {
+            return true;
+        }
+
+        if (dest == null) {
+            return false;
+        }
+
+        for (StackListEntry<FluidStack> entry : toInsert) {
+            int filled = dest.fill(entry.getStack(), action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+
+            if (filled != entry.getStack().getAmount()) {
+                if (action == Action.PERFORM) {
+                    LogManager.getLogger().warn("Inventory unexpectedly didn't accept all of {}, the remainder has been voided!", entry.getStack().getTranslationKey());
+                }
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }
