@@ -1,8 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
@@ -47,7 +49,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DestructorNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType {
+public class DestructorNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "destructor");
 
     private static final String NBT_COMPARE = "Compare";
@@ -71,8 +73,11 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     private boolean pickupItem = false;
     private ItemStack tool = createTool();
 
+    private final CoverManager coverManager;
+
     public DestructorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
+        this.coverManager = new CoverManager(this);
     }
 
     @Override
@@ -250,6 +255,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     public void read(CompoundNBT tag) {
         super.read(tag);
 
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
+
         StackUtils.readItems(upgrades, 1, tag);
     }
 
@@ -261,6 +270,8 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
+
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
 
         StackUtils.writeItems(upgrades, 1, tag);
 
@@ -347,5 +358,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     public void setPickupItem(boolean pickupItem) {
         this.pickupItem = pickupItem;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }

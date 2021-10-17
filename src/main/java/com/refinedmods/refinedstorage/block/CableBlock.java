@@ -1,8 +1,15 @@
 package com.refinedmods.refinedstorage.block;
 
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
+import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
+import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.tile.CableTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -75,7 +82,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        return ShapeCache.getOrCreate(state, CableBlock::getCableShape);
+        return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, CableBlock::getCableShape), world, pos);
     }
 
     protected static VoxelShape getCableShape(BlockState state) {
@@ -122,6 +129,12 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         super.onDirectionChanged(world, pos, newDirection);
     }
 
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        world.setBlockState(pos, getState(world.getBlockState(pos), world, pos));
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
@@ -155,7 +168,21 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
             return false;
         }
 
-        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent();
+        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
+                && isSideNotCoveredOrHollow(tile, direction)
+                && isSideNotCoveredOrHollow(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
+    }
+
+    private boolean isSideNotCoveredOrHollow(TileEntity tile, Direction direction){
+        if (tile == null){
+            return false;
+        }
+        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction)
+                .map(INetworkNodeProxy::getNode)
+                .map(iNetworkNode -> !(iNetworkNode instanceof ICoverable)
+                        || (!((ICoverable) iNetworkNode).getCoverManager().hasCover(direction)
+                        || ((ICoverable) iNetworkNode).getCoverManager().getCover(direction).getType() == CoverType.HOLLOW))
+                .orElse(false);
     }
 
     private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {

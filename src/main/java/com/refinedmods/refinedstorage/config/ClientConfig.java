@@ -8,11 +8,12 @@ public class ClientConfig {
 
     private final Grid grid;
     private final CrafterManager crafterManager;
+    private final Cover cover;
 
     public ClientConfig() {
         grid = new Grid();
         crafterManager = new CrafterManager();
-
+        cover = new Cover();
         spec = builder.build();
     }
 
@@ -26,6 +27,10 @@ public class ClientConfig {
 
     public CrafterManager getCrafterManager() {
         return crafterManager;
+    }
+
+    public Cover getCover() {
+        return cover;
     }
 
     public class Grid {
@@ -81,6 +86,21 @@ public class ClientConfig {
 
         public int getMaxRowsStretch() {
             return maxRowsStretch.get();
+        }
+    }
+
+    public class Cover{
+
+        private final ForgeConfigSpec.BooleanValue showAllCoversInJEI;
+
+        public Cover() {
+            builder.push("cover");
+            showAllCoversInJEI = builder.comment("When true all the possible covers will be added to JEI (Game restart required)").define("showAllCoversInJEI", true);
+            builder.pop();
+        }
+
+        public boolean showAllRecipesInJEI() {
+            return showAllCoversInJEI.get();
         }
     }
 }
