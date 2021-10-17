@@ -373,7 +373,9 @@ public final class RenderUtils {
         }
 
         if (sprite == null) {
-            sprite = null; //TODO Get missing sprite
+            for (BakedQuad quad : Minecraft.getInstance().getModelManager().getMissingModel().getQuads(coverState, facing, rand)) {
+                return quad.getSprite();
+            }
         }
 
         return sprite;

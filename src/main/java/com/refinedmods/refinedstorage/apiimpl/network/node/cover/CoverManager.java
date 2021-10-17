@@ -164,8 +164,8 @@ public class CoverManager {
     }
 
     @Nullable
-    public static Block getBlock(@Nullable ItemStack item) {
-        if (item == null) {
+    public static Block getBlock(ItemStack item) {
+        if (item.isEmpty()) {
             return null;
         }
 
@@ -180,7 +180,7 @@ public class CoverManager {
 
     @Nullable
     @SuppressWarnings("deprecation")
-    public static BlockState getBlockState(@Nullable ItemStack item) {
+    public static BlockState getBlockState(ItemStack item) {
         Block block = getBlock(item);
 
         if (block == null) {
