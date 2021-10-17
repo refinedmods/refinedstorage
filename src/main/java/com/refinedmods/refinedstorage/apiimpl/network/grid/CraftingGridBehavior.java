@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
@@ -286,7 +287,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         for (int j = 0; j < player.inventory.getSizeInventory(); j++) {
             ItemStack inventoryStack = player.inventory.getStackInSlot(j);
 
-            if (inventoryStack.getItem() instanceof PatternItem) {
+            if (inventoryStack.getItem() instanceof ICraftingPatternProvider) {
                 ICraftingPattern pattern = PatternItem.fromCache(network.getWorld(), inventoryStack);
                 if (pattern.isValid()) {
                     for (ItemStack stack : pattern.getOutputs()) {

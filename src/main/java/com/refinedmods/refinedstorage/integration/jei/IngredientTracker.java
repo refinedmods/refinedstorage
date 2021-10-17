@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.item.PatternItem;
@@ -35,7 +36,7 @@ public class IngredientTracker {
     public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
         int available = stack.getCount();
         if (doTransfer) {
-            if (stack.getItem() instanceof PatternItem) {
+            if (stack.getItem() instanceof ICraftingPatternProvider) {
                 ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().world, stack);
                 if (pattern.isValid()) {
                     for (ItemStack outputStack : pattern.getOutputs()) {
