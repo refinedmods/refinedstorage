@@ -49,19 +49,16 @@ public class HollowCoverCraftingCategoryExtension implements ICustomCraftingCate
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, IIngredients ingredients) {
         ItemStack stack = recipeLayout.getFocus(VanillaTypes.ITEM).getValue();
-
         if (stack.getItem() == RSItems.COVER.get()){
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, stack);
             ItemStack output = new ItemStack(RSItems.HOLLOW_COVER.get());
             CoverItem.setItem(output, CoverItem.getItem(stack));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, output);
-        }else {
+        } else {
             ItemStack input = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(input,  CoverItem.getItem(stack));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, input);
-
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);
         }
-
     }
 }

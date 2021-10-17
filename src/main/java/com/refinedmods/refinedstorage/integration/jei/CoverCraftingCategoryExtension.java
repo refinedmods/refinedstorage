@@ -72,13 +72,12 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getAllElements().stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, CoverItem.getItem(stack));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);
-        }else {
+        } else {
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getAllElements().stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, stack);
             ItemStack output = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(output, stack);
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, output);
         }
-
     }
 }

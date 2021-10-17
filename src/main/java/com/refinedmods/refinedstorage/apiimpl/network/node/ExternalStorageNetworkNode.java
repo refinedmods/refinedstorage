@@ -65,7 +65,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private final List<IExternalStorage<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
     private final List<IExternalStorage<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
 
-    private CoverManager coverManager;
+    private final CoverManager coverManager;
 
     public ExternalStorageNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -334,7 +334,9 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
     }
 
 
@@ -343,7 +345,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.put("Cover", this.coverManager.writeToNbt());
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
 
         return tag;
     }

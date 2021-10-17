@@ -49,7 +49,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
     private int currentSlot;
 
-    private CoverManager coverManager;
+    private final CoverManager coverManager;
 
     public ImporterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -154,7 +154,9 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
 
         StackUtils.readItems(upgrades, 1, tag);
     }
@@ -168,7 +170,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.put("Cover", this.coverManager.writeToNbt());
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
 
         StackUtils.writeItems(upgrades, 1, tag);
 

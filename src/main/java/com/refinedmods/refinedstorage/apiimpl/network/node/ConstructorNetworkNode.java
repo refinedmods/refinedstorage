@@ -66,7 +66,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     private int type = IType.ITEMS;
     private boolean drop = false;
 
-    private CoverManager coverManager;
+    private final CoverManager coverManager;
 
     public ConstructorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -179,7 +179,9 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
 
         StackUtils.readItems(upgrades, 1, tag);
     }
@@ -193,7 +195,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.put("Cover", this.coverManager.writeToNbt());
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
 
         StackUtils.writeItems(upgrades, 1, tag);
 

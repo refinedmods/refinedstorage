@@ -35,6 +35,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
@@ -317,7 +318,7 @@ public final class RenderUtils {
     }
 
     public static boolean isLightMapDisabled() {
-        return false; //FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled; TODO
+        return false;
     }
 
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {

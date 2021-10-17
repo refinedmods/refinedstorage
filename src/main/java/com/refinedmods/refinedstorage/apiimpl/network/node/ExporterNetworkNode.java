@@ -74,7 +74,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     private int filterSlot;
 
-    private CoverManager coverManager;
+    private final CoverManager coverManager;
 
     public ExporterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -250,7 +250,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.put("Cover", this.coverManager.writeToNbt());
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
 
         StackUtils.writeItems(upgrades, 1, tag);
         return tag;
@@ -274,7 +274,9 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
 
         StackUtils.readItems(upgrades, 1, tag);
     }

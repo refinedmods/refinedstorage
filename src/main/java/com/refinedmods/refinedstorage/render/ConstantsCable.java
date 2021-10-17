@@ -76,15 +76,15 @@ public class ConstantsCable {
     }
 
     public static VoxelShape addCoverVoxelShapes(VoxelShape shape, IBlockReader world, BlockPos pos){
-        if (world != null){
+        if (world != null) {
             TileEntity entity = world.getTileEntity(pos);
-            if (entity instanceof NetworkNodeTile && ((NetworkNodeTile<?>) entity).getNode() instanceof ICoverable){
+            if (entity instanceof NetworkNodeTile && ((NetworkNodeTile<?>) entity).getNode() instanceof ICoverable) {
                 CoverManager coverManager = ((ICoverable) ((NetworkNodeTile<?>) entity).getNode()).getCoverManager();
                 for (Direction value : Direction.values()) {
                     Cover cover = coverManager.getCover(value);
-                    if (cover != null){
+                    if (cover != null) {
                         shape = VoxelShapes.or(shape, VoxelShapes.create(ConstantsCable.getCoverBounds(value)));
-                        if (cover.getType() == CoverType.NORMAL){
+                        if (cover.getType() == CoverType.NORMAL) {
                             shape = VoxelShapes.or(shape, VoxelShapes.create(ConstantsCable.getHolderBounds(value)));
                         }
                     }

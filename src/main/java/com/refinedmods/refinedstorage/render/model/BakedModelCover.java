@@ -106,13 +106,6 @@ public class BakedModelCover extends BakedModelCableCover{
         };
     }
 
-    //    @Override
-    //    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-    //        TRSRTransformation transform = RenderUtils.getDefaultBlockTransforms().get(cameraTransformType);
-    //
-    //        return Pair.of(this, transform == null ? RenderUtils.EMPTY_MATRIX_TRANSFORM : transform.getMatrix());
-    //    }
-
     @Override
     public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack matrixStack) {
         TransformationMatrix transform = RenderUtils.getDefaultBlockTransforms().get(cameraTransformType);

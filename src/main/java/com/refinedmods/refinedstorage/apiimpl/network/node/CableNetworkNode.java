@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class CableNetworkNode extends NetworkNode implements ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "cable");
 
-    private CoverManager coverManager;
+    private final CoverManager coverManager;
 
     public CableNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -36,13 +36,15 @@ public class CableNetworkNode extends NetworkNode implements ICoverable {
 
     @Override
     public void read(CompoundNBT tag) {
-        if (tag.contains("Cover")) this.coverManager.readFromNbt(tag.getCompound("Cover"));
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
         super.read(tag);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        tag.put("Cover", this.coverManager.writeToNbt());
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
         return super.write(tag);
     }
 }

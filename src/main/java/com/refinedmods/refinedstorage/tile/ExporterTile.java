@@ -23,14 +23,10 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
     public static final TileDataParameter<CompoundNBT, ExporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> Minecraft.getInstance().enqueue(() -> {}));
+            (initial, p) -> {});
 
     public static final TileDataParameter<Integer, ExporterTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, ExporterTile> TYPE = IType.createParameter();
-
-    static {
-        TileDataManager.registerParameter(COVER_MANAGER);
-    }
 
     public ExporterTile() {
         super(RSTiles.EXPORTER);
@@ -55,7 +51,8 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
     @Override
     public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
-        tag.put("Covers", this.getNode().getCoverManager().writeToNbt());
+
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.getNode().getCoverManager().writeToNbt());
 
         return tag;
     }
@@ -64,7 +61,7 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        this.getNode().getCoverManager().readFromNbt(tag.getCompound("Covers"));
+        this.getNode().getCoverManager().readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
 
         requestModelDataUpdate();
 

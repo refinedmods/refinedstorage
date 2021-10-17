@@ -24,6 +24,8 @@ import java.util.Map;
 
 public class CoverManager {
 
+    public static String NBT_COVER_MANAGER = "Cover";
+
     public static final ModelProperty<CoverManager> PROPERTY = new ModelProperty<>();
 
     private static final String NBT_DIRECTION = "Direction";
@@ -149,7 +151,8 @@ public class CoverManager {
 
         BlockState state = getBlockState(item);
 
-        return block != null && state != null && ((isModelSupported(state) && !block.ticksRandomly(state) && !block.hasTileEntity(state) && !state.isTransparent())); //Changed from 1.12: to use 1.16 methods
+        return block != null && state != null && isModelSupported(state) && !block.ticksRandomly(state)
+                && !block.hasTileEntity(state) && !state.isTransparent(); //Changed from 1.12: to use 1.16 methods
     }
 
     private static boolean isModelSupported(BlockState state) {
@@ -184,11 +187,7 @@ public class CoverManager {
             return null;
         }
 
-        try {
-            return block.getDefaultState();
-        } catch (Exception e) {
-            return null;
-        }
+        return block.getDefaultState();
     }
     
 }

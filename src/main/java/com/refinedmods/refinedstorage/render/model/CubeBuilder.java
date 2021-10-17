@@ -113,7 +113,6 @@ public class CubeBuilder {
     private BakedQuad bakeFace(Direction facing, Face cubeFace) {
         BakedQuadBuilder builder = new BakedQuadBuilder(cubeFace.sprite); //TODO See if can change the vertex format
 
-        //builder.setTexture(cubeFace.sprite);
         builder.setQuadOrientation(facing);
         builder.setQuadTint(-1);
         builder.setApplyDiffuseLighting(true);

@@ -31,11 +31,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
     public static final TileDataParameter<CompoundNBT, DestructorTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> Minecraft.getInstance().enqueue(() -> {}));
-
-    static {
-        TileDataManager.registerParameter(COVER_MANAGER);
-    }
+            (initial, p) -> {});
 
     public DestructorTile() {
         super(RSTiles.DESTRUCTOR);
@@ -63,7 +59,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
     public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
-        tag.put("Covers", this.getNode().getCoverManager().writeToNbt());
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.getNode().getCoverManager().writeToNbt());
 
         return tag;
     }
@@ -72,7 +68,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        this.getNode().getCoverManager().readFromNbt(tag.getCompound("Covers"));
+        this.getNode().getCoverManager().readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
 
         requestModelDataUpdate();
 
