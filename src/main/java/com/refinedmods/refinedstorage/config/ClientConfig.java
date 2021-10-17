@@ -89,13 +89,13 @@ public class ClientConfig {
         }
     }
 
-    public class Cover{
+    public class Cover {
 
         private final ForgeConfigSpec.BooleanValue showAllCoversInJEI;
 
         public Cover() {
             builder.push("cover");
-            showAllCoversInJEI = builder.comment("When true all the possible covers will be added to JEI (Game restart required)").define("showAllCoversInJEI", true);
+            showAllCoversInJEI = builder.comment("When true all the possible covers will be added to JEI (Game restart required)").define("showAllCoversInJEI", false);
             builder.pop();
         }
 
