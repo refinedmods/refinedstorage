@@ -70,6 +70,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -486,7 +487,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 this.itemStorageTrackerId = UUID.randomUUID();
             }
 
-            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) world).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager(ServerLifecycleHooks.getCurrentServer().func_241755_D_()).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
         }
 
         return itemStorageTracker;
@@ -499,7 +500,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 this.fluidStorageTrackerId = UUID.randomUUID();
             }
 
-            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) world).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager(ServerLifecycleHooks.getCurrentServer().func_241755_D_()).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
         }
 
         return fluidStorageTracker;
