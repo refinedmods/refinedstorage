@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
+import com.refinedmods.refinedstorage.block.CableBlock;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
@@ -67,7 +68,7 @@ public class CoverItem extends Item {
         ItemStack item = getItem(stack);
 
         if (!item.isEmpty()) {
-            tooltip.add(((TextComponent)item.getItem().getDisplayName(item)).mergeStyle(TextFormatting.GRAY));
+            tooltip.add(((TextComponent) item.getItem().getDisplayName(item)).mergeStyle(TextFormatting.GRAY));
         }
     }
 
@@ -118,7 +119,7 @@ public class CoverItem extends Item {
         TileEntity tile = world.getTileEntity(pos);
 
         // Support placing on the bottom side without too much hassle.
-        if (!canPlaceOn(tile)) {
+        if (!canPlaceOn(world, pos, facing)) {
             pos = pos.up();
 
             facing = Direction.DOWN;
@@ -126,7 +127,7 @@ public class CoverItem extends Item {
             tile = world.getTileEntity(pos);
         }
 
-        if (canPlaceOn(tile)) {
+        if (canPlaceOn(world, pos, facing)) {
             if (world.isRemote) {
                 ModelDataManager.requestModelDataRefresh(tile);
                 return ActionResultType.SUCCESS;
@@ -155,8 +156,8 @@ public class CoverItem extends Item {
     }
 
 
-    private boolean canPlaceOn(TileEntity tile) {
-        return tile instanceof NetworkNodeTile && ((NetworkNodeTile<?>) tile).getNode() instanceof ICoverable;
+    private boolean canPlaceOn(World world, BlockPos pos, Direction facing) {
+        return world.getTileEntity(pos) instanceof NetworkNodeTile && ((NetworkNodeTile<?>) world.getTileEntity(pos)).getNode() instanceof ICoverable && !CableBlock.hasVisualConnectionOnSide(world.getBlockState(pos), facing);
     }
 
     protected Cover createCover(ItemStack stack) {

@@ -2,14 +2,11 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
-import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.tile.CableTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -169,20 +166,20 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         }
 
         return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
-                && isSideNotCoveredOrHollow(tile, direction)
-                && isSideNotCoveredOrHollow(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
+            && isSideNotCoveredOrHollow(tile, direction)
+            && isSideNotCoveredOrHollow(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
     }
 
-    private boolean isSideNotCoveredOrHollow(TileEntity tile, Direction direction){
-        if (tile == null){
+    private boolean isSideNotCoveredOrHollow(TileEntity tile, Direction direction) {
+        if (tile == null) {
             return false;
         }
         return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction)
-                .map(INetworkNodeProxy::getNode)
-                .map(iNetworkNode -> !(iNetworkNode instanceof ICoverable)
-                        || (!((ICoverable) iNetworkNode).getCoverManager().hasCover(direction)
-                        || ((ICoverable) iNetworkNode).getCoverManager().getCover(direction).getType() == CoverType.HOLLOW))
-                .orElse(false);
+            .map(INetworkNodeProxy::getNode)
+            .map(iNetworkNode -> !(iNetworkNode instanceof ICoverable)
+                || (!((ICoverable) iNetworkNode).getCoverManager().hasCover(direction)
+                || ((ICoverable) iNetworkNode).getCoverManager().getCover(direction).getType() == CoverType.HOLLOW))
+            .orElse(false);
     }
 
     private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {
@@ -213,5 +210,23 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         super.fillStateContainer(builder);
 
         builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, WATERLOGGED);
+    }
+
+    public static boolean hasVisualConnectionOnSide(BlockState state, Direction direction) {
+        switch (direction) {
+            case DOWN:
+                return state.get(DOWN);
+            case UP:
+                return state.get(UP);
+            case NORTH:
+                return state.get(NORTH);
+            case SOUTH:
+                return state.get(SOUTH);
+            case WEST:
+                return state.get(WEST);
+            case EAST:
+                return state.get(EAST);
+        }
+        return false;
     }
 }
