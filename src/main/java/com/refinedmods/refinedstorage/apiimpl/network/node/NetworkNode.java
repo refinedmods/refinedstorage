@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
+import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -224,18 +225,20 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world;
     }
 
-    /**
-     * @param direction the direction
-     * @return whether a network signal can be conducted in the given direction.
-     */
-    protected boolean canConduct(Direction direction) {
+
+    @Override
+    public boolean canConduct(Direction direction) {
         return true;
     }
 
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            if (canConduct(facing)) {
+            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(world.getTileEntity(pos.offset(facing)));
+            if (oppositeNode == null) {
+                continue;
+            }
+            if (canConduct(facing) && oppositeNode.canConduct(facing.getOpposite())) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());
             }
         }

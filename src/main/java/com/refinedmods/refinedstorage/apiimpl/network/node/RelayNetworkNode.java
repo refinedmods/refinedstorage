@@ -37,7 +37,7 @@ public class RelayNetworkNode extends NetworkNode {
     }
 
     @Override
-    protected boolean canConduct(Direction direction) {
+    public boolean canConduct(Direction direction) {
         return canUpdate();
     }
 

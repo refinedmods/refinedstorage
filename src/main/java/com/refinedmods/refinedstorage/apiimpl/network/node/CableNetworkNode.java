@@ -3,8 +3,9 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,6 +18,11 @@ public class CableNetworkNode extends NetworkNode implements ICoverable {
     public CableNetworkNode(World world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
+    }
+
+    @Override
+    public boolean canConduct(Direction direction) {
+        return !coverManager.hasCover(direction) || coverManager.getCover(direction).getType() == CoverType.HOLLOW;
     }
 
     @Override
