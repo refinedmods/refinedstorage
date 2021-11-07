@@ -10,6 +10,7 @@
 - Fixed Wireless Crafting Monitor not working as Curio (Darkere)
 - Fixed wrong slot being locked in some cases when opening Wireless Item (Darkere)
 - Slightly sped up External Storage item look up (necauqua)
+- Fixed extraction from Storage Monitor not respecting maximum stack size (Darkere)
 - Added Polish translation (joker876)
 - Added Italian translation (maicol07)
 - Addons can now override how Crafters insert items (Darkere)
