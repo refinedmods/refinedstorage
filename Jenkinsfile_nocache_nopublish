@@ -1,0 +1,17 @@
+node {
+  stage('Preparation') {
+    checkout scm
+  }
+  stage('Cleanup') {
+    sh "./gradlew clean"
+  }
+  stage('Test') {
+    sh "./gradlew test"
+  }
+  stage('Build') {
+    sh "./gradlew build"
+  }
+  stage('Archive artifacts') {
+    archiveArtifacts 'build/libs/*.jar'
+  }
+}
