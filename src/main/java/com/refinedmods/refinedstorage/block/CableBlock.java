@@ -1,7 +1,9 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.node.ICoverable;
+import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
@@ -29,6 +31,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     private static final BooleanProperty NORTH = BooleanProperty.create("north");
@@ -154,7 +157,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
     }
 
-    private boolean hasNode(IWorld world, BlockPos pos, BlockState state, Direction direction) {
+    private boolean hasNodeConnection(IWorld world, BlockPos pos, BlockState state, Direction direction) {
         // Prevent the "holder" of a cable block conflicting with a cable connection.
         if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()).getOpposite() == direction) {
             return false;
@@ -166,29 +169,36 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         }
 
         return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
-            && isSideNotCoveredOrHollow(tile, direction)
-            && isSideNotCoveredOrHollow(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
+            && !isSideCovered(tile, direction)
+            && !isSideCovered(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
     }
 
-    private boolean isSideNotCoveredOrHollow(TileEntity tile, Direction direction) {
+    private boolean isSideCovered(TileEntity tile, Direction direction) {
         if (tile == null) {
             return false;
         }
-        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction)
-            .map(INetworkNodeProxy::getNode)
-            .map(iNetworkNode -> !(iNetworkNode instanceof ICoverable)
-                || (!((ICoverable) iNetworkNode).getCoverManager().hasCover(direction)
-                || ((ICoverable) iNetworkNode).getCoverManager().getCover(direction).getType() == CoverType.HOLLOW))
-            .orElse(false);
+
+        Optional<INetworkNode> node = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode);
+
+        if (node.isPresent() && node.get() instanceof ICoverable) {
+            Cover cover = ((ICoverable) node.get()).getCoverManager().getCover(direction);
+            if (cover == null) {
+                return false;
+            } else {
+                return cover.getType() == CoverType.NORMAL;
+            }
+        }
+
+        return false;
     }
 
     private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {
-        boolean north = hasNode(world, pos.offset(Direction.NORTH), currentState, Direction.SOUTH);
-        boolean east = hasNode(world, pos.offset(Direction.EAST), currentState, Direction.WEST);
-        boolean south = hasNode(world, pos.offset(Direction.SOUTH), currentState, Direction.NORTH);
-        boolean west = hasNode(world, pos.offset(Direction.WEST), currentState, Direction.EAST);
-        boolean up = hasNode(world, pos.offset(Direction.UP), currentState, Direction.DOWN);
-        boolean down = hasNode(world, pos.offset(Direction.DOWN), currentState, Direction.UP);
+        boolean north = hasNodeConnection(world, pos.offset(Direction.NORTH), currentState, Direction.SOUTH);
+        boolean east = hasNodeConnection(world, pos.offset(Direction.EAST), currentState, Direction.WEST);
+        boolean south = hasNodeConnection(world, pos.offset(Direction.SOUTH), currentState, Direction.NORTH);
+        boolean west = hasNodeConnection(world, pos.offset(Direction.WEST), currentState, Direction.EAST);
+        boolean up = hasNodeConnection(world, pos.offset(Direction.UP), currentState, Direction.DOWN);
+        boolean down = hasNodeConnection(world, pos.offset(Direction.DOWN), currentState, Direction.UP);
 
         return currentState
             .with(NORTH, north)
