@@ -22,6 +22,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -125,6 +126,16 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         // But since rotate() doesn't invalidate that connection, we need to do it here.
         // Ideally, this code would be in rotate(). But rotate() doesn't have any data about the position and world, so we need to do it here.
         world.setBlockState(pos, getState(world.getBlockState(pos), world, pos));
+
+
+        //when rotating skip rotations blocked by covers
+        BlockDirection dir = getDirection();
+        if (dir != BlockDirection.NONE) {
+            if (isSideCovered(world.getTileEntity(pos), newDirection)) {
+                BlockState newState = rotate(world.getBlockState(pos), Rotation.CLOCKWISE_90);
+                world.setBlockState(pos, newState);
+            }
+        }
 
         super.onDirectionChanged(world, pos, newDirection);
     }
