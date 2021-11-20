@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.apiimpl.network.item.WirelessCraftingMonitorNetworkItem;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,8 +28,6 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
     public WirelessCraftingMonitorItem(Type type) {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
 
-        this.setRegistryName(RS.ID, (type == Type.CREATIVE ? "creative_" : "") + "wireless_crafting_monitor");
-
         this.type = type;
     }
 
@@ -38,8 +37,8 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
 
     @Nonnull
     @Override
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
-        return new WirelessCraftingMonitorNetworkItem(handler, player, stack, slotId);
+    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+        return new WirelessCraftingMonitorNetworkItem(handler, player, stack, slot);
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {

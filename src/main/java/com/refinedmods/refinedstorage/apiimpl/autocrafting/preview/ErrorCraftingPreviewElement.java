@@ -3,26 +3,25 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
+public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
 
-    private final CraftingTaskErrorType type;
-    private final ItemStack stack;
+    private final CalculationResultType type;
+    private final ItemStack recursedPattern;
 
-    public ErrorCraftingPreviewElement(CraftingTaskErrorType type, ItemStack stack) {
+    public ErrorCraftingPreviewElement(CalculationResultType type, ItemStack recursedPattern) {
         this.type = type;
-        this.stack = stack;
+        this.recursedPattern = recursedPattern;
     }
 
-    @Override
-    public ItemStack getElement() {
-        return stack;
+    public ItemStack getRecursedPattern() {
+        return recursedPattern;
     }
 
     @Override
@@ -31,33 +30,23 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<Item
     }
 
     @Override
-    public int getAvailable() {
-        return 0;
-    }
-
-    @Override
-    public int getToCraft() {
-        return 0;
-    }
-
-    @Override
-    public boolean hasMissing() {
-        return false;
+    public boolean doesDisableTaskStarting() {
+        return true;
     }
 
     @Override
     public void write(PacketBuffer buf) {
         buf.writeInt(type.ordinal());
-        buf.writeItemStack(stack);
+        buf.writeItemStack(recursedPattern);
     }
 
-    public CraftingTaskErrorType getType() {
+    public CalculationResultType getType() {
         return type;
     }
 
     public static ErrorCraftingPreviewElement read(PacketBuffer buf) {
         int errorIdx = buf.readInt();
-        CraftingTaskErrorType error = errorIdx >= 0 && errorIdx < CraftingTaskErrorType.values().length ? CraftingTaskErrorType.values()[errorIdx] : CraftingTaskErrorType.TOO_COMPLEX;
+        CalculationResultType error = errorIdx >= 0 && errorIdx < CalculationResultType.values().length ? CalculationResultType.values()[errorIdx] : CalculationResultType.TOO_COMPLEX;
         ItemStack stack = buf.readItemStack();
 
         return new ErrorCraftingPreviewElement(error, stack);

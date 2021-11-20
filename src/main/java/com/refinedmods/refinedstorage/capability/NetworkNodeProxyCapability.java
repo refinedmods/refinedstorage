@@ -17,6 +17,9 @@ public class NetworkNodeProxyCapability {
     @CapabilityInject(INetworkNodeProxy.class)
     public static final Capability<INetworkNodeProxy> NETWORK_NODE_PROXY_CAPABILITY = null;
 
+    private NetworkNodeProxyCapability() {
+    }
+
     public static void register() {
         CapabilityManager.INSTANCE.register(INetworkNodeProxy.class, new Storage(), new Factory());
 

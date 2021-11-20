@@ -11,19 +11,20 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class NetworkUtils {
+public final class NetworkUtils {
+    private NetworkUtils() {
+    }
+
     @Nullable
     public static INetworkNode getNodeFromTile(@Nullable TileEntity tile) {
         if (tile != null) {
-            INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
-
+            INetworkNodeProxy<?> proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
             if (proxy != null) {
                 return proxy.getNode();
             }
@@ -41,11 +42,11 @@ public class NetworkUtils {
         return null;
     }
 
-    public static ActionResultType attemptModify(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action) {
-        return attempt(world, pos, facing, player, action, Permission.MODIFY);
+    public static ActionResultType attemptModify(World world, BlockPos pos, PlayerEntity player, Runnable action) {
+        return attempt(world, pos, player, action, Permission.MODIFY);
     }
 
-    public static ActionResultType attempt(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
+    public static ActionResultType attempt(World world, BlockPos pos, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
         if (world.isRemote) {
             return ActionResultType.SUCCESS;
         }

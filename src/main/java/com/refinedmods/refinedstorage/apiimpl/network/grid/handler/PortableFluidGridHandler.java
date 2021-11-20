@@ -28,6 +28,10 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onExtract(ServerPlayerEntity player, UUID id, boolean shift) {
+        if (!portableGrid.isGridActive()) {
+            return;
+        }
+
         FluidStack stack = portableGrid.getFluidCache().getList().get(id);
 
         if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME) {
@@ -71,6 +75,10 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
     @Override
     @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
+        if (!portableGrid.isGridActive()) {
+            return container;
+        }
+
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
         if (!result.getValue().isEmpty() && portableGrid.getFluidStorage().insert(result.getValue(), result.getValue().getAmount(), Action.SIMULATE).isEmpty()) {

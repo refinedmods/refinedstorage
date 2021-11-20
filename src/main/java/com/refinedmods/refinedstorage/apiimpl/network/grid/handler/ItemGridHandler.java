@@ -1,20 +1,24 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid.handler;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
+import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.util.Action;
+import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -22,6 +26,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
@@ -32,10 +37,18 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, int flags) {
+    public void onExtract(ServerPlayerEntity player, ItemStack stack, int preferredSlot, int flags) {
+        StackListEntry<ItemStack> stackEntry = network.getItemStorageCache().getList().getEntry(stack, IComparer.COMPARE_NBT);
+        if (stackEntry != null) {
+            onExtract(player, stackEntry.getId(), preferredSlot, flags);
+        }
+    }
+
+    @Override
+    public void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(id);
 
-        if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
             return;
         }
 
@@ -82,12 +95,22 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+                Optional<IItemHandler> playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve();
+                if (playerInventory.isPresent()) {
+                    if (preferredSlot != -1) {
+                        ItemStack remainder = playerInventory.get().insertItem(preferredSlot, took, true);
+                        if (remainder.getCount() != took.getCount()) {
+                            ItemStack inserted = network.extractItem(item, size - remainder.getCount(), Action.PERFORM);
+                            playerInventory.get().insertItem(preferredSlot, inserted, false);
+                            took.setCount(remainder.getCount());
+                        }
+                    }
 
-                if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
-                    took = network.extractItem(item, size, Action.PERFORM);
+                    if (!took.isEmpty() && ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, true).isEmpty()) {
+                        took = network.extractItem(item, size, Action.PERFORM);
 
-                    ItemHandlerHelper.insertItem(playerInventory, took, false);
+                        ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, false);
+                    }
                 }
             } else {
                 took = network.extractItem(item, size, Action.PERFORM);
@@ -109,14 +132,23 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
-        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single) {
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return stack;
         }
 
         network.getItemStorageTracker().changed(player, stack.copy());
 
-        ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
+        ItemStack remainder;
+        if (single) {
+            if (network.insertItem(stack, 1, Action.SIMULATE).isEmpty()) {
+                network.insertItem(stack, 1, Action.PERFORM);
+                stack.shrink(1);
+            }
+            remainder = stack;
+        } else {
+            remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
+        }
 
         network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getInsertUsage());
 
@@ -125,7 +157,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+        if (player.inventory.getItemStack().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return;
         }
 
@@ -158,46 +190,33 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
-            Thread calculationThread = new Thread(() -> {
-                ICraftingTask task = network.getCraftingManager().create(stack, quantity);
-                if (task == null) {
-                    return;
-                }
+            ICalculationResult result = network.getCraftingManager().create(stack, quantity);
 
-                ICraftingTaskError error = task.calculate();
+            if (!result.isOk() && result.getType() != CalculationResultType.MISSING) {
+                RS.NETWORK_HANDLER.sendTo(
+                    player,
+                    new GridCraftingPreviewResponseMessage(
+                        Collections.singletonList(new ErrorCraftingPreviewElement(result.getType(), result.getRecursedPattern() == null ? ItemStack.EMPTY : result.getRecursedPattern().getStack())),
+                        id,
+                        quantity,
+                        false
+                    )
+                );
+            } else if (result.isOk() && noPreview) {
+                network.getCraftingManager().start(result.getTask());
 
-                ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
-
-                if (error != null) {
-                    RS.NETWORK_HANDLER.sendTo(
-                        player,
-                        new GridCraftingPreviewResponseMessage(
-                            factoryId,
-                            Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
-                            id,
-                            quantity,
-                            false
-                        )
-                    );
-                } else if (noPreview && !task.hasMissing()) {
-                    network.getCraftingManager().start(task);
-
-                    RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
-                } else {
-                    RS.NETWORK_HANDLER.sendTo(
-                        player,
-                        new GridCraftingPreviewResponseMessage(
-                            factoryId,
-                            task.getPreviewStacks(),
-                            id,
-                            quantity,
-                            false
-                        )
-                    );
-                }
-            }, "RS crafting preview calculation");
-
-            calculationThread.start();
+                RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
+            } else {
+                RS.NETWORK_HANDLER.sendTo(
+                    player,
+                    new GridCraftingPreviewResponseMessage(
+                        result.getPreviewElements(),
+                        id,
+                        quantity,
+                        false
+                    )
+                );
+            }
         }
     }
 
@@ -210,14 +229,9 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
-            ICraftingTask task = network.getCraftingManager().create(stack, quantity);
-            if (task == null) {
-                return;
-            }
-
-            ICraftingTaskError error = task.calculate();
-            if (error == null && !task.hasMissing()) {
-                network.getCraftingManager().start(task);
+            ICalculationResult result = network.getCraftingManager().create(stack, quantity);
+            if (result.isOk()) {
+                network.getCraftingManager().start(result.getTask());
             }
         }
     }
@@ -231,5 +245,96 @@ public class ItemGridHandler implements IItemGridHandler {
         network.getCraftingManager().cancel(id);
 
         network.getNetworkItemManager().drainEnergy(player, id == null ? RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCancelAllUsage() : RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCancelUsage());
+    }
+
+    @Override
+    public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+        onInventoryScroll(this, player, slot, shift, up, network);
+    }
+
+    public static void onInventoryScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, int slot, boolean shift, boolean up, @Nullable INetwork network) {
+        if (player == null || !(player.openContainer instanceof GridContainer)) {
+            return;
+        }
+
+        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
+            return;
+        }
+
+        int flags = EXTRACT_SINGLE;
+        ItemStack stackInSlot = player.inventory.getStackInSlot(slot);
+        ItemStack stackOnCursor = player.inventory.getItemStack();
+
+        if (shift) { // shift
+            flags |= EXTRACT_SHIFT;
+
+            if (!stackInSlot.isEmpty()) {
+                if (up) { // scroll up
+                    player.inventory.setInventorySlotContents(slot, gridHandler.onInsert(player, stackInSlot, true));
+                } else { // scroll down
+                    gridHandler.onExtract(player, stackInSlot, slot, flags);
+                }
+            }
+        } else { //ctrl
+            if (up) { // scroll up
+                if (!stackOnCursor.isEmpty()) {
+                    gridHandler.onInsert(player, stackOnCursor, true);
+                    player.updateHeldItem();
+                }
+            } else { //scroll down
+                if (stackOnCursor.isEmpty()) {
+                    gridHandler.onExtract(player, stackInSlot, -1, flags);
+                } else {
+                    gridHandler.onExtract(player, stackOnCursor, -1, flags);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up) {
+        onGridScroll(this, player, id, shift, up, network);
+    }
+
+    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up, @Nullable INetwork network) {
+        if (player == null || !(player.openContainer instanceof GridContainer)) {
+            return;
+        }
+
+        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
+            return;
+        }
+
+        IGrid grid = ((GridContainer) player.openContainer).getGrid();
+
+        int flags = EXTRACT_SINGLE;
+
+        if (shift && id != null) {
+            flags |= EXTRACT_SHIFT;
+            if (up) { //scroll up, insert hovering stack pulled from Inventory
+                IStorageCache<ItemStack> cache = grid.getStorageCache();
+                if (cache == null || cache.getList().get(id) == null) {
+                    return;
+                }
+
+                for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
+                    if (API.instance().getComparer().isEqual(player.inventory.getStackInSlot(i), cache.getList().get(id), IComparer.COMPARE_NBT)) {
+                        gridHandler.onInsert(player, player.inventory.getStackInSlot(i), true);
+                        break;
+                    }
+                }
+
+            } else { //scroll down, extract hovering item
+                gridHandler.onExtract(player, id, -1, flags);
+            }
+        } else { //ctrl
+            if (!up && id != null) { //scroll down, extract hovering item
+                gridHandler.onExtract(player, id, -1, flags);
+
+            } else if (up && !player.inventory.getItemStack().isEmpty()) { // insert stack from cursor
+                gridHandler.onInsert(player, player.inventory.getItemStack(), true);
+                player.updateHeldItem();
+            }
+        }
     }
 }

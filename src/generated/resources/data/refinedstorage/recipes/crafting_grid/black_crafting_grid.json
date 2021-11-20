@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "refinedstorage:black_grid"
+    },
+    {
+      "item": "refinedstorage:advanced_processor"
+    },
+    {
+      "tag": "refinedstorage:crafting_tables"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:black_crafting_grid"
+  }
+}

@@ -27,7 +27,6 @@ import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
-import com.refinedmods.refinedstorage.util.GridUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -56,7 +55,10 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
@@ -112,7 +114,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             }
         });
 
-    private boolean reading;
+    private boolean readingInventory;
 
     private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
@@ -137,7 +139,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             return stack;
         }
     }
-        .addValidator(new ItemValidator(RSItems.PATTERN))
+        .addValidator(new ItemValidator(RSItems.PATTERN.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
             ItemStack pattern = handler.getStackInSlot(slot);
@@ -193,6 +195,21 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         super(world, pos);
 
         this.type = type;
+    }
+
+    public static ResourceLocation getId(GridType type) {
+        switch (type) {
+            case NORMAL:
+                return ID;
+            case CRAFTING:
+                return CRAFTING_ID;
+            case PATTERN:
+                return PATTERN_ID;
+            case FLUID:
+                return FLUID_ID;
+            default:
+                throw new IllegalArgumentException("Unknown grid type " + type);
+        }
     }
 
     public AllowedTagList getAllowedTagList() {
@@ -283,7 +300,11 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     @Nullable
     @Override
     public IStorageCache getStorageCache() {
-        return network != null ? (type == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache()) : null;
+        if (network != null) {
+            return type == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache();
+        }
+
+        return null;
     }
 
     @Nullable
@@ -373,7 +394,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
         craftingListeners.forEach(ICraftingGridListener::onCraftingMatrixChanged);
 
-        if (!reading) {
+        if (!readingInventory) {
             markDirty();
         }
     }
@@ -425,19 +446,32 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onClear(PlayerEntity player) {
-        if (type == GridType.CRAFTING && network != null && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
-            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                ItemStack slot = matrix.getStackInSlot(i);
+        if (type == GridType.CRAFTING) {
+            if (network != null && network.canRun() && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+                for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                    ItemStack slot = matrix.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    matrix.setInventorySlotContents(i, network.insertItem(slot, slot.getCount(), Action.PERFORM));
+                    if (!slot.isEmpty()) {
+                        matrix.setInventorySlotContents(i, network.insertItem(slot, slot.getCount(), Action.PERFORM));
 
-                    network.getItemStorageTracker().changed(player, slot.copy());
+                        network.getItemStorageTracker().changed(player, slot.copy());
+                    }
+                }
+            } else {
+                for (int i = 0; i < matrix.getSizeInventory(); i++) {
+                    ItemStack slot = matrix.getStackInSlot(i);
+
+                    if (!slot.isEmpty()) {
+                        player.inventory.addItemStackToInventory(matrix.getStackInSlot(i));
+                    }
+
+                    onCraftingMatrixChanged();
                 }
             }
         } else if (type == GridType.PATTERN) {
             clearMatrix();
         }
+
     }
 
     @Override
@@ -451,7 +485,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 patterns.extractItem(0, 1, false);
             }
 
-            ItemStack pattern = new ItemStack(RSItems.PATTERN);
+            ItemStack pattern = new ItemStack(RSItems.PATTERN.get());
 
             PatternItem.setToCurrentVersion(pattern);
             PatternItem.setProcessing(pattern, processingPattern);
@@ -625,12 +659,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public IItemHandlerModifiable getItemFilters() {
-        return processingMatrix;
+        return getProcessingMatrix();
     }
 
     @Override
     public FluidInventory getFluidFilters() {
-        return processingMatrixFluids;
+        return getProcessingMatrixFluids();
     }
 
     @Override
@@ -641,7 +675,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             allowedTagList.readFromNbt(tag.getCompound(NBT_ALLOWED_TAGS));
         }
 
-        reading = true;
+        readingInventory = true;
 
         StackUtils.readItems(matrix, 0, tag);
         StackUtils.readItems(patterns, 1, tag);
@@ -660,12 +694,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             tabPage = tag.getInt(NBT_TAB_PAGE);
         }
 
-        reading = false;
+        readingInventory = false;
     }
 
     @Override
     public ResourceLocation getId() {
-        return GridUtils.getNetworkNodeId(type);
+        return getId(type);
     }
 
     @Override

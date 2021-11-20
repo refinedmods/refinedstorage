@@ -66,7 +66,6 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         }
     }
 
-    private final IBakedModel base;
     private final IBakedModel disk;
     private final IBakedModel diskNearCapacity;
     private final IBakedModel diskFull;
@@ -76,11 +75,12 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
+            Direction facing = key.state.get(RSBlocks.DISK_DRIVE.get().getDirection().getProperty());
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(base, facing, null, key.state, key.random, key.side));
 
-            int x = 0, y = 0;
+            int x = 0;
+            int y = 0;
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
                     IBakedModel diskModel = getDiskModel(key.diskState[i]);
@@ -104,6 +104,33 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
             return quads;
         }
+
+        private IBakedModel getDiskModel(DiskState diskState) {
+            switch (diskState) {
+                case DISCONNECTED:
+                    return diskDisconnected;
+                case NEAR_CAPACITY:
+                    return diskNearCapacity;
+                case FULL:
+                    return diskFull;
+                default:
+                    return disk;
+            }
+        }
+
+        private Vector3f getDiskTranslation(Direction facing, int x, int y) {
+            Vector3f translation = new Vector3f();
+
+            if (facing == Direction.NORTH || facing == Direction.SOUTH) {
+                translation.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
+            } else if (facing == Direction.EAST || facing == Direction.WEST) {
+                translation.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
+            }
+
+            translation.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
+
+            return translation;
+        }
     });
 
     public DiskDriveBakedModel(IBakedModel base,
@@ -113,38 +140,10 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
                                IBakedModel diskDisconnected) {
         super(base);
 
-        this.base = base;
         this.disk = disk;
         this.diskNearCapacity = diskNearCapacity;
         this.diskFull = diskFull;
         this.diskDisconnected = diskDisconnected;
-    }
-
-    private IBakedModel getDiskModel(DiskState diskState) {
-        switch (diskState) {
-            case DISCONNECTED:
-                return diskDisconnected;
-            case NEAR_CAPACITY:
-                return diskNearCapacity;
-            case FULL:
-                return diskFull;
-            default:
-                return disk;
-        }
-    }
-
-    private Vector3f getDiskTranslation(Direction facing, int x, int y) {
-        Vector3f translation = new Vector3f();
-
-        if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-            translation.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
-        } else if (facing == Direction.EAST || facing == Direction.WEST) {
-            translation.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
-        }
-
-        translation.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
-
-        return translation;
     }
 
     @Nonnull

@@ -12,6 +12,9 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.*;
 
 public final class RSSerializers {
+    private RSSerializers() {
+    }
+
     public static final IDataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new IDataSerializer<List<ClientNode>>() {
         @Override
         public void write(PacketBuffer buf, List<ClientNode> nodes) {

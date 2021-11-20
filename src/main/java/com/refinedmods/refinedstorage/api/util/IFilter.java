@@ -3,14 +3,14 @@ package com.refinedmods.refinedstorage.api.util;
 /**
  * A filter.
  */
-public interface IFilter<T> {
+public interface IFilter {
     int MODE_WHITELIST = 0;
     int MODE_BLACKLIST = 1;
 
     /**
      * @return the stack being filtered
      */
-    T getStack();
+    Object getStack();
 
     /**
      * @return the compare flags, see {@link IComparer}

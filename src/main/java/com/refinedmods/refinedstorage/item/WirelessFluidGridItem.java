@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.apiimpl.network.item.WirelessFluidGridNetworkItem;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,8 +25,6 @@ public class WirelessFluidGridItem extends NetworkItem {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessFluidGrid().getCapacity());
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, (type == Type.CREATIVE ? "creative_" : "") + "wireless_fluid_grid");
     }
 
     public Type getType() {
@@ -34,8 +33,8 @@ public class WirelessFluidGridItem extends NetworkItem {
 
     @Nonnull
     @Override
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
-        return new WirelessFluidGridNetworkItem(handler, player, stack, slotId);
+    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+        return new WirelessFluidGridNetworkItem(handler, player, stack, slot);
     }
 
     public static int getSortingType(ItemStack stack) {

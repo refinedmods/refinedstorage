@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSBlocks;
+import com.refinedmods.refinedstorage.block.NetworkReceiverBlock;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -29,21 +29,19 @@ public class NetworkCardItem extends Item {
 
     public NetworkCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "network_card");
     }
 
     @Override
     public ActionResultType onItemUse(ItemUseContext ctx) {
         Block block = ctx.getWorld().getBlockState(ctx.getPos()).getBlock();
 
-        if (block == RSBlocks.NETWORK_RECEIVER) {
+        if (block instanceof NetworkReceiverBlock) {
             CompoundNBT tag = new CompoundNBT();
 
             tag.putInt(NBT_RECEIVER_X, ctx.getPos().getX());
             tag.putInt(NBT_RECEIVER_Y, ctx.getPos().getY());
             tag.putInt(NBT_RECEIVER_Z, ctx.getPos().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().func_234923_W_().func_240901_a_().toString());
+            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimensionKey().getLocation().toString());
 
             ctx.getPlayer().getHeldItem(ctx.getHand()).setTag(tag);
 
@@ -66,8 +64,8 @@ public class NetworkCardItem extends Item {
                 pos.getX(),
                 pos.getY(),
                 pos.getZ(),
-                type.func_240901_a_().toString()
-            ).func_230530_a_(Styles.GRAY));
+                type.getLocation().toString()
+            ).setStyle(Styles.GRAY));
         }
     }
 
@@ -95,7 +93,7 @@ public class NetworkCardItem extends Item {
                 return null;
             }
 
-            return RegistryKey.func_240903_a_(Registry.WORLD_KEY, name);
+            return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, name);
         }
 
         return null;

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.container.FluidStorageContainer;
@@ -31,8 +30,6 @@ public class FluidStorageBlock extends NetworkNodeBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-
-        this.setRegistryName(RS.ID, type.getName() + "_fluid_storage_block");
     }
 
     public FluidStorageType getType() {
@@ -48,7 +45,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
                 storage.setStorageId(stack.getTag().getUniqueId(FluidStorageNetworkNode.NBT_ID));
             }
 
-            storage.loadStorage();
+            storage.loadStorage(player instanceof PlayerEntity ? (PlayerEntity) player : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
@@ -65,7 +62,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui((ServerPlayerEntity) player, new PositionalTileContainerProvider<FluidStorageTile>(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayerEntity) player, new PositionalTileContainerProvider<FluidStorageTile>(
                 ((FluidStorageTile) world.getTileEntity(pos)).getNode().getTitle(),
                 (tile, windowId, inventory, p) -> new FluidStorageContainer(tile, player, windowId),
                 pos

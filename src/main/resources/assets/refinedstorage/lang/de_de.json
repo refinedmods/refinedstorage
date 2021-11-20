@@ -280,12 +280,8 @@
   "item.refinedstorage.security_card": "Sicherheitskarte",
   "item.refinedstorage.security_card.owner": "Besitzer: %s",
   "item.refinedstorage.processor_binding": "Prozessor Rohmaterial",
-
-  "commands.refinedstorage.createdisk.usage": "/createdisk <Spieler> <Item> <Metadaten> <ID>",
-  "commands.refinedstorage.createdisk.error.notADisk": "Das Item ist keine Speicherzelle.",
-  "commands.refinedstorage.createdisk.error.diskNotFound": "Speicherzelle %s konnte nicht gefunden werden.",
-  "commands.refinedstorage.createdisk.success": "Speicherzelle %s erfolgreich an %s gegeben.",
-
+  "commands.refinedstorage.disk.create.error.disk_not_found": "Speicherzelle %s konnte nicht gefunden werden.",
+  "commands.refinedstorage.disk.create.success": "Speicherzelle %s erfolgreich an %s gegeben.",
   "advancements.refinedstorage.controlling.description": "Stelle einen Kontrollblock her",
   "advancements.refinedstorage.connecting": "Verbinden",
   "advancements.refinedstorage.connecting.description": "Platziere zwei Geräte nebeneinander oder verwende ein Kabel um sie zu verbinden",

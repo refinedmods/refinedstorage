@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.tile;
 import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
@@ -165,15 +165,15 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
     private static List<ClientNode> collectClientNodes(ControllerTile tile) {
         List<ClientNode> nodes = new ArrayList<>();
 
-        for (INetworkNode node : tile.getNetwork().getNodeGraph().all()) {
-            if (node.isActive()) {
-                ItemStack stack = node.getItemStack();
+        for (INetworkNodeGraphEntry entry : tile.getNetwork().getNodeGraph().all()) {
+            if (entry.getNode().isActive()) {
+                ItemStack stack = entry.getNode().getItemStack();
 
                 if (stack.isEmpty()) {
                     continue;
                 }
 
-                ClientNode clientNode = new ClientNode(stack, 1, node.getEnergyUsage());
+                ClientNode clientNode = new ClientNode(stack, 1, entry.getNode().getEnergyUsage());
 
                 if (nodes.contains(clientNode)) {
                     ClientNode other = nodes.get(nodes.indexOf(clientNode));

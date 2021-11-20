@@ -1,8 +1,13 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
+import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
+import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
+import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.tile.CableTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
@@ -12,10 +17,12 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -25,6 +32,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     private static final BooleanProperty NORTH = BooleanProperty.create("north");
@@ -58,7 +66,6 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     public CableBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "cable");
         this.setDefaultState(getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(WATERLOGGED, false));
     }
 
@@ -69,35 +76,40 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     }
 
     @Override
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        return ShapeCache.getOrCreate(state, CableBlock::getCableShape);
+        return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, CableBlock::getCableShape), world, pos);
     }
 
     protected static VoxelShape getCableShape(BlockState state) {
         VoxelShape shape = SHAPE_CORE;
 
-        if (state.get(NORTH)) {
+        if (Boolean.TRUE.equals(state.get(NORTH))) {
             shape = VoxelShapes.or(shape, SHAPE_NORTH);
         }
 
-        if (state.get(EAST)) {
+        if (Boolean.TRUE.equals(state.get(EAST))) {
             shape = VoxelShapes.or(shape, SHAPE_EAST);
         }
 
-        if (state.get(SOUTH)) {
+        if (Boolean.TRUE.equals(state.get(SOUTH))) {
             shape = VoxelShapes.or(shape, SHAPE_SOUTH);
         }
 
-        if (state.get(WEST)) {
+        if (Boolean.TRUE.equals(state.get(WEST))) {
             shape = VoxelShapes.or(shape, SHAPE_WEST);
         }
 
-        if (state.get(UP)) {
+        if (Boolean.TRUE.equals(state.get(UP))) {
             shape = VoxelShapes.or(shape, SHAPE_UP);
         }
 
-        if (state.get(DOWN)) {
+        if (Boolean.TRUE.equals(state.get(DOWN))) {
             shape = VoxelShapes.or(shape, SHAPE_DOWN);
         }
 
@@ -115,7 +127,23 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         // Ideally, this code would be in rotate(). But rotate() doesn't have any data about the position and world, so we need to do it here.
         world.setBlockState(pos, getState(world.getBlockState(pos), world, pos));
 
+
+        //when rotating skip rotations blocked by covers
+        BlockDirection dir = getDirection();
+        if (dir != BlockDirection.NONE) {
+            if (isSideCovered(world.getTileEntity(pos), newDirection)) {
+                BlockState newState = rotate(world.getBlockState(pos), Rotation.CLOCKWISE_90);
+                world.setBlockState(pos, newState);
+            }
+        }
+
         super.onDirectionChanged(world, pos, newDirection);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        world.setBlockState(pos, getState(world.getBlockState(pos), world, pos));
     }
 
     @Nullable
@@ -127,7 +155,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return Boolean.TRUE.equals(state.get(WATERLOGGED)) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
@@ -140,7 +168,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
     }
 
-    private boolean hasNode(IWorld world, BlockPos pos, BlockState state, Direction direction) {
+    private boolean hasNodeConnection(IWorld world, BlockPos pos, BlockState state, Direction direction) {
         // Prevent the "holder" of a cable block conflicting with a cable connection.
         if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()).getOpposite() == direction) {
             return false;
@@ -151,16 +179,37 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
             return false;
         }
 
-        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent();
+        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
+            && !isSideCovered(tile, direction)
+            && !isSideCovered(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
+    }
+
+    private boolean isSideCovered(TileEntity tile, Direction direction) {
+        if (tile == null) {
+            return false;
+        }
+
+        Optional<INetworkNode> node = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode);
+
+        if (node.isPresent() && node.get() instanceof ICoverable) {
+            Cover cover = ((ICoverable) node.get()).getCoverManager().getCover(direction);
+            if (cover == null) {
+                return false;
+            } else {
+                return cover.getType() == CoverType.NORMAL;
+            }
+        }
+
+        return false;
     }
 
     private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {
-        boolean north = hasNode(world, pos.offset(Direction.NORTH), currentState, Direction.SOUTH);
-        boolean east = hasNode(world, pos.offset(Direction.EAST), currentState, Direction.WEST);
-        boolean south = hasNode(world, pos.offset(Direction.SOUTH), currentState, Direction.NORTH);
-        boolean west = hasNode(world, pos.offset(Direction.WEST), currentState, Direction.EAST);
-        boolean up = hasNode(world, pos.offset(Direction.UP), currentState, Direction.DOWN);
-        boolean down = hasNode(world, pos.offset(Direction.DOWN), currentState, Direction.UP);
+        boolean north = hasNodeConnection(world, pos.offset(Direction.NORTH), currentState, Direction.SOUTH);
+        boolean east = hasNodeConnection(world, pos.offset(Direction.EAST), currentState, Direction.WEST);
+        boolean south = hasNodeConnection(world, pos.offset(Direction.SOUTH), currentState, Direction.NORTH);
+        boolean west = hasNodeConnection(world, pos.offset(Direction.WEST), currentState, Direction.EAST);
+        boolean up = hasNodeConnection(world, pos.offset(Direction.UP), currentState, Direction.DOWN);
+        boolean down = hasNodeConnection(world, pos.offset(Direction.DOWN), currentState, Direction.UP);
 
         return currentState
             .with(NORTH, north)
@@ -182,5 +231,23 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         super.fillStateContainer(builder);
 
         builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, WATERLOGGED);
+    }
+
+    public static boolean hasVisualConnectionOnSide(BlockState state, Direction direction) {
+        switch (direction) {
+            case DOWN:
+                return state.get(DOWN);
+            case UP:
+                return state.get(UP);
+            case NORTH:
+                return state.get(NORTH);
+            case SOUTH:
+                return state.get(SOUTH);
+            case WEST:
+                return state.get(WEST);
+            case EAST:
+                return state.get(EAST);
+        }
+        return false;
     }
 }

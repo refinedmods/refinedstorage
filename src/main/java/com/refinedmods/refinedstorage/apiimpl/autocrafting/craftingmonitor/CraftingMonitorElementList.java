@@ -27,8 +27,8 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (craftingElements != null) {
             ICraftingMonitorElement existingElement = craftingElements.get(element.baseElementHashCode());
             if (existingElement != null) {
-                if(existingElement instanceof ErrorCraftingMonitorElement){
-                    ((ErrorCraftingMonitorElement)existingElement).mergeBases(element);
+                if (existingElement instanceof ErrorCraftingMonitorElement) {
+                    ((ErrorCraftingMonitorElement) existingElement).mergeBases(element);
                 } else {
                     existingElement.merge(element);
                 }
@@ -38,8 +38,8 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (processingElements != null) {
             ICraftingMonitorElement existingElement = processingElements.get(element.baseElementHashCode());
             if (existingElement != null) {
-                if(existingElement instanceof ErrorCraftingMonitorElement){
-                    ((ErrorCraftingMonitorElement)existingElement).mergeBases(element);
+                if (existingElement instanceof ErrorCraftingMonitorElement) {
+                    ((ErrorCraftingMonitorElement) existingElement).mergeBases(element);
                 } else {
                     existingElement.merge(element);
                 }
@@ -114,7 +114,7 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
 
     @Override
     public List<ICraftingMonitorElement> getElements() {
-        if (!currentLists.isEmpty()||!currentCraftingLists.isEmpty() || !currentProcessingLists.isEmpty() || !currentStorageLists.isEmpty()) {
+        if (!currentLists.isEmpty() || !currentCraftingLists.isEmpty() || !currentProcessingLists.isEmpty() || !currentStorageLists.isEmpty()) {
             commit();
         }
 

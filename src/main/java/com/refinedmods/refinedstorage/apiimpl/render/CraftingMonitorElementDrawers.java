@@ -6,32 +6,28 @@ import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
 
-public class CraftingMonitorElementDrawers extends ElementDrawers {
-    private int itemWidth;
-    private int itemHeight;
+public class CraftingMonitorElementDrawers extends ElementDrawers<CraftingMonitorContainer> {
+    private final IElementDrawer<Integer> overlayDrawer;
+    private final IElementDrawer<Void> errorDrawer;
 
-    private final IElementDrawer<Integer> overlayDrawer = (matrixStack, x, y, color) -> {
-        RenderSystem.color4f(1, 1, 1, 1);
-        RenderSystem.disableLighting();
+    public CraftingMonitorElementDrawers(BaseScreen<CraftingMonitorContainer> screen, int itemWidth, int itemHeight) {
+        super(screen);
 
-        AbstractGui.fill(matrixStack, x, y, x + itemWidth, y + itemHeight, color);
-    };
+        this.overlayDrawer = (matrixStack, x, y, color) -> {
+            RenderSystem.color4f(1, 1, 1, 1);
+            RenderSystem.disableLighting();
 
-    private final IElementDrawer<?> errorDrawer = (matrixStack, x, y, nothing) -> {
-        RenderSystem.color4f(1, 1, 1, 1);
-        RenderSystem.disableLighting();
+            AbstractGui.fill(matrixStack, x, y, x + itemWidth, y + itemHeight, color);
+        };
 
-        screen.bindTexture(RS.ID, "gui/crafting_preview.png");
-        screen.blit(matrixStack, x + itemWidth - 12 - 2, y + itemHeight - 12 - 2, 0, 244, 12, 12);
-    };
+        this.errorDrawer = (matrixStack, x, y, nothing) -> {
+            RenderSystem.color4f(1, 1, 1, 1);
+            RenderSystem.disableLighting();
 
-    public CraftingMonitorElementDrawers(BaseScreen<CraftingMonitorContainer> gui, FontRenderer fontRenderer, int itemWidth, int itemHeight) {
-        super(gui, fontRenderer);
-
-        this.itemWidth = itemWidth;
-        this.itemHeight = itemHeight;
+            screen.bindTexture(RS.ID, "gui/crafting_preview.png");
+            screen.blit(matrixStack, x + itemWidth - 12 - 2, y + itemHeight - 12 - 2, 0, 244, 12, 12);
+        };
     }
 
     @Override
@@ -40,7 +36,7 @@ public class CraftingMonitorElementDrawers extends ElementDrawers {
     }
 
     @Override
-    public IElementDrawer<?> getErrorDrawer() {
+    public IElementDrawer<Void> getErrorDrawer() {
         return errorDrawer;
     }
 }

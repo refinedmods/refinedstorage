@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DiskDriveContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.tile.DiskDriveTile;
@@ -24,8 +23,6 @@ import javax.annotation.Nullable;
 public class DiskDriveBlock extends NetworkNodeBlock {
     public DiskDriveBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "disk_drive");
     }
 
     @Override
@@ -43,7 +40,7 @@ public class DiskDriveBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
-            return NetworkUtils.attemptModify(world, pos, rayTraceResult.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DiskDriveTile>(
                     new TranslationTextComponent("gui.refinedstorage.disk_drive"),

@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.PortableGridBlock;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGrid;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridDiskState;
 import net.minecraft.block.BlockState;
@@ -15,7 +16,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +38,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(@Nonnull CacheKey key) {
-            Direction direction = key.state.get(RSBlocks.PORTABLE_GRID.getDirection().getProperty());
+            Direction direction = key.state.get(RSBlocks.PORTABLE_GRID.get().getDirection().getProperty());
             boolean active = key.state.get(PortableGridBlock.ACTIVE);
             PortableGridDiskState diskState = key.state.get(PortableGridBlock.DISK_STATE);
 
@@ -111,8 +111,8 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     private class CustomItemOverrideList extends ItemOverrideList {
         @Nullable
         @Override
-        public IBakedModel func_239290_a_(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-            PortableGrid portableGrid = new PortableGrid(null, stack, -1);
+        public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+            PortableGrid portableGrid = new PortableGrid(null, stack, new PlayerSlot(-1));
 
             if (portableGrid.isGridActive()) {
                 return new PortableGridItemBakedModel(baseConnected, getDiskModel(portableGrid.getDiskState()));

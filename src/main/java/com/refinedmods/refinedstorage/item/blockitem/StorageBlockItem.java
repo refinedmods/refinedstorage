@@ -35,8 +35,6 @@ public class StorageBlockItem extends BaseBlockItem {
         super(block, new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = block.getType();
-
-        this.setRegistryName(block.getRegistryName());
     }
 
     @Override
@@ -51,14 +49,14 @@ public class StorageBlockItem extends BaseBlockItem {
             StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).func_230530_a_(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).setStyle(Styles.GRAY));
                 } else {
-                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).func_230530_a_(Styles.GRAY));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).setStyle(Styles.GRAY));
                 }
             }
 
             if (flag.isAdvanced()) {
-                tooltip.add(new StringTextComponent(id.toString()).func_230530_a_(Styles.GRAY));
+                tooltip.add(new StringTextComponent(id.toString()).setStyle(Styles.GRAY));
             }
         }
     }
@@ -66,6 +64,7 @@ public class StorageBlockItem extends BaseBlockItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack storageStack = player.getHeldItem(hand);
+        int count = storageStack.getCount();
 
         if (!world.isRemote && player.isCrouching() && type != ItemStorageType.CREATIVE) {
             UUID diskId = null;
@@ -79,6 +78,7 @@ public class StorageBlockItem extends BaseBlockItem {
             // Newly created storages won't have a tag yet, so allow invalid disks as well.
             if (disk == null || disk.getStored() == 0) {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type));
+                storagePart.setCount(count);
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
@@ -89,7 +89,9 @@ public class StorageBlockItem extends BaseBlockItem {
                     API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
                 }
 
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));
+                ItemStack stack = new ItemStack(RSBlocks.MACHINE_CASING.get());
+                stack.setCount(count);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
 

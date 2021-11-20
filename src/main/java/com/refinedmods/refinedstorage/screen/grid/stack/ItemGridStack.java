@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class ItemGridStack implements IGridStack {
+    private static final String ERROR_PLACEHOLDER = "<Error>";
+
     private final Logger logger = LogManager.getLogger(getClass());
 
     private UUID id;
@@ -92,9 +94,9 @@ public class ItemGridStack implements IGridStack {
             try {
                 cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
-                logger.warn("Could not retrieve item name of " + stack.getItem().toString(), t);
+                logger.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
 
-                cachedName = "<Error>";
+                cachedName = ERROR_PLACEHOLDER;
             }
         }
 
@@ -107,8 +109,10 @@ public class ItemGridStack implements IGridStack {
             cachedModId = stack.getItem().getCreatorModId(stack);
 
             if (cachedModId == null) {
-                cachedModId = "<Error>";
+                cachedModId = ERROR_PLACEHOLDER;
             }
+
+            cachedModId = cachedModId.toLowerCase().replace(" ", "");
         }
 
         return cachedModId;
@@ -120,7 +124,7 @@ public class ItemGridStack implements IGridStack {
             cachedModName = getModNameByModId(getModId());
 
             if (cachedModName == null) {
-                cachedModName = "<Error>";
+                cachedModName = ERROR_PLACEHOLDER;
             }
         }
 
@@ -141,15 +145,22 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public List<ITextComponent> getTooltip() {
-        if (cachedTooltip == null) {
+    public List<ITextComponent> getTooltip(boolean bypassCache) {
+        if (bypassCache || cachedTooltip == null) {
+            List<ITextComponent> tooltip;
             try {
-                cachedTooltip = RenderUtils.getTooltipFromItem(stack);
+                tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
-                logger.warn("Could not retrieve item tooltip of " + stack.getItem().toString(), t);
+                logger.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
 
-                cachedTooltip = new ArrayList<>();
-                cachedTooltip.add(new StringTextComponent("<Error>"));
+                tooltip = new ArrayList<>();
+                tooltip.add(new StringTextComponent(ERROR_PLACEHOLDER));
+            }
+
+            if (bypassCache) {
+                return tooltip;
+            } else {
+                cachedTooltip = tooltip;
             }
         }
 
@@ -159,7 +170,16 @@ public class ItemGridStack implements IGridStack {
     @Override
     public int getQuantity() {
         // The isCraftable check is needed so sorting is applied correctly
-        return isCraftable() ? 0 : stack.getCount();
+        return isCraftable() || zeroed ? 0 : stack.getCount();
+    }
+
+    @Override
+    public void setQuantity(int amount) {
+        if (amount <= 0) {
+            setZeroed(true);
+        } else {
+            stack.setCount(amount);
+        }
     }
 
     @Override
@@ -190,7 +210,7 @@ public class ItemGridStack implements IGridStack {
 
     @Override
     public Object getIngredient() {
-        return stack;
+        return getStack();
     }
 
     @Nullable

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "connected=false": {
+      "model": "refinedstorage:block/network_transmitter/disconnected"
+    },
+    "connected=true": {
+      "model": "refinedstorage:block/network_transmitter/magenta"
+    }
+  }
+}

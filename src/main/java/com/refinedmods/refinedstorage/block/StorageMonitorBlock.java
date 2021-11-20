@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
 import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -28,8 +27,6 @@ import javax.annotation.Nullable;
 public class StorageMonitorBlock extends NetworkNodeBlock {
     public StorageMonitorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "storage_monitor");
     }
 
     @Override
@@ -50,7 +47,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
             ItemStack held = player.inventory.getCurrentItem();
 
             if (player.isCrouching()) {
-                return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+                return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                     (ServerPlayerEntity) player,
                     new PositionalTileContainerProvider<StorageMonitorTile>(
                         new TranslationTextComponent("gui.refinedstorage.storage_monitor"),

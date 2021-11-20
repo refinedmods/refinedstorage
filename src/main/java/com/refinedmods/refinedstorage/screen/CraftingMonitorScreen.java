@@ -60,11 +60,18 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             List<String> smallTextLines = Lists.newArrayList();
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
+            int hours = totalSecs / 3600;
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
             smallTextLines.add(I18n.format("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
-            smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+
+            if (hours > 0) {
+                smallTextLines.add(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+            } else {
+                smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+            }
+
             smallTextLines.add(String.format("%d%%", completionPercentage));
 
             RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
@@ -72,7 +79,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         @Override
         public List<IFilter> getFilters() {
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -102,16 +109,16 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     private final ICraftingMonitor craftingMonitor;
 
     private List<IGridTab> tasks = Collections.emptyList();
-    private final TabListWidget tabs;
+    private final TabListWidget<CraftingMonitorContainer> tabs;
 
-    private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, font, ITEM_WIDTH, ITEM_HEIGHT);
+    private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, ITEM_WIDTH, ITEM_HEIGHT);
 
     public CraftingMonitorScreen(CraftingMonitorContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 254, 201, inventory, title);
 
         this.craftingMonitor = container.getCraftingMonitor();
 
-        this.tabs = new TabListWidget(this, new ElementDrawers(this, font), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
+        this.tabs = new TabListWidget<>(this, new ElementDrawers<>(this), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();
 
             if (tab == null) {
@@ -203,7 +210,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         if (cancelAllButton != null) {
-            cancelAllButton.active = tasks.size() > 0;
+            cancelAllButton.active = !tasks.isEmpty();
         }
     }
 

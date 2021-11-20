@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButt
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.refinedmods.refinedstorage.tile.ExporterTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -27,7 +28,7 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, ExporterTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
 
         addSideButton(new TypeSideButton(this, ExporterTile.TYPE));
 

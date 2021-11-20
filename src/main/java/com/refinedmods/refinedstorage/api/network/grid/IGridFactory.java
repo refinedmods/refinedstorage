@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,11 +18,11 @@ public interface IGridFactory {
      *
      * @param player the player
      * @param stack  the stack
-     * @param slotId the slot id, if applicable, otherwise -1
+     * @param slot   the slot in the players inventory or curio slot, otherwise -1
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId);
+    IGrid createFromStack(PlayerEntity player, ItemStack stack, PlayerSlot slot);
 
     /**
      * Creates a grid from a block. Used when {@link #getType()} is BLOCK.

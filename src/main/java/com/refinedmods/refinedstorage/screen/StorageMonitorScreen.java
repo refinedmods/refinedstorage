@@ -23,6 +23,7 @@ public class StorageMonitorScreen extends BaseScreen<StorageMonitorContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

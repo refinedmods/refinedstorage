@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network.security;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityCard;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityManager;
@@ -48,9 +48,9 @@ public class SecurityManager implements ISecurityManager {
         this.cards.clear();
         this.globalCard = null;
 
-        for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ISecurityCardContainer && node.isActive()) {
-                ISecurityCardContainer container = (ISecurityCardContainer) node;
+        for (INetworkNodeGraphEntry entry : network.getNodeGraph().all()) {
+            if (entry.getNode() instanceof ISecurityCardContainer && entry.getNode().isActive()) {
+                ISecurityCardContainer container = (ISecurityCardContainer) entry.getNode();
 
                 for (ISecurityCard card : container.getCards()) {
                     if (card.getOwner() == null) {

@@ -33,8 +33,12 @@ public class ControllerLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType func_230425_b_() {
-        return RSLootFunctions.CONTROLLER;
+    public LootFunctionType getFunctionType() {
+        return RSLootFunctions.getController();
+    }
+
+    public static LootFunction.Builder<?> builder() {
+        return builder(ControllerLootFunction::new);
     }
 
     public static class Serializer extends LootFunction.Serializer<ControllerLootFunction> {

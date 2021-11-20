@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.factory.CraftingMonitorContainerProvider;
@@ -21,11 +21,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class CraftingMonitorBlock extends NetworkNodeBlock {
+public class CraftingMonitorBlock extends ColoredNetworkBlock {
     public CraftingMonitorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "crafting_monitor");
     }
 
     @Override
@@ -41,11 +39,16 @@ public class CraftingMonitorBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.CRAFTING_MONITOR.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
         if (!world.isRemote) {
             CraftingMonitorTile tile = (CraftingMonitorTile) world.getTileEntity(pos);
 
-            return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new CraftingMonitorContainerProvider(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile),
                 pos

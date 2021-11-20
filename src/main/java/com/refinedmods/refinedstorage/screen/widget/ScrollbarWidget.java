@@ -83,7 +83,7 @@ public class ScrollbarWidget implements IGuiEventListener {
 
         if (button == 0 && RenderUtils.inBounds(x, y, width, height, mx, my)) {
             // Prevent accidental scrollbar click after clicking recipe transfer button
-            if (JeiIntegration.isLoaded() && System.currentTimeMillis() - GridRecipeTransferHandler.LAST_TRANSFER_TIME <= GridRecipeTransferHandler.TRANSFER_SCROLLBAR_DELAY_MS) {
+            if (JeiIntegration.isLoaded() && GridRecipeTransferHandler.INSTANCE.hasTransferredRecently()) {
                 return false;
             }
 

@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideB
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.WhitelistBlacklistSideButton;
 import com.refinedmods.refinedstorage.tile.ImporterTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -19,7 +20,7 @@ public class ImporterScreen extends BaseScreen<ImporterContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, ImporterTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
 
         addSideButton(new TypeSideButton(this, ImporterTile.TYPE));
 
@@ -30,6 +31,7 @@ public class ImporterScreen extends BaseScreen<ImporterContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

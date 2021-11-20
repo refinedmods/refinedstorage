@@ -30,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternContainer {
+
     public enum CrafterMode {
         IGNORE,
         SIGNAL_UNLOCKS_AUTOCRAFTING,
@@ -66,6 +68,16 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         @Override
         public int getSlotLimit(int slot) {
             return 1;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            if (!stacks.get(slot).isEmpty()) {
+                return stack;
+            }
+
+            return super.insertItem(slot, stack, simulate);
         }
     }
         .addValidator(new PatternItemValidator(world))
@@ -133,7 +145,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             invalidate();
         }
 
-        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET) {
+        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET && world.isBlockPresent(pos)) {
             if (world.isBlockPowered(pos)) {
                 this.wasPowered = true;
 
@@ -183,7 +195,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.contains(NBT_DISPLAY_NAME)) {
-            displayName = ITextComponent.Serializer.func_240643_a_(tag.getString(NBT_DISPLAY_NAME));
+            displayName = ITextComponent.Serializer.getComponentFromJson(tag.getString(NBT_DISPLAY_NAME));
         }
 
         if (tag.hasUniqueId(NBT_UUID)) {
@@ -299,6 +311,17 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         return proxy.getFacingTile();
     }
 
+    @Nullable
+    @Override
+    public TileEntity getFacingTile() {
+        BlockPos facingPos = pos.offset(getDirection());
+        if (!world.isBlockPresent(facingPos)) {
+            return null;
+        }
+
+        return world.getTileEntity(facingPos);
+    }
+
     @Override
     public List<ICraftingPattern> getPatterns() {
         return patterns;
@@ -353,10 +376,6 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         this.locked = false;
 
         this.markDirty();
-    }
-
-    public IItemHandler getPatternItems() {
-        return patternsInventory;
     }
 
     public IItemHandler getUpgrades() {
@@ -449,4 +468,5 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             markDirty();
         }
     }
+
 }

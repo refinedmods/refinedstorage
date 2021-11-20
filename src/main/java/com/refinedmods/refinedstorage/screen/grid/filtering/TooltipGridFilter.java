@@ -15,10 +15,10 @@ public class TooltipGridFilter implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
-        List<ITextComponent> tooltip = stack.getTooltip();
+        List<ITextComponent> stackTooltip = stack.getTooltip(false);
 
-        for (int i = 1; i < tooltip.size(); ++i) {
-            if (tooltip.get(i).getString().toLowerCase().contains(this.tooltip.toLowerCase())) {
+        for (int i = 1; i < stackTooltip.size(); ++i) {
+            if (stackTooltip.get(i).getString().toLowerCase().contains(tooltip.toLowerCase())) {
                 return true;
             }
         }

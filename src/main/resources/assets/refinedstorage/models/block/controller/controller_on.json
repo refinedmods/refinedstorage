@@ -1,8 +1,0 @@
-{
-  "parent": "refinedstorage:block/cube_all_cutout",
-  "textures": {
-    "particle": "refinedstorage:block/controller/controller_off",
-    "all": "refinedstorage:block/controller/controller",
-    "cutout": "refinedstorage:block/controller/cutouts/on"
-  }
-}

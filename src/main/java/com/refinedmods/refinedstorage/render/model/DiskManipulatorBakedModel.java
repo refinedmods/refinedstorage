@@ -5,8 +5,9 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
-import com.refinedmods.refinedstorage.block.DiskManipulatorBlock;
+import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
+import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -78,8 +79,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.getDirection().getProperty());
-            boolean connected = key.state.get(DiskManipulatorBlock.CONNECTED);
+            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
+            boolean connected = key.state.get(NetworkNodeBlock.CONNECTED);
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
                 connected ? baseConnected : baseDisconnected,
@@ -90,7 +91,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
                 key.side
             ));
 
-            int x = 0, y = 0;
+            int x = 0;
+            int y = 0;
             for (int i = 0; i < 6; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
                     IBakedModel diskModel = getDiskModel(key.diskState[i]);
@@ -114,10 +116,37 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
 
             return quads;
         }
+
+        private IBakedModel getDiskModel(DiskState diskState) {
+            switch (diskState) {
+                case DISCONNECTED:
+                    return diskDisconnected;
+                case NEAR_CAPACITY:
+                    return diskNearCapacity;
+                case FULL:
+                    return diskFull;
+                default:
+                    return disk;
+            }
+        }
+
+        private Vector3f getDiskTranslation(Direction facing, int x, int y) {
+            Vector3f translation = new Vector3f();
+
+            if (facing == Direction.NORTH || facing == Direction.SOUTH) {
+                translation.add((2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
+            } else if (facing == Direction.EAST || facing == Direction.WEST) {
+                translation.add(0, 0, (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
+            }
+
+            translation.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
+
+            return translation;
+        }
     });
 
     public DiskManipulatorBakedModel(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        super(baseDisconnected);
+        super(baseConnected);
 
         this.baseConnected = baseConnected;
         this.baseDisconnected = baseDisconnected;
@@ -125,33 +154,6 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         this.diskNearCapacity = diskNearCapacity;
         this.diskFull = diskFull;
         this.diskDisconnected = diskDisconnected;
-    }
-
-    private IBakedModel getDiskModel(DiskState diskState) {
-        switch (diskState) {
-            case DISCONNECTED:
-                return diskDisconnected;
-            case NEAR_CAPACITY:
-                return diskNearCapacity;
-            case FULL:
-                return diskFull;
-            default:
-                return disk;
-        }
-    }
-
-    private Vector3f getDiskTranslation(Direction facing, int x, int y) {
-        Vector3f translation = new Vector3f();
-
-        if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-            translation.add((2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
-        } else if (facing == Direction.EAST || facing == Direction.WEST) {
-            translation.add(0, 0, (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
-        }
-
-        translation.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
-
-        return translation;
     }
 
     @Override

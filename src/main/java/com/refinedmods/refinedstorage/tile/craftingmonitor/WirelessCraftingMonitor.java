@@ -4,6 +4,8 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
+import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
 import com.refinedmods.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
@@ -32,15 +34,15 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private final BlockPos nodePos;
     private int tabPage;
     private Optional<UUID> tabSelected;
-    private final int slotId;
+    private final PlayerSlot slot;
 
-    public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
+    public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server, PlayerSlot slot) {
         this.stack = stack;
         this.server = server;
-        this.slotId = slotId;
+        this.slot = slot;
 
-        this.nodeDimension = WirelessCraftingMonitorItem.getDimension(stack);
-        this.nodePos = new BlockPos(WirelessCraftingMonitorItem.getX(stack), WirelessCraftingMonitorItem.getY(stack), WirelessCraftingMonitorItem.getZ(stack));
+        this.nodeDimension = NetworkItem.getDimension(stack);
+        this.nodePos = new BlockPos(NetworkItem.getX(stack), NetworkItem.getY(stack), NetworkItem.getZ(stack));
         this.tabPage = WirelessCraftingMonitorItem.getTabPage(stack);
         this.tabSelected = WirelessCraftingMonitorItem.getTabSelected(stack);
     }
@@ -154,6 +156,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     @Override
     public int getSlotId() {
-        return slotId;
+        return slot.getSlotIdInPlayerInventory();
     }
 }

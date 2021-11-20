@@ -1,23 +1,21 @@
 package com.refinedmods.refinedstorage.util;
 
-import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.block.BaseBlock;
-import com.refinedmods.refinedstorage.item.blockitem.BaseBlockItem;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
-public class BlockUtils {
-    public static final Block.Properties DEFAULT_ROCK_PROPERTIES = Block.Properties.create(Material.ROCK).hardnessAndResistance(1.9F).sound(SoundType.STONE);
-    public static final Block.Properties DEFAULT_GLASS_PROPERTIES = Block.Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.35F);
+public final class BlockUtils {
+    public static final AbstractBlock.Properties DEFAULT_ROCK_PROPERTIES = AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(1.9F).sound(SoundType.STONE);
+    public static final AbstractBlock.Properties DEFAULT_GLASS_PROPERTIES = AbstractBlock.Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.35F);
 
-    public static BlockItem createBlockItemFor(BaseBlock block) {
-        BaseBlockItem blockItem = new BaseBlockItem(block, new Item.Properties().group(RS.MAIN_GROUP));
+    private BlockUtils() {
+    }
 
-        blockItem.setRegistryName(block.getRegistryName());
-
-        return blockItem;
+    // Block#getTranslatedName is client only
+    public static ITextComponent getBlockTranslation(Block block) {
+        return new TranslationTextComponent(block.getTranslationKey());
     }
 }

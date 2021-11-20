@@ -26,9 +26,11 @@ public interface IGridStack {
 
     Set<String> getTags();
 
-    List<ITextComponent> getTooltip();
+    List<ITextComponent> getTooltip(boolean bypassCache);
 
     int getQuantity();
+
+    void setQuantity(int amount);
 
     String getFormattedFullQuantity();
 

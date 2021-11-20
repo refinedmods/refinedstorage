@@ -11,6 +11,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ClientProxy {
+    private ClientProxy() {
+    }
+
     public static void onReceivedCraftingPreviewResponseMessage(GridCraftingPreviewResponseMessage message) {
         Screen screen = Minecraft.getInstance().currentScreen;
 
@@ -20,8 +23,7 @@ public class ClientProxy {
 
         Minecraft.getInstance().displayGuiScreen(new CraftingPreviewScreen(
             screen,
-            message.getFactoryId(),
-            message.getStacks(),
+            message.getElements(),
             message.getId(),
             message.getQuantity(),
             message.isFluids(),

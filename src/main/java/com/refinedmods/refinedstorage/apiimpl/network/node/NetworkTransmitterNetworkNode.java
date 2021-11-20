@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.NetworkCardItem;
+import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,7 +24,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
     private final BaseItemHandler networkCard = new BaseItemHandler(1)
-        .addValidator(new ItemValidator(RSItems.NETWORK_CARD))
+        .addValidator(new ItemValidator(RSItems.NETWORK_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             ItemStack card = handler.getStackInSlot(slot);
@@ -80,12 +81,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
     @Override
     public IItemHandler getDrops() {
-        return networkCard;
-    }
-
-    @Nullable
-    public BlockPos getReceiver() {
-        return receiver;
+        return getNetworkCard();
     }
 
     @Nullable
@@ -102,7 +98,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.func_234923_W_() == receiverDimension;
+        return world.getDimensionKey() == receiverDimension;
     }
 
     private boolean canTransmit() {
@@ -120,18 +116,16 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                return;
+                World dimensionWorld = world.getServer().getWorld(receiverDimension);
+
+                if (dimensionWorld != null && dimensionWorld.getTileEntity(receiver) instanceof NetworkReceiverTile) {
+                    operator.apply(dimensionWorld, receiver, null);
+                }
+            } else {
+                if (world.getTileEntity(receiver) instanceof NetworkReceiverTile) {
+                    operator.apply(world, receiver, null);
+                }
             }
-
-            // TODO if (!isSameDimension()) {
-            //    World dimensionWorld = DimensionManager.getWorld(world.getServer(), receiverDimension, true, true);
-
-            //if (dimensionWorld != null) {
-            //        operator.apply(dimensionWorld, receiver, null);
-            //    }
-            //} else {
-                operator.apply(world, receiver, null);
-            //}
         }
     }
 }

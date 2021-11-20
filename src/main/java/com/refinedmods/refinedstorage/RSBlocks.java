@@ -1,87 +1,111 @@
 package com.refinedmods.refinedstorage;
 
+import com.refinedmods.refinedstorage.api.network.NetworkType;
+import com.refinedmods.refinedstorage.api.network.grid.GridType;
+import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
+import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.*;
-import net.minecraftforge.registries.ObjectHolder;
+import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
+import com.refinedmods.refinedstorage.util.ColorMap;
+import net.minecraft.block.Block;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public final class RSBlocks {
-    @ObjectHolder(RS.ID + ":importer")
-    public static final ImporterBlock IMPORTER = null;
-    @ObjectHolder(RS.ID + ":exporter")
-    public static final ExporterBlock EXPORTER = null;
-    @ObjectHolder(RS.ID + ":detector")
-    public static final DetectorBlock DETECTOR = null;
-    @ObjectHolder(RS.ID + ":relay")
-    public static final RelayBlock RELAY = null;
-    @ObjectHolder(RS.ID + ":network_transmitter")
-    public static final NetworkTransmitterBlock NETWORK_TRANSMITTER = null;
-    @ObjectHolder(RS.ID + ":network_receiver")
-    public static final NetworkReceiverBlock NETWORK_RECEIVER = null;
-    @ObjectHolder(RS.ID + ":quartz_enriched_iron_block")
-    public static final QuartzEnrichedIronBlock QUARTZ_ENRICHED_IRON = null;
-    @ObjectHolder(RS.ID + ":machine_casing")
-    public static final MachineCasingBlock MACHINE_CASING = null;
-    @ObjectHolder(RS.ID + ":controller")
-    public static final ControllerBlock CONTROLLER = null;
-    @ObjectHolder(RS.ID + ":creative_controller")
-    public static final ControllerBlock CREATIVE_CONTROLLER = null;
-    @ObjectHolder(RS.ID + ":cable")
-    public static final CableBlock CABLE = null;
-    @ObjectHolder(RS.ID + ":disk_drive")
-    public static final DiskDriveBlock DISK_DRIVE = null;
-    @ObjectHolder(RS.ID + ":external_storage")
-    public static final ExternalStorageBlock EXTERNAL_STORAGE = null;
-    @ObjectHolder(RS.ID + ":grid")
-    public static final GridBlock GRID = null;
-    @ObjectHolder(RS.ID + ":crafting_grid")
-    public static final GridBlock CRAFTING_GRID = null;
-    @ObjectHolder(RS.ID + ":pattern_grid")
-    public static final GridBlock PATTERN_GRID = null;
-    @ObjectHolder(RS.ID + ":fluid_grid")
-    public static final GridBlock FLUID_GRID = null;
-    @ObjectHolder(RS.ID + ":1k_storage_block")
-    public static final StorageBlock ONE_K_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":4k_storage_block")
-    public static final StorageBlock FOUR_K_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":16k_storage_block")
-    public static final StorageBlock SIXTEEN_K_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":64k_storage_block")
-    public static final StorageBlock SIXTY_FOUR_K_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":creative_storage_block")
-    public static final StorageBlock CREATIVE_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":64k_fluid_storage_block")
-    public static final FluidStorageBlock SIXTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":256k_fluid_storage_block")
-    public static final FluidStorageBlock TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":1024k_fluid_storage_block")
-    public static final FluidStorageBlock THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":4096k_fluid_storage_block")
-    public static final FluidStorageBlock FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":creative_fluid_storage_block")
-    public static final FluidStorageBlock CREATIVE_FLUID_STORAGE_BLOCK = null;
-    @ObjectHolder(RS.ID + ":security_manager")
-    public static final SecurityManagerBlock SECURITY_MANAGER = null;
-    @ObjectHolder(RS.ID + ":interface")
-    public static final InterfaceBlock INTERFACE = null;
-    @ObjectHolder(RS.ID + ":fluid_interface")
-    public static final FluidInterfaceBlock FLUID_INTERFACE = null;
-    @ObjectHolder(RS.ID + ":wireless_transmitter")
-    public static final WirelessTransmitterBlock WIRELESS_TRANSMITTER = null;
-    @ObjectHolder(RS.ID + ":storage_monitor")
-    public static final StorageMonitorBlock STORAGE_MONITOR = null;
-    @ObjectHolder(RS.ID + ":constructor")
-    public static final ConstructorBlock CONSTRUCTOR = null;
-    @ObjectHolder(RS.ID + ":destructor")
-    public static final DestructorBlock DESTRUCTOR = null;
-    @ObjectHolder(RS.ID + ":disk_manipulator")
-    public static final DiskManipulatorBlock DISK_MANIPULATOR = null;
-    @ObjectHolder(RS.ID + ":portable_grid")
-    public static final PortableGridBlock PORTABLE_GRID = null;
-    @ObjectHolder(RS.ID + ":creative_portable_grid")
-    public static final PortableGridBlock CREATIVE_PORTABLE_GRID = null;
-    @ObjectHolder(RS.ID + ":crafter")
-    public static final CrafterBlock CRAFTER = null;
-    @ObjectHolder(RS.ID + ":crafter_manager")
-    public static final CrafterManagerBlock CRAFTER_MANAGER = null;
-    @ObjectHolder(RS.ID + ":crafting_monitor")
-    public static final CraftingMonitorBlock CRAFTING_MONITOR = null;
+    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
+
+    private static final String GRID_SUFFIX = "_grid";
+
+    public static final RegistryObject<ImporterBlock> IMPORTER;
+    public static final RegistryObject<ExporterBlock> EXPORTER;
+
+    public static final RegistryObject<QuartzEnrichedIronBlock> QUARTZ_ENRICHED_IRON;
+    public static final RegistryObject<MachineCasingBlock> MACHINE_CASING;
+    public static final RegistryObject<CableBlock> CABLE;
+    public static final RegistryObject<DiskDriveBlock> DISK_DRIVE;
+    public static final RegistryObject<ExternalStorageBlock> EXTERNAL_STORAGE;
+    public static final Map<ItemStorageType, RegistryObject<StorageBlock>> STORAGE_BLOCKS = new EnumMap<>(ItemStorageType.class);
+    public static final Map<FluidStorageType, RegistryObject<FluidStorageBlock>> FLUID_STORAGE_BLOCKS = new EnumMap<>(FluidStorageType.class);
+    public static final RegistryObject<InterfaceBlock> INTERFACE;
+    public static final RegistryObject<FluidInterfaceBlock> FLUID_INTERFACE;
+    public static final RegistryObject<StorageMonitorBlock> STORAGE_MONITOR;
+    public static final RegistryObject<ConstructorBlock> CONSTRUCTOR;
+    public static final RegistryObject<DestructorBlock> DESTRUCTOR;
+    public static final RegistryObject<PortableGridBlock> PORTABLE_GRID;
+    public static final RegistryObject<PortableGridBlock> CREATIVE_PORTABLE_GRID;
+
+    public static final ColorMap<CrafterBlock> CRAFTER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<RelayBlock> RELAY = new ColorMap<>(BLOCKS);
+    public static final ColorMap<NetworkTransmitterBlock> NETWORK_TRANSMITTER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<NetworkReceiverBlock> NETWORK_RECEIVER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<ControllerBlock> CONTROLLER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<ControllerBlock> CREATIVE_CONTROLLER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<GridBlock> GRID = new ColorMap<>(BLOCKS);
+    public static final ColorMap<GridBlock> CRAFTING_GRID = new ColorMap<>(BLOCKS);
+    public static final ColorMap<GridBlock> PATTERN_GRID = new ColorMap<>(BLOCKS);
+    public static final ColorMap<GridBlock> FLUID_GRID = new ColorMap<>(BLOCKS);
+    public static final ColorMap<SecurityManagerBlock> SECURITY_MANAGER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<WirelessTransmitterBlock> WIRELESS_TRANSMITTER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<DiskManipulatorBlock> DISK_MANIPULATOR = new ColorMap<>(BLOCKS);
+    public static final ColorMap<CrafterManagerBlock> CRAFTER_MANAGER = new ColorMap<>(BLOCKS);
+    public static final ColorMap<CraftingMonitorBlock> CRAFTING_MONITOR = new ColorMap<>(BLOCKS);
+    public static final ColorMap<DetectorBlock> DETECTOR = new ColorMap<>(BLOCKS);
+
+    public static final List<RegistryObject<? extends Block>> COLORED_BLOCKS = new ArrayList<>();
+
+    static {
+        QUARTZ_ENRICHED_IRON = BLOCKS.register("quartz_enriched_iron_block", QuartzEnrichedIronBlock::new);
+        MACHINE_CASING = BLOCKS.register("machine_casing", MachineCasingBlock::new);
+        CABLE = BLOCKS.register("cable", CableBlock::new);
+        DISK_DRIVE = BLOCKS.register("disk_drive", DiskDriveBlock::new);
+        EXTERNAL_STORAGE = BLOCKS.register("external_storage", ExternalStorageBlock::new);
+        IMPORTER = BLOCKS.register("importer", ImporterBlock::new);
+        EXPORTER = BLOCKS.register("exporter", ExporterBlock::new);
+        INTERFACE = BLOCKS.register("interface", InterfaceBlock::new);
+        FLUID_INTERFACE = BLOCKS.register("fluid_interface", FluidInterfaceBlock::new);
+        STORAGE_MONITOR = BLOCKS.register("storage_monitor", StorageMonitorBlock::new);
+        CONSTRUCTOR = BLOCKS.register("constructor", ConstructorBlock::new);
+        DESTRUCTOR = BLOCKS.register("destructor", DestructorBlock::new);
+        CREATIVE_PORTABLE_GRID = BLOCKS.register("creative_portable_grid", () -> new PortableGridBlock(PortableGridBlockItem.Type.CREATIVE));
+        PORTABLE_GRID = BLOCKS.register("portable_grid", () -> new PortableGridBlock(PortableGridBlockItem.Type.NORMAL));
+
+        for (ItemStorageType type : ItemStorageType.values()) {
+            STORAGE_BLOCKS.put(type, BLOCKS.register(type.getName() + "_storage_block", () -> new StorageBlock(type)));
+        }
+
+        for (FluidStorageType type : FluidStorageType.values()) {
+            FLUID_STORAGE_BLOCKS.put(type, BLOCKS.register(type.getName() + "_fluid_storage_block", () -> new FluidStorageBlock(type)));
+        }
+
+        GRID.registerBlocks("grid", () -> new GridBlock(GridType.NORMAL));
+        CRAFTING_GRID.registerBlocks(GridType.CRAFTING.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.CRAFTING));
+        PATTERN_GRID.registerBlocks(GridType.PATTERN.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.PATTERN));
+        FLUID_GRID.registerBlocks(GridType.FLUID.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.FLUID));
+        CONTROLLER.registerBlocks("controller", () -> new ControllerBlock(NetworkType.NORMAL));
+        CREATIVE_CONTROLLER.registerBlocks("creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
+        NETWORK_RECEIVER.registerBlocks("network_receiver", NetworkReceiverBlock::new);
+        NETWORK_TRANSMITTER.registerBlocks("network_transmitter", NetworkTransmitterBlock::new);
+        RELAY.registerBlocks("relay", RelayBlock::new);
+        SECURITY_MANAGER.registerBlocks("security_manager", SecurityManagerBlock::new);
+        WIRELESS_TRANSMITTER.registerBlocks("wireless_transmitter", WirelessTransmitterBlock::new);
+        DISK_MANIPULATOR.registerBlocks("disk_manipulator", DiskManipulatorBlock::new);
+        CRAFTER.registerBlocks("crafter", CrafterBlock::new);
+        CRAFTER_MANAGER.registerBlocks("crafter_manager", CrafterManagerBlock::new);
+        CRAFTING_MONITOR.registerBlocks("crafting_monitor", CraftingMonitorBlock::new);
+        DETECTOR.registerBlocks("detector", DetectorBlock::new);
+    }
+
+    private RSBlocks() {
+    }
+
+    public static void register() {
+        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 }

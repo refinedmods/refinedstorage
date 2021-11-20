@@ -4,20 +4,12 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class GridFluidInsertHeldMessage {
-    public static GridFluidInsertHeldMessage decode(PacketBuffer buf) {
-        return new GridFluidInsertHeldMessage();
-    }
-
-    public static void encode(GridFluidInsertHeldMessage message, PacketBuffer buf) {
-    }
-
-    public static void handle(GridFluidInsertHeldMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(Supplier<NetworkEvent.Context> ctx) {
         ServerPlayerEntity player = ctx.get().getSender();
 
         if (player != null) {

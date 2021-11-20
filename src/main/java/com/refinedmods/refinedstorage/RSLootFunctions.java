@@ -9,15 +9,34 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
 public final class RSLootFunctions {
-    public static LootFunctionType STORAGE_BLOCK;
-    public static LootFunctionType PORTABLE_GRID;
-    public static LootFunctionType CRAFTER;
-    public static LootFunctionType CONTROLLER;
+    private static LootFunctionType storageBlock;
+    private static LootFunctionType portableGrid;
+    private static LootFunctionType crafter;
+    private static LootFunctionType controller;
+
+    private RSLootFunctions() {
+    }
 
     public static void register() {
-        STORAGE_BLOCK = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
-        PORTABLE_GRID = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
-        CRAFTER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
-        CONTROLLER = Registry.register(Registry.field_239694_aZ_, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
+        storageBlock = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "storage_block"), new LootFunctionType(new StorageBlockLootFunction.Serializer()));
+        portableGrid = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "portable_grid"), new LootFunctionType(new PortableGridBlockLootFunction.Serializer()));
+        crafter = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "crafter"), new LootFunctionType(new CrafterLootFunction.Serializer()));
+        controller = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "controller"), new LootFunctionType(new ControllerLootFunction.Serializer()));
+    }
+
+    public static LootFunctionType getStorageBlock() {
+        return storageBlock;
+    }
+
+    public static LootFunctionType getPortableGrid() {
+        return portableGrid;
+    }
+
+    public static LootFunctionType getCrafter() {
+        return crafter;
+    }
+
+    public static LootFunctionType getController() {
+        return controller;
     }
 }

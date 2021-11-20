@@ -12,7 +12,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistr
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.refinedmods.refinedstorage.api.storage.StorageType;
@@ -21,6 +20,7 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
+import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTrackerManager;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
@@ -35,10 +35,13 @@ import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.CraftingGridBehavior;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.GridManager;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.*;
+import com.refinedmods.refinedstorage.apiimpl.storage.tracker.StorageTrackerManager;
 import com.refinedmods.refinedstorage.apiimpl.util.Comparer;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
+import com.refinedmods.refinedstorage.util.StackUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -47,11 +50,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,7 +76,7 @@ public class API implements IRSAPI {
     private final ICraftingGridBehavior craftingGridBehavior = new CraftingGridBehavior();
     private final IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private final IStorageDiskSync storageDiskSync = new StorageDiskSync();
-    private final Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
+    private final Map<StorageType, TreeSet<IExternalStorageProvider<?>>> externalStorageProviders = new EnumMap<>(StorageType.class);
     private final List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
@@ -125,12 +130,12 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager("network_nodes", world), "network_nodes");
+        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(NetworkNodeManager.NAME, world), NetworkNodeManager.NAME);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkManager("networks", world), "networks");
+        return world.getSavedData().getOrCreate(() -> new NetworkManager(NetworkManager.NAME, world), NetworkManager.NAME);
     }
 
     @Override
@@ -201,46 +206,54 @@ public class API implements IRSAPI {
         return storageDiskSync;
     }
 
+    @Nonnull
     @Override
-    public void addExternalStorageProvider(StorageType type, IExternalStorageProvider provider) {
+    public IStorageTrackerManager getStorageTrackerManager(ServerWorld anyWorld) {
+        ServerWorld world = anyWorld.getServer().func_241755_D_(); // Get the overworld
+
+        return world.getSavedData().getOrCreate(() -> new StorageTrackerManager(StorageTrackerManager.NAME), StorageTrackerManager.NAME);
+    }
+
+    @Override
+    public void addExternalStorageProvider(StorageType type, IExternalStorageProvider<?> provider) {
         externalStorageProviders.computeIfAbsent(type, k -> new TreeSet<>((a, b) -> Integer.compare(b.getPriority(), a.getPriority()))).add(provider);
     }
 
     @Override
-    public Set<IExternalStorageProvider> getExternalStorageProviders(StorageType type) {
-        TreeSet<IExternalStorageProvider> providers = externalStorageProviders.get(type);
+    public Set<IExternalStorageProvider<?>> getExternalStorageProviders(StorageType type) {
+        TreeSet<IExternalStorageProvider<?>> providers = externalStorageProviders.get(type);
 
         return providers == null ? Collections.emptySet() : providers;
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new ItemStorageDisk(world, capacity);
+        return new ItemStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new FluidStorageDisk(world, capacity);
+        return new FluidStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack) {
-        return new CraftingRequestInfo(stack);
+    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack, int count) {
+        return new CraftingRequestInfo(ItemHandlerHelper.copyStackWithSize(stack, count));
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack) {
-        return new CraftingRequestInfo(stack);
+    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack, int count) {
+        return new CraftingRequestInfo(StackUtils.copy(stack, count));
     }
 
     @Override
@@ -307,32 +320,5 @@ public class API implements IRSAPI {
         }
 
         return result;
-    }
-
-    @Override
-    public int getNetworkNodeHashCode(INetworkNode node) {
-        int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().func_234923_W_().hashCode();
-
-        return result;
-    }
-
-    @Override
-    public boolean isNetworkNodeEqual(INetworkNode left, Object right) {
-        if (!(right instanceof INetworkNode)) {
-            return false;
-        }
-
-        if (left == right) {
-            return true;
-        }
-
-        INetworkNode rightNode = (INetworkNode) right;
-
-        if (left.getWorld().func_234923_W_() != rightNode.getWorld().func_234923_W_()) {
-            return false;
-        }
-
-        return left.getPos().equals(rightNode.getPos());
     }
 }

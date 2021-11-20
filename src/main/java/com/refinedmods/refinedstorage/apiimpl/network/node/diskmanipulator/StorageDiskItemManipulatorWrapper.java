@@ -16,6 +16,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack> {
     private final DiskManipulatorNetworkNode diskManipulator;
@@ -43,6 +44,12 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     @Override
     public int getCapacity() {
         return parent.getCapacity();
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return parent.getOwner();
     }
 
     @Override

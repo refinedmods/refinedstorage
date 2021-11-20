@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.recipe;
 
 import com.refinedmods.refinedstorage.RSItems;
+import com.refinedmods.refinedstorage.item.UpgradeItem;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -22,15 +23,15 @@ public class UpgradeWithEnchantedBookRecipe extends ShapedRecipe {
 
     public UpgradeWithEnchantedBookRecipe(ResourceLocation recipeId, Enchantment enchantment, int enchantmentLevel, ItemStack result) {
         super(recipeId, "", 3, 3, NonNullList.from(Ingredient.EMPTY,
-            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
+            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get())),
             Ingredient.fromStacks(EnchantedBookItem.getEnchantedItemStack(new EnchantmentData(enchantment, enchantmentLevel))),
-            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
+            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get())),
             Ingredient.fromStacks(new ItemStack(Blocks.BOOKSHELF)),
-            Ingredient.fromStacks(new ItemStack(RSItems.UPGRADE)),
+            Ingredient.fromStacks(new ItemStack(RSItems.UPGRADE_ITEMS.get(UpgradeItem.Type.NORMAL).get())),
             Ingredient.fromStacks(new ItemStack(Blocks.BOOKSHELF)),
-            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
-            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
-            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON))
+            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get())),
+            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get())),
+            Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get()))
         ), result);
 
         this.enchant = new EnchantmentData(enchantment, enchantmentLevel);
@@ -53,8 +54,9 @@ public class UpgradeWithEnchantedBookRecipe extends ShapedRecipe {
             for (int i = 0; i < enchantments.size(); ++i) {
                 CompoundNBT enchantmentNbt = enchantments.getCompound(i);
 
-                // @Volatile: NBT tags from ItemEnchantedBook
-                if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentNbt.getString("id"))) == enchant.enchantment && enchantmentNbt.getShort("lvl") == enchant.enchantmentLevel) {
+                // @Volatile: NBT tags from EnchantedBookItem
+                if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentNbt.getString("id"))) == enchant.enchantment &&
+                    enchantmentNbt.getShort("lvl") == enchant.enchantmentLevel) {
                     return true;
                 }
             }

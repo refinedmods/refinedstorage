@@ -11,13 +11,31 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ExporterContainer extends BaseContainer {
     private final ExporterTile exporter;
+    private boolean hasRegulatorMode;
 
     public ExporterContainer(ExporterTile exporter, PlayerEntity player, int windowId) {
         super(RSContainers.EXPORTER, exporter, player, windowId);
 
         this.exporter = exporter;
+        this.hasRegulatorMode = hasRegulatorMode();
 
         initSlots();
+    }
+
+    private boolean hasRegulatorMode() {
+        return exporter.getNode().getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR);
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        boolean updatedHasRegulatorMode = hasRegulatorMode();
+        if (hasRegulatorMode != updatedHasRegulatorMode) {
+            hasRegulatorMode = updatedHasRegulatorMode;
+
+            initSlots();
+        }
     }
 
     public void initSlots() {

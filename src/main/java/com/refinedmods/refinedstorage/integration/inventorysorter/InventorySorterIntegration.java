@@ -5,6 +5,9 @@ import net.minecraftforge.fml.ModList;
 public class InventorySorterIntegration {
     private static final String ID = "inventorysorter";
 
+    private InventorySorterIntegration() {
+    }
+
     public static boolean isLoaded() {
         return ModList.get().isLoaded(ID);
     }

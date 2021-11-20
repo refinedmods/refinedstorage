@@ -5,14 +5,15 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeGraph;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityManager;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.IStorage;
+import com.refinedmods.refinedstorage.api.storage.StorageType;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
@@ -38,6 +39,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -49,6 +51,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public class Network implements INetwork, IRedstoneConfigurable {
@@ -56,8 +59,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private static final int THROTTLE_ACTIVE_TO_INACTIVE = 4;
 
     private static final String NBT_ENERGY = "Energy";
-    private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker";
-    private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
+    private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker"; //TODO: remove next version
+    private static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
+    private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker"; //TODO: remove next version
+    private static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";
 
     private static final Logger LOGGER = LogManager.getLogger(Network.class);
 
@@ -68,11 +73,15 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private final ICraftingManager craftingManager = new CraftingManager(this);
     private final ISecurityManager securityManager = new SecurityManager(this);
     private final IStorageCache<ItemStack> itemStorage = new ItemStorageCache(this);
-    private final ItemStorageTracker itemStorageTracker = new ItemStorageTracker(this::markDirty);
     private final IStorageCache<FluidStack> fluidStorage = new FluidStorageCache(this);
-    private final FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
     private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer(), 0);
     private final RootNetworkNode root;
+
+
+    private ItemStorageTracker itemStorageTracker;
+    private UUID itemStorageTrackerId;
+    private FluidStorageTracker fluidStorageTracker;
+    private UUID fluidStorageTrackerId;
 
     private final BlockPos pos;
     private final World world;
@@ -80,10 +89,15 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
     private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    private boolean redstonePowered = false;
 
+    private boolean amILoaded = false;
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
+    private int ticks;
+    private long[] tickTimes = new long[100];
+    private int tickCounter = 0;
 
     public Network(World world, BlockPos pos, NetworkType type) {
         this.pos = pos;
@@ -103,10 +117,6 @@ public class Network implements INetwork, IRedstoneConfigurable {
         return root;
     }
 
-    public BaseEnergyStorage getEnergy() {
-        return energy;
-    }
-
     @Override
     public BlockPos getPosition() {
         return pos;
@@ -114,7 +124,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
+        return amILoaded && energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(redstonePowered);
+    }
+
+    public void setRedstonePowered(boolean redstonePowered) {
+        this.redstonePowered = redstonePowered;
     }
 
     @Override
@@ -135,6 +149,16 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            long tickStart = Util.nanoTime();
+
+            if (ticks == 0) {
+                redstonePowered = world.isBlockPowered(pos);
+            }
+
+            ++ticks;
+
+            amILoaded = world.isBlockPresent(pos);
+
             updateEnergyUsage();
 
             if (canRun()) {
@@ -184,6 +208,9 @@ public class Network implements INetwork, IRedstoneConfigurable {
                     world.setBlockState(pos, state.with(ControllerBlock.ENERGY_TYPE, energyType));
                 }
             }
+
+            tickTimes[tickCounter % tickTimes.length] = Util.nanoTime() - tickStart;
+            tickCounter++;
         }
     }
 
@@ -209,6 +236,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
         }
 
         nodeGraph.disconnectAll();
+        API.instance().getStorageTrackerManager((ServerWorld) getWorld()).remove(itemStorageTrackerId);
+        API.instance().getStorageTrackerManager((ServerWorld) getWorld()).remove(fluidStorageTrackerId);
     }
 
     @Override
@@ -437,11 +466,27 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public IStorageTracker<ItemStack> getItemStorageTracker() {
+        if (itemStorageTracker == null) {
+            if (itemStorageTrackerId == null) {
+                this.itemStorageTrackerId = UUID.randomUUID();
+            }
+
+            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) world).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+        }
+
         return itemStorageTracker;
     }
 
     @Override
     public IStorageTracker<FluidStack> getFluidStorageTracker() {
+        if (fluidStorageTracker == null) {
+            if (fluidStorageTrackerId == null) {
+                this.fluidStorageTrackerId = UUID.randomUUID();
+            }
+
+            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) world).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+        }
+
         return fluidStorageTracker;
     }
 
@@ -460,12 +505,20 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
         craftingManager.readFromNbt(tag);
 
-        if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) {
-            itemStorageTracker.readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        if (tag.contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
+            this.itemStorageTrackerId = tag.getUniqueId(NBT_ITEM_STORAGE_TRACKER_ID);
+        } else {
+            if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) { //TODO: remove next version
+                getItemStorageTracker().readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            }
         }
 
-        if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) {
-            fluidStorageTracker.readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        if (tag.contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
+            this.fluidStorageTrackerId = tag.getUniqueId(NBT_FLUID_STORAGE_TRACKER_ID);
+        } else {
+            if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
+                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            }
         }
 
         return this;
@@ -478,11 +531,20 @@ public class Network implements INetwork, IRedstoneConfigurable {
         redstoneMode.write(tag);
 
         craftingManager.writeToNbt(tag);
+        if (itemStorageTrackerId != null) {
+            tag.putUniqueId(NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
+        }
 
-        tag.put(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNbt());
-        tag.put(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
+        if (fluidStorageTrackerId != null) {
+            tag.putUniqueId(NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
+        }
 
         return tag;
+    }
+
+    @Override
+    public long[] getTickTimes() {
+        return tickTimes;
     }
 
     @Override
@@ -495,7 +557,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     public ControllerBlock.EnergyType getEnergyType() {
-        if (!redstoneMode.isEnabled(world, pos)) {
+        if (!redstoneMode.isEnabled(redstonePowered)) {
             return ControllerBlock.EnergyType.OFF;
         }
 
@@ -529,16 +591,16 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     private void updateEnergyUsage() {
-        if (!redstoneMode.isEnabled(world, pos)) {
+        if (!redstoneMode.isEnabled(redstonePowered)) {
             this.lastEnergyUsage = 0;
             return;
         }
 
         int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
-        for (INetworkNode node : nodeGraph.all()) {
-            if (node.isActive()) {
-                usage += node.getEnergyUsage();
+        for (INetworkNodeGraphEntry entry : nodeGraph.all()) {
+            if (entry.getNode().isActive()) {
+                usage += entry.getNode().getEnergyUsage();
             }
         }
 

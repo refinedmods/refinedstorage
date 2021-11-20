@@ -49,11 +49,15 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
+    private static final ITextComponent ALTERNATIVES_TEXT = new TranslationTextComponent("gui.refinedstorage.alternatives");
+
+    private final List<SideButton> sideButtons = new ArrayList<>();
+
     private final Logger logger = LogManager.getLogger(getClass());
 
     private int sideButtonY;
 
-    public BaseScreen(T container, int xSize, int ySize, PlayerInventory inventory, ITextComponent title) {
+    protected BaseScreen(T container, int xSize, int ySize, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
 
         this.xSize = xSize;
@@ -93,6 +97,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
 
         sideButtonY = 6;
+        sideButtons.clear();
 
         onPostInit(guiLeft, guiTop);
 
@@ -121,11 +126,11 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        func_230459_a_(matrixStack, mouseX, mouseY);
+        renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
-    @Override // drawGuiContainerBackgroundLayer
-    protected void func_230450_a_(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         renderBackground(matrixStack, guiLeft, guiTop, mouseX, mouseY);
@@ -149,8 +154,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    @Override // drawGuiContainerForegroundLayer
-    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
+    @Override
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX -= guiLeft;
@@ -187,7 +192,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     minecraft.displayGuiScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
-                        new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                        ALTERNATIVES_TEXT,
                         slot.getStack(),
                         slot.getSlotIndex()
                     ));
@@ -201,7 +206,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         ((FilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             parent,
                             minecraft.player,
-                            new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                            ALTERNATIVES_TEXT,
                             slot.getStack(),
                             slot.getSlotIndex()
                         )) : null
@@ -216,7 +221,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     minecraft.displayGuiScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
-                        new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                        ALTERNATIVES_TEXT,
                         stack,
                         slot.getSlotIndex()
                     ));
@@ -230,7 +235,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         ((FluidFilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             this,
                             minecraft.player,
-                            new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                            ALTERNATIVES_TEXT,
                             stack,
                             slot.getSlotIndex()
                         )) : null
@@ -264,16 +269,21 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void addSideButton(SideButton button) {
-        button.x = guiLeft + -SideButton.WIDTH - 2;
+        button.x = guiLeft - button.getWidth() - 2;
         button.y = guiTop + sideButtonY;
 
-        sideButtonY += SideButton.HEIGHT + 2;
+        sideButtonY += button.getHeight() + 2;
 
+        sideButtons.add(button);
         this.addButton(button);
     }
 
+    public List<SideButton> getSideButtons() {
+        return sideButtons;
+    }
+
     public void bindTexture(String namespace, String filenameInTexturesFolder) {
-        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, (newId) -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
+        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
     }
 
     public void renderItem(MatrixStack matrixStack, int x, int y, ItemStack stack) {
@@ -298,23 +308,23 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                 renderQuantity(matrixStack, x, y, text, textColor);
             }
         } catch (Throwable t) {
-            logger.warn("Couldn't render stack: " + stack.getItem().toString(), t);
+            logger.warn("Couldn't render stack: {}", stack.getItem().getRegistryName());
         }
     }
 
     public void renderQuantity(MatrixStack matrixStack, int x, int y, String qty, int color) {
         boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(x, y, Z_LEVEL_QTY);
+        matrixStack.push();
+        matrixStack.translate(x, y, Z_LEVEL_QTY);
 
         if (!large) {
-            RenderSystem.scalef(0.5f, 0.5f, 1);
+            matrixStack.scale(0.5F, 0.5F, 1);
         }
 
         font.drawStringWithShadow(matrixStack, qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, color);
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     public void renderString(MatrixStack matrixStack, int x, int y, String message) {
@@ -342,7 +352,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public static boolean isKeyDown(KeyBinding keybinding) {
-        return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
+        return !keybinding.isInvalid() && InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
             keybinding.getKeyConflictContext().isActive() &&
             keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }
@@ -356,13 +366,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     public abstract void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY);
 
     public static <T> void executeLater(Class<T> clazz, Consumer<T> callback) {
-        Queue<Consumer> queue = ACTIONS.get(clazz);
-
-        if (queue == null) {
-            ACTIONS.put(clazz, queue = new ArrayDeque<>());
-        }
-
-        queue.add(callback);
+        ACTIONS.computeIfAbsent(clazz, key -> new ArrayDeque<>()).add(callback);
     }
 
     public static void executeLater(Consumer<ContainerScreen> callback) {

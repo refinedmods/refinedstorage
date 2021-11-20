@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.api.network.node;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -90,6 +91,15 @@ public interface INetworkNode {
      * @return the id of this node as specified in {@link INetworkNodeRegistry}
      */
     ResourceLocation getId();
+
+    /**
+     * @param direction the direction
+     * @return whether a network signal can be conducted in the given direction.
+     */
+
+    default boolean canConduct(Direction direction) {
+        return true;
+    }
 
     /**
      * @param owner the owner

@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -61,8 +60,8 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, 1);
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
         int yy = y + 7;
 
@@ -94,7 +93,7 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
             drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", crafting));
         }
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     @Override
@@ -157,5 +156,51 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
     @Override
     public int elementHashCode() {
         return API.instance().getItemStackHashCode(stack);
+    }
+
+    public static class Builder {
+        private final ItemStack stack;
+        private int stored;
+        private int missing;
+        private int processing;
+        private int scheduled;
+        private int crafting;
+
+        public Builder(ItemStack stack) {
+            this.stack = stack;
+        }
+
+        public Builder stored(int stored) {
+            this.stored = stored;
+            return this;
+        }
+
+        public Builder missing(int missing) {
+            this.missing = missing;
+            return this;
+        }
+
+        public Builder processing(int processing) {
+            this.processing = processing;
+            return this;
+        }
+
+        public Builder scheduled(int scheduled) {
+            this.scheduled = scheduled;
+            return this;
+        }
+
+        public Builder crafting(int crafting) {
+            this.crafting = crafting;
+            return this;
+        }
+
+        public ItemCraftingMonitorElement build() {
+            return new ItemCraftingMonitorElement(stack, stored, missing, processing, scheduled, crafting);
+        }
+
+        public static Builder forStack(ItemStack stack) {
+            return new Builder(stack);
+        }
     }
 }

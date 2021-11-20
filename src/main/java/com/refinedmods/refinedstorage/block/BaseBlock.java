@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BaseBlock extends Block {
-    public BaseBlock(Properties properties) {
+    protected BaseBlock(Properties properties) {
         super(properties);
     }
 
@@ -31,6 +31,7 @@ public abstract class BaseBlock extends Block {
     }
 
     protected void onDirectionChanged(World world, BlockPos pos, Direction newDirection) {
+        // NO OP
     }
 
     @Override
@@ -38,6 +39,10 @@ public abstract class BaseBlock extends Block {
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         super.onReplaced(state, world, pos, newState, isMoving);
 
+        checkIfDirectionHasChanged(state, world, pos, newState);
+    }
+
+    protected void checkIfDirectionHasChanged(BlockState state, World world, BlockPos pos, BlockState newState) {
         if (getDirection() != BlockDirection.NONE &&
             state.getBlock() == newState.getBlock() &&
             state.get(getDirection().getProperty()) != newState.get(getDirection().getProperty())) {

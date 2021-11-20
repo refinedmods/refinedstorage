@@ -57,6 +57,23 @@ public interface IStackList<T> {
     }
 
     /**
+     * Returns the amount in this list, based on the stack and the flags.
+     *
+     * @param stack the stack
+     * @param flags the flags
+     * @return the count, 0 if not found
+     */
+    int getCount(@Nonnull T stack, int flags);
+
+    /**
+     * @param stack the stack
+     * @return the count, 0 if not found
+     */
+    default int getCount(@Nonnull T stack) {
+        return getCount(stack, IComparer.COMPARE_NBT);
+    }
+
+    /**
      * Returns a stack.
      *
      * @param stack the stack to search for
@@ -102,8 +119,19 @@ public interface IStackList<T> {
     Collection<StackListEntry<T>> getStacks();
 
     /**
+     * @return a collection of stacks matching the given type (ignoring NBT)
+     */
+    @Nonnull
+    Collection<StackListEntry<T>> getStacks(@Nonnull T stack);
+
+    /**
      * @return a new copy of this list, with the stacks in it copied as well
      */
     @Nonnull
     IStackList<T> copy();
+
+    /**
+     * @return the amount of elements in this list
+     */
+    int size();
 }

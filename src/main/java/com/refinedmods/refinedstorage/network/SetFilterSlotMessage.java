@@ -1,17 +1,20 @@
 package com.refinedmods.refinedstorage.network;
 
-import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.api.network.grid.IGrid;
+import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
-import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.items.IItemHandler;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class SetFilterSlotMessage {
@@ -40,34 +43,39 @@ public class SetFilterSlotMessage {
                 ctx.get().enqueueWork(() -> {
                     Container container = player.openContainer;
 
-                    if (container != null) {
-                        if (message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
-                            Slot slot = container.getSlot(message.containerSlot);
-
-                            if (slot instanceof FilterSlot || slot instanceof LegacyFilterSlot) {
-                                // Avoid resetting allowed tag list in the pattern grid.
-                                if (API.instance().getComparer().isEqualNoQuantity(slot.getStack(), message.stack)) {
-                                    slot.getStack().setCount(message.stack.getCount());
-
-                                    if (slot instanceof FilterSlot) {
-                                        IItemHandler itemHandler = ((FilterSlot) slot).getItemHandler();
-
-                                        if (itemHandler instanceof BaseItemHandler) {
-                                            ((BaseItemHandler) itemHandler).onChanged(slot.getSlotIndex());
-                                        }
-                                    } else {
-                                        slot.inventory.markDirty();
-                                    }
-                                } else {
-                                    slot.putStack(message.stack);
-                                }
-                            }
-                        }
+                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
+                        handle(message, container);
                     }
                 });
             }
         }
 
         ctx.get().setPacketHandled(true);
+    }
+
+    private static void handle(SetFilterSlotMessage message, Container container) {
+        Slot slot = container.getSlot(message.containerSlot);
+
+        if (slot instanceof FilterSlot || slot instanceof LegacyFilterSlot) {
+            Runnable postAction = () -> {
+            };
+
+            // Prevent the grid crafting matrix inventory listener from resetting the list.
+            if (container instanceof GridContainer) {
+                IGrid grid = ((GridContainer) container).getGrid();
+                //exclude output slots
+                if (grid instanceof GridNetworkNode && slot.getSlotIndex() < ((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().size()) {
+                    Set<ResourceLocation> list = new HashSet<>(((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().get(slot.getSlotIndex()));
+
+                    postAction = () -> {
+                        ((GridNetworkNode) grid).getAllowedTagList().setAllowedItemTags(slot.getSlotIndex(), list);
+                        ((GridNetworkNode) grid).markDirty();
+                    };
+                }
+            }
+
+            slot.putStack(message.stack);
+            postAction.run();
+        }
     }
 }

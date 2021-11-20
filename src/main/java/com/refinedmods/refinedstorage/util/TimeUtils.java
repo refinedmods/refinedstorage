@@ -10,6 +10,9 @@ public final class TimeUtils {
     private static final long WEEK = DAY * 7;
     private static final long YEAR = DAY * 365;
 
+    private TimeUtils() {
+    }
+
     public static String getAgo(long ago, String by) {
         long diff = System.currentTimeMillis() - ago;
 

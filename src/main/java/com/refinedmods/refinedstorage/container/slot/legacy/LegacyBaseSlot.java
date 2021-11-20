@@ -3,16 +3,16 @@ package com.refinedmods.refinedstorage.container.slot.legacy;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
 public class LegacyBaseSlot extends Slot {
-    private Supplier<Boolean> enableHandler = () -> true;
+    private BooleanSupplier enableHandler = () -> true;
 
     public LegacyBaseSlot(IInventory inventory, int inventoryIndex, int x, int y) {
         super(inventory, inventoryIndex, x, y);
     }
 
-    public LegacyBaseSlot setEnableHandler(Supplier<Boolean> enableHandler) {
+    public LegacyBaseSlot setEnableHandler(BooleanSupplier enableHandler) {
         this.enableHandler = enableHandler;
 
         return this;
@@ -20,7 +20,6 @@ public class LegacyBaseSlot extends Slot {
 
     @Override
     public boolean isEnabled() {
-        return enableHandler.get();
+        return enableHandler.getAsBoolean();
     }
-
 }

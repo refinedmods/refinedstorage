@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.container.FilterContainer;
-import com.refinedmods.refinedstorage.inventory.fluid.FilterFluidInventory;
-import com.refinedmods.refinedstorage.inventory.item.FilterItemsItemHandler;
+import com.refinedmods.refinedstorage.inventory.fluid.ConfiguredFluidsInFilterItemHandler;
+import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItemHandler;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.RenderUtils;
@@ -42,8 +42,6 @@ public class FilterItem extends Item {
 
     public FilterItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
-
-        this.setRegistryName(RS.ID, "filter");
     }
 
     @Override
@@ -52,7 +50,7 @@ public class FilterItem extends Item {
 
         if (!world.isRemote) {
             if (player.isCrouching()) {
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER.get()));
             }
 
             player.openContainer(new INamedContainerProvider() {
@@ -61,36 +59,28 @@ public class FilterItem extends Item {
                     return new TranslationTextComponent("gui.refinedstorage.filter");
                 }
 
-                @Nullable
                 @Override
                 public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
                     return new FilterContainer(player, inventory.getCurrentItem(), windowId);
                 }
             });
-
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
 
-        return new ActionResult<>(ActionResultType.PASS, stack);
+        return new ActionResult<>(ActionResultType.CONSUME, stack);
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).func_230530_a_(Styles.YELLOW));
+        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
 
         if (isModFilter(stack)) {
-            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").func_230530_a_(Styles.BLUE));
+            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
         }
 
-        FilterItemsItemHandler items = new FilterItemsItemHandler(stack);
-
-        RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
-
-        FilterFluidInventory fluids = new FilterFluidInventory(stack);
-
-        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, fluids.getFilteredFluids());
+        RenderUtils.addCombinedItemsToTooltip(tooltip, false, new ConfiguredItemsInFilterItemHandler(stack).getConfiguredItems());
+        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, new ConfiguredFluidsInFilterItemHandler(stack).getConfiguredFluids());
     }
 
     @Override

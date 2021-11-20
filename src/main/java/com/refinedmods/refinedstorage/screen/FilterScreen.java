@@ -36,13 +36,13 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     public FilterScreen(FilterContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 176, 231, inventory, title);
 
-        this.stack = container.getStack();
+        this.stack = container.getFilterItem();
 
-        this.compare = FilterItem.getCompare(container.getStack());
-        this.mode = FilterItem.getMode(container.getStack());
-        this.modFilter = FilterItem.isModFilter(container.getStack());
-        this.name = FilterItem.getName(container.getStack());
-        this.type = FilterItem.getType(container.getStack());
+        this.compare = FilterItem.getCompare(container.getFilterItem());
+        this.mode = FilterItem.getMode(container.getFilterItem());
+        this.modFilter = FilterItem.isModFilter(container.getFilterItem());
+        this.name = FilterItem.getName(container.getFilterItem());
+        this.type = FilterItem.getType(container.getFilterItem());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
         nameField.setCanLoseFocus(true);
         nameField.setFocused2(false);
         nameField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
-        nameField.setResponder(name -> sendUpdate());
+        nameField.setResponder(content -> sendUpdate());
 
         addButton(nameField);
 
@@ -110,6 +110,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
 
     @Override
     public void tick(int x, int y) {
+        // NO OP
     }
 
     @Override

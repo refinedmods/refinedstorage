@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -16,7 +17,7 @@ public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainer> 
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, DiskManipulatorTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
         addSideButton(new IoModeSideButton(this));
         addSideButton(new TypeSideButton(this, DiskManipulatorTile.TYPE));
         addSideButton(new WhitelistBlacklistSideButton(this, DiskManipulatorTile.WHITELIST_BLACKLIST));
@@ -25,7 +26,7 @@ public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainer> 
 
     @Override
     public void tick(int x, int y) {
-
+        // NO OP
     }
 
     @Override

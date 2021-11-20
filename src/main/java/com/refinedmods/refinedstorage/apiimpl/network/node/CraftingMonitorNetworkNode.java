@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.block.CraftingMonitorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -62,7 +63,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return CraftingMonitorTile.REDSTONE_MODE;
+        return NetworkNodeTile.REDSTONE_MODE;
     }
 
     @Override

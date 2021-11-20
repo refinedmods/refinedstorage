@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.storage.cache;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
+import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.IStorage;
 import com.refinedmods.refinedstorage.api.storage.IStorageProvider;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FluidStorageCache implements IStorageCache<FluidStack> {
-    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE = cause -> network -> network.getFluidStorageCache().invalidate(cause);
+    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE_ACTION = cause -> invalidatedNetwork -> invalidatedNetwork.getFluidStorageCache().invalidate(cause);
 
     private static final Logger LOGGER = LogManager.getLogger(FluidStorageCache.class);
 
@@ -44,7 +45,10 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
 
         storages.clear();
 
-        network.getNodeGraph().all().stream()
+        network.getNodeGraph()
+            .all()
+            .stream()
+            .map(INetworkNodeGraphEntry::getNode)
             .filter(node -> node.isActive() && node instanceof IStorageProvider)
             .forEach(node -> ((IStorageProvider) node).addFluidStorages(storages));
 

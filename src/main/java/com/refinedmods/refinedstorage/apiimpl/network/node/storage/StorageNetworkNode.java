@@ -24,7 +24,7 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.StorageBlockUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +73,23 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         this.type = type;
     }
 
+    public static ResourceLocation getId(ItemStorageType type) {
+        switch (type) {
+            case ONE_K:
+                return ONE_K_STORAGE_BLOCK_ID;
+            case FOUR_K:
+                return FOUR_K_STORAGE_BLOCK_ID;
+            case SIXTEEN_K:
+                return SIXTEEN_K_STORAGE_BLOCK_ID;
+            case SIXTY_FOUR_K:
+                return SIXTY_FOUR_K_STORAGE_BLOCK_ID;
+            case CREATIVE:
+                return CREATIVE_STORAGE_BLOCK_ID;
+            default:
+                throw new IllegalArgumentException("Unknown storage type " + type);
+        }
+    }
+
     @Override
     public int getEnergyUsage() {
         switch (type) {
@@ -96,13 +114,13 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
         LOGGER.debug("Connectivity state of item storage block at {} changed to {} due to {}", pos, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
     }
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
         if (storage == null) {
-            loadStorage();
+            loadStorage(null);
         }
 
         storages.add(storage);
@@ -115,7 +133,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
     @Override
     public ResourceLocation getId() {
-        return StorageBlockUtils.getNetworkNodeId(type);
+        return getId(type);
     }
 
     @Override
@@ -134,15 +152,17 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         if (tag.hasUniqueId(NBT_ID)) {
             storageId = tag.getUniqueId(NBT_ID);
 
-            loadStorage();
+            loadStorage(null);
         }
     }
 
-    public void loadStorage() {
+    public void loadStorage(@Nullable PlayerEntity owner) {
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity()));
+            disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity(), owner);
+
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk);
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 

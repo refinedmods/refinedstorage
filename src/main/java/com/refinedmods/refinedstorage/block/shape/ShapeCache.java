@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class ShapeCache {
+public final class ShapeCache {
     private static final Map<BlockState, VoxelShape> CACHE = new HashMap<>();
+
+    private ShapeCache() {
+    }
 
     public static VoxelShape getOrCreate(BlockState state, Function<BlockState, VoxelShape> shapeFactory) {
         return CACHE.computeIfAbsent(state, shapeFactory);

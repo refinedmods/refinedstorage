@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridGridFactory;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.util.ITooltipFlag;
@@ -32,14 +33,13 @@ public class PortableGridBlockItem extends EnergyBlockItem {
 
     public PortableGridBlockItem(Type type) {
         super(
-            type == Type.CREATIVE ? RSBlocks.CREATIVE_PORTABLE_GRID : RSBlocks.PORTABLE_GRID,
+            type == Type.CREATIVE ? RSBlocks.CREATIVE_PORTABLE_GRID.get() : RSBlocks.PORTABLE_GRID.get(),
             new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1),
             type == Type.CREATIVE,
             () -> RS.SERVER_CONFIG.getPortableGrid().getCapacity()
         );
 
         this.type = type;
-        this.setRegistryName(RS.ID, (type == Type.CREATIVE ? "creative_" : "") + "portable_grid");
     }
 
     public Type getType() {
@@ -51,7 +51,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, player.inventory.currentItem);
+            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, PlayerSlot.getSlotForHand(player, hand));
         }
 
         return ActionResult.resultSuccess(stack);
@@ -61,7 +61,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("block.refinedstorage.portable_grid.tooltip").func_230530_a_(Styles.GRAY));
+        tooltip.add(new TranslationTextComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
     }
 
     @Override
@@ -80,15 +80,14 @@ public class PortableGridBlockItem extends EnergyBlockItem {
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        if (oldStack.getItem() == newStack.getItem()) {
-            if (WirelessGridItem.getSortingDirection(oldStack) == WirelessGridItem.getSortingDirection(newStack) &&
-                WirelessGridItem.getSortingType(oldStack) == WirelessGridItem.getSortingType(newStack) &&
-                WirelessGridItem.getSearchBoxMode(oldStack) == WirelessGridItem.getSearchBoxMode(newStack) &&
-                WirelessGridItem.getTabSelected(oldStack) == WirelessGridItem.getTabSelected(newStack) &&
-                WirelessGridItem.getTabPage(oldStack) == WirelessGridItem.getTabPage(newStack) &&
-                WirelessGridItem.getSize(oldStack) == WirelessGridItem.getSize(newStack)) {
-                return false;
-            }
+        if (oldStack.getItem() == newStack.getItem() &&
+            WirelessGridItem.getSortingDirection(oldStack) == WirelessGridItem.getSortingDirection(newStack) &&
+            WirelessGridItem.getSortingType(oldStack) == WirelessGridItem.getSortingType(newStack) &&
+            WirelessGridItem.getSearchBoxMode(oldStack) == WirelessGridItem.getSearchBoxMode(newStack) &&
+            WirelessGridItem.getTabSelected(oldStack) == WirelessGridItem.getTabSelected(newStack) &&
+            WirelessGridItem.getTabPage(oldStack) == WirelessGridItem.getTabPage(newStack) &&
+            WirelessGridItem.getSize(oldStack) == WirelessGridItem.getSize(newStack)) {
+            return false;
         }
 
         return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);

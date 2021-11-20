@@ -13,16 +13,18 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.CrafterManagerSea
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.GridSizeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
 
-// TODO @MouseTweaksDisableWheelTweak
+@MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
     private final CrafterManagerNetworkNode crafterManager;
 
@@ -42,9 +44,9 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, CrafterManagerTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
         addSideButton(new CrafterManagerSearchBoxModeSideButton(this));
-        addSideButton(new GridSizeSideButton(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
+        addSideButton(new GridSizeSideButton(this, crafterManager::getSize, size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
         this.scrollbar.addListener((oldOffset, newOffset) -> container.initSlots(null));
@@ -89,7 +91,16 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            blit(matrixStack, x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), xSize, 18);
+            int yTextureStart = getTopHeight();
+            if (i > 0) {
+                if (i == rows - 1) {
+                    yTextureStart += 18 * 2;
+                } else {
+                    yTextureStart += 18;
+                }
+            }
+
+            blit(matrixStack, x, yy, 0, yTextureStart, xSize, 18);
         }
 
         yy += 18;
@@ -142,12 +153,12 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     }
 
     @Override
-    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-        if (searchField.charTyped(p_charTyped_1_, p_charTyped_2_)) {
+    public boolean charTyped(char unknown1, int unknown2) {
+        if (searchField.charTyped(unknown1, unknown2)) {
             return true;
         }
 
-        return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+        return super.charTyped(unknown1, unknown2);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
@@ -10,9 +12,11 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.NonNullList;
@@ -21,8 +25,8 @@ import net.minecraftforge.fml.hooks.BasicEventHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
     @Override
@@ -54,13 +58,14 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     matrix.setInventorySlotContents(i, remainder.get(i).copy());
                 }
             } else if (!slot.isEmpty()) { // We don't have a remainder, but the slot is not empty.
-                if (slot.getCount() == 1 && network != null) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
+                if (slot.getCount() == 1 && network != null && grid.isGridActive()) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
                     ItemStack refill;
                     if (availableItems == null) { // for regular crafting
                         refill = network.extractItem(slot, 1, Action.PERFORM);
                     } else { // for shift crafting
                         if (availableItems.get(slot) != null) {
                             refill = availableItems.remove(slot, 1).getStack().copy();
+                            refill.setCount(1);
                             usedItems.add(refill);
                         } else {
                             refill = ItemStack.EMPTY;
@@ -91,13 +96,13 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int maxCrafted = crafted.getMaxStackSize();
 
         int amountCrafted = 0;
-        boolean useNetwork = network != null;
+        boolean useNetwork = network != null && grid.isGridActive();
 
-        IStackList<ItemStack> availableItems = null;
+        IStackList<ItemStack> availableItems = API.instance().createItemStackList();
         if (useNetwork) {
             // We need a modifiable list of the items in storage that are relevant for this craft.
             // For performance reason we extract these into an extra list
-            availableItems = createFilteredItemList(network, matrix);
+            filterDuplicateStacks(network, matrix, availableItems);
         }
 
         //A second list to remember which items have been extracted
@@ -140,8 +145,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         ForgeHooks.setCraftingPlayer(null);
     }
 
-    private IStackList<ItemStack> createFilteredItemList(INetwork network, CraftingInventory matrix) {
-        IStackList<ItemStack> availableItems = API.instance().createItemStackList();
+    private void filterDuplicateStacks(INetwork network, CraftingInventory matrix, IStackList<ItemStack> availableItems) {
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack stack = network.getItemStorageCache().getList().get(matrix.getStackInSlot(i));
 
@@ -150,7 +154,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 availableItems.add(stack);
             }
         }
-        return availableItems;
     }
 
     @Override
@@ -169,7 +172,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
                 if (grid.getGridType() == GridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
-                    if (network != null) {
+                    if (network != null && grid.isGridActive()) {
                         if (!network.insertItem(slot, slot.getCount(), Action.SIMULATE).isEmpty()) {
                             return;
                         } else {
@@ -189,17 +192,24 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             }
         }
 
+        AtomicReference<Map<Item, ItemStack>> playerItems = new AtomicReference<>();
         // Now let's fill the matrix
         for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
             if (recipe[i] != null) {
                 ItemStack[] possibilities = recipe[i];
+
+                if (network != null && grid.isGridActive() && network.getItemStorageCache() != null) {
+
+                    // sort by the number of items in storage, craftables and inventory
+                    Arrays.sort(possibilities, compareByItemStackCounts(player, network, playerItems));
+                }
 
                 // If we are a crafting grid
                 if (grid.getGridType() == GridType.CRAFTING) {
                     boolean found = false;
 
                     // If we are connected, first try to get the possibilities from the network
-                    if (network != null) {
+                    if (network != null && grid.isGridActive()) {
                         for (ItemStack possibility : possibilities) {
                             ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT, Action.PERFORM);
 
@@ -247,4 +257,51 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             ((GridNetworkNode) grid).markDirty();
         }
     }
+
+    private Comparator<ItemStack> compareByItemStackCounts(PlayerEntity player, INetwork network, AtomicReference<Map<Item, ItemStack>> playerItems) {
+        return Comparator.comparingInt((ItemStack itemStack) -> {
+
+            ItemStack stack = network.getItemStorageCache().getList().get(itemStack);
+            if (stack != null) {
+                return stack.getCount();
+            }
+
+            if (network.getCraftingManager().getPattern(itemStack) != null) {
+                return 1;
+            }
+
+            if (playerItems.get() == null) {
+                playerItems.set(makePlayerInventoryMap(player, network));
+            }
+
+            ItemStack onPlayer = playerItems.get().get(itemStack.getItem());
+            if (onPlayer != null) {
+                return onPlayer.getCount();
+            }
+            return 0;
+        }).reversed();
+    }
+
+    private Map<Item, ItemStack> makePlayerInventoryMap(PlayerEntity player, INetwork network) {
+        Map<Item, ItemStack> playerItems = new HashMap<>();
+        for (int j = 0; j < player.inventory.getSizeInventory(); j++) {
+            ItemStack inventoryStack = player.inventory.getStackInSlot(j);
+
+            if (inventoryStack.getItem() instanceof ICraftingPatternProvider) {
+                ICraftingPattern pattern = PatternItem.fromCache(network.getWorld(), inventoryStack);
+                if (pattern.isValid()) {
+                    for (ItemStack stack : pattern.getOutputs()) {
+                        if (!stack.isEmpty()) {
+                            playerItems.put(stack.getItem(), stack);
+                        }
+                    }
+                }
+            } else {
+                playerItems.put(inventoryStack.getItem(), inventoryStack);
+            }
+        }
+
+        return playerItems;
+    }
+
 }

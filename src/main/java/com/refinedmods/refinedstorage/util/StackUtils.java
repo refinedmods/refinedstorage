@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
+import com.refinedmods.refinedstorage.api.storage.StorageType;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
@@ -40,8 +41,12 @@ public final class StackUtils {
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
+    private static final String NBT_FORGE_CAPS = "ForgeCaps"; // @Volatile
 
     private static final Logger LOGGER = LogManager.getLogger(StackUtils.class);
+
+    private StackUtils() {
+    }
 
     // @Volatile: from PacketBuffer#writeItemStack, with some tweaks to allow int stack counts
     public static void writeItemStack(PacketBuffer buf, @Nonnull ItemStack stack) {
@@ -169,15 +174,12 @@ public final class StackUtils {
             IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(diskStack);
 
             if (disk != null) {
-                switch (((IStorageDiskProvider) diskStack.getItem()).getType()) {
-                    case ITEM: {
-                        itemDisks[slot] = itemDiskWrapper.apply(disk);
-                        break;
-                    }
-                    case FLUID: {
-                        fluidDisks[slot] = fluidDiskWrapper.apply(disk);
-                        break;
-                    }
+                StorageType type = ((IStorageDiskProvider) diskStack.getItem()).getType();
+
+                if (type == StorageType.ITEM) {
+                    itemDisks[slot] = itemDiskWrapper.apply(disk);
+                } else if (type == StorageType.FLUID) {
+                    fluidDisks[slot] = fluidDiskWrapper.apply(disk);
                 }
             } else {
                 itemDisks[slot] = null;
@@ -316,13 +318,12 @@ public final class StackUtils {
             itemTag.put(NBT_ITEM_NBT, stack.getTag());
         }
 
+        // @Volatile
         stack.write(dummy);
-
-        if (dummy.contains("ForgeCaps")) {
-            itemTag.put(NBT_ITEM_CAPS, dummy.get("ForgeCaps"));
+        if (dummy.contains(NBT_FORGE_CAPS)) {
+            itemTag.put(NBT_ITEM_CAPS, dummy.get(NBT_FORGE_CAPS));
         }
-
-        dummy.remove("ForgeCaps");
+        dummy.remove(NBT_FORGE_CAPS);
 
         return itemTag;
     }
@@ -334,7 +335,7 @@ public final class StackUtils {
             item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString(NBT_ITEM_ID)));
 
             if (item == null) {
-                LOGGER.warn("Could not deserialize item from string ID, it no longer exists: " + tag.getString(NBT_ITEM_ID));
+                LOGGER.warn("Could not deserialize item from string ID {}, it no longer exists", tag.getString(NBT_ITEM_ID));
             }
         } else {
             throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_ID + " tag was found!");

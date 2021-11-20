@@ -35,8 +35,12 @@ public class CrafterLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType func_230425_b_() {
-        return RSLootFunctions.CRAFTER;
+    public LootFunctionType getFunctionType() {
+        return RSLootFunctions.getCrafter();
+    }
+
+    public static LootFunction.Builder<?> builder() {
+        return builder(CrafterLootFunction::new);
     }
 
     public static class Serializer extends LootFunction.Serializer<CrafterLootFunction> {

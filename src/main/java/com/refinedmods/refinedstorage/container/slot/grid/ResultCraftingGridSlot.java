@@ -4,6 +4,8 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.hooks.BasicEventHooks;
 
 import javax.annotation.Nonnull;
 
@@ -21,10 +23,14 @@ public class ResultCraftingGridSlot extends CraftingResultSlot {
     @Nonnull
     public ItemStack onTake(PlayerEntity player, @Nonnull ItemStack stack) {
         onCrafting(stack);
+        ForgeHooks.setCraftingPlayer(player);
 
         if (!player.getEntityWorld().isRemote) {
             grid.onCrafted(player, null, null);
         }
+
+        BasicEventHooks.firePlayerCraftingEvent(player, stack.copy(), grid.getCraftingMatrix());
+        ForgeHooks.setCraftingPlayer(null);
 
         return ItemStack.EMPTY;
     }

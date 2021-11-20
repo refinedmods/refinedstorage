@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ImporterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
+import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.tile.ImporterTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
@@ -60,8 +60,6 @@ public class ImporterBlock extends CableBlock {
 
     public ImporterBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "importer");
     }
 
     @Override
@@ -71,13 +69,13 @@ public class ImporterBlock extends CableBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        return ShapeCache.getOrCreate(state, s -> {
+        return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, s -> {
             VoxelShape shape = getCableShape(s);
 
             shape = VoxelShapes.or(shape, getLineShape(s));
 
             return shape;
-        });
+        }), world, pos);
     }
 
     private VoxelShape getLineShape(BlockState state) {
@@ -120,7 +118,7 @@ public class ImporterBlock extends CableBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getHitVec())) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<ImporterTile>(
                     new TranslationTextComponent("gui.refinedstorage.importer"),

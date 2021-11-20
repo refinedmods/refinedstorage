@@ -1,8 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
@@ -43,7 +45,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ConstructorNetworkNode extends NetworkNode implements IComparable, IType {
+public class ConstructorNetworkNode extends NetworkNode implements IComparable, IType, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "constructor");
 
     private static final String NBT_COMPARE = "Compare";
@@ -64,8 +66,11 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     private int type = IType.ITEMS;
     private boolean drop = false;
 
+    private final CoverManager coverManager;
+
     public ConstructorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
+        this.coverManager = new CoverManager(this);
     }
 
     @Override
@@ -77,7 +82,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
+        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0 && world.isBlockPresent(pos)) {
             if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
                 ItemStack stack = itemFilters.getStackInSlot(0);
 
@@ -101,7 +106,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                 network.getCraftingManager().request(this, stack, FluidAttributes.BUCKET_VOLUME);
             }
-        } else {
+        } else if (!world.getBlockState(front).getFluidState().isSource()) {
             FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
         }
     }
@@ -118,7 +123,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             );
 
             ActionResultType result = ForgeHooks.onPlaceItemIntoWorld(ctx);
-            if (result == ActionResultType.SUCCESS) {
+            if (result.isSuccessOrConsume()) {
                 network.extractItem(stack, 1, Action.PERFORM);
             }
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
@@ -129,7 +134,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private void extractAndDropItem(ItemStack stack) {
-        ItemStack took = network.extractItem(stack, upgrades.getStackInteractCount(), Action.PERFORM);
+        ItemStack took = network.extractItem(stack, upgrades.getStackInteractCount(), compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
             DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
@@ -139,24 +144,21 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private void extractAndSpawnFireworks(ItemStack stack) {
-        ItemStack took = network.extractItem(stack, 1, Action.PERFORM);
+        ItemStack took = network.extractItem(stack, 1, compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
             world.addEntity(new FireworkRocketEntity(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
         }
     }
 
-    // @Volatile: From BlockDispenser#getDispensePosition
     private double getDispensePositionX() {
         return (double) pos.getX() + 0.5D + 0.8D * (double) getDirection().getXOffset();
     }
 
-    // @Volatile: From BlockDispenser#getDispensePosition
     private double getDispensePositionY() {
         return (double) pos.getY() + (getDirection() == Direction.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getYOffset();
     }
 
-    // @Volatile: From BlockDispenser#getDispensePosition
     private double getDispensePositionZ() {
         return (double) pos.getZ() + 0.5D + 0.8D * (double) getDirection().getZOffset();
     }
@@ -177,6 +179,10 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     public void read(CompoundNBT tag) {
         super.read(tag);
 
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+            this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
+        }
+
         StackUtils.readItems(upgrades, 1, tag);
     }
 
@@ -188,6 +194,8 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
+
+        tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
 
         StackUtils.writeItems(upgrades, 1, tag);
 
@@ -246,7 +254,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return getUpgrades();
     }
 
     @Override
@@ -271,6 +279,11 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         return fluidFilters;
     }
 
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
+    }
+
     private class NetworkFluidHandler implements IFluidHandler {
         private final FluidStack resource;
 
@@ -280,40 +293,40 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
         @Override
         public int getTanks() {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Nonnull
         @Override
         public FluidStack getFluidInTank(int tank) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public int getTankCapacity(int tank) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public int fill(FluidStack resource, FluidAction action) {
-            throw new RuntimeException("Cannot be called");
+            throw new UnsupportedOperationException();
         }
 
         @Nonnull
         @Override
         public FluidStack drain(FluidStack resource, FluidAction action) {
-            return network.extractFluid(resource, resource.getAmount(), action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
+            return network.extractFluid(resource, resource.getAmount(), compare, action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
         }
 
         @Nonnull
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
-            return network.extractFluid(resource, resource.getAmount(), action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
+            return network.extractFluid(resource, resource.getAmount(), compare, action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
         }
     }
 

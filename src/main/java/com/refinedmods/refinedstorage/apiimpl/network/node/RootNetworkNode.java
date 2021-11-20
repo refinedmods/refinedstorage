@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
-import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,7 +34,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void setOwner(@Nullable UUID owner) {
-
+        // NO OP
     }
 
     @Nullable
@@ -62,10 +61,12 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void onConnected(INetwork network) {
+        // NO OP
     }
 
     @Override
     public void onDisconnected(INetwork network) {
+        // NO OP
     }
 
     @Override
@@ -80,7 +81,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void update() {
-
+        // NO OP
     }
 
     @Override
@@ -100,7 +101,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void markDirty() {
-
+        // NO OP
     }
 
     @Override
@@ -108,15 +109,5 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
         for (Direction facing : Direction.values()) {
             operator.apply(world, pos.offset(facing), facing.getOpposite());
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return API.instance().isNetworkNodeEqual(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return API.instance().getNetworkNodeHashCode(this);
     }
 }

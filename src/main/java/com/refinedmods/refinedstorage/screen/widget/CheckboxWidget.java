@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.function.Consumer;
@@ -48,11 +47,11 @@ public class CheckboxWidget extends CheckboxButton {
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         minecraft.getTextureManager().bindTexture(TEXTURE);
         RenderSystem.enableDepthTest();
-        FontRenderer fontrenderer = minecraft.fontRenderer;
+        FontRenderer fontRenderer = minecraft.fontRenderer;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -66,7 +65,7 @@ public class CheckboxWidget extends CheckboxButton {
 
         blit(matrixStack, this.x, this.y, textureX, textureY, width, height, 32, 32);
 
-        this.renderBg(matrixStack, minecraft, p_230431_2_, p_230431_3_);
+        this.renderBg(matrixStack, minecraft, mouseX, mouseY);
 
         int color = 14737632;
 
@@ -77,9 +76,9 @@ public class CheckboxWidget extends CheckboxButton {
         }
 
         if (shadow) {
-            super.drawString(matrixStack, fontrenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
+            drawString(matrixStack, fontRenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
         } else {
-            fontrenderer.drawString(matrixStack, this.getMessage().getString(), this.x + 13, this.y + (this.height - 8) / 2F, color);
+            fontRenderer.drawString(matrixStack, this.getMessage().getString(), (float) this.x + 13, this.y + (this.height - 8) / 2F, color);
         }
     }
 }

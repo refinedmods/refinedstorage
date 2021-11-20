@@ -5,7 +5,6 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
@@ -21,7 +20,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     protected Button okButton;
     protected Button cancelButton;
 
-    public AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
+    protected AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
         super(container, width, height, playerInventory, title);
 
         this.parent = parent;
@@ -68,7 +67,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
         addButton(amountField);
 
-        setFocused(amountField);
+        setListener(amountField);
 
         int[] increments = getIncrements();
 
@@ -160,7 +159,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
         blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
-        amountField.renderButton(matrixStack, 0, 0, 0);
+        amountField.renderWidget(matrixStack, 0, 0, 0);
     }
 
     @Override
@@ -170,6 +169,17 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
     protected void onOkButtonPressed(boolean shiftDown) {
         // NO OP
+    }
+
+    @Override
+    public boolean mouseScrolled(double x, double y, double delta) {
+        if (delta > 0) {
+            onIncrementButtonClicked(1);
+        } else {
+            onIncrementButtonClicked(-1);
+        }
+
+        return super.mouseScrolled(x, y, delta);
     }
 
     public void close() {

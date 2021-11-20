@@ -6,14 +6,12 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FluidStackList implements IStackList<FluidStack> {
     private final ArrayListMultimap<Fluid, StackListEntry<FluidStack>> stacks = ArrayListMultimap.create();
@@ -83,6 +81,16 @@ public class FluidStackList implements IStackList<FluidStack> {
     }
 
     @Override
+    public int getCount(@Nonnull FluidStack stack, int flags) {
+        FluidStack found = get(stack, flags);
+        if (found == null) {
+            return 0;
+        }
+
+        return found.getAmount();
+    }
+
+    @Override
     @Nullable
     public FluidStack get(@Nonnull FluidStack stack, int flags) {
         for (StackListEntry<FluidStack> entry : stacks.get(stack.getFluid())) {
@@ -135,6 +143,12 @@ public class FluidStackList implements IStackList<FluidStack> {
 
     @Override
     @Nonnull
+    public Collection<StackListEntry<FluidStack>> getStacks(@Nonnull FluidStack stack) {
+        return stacks.get(stack.getFluid());
+    }
+
+    @Override
+    @Nonnull
     public IStackList<FluidStack> copy() {
         FluidStackList list = new FluidStackList();
 
@@ -146,5 +160,10 @@ public class FluidStackList implements IStackList<FluidStack> {
         }
 
         return list;
+    }
+
+    @Override
+    public int size() {
+        return stacks.size();
     }
 }

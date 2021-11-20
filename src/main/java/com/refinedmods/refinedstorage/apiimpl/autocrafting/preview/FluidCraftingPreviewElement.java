@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -15,9 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.Map;
-
-public class FluidCraftingPreviewElement implements ICraftingPreviewElement<FluidStack> {
+public class FluidCraftingPreviewElement implements ICraftingPreviewElement {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
 
     private final FluidStack stack;
@@ -54,8 +51,7 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
         return new FluidCraftingPreviewElement(stack, available, missing, toCraft);
     }
 
-    @Override
-    public FluidStack getElement() {
+    public FluidStack getStack() {
         return stack;
     }
 
@@ -69,45 +65,35 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
         x += 5;
         y += 7;
 
-        drawers.getFluidDrawer().draw(matrixStack, x, y, getElement());
+        drawers.getFluidDrawer().draw(matrixStack, x, y, getStack());
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         y += 2;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, 1);
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1);
 
-        if (getToCraft() > 0) {
-            String format = hasMissing() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, API.instance().getQuantityFormatter().formatInBucketForm(getToCraft())));
+        if (toCraft > 0) {
+            String format = doesDisableTaskStarting() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, API.instance().getQuantityFormatter().formatInBucketForm(toCraft)));
 
             y += 7;
         }
 
-        if (getAvailable() > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(getAvailable())));
+        if (available > 0) {
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(available)));
         }
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     public void addAvailable(int amount) {
         this.available += amount;
     }
 
-    @Override
-    public int getAvailable() {
-        return available;
-    }
-
     public void addToCraft(int amount) {
         this.toCraft += amount;
-    }
-
-    @Override
-    public int getToCraft() {
-        return this.toCraft;
     }
 
     public void setMissing(boolean missing) {
@@ -115,7 +101,7 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
     }
 
     @Override
-    public boolean hasMissing() {
+    public boolean doesDisableTaskStarting() {
         return missing;
     }
 

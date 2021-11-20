@@ -150,8 +150,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
         LOGGER.debug("Connectivity state of disk drive at {} changed to {} due to {}", pos, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
-        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
 
         WorldUtils.updateBlock(world, pos);
     }
@@ -350,6 +350,6 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
     @Override
     public IItemHandler getDrops() {
-        return disks;
+        return getDisks();
     }
 }

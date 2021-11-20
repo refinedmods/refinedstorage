@@ -20,7 +20,7 @@ public class CrafterTile extends NetworkNodeTile<CrafterNetworkNode> {
     public static final TileDataParameter<Integer, CrafterTile> MODE = new TileDataParameter<>(DataSerializers.VARINT, CrafterNetworkNode.CrafterMode.IGNORE.ordinal(), t -> t.getNode().getMode().ordinal(), (t, v) -> t.getNode().setMode(CrafterNetworkNode.CrafterMode.getById(v)));
     private static final TileDataParameter<Boolean, CrafterTile> HAS_ROOT = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().getRootContainerNotSelf().isPresent(), null, (t, v) -> new CrafterTileDataParameterClientListener().onChanged(t, v));
 
-    private final LazyOptional<IItemHandler> patternsCapability = LazyOptional.of(() -> getNode().getPatternItems());
+    private final LazyOptional<IItemHandler> patternsCapability = LazyOptional.of(() -> getNode().getPatternInventory());
 
     public CrafterTile() {
         super(RSTiles.CRAFTER);
@@ -38,10 +38,8 @@ public class CrafterTile extends NetworkNodeTile<CrafterNetworkNode> {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (direction != null && !direction.equals(this.getNode().getDirection())) {
-                return patternsCapability.cast();
-            }
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && direction != null && !direction.equals(this.getNode().getDirection())) {
+            return patternsCapability.cast();
         }
 
         return super.getCapability(cap, direction);

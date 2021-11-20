@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainers;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterManagerNetworkNode;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
@@ -74,7 +74,7 @@ public class CrafterManagerContainer extends BaseContainer {
         int y = 19 + 18 - screenInfoProvider.getCurrentOffset() * 18;
         int x = 8;
 
-        List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(null, screenInfoProvider.getSearchFieldText(), Collections.emptyList());
+        Predicate<IGridStack> filters = GridFilterParser.getFilters(null, screenInfoProvider.getSearchFieldText(), Collections.emptyList());
 
         for (Map.Entry<String, Integer> category : containerData.entrySet()) {
             IItemHandlerModifiable dummy;
@@ -82,7 +82,7 @@ public class CrafterManagerContainer extends BaseContainer {
             if (data == null) { // We're only resizing, get the previous inventory...
                 dummy = dummyInventories.get(category.getKey());
             } else {
-                dummyInventories.put(category.getKey(), dummy = new BaseItemHandler(category.getValue()) {
+                dummy = new BaseItemHandler(category.getValue()) {
                     @Override
                     public int getSlotLimit(int slot) {
                         return 1;
@@ -97,7 +97,9 @@ public class CrafterManagerContainer extends BaseContainer {
 
                         return stack;
                     }
-                });
+                };
+
+                dummyInventories.put(category.getKey(), dummy);
             }
 
             boolean foundItemsInCategory = false;
@@ -114,15 +116,15 @@ public class CrafterManagerContainer extends BaseContainer {
                     if (stack.isEmpty()) {
                         visible = false;
                     } else {
-                        CraftingPattern pattern = PatternItem.fromCache(crafterManager.getWorld(), stack);
+                        ICraftingPattern pattern = PatternItem.fromCache(crafterManager.getWorld(), stack);
 
                         visible = false;
 
-                        for (ItemStack output : pattern.getOutputs()) {
-                            ItemGridStack outputConverted = new ItemGridStack(output);
+                        if (pattern.isValid()) {
+                            for (ItemStack output : pattern.getOutputs()) {
+                                ItemGridStack outputConverted = new ItemGridStack(output);
 
-                            for (Predicate<IGridStack> filter : filters) {
-                                if (filter.test(outputConverted)) {
+                                if (filters.test(outputConverted)) {
                                     visible = true;
                                     break;
                                 }

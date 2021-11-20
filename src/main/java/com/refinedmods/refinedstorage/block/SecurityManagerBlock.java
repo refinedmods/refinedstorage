@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.SecurityManagerContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -22,11 +22,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class SecurityManagerBlock extends NetworkNodeBlock {
+public class SecurityManagerBlock extends ColoredNetworkBlock {
     public SecurityManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "security_manager");
     }
 
     @Override
@@ -36,7 +34,12 @@ public class SecurityManagerBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.SECURITY_MANAGER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+        if (result != ActionResultType.PASS) {
+            return result;
+        }
+
         if (!world.isRemote) {
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
@@ -51,7 +54,7 @@ public class SecurityManagerBlock extends NetworkNodeBlock {
             if (player.getGameProfile().getId().equals(((SecurityManagerTile) world.getTileEntity(pos)).getNode().getOwner())) {
                 action.run();
             } else {
-                return NetworkUtils.attempt(world, pos, hit.getFace(), player, action, Permission.MODIFY, Permission.SECURITY);
+                return NetworkUtils.attempt(world, pos, player, action, Permission.MODIFY, Permission.SECURITY);
             }
         }
 

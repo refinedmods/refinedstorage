@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
@@ -13,7 +14,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,7 +24,9 @@ import java.util.*;
 public class CraftingPatternFactory {
     public static final CraftingPatternFactory INSTANCE = new CraftingPatternFactory();
 
-    public CraftingPattern create(World world, ICraftingPatternContainer container, ItemStack stack) {
+    public ICraftingPattern create(World world, ICraftingPatternContainer container, ItemStack stack) {
+        CraftingPatternContext context = new CraftingPatternContext(container, stack);
+
         boolean processing = PatternItem.isProcessing(stack);
         boolean exact = PatternItem.isExact(stack);
         AllowedTagList allowedTagList = PatternItem.getAllowedTags(stack);
@@ -35,8 +37,6 @@ public class CraftingPatternFactory {
         List<NonNullList<FluidStack>> fluidInputs = new ArrayList<>();
         NonNullList<FluidStack> fluidOutputs = NonNullList.create();
         ICraftingRecipe recipe = null;
-        boolean valid = true;
-        ITextComponent errorMessage = null;
 
         try {
             if (processing) {
@@ -77,11 +77,18 @@ public class CraftingPatternFactory {
                 }
             }
         } catch (CraftingPatternFactoryException e) {
-            valid = false;
-            errorMessage = e.getErrorMessage();
+            return new InvalidCraftingPattern(context, e.getErrorMessage());
         }
 
-        return new CraftingPattern(container, stack, processing, exact, errorMessage, valid, recipe, inputs, outputs, byproducts, fluidInputs, fluidOutputs, allowedTagList);
+        return new CraftingPattern(
+            context,
+            processing,
+            exact,
+            recipe,
+            new CraftingPatternInputs(inputs, fluidInputs),
+            new CraftingPatternOutputs(outputs, byproducts, fluidOutputs),
+            allowedTagList
+        );
     }
 
     private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, @Nullable AllowedTagList allowedTagList) throws CraftingPatternFactoryException {

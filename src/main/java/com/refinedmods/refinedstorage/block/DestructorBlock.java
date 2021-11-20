@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.DestructorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
+import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.tile.DestructorTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
@@ -37,8 +37,6 @@ public class DestructorBlock extends CableBlock {
 
     public DestructorBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "destructor");
     }
 
     @Override
@@ -54,13 +52,13 @@ public class DestructorBlock extends CableBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
-        return ShapeCache.getOrCreate(state, s -> {
+        return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, s -> {
             VoxelShape shape = getCableShape(s);
 
             shape = VoxelShapes.or(shape, getHeadShape(s));
 
             return shape;
-        });
+        }), world, pos);
     }
 
     private VoxelShape getHeadShape(BlockState state) {
@@ -97,7 +95,7 @@ public class DestructorBlock extends CableBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getHitVec())) {
-            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DestructorTile>(
                     new TranslationTextComponent("gui.refinedstorage.destructor"),

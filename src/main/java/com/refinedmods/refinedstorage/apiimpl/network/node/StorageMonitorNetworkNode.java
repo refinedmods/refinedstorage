@@ -71,6 +71,10 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     public void update() {
         super.update();
 
+        if (!canUpdate()) {
+            return;
+        }
+
         int newAmount = getAmount();
 
         if (oldAmount == -1) {
@@ -189,15 +193,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     private void extractItems(PlayerEntity player) {
         ItemStack filter = itemFilter.getStackInSlot(0);
 
-        int toExtract = player.isCrouching() ? 1 : 64;
+        int toExtract = player.isCrouching() ? 1 : filter.getMaxStackSize();
 
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
-            if (!result.isEmpty()) {
-                if (!player.inventory.addItemStackToInventory(result.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), result);
-                }
+            if (!result.isEmpty() && !player.inventory.addItemStackToInventory(result.copy())) {
+                InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), result);
             }
         }
     }

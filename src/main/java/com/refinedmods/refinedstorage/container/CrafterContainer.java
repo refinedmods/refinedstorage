@@ -10,7 +10,7 @@ public class CrafterContainer extends BaseContainer {
         super(RSContainers.CRAFTER, crafter, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
-            addSlot(new SlotItemHandler(crafter.getNode().getPatternItems(), i, 8 + (18 * i), 20));
+            addSlot(new SlotItemHandler(crafter.getNode().getPatternInventory(), i, 8 + (18 * i), 20));
         }
 
         for (int i = 0; i < 4; ++i) {
@@ -20,6 +20,6 @@ public class CrafterContainer extends BaseContainer {
         addPlayerInventory(8, 55);
 
         transferManager.addBiTransfer(player.inventory, crafter.getNode().getUpgrades());
-        transferManager.addBiTransfer(player.inventory, crafter.getNode().getPatternItems());
+        transferManager.addBiTransfer(player.inventory, crafter.getNode().getPatternInventory());
     }
 }

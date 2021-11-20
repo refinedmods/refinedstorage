@@ -6,6 +6,9 @@ import net.minecraft.nbt.CompoundNBT;
 public final class AccessTypeUtils {
     private static final String NBT_ACCESS_TYPE = "AccessType";
 
+    private AccessTypeUtils() {
+    }
+
     public static void writeAccessType(CompoundNBT tag, AccessType type) {
         tag.putInt(NBT_ACCESS_TYPE, type.getId());
     }

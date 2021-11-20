@@ -9,6 +9,9 @@ node {
     stage('Cleanup') {
       sh "./gradlew clean"
     }
+    stage('Test') {
+      sh "./gradlew test"
+    }
     stage('Build') {
       sh "./gradlew build"
     }

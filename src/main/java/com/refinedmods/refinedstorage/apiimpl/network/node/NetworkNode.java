@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
+import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,14 +27,25 @@ import java.util.UUID;
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_VERSION = "Version";
-    private static final int VERSION = 1;
+    private static final int CURRENT_VERSION = 1;
 
     @Nullable
     protected INetwork network;
+    // @Volatile: Mental note. At this moment world instances are retained in Minecraft (since 1.16).
+    // This means that during the entire server lifetime, all worlds are present and will not change their instance.
+    // However, due to the memory footprint of worlds and modded minecraft having the tendency to have lots of worlds,
+    // Forge is planning to unload (aka remove) worlds so their instances will change.
+    // This is problematic as this attribute will target the wrong world in that case.
+    // Idea: possibly change to a getter based on RegistryKey<World>?
+    // Another note: this attribute isn't the *real* problem. Because network nodes are in WorldSavedData in a tick handler,
+    // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
+    // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
+    // having multiple different instances of the same network node.
     protected World world;
     protected BlockPos pos;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    private boolean redstonePowered = false;
     @Nullable
     protected UUID owner;
     protected String version;
@@ -50,7 +62,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
 
-    public NetworkNode(World world, BlockPos pos) {
+    protected NetworkNode(World world, BlockPos pos) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
@@ -72,7 +84,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        // TODO This doesn't work crossdim.
         return new ItemStack(Item.BLOCK_TO_ITEM.get(world.getBlockState(pos).getBlock()), 1);
     }
 
@@ -103,7 +114,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public boolean isActive() {
-        return redstoneMode.isEnabled(world, pos);
+        return redstoneMode.isEnabled(redstonePowered);
     }
 
     protected final boolean canUpdate() {
@@ -122,8 +133,16 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return 4;
     }
 
+    public void setRedstonePowered(boolean redstonePowered) {
+        this.redstonePowered = redstonePowered;
+    }
+
     @Override
     public void update() {
+        if (ticks == 0) {
+            redstonePowered = world.isBlockPowered(pos);
+        }
+
         ++ticks;
 
         boolean canUpdate = canUpdate();
@@ -161,7 +180,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             tag.putUniqueId(NBT_OWNER, owner);
         }
 
-        tag.putInt(NBT_VERSION, VERSION);
+        tag.putInt(NBT_VERSION, CURRENT_VERSION);
 
         writeConfiguration(tag);
 
@@ -206,14 +225,20 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world;
     }
 
-    public boolean canConduct(@Nullable Direction direction) {
+
+    @Override
+    public boolean canConduct(Direction direction) {
         return true;
     }
 
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            if (canConduct(facing)) {
+            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(world.getTileEntity(pos.offset(facing)));
+            if (oppositeNode == null) {
+                continue;
+            }
+            if (canConduct(facing) && oppositeNode.canConduct(facing.getOpposite())) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());
             }
         }
@@ -260,15 +285,5 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nullable
     public UUID getOwner() {
         return owner;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return API.instance().isNetworkNodeEqual(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return API.instance().getNetworkNodeHashCode(this);
     }
 }

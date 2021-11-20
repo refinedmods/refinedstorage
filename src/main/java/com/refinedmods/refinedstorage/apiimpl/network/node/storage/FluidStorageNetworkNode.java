@@ -23,7 +23,7 @@ import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
-import com.refinedmods.refinedstorage.util.FluidStorageBlockUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -36,6 +36,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +73,23 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         this.type = type;
     }
 
+    public static ResourceLocation getId(FluidStorageType type) {
+        switch (type) {
+            case SIXTY_FOUR_K:
+                return SIXTY_FOUR_K_FLUID_STORAGE_BLOCK_ID;
+            case TWO_HUNDRED_FIFTY_SIX_K:
+                return TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK_ID;
+            case THOUSAND_TWENTY_FOUR_K:
+                return THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID;
+            case FOUR_THOUSAND_NINETY_SIX_K:
+                return FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID;
+            case CREATIVE:
+                return CREATIVE_FLUID_STORAGE_BLOCK_ID;
+            default:
+                throw new IllegalArgumentException("Unknown storage type " + type);
+        }
+    }
+
     @Override
     public int getEnergyUsage() {
         switch (type) {
@@ -96,7 +114,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
 
         LOGGER.debug("Connectivity state of fluid storage block at {} changed to {} due to {}", pos, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
     }
 
     @Override
@@ -107,7 +125,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
         if (storage == null) {
-            loadStorage();
+            loadStorage(null);
         }
 
         storages.add(storage);
@@ -115,7 +133,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
 
     @Override
     public ResourceLocation getId() {
-        return FluidStorageBlockUtils.getNetworkNodeId(type);
+        return getId(type);
     }
 
     @Override
@@ -134,15 +152,17 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         if (tag.hasUniqueId(NBT_ID)) {
             storageId = tag.getUniqueId(NBT_ID);
 
-            loadStorage();
+            loadStorage(null);
         }
     }
 
-    public void loadStorage() {
+    public void loadStorage(@Nullable PlayerEntity owner) {
         IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity()));
+            disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity(), owner);
+
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk);
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 

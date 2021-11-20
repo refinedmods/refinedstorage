@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.InterfaceContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -25,8 +24,6 @@ import javax.annotation.Nullable;
 public class InterfaceBlock extends NetworkNodeBlock {
     public InterfaceBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
-
-        this.setRegistryName(RS.ID, "interface");
     }
 
     @Nullable
@@ -39,7 +36,7 @@ public class InterfaceBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
-            return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<InterfaceTile>(
                     new TranslationTextComponent("gui.refinedstorage.interface"),

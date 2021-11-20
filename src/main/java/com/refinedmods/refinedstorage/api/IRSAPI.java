@@ -10,7 +10,6 @@ import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistr
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.refinedmods.refinedstorage.api.storage.StorageType;
@@ -19,15 +18,18 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
+import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTrackerManager;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -138,6 +140,12 @@ public interface IRSAPI {
     IStorageDiskSync getStorageDiskSync();
 
     /**
+     * @return the storage tracker manager
+     */
+    @Nonnull
+    IStorageTrackerManager getStorageTrackerManager(ServerWorld anyWorld);
+
+    /**
      * Adds an external storage provider for the given storage type.
      *
      * @param type     the storage type
@@ -149,39 +157,43 @@ public interface IRSAPI {
      * @param type the type
      * @return a set of external storage providers
      */
-    Set<IExternalStorageProvider> getExternalStorageProviders(StorageType type);
+    <T> Set<IExternalStorageProvider<T>> getExternalStorageProviders(StorageType type);
 
     /**
      * @param world    the world
      * @param capacity the capacity
+     * @param owner    the owner or null if no owner
      * @return a storage disk
      */
     @Nonnull
-    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity);
+    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner);
 
     /**
      * @param world    the world
      * @param capacity the capacity in mB
+     * @param owner    the owner or null if no owner
      * @return a fluid storage disk
      */
     @Nonnull
-    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity);
+    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner);
 
     /**
      * Creates crafting request info for an item.
      *
      * @param stack the stack
+     * @param count the count
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack);
+    ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack, int count);
 
     /**
      * Creates crafting request info for a fluid.
      *
      * @param stack the stack
+     * @param count the count
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack);
+    ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack, int count);
 
     /**
      * Creates crafting request info from NBT.
@@ -212,17 +224,4 @@ public interface IRSAPI {
      * @return a hashcode for the given stack
      */
     int getFluidStackHashCode(FluidStack stack);
-
-    /**
-     * @param node the node
-     * @return the hashcode
-     */
-    int getNetworkNodeHashCode(INetworkNode node);
-
-    /**
-     * @param left  the first network node
-     * @param right the second network node
-     * @return true if the two network nodes are equal, false otherwise
-     */
-    boolean isNetworkNodeEqual(INetworkNode left, Object right);
 }

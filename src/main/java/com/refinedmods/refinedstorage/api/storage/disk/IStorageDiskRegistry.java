@@ -14,7 +14,7 @@ public interface IStorageDiskRegistry {
      * @param id      the id of this factory
      * @param factory the factory
      */
-    void add(ResourceLocation id, IStorageDiskFactory factory);
+    void add(ResourceLocation id, IStorageDiskFactory<?> factory);
 
     /**
      * Gets a factory.

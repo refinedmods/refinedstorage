@@ -2,12 +2,13 @@ package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemProvider;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -30,10 +31,8 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     private static final String NBT_NODE_Z = "NodeZ";
     private static final String NBT_DIMENSION = "Dimension";
 
-    public NetworkItem(Item.Properties item, boolean creative, Supplier<Integer> energyCapacity) {
+    protected NetworkItem(Item.Properties item, boolean creative, Supplier<Integer> energyCapacity) {
         super(item, creative, energyCapacity);
-
-        ItemModelsProperties.func_239418_a_(this, new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -41,7 +40,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), player.inventory.currentItem), err -> player.sendMessage(err, player.getUniqueID()));
+            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUniqueID()));
         }
 
         return ActionResult.resultSuccess(stack);
@@ -81,8 +80,13 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         super.addInformation(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).func_230530_a_(Styles.GRAY));
+            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
         }
+    }
+
+    @Override
+    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        return super.itemInteractionForEntity(stack, playerIn, target, hand);
     }
 
     @Override
@@ -100,7 +104,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             tag.putInt(NBT_NODE_X, network.getPosition().getX());
             tag.putInt(NBT_NODE_Y, network.getPosition().getY());
             tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().func_234923_W_().func_240901_a_().toString());
+            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimensionKey().getLocation().toString());
 
             stack.setTag(tag);
 
@@ -118,7 +122,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
                 return null;
             }
 
-            return RegistryKey.func_240903_a_(Registry.WORLD_KEY, name);
+            return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, name);
         }
 
         return null;
@@ -141,7 +145,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         return false;
     }
 
-    public boolean isValid(ItemStack stack) {
+    public static boolean isValid(ItemStack stack) {
         return stack.hasTag()
             && stack.getTag().contains(NBT_NODE_X)
             && stack.getTag().contains(NBT_NODE_Y)

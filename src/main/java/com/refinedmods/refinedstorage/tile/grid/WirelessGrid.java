@@ -11,6 +11,8 @@ import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
+import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
+import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.network.grid.WirelessGridSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -41,7 +43,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     private final MinecraftServer server;
     private final RegistryKey<World> nodeDimension;
     private final BlockPos nodePos;
-    private final int slotId;
+    private final PlayerSlot slot;
 
     private int viewType;
     private int sortingType;
@@ -62,12 +64,12 @@ public class WirelessGrid implements INetworkAwareGrid {
             StackUtils.writeItems(handler, 0, stack.getTag());
         });
 
-    public WirelessGrid(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
+    public WirelessGrid(ItemStack stack, @Nullable MinecraftServer server, PlayerSlot slot) {
         this.stack = stack;
         this.server = server;
-        this.nodeDimension = WirelessGridItem.getDimension(stack);
-        this.nodePos = new BlockPos(WirelessGridItem.getX(stack), WirelessGridItem.getY(stack), WirelessGridItem.getZ(stack));
-        this.slotId = slotId;
+        this.nodeDimension = NetworkItem.getDimension(stack);
+        this.nodePos = new BlockPos(NetworkItem.getX(stack), NetworkItem.getY(stack), NetworkItem.getZ(stack));
+        this.slot = slot;
 
         this.viewType = WirelessGridItem.getViewType(stack);
         this.sortingType = WirelessGridItem.getSortingType(stack);
@@ -302,7 +304,7 @@ public class WirelessGrid implements INetworkAwareGrid {
 
     @Override
     public int getSlotId() {
-        return slotId;
+        return slot.getSlotIdInPlayerInventory();
     }
 
     @Override

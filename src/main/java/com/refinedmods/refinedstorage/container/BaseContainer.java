@@ -36,7 +36,7 @@ public abstract class BaseContainer extends Container {
     private final List<FluidFilterSlot> fluidSlots = new ArrayList<>();
     private final List<FluidStack> fluids = new ArrayList<>();
 
-    public BaseContainer(@Nullable ContainerType<?> type, @Nullable BaseTile tile, PlayerEntity player, int windowId) {
+    protected BaseContainer(@Nullable ContainerType<?> type, @Nullable BaseTile tile, PlayerEntity player, int windowId) {
         super(type, windowId);
 
         this.tile = tile;
@@ -162,7 +162,6 @@ public abstract class BaseContainer extends Container {
 
     private boolean isTileStillThere() {
         if (tile != null) {
-            // @Volatile: Logic from LockableLootTileEntity#isUsableByPlayer
             return tile.getWorld().getTileEntity(tile.getPos()) == tile;
         }
 

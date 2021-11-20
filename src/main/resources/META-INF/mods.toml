@@ -1,6 +1,7 @@
-modLoader="javafml"
-loaderVersion="[32,)"
-issueTrackerURL="https://github.com/refinedmods/refinedstorage"
+modLoader = "javafml"
+loaderVersion = "[36,)"
+issueTrackerURL = "https://github.com/refinedmods/refinedstorage"
+license="MIT"
 [[mods]]
 modId="refinedstorage"
 version="${version}"
@@ -8,7 +9,7 @@ displayName="Refined Storage"
 updateJSONURL="https://refinedmods.com/refined-storage/update.json"
 displayURL="https://refinedmods.com/refined-storage"
 logoFile="logo.png"
-authors="Refined Mods"
-description='''
+authors = "Refined Mods"
+description = '''
 An elegant solution to your hoarding problem
 '''

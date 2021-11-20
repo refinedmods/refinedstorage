@@ -34,8 +34,8 @@ import java.util.List;
 
 public class GridContainer extends BaseContainer implements ICraftingGridListener {
     private final IGrid grid;
-    private IStorageCache cache;
-    private IStorageCacheListener listener;
+    private IStorageCache storageCache;
+    private IStorageCacheListener storageCacheListener;
     private IScreenInfoProvider screenInfoProvider;
 
     private ResultCraftingGridSlot craftingResultSlot;
@@ -50,6 +50,10 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         this.grid = grid;
 
         grid.addCraftingListener(this);
+    }
+
+    public IScreenInfoProvider getScreenInfoProvider() {
+        return screenInfoProvider;
     }
 
     public void setScreenInfoProvider(IScreenInfoProvider screenInfoProvider) {
@@ -77,11 +81,10 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         transferManager.setNotFoundHandler(slotIndex -> {
             if (!getPlayer().getEntityWorld().isRemote) {
                 Slot slot = inventorySlots.get(slotIndex);
-                if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler) {
-                    if (((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDisk())) {
-                        return ItemStack.EMPTY;
-                    }
+                if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDiskInventory())) {
+                    return ItemStack.EMPTY;
                 }
+
                 if (slot.getHasStack()) {
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());
@@ -100,7 +103,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                             IItemGridHandler itemHandler = grid.getItemHandler();
 
                             if (itemHandler != null) {
-                                slot.putStack(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack));
+                                slot.putStack(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack, false));
                             } else if (slot instanceof CraftingGridSlot && mergeItemStack(stack, 14, 14 + (9 * 4), false)) {
                                 slot.onSlotChanged();
 
@@ -123,9 +126,9 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     private void addPortableGridSlots() {
-        addSlot(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6));
+        addSlot(new SlotItemHandler(((IPortableGrid) grid).getDiskInventory(), 0, 204, 6));
 
-        transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDisk());
+        transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDiskInventory());
     }
 
     private void addFilterSlots() {
@@ -159,7 +162,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
 
-        addSlot(craftingResultSlot = new ResultCraftingGridSlot(getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
+        craftingResultSlot = new ResultCraftingGridSlot(getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22);
+        addSlot(craftingResultSlot);
     }
 
     private void addPatternSlots() {
@@ -223,7 +227,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
 
-        addSlot(patternResultSlot = (new LegacyDisabledSlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern())));
+        patternResultSlot = new LegacyDisabledSlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern());
+        addSlot(patternResultSlot);
     }
 
     private boolean isVisible(int slotNumber) {
@@ -260,18 +265,18 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             // The grid is offline.
             if (grid.getStorageCache() == null) {
                 // The grid just went offline, there is still a listener.
-                if (listener != null) {
+                if (storageCacheListener != null) {
                     // Remove it from the previous cache and clean up.
-                    cache.removeListener(listener);
+                    storageCache.removeListener(storageCacheListener);
 
-                    listener = null;
-                    cache = null;
+                    storageCacheListener = null;
+                    storageCache = null;
                 }
-            } else if (listener == null) { // The grid came online.
-                listener = grid.createListener((ServerPlayerEntity) getPlayer());
-                cache = grid.getStorageCache();
+            } else if (storageCacheListener == null) { // The grid came online.
+                storageCacheListener = grid.createListener((ServerPlayerEntity) getPlayer());
+                storageCache = grid.getStorageCache();
 
-                cache.addListener(listener);
+                storageCache.addListener(storageCacheListener);
             }
         }
 
@@ -285,8 +290,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         if (!player.getEntityWorld().isRemote) {
             grid.onClosed(player);
 
-            if (cache != null && listener != null) {
-                cache.removeListener(listener);
+            if (storageCache != null && storageCacheListener != null) {
+                storageCache.removeListener(storageCacheListener);
             }
         }
 

@@ -23,6 +23,10 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         }
     });
 
+    public static void invalidateCache() {
+        CACHE.invalidateAll();
+    }
+
     private final Set<ResourceLocation> textures;
     private final boolean doCaching;
 
@@ -53,7 +57,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         for (int i = 0; i < quads.size(); ++i) {
             BakedQuad quad = quads.get(i);
 
-            if (textures.contains(quad.func_187508_a().getName())) {
+            if (textures.contains(quad.getSprite().getName())) {
                 quads.set(i, transformQuad(quad));
             }
         }
@@ -63,19 +67,20 @@ public class FullbrightBakedModel extends DelegateBakedModel {
 
     private static BakedQuad transformQuad(BakedQuad quad) {
         int[] vertexData = quad.getVertexData().clone();
+        int step = vertexData.length / 4;
 
         // Set lighting to fullbright on all vertices
         vertexData[6] = 0x00F000F0;
-        vertexData[6 + 8] = 0x00F000F0;
-        vertexData[6 + 8 + 8] = 0x00F000F0;
-        vertexData[6 + 8 + 8 + 8] = 0x00F000F0;
+        vertexData[6 + step] = 0x00F000F0;
+        vertexData[6 + 2 * step] = 0x00F000F0;
+        vertexData[6 + 3 * step] = 0x00F000F0;
 
         return new BakedQuad(
             vertexData,
             quad.getTintIndex(),
             quad.getFace(),
-            quad.func_187508_a(),
-            quad.func_239287_f_() // shouldApplyDiffuseLighting
+            quad.getSprite(),
+            quad.applyDiffuseLighting()
         );
     }
 
@@ -110,11 +115,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
                 return false;
             }
 
-            if (!state.equals(cacheKey.state)) {
-                return false;
-            }
-
-            return true;
+            return state.equals(cacheKey.state);
         }
 
         @Override

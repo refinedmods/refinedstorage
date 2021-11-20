@@ -17,14 +17,14 @@ import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import com.refinedmods.refinedstorage.screen.grid.sorting.*;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
-import com.refinedmods.refinedstorage.screen.grid.view.FluidGridView;
+import com.refinedmods.refinedstorage.screen.grid.view.GridViewImpl;
 import com.refinedmods.refinedstorage.screen.grid.view.IGridView;
-import com.refinedmods.refinedstorage.screen.grid.view.ItemGridView;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
+import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
@@ -41,11 +41,15 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
+    private static String searchQuery = "";
+
     private IGridView view;
 
     private SearchWidget searchField;
@@ -56,7 +60,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     private ScrollbarWidget patternScrollbar;
 
     private final IGrid grid;
-    private final TabListWidget tabs;
+    private final TabListWidget<GridContainer> tabs;
 
     private boolean wasConnected;
     private boolean doSort;
@@ -72,9 +76,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         super(container, 227, 0, inventory, title);
 
         this.grid = grid;
-        this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
+        this.view = new GridViewImpl(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isGridActive();
-        this.tabs = new TabListWidget(this, new ElementDrawers(this, font), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
+        this.tabs = new TabListWidget<>(this, new ElementDrawers<>(this), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabListWidget.ITabListListener() {
             @Override
             public void onSelectionChanged(int tab) {
@@ -110,7 +114,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof GridNetworkNode || grid instanceof PortableGridTile) {
-            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : PortableGridTile.REDSTONE_MODE));
+            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? NetworkNodeTile.REDSTONE_MODE : PortableGridTile.REDSTONE_MODE));
         }
 
         int sx = x + 80 + 1;
@@ -122,8 +126,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 searchField.updateJei();
 
                 getView().sort(); // Use getter since this view can be replaced.
+
+                searchQuery = value;
             });
             searchField.setMode(grid.getSearchBoxMode());
+            searchField.setText(searchQuery);
         } else {
             searchField.x = sx;
             searchField.y = sy;
@@ -138,7 +145,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         addSideButton(new GridSortingDirectionSideButton(this, grid));
         addSideButton(new GridSortingTypeSideButton(this, grid));
         addSideButton(new GridSearchBoxModeSideButton(this));
-        addSideButton(new GridSizeSideButton(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
+        addSideButton(new GridSizeSideButton(this, grid::getSize, grid::onSizeChanged));
 
         if (grid.getGridType() == GridType.PATTERN) {
             patternScrollbar = new ScrollbarWidget(this, 160, getTopHeight() + getVisibleRows() * 18 + 4, 6, 18 * 3 - 2, true);
@@ -346,7 +353,16 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            blit(matrixStack, x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), xSize - 34, 18);
+            int yTextureStart = getTopHeight();
+            if (i > 0) {
+                if (i == rows - 1) {
+                    yTextureStart += 18 * 2;
+                } else {
+                    yTextureStart += 18;
+                }
+            }
+
+            blit(matrixStack, x, yy, 0, yTextureStart, xSize - 34, 18);
         }
 
         yy += 18;
@@ -415,13 +431,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
-                RenderSystem.pushMatrix();
+                matrixStack.push();
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
                 fillGradient(matrixStack, x, y, x + 16, y + 16, color, color);
                 RenderSystem.colorMask(true, true, true, true);
-                RenderSystem.popMatrix();
+                matrixStack.pop();
             }
 
             slot++;
@@ -446,7 +462,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     private void drawGridTooltip(MatrixStack matrixStack, IGridStack gridStack, int mouseX, int mouseY) {
-        List<ITextComponent> textLines = gridStack.getTooltip();
+        List<ITextComponent> textLines = gridStack.getTooltip(true);
         List<String> smallTextLines = Lists.newArrayList();
 
         if (!gridStack.isCraftable()) {
@@ -487,15 +503,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
             return true;
+        } else if (clickedClear) {
+            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+            RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
+
+            return true;
         } else if (grid.isGridActive()) {
-            if (clickedClear) {
-                minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-
-                RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
-
-                return true;
-            }
-
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
@@ -509,12 +523,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             }
 
             if (isOverSlotWithStack()) {
-                boolean isMiddleClickPulling = !held.isEmpty() && clickedButton == 2;
-                boolean isPulling = held.isEmpty() || isMiddleClickPulling;
-
                 IGridStack stack = view.getStacks().get(slotNumber);
 
-                if (isPulling) {
+                if (held.isEmpty()) {
                     if (view.canCraft() && stack.isCraftable()) {
                         minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, stack));
                     } else if (view.canCraft() && !stack.isCraftable() && stack.getOtherId() != null && hasShiftDown() && hasControlDown()) {
@@ -530,10 +541,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
                         if (hasShiftDown()) {
                             flags |= IItemGridHandler.EXTRACT_SHIFT;
-                        }
-
-                        if (clickedButton == 2) {
-                            flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
                         RS.NETWORK_HANDLER.sendToServer(new GridItemPullMessage(stack.getId(), flags));
@@ -574,10 +581,31 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
+        if (hasShiftDown() || hasControlDown()) {
+            if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
+                doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
+            }
+
+            if (grid.getGridType() != GridType.FLUID) {
+                if (isOverInventory(x - guiLeft, y - guiTop) && hoveredSlot != null && hoveredSlot.getHasStack()) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
+                } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : null, hasShiftDown(), delta > 0));
+                }
+            }
+
+            return super.mouseScrolled(x, y, delta);
+        } else {
+            return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+        }
         if (grid.getGridType() == GridType.PATTERN && isOverPatternArea(x - guiLeft, y - guiTop) && patternScrollbar.mouseScrolled(x, y, delta)) {
             return true;
         }
         return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    }
+
+    private boolean isOverInventory(double x, double y) {
+        return RenderUtils.inBounds(8, getYPlayerInventory(), 9 * 18 - 2, 4 * 18 + 2, x, y);
     }
 
     private boolean isOverPatternArea(double x, double y) {
@@ -585,20 +613,24 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
-    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-        if (searchField.charTyped(p_charTyped_1_, p_charTyped_2_)) {
+    public boolean charTyped(char unknown1, int unknown2) {
+        if (searchField.charTyped(unknown1, unknown2)) {
             return true;
         }
 
-        return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+        return super.charTyped(unknown1, unknown2);
     }
 
     @Override
-    public boolean keyReleased(int key, int p_223281_2_, int p_223281_3_) {
-        if (key == GLFW.GLFW_KEY_LEFT_SHIFT || key == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT ||
+            keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT ||
+            keyCode == GLFW.GLFW_KEY_LEFT_CONTROL ||
+            keyCode == GLFW.GLFW_KEY_RIGHT_CONTROL) {
             view.sort();
         }
-        return super.keyReleased(key, p_223281_2_, p_223281_3_);
+
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -608,6 +640,15 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         return super.keyPressed(key, scanCode, modifiers);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+
+        if (!RS.CLIENT_CONFIG.getGrid().getRememberSearchQuery()) {
+            searchQuery = "";
+        }
     }
 
     public SearchWidget getSearchField() {
@@ -675,7 +716,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     public boolean canSort() {
-        return doSort || !hasShiftDown();
+        return doSort || (!hasShiftDown() && !hasControlDown());
     }
 
     public static List<IGridSorter> getSorters() {

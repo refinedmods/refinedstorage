@@ -14,7 +14,7 @@ public class WirelessTransmitterTile extends NetworkNodeTile<WirelessTransmitter
 
     public WirelessTransmitterTile() {
         super(RSTiles.WIRELESS_TRANSMITTER);
-        
+
         dataManager.addWatchedParameter(RANGE);
     }
 

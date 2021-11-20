@@ -15,12 +15,12 @@ public class DestructorPickupSideButton extends SideButton {
 
     @Override
     protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
-        screen.blit(matrixStack, x, y, 64 + (!DestructorTile.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
+        screen.blit(matrixStack, x, y, 64 + (Boolean.TRUE.equals(DestructorTile.PICKUP.getValue()) ? 0 : 16), 0, 16, 16);
     }
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.destructor.pickup") + "\n" + TextFormatting.GRAY + I18n.format(DestructorTile.PICKUP.getValue() ? "gui.yes" : "gui.no");
+        return I18n.format("sidebutton.refinedstorage.destructor.pickup") + "\n" + TextFormatting.GRAY + I18n.format(Boolean.TRUE.equals(DestructorTile.PICKUP.getValue()) ? "gui.yes" : "gui.no");
     }
 
     @Override

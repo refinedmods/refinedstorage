@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class FluidGridStack implements IGridStack {
+    private static final String ERROR_PLACEHOLDER = "<Error>";
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final UUID id;
@@ -79,9 +80,9 @@ public class FluidGridStack implements IGridStack {
             try {
                 cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
-                logger.warn("Could not retrieve fluid name of " + stack.getFluid().getRegistryName().toString(), t);
+                logger.warn("Could not retrieve fluid name of {}", stack.getFluid().getRegistryName());
 
-                cachedName = "<Error>";
+                cachedName = ERROR_PLACEHOLDER;
             }
         }
 
@@ -96,7 +97,7 @@ public class FluidGridStack implements IGridStack {
             if (registryName != null) {
                 cachedModId = registryName.getNamespace();
             } else {
-                cachedModId = "<Error>";
+                cachedModId = ERROR_PLACEHOLDER;
             }
         }
 
@@ -109,7 +110,7 @@ public class FluidGridStack implements IGridStack {
             cachedModName = ItemGridStack.getModNameByModId(getModId());
 
             if (cachedModName == null) {
-                cachedModName = "<Error>";
+                cachedModName = ERROR_PLACEHOLDER;
             }
         }
 
@@ -130,14 +131,21 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public List<ITextComponent> getTooltip() {
-        if (cachedTooltip == null) {
+    public List<ITextComponent> getTooltip(boolean bypassCache) {
+        if (bypassCache || cachedTooltip == null) {
+            List<ITextComponent> tooltip;
             try {
-                cachedTooltip = Arrays.asList(stack.getDisplayName());
+                tooltip = Arrays.asList(stack.getDisplayName());
             } catch (Throwable t) {
-                logger.warn("Could not retrieve fluid tooltip of " + stack.getFluid().getRegistryName().toString(), t);
+                logger.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
 
-                cachedTooltip = Arrays.asList(new StringTextComponent("<Error>"));
+                tooltip = Arrays.asList(new StringTextComponent(ERROR_PLACEHOLDER));
+            }
+
+            if (bypassCache) {
+                return tooltip;
+            } else {
+                cachedTooltip = tooltip;
             }
         }
 
@@ -147,7 +155,16 @@ public class FluidGridStack implements IGridStack {
     @Override
     public int getQuantity() {
         // The isCraftable check is needed so sorting is applied correctly
-        return isCraftable() ? 0 : stack.getAmount();
+        return isCraftable() || zeroed ? 0 : stack.getAmount();
+    }
+
+    @Override
+    public void setQuantity(int amount) {
+        if (amount <= 0) {
+            setZeroed(true);
+        } else {
+            stack.setAmount(amount);
+        }
     }
 
     @Override
@@ -180,7 +197,7 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public Object getIngredient() {
-        return stack;
+        return getStack();
     }
 
     @Nullable

@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.util;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import net.minecraft.item.ItemStack;
 
-public class ItemFilter implements IFilter<ItemStack> {
+public class ItemFilter implements IFilter {
     private final ItemStack stack;
     private final int compare;
     private final int mode;
@@ -17,7 +17,7 @@ public class ItemFilter implements IFilter<ItemStack> {
     }
 
     @Override
-    public ItemStack getStack() {
+    public Object getStack() {
         return stack;
     }
 

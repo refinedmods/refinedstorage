@@ -5,12 +5,12 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class StorageDiskManager extends WorldSavedData implements IStorageDiskManager {
+public class StorageDiskManager extends RSWorldSavedData implements IStorageDiskManager {
     public static final String NAME = "refinedstorage_disks";
 
     private static final String NBT_DISKS = "Disks";
@@ -115,19 +115,19 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        ListNBT disks = new ListNBT();
+        ListNBT disksTag = new ListNBT();
 
-        for (Map.Entry<UUID, IStorageDisk> entry : this.disks.entrySet()) {
+        for (Map.Entry<UUID, IStorageDisk> entry : disks.entrySet()) {
             CompoundNBT diskTag = new CompoundNBT();
 
             diskTag.putUniqueId(NBT_DISK_ID, entry.getKey());
             diskTag.put(NBT_DISK_DATA, entry.getValue().writeToNbt());
             diskTag.putString(NBT_DISK_TYPE, entry.getValue().getFactoryId().toString());
 
-            disks.add(diskTag);
+            disksTag.add(diskTag);
         }
 
-        tag.put(NBT_DISKS, disks);
+        tag.put(NBT_DISKS, disksTag);
 
         return tag;
     }

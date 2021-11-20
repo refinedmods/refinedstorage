@@ -33,7 +33,7 @@ public enum BlockDirection {
             case HORIZONTAL:
                 return entity.getHorizontalFacing().getOpposite();
             default:
-                throw new RuntimeException("Unknown direction type");
+                throw new IllegalStateException("Unknown direction type");
         }
     }
 
@@ -45,7 +45,7 @@ public enum BlockDirection {
             case HORIZONTAL:
                 return previous.rotateYCCW();
             default:
-                throw new RuntimeException("Unknown direction type");
+                throw new IllegalStateException("Unknown direction type");
         }
     }
 }

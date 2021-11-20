@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.api.network;
 
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.Action;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,9 +29,9 @@ public interface INetworkNodeGraph {
     void runActionWhenPossible(Consumer<INetwork> handler);
 
     /**
-     * @return a collection of all connected nodes
+     * @return a collection of all connected entries
      */
-    Collection<INetworkNode> all();
+    Collection<INetworkNodeGraphEntry> all();
 
     /**
      * @param listener the listener

@@ -1,31 +1,51 @@
 package com.refinedmods.refinedstorage.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.TransformationMatrix;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.*;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 public final class RenderUtils {
+    private RenderUtils() {
+    }
+
     public static String shorten(String text, int length) {
         if (text.length() > length) {
             text = text.substring(0, length) + "...";
@@ -59,10 +79,10 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new StringTextComponent(amount + "x ").func_230529_a_(data);
+                    data = new StringTextComponent(amount + "x ").appendSibling(data);
                 }
 
-                tooltip.add(data.func_230530_a_(Styles.GRAY));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -87,10 +107,10 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").func_230529_a_(data);
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
                 }
 
-                tooltip.add(data.func_230530_a_(Styles.GRAY));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -118,7 +138,7 @@ public final class RenderUtils {
             RenderSystem.disableDepthTest();
             int tooltipTextWidth = 0;
 
-            for (ITextProperties  textLine : textLines) {
+            for (ITextProperties textLine : textLines) {
                 int textLineWidth = font.getStringWidth(textLine.getString());
                 if (textLineWidth > tooltipTextWidth)
                     tooltipTextWidth = textLineWidth;
@@ -161,8 +181,8 @@ public final class RenderUtils {
                 int wrappedTooltipWidth = 0;
                 List<ITextProperties> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
-                    ITextProperties  textLine = textLines.get(i);
-                    List<ITextProperties> wrappedLine = font.func_238425_b_(textLine, tooltipTextWidth);
+                    ITextProperties textLine = textLines.get(i);
+                    List<ITextProperties> wrappedLine = font.getCharacterManager().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
                     if (i == 0)
                         titleLinesCount = wrappedLine.size();
 
@@ -235,7 +255,7 @@ public final class RenderUtils {
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 ITextProperties line = textLines.get(lineNumber);
                 if (line != null)
-                    font.func_238416_a_(line, (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
+                    font.drawEntityText(LanguageMap.getInstance().func_241870_a(line), (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
 
                 if (lineNumber + 1 == titleLinesCount)
                     tooltipY += 2;
@@ -256,12 +276,12 @@ public final class RenderUtils {
 
                     RenderSystem.enableAlphaTest();
 
-                    // FontRenderer#drawStringWithShadow - call to func_228078_a_ (private)
+                    // FontRenderer#drawStringWithShadow - call to renderString (private)
                     MatrixStack smallTextStack = new MatrixStack();
                     smallTextStack.translate(0.0D, 0.0D, zLevel);
                     smallTextStack.scale(textScale, textScale, 1);
 
-                    IRenderTypeBuffer.Impl lvt_7_1_ = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+                    IRenderTypeBuffer.Impl renderTypeBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
                     font.renderString(
                         TextFormatting.GRAY + smallTextLines.get(i),
                         RenderUtils.getOffsetOnScale(tooltipX, textScale),
@@ -269,13 +289,13 @@ public final class RenderUtils {
                         -1,
                         true,
                         smallTextStack.getLast().getMatrix(),
-                        lvt_7_1_,
+                        renderTypeBuffer,
                         false,
                         0,
                         15728880
                     );
 
-                    lvt_7_1_.finish();
+                    renderTypeBuffer.finish();
 
                     y -= 9;
                 }
@@ -296,4 +316,102 @@ public final class RenderUtils {
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
         return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
     }
+
+    public static boolean isLightMapDisabled() {
+        return false;
+    }
+
+    public static VertexFormat getFormatWithLightMap(VertexFormat format) {
+        if (isLightMapDisabled()) {
+            return format;
+        }
+
+        if (format == DefaultVertexFormats.BLOCK) {
+            return DefaultVertexFormats.BLOCK;
+        } else if (!format.hasUV(1)) { ;
+            return new VertexFormat(ImmutableList.<VertexFormatElement>builder().addAll(format.getElements()).add(DefaultVertexFormats.TEX_2S).build());
+        }
+
+        return format;
+    }
+
+    public static TextureAtlasSprite getSprite(IBakedModel coverModel, BlockState coverState, Direction facing, Random rand) {
+        TextureAtlasSprite sprite = null;
+
+        RenderType originalLayer = MinecraftForgeClient.getRenderLayer();
+
+        try {
+            for (RenderType layer : RenderType.getBlockRenderTypes()) {
+                ForgeHooksClient.setRenderLayer(layer);
+
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
+                    return bakedQuad.getSprite();
+                }
+
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
+                    if (sprite == null) {
+                        sprite = bakedQuad.getSprite();
+                    }
+
+                    if (bakedQuad.getFace() == facing) {
+                        return bakedQuad.getSprite();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // NO OP
+        } finally {
+            ForgeHooksClient.setRenderLayer(originalLayer);
+        }
+
+        if (sprite == null) {
+            try {
+                sprite = coverModel.getParticleTexture();
+            } catch (Exception e) {
+                // NO OP
+            }
+        }
+
+        if (sprite == null) {
+            for (BakedQuad quad : Minecraft.getInstance().getModelManager().getMissingModel().getQuads(coverState, facing, rand)) {
+                return quad.getSprite();
+            }
+        }
+
+        return sprite;
+    }
+
+    private static ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> DEFAULT_BLOCK_TRANSFORM;
+
+    public static ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> getDefaultBlockTransforms() {
+        if (DEFAULT_BLOCK_TRANSFORM != null) {
+            return DEFAULT_BLOCK_TRANSFORM;
+        }
+
+        TransformationMatrix thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
+
+        return DEFAULT_BLOCK_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TransformationMatrix>builder()
+                .put(ItemCameraTransforms.TransformType.GUI, getTransform(0, 0, 0, 30, 225, 0, 0.625f))
+                .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 3, 0, 0, 0, 0, 0.25f))
+                .put(ItemCameraTransforms.TransformType.FIXED, getTransform(0, 0, 0, 0, 0, 0, 0.5f))
+                .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson)
+                .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, leftifyTransform(thirdperson))
+                .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(0, 0, 0, 0, 45, 0, 0.4f))
+                .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(0, 0, 0, 0, 225, 0, 0.4f))
+                .build();
+    }
+
+    private static TransformationMatrix leftifyTransform(TransformationMatrix transform) {
+        return transform.blockCornerToCenter().blockCenterToCorner();
+    }
+
+    private static TransformationMatrix getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
+        return new TransformationMatrix(
+                new Vector3f(tx / 16, ty / 16, tz / 16),
+                new Quaternion(ax, ay, az, true),
+                new Vector3f(s, s, s),
+                null
+        );
+    }
+
 }
