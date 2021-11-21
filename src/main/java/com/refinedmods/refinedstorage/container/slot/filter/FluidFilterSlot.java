@@ -52,4 +52,9 @@ public class FluidFilterSlot extends BaseSlot {
     public FluidInventory getFluidInventory() {
         return fluidInventory;
     }
+
+    // not overriding getHasStack as we do the tooltips ourselves
+    public boolean hasStack() {
+        return !fluidInventory.getFluid(getSlotIndex()).isEmpty();
+    }
 }
