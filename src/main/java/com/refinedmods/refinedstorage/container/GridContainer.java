@@ -194,9 +194,9 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
 
             int finalI = i;
             itemPatternSlots.add(addSlot(new FilterSlot(((GridNetworkNode) grid).getProcessingMatrix(), i, x, y, itemFilterSlotConfig)
-                .setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.ITEMS && isVisible(finalI))));
+                .setEnableHandler(() -> getSlotEnabled(finalI, true))));
             fluidPatternSlots.add(addSlot(new FluidFilterSlot(((GridNetworkNode) grid).getProcessingMatrixFluids(), i, x, y, fluidFilterSlotConfig)
-                .setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS && isVisible(finalI))));
+                .setEnableHandler(() -> getSlotEnabled(finalI, false))));
 
             x += 18;
 
@@ -229,6 +229,34 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
 
         patternResultSlot = new LegacyDisabledSlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern());
         addSlot(patternResultSlot);
+    }
+
+    private boolean getSlotEnabled(int i, boolean item) {
+        if (!((GridNetworkNode) grid).isProcessingPattern() || !isVisible(i)) {
+            return false;
+        }
+
+        if (item) {
+            if (itemPatternSlots.get(i).getHasStack()) {
+                return true;
+            }
+
+            if (((FluidFilterSlot) fluidPatternSlots.get(i)).hasStack()) {
+                return false;
+            }
+
+            return ((GridNetworkNode) grid).getType() == IType.ITEMS;
+        } else {
+            if (((FluidFilterSlot) fluidPatternSlots.get(i)).hasStack()) {
+                return true;
+            }
+
+            if (itemPatternSlots.get(i).getHasStack()) {
+                return false;
+            }
+
+            return ((GridNetworkNode) grid).getType() == IType.FLUIDS;
+        }
     }
 
     private boolean isVisible(int slotNumber) {
