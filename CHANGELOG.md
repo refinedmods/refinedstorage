@@ -1,6 +1,8 @@
 # Refined Storage Changelog
 
 ### 1.9.17
+- Added more slots to the Pattern Grid (Darkere)
+- Combined Fluid and Item View in the Pattern Grid (Darkere)
 
 ### 1.9.16
 

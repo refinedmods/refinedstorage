@@ -171,7 +171,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
 
-
             if (!processingPattern.isChecked()) {
                 exactPattern = addCheckBox(
                     processingPattern.x + processingPattern.getWidth() + 5,
@@ -675,7 +674,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                     filledInputSlots++;
                     lastFilledInputSlot = i;
                 }
-
             }
         }
 
