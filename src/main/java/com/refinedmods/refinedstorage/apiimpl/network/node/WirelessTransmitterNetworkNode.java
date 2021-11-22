@@ -76,7 +76,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public boolean canConduct(Direction direction) {
-        return Direction.DOWN.equals(direction);
+        return getDirection() == direction;
     }
 
     @Override
