@@ -336,7 +336,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     @Override
-    protected int getDisabledSlotNumber() {
+    public int getDisabledSlotNumber() {
         return grid.getSlotId();
     }
 
