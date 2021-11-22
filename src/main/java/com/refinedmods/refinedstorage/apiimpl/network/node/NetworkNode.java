@@ -238,7 +238,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             if (oppositeNode == null) {
                 continue;
             }
-            if (canConduct(facing) && oppositeNode.canConduct(facing.getOpposite())) {
+            if (canConduct(facing) && oppositeNode.canReceive(facing.getOpposite())) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());
             }
         }

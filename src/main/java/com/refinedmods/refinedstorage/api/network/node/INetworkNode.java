@@ -96,9 +96,16 @@ public interface INetworkNode {
      * @param direction the direction
      * @return whether a network signal can be conducted in the given direction.
      */
-
     default boolean canConduct(Direction direction) {
         return true;
+    }
+
+    /**
+     * @param direction the direction
+     * @return whether the network node can receiver network connections from this side
+     */
+    default boolean canReceive(Direction direction) {
+        return canConduct(direction);
     }
 
     /**

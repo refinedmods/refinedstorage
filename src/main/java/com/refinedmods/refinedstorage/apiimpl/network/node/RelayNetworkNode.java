@@ -42,6 +42,11 @@ public class RelayNetworkNode extends NetworkNode {
     }
 
     @Override
+    public boolean canReceive(Direction direction) {
+        return true;
+    }
+
+    @Override
     public boolean shouldRebuildGraphOnChange() {
         return true;
     }
