@@ -118,9 +118,7 @@
   "misc.refinedstorage.pattern.error.no_output": "Recipe has no output",
   "misc.refinedstorage.pattern.error.recipe_does_not_exist": "Recipe doesn't exist",
   "misc.refinedstorage.pattern.error.tag_no_longer_applicable": "Tag %s is no longer applicable for %s",
-
   "misc.refinedstorage.security.no_permission": "You have no permission to perform that action.",
-
   "misc.refinedstorage.start": "Start",
   "misc.refinedstorage.clear": "Clear",
   "misc.refinedstorage.set": "Set",
@@ -128,9 +126,8 @@
   "misc.refinedstorage.priority": "Priority",
   "misc.refinedstorage.exact": "Exact",
   "misc.refinedstorage.processing": "Processing",
-
+  "misc.refinedstorage.fluidmode": "Fluids",
   "misc.refinedstorage.total": "%s total",
-
   "misc.refinedstorage.last_modified.just_now": "Last modified just now by %s",
   "misc.refinedstorage.last_modified.second": "Last modified %d second ago by %s",
   "misc.refinedstorage.last_modified.seconds": "Last modified %d seconds ago by %s",

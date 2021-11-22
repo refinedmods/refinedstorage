@@ -39,7 +39,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
@@ -183,7 +182,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             } else {
                 patternScrollbar.setEnabled(true);
 
-                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, new StringTextComponent("Fluids"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
+                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslationTextComponent("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
                     TileDataManager.setParameter(GridTile.PROCESSING_TYPE, GridTile.PROCESSING_TYPE.getValue() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
                 });
             }
