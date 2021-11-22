@@ -66,11 +66,22 @@ public class PortableGridBlockItem extends EnergyBlockItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        if (!context.getPlayer().isCrouching()) {
+        if (context.getPlayer() == null) {
             return ActionResultType.FAIL;
         }
 
-        return super.onItemUse(context);
+        //Place
+        if (context.getPlayer().isCrouching()) {
+            return super.onItemUse(context);
+        }
+
+        ItemStack stack = context.getPlayer().getHeldItem(context.getHand());
+
+        if (!context.getWorld().isRemote) {
+            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) context.getPlayer(), stack, PlayerSlot.getSlotForHand(context.getPlayer(), context.getHand()));
+        }
+
+        return ActionResultType.SUCCESS;
     }
 
     @Override
