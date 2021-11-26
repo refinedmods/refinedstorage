@@ -40,6 +40,8 @@ public class CraftingManager implements ICraftingManager {
     private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private final List<ICraftingPattern> patterns = new ArrayList<>();
+    private final Map<CompoundNBT, ICraftingPattern> fluidPatternCache = new HashMap<>();
+    private final Map<CompoundNBT, ICraftingPattern> itemPatternCache = new HashMap<>();
 
     private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
@@ -359,6 +361,8 @@ public class CraftingManager implements ICraftingManager {
         this.network.getFluidStorageCache().getCraftablesList().clear();
 
         this.patterns.clear();
+        this.fluidPatternCache.clear();
+        this.itemPatternCache.clear();
         this.containerInventories.clear();
         this.patternToContainer.clear();
 
@@ -412,28 +416,30 @@ public class CraftingManager implements ICraftingManager {
     @Nullable
     @Override
     public ICraftingPattern getPattern(ItemStack pattern) {
-        for (ICraftingPattern patternInList : patterns) {
-            for (ItemStack output : patternInList.getOutputs()) {
-                if (API.instance().getComparer().isEqualNoQuantity(output, pattern)) {
-                    return patternInList;
+        return itemPatternCache.computeIfAbsent(pattern.getTag(), patternTag -> {
+            if (patternTag == null)
+                return null;
+            for (ICraftingPattern patternInList : patterns) {
+                for (ItemStack output : patternInList.getOutputs()) {
+                    if (patternTag.equals(output.getTag()))
+                        return patternInList;
                 }
             }
-        }
-
-        return null;
+            return null;
+        });
     }
 
     @Nullable
     @Override
     public ICraftingPattern getPattern(FluidStack pattern) {
-        for (ICraftingPattern patternInList : patterns) {
-            for (FluidStack output : patternInList.getFluidOutputs()) {
-                if (API.instance().getComparer().isEqual(output, pattern, IComparer.COMPARE_NBT)) {
-                    return patternInList;
+        return fluidPatternCache.computeIfAbsent(pattern.getTag(), patternTag -> {
+            for (ICraftingPattern patternInList : patterns) {
+                for (FluidStack output : patternInList.getFluidOutputs()) {
+                    if (patternTag.equals(output.getTag()))
+                        return patternInList;
                 }
             }
-        }
-
-        return null;
+            return null;
+        });
     }
 }
