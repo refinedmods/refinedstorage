@@ -40,8 +40,8 @@ public class CraftingManager implements ICraftingManager {
     private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private final List<ICraftingPattern> patterns = new ArrayList<>();
-    private final Map<CompoundNBT, ICraftingPattern> fluidPatternCache = new HashMap<>();
-    private final Map<CompoundNBT, ICraftingPattern> itemPatternCache = new HashMap<>();
+    private final Map<Integer, ICraftingPattern> fluidPatternCache = new HashMap<>();
+    private final Map<Integer, ICraftingPattern> itemPatternCache = new HashMap<>();
 
     private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
@@ -416,12 +416,12 @@ public class CraftingManager implements ICraftingManager {
     @Nullable
     @Override
     public ICraftingPattern getPattern(ItemStack pattern) {
-        return itemPatternCache.computeIfAbsent(pattern.getTag(), patternTag -> {
-            if (patternTag == null)
+        return itemPatternCache.computeIfAbsent(Objects.hash(pattern.getItem(), pattern.getTag()), patternKey -> {
+            if (patternKey == null)
                 return null;
             for (ICraftingPattern patternInList : patterns) {
                 for (ItemStack output : patternInList.getOutputs()) {
-                    if (patternTag.equals(output.getTag()))
+                    if (patternKey.equals(Objects.hash(output.getItem(), output.getTag())))
                         return patternInList;
                 }
             }
@@ -432,10 +432,11 @@ public class CraftingManager implements ICraftingManager {
     @Nullable
     @Override
     public ICraftingPattern getPattern(FluidStack pattern) {
-        return fluidPatternCache.computeIfAbsent(pattern.getTag(), patternTag -> {
+        return fluidPatternCache.computeIfAbsent(Objects.hash(pattern.getFluid(), pattern.getTag()), patternKey -> {
             for (ICraftingPattern patternInList : patterns) {
                 for (FluidStack output : patternInList.getFluidOutputs()) {
-                    if (patternTag.equals(output.getTag()))
+                    final Integer outputKey = Objects.hash(output.getFluid(), output.getTag());
+                    if (patternKey.equals(outputKey))
                         return patternInList;
                 }
             }
