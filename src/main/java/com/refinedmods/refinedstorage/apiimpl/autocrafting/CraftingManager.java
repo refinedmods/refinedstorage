@@ -40,8 +40,8 @@ public class CraftingManager implements ICraftingManager {
     private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private final List<ICraftingPattern> patterns = new ArrayList<>();
-    private final Map<Integer, ICraftingPattern> fluidPatternCache = new HashMap<>();
-    private final Map<Integer, ICraftingPattern> itemPatternCache = new HashMap<>();
+    private final Map<Integer, ICraftingPattern> fluidPatternsByOutput = new HashMap<>();
+    private final Map<Integer, ICraftingPattern> itemPatternsByOutput = new HashMap<>();
 
     private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
@@ -361,8 +361,8 @@ public class CraftingManager implements ICraftingManager {
         this.network.getFluidStorageCache().getCraftablesList().clear();
 
         this.patterns.clear();
-        this.fluidPatternCache.clear();
-        this.itemPatternCache.clear();
+        this.fluidPatternsByOutput.clear();
+        this.itemPatternsByOutput.clear();
         this.containerInventories.clear();
         this.patternToContainer.clear();
 
@@ -374,10 +374,12 @@ public class CraftingManager implements ICraftingManager {
 
                 for (ItemStack output : pattern.getOutputs()) {
                     network.getItemStorageCache().getCraftablesList().add(output);
+                    this.itemPatternsByOutput.put(API.instance().getItemStackHashCode(output), pattern);
                 }
 
                 for (FluidStack output : pattern.getFluidOutputs()) {
                     network.getFluidStorageCache().getCraftablesList().add(output);
+                    this.fluidPatternsByOutput.put(API.instance().getFluidStackHashCode(output), pattern);
                 }
 
                 Set<ICraftingPatternContainer> containersForPattern = this.patternToContainer.computeIfAbsent(pattern, key -> new LinkedHashSet<>());
@@ -416,31 +418,12 @@ public class CraftingManager implements ICraftingManager {
     @Nullable
     @Override
     public ICraftingPattern getPattern(ItemStack pattern) {
-        return itemPatternCache.computeIfAbsent(Objects.hash(pattern.getItem(), pattern.getTag()), patternKey -> {
-            if (patternKey == null)
-                return null;
-            for (ICraftingPattern patternInList : patterns) {
-                for (ItemStack output : patternInList.getOutputs()) {
-                    if (patternKey.equals(Objects.hash(output.getItem(), output.getTag())))
-                        return patternInList;
-                }
-            }
-            return null;
-        });
+        return itemPatternsByOutput.get(API.instance().getItemStackHashCode(pattern));
     }
 
     @Nullable
     @Override
     public ICraftingPattern getPattern(FluidStack pattern) {
-        return fluidPatternCache.computeIfAbsent(Objects.hash(pattern.getFluid(), pattern.getTag()), patternKey -> {
-            for (ICraftingPattern patternInList : patterns) {
-                for (FluidStack output : patternInList.getFluidOutputs()) {
-                    final Integer outputKey = Objects.hash(output.getFluid(), output.getTag());
-                    if (patternKey.equals(outputKey))
-                        return patternInList;
-                }
-            }
-            return null;
-        });
+        return fluidPatternsByOutput.get(API.instance().getFluidStackHashCode(pattern));
     }
 }
