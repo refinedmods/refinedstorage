@@ -26,15 +26,18 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
-version = '1.10.0'
-def env = System.getenv()
-if (env.BUILD_NUMBER) {
-    version = version + "+" + "${env.BUILD_NUMBER}"
-}
 group = 'com.refinedmods'
 archivesBaseName = 'refinedstorage'
+version = '1.10.0'
+
+if (System.getenv('GITHUB_SHA') != null) {
+    version += '+' + System.getenv('GITHUB_SHA').substring(0, 7)
+}
+
+if (System.getenv('RELEASE') != null) {
+    version = System.getenv('RELEASE').substring(1) // remove 'v'
+}
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -123,53 +126,3 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
-
-task apiJar(type: Jar, dependsOn: 'classes') {
-    classifier = 'api'
-    from(sourceSets.main.output) {
-        include 'com/refinedmods/refinedstorage/api/**'
-    }
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task deobfJar(type:Jar) {
-    from sourceSets.main.output
-    classifier 'deobf'
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives deobfJar
-    archives apiJar
-}
-
-test {
-    useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
-            artifact jar
-            artifact sourcesJar
-            artifact deobfJar
-            artifact apiJar
-        }
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            url "/var/www/repo"
-        }
-    }
-}
