@@ -85,7 +85,7 @@ public interface INetwork {
     INetworkItemManager getNetworkItemManager();
 
     /**
-     * @return the {@link IStorageCache <ItemStack>} of this network
+     * @return the {@link IStorageCache<ItemStack>} of this network
      */
     IStorageCache<ItemStack> getItemStorageCache();
 

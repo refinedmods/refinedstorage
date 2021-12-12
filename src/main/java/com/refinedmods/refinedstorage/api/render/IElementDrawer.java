@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
  * This {@link FunctionalInterface} is used to define a draw/render function.
  * This function use x and y coords and the element to draw.
  *
- * @param <T> the element to draw, usually {@link String}, {@link net.minecraft.item.ItemStack} or {@link net.minecraftforge.fluids.FluidStack}
+ * @param <T> the element to draw, usually {@link String}, {@link net.minecraft.world.item.ItemStack} or {@link net.minecraftforge.fluids.FluidStack}
  */
 @FunctionalInterface
 public interface IElementDrawer<T> {
