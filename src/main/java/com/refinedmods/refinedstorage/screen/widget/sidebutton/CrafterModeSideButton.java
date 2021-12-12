@@ -14,7 +14,7 @@ public class CrafterModeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.crafter_mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.crafter_mode." + CrafterTile.MODE.getValue());
     }
 

@@ -172,8 +172,8 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
         renderForeground(matrixStack, mouseX, mouseY);
 
         for (Widget button : this.renderables) {
-            if (button instanceof SideButton && ((SideButton) button).isHoveredOrFocused()) {
-                renderTooltip(matrixStack, mouseX, mouseY, ((SideButton) button).getTooltip());
+            if (button instanceof SideButton sideButton) {
+                sideButton.renderTooltip(matrixStack, mouseX, mouseY);
             }
         }
 

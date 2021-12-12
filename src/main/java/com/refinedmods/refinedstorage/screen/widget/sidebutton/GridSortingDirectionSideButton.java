@@ -17,7 +17,7 @@ public class GridSortingDirectionSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.sorting.direction") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.sorting.direction." + grid.getSortingDirection());
     }
 

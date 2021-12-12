@@ -30,7 +30,7 @@ public abstract class SearchBoxModeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.search_box_mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.search_box_mode." + getSearchBoxMode());
     }
 

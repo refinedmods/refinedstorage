@@ -24,7 +24,7 @@ public class AccessTypeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.access_type") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.access_type." + parameter.getValue().getId());
     }
 

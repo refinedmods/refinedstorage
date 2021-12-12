@@ -24,10 +24,18 @@ public abstract class SideButton extends Button {
         this.screen = screen;
     }
 
+    public void renderTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
+        boolean isFocused = isFocused();
+        if (isHovered || isFocused) {
+            int x = isHovered ? mouseX : (this.x - screen.getGuiLeft()) + width;
+            int y = isHovered ? mouseY : (this.y - screen.getGuiTop()) + (height / 2);
+            screen.renderTooltip(matrixStack, x, y, getTooltip());
+        }
+    }
+
     @Override
     public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        // TODO RenderSystem.enableAlphaTest();
 
         isHovered = RenderUtils.inBounds(x, y, width, height, mouseX, mouseY);
 
@@ -36,7 +44,7 @@ public abstract class SideButton extends Button {
 
         renderButtonIcon(matrixStack, x + 1, y + 1);
 
-        if (isHovered) {
+        if (isHoveredOrFocused()) {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.5f);
@@ -51,5 +59,5 @@ public abstract class SideButton extends Button {
 
     protected abstract void renderButtonIcon(PoseStack matrixStack, int x, int y);
 
-    public abstract String getTooltip();
+    protected abstract String getTooltip();
 }

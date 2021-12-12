@@ -17,7 +17,7 @@ public class RedstoneModeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.redstone_mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.redstone_mode." + parameter.getValue());
     }
 

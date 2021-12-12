@@ -19,7 +19,7 @@ public class ConstructorDropSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.constructor.drop") + "\n" + ChatFormatting.GRAY + I18n.get(Boolean.TRUE.equals(ConstructorTile.DROP.getValue()) ? "gui.yes" : "gui.no");
     }
 

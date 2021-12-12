@@ -19,7 +19,7 @@ public class GridSortingTypeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.sorting.type") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.sorting.type." + grid.getSortingType());
     }
 

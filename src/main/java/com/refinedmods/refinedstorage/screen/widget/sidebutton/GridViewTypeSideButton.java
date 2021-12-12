@@ -17,7 +17,7 @@ public class GridViewTypeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.view_type") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.view_type." + grid.getViewType());
     }
 

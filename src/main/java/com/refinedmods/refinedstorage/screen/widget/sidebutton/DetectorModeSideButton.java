@@ -15,7 +15,7 @@ public class DetectorModeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.detector.mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.detector.mode." + DetectorTile.MODE.getValue());
     }
 

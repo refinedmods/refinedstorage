@@ -20,7 +20,7 @@ public class ExactModeSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         String tooltip = I18n.get("sidebutton.refinedstorage.exact_mode") + "\n" + ChatFormatting.GRAY;
 
         if ((parameter.getValue() & MASK) == MASK) {

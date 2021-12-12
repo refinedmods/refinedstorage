@@ -19,7 +19,7 @@ public class DestructorPickupSideButton extends SideButton {
     }
 
     @Override
-    public String getTooltip() {
+    protected String getTooltip() {
         return I18n.get("sidebutton.refinedstorage.destructor.pickup") + "\n" + ChatFormatting.GRAY + I18n.get(Boolean.TRUE.equals(DestructorTile.PICKUP.getValue()) ? "gui.yes" : "gui.no");
     }
 
