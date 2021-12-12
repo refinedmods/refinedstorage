@@ -21,16 +21,16 @@ public final class QuadTransformer {
     }
 
     public static List<BakedQuad> getTransformedQuads(IBakedModel model, Direction facing, @Nullable Vector3f translation, BlockState state, Random rand, Direction side) {
-        double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
+        double r = Math.PI * (360 - facing.getOpposite().get2DDataValue() * 90) / 180d;
 
         TransformationMatrix transformation = new TransformationMatrix(translation, TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false), null, null);
 
         ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
-        if (side != null && side.getHorizontalIndex() > -1) {
-            int faceOffset = 4 + Direction.NORTH.getHorizontalIndex() - facing.getHorizontalIndex();
+        if (side != null && side.get2DDataValue() > -1) {
+            int faceOffset = 4 + Direction.NORTH.get2DDataValue() - facing.get2DDataValue();
 
-            side = Direction.byHorizontalIndex((side.getHorizontalIndex() + faceOffset) % 4);
+            side = Direction.from2DDataValue((side.get2DDataValue() + faceOffset) % 4);
         }
 
         for (BakedQuad quad : model.getQuads(state, side, rand, EmptyModelData.INSTANCE)) {

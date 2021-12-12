@@ -19,7 +19,7 @@ public class LegacyBaseSlot extends Slot {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isActive() {
         return enableHandler.getAsBoolean();
     }
 }

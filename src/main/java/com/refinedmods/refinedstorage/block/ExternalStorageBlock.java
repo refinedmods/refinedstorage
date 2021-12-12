@@ -32,12 +32,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class ExternalStorageBlock extends CableBlock {
-    private static final VoxelShape HEAD_NORTH = VoxelShapes.or(makeCuboidShape(3, 3, 0, 13, 13, 2), HOLDER_NORTH);
-    private static final VoxelShape HEAD_EAST = VoxelShapes.or(makeCuboidShape(14, 3, 3, 16, 13, 13), HOLDER_EAST);
-    private static final VoxelShape HEAD_SOUTH = VoxelShapes.or(makeCuboidShape(3, 3, 14, 13, 13, 16), HOLDER_SOUTH);
-    private static final VoxelShape HEAD_WEST = VoxelShapes.or(makeCuboidShape(0, 3, 3, 2, 13, 13), HOLDER_WEST);
-    private static final VoxelShape HEAD_UP = VoxelShapes.or(makeCuboidShape(3, 14, 3, 13, 16, 13), HOLDER_UP);
-    private static final VoxelShape HEAD_DOWN = VoxelShapes.or(makeCuboidShape(3, 0, 3, 13, 2, 13), HOLDER_DOWN);
+    private static final VoxelShape HEAD_NORTH = VoxelShapes.or(box(3, 3, 0, 13, 13, 2), HOLDER_NORTH);
+    private static final VoxelShape HEAD_EAST = VoxelShapes.or(box(14, 3, 3, 16, 13, 13), HOLDER_EAST);
+    private static final VoxelShape HEAD_SOUTH = VoxelShapes.or(box(3, 3, 14, 13, 13, 16), HOLDER_SOUTH);
+    private static final VoxelShape HEAD_WEST = VoxelShapes.or(box(0, 3, 3, 2, 13, 13), HOLDER_WEST);
+    private static final VoxelShape HEAD_UP = VoxelShapes.or(box(3, 14, 3, 13, 16, 13), HOLDER_UP);
+    private static final VoxelShape HEAD_DOWN = VoxelShapes.or(box(3, 0, 3, 13, 2, 13), HOLDER_DOWN);
 
     public ExternalStorageBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
@@ -60,7 +60,7 @@ public class ExternalStorageBlock extends CableBlock {
     }
 
     private VoxelShape getHeadShape(BlockState state) {
-        Direction direction = state.get(getDirection().getProperty());
+        Direction direction = state.getValue(getDirection().getProperty());
 
         if (direction == Direction.NORTH) {
             return HEAD_NORTH;
@@ -97,8 +97,8 @@ public class ExternalStorageBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getHitVec())) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<ExternalStorageTile>(
@@ -118,12 +118,12 @@ public class ExternalStorageBlock extends CableBlock {
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 
-        if (!world.isRemote) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(world.getTileEntity(pos));
+        if (!world.isClientSide) {
+            INetworkNode node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos));
 
             if (node instanceof ExternalStorageNetworkNode &&
                 node.getNetwork() != null &&
-                fromPos.equals(pos.offset(((ExternalStorageNetworkNode) node).getDirection()))) {
+                fromPos.equals(pos.relative(((ExternalStorageNetworkNode) node).getDirection()))) {
                 ((ExternalStorageNetworkNode) node).updateStorage(node.getNetwork(), InvalidateCause.NEIGHBOR_CHANGED);
             }
         }

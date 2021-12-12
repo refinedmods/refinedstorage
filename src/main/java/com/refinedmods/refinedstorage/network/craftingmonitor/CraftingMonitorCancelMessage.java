@@ -18,14 +18,14 @@ public class CraftingMonitorCancelMessage {
     }
 
     public static CraftingMonitorCancelMessage decode(PacketBuffer buf) {
-        return new CraftingMonitorCancelMessage(buf.readBoolean() ? buf.readUniqueId() : null);
+        return new CraftingMonitorCancelMessage(buf.readBoolean() ? buf.readUUID() : null);
     }
 
     public static void encode(CraftingMonitorCancelMessage message, PacketBuffer buf) {
         buf.writeBoolean(message.taskId != null);
 
         if (message.taskId != null) {
-            buf.writeUniqueId(message.taskId);
+            buf.writeUUID(message.taskId);
         }
     }
 
@@ -34,8 +34,8 @@ public class CraftingMonitorCancelMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.openContainer instanceof CraftingMonitorContainer) {
-                    ((CraftingMonitorContainer) player.openContainer).getCraftingMonitor().onCancelled(player, message.taskId);
+                if (player.containerMenu instanceof CraftingMonitorContainer) {
+                    ((CraftingMonitorContainer) player.containerMenu).getCraftingMonitor().onCancelled(player, message.taskId);
                 }
             });
         }

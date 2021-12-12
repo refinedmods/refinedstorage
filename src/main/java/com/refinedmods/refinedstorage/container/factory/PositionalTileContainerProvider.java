@@ -33,7 +33,7 @@ public class PositionalTileContainerProvider<T extends TileEntity> implements IN
     @Nullable
     @Override
     public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-        T tile = (T) player.world.getTileEntity(pos);
+        T tile = (T) player.level.getBlockEntity(pos);
 
         return provider.create(tile, windowId, inventory, player);
     }

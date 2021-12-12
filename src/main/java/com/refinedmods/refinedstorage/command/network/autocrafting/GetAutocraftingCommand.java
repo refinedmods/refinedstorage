@@ -15,18 +15,18 @@ import java.util.UUID;
 public class GetAutocraftingCommand extends NetworkCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("get").then(
-            Commands.argument("id", UUIDArgument.func_239194_a_()).suggests(new AutocraftingIdSuggestionProvider())
+            Commands.argument("id", UUIDArgument.uuid()).suggests(new AutocraftingIdSuggestionProvider())
                 .executes(new GetAutocraftingCommand())
         );
     }
 
     @Override
     protected int run(CommandContext<CommandSource> context, INetwork network) {
-        UUID id = UUIDArgument.func_239195_a_(context, "id");
+        UUID id = UUIDArgument.getUuid(context, "id");
 
         ICraftingTask task = network.getCraftingManager().getTask(id);
         if (task == null) {
-            context.getSource().sendErrorMessage(new TranslationTextComponent("commands.refinedstorage.network.autocrafting.get.error.not_found"));
+            context.getSource().sendFailure(new TranslationTextComponent("commands.refinedstorage.network.autocrafting.get.error.not_found"));
         } else {
             ListAutocraftingCommand.addInfo(context, task);
         }

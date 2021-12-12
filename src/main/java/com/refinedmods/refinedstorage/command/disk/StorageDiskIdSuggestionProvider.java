@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 public class StorageDiskIdSuggestionProvider implements SuggestionProvider<CommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> context, SuggestionsBuilder builder) {
-        API.instance().getStorageDiskManager(context.getSource().getWorld())
+        API.instance().getStorageDiskManager(context.getSource().getLevel())
             .getAll()
             .keySet()
             .forEach(id -> builder.suggest(id.toString()));

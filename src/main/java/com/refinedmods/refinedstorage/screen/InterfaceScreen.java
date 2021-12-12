@@ -32,13 +32,13 @@ public class InterfaceScreen extends BaseScreen<InterfaceContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/interface.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, I18n.format("gui.refinedstorage.interface.import"));
-        renderString(matrixStack, 7, 42, I18n.format("gui.refinedstorage.interface.export"));
-        renderString(matrixStack, 7, 122, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 7, I18n.get("gui.refinedstorage.interface.import"));
+        renderString(matrixStack, 7, 42, I18n.get("gui.refinedstorage.interface.export"));
+        renderString(matrixStack, 7, 122, I18n.get("container.inventory"));
     }
 }

@@ -37,19 +37,19 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
-        if (!world.isRemote) {
-            FluidStorageNetworkNode storage = ((FluidStorageTile) world.getTileEntity(pos)).getNode();
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
+        if (!world.isClientSide) {
+            FluidStorageNetworkNode storage = ((FluidStorageTile) world.getBlockEntity(pos)).getNode();
 
-            if (stack.hasTag() && stack.getTag().hasUniqueId(FluidStorageNetworkNode.NBT_ID)) {
-                storage.setStorageId(stack.getTag().getUniqueId(FluidStorageNetworkNode.NBT_ID));
+            if (stack.hasTag() && stack.getTag().hasUUID(FluidStorageNetworkNode.NBT_ID)) {
+                storage.setStorageId(stack.getTag().getUUID(FluidStorageNetworkNode.NBT_ID));
             }
 
             storage.loadStorage(player instanceof PlayerEntity ? (PlayerEntity) player : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
-        super.onBlockPlacedBy(world, pos, state, player, stack);
+        super.setPlacedBy(world, pos, state, player, stack);
     }
 
     @Nullable
@@ -60,10 +60,10 @@ public class FluidStorageBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!world.isClientSide) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayerEntity) player, new PositionalTileContainerProvider<FluidStorageTile>(
-                ((FluidStorageTile) world.getTileEntity(pos)).getNode().getTitle(),
+                ((FluidStorageTile) world.getBlockEntity(pos)).getNode().getTitle(),
                 (tile, windowId, inventory, p) -> new FluidStorageContainer(tile, player, windowId),
                 pos
             ), pos));

@@ -21,7 +21,7 @@ public class FluidExternalStorageProvider implements IExternalStorageProvider<Fl
     @Override
     public IExternalStorage<FluidStack> provide(IExternalStorageContext context, TileEntity tile, Direction direction) {
         return new FluidExternalStorage(context, () -> {
-            if (!tile.getWorld().isBlockPresent(tile.getPos())) {
+            if (!tile.getLevel().isLoaded(tile.getBlockPos())) {
                 return null;
             }
 

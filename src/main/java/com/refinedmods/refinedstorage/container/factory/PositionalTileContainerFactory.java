@@ -22,7 +22,7 @@ public class PositionalTileContainerFactory<C extends Container, T extends TileE
     public C create(int windowId, PlayerInventory inv, PacketBuffer data) {
         BlockPos pos = data.readBlockPos();
 
-        T tile = (T) inv.player.world.getTileEntity(pos);
+        T tile = (T) inv.player.level.getBlockEntity(pos);
 
         return factory.create(windowId, inv, tile);
     }

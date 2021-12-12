@@ -28,22 +28,22 @@ public class NetworkCardItem extends Item {
     private static final String NBT_DIMENSION = "Dimension";
 
     public NetworkCardItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
+        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext ctx) {
-        Block block = ctx.getWorld().getBlockState(ctx.getPos()).getBlock();
+    public ActionResultType useOn(ItemUseContext ctx) {
+        Block block = ctx.getLevel().getBlockState(ctx.getClickedPos()).getBlock();
 
         if (block instanceof NetworkReceiverBlock) {
             CompoundNBT tag = new CompoundNBT();
 
-            tag.putInt(NBT_RECEIVER_X, ctx.getPos().getX());
-            tag.putInt(NBT_RECEIVER_Y, ctx.getPos().getY());
-            tag.putInt(NBT_RECEIVER_Z, ctx.getPos().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimensionKey().getLocation().toString());
+            tag.putInt(NBT_RECEIVER_X, ctx.getClickedPos().getX());
+            tag.putInt(NBT_RECEIVER_Y, ctx.getClickedPos().getY());
+            tag.putInt(NBT_RECEIVER_Z, ctx.getClickedPos().getZ());
+            tag.putString(NBT_DIMENSION, ctx.getLevel().dimension().location().toString());
 
-            ctx.getPlayer().getHeldItem(ctx.getHand()).setTag(tag);
+            ctx.getPlayer().getItemInHand(ctx.getHand()).setTag(tag);
 
             return ActionResultType.SUCCESS;
         }
@@ -52,8 +52,8 @@ public class NetworkCardItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         BlockPos pos = getReceiver(stack);
         RegistryKey<World> type = getDimension(stack);
@@ -64,7 +64,7 @@ public class NetworkCardItem extends Item {
                 pos.getX(),
                 pos.getY(),
                 pos.getZ(),
-                type.getLocation().toString()
+                type.location().toString()
             ).setStyle(Styles.GRAY));
         }
     }
@@ -88,12 +88,12 @@ public class NetworkCardItem extends Item {
     @Nullable
     public static RegistryKey<World> getDimension(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains(NBT_DIMENSION)) {
-            ResourceLocation name = ResourceLocation.tryCreate(stack.getTag().getString(NBT_DIMENSION));
+            ResourceLocation name = ResourceLocation.tryParse(stack.getTag().getString(NBT_DIMENSION));
             if (name == null) {
                 return null;
             }
 
-            return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, name);
+            return RegistryKey.create(Registry.DIMENSION_REGISTRY, name);
         }
 
         return null;

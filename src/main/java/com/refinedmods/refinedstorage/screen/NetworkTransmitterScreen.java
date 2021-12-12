@@ -32,7 +32,7 @@ public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterConta
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/network_transmitter.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
@@ -45,14 +45,14 @@ public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterConta
         int distance = NetworkTransmitterTile.DISTANCE.getValue();
 
         if (!receiverDim.isPresent()) {
-            text = I18n.format("gui.refinedstorage.network_transmitter.missing_card");
+            text = I18n.get("gui.refinedstorage.network_transmitter.missing_card");
         } else if (distance != -1) {
-            text = I18n.format("gui.refinedstorage.network_transmitter.distance", distance);
+            text = I18n.get("gui.refinedstorage.network_transmitter.distance", distance);
         } else {
             text = receiverDim.get().toString();
         }
 
         renderString(matrixStack, 51, 24, text);
-        renderString(matrixStack, 7, 42, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 42, I18n.get("container.inventory"));
     }
 }

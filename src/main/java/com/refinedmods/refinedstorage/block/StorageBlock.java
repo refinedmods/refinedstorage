@@ -37,19 +37,19 @@ public class StorageBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (!world.isRemote) {
-            StorageNetworkNode storage = ((StorageTile) world.getTileEntity(pos)).getNode();
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        if (!world.isClientSide) {
+            StorageNetworkNode storage = ((StorageTile) world.getBlockEntity(pos)).getNode();
 
-            if (stack.hasTag() && stack.getTag().hasUniqueId(StorageNetworkNode.NBT_ID)) {
-                storage.setStorageId(stack.getTag().getUniqueId(StorageNetworkNode.NBT_ID));
+            if (stack.hasTag() && stack.getTag().hasUUID(StorageNetworkNode.NBT_ID)) {
+                storage.setStorageId(stack.getTag().getUUID(StorageNetworkNode.NBT_ID));
             }
 
             storage.loadStorage(entity instanceof PlayerEntity ? (PlayerEntity) entity : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
-        super.onBlockPlacedBy(world, pos, state, entity, stack);
+        super.setPlacedBy(world, pos, state, entity, stack);
     }
 
     @Nullable
@@ -60,10 +60,10 @@ public class StorageBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!world.isClientSide) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayerEntity) player, new PositionalTileContainerProvider<StorageTile>(
-                ((StorageTile) world.getTileEntity(pos)).getNode().getTitle(),
+                ((StorageTile) world.getBlockEntity(pos)).getNode().getTitle(),
                 (tile, windowId, inventory, p) -> new StorageContainer(tile, player, windowId),
                 pos
             ), pos));

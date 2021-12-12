@@ -90,7 +90,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     public void update() {
         super.update();
 
-        if (canUpdate() && world.isBlockPresent(pos)) {
+        if (canUpdate() && world.isLoaded(pos)) {
             if (networkTicks++ == 0) {
                 updateStorage(network, InvalidateCause.INITIAL_TICK_INVALIDATION);
 
@@ -293,7 +293,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     @Override
     public int getType() {
-        return world.isRemote ? ExternalStorageTile.TYPE.getValue() : type;
+        return world.isClientSide ? ExternalStorageTile.TYPE.getValue() : type;
     }
 
     @Override

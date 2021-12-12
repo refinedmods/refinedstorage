@@ -29,8 +29,8 @@ public class FluidFilterSlotUpdateMessage {
 
     public static void handle(FluidFilterSlotUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         BaseScreen.executeLater(gui -> {
-            if (message.containerSlot >= 0 && message.containerSlot < gui.getContainer().inventorySlots.size()) {
-                Slot slot = gui.getContainer().getSlot(message.containerSlot);
+            if (message.containerSlot >= 0 && message.containerSlot < gui.getMenu().slots.size()) {
+                Slot slot = gui.getMenu().getSlot(message.containerSlot);
 
                 if (slot instanceof FluidFilterSlot) {
                     ((FluidFilterSlot) slot).getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);

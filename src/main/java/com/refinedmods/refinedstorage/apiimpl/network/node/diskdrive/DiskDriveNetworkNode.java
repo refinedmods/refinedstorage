@@ -64,7 +64,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
                     handler.getStackInSlot(slot),
@@ -328,7 +328,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
     @Override
     public int getType() {
-        return world.isRemote ? DiskDriveTile.TYPE.getValue() : type;
+        return world.isClientSide ? DiskDriveTile.TYPE.getValue() : type;
     }
 
     @Override

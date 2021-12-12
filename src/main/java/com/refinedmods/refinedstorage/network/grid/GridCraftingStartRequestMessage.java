@@ -23,14 +23,14 @@ public class GridCraftingStartRequestMessage {
 
     public static GridCraftingStartRequestMessage decode(PacketBuffer buf) {
         return new GridCraftingStartRequestMessage(
-            buf.readUniqueId(),
+            buf.readUUID(),
             buf.readInt(),
             buf.readBoolean()
         );
     }
 
     public static void encode(GridCraftingStartRequestMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.fluids);
     }
@@ -40,7 +40,7 @@ public class GridCraftingStartRequestMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.openContainer;
+                Container container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     IGrid grid = ((GridContainer) container).getGrid();

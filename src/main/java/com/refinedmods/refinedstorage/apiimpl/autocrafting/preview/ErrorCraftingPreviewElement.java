@@ -37,7 +37,7 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     @Override
     public void write(PacketBuffer buf) {
         buf.writeInt(type.ordinal());
-        buf.writeItemStack(recursedPattern);
+        buf.writeItem(recursedPattern);
     }
 
     public CalculationResultType getType() {
@@ -47,7 +47,7 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     public static ErrorCraftingPreviewElement read(PacketBuffer buf) {
         int errorIdx = buf.readInt();
         CalculationResultType error = errorIdx >= 0 && errorIdx < CalculationResultType.values().length ? CalculationResultType.values()[errorIdx] : CalculationResultType.TOO_COMPLEX;
-        ItemStack stack = buf.readItemStack();
+        ItemStack stack = buf.readItem();
 
         return new ErrorCraftingPreviewElement(error, stack);
     }

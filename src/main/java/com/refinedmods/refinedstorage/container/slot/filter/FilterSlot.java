@@ -26,8 +26,8 @@ public class FilterSlot extends BaseSlot {
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
-        if (super.isItemValid(stack)) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
+        if (super.mayPlace(stack)) {
             if (isBlockAllowed()) {
                 return stack.getItem() instanceof BlockItem;
             }
@@ -39,16 +39,16 @@ public class FilterSlot extends BaseSlot {
     }
 
     @Override
-    public void putStack(@Nonnull ItemStack stack) {
+    public void set(@Nonnull ItemStack stack) {
         if (!stack.isEmpty() && !isSizeAllowed()) {
             stack.setCount(1);
         }
 
-        super.putStack(stack);
+        super.set(stack);
     }
 
     @Override
-    public boolean canTakeStack(PlayerEntity playerIn) {
+    public boolean mayPickup(PlayerEntity playerIn) {
         return false;
     }
 

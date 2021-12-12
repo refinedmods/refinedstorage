@@ -19,10 +19,10 @@ public abstract class RSWorldSavedData extends WorldSavedData {
     }
 
     @Override
-    public abstract void read(CompoundNBT nbt);
+    public abstract void load(CompoundNBT nbt);
 
     @Override
-    public abstract CompoundNBT write(CompoundNBT compound);
+    public abstract CompoundNBT save(CompoundNBT compound);
 
     @Override
     public void save(File fileIn) {
@@ -31,8 +31,8 @@ public abstract class RSWorldSavedData extends WorldSavedData {
             File tempFile = fileIn.toPath().getParent().resolve(fileIn.getName() + ".temp").toFile();
 
             CompoundNBT compoundnbt = new CompoundNBT();
-            compoundnbt.put("data", this.write(new CompoundNBT()));
-            compoundnbt.putInt("DataVersion", SharedConstants.getVersion().getWorldVersion());
+            compoundnbt.put("data", this.save(new CompoundNBT()));
+            compoundnbt.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
 
             try {
                 CompressedStreamTools.writeCompressed(compoundnbt, tempFile);

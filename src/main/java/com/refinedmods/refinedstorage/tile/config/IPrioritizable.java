@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface IPrioritizable {
     static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, 0, t -> ((IPrioritizable) t.getNode()).getPriority(), (t, v) -> ((IPrioritizable) t.getNode()).setPriority(v));
+        return new TileDataParameter<>(DataSerializers.INT, 0, t -> ((IPrioritizable) t.getNode()).getPriority(), (t, v) -> ((IPrioritizable) t.getNode()).setPriority(v));
     }
 
     int getPriority();

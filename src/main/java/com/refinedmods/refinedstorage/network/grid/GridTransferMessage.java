@@ -77,8 +77,8 @@ public class GridTransferMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.openContainer instanceof GridContainer) {
-                    IGrid grid = ((GridContainer) player.openContainer).getGrid();
+                if (player.containerMenu instanceof GridContainer) {
+                    IGrid grid = ((GridContainer) player.containerMenu).getGrid();
 
                     if (grid.getGridType() == GridType.CRAFTING || grid.getGridType() == GridType.PATTERN) {
                         grid.onRecipeTransfer(player, message.recipe);

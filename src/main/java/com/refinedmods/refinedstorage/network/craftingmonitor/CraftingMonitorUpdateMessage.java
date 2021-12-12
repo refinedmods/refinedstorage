@@ -45,11 +45,11 @@ public class CraftingMonitorUpdateMessage {
         List<IGridTab> tasks = new ArrayList<>();
 
         for (int i = 0; i < size; ++i) {
-            UUID id = buf.readUniqueId();
+            UUID id = buf.readUUID();
 
             ICraftingRequestInfo requested = null;
             try {
-                requested = API.instance().createCraftingRequestInfo(buf.readCompoundTag());
+                requested = API.instance().createCraftingRequestInfo(buf.readNbt());
             } catch (CraftingTaskReadException e) {
                 LOGGER.error("Could not create crafting request info", e);
             }
@@ -80,8 +80,8 @@ public class CraftingMonitorUpdateMessage {
         buf.writeInt(message.craftingMonitor.getTasks().size());
 
         for (ICraftingTask task : message.craftingMonitor.getTasks()) {
-            buf.writeUniqueId(task.getId());
-            buf.writeCompoundTag(task.getRequested().writeToNbt());
+            buf.writeUUID(task.getId());
+            buf.writeNbt(task.getRequested().writeToNbt());
             buf.writeInt(task.getQuantity());
             buf.writeLong(task.getStartTime());
             buf.writeInt(task.getCompletionPercentage());

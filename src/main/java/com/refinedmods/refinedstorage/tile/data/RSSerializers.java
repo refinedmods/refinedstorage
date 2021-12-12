@@ -21,7 +21,7 @@ public final class RSSerializers {
             buf.writeInt(nodes.size());
 
             for (ClientNode node : nodes) {
-                buf.writeItemStack(node.getStack());
+                buf.writeItem(node.getStack());
                 buf.writeInt(node.getAmount());
                 buf.writeInt(node.getEnergyUsage());
             }
@@ -34,19 +34,19 @@ public final class RSSerializers {
             int size = buf.readInt();
 
             for (int i = 0; i < size; ++i) {
-                nodes.add(new ClientNode(buf.readItemStack(), buf.readInt(), buf.readInt()));
+                nodes.add(new ClientNode(buf.readItem(), buf.readInt(), buf.readInt()));
             }
 
             return nodes;
         }
 
         @Override
-        public DataParameter<List<ClientNode>> createKey(int id) {
+        public DataParameter<List<ClientNode>> createAccessor(int id) {
             return null;
         }
 
         @Override
-        public List<ClientNode> copyValue(List<ClientNode> value) {
+        public List<ClientNode> copy(List<ClientNode> value) {
             return value;
         }
     };
@@ -63,12 +63,12 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<FluidStack> createKey(int id) {
+        public DataParameter<FluidStack> createAccessor(int id) {
             return null;
         }
 
         @Override
-        public FluidStack copyValue(FluidStack value) {
+        public FluidStack copy(FluidStack value) {
             return value;
         }
     };
@@ -85,12 +85,12 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<AccessType> createKey(int id) {
+        public DataParameter<AccessType> createAccessor(int id) {
             return null;
         }
 
         @Override
-        public AccessType copyValue(AccessType value) {
+        public AccessType copy(AccessType value) {
             return value;
         }
     };
@@ -107,12 +107,12 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<Long> createKey(int id) {
+        public DataParameter<Long> createAccessor(int id) {
             return null;
         }
 
         @Override
-        public Long copyValue(Long value) {
+        public Long copy(Long value) {
             return value;
         }
     };
@@ -135,12 +135,12 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<Optional<ResourceLocation>> createKey(int id) {
+        public DataParameter<Optional<ResourceLocation>> createAccessor(int id) {
             return null;
         }
 
         @Override
-        public Optional<ResourceLocation> copyValue(Optional<ResourceLocation> value) {
+        public Optional<ResourceLocation> copy(Optional<ResourceLocation> value) {
             return value;
         }
     };
@@ -178,12 +178,12 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<List<Set<ResourceLocation>>> createKey(int id) {
+        public DataParameter<List<Set<ResourceLocation>>> createAccessor(int id) {
             return null;
         }
 
         @Override
-        public List<Set<ResourceLocation>> copyValue(List<Set<ResourceLocation>> value) {
+        public List<Set<ResourceLocation>> copy(List<Set<ResourceLocation>> value) {
             return value;
         }
     };

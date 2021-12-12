@@ -167,13 +167,13 @@ public final class RSItems {
         LATE_REGISTRATION.add(() -> {
             RSBlocks.CONTROLLER.forEach((color, block) -> {
                 if (color != ColorMap.DEFAULT_COLOR) {
-                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getDescriptionId()))));
                 }
             });
 
             RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
                 if (color != ColorMap.DEFAULT_COLOR) {
-                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getTranslationKey()))));
+                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, new TranslationTextComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getDescriptionId()))));
                 }
             });
         });
@@ -207,7 +207,7 @@ public final class RSItems {
     }
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().group(RS.MAIN_GROUP)));
+        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().tab(RS.MAIN_GROUP)));
     }
 
     public static void register() {

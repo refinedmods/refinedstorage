@@ -30,7 +30,7 @@ import java.util.HashMap;
 
 public class CableTile extends NetworkNodeTile<CableNetworkNode> {
 
-    public static final TileDataParameter<CompoundNBT, CableTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
+    public static final TileDataParameter<CompoundNBT, CableTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
             (initial, p) -> {});
@@ -69,7 +69,7 @@ public class CableTile extends NetworkNodeTile<CableNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 
 

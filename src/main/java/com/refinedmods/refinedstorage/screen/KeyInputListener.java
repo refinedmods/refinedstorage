@@ -26,13 +26,13 @@ public class KeyInputListener {
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
         if (Minecraft.getInstance().player != null) {
-            if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
+            if (RSKeyBindings.OPEN_WIRELESS_GRID.isDown()) {
                 findAndOpen(RSItems.WIRELESS_GRID.get(), RSItems.CREATIVE_WIRELESS_GRID.get());
-            } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
+            } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isDown()) {
                 findAndOpen(RSItems.WIRELESS_FLUID_GRID.get(), RSItems.CREATIVE_WIRELESS_FLUID_GRID.get());
-            } else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
+            } else if (RSKeyBindings.OPEN_PORTABLE_GRID.isDown()) {
                 findAndOpen(RSItems.PORTABLE_GRID.get(), RSItems.CREATIVE_PORTABLE_GRID.get());
-            } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
+            } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isDown()) {
                 findAndOpen(RSItems.WIRELESS_CRAFTING_MONITOR.get(), RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get());
             }
         }
@@ -44,12 +44,12 @@ public class KeyInputListener {
         IInventory inv = Minecraft.getInstance().player.inventory;
         int slotFound = -1;
 
-        for (int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack slot = inv.getStackInSlot(i);
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack slot = inv.getItem(i);
 
             if (validItems.contains(slot.getItem())) {
                 if (slotFound != -1) {
-                    sendError(new TranslationTextComponent("misc.refinedstorage.network_item.shortcut_duplicate", new TranslationTextComponent(items[0].getTranslationKey())));
+                    sendError(new TranslationTextComponent("misc.refinedstorage.network_item.shortcut_duplicate", new TranslationTextComponent(items[0].getDescriptionId())));
                     return;
                 }
 
@@ -67,14 +67,14 @@ public class KeyInputListener {
         }
 
         if (slotFound == -1) {
-            sendError(new TranslationTextComponent("misc.refinedstorage.network_item.shortcut_not_found", new TranslationTextComponent(items[0].getTranslationKey())));
+            sendError(new TranslationTextComponent("misc.refinedstorage.network_item.shortcut_not_found", new TranslationTextComponent(items[0].getDescriptionId())));
         } else {
             RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(new PlayerSlot(slotFound)));
         }
     }
 
     public static void sendError(TranslationTextComponent error) {
-        Minecraft.getInstance().player.sendMessage(error, Util.DUMMY_UUID);
+        Minecraft.getInstance().player.sendMessage(error, Util.NIL_UUID);
     }
 
 

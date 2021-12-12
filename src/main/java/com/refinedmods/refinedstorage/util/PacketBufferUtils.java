@@ -8,6 +8,6 @@ public final class PacketBufferUtils {
 
     // @Volatile: From PacketBuffer#readString, this exists because SideOnly
     public static String readString(PacketBuffer buffer) {
-        return buffer.readString(32767);
+        return buffer.readUtf(32767);
     }
 }

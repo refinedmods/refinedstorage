@@ -24,7 +24,7 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
     public static final TileDataParameter<Integer, ImporterTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, ImporterTile> TYPE = IType.createParameter();
 
-    public static final TileDataParameter<CompoundNBT, ImporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
+    public static final TileDataParameter<CompoundNBT, ImporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
             (initial, p) -> {});
@@ -67,6 +67,6 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 }

@@ -42,7 +42,7 @@ public class GridCraftingPreviewResponseMessage {
     }
 
     public static GridCraftingPreviewResponseMessage decode(PacketBuffer buf) {
-        UUID id = buf.readUniqueId();
+        UUID id = buf.readUUID();
         int quantity = buf.readInt();
         boolean fluids = buf.readBoolean();
 
@@ -59,7 +59,7 @@ public class GridCraftingPreviewResponseMessage {
     }
 
     public static void encode(GridCraftingPreviewResponseMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.fluids);
         buf.writeInt(message.elements.size());

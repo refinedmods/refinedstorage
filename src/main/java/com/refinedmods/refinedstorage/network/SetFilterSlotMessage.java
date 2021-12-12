@@ -27,12 +27,12 @@ public class SetFilterSlotMessage {
     }
 
     public static SetFilterSlotMessage decode(PacketBuffer buf) {
-        return new SetFilterSlotMessage(buf.readInt(), buf.readItemStack());
+        return new SetFilterSlotMessage(buf.readInt(), buf.readItem());
     }
 
     public static void encode(SetFilterSlotMessage message, PacketBuffer buf) {
         buf.writeInt(message.containerSlot);
-        buf.writeItemStack(message.stack);
+        buf.writeItem(message.stack);
     }
 
     public static void handle(SetFilterSlotMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -41,9 +41,9 @@ public class SetFilterSlotMessage {
 
             if (player != null) {
                 ctx.get().enqueueWork(() -> {
-                    Container container = player.openContainer;
+                    Container container = player.containerMenu;
 
-                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
+                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.slots.size()) {
                         handle(message, container);
                     }
                 });
@@ -74,7 +74,7 @@ public class SetFilterSlotMessage {
                 }
             }
 
-            slot.putStack(message.stack);
+            slot.set(message.stack);
             postAction.run();
         }
     }

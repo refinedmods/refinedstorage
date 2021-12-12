@@ -31,12 +31,12 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
 
         addSideButton(new ExactModeSideButton(this, DetectorTile.COMPARE));
 
-        amountField = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.FONT_HEIGHT, new StringTextComponent(""));
-        amountField.setText(String.valueOf(DetectorTile.AMOUNT.getValue()));
-        amountField.setEnableBackgroundDrawing(false);
+        amountField = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.lineHeight, new StringTextComponent(""));
+        amountField.setValue(String.valueOf(DetectorTile.AMOUNT.getValue()));
+        amountField.setBordered(false);
         amountField.setVisible(true);
         amountField.setCanLoseFocus(true);
-        amountField.setFocused2(false);
+        amountField.setFocus(false);
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setResponder(value -> {
             try {
@@ -52,7 +52,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
     }
 
     public void updateAmountField(int amount) {
-        amountField.setText(String.valueOf(amount));
+        amountField.setValue(String.valueOf(amount));
     }
 
     @Override
@@ -64,24 +64,24 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/detector.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 43, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 43, I18n.get("container.inventory"));
     }
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.player.closeScreen();
+            minecraft.player.closeContainer();
 
             return true;
         }
 
-        if (amountField.keyPressed(key, scanCode, modifiers) || amountField.canWrite()) {
+        if (amountField.keyPressed(key, scanCode, modifiers) || amountField.canConsumeInput()) {
             return true;
         }
 

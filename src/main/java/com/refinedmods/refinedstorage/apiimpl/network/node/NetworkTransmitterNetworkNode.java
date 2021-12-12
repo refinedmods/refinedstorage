@@ -98,7 +98,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.getDimensionKey() == receiverDimension;
+        return world.dimension() == receiverDimension;
     }
 
     private boolean canTransmit() {
@@ -116,13 +116,13 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                World dimensionWorld = world.getServer().getWorld(receiverDimension);
+                World dimensionWorld = world.getServer().getLevel(receiverDimension);
 
-                if (dimensionWorld != null && dimensionWorld.getTileEntity(receiver) instanceof NetworkReceiverTile) {
+                if (dimensionWorld != null && dimensionWorld.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
                     operator.apply(dimensionWorld, receiver, null);
                 }
             } else {
-                if (world.getTileEntity(receiver) instanceof NetworkReceiverTile) {
+                if (world.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
                     operator.apply(world, receiver, null);
                 }
             }

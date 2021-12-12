@@ -23,7 +23,7 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
         Optional<UUID> tabSelected = Optional.empty();
 
         if (buf.readBoolean()) {
-            tabSelected = Optional.of(buf.readUniqueId());
+            tabSelected = Optional.of(buf.readUUID());
         }
 
         int tabPage = buf.readInt();
@@ -34,7 +34,7 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
     public static void encode(WirelessCraftingMonitorSettingsUpdateMessage message, PacketBuffer buf) {
         buf.writeBoolean(message.tabSelected.isPresent());
 
-        message.tabSelected.ifPresent(buf::writeUniqueId);
+        message.tabSelected.ifPresent(buf::writeUUID);
 
         buf.writeInt(message.tabPage);
     }
@@ -44,8 +44,8 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.openContainer instanceof CraftingMonitorContainer) {
-                    ((WirelessCraftingMonitor) ((CraftingMonitorContainer) player.openContainer).getCraftingMonitor()).setSettings(message.tabSelected, message.tabPage);
+                if (player.containerMenu instanceof CraftingMonitorContainer) {
+                    ((WirelessCraftingMonitor) ((CraftingMonitorContainer) player.containerMenu).getCraftingMonitor()).setSettings(message.tabSelected, message.tabPage);
                 }
             });
         }

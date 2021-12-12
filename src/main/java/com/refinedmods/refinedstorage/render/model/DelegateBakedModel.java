@@ -27,8 +27,8 @@ public class DelegateBakedModel implements IBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return base.isAmbientOcclusion();
+    public boolean useAmbientOcclusion() {
+        return base.useAmbientOcclusion();
     }
 
     @Override
@@ -37,19 +37,19 @@ public class DelegateBakedModel implements IBakedModel {
     }
 
     @Override
-    public boolean isSideLit() {
-        return base.isSideLit();
+    public boolean usesBlockLight() {
+        return base.usesBlockLight();
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
-        return base.isBuiltInRenderer();
+    public boolean isCustomRenderer() {
+        return base.isCustomRenderer();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public TextureAtlasSprite getParticleTexture() {
-        return base.getParticleTexture();
+    public TextureAtlasSprite getParticleIcon() {
+        return base.getParticleIcon();
     }
 
     @Override
@@ -59,8 +59,8 @@ public class DelegateBakedModel implements IBakedModel {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return base.getItemCameraTransforms();
+    public ItemCameraTransforms getTransforms() {
+        return base.getTransforms();
     }
 
     @Override

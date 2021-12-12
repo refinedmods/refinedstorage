@@ -32,17 +32,17 @@ import javax.annotation.Nullable;
 public class DetectorBlock extends ColoredNetworkBlock {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
-    private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 5, 16);
+    private static final VoxelShape SHAPE = box(0, 0, 0, 16, 5, 16);
 
     public DetectorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
-        this.setDefaultState(this.getStateContainer().getBaseState().with(POWERED, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(POWERED, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
 
         builder.add(POWERED);
     }
@@ -55,31 +55,31 @@ public class DetectorBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakPower(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
-        TileEntity tile = world.getTileEntity(pos);
+    public int getSignal(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+        TileEntity tile = world.getBlockEntity(pos);
 
         return (tile instanceof DetectorTile && ((DetectorTile) tile).getNode().isPowered()) ? 15 : 0;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ColorMap<DetectorBlock> colorMap = RSBlocks.DETECTOR;
-        DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
+        DyeColor color = DyeColor.getColor(player.getItemInHand(hand));
 
         if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
-            BlockState newState = colorMap.get(color).get().getDefaultState().with(POWERED, state.get(POWERED));
+            BlockState newState = colorMap.get(color).get().defaultBlockState().setValue(POWERED, state.getValue(POWERED));
 
-            return RSBlocks.DETECTOR.setBlockState(newState, player.getHeldItem(hand), world, pos, player);
+            return RSBlocks.DETECTOR.setBlockState(newState, player.getItemInHand(hand), world, pos, player);
         }
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DetectorTile>(

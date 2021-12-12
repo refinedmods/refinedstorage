@@ -28,7 +28,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
         t.getNode().markDirty();
     });
 
-    public static final TileDataParameter<CompoundNBT, DestructorTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
+    public static final TileDataParameter<CompoundNBT, DestructorTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
             (initial, p) -> {});
@@ -72,6 +72,6 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 }

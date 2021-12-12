@@ -160,11 +160,11 @@ public class ClientSetup {
         API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
 
         API.instance().addPatternRenderHandler(pattern -> {
-            Container container = Minecraft.getInstance().player.openContainer;
+            Container container = Minecraft.getInstance().player.containerMenu;
 
             if (container instanceof CrafterManagerContainer) {
-                for (Slot slot : container.inventorySlots) {
-                    if (slot instanceof CrafterManagerSlot && slot.getStack() == pattern) {
+                for (Slot slot : container.slots) {
+                    if (slot instanceof CrafterManagerSlot && slot.getItem() == pattern) {
                         return true;
                     }
                 }
@@ -174,11 +174,11 @@ public class ClientSetup {
         });
 
         API.instance().addPatternRenderHandler(pattern -> {
-            Container container = Minecraft.getInstance().player.openContainer;
+            Container container = Minecraft.getInstance().player.containerMenu;
 
             if (container instanceof CrafterContainer) {
                 for (int i = 0; i < 9; ++i) {
-                    if (container.getSlot(i).getStack() == pattern) {
+                    if (container.getSlot(i).getItem() == pattern) {
                         return true;
                     }
                 }
@@ -207,30 +207,30 @@ public class ClientSetup {
     public void onClientSetup(FMLClientSetupEvent e) {
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
 
-        ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
-        ScreenManager.registerFactory(RSContainers.CONTROLLER, ControllerScreen::new);
-        ScreenManager.registerFactory(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
-        ScreenManager.registerFactory(RSContainers.GRID, new GridScreenFactory());
-        ScreenManager.registerFactory(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
-        ScreenManager.registerFactory(RSContainers.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
-        ScreenManager.registerFactory(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
-        ScreenManager.registerFactory(RSContainers.IMPORTER, ImporterScreen::new);
-        ScreenManager.registerFactory(RSContainers.EXPORTER, ExporterScreen::new);
-        ScreenManager.registerFactory(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
-        ScreenManager.registerFactory(RSContainers.RELAY, RelayScreen::new);
-        ScreenManager.registerFactory(RSContainers.DETECTOR, DetectorScreen::new);
-        ScreenManager.registerFactory(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
-        ScreenManager.registerFactory(RSContainers.INTERFACE, InterfaceScreen::new);
-        ScreenManager.registerFactory(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
-        ScreenManager.registerFactory(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
-        ScreenManager.registerFactory(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
-        ScreenManager.registerFactory(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
-        ScreenManager.registerFactory(RSContainers.DESTRUCTOR, DestructorScreen::new);
-        ScreenManager.registerFactory(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
-        ScreenManager.registerFactory(RSContainers.CRAFTER, CrafterScreen::new);
-        ScreenManager.registerFactory(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
-        ScreenManager.registerFactory(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
-        ScreenManager.registerFactory(RSContainers.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        ScreenManager.register(RSContainers.FILTER, FilterScreen::new);
+        ScreenManager.register(RSContainers.CONTROLLER, ControllerScreen::new);
+        ScreenManager.register(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
+        ScreenManager.register(RSContainers.GRID, new GridScreenFactory());
+        ScreenManager.register(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
+        ScreenManager.register(RSContainers.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
+        ScreenManager.register(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
+        ScreenManager.register(RSContainers.IMPORTER, ImporterScreen::new);
+        ScreenManager.register(RSContainers.EXPORTER, ExporterScreen::new);
+        ScreenManager.register(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
+        ScreenManager.register(RSContainers.RELAY, RelayScreen::new);
+        ScreenManager.register(RSContainers.DETECTOR, DetectorScreen::new);
+        ScreenManager.register(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
+        ScreenManager.register(RSContainers.INTERFACE, InterfaceScreen::new);
+        ScreenManager.register(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
+        ScreenManager.register(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
+        ScreenManager.register(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
+        ScreenManager.register(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
+        ScreenManager.register(RSContainers.DESTRUCTOR, DestructorScreen::new);
+        ScreenManager.register(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
+        ScreenManager.register(RSContainers.CRAFTER, CrafterScreen::new);
+        ScreenManager.register(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
+        ScreenManager.register(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        ScreenManager.register(RSContainers.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
@@ -239,46 +239,46 @@ public class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
-        RSBlocks.CONTROLLER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.CRAFTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.CRAFTER_MANAGER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.CRAFTING_MONITOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.DETECTOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.DISK_MANIPULATOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.CRAFTING_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.PATTERN_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.FLUID_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.NETWORK_RECEIVER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.RELAY.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.SECURITY_MANAGER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.getCutout()));
-        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.getCutout());
+        RSBlocks.CONTROLLER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTER_MANAGER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTING_MONITOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.DETECTOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.DISK_MANIPULATOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTING_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.PATTERN_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.FLUID_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.NETWORK_RECEIVER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.RELAY.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.SECURITY_MANAGER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
+        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
 
         ClientRegistry.bindTileEntityRenderer(RSTiles.STORAGE_MONITOR, StorageMonitorTileRenderer::new);
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
 
-        ItemModelsProperties.registerProperty(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
 
-        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.registerProperty(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
-        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.registerProperty(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
 
-        ItemModelsProperties.registerProperty(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.registerProperty(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.registerProperty(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.registerProperty(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemModelsProperties.register(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
     }
 
     @SubscribeEvent
@@ -322,7 +322,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public void onTextureStitch(TextureStitchEvent.Pre event){
-        if (event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
+        if (event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS))
             event.addSprite(new ResourceLocation(RS.ID ,"block/cable_part_border"));
     }
 }

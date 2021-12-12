@@ -15,13 +15,13 @@ import net.minecraft.world.server.ServerWorld;
 public abstract class NetworkCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = DimensionArgument.getDimensionArgument(context, "dimension");
-        BlockPos pos = BlockPosArgument.getBlockPos(context, "pos");
+        ServerWorld world = DimensionArgument.getDimension(context, "dimension");
+        BlockPos pos = BlockPosArgument.getOrLoadBlockPos(context, "pos");
 
         INetwork network = API.instance().getNetworkManager(world).getNetwork(pos);
 
         if (network == null) {
-            context.getSource().sendErrorMessage(new TranslationTextComponent("commands.refinedstorage.network.get.error.not_found"));
+            context.getSource().sendFailure(new TranslationTextComponent("commands.refinedstorage.network.get.error.not_found"));
             return 0;
         } else {
             return run(context, network);

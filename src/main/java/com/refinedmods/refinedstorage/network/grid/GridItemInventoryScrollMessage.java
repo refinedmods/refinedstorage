@@ -31,8 +31,8 @@ public class GridItemInventoryScrollMessage {
     public static void handle(GridItemInventoryScrollMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();
-            if (player != null && player.openContainer instanceof GridContainer && ((GridContainer) player.openContainer).getGrid().getItemHandler() != null) {
-                ((GridContainer) player.openContainer).getGrid().getItemHandler().onInventoryScroll(player, message.slot, message.shift, message.up);
+            if (player != null && player.containerMenu instanceof GridContainer && ((GridContainer) player.containerMenu).getGrid().getItemHandler() != null) {
+                ((GridContainer) player.containerMenu).getGrid().getItemHandler().onInventoryScroll(player, message.slot, message.shift, message.up);
             }
         });
         ctx.get().setPacketHandled(true);

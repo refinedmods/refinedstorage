@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
 
-    public static final TileDataParameter<CompoundNBT, ExporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
+    public static final TileDataParameter<CompoundNBT, ExporterTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
             (initial, p) -> {});
@@ -65,6 +65,6 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 }

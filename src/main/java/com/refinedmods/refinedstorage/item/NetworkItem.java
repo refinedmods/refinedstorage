@@ -36,14 +36,14 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isRemote) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUniqueID()));
+        if (!world.isClientSide) {
+            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getItemInHand(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUUID()));
         }
 
-        return ActionResult.resultSuccess(stack);
+        return ActionResult.success(stack);
     }
 
     public void applyNetwork(MinecraftServer server, ItemStack stack, Consumer<INetwork> onNetwork, Consumer<ITextComponent> onError) {
@@ -60,13 +60,13 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        World nodeWorld = server.getWorld(dimension);
+        World nodeWorld = server.getLevel(dimension);
         if (nodeWorld == null) {
             onError.accept(notFound);
             return;
         }
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(nodeWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(nodeWorld.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
         if (network == null) {
             onError.accept(notFound);
             return;
@@ -76,8 +76,8 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
             tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
@@ -85,15 +85,15 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     @Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        return super.itemInteractionForEntity(stack, playerIn, target, hand);
+    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        return super.interactLivingEntity(stack, playerIn, target, hand);
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext ctx) {
-        ItemStack stack = ctx.getPlayer().getHeldItem(ctx.getHand());
+    public ActionResultType useOn(ItemUseContext ctx) {
+        ItemStack stack = ctx.getPlayer().getItemInHand(ctx.getHand());
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(ctx.getWorld().getTileEntity(ctx.getPos())));
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(ctx.getLevel().getBlockEntity(ctx.getClickedPos())));
         if (network != null) {
             CompoundNBT tag = stack.getTag();
 
@@ -104,7 +104,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             tag.putInt(NBT_NODE_X, network.getPosition().getX());
             tag.putInt(NBT_NODE_Y, network.getPosition().getY());
             tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimensionKey().getLocation().toString());
+            tag.putString(NBT_DIMENSION, ctx.getLevel().dimension().location().toString());
 
             stack.setTag(tag);
 
@@ -117,12 +117,12 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     @Nullable
     public static RegistryKey<World> getDimension(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains(NBT_DIMENSION)) {
-            ResourceLocation name = ResourceLocation.tryCreate(stack.getTag().getString(NBT_DIMENSION));
+            ResourceLocation name = ResourceLocation.tryParse(stack.getTag().getString(NBT_DIMENSION));
             if (name == null) {
                 return null;
             }
 
-            return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, name);
+            return RegistryKey.create(Registry.DIMENSION_REGISTRY, name);
         }
 
         return null;

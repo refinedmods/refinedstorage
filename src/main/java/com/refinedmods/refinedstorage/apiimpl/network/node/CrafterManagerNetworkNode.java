@@ -35,7 +35,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public int getSize() {
-        return world.isRemote ? CrafterManagerTile.SIZE.getValue() : size;
+        return world.isClientSide ? CrafterManagerTile.SIZE.getValue() : size;
     }
 
     public void setSize(int size) {
@@ -66,7 +66,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public int getSearchBoxMode() {
-        return world.isRemote ? CrafterManagerTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return world.isClientSide ? CrafterManagerTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {
@@ -77,7 +77,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() instanceof CrafterManagerBlock) {
-            return state.get(NetworkNodeBlock.CONNECTED);
+            return state.getValue(NetworkNodeBlock.CONNECTED);
         }
 
         return false;

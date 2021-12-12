@@ -22,14 +22,14 @@ public class ListNetworkCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("list")
-            .requires(cs -> cs.hasPermissionLevel(2))
-            .then(Commands.argument("dimension", DimensionArgument.getDimension())
+            .requires(cs -> cs.hasPermission(2))
+            .then(Commands.argument("dimension", DimensionArgument.dimension())
                 .executes(new ListNetworkCommand()));
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = DimensionArgument.getDimensionArgument(context, "dimension");
+        ServerWorld world = DimensionArgument.getDimension(context, "dimension");
 
         API.instance().getNetworkManager(world)
             .all()
@@ -63,31 +63,31 @@ public class ListNetworkCommand implements Command<CommandSource> {
     }
 
     public static void sendInfo(CommandContext<CommandSource> context, NetworkInList listItem, boolean detailed) {
-        context.getSource().sendFeedback(
+        context.getSource().sendSuccess(
             new TranslationTextComponent(
                 "commands.refinedstorage.network.list.pos",
                 listItem.network.getPosition().getX(),
                 listItem.network.getPosition().getY(),
                 listItem.network.getPosition().getZ()
             )
-                .appendString(" [")
-                .appendSibling(new TranslationTextComponent(
+                .append(" [")
+                .append(new TranslationTextComponent(
                     "commands.refinedstorage.network.list.tick_times",
                     new StringTextComponent(TIME_FORMATTER.format(listItem.tickTime)).setStyle(Styles.YELLOW),
                     new StringTextComponent(TIME_FORMATTER.format(listItem.tps)).setStyle(Styles.YELLOW)
                 ))
-                .appendString("]"), false);
+                .append("]"), false);
 
         if (detailed) {
-            context.getSource().sendFeedback(new TranslationTextComponent("commands.refinedstorage.network.list.autocrafting_tasks",
+            context.getSource().sendSuccess(new TranslationTextComponent("commands.refinedstorage.network.list.autocrafting_tasks",
                 new StringTextComponent(listItem.network.getCraftingManager().getTasks().size() + "").setStyle(Styles.YELLOW)
             ), false);
 
-            context.getSource().sendFeedback(new TranslationTextComponent("commands.refinedstorage.network.list.nodes",
+            context.getSource().sendSuccess(new TranslationTextComponent("commands.refinedstorage.network.list.nodes",
                 new StringTextComponent(listItem.network.getNodeGraph().all().size() + "").setStyle(Styles.YELLOW)
             ), false);
 
-            context.getSource().sendFeedback(new TranslationTextComponent("commands.refinedstorage.network.list.energy_usage",
+            context.getSource().sendSuccess(new TranslationTextComponent("commands.refinedstorage.network.list.energy_usage",
                 new StringTextComponent(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
             ), false);
         }

@@ -34,10 +34,10 @@ public final class WorldUtils {
     }
 
     public static void updateBlock(@Nullable World world, BlockPos pos) {
-        if (world != null && world.isBlockPresent(pos)) {
+        if (world != null && world.isLoaded(pos)) {
             BlockState state = world.getBlockState(pos);
 
-            world.notifyBlockUpdate(pos, state, state, 1 | 2);
+            world.sendBlockUpdated(pos, state, state, 1 | 2);
         }
     }
 
@@ -68,9 +68,9 @@ public final class WorldUtils {
 
     public static FakePlayer getFakePlayer(ServerWorld world, @Nullable UUID owner) {
         if (owner != null) {
-            PlayerProfileCache profileCache = world.getServer().getPlayerProfileCache();
+            PlayerProfileCache profileCache = world.getServer().getProfileCache();
 
-            GameProfile profile = profileCache.getProfileByUUID(owner);
+            GameProfile profile = profileCache.get(owner);
 
             if (profile != null) {
                 return FakePlayerFactory.get(world, profile);
@@ -81,16 +81,16 @@ public final class WorldUtils {
     }
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED), player.getUniqueID());
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED), player.getUUID());
     }
 
     public static RayTraceResult rayTracePlayer(World world, PlayerEntity player) {
         double reachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 
         Vector3d base = player.getEyePosition(1.0F);
-        Vector3d look = player.getLookVec();
+        Vector3d look = player.getLookAngle();
         Vector3d target = base.add(look.x * reachDistance, look.y * reachDistance, look.z * reachDistance);
 
-        return world.rayTraceBlocks(new RayTraceContext(base, target, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
+        return world.clip(new RayTraceContext(base, target, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
     }
 }

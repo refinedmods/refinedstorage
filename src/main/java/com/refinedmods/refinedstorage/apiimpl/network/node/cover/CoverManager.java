@@ -92,11 +92,11 @@ public class CoverManager {
 
     public void readFromNbt(CompoundNBT nbt) {
         covers.clear();
-        for (String s : nbt.keySet()) {
+        for (String s : nbt.getAllKeys()) {
             CompoundNBT tag = nbt.getCompound(s);
             if (tag.contains(NBT_DIRECTION) && tag.contains(NBT_ITEM)) {
-                Direction direction = Direction.byIndex(tag.getInt(NBT_DIRECTION));
-                ItemStack item = ItemStack.read(tag.getCompound(NBT_ITEM));
+                Direction direction = Direction.from3DDataValue(tag.getInt(NBT_DIRECTION));
+                ItemStack item = ItemStack.of(tag.getCompound(NBT_ITEM));
                 int type = tag.contains(NBT_TYPE) ? tag.getInt(NBT_TYPE) : 0;
 
                 if (type >= CoverType.values().length) {
@@ -151,16 +151,16 @@ public class CoverManager {
 
         BlockState state = getBlockState(item);
 
-        return block != null && state != null && isModelSupported(state) && !block.ticksRandomly(state)
-                && !block.hasTileEntity(state) && !state.isTransparent(); //Changed from 1.12: to use 1.16 methods
+        return block != null && state != null && isModelSupported(state) && !block.isRandomlyTicking(state)
+                && !block.hasTileEntity(state) && !state.useShapeForLightOcclusion(); //Changed from 1.12: to use 1.16 methods
     }
 
     private static boolean isModelSupported(BlockState state) {
-        if (state.getRenderType() != BlockRenderType.MODEL) {
+        if (state.getRenderShape() != BlockRenderType.MODEL) {
             return false;
         }
 
-        return state.isSolid();
+        return state.canOcclude();
     }
 
     @Nullable
@@ -169,7 +169,7 @@ public class CoverManager {
             return null;
         }
 
-        Block block = Block.getBlockFromItem(item.getItem());
+        Block block = Block.byItem(item.getItem());
 
         if (block == Blocks.AIR) {
             return null;
@@ -187,7 +187,7 @@ public class CoverManager {
             return null;
         }
 
-        return block.getDefaultState();
+        return block.defaultBlockState();
     }
     
 }

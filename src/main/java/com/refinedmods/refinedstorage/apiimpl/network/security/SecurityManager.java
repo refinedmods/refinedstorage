@@ -24,9 +24,9 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public boolean hasPermission(Permission permission, PlayerEntity player) {
-        OpList ops = player.getServer().getPlayerList().getOppedPlayers();
+        OpList ops = player.getServer().getPlayerList().getOps();
 
-        if (ops.getEntry(player.getGameProfile()) != null) {
+        if (ops.get(player.getGameProfile()) != null) {
             return true;
         }
 

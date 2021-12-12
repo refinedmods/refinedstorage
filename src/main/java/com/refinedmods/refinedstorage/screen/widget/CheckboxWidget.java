@@ -22,7 +22,7 @@ public class CheckboxWidget extends CheckboxButton {
         super(
             x,
             y,
-            Minecraft.getInstance().fontRenderer.getStringWidth(text.getString()) + BOX_WIDTH,
+            Minecraft.getInstance().font.width(text.getString()) + BOX_WIDTH,
             10,
             text,
             isChecked
@@ -43,22 +43,22 @@ public class CheckboxWidget extends CheckboxButton {
     }
 
     public void setChecked(boolean value) {
-        this.checked = value;
+        this.selected = value;
     }
 
     @Override
-    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(TEXTURE);
+        minecraft.getTextureManager().bind(TEXTURE);
         RenderSystem.enableDepthTest();
-        FontRenderer fontRenderer = minecraft.fontRenderer;
+        FontRenderer fontRenderer = minecraft.font;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         float textureX = (this.isFocused() ? 10.0F : 0.0F);
-        float textureY = (this.checked ? 10.0F : 0.0F);
+        float textureY = (this.selected ? 10.0F : 0.0F);
 
         int width = 10;
         int height = 10;
@@ -78,7 +78,7 @@ public class CheckboxWidget extends CheckboxButton {
         if (shadow) {
             drawString(matrixStack, fontRenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
         } else {
-            fontRenderer.drawString(matrixStack, this.getMessage().getString(), (float) this.x + 13, this.y + (this.height - 8) / 2F, color);
+            fontRenderer.draw(matrixStack, this.getMessage().getString(), (float) this.x + 13, this.y + (this.height - 8) / 2F, color);
         }
     }
 }

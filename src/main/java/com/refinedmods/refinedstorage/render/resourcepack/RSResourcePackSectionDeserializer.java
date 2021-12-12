@@ -5,12 +5,12 @@ import net.minecraft.resources.data.IMetadataSectionSerializer;
 
 public class RSResourcePackSectionDeserializer implements IMetadataSectionSerializer<RSResourcePackSection> {
     @Override
-    public String getSectionName() {
+    public String getMetadataSectionName() {
         return "refinedstorage";
     }
 
     @Override
-    public RSResourcePackSection deserialize(JsonObject json) {
+    public RSResourcePackSection fromJson(JsonObject json) {
         int primaryColor = -1;
         int secondaryColor = -1;
 

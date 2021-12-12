@@ -19,7 +19,7 @@ public class WhitelistBlacklistSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.mode." + (parameter.getValue() == IWhitelistBlacklist.WHITELIST ? "whitelist" : "blacklist"));
+        return I18n.get("sidebutton.refinedstorage.mode") + "\n" + TextFormatting.GRAY + I18n.get("sidebutton.refinedstorage.mode." + (parameter.getValue() == IWhitelistBlacklist.WHITELIST ? "whitelist" : "blacklist"));
     }
 
     @Override

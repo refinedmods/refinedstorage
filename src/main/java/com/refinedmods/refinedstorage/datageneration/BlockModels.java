@@ -26,7 +26,7 @@ public class BlockModels {
     public void anyDirectionalRSBlock(Block block, Function<BlockState, ModelFile> modelFunc, int angleOffset) {
         generator.getVariantBuilder(block)
             .forAllStates(state -> {
-                Direction dir = state.get(BlockDirection.ANY.getProperty());
+                Direction dir = state.getValue(BlockDirection.ANY.getProperty());
 
                 int xRotation = 0;
                 if (dir == Direction.DOWN) {
@@ -39,7 +39,7 @@ public class BlockModels {
                 return ConfiguredModel.builder()
                     .modelFile(modelFunc.apply(state))
                     .rotationX(xRotation)
-                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + angleOffset) % 360)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + angleOffset) % 360)
                     .build();
             });
     }
@@ -47,7 +47,7 @@ public class BlockModels {
     public void wirelessTransmitterBlock(Block block, Function<BlockState, ModelFile> modelFunc, int angleOffset) {
         generator.getVariantBuilder(block)
             .forAllStates(state -> {
-                Direction dir = state.get(BlockDirection.ANY.getProperty());
+                Direction dir = state.getValue(BlockDirection.ANY.getProperty());
 
                 int xRotation;
                 if (dir.getAxis() == Direction.Axis.Y) {
@@ -59,7 +59,7 @@ public class BlockModels {
                 return ConfiguredModel.builder()
                     .modelFile(modelFunc.apply(state))
                     .rotationX(xRotation)
-                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + angleOffset) % 360)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + angleOffset) % 360)
                     .build();
             });
     }
@@ -68,7 +68,7 @@ public class BlockModels {
         generator.getVariantBuilder(block)
             .forAllStates(state -> ConfiguredModel.builder()
                 .modelFile(modelFunc.apply(state))
-                .rotationY(((int) state.get(BlockDirection.HORIZONTAL.getProperty()).getHorizontalAngle() + angleOffset) % 360)
+                .rotationY(((int) state.getValue(BlockDirection.HORIZONTAL.getProperty()).toYRot() + angleOffset) % 360)
                 .build()
             );
     }

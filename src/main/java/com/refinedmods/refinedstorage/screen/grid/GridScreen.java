@@ -103,14 +103,14 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     protected void onPreInit() {
         super.onPreInit();
         this.doSort = true;
-        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
+        this.imageHeight = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        this.container.initSlots();
+        this.menu.initSlots();
 
-        this.tabs.init(xSize - 32);
+        this.tabs.init(imageWidth - 32);
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
@@ -131,7 +131,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 searchQuery = value;
             });
             searchField.setMode(grid.getSearchBoxMode());
-            searchField.setText(searchQuery);
+            searchField.setValue(searchQuery);
         } else {
             searchField.x = sx;
             searchField.y = sy;
@@ -154,29 +154,29 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             patternScrollbar.setMaxOffset(patternScrollOffsetAbsoluteMax);
             patternScrollbar.setOffset(patternScrollOffset); // keep offset when changing between fluid and item view
 
-            container.updatePatternSlotPositions(patternScrollOffset);
+            menu.updatePatternSlotPositions(patternScrollOffset);
             patternScrollbar.addListener((oldOffset, newOffset) -> {
                 patternScrollOffset = newOffset;
-                container.updatePatternSlotPositions(newOffset);
+                menu.updatePatternSlotPositions(newOffset);
             });
 
             processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslationTextComponent("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
                 // Rebuild the inventory slots before the slot change packet arrives.
-                GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
+                GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.selected());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
-                this.container.initSlots();
+                this.menu.initSlots();
 
                 patternScrollOffset = 0; // reset offset when switching between crafting and processing
-                TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
+                TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.selected());
             });
 
-            if (!processingPattern.isChecked()) {
+            if (!processingPattern.selected()) {
                 exactPattern = addCheckBox(
                     processingPattern.x + processingPattern.getWidth() + 5,
                     y + getTopHeight() + (getVisibleRows() * 18) + 60,
                     new TranslationTextComponent("misc.refinedstorage.exact"),
                     GridTile.EXACT_PATTERN.getValue(),
-                    btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked())
+                    btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.selected())
                 );
                 patternScrollbar.setEnabled(false);
             } else {
@@ -266,7 +266,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public String getSearchFieldText() {
-        return searchField.getText();
+        return searchField.getValue();
     }
 
     @Override
@@ -340,10 +340,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         int yy = y;
 
-        blit(matrixStack, x, yy, 0, 0, xSize - 34, getTopHeight());
+        blit(matrixStack, x, yy, 0, 0, imageWidth - 34, getTopHeight());
 
         // Filters and/or portable grid disk
-        blit(matrixStack, x + xSize - 34 + 4, y, 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
+        blit(matrixStack, x + imageWidth - 34 + 4, y, 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
 
         int rows = getVisibleRows();
 
@@ -359,17 +359,17 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 }
             }
 
-            blit(matrixStack, x, yy, 0, yTextureStart, xSize - 34, 18);
+            blit(matrixStack, x, yy, 0, yTextureStart, imageWidth - 34, 18);
         }
 
         yy += 18;
 
-        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), xSize - 34, getBottomHeight());
+        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth - 34, getBottomHeight());
 
         if (grid.getGridType() == GridType.PATTERN) {
             int ty = 0;
 
-            if (isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
+            if (isOverCreatePattern(mouseX - leftPos, mouseY - topPos)) {
                 ty = 1;
             }
 
@@ -378,7 +378,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             }
 
             blit(matrixStack, x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
-            if (processingPattern.isChecked()) {
+            if (processingPattern.selected()) {
                 updatePatternScrollbar();
                 patternScrollbar.render(matrixStack);
             }
@@ -405,7 +405,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
         int x = 8;
         int y = 19;
@@ -414,7 +414,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
 
-        RenderHelper.setupGui3DDiffuseLighting();
+        RenderHelper.setupFor3DItems();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
@@ -428,13 +428,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
-                matrixStack.push();
+                matrixStack.pushPose();
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
                 fillGradient(matrixStack, x, y, x + 16, y + 16, color, color);
                 RenderSystem.colorMask(true, true, true, true);
-                matrixStack.pop();
+                matrixStack.popPose();
             }
 
             slot++;
@@ -448,11 +448,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         if (isOverClear(mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.format("misc.refinedstorage.clear"));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.clear"));
         }
 
         if (isOverCreatePattern(mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.format("gui.refinedstorage.grid.pattern_create"));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("gui.refinedstorage.grid.pattern_create"));
         }
 
         tabs.drawTooltip(matrixStack, font, mouseX, mouseY);
@@ -463,7 +463,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         List<String> smallTextLines = Lists.newArrayList();
 
         if (!gridStack.isCraftable()) {
-            smallTextLines.add(I18n.format("misc.refinedstorage.total", gridStack.getFormattedFullQuantity()));
+            smallTextLines.add(I18n.get("misc.refinedstorage.total", gridStack.getFormattedFullQuantity()));
         }
 
         if (gridStack.getTrackerEntry() != null) {
@@ -488,28 +488,28 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             return true;
         }
         if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
-            doSort = !isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !isOverCraftingOutputArea(mouseX - guiLeft, mouseY - guiTop);
+            doSort = !isOverSlotArea(mouseX - leftPos, mouseY - topPos) && !isOverCraftingOutputArea(mouseX - leftPos, mouseY - topPos);
         }
 
-        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
-        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
+        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - leftPos, mouseY - topPos);
+        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - leftPos, mouseY - topPos);
 
         if (clickedCreatePattern) {
-            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
             return true;
         } else if (clickedClear) {
-            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
 
             return true;
         } else if (grid.isGridActive()) {
-            ItemStack held = container.getPlayer().inventory.getItemStack();
+            ItemStack held = menu.getPlayer().inventory.getCarried();
 
-            if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
+            if (isOverSlotArea(mouseX - leftPos, mouseY - topPos) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
                 if (grid.getGridType() == GridType.FLUID) {
                     RS.NETWORK_HANDLER.sendToServer(new GridFluidInsertHeldMessage());
                 } else {
@@ -524,9 +524,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
                 if (held.isEmpty()) {
                     if (view.canCraft() && stack.isCraftable()) {
-                        minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, stack));
+                        minecraft.setScreen(new CraftingSettingsScreen(this, inventory.player, stack));
                     } else if (view.canCraft() && !stack.isCraftable() && stack.getOtherId() != null && hasShiftDown() && hasControlDown()) {
-                        minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, view.get(stack.getOtherId())));
+                        minecraft.setScreen(new CraftingSettingsScreen(this, inventory.player, view.get(stack.getOtherId())));
                     } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
                         RS.NETWORK_HANDLER.sendToServer(new GridFluidPullMessage(view.getStacks().get(slotNumber).getId(), hasShiftDown()));
                     } else if (grid.getGridType() != GridType.FLUID) {
@@ -580,12 +580,12 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     public boolean mouseScrolled(double x, double y, double delta) {
         if (hasShiftDown() || hasControlDown()) {
             if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
-                doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
+                doSort = !isOverSlotArea(x - leftPos, y - topPos) && !isOverCraftingOutputArea(x - leftPos, y - topPos);
             }
             if (grid.getGridType() != GridType.FLUID) {
-                if (isOverInventory(x - guiLeft, y - guiTop) && hoveredSlot != null && hoveredSlot.getHasStack() && getContainer().getDisabledSlotNumber() != hoveredSlot.getSlotIndex()) {
+                if (isOverInventory(x - leftPos, y - topPos) && hoveredSlot != null && hoveredSlot.hasItem() && getMenu().getDisabledSlotNumber() != hoveredSlot.getSlotIndex()) {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
-                } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
+                } else if (isOverSlotArea(x - leftPos, y - topPos)) {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : null, hasShiftDown(), delta > 0));
                 }
             }
@@ -593,7 +593,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             return super.mouseScrolled(x, y, delta);
         }
 
-        if (grid.getGridType() == GridType.PATTERN && isOverPatternArea(x - guiLeft, y - guiTop) && patternScrollbar.mouseScrolled(x, y, delta)) {
+        if (grid.getGridType() == GridType.PATTERN && isOverPatternArea(x - leftPos, y - topPos) && patternScrollbar.mouseScrolled(x, y, delta)) {
             return true;
         }
 
@@ -631,7 +631,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canWrite()) {
+        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canConsumeInput()) {
             return true;
         }
 
@@ -639,8 +639,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void removed() {
+        super.removed();
 
         if (!RS.CLIENT_CONFIG.getGrid().getRememberSearchQuery()) {
             searchQuery = "";
@@ -693,12 +693,12 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     public void updatePatternScrollbar() {
-        patternScrollbar.setEnabled(processingPattern.isChecked() && patternScrollOffsetMax > 0);
+        patternScrollbar.setEnabled(processingPattern.selected() && patternScrollOffsetMax > 0);
         int oldOffset = patternScrollbar.getOffset();
         patternScrollbar.setMaxOffset(Math.min(patternScrollOffsetMax, patternScrollOffsetAbsoluteMax));
 
         if (oldOffset != patternScrollbar.getOffset()) {
-            container.updatePatternSlotPositions(patternScrollbar.getOffset());
+            menu.updatePatternSlotPositions(patternScrollbar.getOffset());
         }
     }
 

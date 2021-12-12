@@ -57,17 +57,17 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
         cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
 
-        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, new StringTextComponent(""));
-        amountField.setEnableBackgroundDrawing(false);
+        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new StringTextComponent(""));
+        amountField.setBordered(false);
         amountField.setVisible(true);
-        amountField.setText(String.valueOf(getDefaultAmount()));
+        amountField.setValue(String.valueOf(getDefaultAmount()));
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setCanLoseFocus(false);
         amountField.changeFocus(true);
 
         addButton(amountField);
 
-        setListener(amountField);
+        setFocused(amountField);
 
         int[] increments = getIncrements();
 
@@ -97,7 +97,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
                 text = new StringTextComponent("-1B");
             }
 
-            addButton(x + xx, y + ySize - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));
+            addButton(x + xx, y + imageHeight - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));
 
             xx += width + 3;
         }
@@ -128,7 +128,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         int oldAmount = 0;
 
         try {
-            oldAmount = Integer.parseInt(amountField.getText());
+            oldAmount = Integer.parseInt(amountField.getValue());
         } catch (NumberFormatException e) {
             // NO OP
         }
@@ -145,7 +145,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
             newAmount = getMaxAmount();
         }
 
-        amountField.setText(String.valueOf(newAmount));
+        amountField.setValue(String.valueOf(newAmount));
     }
 
     @Override
@@ -157,9 +157,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, getTexture());
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        amountField.renderWidget(matrixStack, 0, 0, 0);
+        amountField.renderButton(matrixStack, 0, 0, 0);
     }
 
     @Override
@@ -183,7 +183,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     }
 
     public void close() {
-        minecraft.displayGuiScreen(parent);
+        minecraft.setScreen(parent);
     }
 
     public BaseScreen<T> getParent() {

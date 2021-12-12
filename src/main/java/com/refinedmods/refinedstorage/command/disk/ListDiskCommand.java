@@ -11,17 +11,17 @@ import net.minecraft.util.text.StringTextComponent;
 public class ListDiskCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("list")
-            .requires(cs -> cs.hasPermissionLevel(2))
+            .requires(cs -> cs.hasPermission(2))
             .executes(new ListDiskCommand())
             .then(ListDiskForPlayerCommand.register());
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        API.instance().getStorageDiskManager(context.getSource().getWorld())
+        API.instance().getStorageDiskManager(context.getSource().getLevel())
             .getAll()
             .keySet()
-            .forEach(id -> context.getSource().sendFeedback(new StringTextComponent(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(new StringTextComponent(id.toString()), false));
 
         return 0;
     }

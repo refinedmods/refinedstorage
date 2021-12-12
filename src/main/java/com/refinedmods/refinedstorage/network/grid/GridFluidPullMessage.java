@@ -20,11 +20,11 @@ public class GridFluidPullMessage {
     }
 
     public static GridFluidPullMessage decode(PacketBuffer buf) {
-        return new GridFluidPullMessage(buf.readUniqueId(), buf.readBoolean());
+        return new GridFluidPullMessage(buf.readUUID(), buf.readBoolean());
     }
 
     public static void encode(GridFluidPullMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
         buf.writeBoolean(message.shift);
     }
 
@@ -33,7 +33,7 @@ public class GridFluidPullMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.openContainer;
+                Container container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     IGrid grid = ((GridContainer) container).getGrid();

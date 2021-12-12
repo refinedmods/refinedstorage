@@ -26,7 +26,7 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
     private final Type type;
 
     public WirelessCraftingMonitorItem(Type type) {
-        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
+        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
 
         this.type = type;
     }
@@ -42,8 +42,8 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().hasUniqueId(NBT_TAB_SELECTED)) {
-            return Optional.of(stack.getTag().getUniqueId(NBT_TAB_SELECTED));
+        if (stack.hasTag() && stack.getTag().hasUUID(NBT_TAB_SELECTED)) {
+            return Optional.of(stack.getTag().getUUID(NBT_TAB_SELECTED));
         }
 
         return Optional.empty();
@@ -55,7 +55,7 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
         }
 
         if (tabSelected.isPresent()) {
-            stack.getTag().putUniqueId(NBT_TAB_SELECTED, tabSelected.get());
+            stack.getTag().putUUID(NBT_TAB_SELECTED, tabSelected.get());
         } else {
             stack.getTag().remove(NBT_TAB_SELECTED + "Least");
             stack.getTag().remove(NBT_TAB_SELECTED + "Most");

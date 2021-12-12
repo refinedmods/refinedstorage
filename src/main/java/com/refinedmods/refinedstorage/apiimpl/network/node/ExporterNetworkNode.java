@@ -90,7 +90,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed() == 0 && world.isBlockPresent(pos)) {
+        if (canUpdate() && ticks % upgrades.getSpeed() == 0 && world.isLoaded(pos)) {
             if (type == IType.ITEMS) {
                 IItemHandler handler = WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
@@ -311,7 +311,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return world.isRemote ? ExporterTile.TYPE.getValue() : type;
+        return world.isClientSide ? ExporterTile.TYPE.getValue() : type;
     }
 
     @Override

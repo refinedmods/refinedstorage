@@ -30,7 +30,7 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainer> {
 
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 79, 42, I18n.format("gui.refinedstorage.disk_drive.disks"));
+        renderString(matrixStack, 79, 42, I18n.get("gui.refinedstorage.disk_drive.disks"));
 
         super.renderForeground(matrixStack, mouseX, mouseY);
     }

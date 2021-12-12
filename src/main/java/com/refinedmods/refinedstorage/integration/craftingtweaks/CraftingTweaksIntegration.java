@@ -45,8 +45,8 @@ public final class CraftingTweaksIntegration {
     public static class GetGridStartFunction implements Function<GridContainer, Integer> {
         @Override
         public Integer apply(GridContainer containerGrid) {
-            for (int i = 0; i < containerGrid.inventorySlots.size(); i++) {
-                if (containerGrid.inventorySlots.get(i) instanceof CraftingGridSlot) {
+            for (int i = 0; i < containerGrid.slots.size(); i++) {
+                if (containerGrid.slots.get(i) instanceof CraftingGridSlot) {
                     return i;
                 }
             }

@@ -46,21 +46,21 @@ public class LootTableGenerator extends LootTableProvider {
         @Override
         protected void addTables() {
             RSBlocks.CONTROLLER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), ControllerLootFunction.builder()));
-            RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> registerDropSelfLootTable(block.get()));
+            RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> dropSelf(block.get()));
             RSBlocks.CRAFTER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), CrafterLootFunction.builder()));
-            RSBlocks.GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.CRAFTING_GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.FLUID_GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.PATTERN_GRID.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.SECURITY_MANAGER.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.RELAY.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.NETWORK_RECEIVER.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.DISK_MANIPULATOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.CRAFTING_MONITOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.CRAFTER_MANAGER.values().forEach(block -> registerDropSelfLootTable(block.get()));
-            RSBlocks.DETECTOR.values().forEach(block -> registerDropSelfLootTable(block.get()));
+            RSBlocks.GRID.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.CRAFTING_GRID.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.FLUID_GRID.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.PATTERN_GRID.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.SECURITY_MANAGER.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.RELAY.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.NETWORK_RECEIVER.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.DISK_MANIPULATOR.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.CRAFTING_MONITOR.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.CRAFTER_MANAGER.values().forEach(block -> dropSelf(block.get()));
+            RSBlocks.DETECTOR.values().forEach(block -> dropSelf(block.get()));
         }
 
         @Override
@@ -69,12 +69,12 @@ public class LootTableGenerator extends LootTableProvider {
         }
 
         private void genBlockItemLootTableWithFunction(Block block, ILootFunction.IBuilder builder) {
-            registerLootTable(block, LootTable.builder().addLootPool(
-                LootPool.builder()
-                    .rolls(ConstantRange.of(1))
-                    .addEntry(ItemLootEntry.builder(block)
-                        .acceptFunction(builder))
-                    .acceptCondition(SurvivesExplosion.builder())));
+            add(block, LootTable.lootTable().withPool(
+                LootPool.lootPool()
+                    .setRolls(ConstantRange.exactly(1))
+                    .add(ItemLootEntry.lootTableItem(block)
+                        .apply(builder))
+                    .when(SurvivesExplosion.survivesExplosion())));
         }
     }
 }

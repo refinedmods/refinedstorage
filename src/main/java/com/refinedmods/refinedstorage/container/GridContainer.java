@@ -61,8 +61,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     public void initSlots() {
-        this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
+        this.slots.clear();
+        this.lastSlots.clear();
 
         this.transferManager.clearTransfers();
 
@@ -79,33 +79,33 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         }
 
         transferManager.setNotFoundHandler(slotIndex -> {
-            if (!getPlayer().getEntityWorld().isRemote) {
-                Slot slot = inventorySlots.get(slotIndex);
+            if (!getPlayer().getCommandSenderWorld().isClientSide) {
+                Slot slot = slots.get(slotIndex);
                 if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDiskInventory())) {
                     return ItemStack.EMPTY;
                 }
 
-                if (slot.getHasStack()) {
+                if (slot.hasItem()) {
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());
 
-                        detectAndSendChanges();
+                        broadcastChanges();
                     } else {
-                        ItemStack stack = slot.getStack();
+                        ItemStack stack = slot.getItem();
 
                         if (grid.getGridType() == GridType.FLUID) {
                             IFluidGridHandler fluidHandler = grid.getFluidHandler();
 
                             if (fluidHandler != null) {
-                                slot.putStack(fluidHandler.onInsert((ServerPlayerEntity) getPlayer(), stack));
+                                slot.set(fluidHandler.onInsert((ServerPlayerEntity) getPlayer(), stack));
                             }
                         } else {
                             IItemGridHandler itemHandler = grid.getItemHandler();
 
                             if (itemHandler != null) {
-                                slot.putStack(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack, false));
-                            } else if (slot instanceof CraftingGridSlot && mergeItemStack(stack, 14, 14 + (9 * 4), false)) {
-                                slot.onSlotChanged();
+                                slot.set(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack, false));
+                            } else if (slot instanceof CraftingGridSlot && moveItemStackTo(stack, 14, 14 + (9 * 4), false)) {
+                                slot.setChanged();
 
                                 // This is needed because when a grid is disconnected,
                                 // and a player shift clicks from the matrix to the inventory (this if case),
@@ -114,7 +114,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                             }
                         }
 
-                        detectAndSendChanges();
+                        broadcastChanges();
                     }
                 }
             }
@@ -237,7 +237,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         }
 
         if (item) {
-            if (itemPatternSlots.get(i).getHasStack()) {
+            if (itemPatternSlots.get(i).hasItem()) {
                 return true;
             }
 
@@ -251,7 +251,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                 return true;
             }
 
-            if (itemPatternSlots.get(i).getHasStack()) {
+            if (itemPatternSlots.get(i).hasItem()) {
                 return false;
             }
 
@@ -273,14 +273,14 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
 
     @Override
     public void onCraftingMatrixChanged() {
-        for (int i = 0; i < inventorySlots.size(); ++i) {
-            Slot slot = inventorySlots.get(i);
+        for (int i = 0; i < slots.size(); ++i) {
+            Slot slot = slots.get(i);
 
             if (slot instanceof CraftingGridSlot || slot == craftingResultSlot || slot == patternResultSlot) {
-                for (IContainerListener listener : listeners) {
+                for (IContainerListener listener : containerListeners) {
                     // @Volatile: We can't use IContainerListener#sendSlotContents since ServerPlayerEntity blocks CraftingResultSlot changes...
                     if (listener instanceof ServerPlayerEntity) {
-                        ((ServerPlayerEntity) listener).connection.sendPacket(new SSetSlotPacket(windowId, i, slot.getStack()));
+                        ((ServerPlayerEntity) listener).connection.send(new SSetSlotPacket(containerId, i, slot.getItem()));
                     }
                 }
             }
@@ -288,8 +288,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     @Override
-    public void detectAndSendChanges() {
-        if (!getPlayer().world.isRemote) {
+    public void broadcastChanges() {
+        if (!getPlayer().level.isClientSide) {
             // The grid is offline.
             if (grid.getStorageCache() == null) {
                 // The grid just went offline, there is still a listener.
@@ -308,14 +308,14 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
 
-        super.detectAndSendChanges();
+        super.broadcastChanges();
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity player) {
-        super.onContainerClosed(player);
+    public void removed(PlayerEntity player) {
+        super.removed(player);
 
-        if (!player.getEntityWorld().isRemote) {
+        if (!player.getCommandSenderWorld().isClientSide) {
             grid.onClosed(player);
 
             if (storageCache != null && storageCacheListener != null) {
@@ -327,12 +327,12 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     @Override
-    public boolean canMergeSlot(ItemStack stack, Slot slot) {
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
         if (slot == craftingResultSlot || slot == patternResultSlot) {
             return false;
         }
 
-        return super.canMergeSlot(stack, slot);
+        return super.canTakeItemForPickAll(stack, slot);
     }
 
     @Override
@@ -352,8 +352,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
 
             if (isVisible(i)) {
-                itemPatternSlots.get(i).yPos = yPosition;
-                fluidPatternSlots.get(i).yPos = yPosition;
+                itemPatternSlots.get(i).y = yPosition;
+                fluidPatternSlots.get(i).y = yPosition;
                 if ((i + 1) % 3 == 0) {
                     yPosition += 18;
                 }

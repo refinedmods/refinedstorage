@@ -6,6 +6,8 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 public class ProxyFluidHandler implements IFluidHandler {
     private final FluidTank insertHandler;
     private final FluidTank extractHandler;

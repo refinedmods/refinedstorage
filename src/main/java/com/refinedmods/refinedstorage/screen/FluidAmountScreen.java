@@ -40,7 +40,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.displayGuiScreen(alternativesScreenFactory.apply(this)));
+            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -89,7 +89,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
     @Override
     protected void onOkButtonPressed(boolean shiftDown) {
         try {
-            int amount = Integer.parseInt(amountField.getText());
+            int amount = Integer.parseInt(amountField.getValue());
 
             RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(containerSlot, StackUtils.copy(stack, amount)));
 

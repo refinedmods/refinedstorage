@@ -76,7 +76,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
                     handler.getStackInSlot(slot),
@@ -97,7 +97,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
                     handler.getStackInSlot(slot),
@@ -420,7 +420,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return world.isRemote ? DiskManipulatorTile.TYPE.getValue() : type;
+        return world.isClientSide ? DiskManipulatorTile.TYPE.getValue() : type;
     }
 
     @Override

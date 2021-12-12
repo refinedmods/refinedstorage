@@ -62,7 +62,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
         tag.putInt(NBT_CAPACITY, capacity);
 
         if (owner != null) {
-            tag.putUniqueId(NBT_OWNER, owner);
+            tag.putUUID(NBT_OWNER, owner);
         }
 
         return tag;

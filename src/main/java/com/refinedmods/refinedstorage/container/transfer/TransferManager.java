@@ -79,15 +79,15 @@ public class TransferManager {
         if (slot instanceof SlotItemHandler) {
             key = new ItemHandlerInventoryWrapper(((SlotItemHandler) slot).getItemHandler());
         } else {
-            key = new InventoryInventoryWrapper(slot.inventory);
+            key = new InventoryInventoryWrapper(slot.container);
         }
 
         List<IInventoryWrapper> toList = fromToMap.get(key);
 
         if (toList != null) {
-            ItemStack initial = slot.getStack().copy();
+            ItemStack initial = slot.getItem().copy();
 
-            ItemStack remainder = slot.getStack();
+            ItemStack remainder = slot.getItem();
 
             for (IInventoryWrapper to : toList) {
                 InsertionResult result = to.insert(remainder);
@@ -103,8 +103,8 @@ public class TransferManager {
                 }
             }
 
-            slot.putStack(remainder);
-            slot.onSlotChanged();
+            slot.set(remainder);
+            slot.setChanged();
 
             if (API.instance().getComparer().isEqual(remainder, initial) && notFoundHandler != null) {
                 return notFoundHandler.apply(index);

@@ -90,18 +90,18 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
 
     @Override
     public void markForSaving() {
-        markDirty();
+        setDirty();
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void load(CompoundNBT tag) {
         if (tag.contains(NBT_DISKS)) {
             ListNBT disksTag = tag.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < disksTag.size(); ++i) {
                 CompoundNBT diskTag = disksTag.getCompound(i);
 
-                UUID id = diskTag.getUniqueId(NBT_DISK_ID);
+                UUID id = diskTag.getUUID(NBT_DISK_ID);
                 CompoundNBT data = diskTag.getCompound(NBT_DISK_DATA);
                 String type = diskTag.getString(NBT_DISK_TYPE);
 
@@ -114,13 +114,13 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         ListNBT disksTag = new ListNBT();
 
         for (Map.Entry<UUID, IStorageDisk> entry : disks.entrySet()) {
             CompoundNBT diskTag = new CompoundNBT();
 
-            diskTag.putUniqueId(NBT_DISK_ID, entry.getKey());
+            diskTag.putUUID(NBT_DISK_ID, entry.getKey());
             diskTag.put(NBT_DISK_DATA, entry.getValue().writeToNbt());
             diskTag.putString(NBT_DISK_TYPE, entry.getValue().getFactoryId().toString());
 

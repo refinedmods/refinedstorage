@@ -49,53 +49,53 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
     @Nonnull
     @SuppressWarnings("unchecked")
     public N getNode() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             if (clientNode == null) {
-                clientNode = createNode(world, pos);
+                clientNode = createNode(level, worldPosition);
             }
 
             return clientNode;
         }
 
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) level);
 
-        INetworkNode node = manager.getNode(pos);
+        INetworkNode node = manager.getNode(worldPosition);
 
         if (node == null) {
-            throw new IllegalStateException("No network node present at " + pos.toString() + ", consider removing the block at this position");
+            throw new IllegalStateException("No network node present at " + worldPosition.toString() + ", consider removing the block at this position");
         }
 
         return (N) node;
     }
 
     @Override
-    public void validate() {
-        super.validate();
+    public void clearRemoved() {
+        super.clearRemoved();
 
-        if (!world.isRemote) {
-            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
+        if (!level.isClientSide) {
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) level);
 
-            if (manager.getNode(pos) == null) {
-                manager.setNode(pos, createNode(world, pos));
+            if (manager.getNode(worldPosition) == null) {
+                manager.setNode(worldPosition, createNode(level, worldPosition));
                 manager.markForSaving();
             }
         }
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
 
-        if (!world.isRemote) {
-            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
+        if (!level.isClientSide) {
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) level);
 
-            INetworkNode node = manager.getNode(pos);
+            INetworkNode node = manager.getNode(worldPosition);
 
             if (node != null) {
                 removedNode = (N) node;
             }
 
-            manager.removeNode(pos);
+            manager.removeNode(worldPosition);
             manager.markForSaving();
 
             if (node != null && node.getNetwork() != null) {

@@ -17,19 +17,19 @@ public final class TimeUtils {
         long diff = System.currentTimeMillis() - ago;
 
         if (diff < SECOND * 10) {
-            return I18n.format("misc.refinedstorage.last_modified.just_now", by);
+            return I18n.get("misc.refinedstorage.last_modified.just_now", by);
         } else if (diff < MINUTE) {
-            return I18n.format("misc.refinedstorage.last_modified.second" + ((diff / SECOND) > 1 ? "s" : ""), diff / SECOND, by);
+            return I18n.get("misc.refinedstorage.last_modified.second" + ((diff / SECOND) > 1 ? "s" : ""), diff / SECOND, by);
         } else if (diff < HOUR) {
-            return I18n.format("misc.refinedstorage.last_modified.minute" + ((diff / MINUTE) > 1 ? "s" : ""), diff / MINUTE, by);
+            return I18n.get("misc.refinedstorage.last_modified.minute" + ((diff / MINUTE) > 1 ? "s" : ""), diff / MINUTE, by);
         } else if (diff < DAY) {
-            return I18n.format("misc.refinedstorage.last_modified.hour" + ((diff / HOUR) > 1 ? "s" : ""), diff / HOUR, by);
+            return I18n.get("misc.refinedstorage.last_modified.hour" + ((diff / HOUR) > 1 ? "s" : ""), diff / HOUR, by);
         } else if (diff < WEEK) {
-            return I18n.format("misc.refinedstorage.last_modified.day" + ((diff / DAY) > 1 ? "s" : ""), diff / DAY, by);
+            return I18n.get("misc.refinedstorage.last_modified.day" + ((diff / DAY) > 1 ? "s" : ""), diff / DAY, by);
         } else if (diff < YEAR) {
-            return I18n.format("misc.refinedstorage.last_modified.week" + ((diff / WEEK) > 1 ? "s" : ""), diff / WEEK, by);
+            return I18n.get("misc.refinedstorage.last_modified.week" + ((diff / WEEK) > 1 ? "s" : ""), diff / WEEK, by);
         }
 
-        return I18n.format("misc.refinedstorage.last_modified.year" + ((diff / YEAR) > 1 ? "s" : ""), diff / YEAR, by);
+        return I18n.get("misc.refinedstorage.last_modified.year" + ((diff / YEAR) > 1 ? "s" : ""), diff / YEAR, by);
     }
 }

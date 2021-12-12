@@ -122,7 +122,7 @@ public class FluidGridStack implements IGridStack {
         if (cachedTags == null) {
             cachedTags = new HashSet<>();
 
-            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(stack.getFluid())) {
+            for (ResourceLocation owningTag : FluidTags.getAllTags().getMatchingTags(stack.getFluid())) {
                 cachedTags.add(owningTag.getPath());
             }
         }
@@ -187,7 +187,7 @@ public class FluidGridStack implements IGridStack {
             text = "0";
             color = 16733525;
         } else if (isCraftable()) {
-            text = I18n.format("gui.refinedstorage.grid.craft");
+            text = I18n.get("gui.refinedstorage.grid.craft");
         } else {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }

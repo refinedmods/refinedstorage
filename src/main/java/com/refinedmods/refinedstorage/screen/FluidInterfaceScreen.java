@@ -36,7 +36,7 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/fluid_interface.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
         if (!FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
             TANK_RENDERER.render(matrixStack, x + 46, y + 56, FluidInterfaceTile.TANK_IN.getValue());
@@ -50,9 +50,9 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 43 + 4, 20, I18n.format("gui.refinedstorage.fluid_interface.in"));
-        renderString(matrixStack, 115 + 1, 20, I18n.format("gui.refinedstorage.fluid_interface.out"));
-        renderString(matrixStack, 7, 111, I18n.format("container.inventory"));
+        renderString(matrixStack, 43 + 4, 20, I18n.get("gui.refinedstorage.fluid_interface.in"));
+        renderString(matrixStack, 115 + 1, 20, I18n.get("gui.refinedstorage.fluid_interface.out"));
+        renderString(matrixStack, 7, 111, I18n.get("container.inventory"));
 
         if (RenderUtils.inBounds(46, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
             renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceTile.TANK_IN.getValue().getDisplayName().getString() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_IN.getValue().getAmount()) + TextFormatting.RESET);

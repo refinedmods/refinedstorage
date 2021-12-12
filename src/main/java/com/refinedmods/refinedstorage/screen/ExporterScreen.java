@@ -23,7 +23,7 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
     }
 
     private boolean hasRegulatorMode() {
-        return ((ExporterTile) container.getTile()).getNode().getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR);
+        return ((ExporterTile) menu.getTile()).getNode().getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
         if (hasRegulatorMode != updatedHasRegulatorMode) {
             hasRegulatorMode = updatedHasRegulatorMode;
 
-            container.initSlots();
+            menu.initSlots();
         }
     }
 
@@ -49,12 +49,12 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/exporter.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 43, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 43, I18n.get("container.inventory"));
     }
 }

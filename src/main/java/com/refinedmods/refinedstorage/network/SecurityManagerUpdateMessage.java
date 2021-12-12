@@ -50,7 +50,7 @@ public class SecurityManagerUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                TileEntity tile = player.getEntityWorld().getTileEntity(message.pos);
+                TileEntity tile = player.getCommandSenderWorld().getBlockEntity(message.pos);
 
                 if (tile instanceof SecurityManagerTile) {
                     ((SecurityManagerTile) tile).getNode().updatePermission(message.permission, message.state);

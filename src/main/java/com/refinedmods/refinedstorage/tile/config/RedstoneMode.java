@@ -40,6 +40,6 @@ public enum RedstoneMode {
     }
 
     public static <T extends TileEntity & IRedstoneConfigurable> TileDataParameter<Integer, T> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, IGNORE.ordinal(), t -> t.getRedstoneMode().ordinal(), (t, v) -> t.setRedstoneMode(RedstoneMode.getById(v)));
+        return new TileDataParameter<>(DataSerializers.INT, IGNORE.ordinal(), t -> t.getRedstoneMode().ordinal(), (t, v) -> t.setRedstoneMode(RedstoneMode.getById(v)));
     }
 }

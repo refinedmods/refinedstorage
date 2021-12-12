@@ -70,7 +70,7 @@ public class WirelessGridNetworkItem implements INetworkItem {
                 if (energyStorage.getEnergyStored() <= 0) {
                     handler.close(player);
 
-                    player.closeScreen();
+                    player.closeContainer();
 
                     sendOutOfEnergyMessage();
                 }
@@ -79,6 +79,6 @@ public class WirelessGridNetworkItem implements INetworkItem {
     }
 
     private void sendOutOfEnergyMessage() {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getTranslationKey())), player.getUniqueID());
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getDescriptionId())), player.getUUID());
     }
 }

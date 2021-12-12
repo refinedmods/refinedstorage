@@ -18,17 +18,19 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
+import mezz.jei.api.gui.handlers.IGhostIngredientHandler.Target;
+
 public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScreen> {
     @Override
     public <I> List<Target<I>> getTargets(BaseScreen gui, I ingredient, boolean doStart) {
         List<Target<I>> targets = new ArrayList<>();
 
-        for (Slot slot : gui.getContainer().inventorySlots) {
-            if (!slot.isEnabled()) {
+        for (Slot slot : gui.getMenu().slots) {
+            if (!slot.isActive()) {
                 continue;
             }
 
-            Rectangle2d bounds = new Rectangle2d(gui.getGuiLeft() + slot.xPos, gui.getGuiTop() + slot.yPos, 17, 17);
+            Rectangle2d bounds = new Rectangle2d(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 17, 17);
 
             if (ingredient instanceof ItemStack && (slot instanceof LegacyFilterSlot || slot instanceof FilterSlot)) {
                 targets.add(new Target<I>() {
@@ -39,9 +41,9 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
                     @Override
                     public void accept(I ingredient) {
-                        slot.putStack((ItemStack) ingredient);
+                        slot.set((ItemStack) ingredient);
 
-                        RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(slot.slotNumber, (ItemStack) ingredient));
+                        RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(slot.index, (ItemStack) ingredient));
                     }
                 });
             } else if (ingredient instanceof FluidStack && slot instanceof FluidFilterSlot) {
@@ -53,7 +55,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
                     @Override
                     public void accept(I ingredient) {
-                        RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, FluidAttributes.BUCKET_VOLUME)));
+                        RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.index, StackUtils.copy((FluidStack) ingredient, FluidAttributes.BUCKET_VOLUME)));
                     }
                 });
             }

@@ -13,7 +13,7 @@ public class GridClearMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.openContainer;
+                Container container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     ((GridContainer) container).getGrid().onClear(player);

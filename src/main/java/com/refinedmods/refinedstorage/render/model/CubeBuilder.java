@@ -117,44 +117,44 @@ public class CubeBuilder {
         builder.setQuadTint(-1);
         builder.setApplyDiffuseLighting(true);
 
-        Uv uv = getDefaultUv(facing, cubeFace.sprite, from.getX(), from.getY(), from.getZ(), to.getX(), to.getY(), to.getZ());
+        Uv uv = getDefaultUv(facing, cubeFace.sprite, from.x(), from.y(), from.z(), to.x(), to.y(), to.z());
 
         switch (facing) {
             case DOWN:
-                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), from.getZ(), uv);
-                addVertexBottomRight(builder, cubeFace, to.getX(), from.getY(), to.getZ(), uv);
-                addVertexBottomLeft(builder, cubeFace, from.getX(), from.getY(), to.getZ(), uv);
-                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), from.getZ(), uv);
+                addVertexTopRight(builder, cubeFace, to.x(), from.y(), from.z(), uv);
+                addVertexBottomRight(builder, cubeFace, to.x(), from.y(), to.z(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.x(), from.y(), to.z(), uv);
+                addVertexTopLeft(builder, cubeFace, from.x(), from.y(), from.z(), uv);
                 break;
             case UP:
-                addVertexTopLeft(builder, cubeFace, from.getX(), to.getY(), from.getZ(), uv);
-                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), to.getZ(), uv);
-                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), to.getZ(), uv);
-                addVertexTopRight(builder, cubeFace, to.getX(), to.getY(), from.getZ(), uv);
+                addVertexTopLeft(builder, cubeFace, from.x(), to.y(), from.z(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.x(), to.y(), to.z(), uv);
+                addVertexBottomRight(builder, cubeFace, to.x(), to.y(), to.z(), uv);
+                addVertexTopRight(builder, cubeFace, to.x(), to.y(), from.z(), uv);
                 break;
             case NORTH:
-                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), from.getZ(), uv);
-                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), from.getZ(), uv);
-                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), from.getZ(), uv);
-                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), from.getZ(), uv);
+                addVertexBottomRight(builder, cubeFace, to.x(), to.y(), from.z(), uv);
+                addVertexTopRight(builder, cubeFace, to.x(), from.y(), from.z(), uv);
+                addVertexTopLeft(builder, cubeFace, from.x(), from.y(), from.z(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.x(), to.y(), from.z(), uv);
                 break;
             case SOUTH:
-                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), to.getZ(), uv);
-                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), to.getZ(), uv);
-                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), to.getZ(), uv);
-                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), to.getZ(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.x(), to.y(), to.z(), uv);
+                addVertexTopLeft(builder, cubeFace, from.x(), from.y(), to.z(), uv);
+                addVertexTopRight(builder, cubeFace, to.x(), from.y(), to.z(), uv);
+                addVertexBottomRight(builder, cubeFace, to.x(), to.y(), to.z(), uv);
                 break;
             case WEST:
-                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), from.getZ(), uv);
-                addVertexTopRight(builder, cubeFace, from.getX(), from.getY(), to.getZ(), uv);
-                addVertexBottomRight(builder, cubeFace, from.getX(), to.getY(), to.getZ(), uv);
-                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), from.getZ(), uv);
+                addVertexTopLeft(builder, cubeFace, from.x(), from.y(), from.z(), uv);
+                addVertexTopRight(builder, cubeFace, from.x(), from.y(), to.z(), uv);
+                addVertexBottomRight(builder, cubeFace, from.x(), to.y(), to.z(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.x(), to.y(), from.z(), uv);
                 break;
             case EAST:
-                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), from.getZ(), uv);
-                addVertexBottomLeft(builder, cubeFace, to.getX(), to.getY(), to.getZ(), uv);
-                addVertexTopLeft(builder, cubeFace, to.getX(), from.getY(), to.getZ(), uv);
-                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), from.getZ(), uv);
+                addVertexBottomRight(builder, cubeFace, to.x(), to.y(), from.z(), uv);
+                addVertexBottomLeft(builder, cubeFace, to.x(), to.y(), to.z(), uv);
+                addVertexTopLeft(builder, cubeFace, to.x(), from.y(), to.z(), uv);
+                addVertexTopRight(builder, cubeFace, to.x(), from.y(), from.z(), uv);
                 break;
         }
 
@@ -166,40 +166,40 @@ public class CubeBuilder {
 
         switch (face) {
             case DOWN:
-                uv.xFrom = texture.getInterpolatedU(fromX * 16);
-                uv.yFrom = texture.getInterpolatedV(16 - fromZ * 16);
-                uv.xTo = texture.getInterpolatedU(toX * 16);
-                uv.yTo = texture.getInterpolatedV(16 - toZ * 16);
+                uv.xFrom = texture.getU(fromX * 16);
+                uv.yFrom = texture.getV(16 - fromZ * 16);
+                uv.xTo = texture.getU(toX * 16);
+                uv.yTo = texture.getV(16 - toZ * 16);
                 break;
             case UP:
-                uv.xFrom = texture.getInterpolatedU(fromX * 16);
-                uv.yFrom = texture.getInterpolatedV(fromZ * 16);
-                uv.xTo = texture.getInterpolatedU(toX * 16);
-                uv.yTo = texture.getInterpolatedV(toZ * 16);
+                uv.xFrom = texture.getU(fromX * 16);
+                uv.yFrom = texture.getV(fromZ * 16);
+                uv.xTo = texture.getU(toX * 16);
+                uv.yTo = texture.getV(toZ * 16);
                 break;
             case NORTH:
-                uv.xFrom = texture.getInterpolatedU(16 - fromX * 16);
-                uv.yFrom = texture.getInterpolatedV(16 - fromY * 16);
-                uv.xTo = texture.getInterpolatedU(16 - toX * 16);
-                uv.yTo = texture.getInterpolatedV(16 - toY * 16);
+                uv.xFrom = texture.getU(16 - fromX * 16);
+                uv.yFrom = texture.getV(16 - fromY * 16);
+                uv.xTo = texture.getU(16 - toX * 16);
+                uv.yTo = texture.getV(16 - toY * 16);
                 break;
             case SOUTH:
-                uv.xFrom = texture.getInterpolatedU(fromX * 16);
-                uv.yFrom = texture.getInterpolatedV(16 - fromY * 16);
-                uv.xTo = texture.getInterpolatedU(toX * 16);
-                uv.yTo = texture.getInterpolatedV(16 - toY * 16);
+                uv.xFrom = texture.getU(fromX * 16);
+                uv.yFrom = texture.getV(16 - fromY * 16);
+                uv.xTo = texture.getU(toX * 16);
+                uv.yTo = texture.getV(16 - toY * 16);
                 break;
             case WEST:
-                uv.xFrom = texture.getInterpolatedU(fromZ * 16);
-                uv.yFrom = texture.getInterpolatedV(16 - fromY * 16);
-                uv.xTo = texture.getInterpolatedU(toZ * 16);
-                uv.yTo = texture.getInterpolatedV(16 - toY * 16);
+                uv.xFrom = texture.getU(fromZ * 16);
+                uv.yFrom = texture.getV(16 - fromY * 16);
+                uv.xTo = texture.getU(toZ * 16);
+                uv.yTo = texture.getV(16 - toY * 16);
                 break;
             case EAST:
-                uv.xFrom = texture.getInterpolatedU(16 - toZ * 16);
-                uv.yFrom = texture.getInterpolatedV(16 - fromY * 16);
-                uv.xTo = texture.getInterpolatedU(16 - fromZ * 16);
-                uv.yTo = texture.getInterpolatedV(16 - toY * 16);
+                uv.xFrom = texture.getU(16 - toZ * 16);
+                uv.yFrom = texture.getV(16 - fromY * 16);
+                uv.xTo = texture.getU(16 - fromZ * 16);
+                uv.yTo = texture.getV(16 - toY * 16);
                 break;
         }
 
@@ -325,7 +325,7 @@ public class CubeBuilder {
                     builder.put(i, x, y, z);
                     break;
                 case NORMAL:
-                    builder.put(i, face.face.getXOffset(), face.face.getYOffset(), face.face.getZOffset());
+                    builder.put(i, face.face.getStepX(), face.face.getStepY(), face.face.getStepZ());
                     break;
                 case COLOR:
                     float r = (color >> 16 & 0xFF) / 255F;

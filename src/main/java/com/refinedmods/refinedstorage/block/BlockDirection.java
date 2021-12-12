@@ -31,7 +31,7 @@ public enum BlockDirection {
             case ANY_FACE_PLAYER:
                 return DirectionUtils.getFacingFromEntity(pos, entity);
             case HORIZONTAL:
-                return entity.getHorizontalFacing().getOpposite();
+                return entity.getDirection().getOpposite();
             default:
                 throw new IllegalStateException("Unknown direction type");
         }
@@ -43,7 +43,7 @@ public enum BlockDirection {
             case ANY_FACE_PLAYER:
                 return previous.ordinal() + 1 >= Direction.values().length ? Direction.values()[0] : Direction.values()[previous.ordinal() + 1];
             case HORIZONTAL:
-                return previous.rotateYCCW();
+                return previous.getCounterClockWise();
             default:
                 throw new IllegalStateException("Unknown direction type");
         }

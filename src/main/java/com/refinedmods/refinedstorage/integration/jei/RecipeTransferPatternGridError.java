@@ -28,7 +28,7 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
         }
 
         if (craftMessage) {
-            message.add(new TranslationTextComponent("gui.refinedstorage.jei.transfer.autocrafting_available").mergeStyle(TextFormatting.BLUE));
+            message.add(new TranslationTextComponent("gui.refinedstorage.jei.transfer.autocrafting_available").withStyle(TextFormatting.BLUE));
         }
 
         return message;

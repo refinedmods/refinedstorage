@@ -60,7 +60,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
             return 6;
         }
 
-        if (block.getDirection() != null && state.get(block.getDirection().getProperty()) == coverSide) {
+        if (block.getDirection() != null && state.getValue(block.getDirection().getProperty()) == coverSide) {
             if (block == RSBlocks.EXPORTER.get()) {
                 return 6;
             } else if (block == RSBlocks.EXTERNAL_STORAGE.get() || block == RSBlocks.IMPORTER.get()) {
@@ -138,11 +138,11 @@ public class BakedModelCableCover extends DelegateBakedModel{
         }
 
         HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();  //Changed from 1.12: to improve sprite getting for each side
-        quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random)))).bake());
+        quads.addAll(new CubeBuilder().from(from.x(), from.y(), from.z()).to(to.x(), to.y(), to.z()).addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random)))).bake());
 
         if (handle) {
             if (BORDER_SPRITE == null) {
-                BORDER_SPRITE = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(RS.ID , "block/cable_part_border"));
+                BORDER_SPRITE = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(new ResourceLocation(RS.ID , "block/cable_part_border"));
             }
 
             bounds = ConstantsCable.getHolderBounds(coverSide);
@@ -150,7 +150,7 @@ public class BakedModelCableCover extends DelegateBakedModel{
             from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
             to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
-            quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, BORDER_SPRITE)).bake());
+            quads.addAll(new CubeBuilder().from(from.x(), from.y(), from.z()).to(to.x(), to.y(), to.z()).addFaces(face -> new CubeBuilder.Face(face, BORDER_SPRITE)).bake());
         }
     }
 
@@ -199,9 +199,9 @@ public class BakedModelCableCover extends DelegateBakedModel{
         }
         HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>(); //Changed from 1.12: to improve sprite getting for each side
         quads.addAll(new CubeBuilder()
-                .from(from.getX(), from.getY(), from.getZ())
-                .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
+                .from(from.x(), from.y(), from.z())
+                .to(to.x(), to.y(), to.z())
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
                 .bake()
         );
 
@@ -234,9 +234,9 @@ public class BakedModelCableCover extends DelegateBakedModel{
         }
 
         quads.addAll(new CubeBuilder()
-                .from(from.getX(), from.getY(), from.getZ())
-                .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
+                .from(from.x(), from.y(), from.z())
+                .to(to.x(), to.y(), to.z())
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
                 .bake()
         );
 
@@ -294,9 +294,9 @@ public class BakedModelCableCover extends DelegateBakedModel{
         }
 
         quads.addAll(new CubeBuilder()
-                .from(from.getX(), from.getY(), from.getZ())
-                .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
+                .from(from.x(), from.y(), from.z())
+                .to(to.x(), to.y(), to.z())
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
                 .bake()
         );
 
@@ -354,9 +354,9 @@ public class BakedModelCableCover extends DelegateBakedModel{
         }
 
         quads.addAll(new CubeBuilder()
-                .from(from.getX(), from.getY(), from.getZ())
-                .to(to.getX(), to.getY(), to.getZ())
-                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(state), state, direction, random))))
+                .from(from.x(), from.y(), from.z())
+                .to(to.x(), to.y(), to.z())
+                .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
                 .bake()
         );
     }

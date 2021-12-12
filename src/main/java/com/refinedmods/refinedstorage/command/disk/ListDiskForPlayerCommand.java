@@ -22,13 +22,13 @@ public class ListDiskForPlayerCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         PlayerEntity player = EntityArgument.getPlayer(context, "player");
 
-        API.instance().getStorageDiskManager(context.getSource().getWorld())
+        API.instance().getStorageDiskManager(context.getSource().getLevel())
             .getAll()
             .entrySet()
             .stream()
             .filter(entry -> player.getGameProfile().getId().equals(entry.getValue().getOwner()))
             .map(Map.Entry::getKey)
-            .forEach(id -> context.getSource().sendFeedback(new StringTextComponent(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(new StringTextComponent(id.toString()), false));
 
         return 0;
     }

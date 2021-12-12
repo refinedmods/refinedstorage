@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import net.minecraft.item.Item.Properties;
+
 public class ColoredBlockItem extends BaseBlockItem {
     private final ITextComponent displayName;
 
@@ -14,9 +16,9 @@ public class ColoredBlockItem extends BaseBlockItem {
         super(block, builder);
 
         if (color != ColorMap.DEFAULT_COLOR) {
-            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey())
-                    .appendString(" ")
-                    .appendSibling(displayName);
+            this.displayName = new TranslationTextComponent("color.minecraft." + color.getName())
+                    .append(" ")
+                    .append(displayName);
         } else {
             this.displayName = displayName;
         }
@@ -24,7 +26,7 @@ public class ColoredBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         return displayName;
     }
 }

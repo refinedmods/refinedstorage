@@ -95,7 +95,7 @@ public abstract class BaseContainer extends Container {
     }
 
     @Override
-    public ItemStack slotClick(int id, int dragType, ClickType clickType, PlayerEntity player) {
+    public ItemStack clicked(int id, int dragType, ClickType clickType, PlayerEntity player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         int disabledSlotNumber = getDisabledSlotNumber();
@@ -110,71 +110,71 @@ public abstract class BaseContainer extends Container {
         if (slot instanceof FilterSlot) {
             if (((FilterSlot) slot).isSizeAllowed()) {
                 if (clickType == ClickType.QUICK_MOVE) {
-                    slot.putStack(ItemStack.EMPTY);
-                } else if (!player.inventory.getItemStack().isEmpty()) {
-                    slot.putStack(player.inventory.getItemStack().copy());
+                    slot.set(ItemStack.EMPTY);
+                } else if (!player.inventory.getCarried().isEmpty()) {
+                    slot.set(player.inventory.getCarried().copy());
                 }
-            } else if (player.inventory.getItemStack().isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else if (slot.isItemValid(player.inventory.getItemStack())) {
-                slot.putStack(player.inventory.getItemStack().copy());
+            } else if (player.inventory.getCarried().isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else if (slot.mayPlace(player.inventory.getCarried())) {
+                slot.set(player.inventory.getCarried().copy());
             }
 
-            return player.inventory.getItemStack();
+            return player.inventory.getCarried();
         } else if (slot instanceof FluidFilterSlot) {
             if (((FluidFilterSlot) slot).isSizeAllowed()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     ((FluidFilterSlot) slot).onContainerClicked(ItemStack.EMPTY);
-                } else if (!player.inventory.getItemStack().isEmpty()) {
-                    ((FluidFilterSlot) slot).onContainerClicked(player.inventory.getItemStack());
+                } else if (!player.inventory.getCarried().isEmpty()) {
+                    ((FluidFilterSlot) slot).onContainerClicked(player.inventory.getCarried());
                 }
-            } else if (player.inventory.getItemStack().isEmpty()) {
+            } else if (player.inventory.getCarried().isEmpty()) {
                 ((FluidFilterSlot) slot).onContainerClicked(ItemStack.EMPTY);
             } else {
-                ((FluidFilterSlot) slot).onContainerClicked(player.inventory.getItemStack());
+                ((FluidFilterSlot) slot).onContainerClicked(player.inventory.getCarried());
             }
 
-            return player.inventory.getItemStack();
+            return player.inventory.getCarried();
         } else if (slot instanceof LegacyFilterSlot) {
-            if (player.inventory.getItemStack().isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else if (slot.isItemValid(player.inventory.getItemStack())) {
-                slot.putStack(player.inventory.getItemStack().copy());
+            if (player.inventory.getCarried().isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else if (slot.mayPlace(player.inventory.getCarried())) {
+                slot.set(player.inventory.getCarried().copy());
             }
 
-            return player.inventory.getItemStack();
+            return player.inventory.getCarried();
         } else if (slot instanceof LegacyDisabledSlot) {
             return ItemStack.EMPTY;
         }
 
-        return super.slotClick(id, dragType, clickType, player);
+        return super.clicked(id, dragType, clickType, player);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
+    public ItemStack quickMoveStack(PlayerEntity player, int slotIndex) {
         return transferManager.transfer(slotIndex);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player) {
+    public boolean stillValid(PlayerEntity player) {
         return isTileStillThere();
     }
 
     private boolean isTileStillThere() {
         if (tile != null) {
-            return tile.getWorld().getTileEntity(tile.getPos()) == tile;
+            return tile.getLevel().getBlockEntity(tile.getBlockPos()) == tile;
         }
 
         return true;
     }
 
     @Override
-    public boolean canMergeSlot(ItemStack stack, Slot slot) {
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
         if (slot instanceof FilterSlot || slot instanceof FluidFilterSlot || slot instanceof LegacyFilterSlot) {
             return false;
         }
 
-        return super.canMergeSlot(stack, slot);
+        return super.canTakeItemForPickAll(stack, slot);
     }
 
     protected int getDisabledSlotNumber() {
@@ -192,8 +192,8 @@ public abstract class BaseContainer extends Container {
     }
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
+    public void broadcastChanges() {
+        super.broadcastChanges();
 
         // Prevent sending changes about a tile that doesn't exist anymore.
         // This prevents crashes when sending network node data (network node would crash because it no longer exists and we're querying it from the various tile data parameters).
@@ -211,15 +211,15 @@ public abstract class BaseContainer extends Container {
                 if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
                     this.fluids.set(i, actual.copy());
 
-                    RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new FluidFilterSlotUpdateMessage(slot.slotNumber, actual));
+                    RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new FluidFilterSlotUpdateMessage(((Slot)slot).index, actual));
                 }
             }
         }
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity player) {
-        super.onContainerClosed(player);
+    public void removed(PlayerEntity player) {
+        super.removed(player);
 
         if (listener != null) {
             listener.onClosed();

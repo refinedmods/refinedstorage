@@ -18,8 +18,8 @@ public class PortableGridBlockLootFunction extends LootFunction {
     }
 
     @Override
-    public ItemStack doApply(ItemStack stack, LootContext lootContext) {
-        TileEntity tile = lootContext.get(LootParameters.BLOCK_ENTITY);
+    public ItemStack run(ItemStack stack, LootContext lootContext) {
+        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
 
         if (tile instanceof PortableGridTile) {
             ((PortableGridTile) tile).applyDataFromTileToItem(stack);
@@ -29,7 +29,7 @@ public class PortableGridBlockLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return RSLootFunctions.getPortableGrid();
     }
 

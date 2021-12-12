@@ -84,7 +84,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading) {
-                if (!world.isRemote) {
+                if (!world.isClientSide) {
                     invalidate();
                 }
 
@@ -145,8 +145,8 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             invalidate();
         }
 
-        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET && world.isBlockPresent(pos)) {
-            if (world.isBlockPowered(pos)) {
+        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET && world.isLoaded(pos)) {
+            if (world.hasNeighborSignal(pos)) {
                 this.wasPowered = true;
 
                 markDirty();
@@ -195,11 +195,11 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.contains(NBT_DISPLAY_NAME)) {
-            displayName = ITextComponent.Serializer.getComponentFromJson(tag.getString(NBT_DISPLAY_NAME));
+            displayName = ITextComponent.Serializer.fromJson(tag.getString(NBT_DISPLAY_NAME));
         }
 
-        if (tag.hasUniqueId(NBT_UUID)) {
-            uuid = tag.getUniqueId(NBT_UUID);
+        if (tag.hasUUID(NBT_UUID)) {
+            uuid = tag.getUUID(NBT_UUID);
         }
 
         if (tag.contains(NBT_MODE)) {
@@ -232,7 +232,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         }
 
         if (uuid != null) {
-            tag.putUniqueId(NBT_UUID, uuid);
+            tag.putUUID(NBT_UUID, uuid);
         }
 
         tag.putInt(NBT_MODE, mode.ordinal());
@@ -314,12 +314,12 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     @Nullable
     @Override
     public TileEntity getFacingTile() {
-        BlockPos facingPos = pos.offset(getDirection());
-        if (!world.isBlockPresent(facingPos)) {
+        BlockPos facingPos = pos.relative(getDirection());
+        if (!world.isLoaded(facingPos)) {
             return null;
         }
 
-        return world.getTileEntity(facingPos);
+        return world.getBlockEntity(facingPos);
     }
 
     @Override
@@ -346,7 +346,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         }
 
         if (facing != null) {
-            return new TranslationTextComponent(world.getBlockState(facing.getPos()).getBlock().getTranslationKey());
+            return new TranslationTextComponent(world.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
         }
 
         return DEFAULT_NAME;
@@ -394,7 +394,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return null;
         }
 
-        INetworkNode facing = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(getDirection()));
+        INetworkNode facing = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.relative(getDirection()));
         if (!(facing instanceof ICraftingPatternContainer) || facing.getNetwork() != network) {
             return this;
         }
@@ -438,9 +438,9 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             case IGNORE:
                 return false;
             case SIGNAL_LOCKS_AUTOCRAFTING:
-                return world.isBlockPowered(pos);
+                return world.hasNeighborSignal(pos);
             case SIGNAL_UNLOCKS_AUTOCRAFTING:
-                return !world.isBlockPowered(pos);
+                return !world.hasNeighborSignal(pos);
             case PULSE_INSERTS_NEXT_SET:
                 return locked;
             default:

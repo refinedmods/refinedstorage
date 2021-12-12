@@ -28,7 +28,7 @@ public class StorageTrackerManager extends RSWorldSavedData implements IStorageT
 
     @Override
     public void markForSaving() {
-        this.markDirty();
+        this.setDirty();
     }
 
 
@@ -55,14 +55,14 @@ public class StorageTrackerManager extends RSWorldSavedData implements IStorageT
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
+    public void load(CompoundNBT nbt) {
         if (nbt.contains(NBT_TRACKERS)) {
             ListNBT trackerTags = nbt.getList(NBT_TRACKERS, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < trackerTags.size(); ++i) {
                 CompoundNBT trackerTag = trackerTags.getCompound(i);
 
-                UUID id = trackerTag.getUniqueId(NBT_TRACKER_ID);
+                UUID id = trackerTag.getUUID(NBT_TRACKER_ID);
                 ListNBT data = trackerTag.getList(NBT_TRACKER_DATA, Constants.NBT.TAG_COMPOUND);
                 StorageType type = StorageType.values()[trackerTag.getInt(NBT_TRACKER_TYPE)];
 
@@ -73,13 +73,13 @@ public class StorageTrackerManager extends RSWorldSavedData implements IStorageT
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         ListNBT trackerListTag = new ListNBT();
 
         for (Map.Entry<UUID, IStorageTracker<?>> entry : trackers.entrySet()) {
             CompoundNBT trackerTag = new CompoundNBT();
 
-            trackerTag.putUniqueId(NBT_TRACKER_ID, entry.getKey());
+            trackerTag.putUUID(NBT_TRACKER_ID, entry.getKey());
             trackerTag.put(NBT_TRACKER_DATA, entry.getValue().serializeNbt());
             trackerTag.putInt(NBT_TRACKER_TYPE, entry.getValue() instanceof ItemStorageTracker ? StorageType.ITEM.ordinal() : StorageType.FLUID.ordinal());
 

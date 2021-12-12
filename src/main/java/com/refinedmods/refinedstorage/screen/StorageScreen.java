@@ -62,7 +62,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             addSideButton(new AccessTypeSideButton(this, dataParameters.getAccessTypeParameter()));
         }
 
-        int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));
+        int buttonWidth = 10 + font.width(I18n.get("misc.refinedstorage.priority"));
 
         addButton(
             x + 169 - buttonWidth,
@@ -71,7 +71,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             new TranslationTextComponent("misc.refinedstorage.priority"),
             true,
             true,
-            btn -> minecraft.displayGuiScreen(new PriorityScreen(this, dataParameters.getPriorityParameter(), playerInventory))
+            btn -> minecraft.setScreen(new PriorityScreen(this, dataParameters.getPriorityParameter(), inventory))
         );
     }
 
@@ -84,7 +84,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, texture);
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
         int barHeightNew = capacitySupplier.get() < 0 ? 0 : (int) ((float) storedSupplier.get() / (float) capacitySupplier.get() * (float) BAR_HEIGHT);
 
@@ -95,11 +95,11 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
         renderString(matrixStack, 7, 42, capacitySupplier.get() == -1 ?
-            I18n.format("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get())) :
-            I18n.format("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get()), API.instance().getQuantityFormatter().formatWithUnits(capacitySupplier.get()))
+            I18n.get("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get())) :
+            I18n.get("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get()), API.instance().getQuantityFormatter().formatWithUnits(capacitySupplier.get()))
         );
 
-        renderString(matrixStack, 7, 129, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 129, I18n.get("container.inventory"));
 
         if (RenderUtils.inBounds(BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, mouseX, mouseY)) {
             int full = 0;
@@ -109,9 +109,9 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             }
 
             renderTooltip(matrixStack, mouseX, mouseY, (capacitySupplier.get() == -1 ?
-                I18n.format("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get())) :
-                I18n.format("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get()), API.instance().getQuantityFormatter().format(capacitySupplier.get()))
-            ) + "\n" + TextFormatting.GRAY + I18n.format("misc.refinedstorage.storage.full", full));
+                I18n.get("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get())) :
+                I18n.get("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get()), API.instance().getQuantityFormatter().format(capacitySupplier.get()))
+            ) + "\n" + TextFormatting.GRAY + I18n.get("misc.refinedstorage.storage.full", full));
         }
     }
 }

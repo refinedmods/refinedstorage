@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface IComparable {
     static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, 0, t -> ((IComparable) t.getNode()).getCompare(), (t, v) -> ((IComparable) t.getNode()).setCompare(v));
+        return new TileDataParameter<>(DataSerializers.INT, 0, t -> ((IComparable) t.getNode()).getCompare(), (t, v) -> ((IComparable) t.getNode()).setCompare(v));
     }
 
     int getCompare();

@@ -53,7 +53,7 @@ public class GridManager implements IGridManager {
 
             buf.writeBoolean(stack != null);
             if (stack != null) {
-                buf.writeItemStack(stack);
+                buf.writeItem(stack);
             }
 
             slot.writePlayerSlot(buf);
@@ -70,7 +70,7 @@ public class GridManager implements IGridManager {
         }
 
         IGrid grid = null;
-        TileEntity tile = factory.getRelevantTile(player.world, pos);
+        TileEntity tile = factory.getRelevantTile(player.level, pos);
 
         if (factory.getType() == GridFactoryType.STACK) {
             grid = factory.createFromStack(player, stack, slot);

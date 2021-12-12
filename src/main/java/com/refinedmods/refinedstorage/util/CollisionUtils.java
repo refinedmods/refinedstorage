@@ -10,7 +10,7 @@ public final class CollisionUtils {
     }
 
     public static boolean isInBounds(VoxelShape shape, BlockPos pos, Vector3d hit) {
-        AxisAlignedBB aabb = shape.getBoundingBox().offset(pos);
+        AxisAlignedBB aabb = shape.bounds().move(pos);
 
         return hit.x >= aabb.minX
             && hit.x <= aabb.maxX

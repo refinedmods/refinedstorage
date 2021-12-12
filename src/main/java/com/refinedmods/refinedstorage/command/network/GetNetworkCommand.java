@@ -14,8 +14,8 @@ import net.minecraft.command.arguments.DimensionArgument;
 public class GetNetworkCommand extends NetworkCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("get")
-            .requires(cs -> cs.hasPermissionLevel(2))
-            .then(Commands.argument("dimension", DimensionArgument.getDimension())
+            .requires(cs -> cs.hasPermission(2))
+            .then(Commands.argument("dimension", DimensionArgument.dimension())
                 .then(Commands.argument("pos", BlockPosArgument.blockPos()).suggests(new NetworkPositionSuggestionProvider())
                     .executes(new GetNetworkCommand())
                     .then(Commands.literal("autocrafting")

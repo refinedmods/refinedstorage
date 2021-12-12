@@ -17,16 +17,16 @@ public class StorageDiskSizeRequestMessage {
     }
 
     public static StorageDiskSizeRequestMessage decode(PacketBuffer buf) {
-        return new StorageDiskSizeRequestMessage(buf.readUniqueId());
+        return new StorageDiskSizeRequestMessage(buf.readUUID());
     }
 
     public static void encode(StorageDiskSizeRequestMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
     }
 
     public static void handle(StorageDiskSizeRequestMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            IStorageDisk disk = API.instance().getStorageDiskManager(ctx.get().getSender().getServerWorld()).get(message.id);
+            IStorageDisk disk = API.instance().getStorageDiskManager(ctx.get().getSender().getLevel()).get(message.id);
 
             if (disk != null) {
                 RS.NETWORK_HANDLER.sendTo(ctx.get().getSender(), new StorageDiskSizeResponseMessage(message.id, disk.getStored(), disk.getCapacity()));

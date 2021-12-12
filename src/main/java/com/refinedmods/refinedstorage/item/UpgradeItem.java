@@ -79,27 +79,27 @@ public class UpgradeItem extends Item {
     private final Type type;
 
     public UpgradeItem(Type type) {
-        super(new Item.Properties().group(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
 
         this.type = type;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (type.getFortuneLevel() > 0) {
             tooltip.add(
                 new TranslationTextComponent("enchantment.minecraft.fortune")
-                    .appendString(" ")
-                    .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
+                    .append(" ")
+                    .append(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
                     .setStyle(Styles.GRAY)
             );
         }
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return type == Type.SILK_TOUCH ||
             type == Type.FORTUNE_1 ||
             type == Type.FORTUNE_2 ||

@@ -41,7 +41,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
         this.compare = FilterItem.getCompare(container.getFilterItem());
         this.mode = FilterItem.getMode(container.getFilterItem());
         this.modFilter = FilterItem.isModFilter(container.getFilterItem());
-        this.name = FilterItem.getName(container.getFilterItem());
+        this.name = FilterItem.getFilterName(container.getFilterItem());
         this.type = FilterItem.getType(container.getFilterItem());
     }
 
@@ -69,12 +69,12 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
 
         updateModeButton(mode);
 
-        nameField = new TextFieldWidget(font, x + 34, y + 121, 137 - 6, font.FONT_HEIGHT, new StringTextComponent(""));
-        nameField.setText(name);
-        nameField.setEnableBackgroundDrawing(false);
+        nameField = new TextFieldWidget(font, x + 34, y + 121, 137 - 6, font.lineHeight, new StringTextComponent(""));
+        nameField.setValue(name);
+        nameField.setBordered(false);
         nameField.setVisible(true);
         nameField.setCanLoseFocus(true);
-        nameField.setFocused2(false);
+        nameField.setFocus(false);
         nameField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         nameField.setResponder(content -> sendUpdate());
 
@@ -88,7 +88,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
             ? new TranslationTextComponent("sidebutton.refinedstorage.mode.whitelist")
             : new TranslationTextComponent("sidebutton.refinedstorage.mode.blacklist");
 
-        modeButton.setWidth(font.getStringWidth(text.getString()) + 12);
+        modeButton.setWidth(font.width(text.getString()) + 12);
         modeButton.setMessage(text);
         modFilterCheckBox.x = modeButton.x + modeButton.getWidth() + 4;
     }
@@ -96,12 +96,12 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.player.closeScreen();
+            minecraft.player.closeContainer();
 
             return true;
         }
 
-        if (nameField.keyPressed(key, scanCode, modifiers) || nameField.canWrite()) {
+        if (nameField.keyPressed(key, scanCode, modifiers) || nameField.canConsumeInput()) {
             return true;
         }
 
@@ -117,13 +117,13 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/filter.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 137, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 137, I18n.get("container.inventory"));
     }
 
     public int getType() {
@@ -137,6 +137,6 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     }
 
     public void sendUpdate() {
-        RS.NETWORK_HANDLER.sendToServer(new FilterUpdateMessage(compare, mode, modFilter, nameField.getText(), type));
+        RS.NETWORK_HANDLER.sendToServer(new FilterUpdateMessage(compare, mode, modFilter, nameField.getValue(), type));
     }
 }

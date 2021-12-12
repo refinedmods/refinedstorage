@@ -41,7 +41,7 @@ public class CoverItem extends Item {
 
 
     public CoverItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {
@@ -59,22 +59,22 @@ public class CoverItem extends Item {
             return ItemStack.EMPTY;
         }
 
-        return ItemStack.read(cover.getTag().getCompound(NBT_ITEM));
+        return ItemStack.of(cover.getTag().getCompound(NBT_ITEM));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         ItemStack item = getItem(stack);
 
         if (!item.isEmpty()) {
-            tooltip.add(((TextComponent) item.getItem().getDisplayName(item)).mergeStyle(TextFormatting.GRAY));
+            tooltip.add(((TextComponent) item.getItem().getName(item)).withStyle(TextFormatting.GRAY));
         }
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) { //Changed from 1.12: to use 1.16 configs
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group)) { //Changed from 1.12: to use 1.16 configs
             if (!RS.CLIENT_CONFIG.getCover().showAllRecipesInJEI()) {
                 ItemStack stack = new ItemStack(this);
 
@@ -85,7 +85,7 @@ public class CoverItem extends Item {
                 return;
             }
             for (Block block : ForgeRegistries.BLOCKS.getValues()) {
-                Item item = Item.getItemFromBlock(block);
+                Item item = Item.byBlock(block);
 
                 if (item == Items.AIR) {
                     continue;
@@ -93,7 +93,7 @@ public class CoverItem extends Item {
 
                 NonNullList<ItemStack> subBlocks = NonNullList.create();
 
-                block.fillItemGroup(ItemGroup.SEARCH, subBlocks);
+                block.fillItemCategory(ItemGroup.TAB_SEARCH, subBlocks);
 
                 for (ItemStack subBlock : subBlocks) {
                     if (CoverManager.isValidCover(subBlock)) {
@@ -109,26 +109,26 @@ public class CoverItem extends Item {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        BlockPos pos = context.getPos();
-        Direction facing = context.getFace();
-        World world = context.getWorld();
+    public ActionResultType useOn(ItemUseContext context) {
+        BlockPos pos = context.getClickedPos();
+        Direction facing = context.getClickedFace();
+        World world = context.getLevel();
 
-        ItemStack stack = context.getPlayer().getHeldItem(context.getHand());
+        ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
 
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getBlockEntity(pos);
 
         // Support placing on the bottom side without too much hassle.
         if (!canPlaceOn(world, pos, facing)) {
-            pos = pos.up();
+            pos = pos.above();
 
             facing = Direction.DOWN;
 
-            tile = world.getTileEntity(pos);
+            tile = world.getBlockEntity(pos);
         }
 
         if (canPlaceOn(world, pos, facing)) {
-            if (world.isRemote) {
+            if (world.isClientSide) {
                 ModelDataManager.requestModelDataRefresh(tile);
                 return ActionResultType.SUCCESS;
             }
@@ -142,7 +142,7 @@ public class CoverItem extends Item {
             }
 
             if (((ICoverable) node).getCoverManager().setCover(facing, createCover(getItem(stack)))) {
-                context.getPlayer().getHeldItem(context.getHand()).shrink(1);
+                context.getPlayer().getItemInHand(context.getHand()).shrink(1);
 
                 WorldUtils.updateBlock(world, pos);
                 API.instance().getNetworkNodeManager((ServerWorld) world).markForSaving();
@@ -157,7 +157,7 @@ public class CoverItem extends Item {
 
 
     private boolean canPlaceOn(World world, BlockPos pos, Direction facing) {
-        return world.getTileEntity(pos) instanceof NetworkNodeTile && ((NetworkNodeTile<?>) world.getTileEntity(pos)).getNode() instanceof ICoverable && !CableBlock.hasVisualConnectionOnSide(world.getBlockState(pos), facing);
+        return world.getBlockEntity(pos) instanceof NetworkNodeTile && ((NetworkNodeTile<?>) world.getBlockEntity(pos)).getNode() instanceof ICoverable && !CableBlock.hasVisualConnectionOnSide(world.getBlockState(pos), facing);
     }
 
     protected Cover createCover(ItemStack stack) {

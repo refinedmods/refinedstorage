@@ -32,14 +32,14 @@ public class StorageBlockItem extends BaseBlockItem {
     private final ItemStorageType type;
 
     public StorageBlockItem(StorageBlock block) {
-        super(block, new Item.Properties().group(RS.MAIN_GROUP));
+        super(block, new Item.Properties().tab(RS.MAIN_GROUP));
 
         this.type = block.getType();
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
             UUID id = getId(stack);
@@ -62,11 +62,11 @@ public class StorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack storageStack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack storageStack = player.getItemInHand(hand);
         int count = storageStack.getCount();
 
-        if (!world.isRemote && player.isCrouching() && type != ItemStorageType.CREATIVE) {
+        if (!world.isClientSide && player.isCrouching() && type != ItemStorageType.CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 
@@ -80,8 +80,8 @@ public class StorageBlockItem extends BaseBlockItem {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type));
                 storagePart.setCount(count);
 
-                if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
+                if (!player.inventory.add(storagePart.copy())) {
+                    InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), storagePart);
                 }
 
                 if (disk != null) {
@@ -104,10 +104,10 @@ public class StorageBlockItem extends BaseBlockItem {
     }
 
     private UUID getId(ItemStack disk) {
-        return disk.getTag().getUniqueId(StorageNetworkNode.NBT_ID);
+        return disk.getTag().getUUID(StorageNetworkNode.NBT_ID);
     }
 
     private boolean isValid(ItemStack disk) {
-        return disk.hasTag() && disk.getTag().hasUniqueId(StorageNetworkNode.NBT_ID);
+        return disk.hasTag() && disk.getTag().hasUUID(StorageNetworkNode.NBT_ID);
     }
 }

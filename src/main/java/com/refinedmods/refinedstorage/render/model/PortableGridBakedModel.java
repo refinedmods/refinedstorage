@@ -38,9 +38,9 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(@Nonnull CacheKey key) {
-            Direction direction = key.state.get(RSBlocks.PORTABLE_GRID.get().getDirection().getProperty());
-            boolean active = key.state.get(PortableGridBlock.ACTIVE);
-            PortableGridDiskState diskState = key.state.get(PortableGridBlock.DISK_STATE);
+            Direction direction = key.state.getValue(RSBlocks.PORTABLE_GRID.get().getDirection().getProperty());
+            boolean active = key.state.getValue(PortableGridBlock.ACTIVE);
+            PortableGridDiskState diskState = key.state.getValue(PortableGridBlock.DISK_STATE);
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
                 active ? baseConnected : baseDisconnected,
@@ -111,7 +111,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     private class CustomItemOverrideList extends ItemOverrideList {
         @Nullable
         @Override
-        public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+        public IBakedModel resolve(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
             PortableGrid portableGrid = new PortableGrid(null, stack, new PlayerSlot(-1));
 
             if (portableGrid.isGridActive()) {

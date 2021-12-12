@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNetworkNode> {
-    public static final TileDataParameter<Integer, NetworkTransmitterTile> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getDistance());
+    public static final TileDataParameter<Integer, NetworkTransmitterTile> DISTANCE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getDistance());
     public static final TileDataParameter<Optional<ResourceLocation>, NetworkTransmitterTile> RECEIVER_DIMENSION = new TileDataParameter<>(RSSerializers.OPTIONAL_RESOURCE_LOCATION_SERIALIZER, Optional.empty(), t -> {
         if (t.getNode().getReceiverDimension() != null) {
-            return Optional.of(t.getNode().getReceiverDimension().getLocation());
+            return Optional.of(t.getNode().getReceiverDimension().location());
         }
 
         return Optional.empty();

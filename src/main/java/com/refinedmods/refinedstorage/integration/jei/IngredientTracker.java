@@ -37,7 +37,7 @@ public class IngredientTracker {
         int available = stack.getCount();
         if (doTransfer) {
             if (stack.getItem() instanceof ICraftingPatternProvider) {
-                ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().world, stack);
+                ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().level, stack);
                 if (pattern.isValid()) {
                     for (ItemStack outputStack : pattern.getOutputs()) {
                         storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);

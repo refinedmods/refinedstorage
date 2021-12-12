@@ -15,6 +15,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import mezz.jei.api.recipe.transfer.IRecipeTransferError.Type;
+
 public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     private static final Color MISSING_HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
     protected static final Color AUTOCRAFTING_HIGHLIGHT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);
@@ -34,8 +36,8 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     public void showError(MatrixStack stack, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
         List<ITextComponent> message = drawIngredientHighlights(stack, recipeX, recipeY);
 
-        Screen currentScreen = Minecraft.getInstance().currentScreen;
-        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 200, Minecraft.getInstance().fontRenderer);
+        Screen currentScreen = Minecraft.getInstance().screen;
+        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, message, mouseX, mouseY, currentScreen.width, currentScreen.height, 200, Minecraft.getInstance().font);
     }
 
     protected List<ITextComponent> drawIngredientHighlights(MatrixStack stack, int recipeX, int recipeY) {
@@ -58,11 +60,11 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         }
 
         if (missingMessage) {
-            message.add(new TranslationTextComponent("jei.tooltip.error.recipe.transfer.missing").mergeStyle(TextFormatting.RED));
+            message.add(new TranslationTextComponent("jei.tooltip.error.recipe.transfer.missing").withStyle(TextFormatting.RED));
         }
 
         if (craftMessage) {
-            message.add(new TranslationTextComponent("gui.refinedstorage.jei.transfer.request_autocrafting").mergeStyle(TextFormatting.BLUE));
+            message.add(new TranslationTextComponent("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(TextFormatting.BLUE));
         }
 
         return message;

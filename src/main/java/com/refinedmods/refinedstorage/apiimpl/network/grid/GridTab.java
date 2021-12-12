@@ -47,7 +47,7 @@ public class GridTab implements IGridTab {
     @Override
     public void drawIcon(MatrixStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
         if (!icon.isEmpty()) {
-            RenderHelper.setupGui3DDiffuseLighting();
+            RenderHelper.setupFor3DItems();
 
             itemDrawer.draw(matrixStack, x, y, icon);
         } else {

@@ -37,12 +37,12 @@ public class DestructorScreen extends BaseScreen<DestructorContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/destructor.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 43, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 43, I18n.get("container.inventory"));
     }
 }

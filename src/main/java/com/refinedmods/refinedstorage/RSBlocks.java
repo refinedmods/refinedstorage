@@ -85,9 +85,9 @@ public final class RSBlocks {
         }
 
         GRID.registerBlocks("grid", () -> new GridBlock(GridType.NORMAL));
-        CRAFTING_GRID.registerBlocks(GridType.CRAFTING.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.CRAFTING));
-        PATTERN_GRID.registerBlocks(GridType.PATTERN.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.PATTERN));
-        FLUID_GRID.registerBlocks(GridType.FLUID.getString() + GRID_SUFFIX, () -> new GridBlock(GridType.FLUID));
+        CRAFTING_GRID.registerBlocks(GridType.CRAFTING.getSerializedName() + GRID_SUFFIX, () -> new GridBlock(GridType.CRAFTING));
+        PATTERN_GRID.registerBlocks(GridType.PATTERN.getSerializedName() + GRID_SUFFIX, () -> new GridBlock(GridType.PATTERN));
+        FLUID_GRID.registerBlocks(GridType.FLUID.getSerializedName() + GRID_SUFFIX, () -> new GridBlock(GridType.FLUID));
         CONTROLLER.registerBlocks("controller", () -> new ControllerBlock(NetworkType.NORMAL));
         CREATIVE_CONTROLLER.registerBlocks("creative_controller", () -> new ControllerBlock(NetworkType.CREATIVE));
         NETWORK_RECEIVER.registerBlocks("network_receiver", NetworkReceiverBlock::new);

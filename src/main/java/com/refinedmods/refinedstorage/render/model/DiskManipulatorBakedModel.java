@@ -79,8 +79,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
-            boolean connected = key.state.get(NetworkNodeBlock.CONNECTED);
+            Direction facing = key.state.getValue(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
+            boolean connected = key.state.getValue(NetworkNodeBlock.CONNECTED);
 
             List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
                 connected ? baseConnected : baseDisconnected,

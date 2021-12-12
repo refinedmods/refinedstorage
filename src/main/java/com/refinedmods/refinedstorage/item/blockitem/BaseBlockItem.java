@@ -6,6 +6,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 
+import net.minecraft.item.Item.Properties;
+
 public class BaseBlockItem extends BlockItem {
     private final BaseBlock block;
 
@@ -20,9 +22,9 @@ public class BaseBlockItem extends BlockItem {
         boolean result = super.placeBlock(context, state);
 
         if (result && block.getDirection() != BlockDirection.NONE) {
-            context.getWorld().setBlockState(context.getPos(), state.with(block.getDirection().getProperty(), block.getDirection().getFrom(
-                context.getFace(),
-                context.getPos(),
+            context.getLevel().setBlockAndUpdate(context.getClickedPos(), state.setValue(block.getDirection().getProperty(), block.getDirection().getFrom(
+                context.getClickedFace(),
+                context.getClickedPos(),
                 context.getPlayer()
             )));
         }

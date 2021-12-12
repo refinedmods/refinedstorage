@@ -100,7 +100,7 @@ public class BakedModelCover extends BakedModelCableCover{
     public ItemOverrideList getOverrides() {
         return new ItemOverrideList() {
             @Override
-            public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+            public IBakedModel resolve(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
                 return new BakedModelCover(stack, type);
             }
         };
@@ -114,7 +114,7 @@ public class BakedModelCover extends BakedModelCableCover{
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
+    public boolean useAmbientOcclusion() {
         return true;
     }
 
@@ -124,12 +124,12 @@ public class BakedModelCover extends BakedModelCableCover{
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
+    public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture() {
+    public TextureAtlasSprite getParticleIcon() {
         return null;
     }
 
@@ -140,12 +140,12 @@ public class BakedModelCover extends BakedModelCableCover{
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return ItemCameraTransforms.DEFAULT;
+    public ItemCameraTransforms getTransforms() {
+        return ItemCameraTransforms.NO_TRANSFORMS;
     }
 
     @Override
-    public boolean isSideLit() {
+    public boolean usesBlockLight() {
         return true;
     }
 }

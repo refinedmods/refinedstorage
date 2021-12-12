@@ -62,11 +62,11 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (powered != wasPowered && world.isBlockPresent(pos)) {
+        if (powered != wasPowered && world.isLoaded(pos)) {
             wasPowered = powered;
 
-            world.setBlockState(pos, world.getBlockState(pos).with(DetectorBlock.POWERED, powered));
-            world.notifyNeighborsOfStateChange(pos, world.getBlockState(pos).getBlock());
+            world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(DetectorBlock.POWERED, powered));
+            world.updateNeighborsAt(pos, world.getBlockState(pos).getBlock());
         }
 
         if (canUpdate() && ticks % SPEED == 0) {
@@ -215,7 +215,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return world.isRemote ? DetectorTile.TYPE.getValue() : type;
+        return world.isClientSide ? DetectorTile.TYPE.getValue() : type;
     }
 
     @Override

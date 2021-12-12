@@ -80,18 +80,18 @@ public class SerializationUtil {
         CompoundNBT tag = new CompoundNBT();
 
         tag.put(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
-        tag.putLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().toLong());
+        tag.putLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().asLong());
 
         return tag;
     }
 
     public static ICraftingPattern readPatternFromNbt(CompoundNBT tag, World world) throws CraftingTaskReadException {
-        BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
+        BlockPos containerPos = BlockPos.of(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
         INetworkNode node = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(containerPos);
 
         if (node instanceof ICraftingPatternContainer) {
-            ItemStack stack = ItemStack.read(tag.getCompound(NBT_PATTERN_STACK));
+            ItemStack stack = ItemStack.of(tag.getCompound(NBT_PATTERN_STACK));
 
             if (stack.getItem() instanceof ICraftingPatternProvider) {
                 return ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) node);

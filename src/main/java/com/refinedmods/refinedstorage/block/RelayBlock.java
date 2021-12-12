@@ -34,13 +34,13 @@ public class RelayBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = RSBlocks.RELAY.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.RELAY.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<RelayTile>(

@@ -81,38 +81,38 @@ import java.util.UUID;
 
 public class PortableGridTile extends BaseTile implements ITickableTileEntity, IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
     public static final TileDataParameter<Integer, PortableGridTile> REDSTONE_MODE = RedstoneMode.createParameter();
-    private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
-            t.markDirty();
+            t.setChanged();
         }
     }, (initial, p) -> GridTile.trySortGrid(initial));
-    private static final TileDataParameter<Integer, PortableGridTile> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSortingType, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SORTING_TYPE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
-            t.markDirty();
+            t.setChanged();
         }
     }, (initial, p) -> GridTile.trySortGrid(initial));
-    private static final TileDataParameter<Integer, PortableGridTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSearchBoxMode, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
-            t.markDirty();
+            t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
-    private static final TileDataParameter<Integer, PortableGridTile> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getSize, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SIZE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
-            t.markDirty();
+            t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-    private static final TileDataParameter<Integer, PortableGridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getTabSelected, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
-        t.markDirty();
+        t.setChanged();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
-    private static final TileDataParameter<Integer, PortableGridTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, PortableGridTile::getTabPage, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);
-            t.markDirty();
+            t.setChanged();
         }
     });
 
@@ -148,13 +148,13 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         .addValidator(new StorageDiskItemValidator())
         .addListener(new TileInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (world != null && !world.isRemote) {
+            if (level != null && !level.isClientSide) {
                 loadStorage();
 
                 if (!reading) {
                     updateState();
 
-                    WorldUtils.updateBlock(world, pos); // Re-send grid type
+                    WorldUtils.updateBlock(level, worldPosition); // Re-send grid type
                 }
             }
         });
@@ -200,7 +200,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             this.storage = null;
             this.cache = null;
         } else {
-            IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDiskInventory().getStackInSlot(0));
+            IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) level).getByStack(getDiskInventory().getStackInSlot(0));
 
             if (diskInSlot != null) {
                 StorageType diskType = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
@@ -253,7 +253,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
             this.redstoneMode = RedstoneMode.read(stack.getTag());
             if (stack.getTag().contains(PortableGrid.NBT_ITEM_STORAGE_TRACKER_ID)) {
-                itemStorageTrackerId = stack.getTag().getUniqueId(NBT_ITEM_STORAGE_TRACKER_ID);
+                itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
             } else {
                 if (stack.getTag().contains(PortableGrid.NBT_STORAGE_TRACKER)) { //TODO: remove next version
                     getItemStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -261,7 +261,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             }
 
             if (stack.getTag().contains(PortableGrid.NBT_FLUID_STORAGE_TRACKER_ID)) {
-                fluidStorageTrackerId = stack.getTag().getUniqueId(NBT_FLUID_STORAGE_TRACKER_ID);
+                fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
             } else {
                 if (stack.getTag().contains(PortableGrid.NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
                     getFluidStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -273,7 +273,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             }
         }
 
-        markDirty();
+        setChanged();
     }
 
     public void applyDataFromTileToItem(ItemStack stack) {
@@ -287,10 +287,10 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         stack.getTag().putInt(GridNetworkNode.NBT_TAB_PAGE, tabPage);
 
         if (itemStorageTrackerId != null) {
-            stack.getTag().putUniqueId(PortableGrid.NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
+            stack.getTag().putUUID(PortableGrid.NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
         }
         if (fluidStorageTrackerId != null) {
-            stack.getTag().putUniqueId(PortableGrid.NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
+            stack.getTag().putUUID(PortableGrid.NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
         }
 
         if (enchants != null) {
@@ -371,27 +371,27 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
     @Override
     public int getSortingType() {
-        return world.isRemote ? SORTING_TYPE.getValue() : sortingType;
+        return level.isClientSide ? SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSortingDirection() {
-        return world.isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
+        return level.isClientSide ? SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return world.isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return level.isClientSide ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public int getTabSelected() {
-        return world.isRemote ? TAB_SELECTED.getValue() : tabSelected;
+        return level.isClientSide ? TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override
     public int getTabPage() {
-        return world.isRemote ? TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
+        return level.isClientSide ? TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
     }
 
     @Override
@@ -401,7 +401,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
     @Override
     public int getSize() {
-        return world.isRemote ? SIZE.getValue() : size;
+        return level.isClientSide ? SIZE.getValue() : size;
     }
 
     public void setSortingType(int sortingType) {
@@ -487,7 +487,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 this.itemStorageTrackerId = UUID.randomUUID();
             }
 
-            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager(ServerLifecycleHooks.getCurrentServer().func_241755_D_()).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager(ServerLifecycleHooks.getCurrentServer().overworld()).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
         }
 
         return itemStorageTracker;
@@ -500,7 +500,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 this.fluidStorageTrackerId = UUID.randomUUID();
             }
 
-            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager(ServerLifecycleHooks.getCurrentServer().func_241755_D_()).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager(ServerLifecycleHooks.getCurrentServer().overworld()).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
         }
 
         return fluidStorageTracker;
@@ -552,11 +552,11 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
 
     @Override
     public boolean isGridActive() {
-        if (world.isRemote) {
-            BlockState state = world.getBlockState(pos);
+        if (level.isClientSide) {
+            BlockState state = level.getBlockState(worldPosition);
 
             if (state.getBlock() instanceof PortableGridBlock) {
-                return state.get(PortableGridBlock.ACTIVE);
+                return state.getValue(PortableGridBlock.ACTIVE);
             }
 
             return false;
@@ -572,7 +572,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             return false;
         }
 
-        return redstoneMode.isEnabled(world.isBlockPowered(pos));
+        return redstoneMode.isEnabled(level.hasNeighborSignal(worldPosition));
     }
 
     @Override
@@ -596,7 +596,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     public void drainEnergy(int energy) {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() &&
             type != PortableGridBlockItem.Type.CREATIVE &&
-            redstoneMode.isEnabled(world.isBlockPowered(pos))) {
+            redstoneMode.isEnabled(level.hasNeighborSignal(worldPosition))) {
             energyStorage.extractEnergy(energy, false);
 
             updateState();
@@ -640,7 +640,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         if (this.diskState != newDiskState) {
             this.diskState = newDiskState;
 
-            world.setBlockState(pos, world.getBlockState(pos).with(PortableGridBlock.DISK_STATE, diskState));
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(PortableGridBlock.DISK_STATE, diskState));
         }
 
         boolean isActive = isGridActive();
@@ -648,7 +648,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         if (this.active != isActive) {
             this.active = isActive;
 
-            world.setBlockState(pos, world.getBlockState(pos).with(PortableGridBlock.ACTIVE, active));
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(PortableGridBlock.ACTIVE, active));
         }
     }
 
@@ -658,8 +658,8 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        super.write(tag);
+    public CompoundNBT save(CompoundNBT tag) {
+        super.save(tag);
 
         tag.putInt(GridNetworkNode.NBT_SORTING_DIRECTION, sortingDirection);
         tag.putInt(GridNetworkNode.NBT_SORTING_TYPE, sortingType);
@@ -676,10 +676,10 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         redstoneMode.write(tag);
 
         if (itemStorageTrackerId != null) {
-            tag.putUniqueId(NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
+            tag.putUUID(NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
         }
         if (fluidStorageTrackerId != null) {
-            tag.putUniqueId(NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
+            tag.putUUID(NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
         }
 
         if (enchants != null) {
@@ -690,8 +690,8 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public void read(BlockState blockState, CompoundNBT tag) {
-        super.read(blockState, tag);
+    public void load(BlockState blockState, CompoundNBT tag) {
+        super.load(blockState, tag);
 
         if (tag.contains(GridNetworkNode.NBT_SORTING_DIRECTION)) {
             sortingDirection = tag.getInt(GridNetworkNode.NBT_SORTING_DIRECTION);
@@ -727,7 +727,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         redstoneMode = RedstoneMode.read(tag);
 
         if (tag.contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
-            itemStorageTrackerId = tag.getUniqueId(NBT_ITEM_STORAGE_TRACKER_ID);
+            itemStorageTrackerId = tag.getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
                 getItemStorageTracker().readFromNbt(tag.getList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -735,7 +735,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         }
 
         if (tag.contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
-            fluidStorageTrackerId = tag.getUniqueId(NBT_FLUID_STORAGE_TRACKER_ID);
+            fluidStorageTrackerId = tag.getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
                 getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -784,7 +784,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
 
-        markDirty();
+        setChanged();
     }
 
     @Override

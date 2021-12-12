@@ -19,8 +19,8 @@ public class CrafterLootFunction extends LootFunction {
     }
 
     @Override
-    public ItemStack doApply(ItemStack stack, LootContext lootContext) {
-        TileEntity tile = lootContext.get(LootParameters.BLOCK_ENTITY);
+    public ItemStack run(ItemStack stack, LootContext lootContext) {
+        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
 
         CrafterNetworkNode removedNode = ((CrafterTile) tile).getRemovedNode();
         if (removedNode == null) {
@@ -28,19 +28,19 @@ public class CrafterLootFunction extends LootFunction {
         }
 
         if (removedNode.getDisplayName() != null) {
-            stack.setDisplayName(removedNode.getDisplayName());
+            stack.setHoverName(removedNode.getDisplayName());
         }
 
         return stack;
     }
 
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return RSLootFunctions.getCrafter();
     }
 
     public static LootFunction.Builder<?> builder() {
-        return builder(CrafterLootFunction::new);
+        return simpleBuilder(CrafterLootFunction::new);
     }
 
     public static class Serializer extends LootFunction.Serializer<CrafterLootFunction> {

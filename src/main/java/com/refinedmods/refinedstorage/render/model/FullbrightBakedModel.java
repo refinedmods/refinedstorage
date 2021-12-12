@@ -66,7 +66,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
     }
 
     private static BakedQuad transformQuad(BakedQuad quad) {
-        int[] vertexData = quad.getVertexData().clone();
+        int[] vertexData = quad.getVertices().clone();
         int step = vertexData.length / 4;
 
         // Set lighting to fullbright on all vertices
@@ -78,9 +78,9 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         return new BakedQuad(
             vertexData,
             quad.getTintIndex(),
-            quad.getFace(),
+            quad.getDirection(),
             quad.getSprite(),
-            quad.applyDiffuseLighting()
+            quad.isShade()
         );
     }
 

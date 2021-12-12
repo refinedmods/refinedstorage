@@ -17,13 +17,13 @@ import javax.annotation.Nonnull;
 public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
     public static final TileDataParameter<Integer, DetectorTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, DetectorTile> TYPE = IType.createParameter();
-    public static final TileDataParameter<Integer, DetectorTile> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, DetectorTile> MODE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getMode(), (t, v) -> {
         if (v == DetectorNetworkNode.MODE_UNDER || v == DetectorNetworkNode.MODE_EQUAL || v == DetectorNetworkNode.MODE_ABOVE) {
             t.getNode().setMode(v);
             t.getNode().markDirty();
         }
     });
-    public static final TileDataParameter<Integer, DetectorTile> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
+    public static final TileDataParameter<Integer, DetectorTile> AMOUNT = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
     }, (initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen -> detectorScreen.updateAmountField(value)));

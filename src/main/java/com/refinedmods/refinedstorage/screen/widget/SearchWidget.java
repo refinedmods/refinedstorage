@@ -22,16 +22,16 @@ public class SearchWidget extends TextFieldWidget {
     private int historyIndex = -1;
 
     public SearchWidget(FontRenderer fontRenderer, int x, int y, int width) {
-        super(fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT, new StringTextComponent(""));
+        super(fontRenderer, x, y, width, fontRenderer.lineHeight, new StringTextComponent(""));
 
-        this.setEnableBackgroundDrawing(false);
+        this.setBordered(false);
         this.setVisible(true);
         this.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
     }
 
     public void updateJei() {
         if (canSyncToJEINow()) {
-            RSJeiPlugin.getRuntime().getIngredientFilter().setFilterText(getText());
+            RSJeiPlugin.getRuntime().getIngredientFilter().setFilterText(getValue());
         }
     }
 
@@ -54,7 +54,7 @@ public class SearchWidget extends TextFieldWidget {
         boolean clickedWidget = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
 
         if (clickedWidget && mouseButton == 1) {
-            setText("");
+            setValue("");
             setFocused(true);
         } else if (wasFocused != isFocused()) {
             saveHistory();
@@ -135,22 +135,22 @@ public class SearchWidget extends TextFieldWidget {
             historyIndex = HISTORY.size() - 1;
 
             if (delta == 1) {
-                setText("");
+                setValue("");
 
                 return;
             }
         }
 
-        setText(HISTORY.get(historyIndex));
+        setValue(HISTORY.get(historyIndex));
     }
 
     private void saveHistory() {
-        if (!HISTORY.isEmpty() && HISTORY.get(HISTORY.size() - 1).equals(getText())) {
+        if (!HISTORY.isEmpty() && HISTORY.get(HISTORY.size() - 1).equals(getValue())) {
             return;
         }
 
-        if (!getText().trim().isEmpty()) {
-            HISTORY.add(getText());
+        if (!getValue().trim().isEmpty()) {
+            HISTORY.add(getValue());
         }
     }
 
@@ -167,16 +167,16 @@ public class SearchWidget extends TextFieldWidget {
 
     private void setTextFromJEI() {
         final String filterText = RSJeiPlugin.getRuntime().getIngredientFilter().getFilterText();
-        if (!getText().equals(filterText)) {
-            setText(filterText);
+        if (!getValue().equals(filterText)) {
+            setValue(filterText);
         }
     }
 
     @Override
-    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
             setTextFromJEI();
         }
-        super.renderWidget(matrixStack, mouseX, mouseY, partialTicks);
+        super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
     }
 }

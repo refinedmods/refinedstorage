@@ -57,16 +57,16 @@ public final class StackUtils {
 
             Item item = stack.getItem();
 
-            buf.writeVarInt(Item.getIdFromItem(item));
+            buf.writeVarInt(Item.getId(item));
             buf.writeInt(stack.getCount());
 
             CompoundNBT tag = null;
 
-            if (item.isDamageable() || item.shouldSyncTag()) {
+            if (item.canBeDepleted() || item.shouldOverrideMultiplayerNbt()) {
                 tag = stack.getTag();
             }
 
-            buf.writeCompoundTag(tag);
+            buf.writeNbt(tag);
         }
     }
 
@@ -78,9 +78,9 @@ public final class StackUtils {
             int id = buf.readVarInt();
             int count = buf.readInt();
 
-            ItemStack stack = new ItemStack(Item.getItemById(id), count);
+            ItemStack stack = new ItemStack(Item.byId(id), count);
 
-            stack.readShareTag(buf.readCompoundTag());
+            stack.readShareTag(buf.readNbt());
 
             return stack;
         }
@@ -90,11 +90,11 @@ public final class StackUtils {
         writeItemStack(buf, stack);
 
         buf.writeBoolean(craftable);
-        buf.writeUniqueId(id);
+        buf.writeUUID(id);
 
         buf.writeBoolean(otherId != null);
         if (otherId != null) {
-            buf.writeUniqueId(otherId);
+            buf.writeUUID(otherId);
         }
 
         if (entry == null) {
@@ -103,7 +103,7 @@ public final class StackUtils {
             buf.writeBoolean(true);
 
             buf.writeLong(entry.getTime());
-            buf.writeString(entry.getName());
+            buf.writeUtf(entry.getName());
         }
     }
 
@@ -111,11 +111,11 @@ public final class StackUtils {
         ItemStack stack = readItemStack(buf);
 
         boolean craftable = buf.readBoolean();
-        UUID id = buf.readUniqueId();
+        UUID id = buf.readUUID();
 
         UUID otherId = null;
         if (buf.readBoolean()) {
-            otherId = buf.readUniqueId();
+            otherId = buf.readUUID();
         }
 
         StorageTrackerEntry entry = null;
@@ -130,11 +130,11 @@ public final class StackUtils {
         stack.writeToPacket(buf);
 
         buf.writeBoolean(craftable);
-        buf.writeUniqueId(id);
+        buf.writeUUID(id);
 
         buf.writeBoolean(otherId != null);
         if (otherId != null) {
-            buf.writeUniqueId(otherId);
+            buf.writeUUID(otherId);
         }
 
         if (entry == null) {
@@ -143,18 +143,18 @@ public final class StackUtils {
             buf.writeBoolean(true);
 
             buf.writeLong(entry.getTime());
-            buf.writeString(entry.getName());
+            buf.writeUtf(entry.getName());
         }
     }
 
     public static FluidGridStack readFluidGridStack(PacketBuffer buf) {
         FluidStack stack = FluidStack.readFromPacket(buf);
         boolean craftable = buf.readBoolean();
-        UUID id = buf.readUniqueId();
+        UUID id = buf.readUUID();
 
         UUID otherId = null;
         if (buf.readBoolean()) {
-            otherId = buf.readUniqueId();
+            otherId = buf.readUUID();
         }
 
         StorageTrackerEntry entry = null;
@@ -205,7 +205,7 @@ public final class StackUtils {
     }
 
     public static void writeItems(IItemHandler handler, int id, CompoundNBT tag) {
-        writeItems(handler, id, tag, stack -> stack.write(new CompoundNBT()));
+        writeItems(handler, id, tag, stack -> stack.save(new CompoundNBT()));
     }
 
     public static void readItems(IItemHandlerModifiable handler, int id, CompoundNBT tag, Function<CompoundNBT, ItemStack> deserializer) {
@@ -225,13 +225,13 @@ public final class StackUtils {
     }
 
     public static void readItems(IItemHandlerModifiable handler, int id, CompoundNBT tag) {
-        readItems(handler, id, tag, ItemStack::read);
+        readItems(handler, id, tag, ItemStack::of);
     }
 
     public static void readItems(BaseItemHandler handler, int id, CompoundNBT tag) {
         handler.setReading(true);
 
-        readItems(handler, id, tag, ItemStack::read);
+        readItems(handler, id, tag, ItemStack::of);
 
         handler.setReading(false);
     }
@@ -239,13 +239,13 @@ public final class StackUtils {
     public static void writeItems(IInventory inventory, int id, CompoundNBT tag) {
         ListNBT tagList = new ListNBT();
 
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            if (!inventory.getStackInSlot(i).isEmpty()) {
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            if (!inventory.getItem(i).isEmpty()) {
                 CompoundNBT stackTag = new CompoundNBT();
 
                 stackTag.putInt(NBT_SLOT, i);
 
-                inventory.getStackInSlot(i).write(stackTag);
+                inventory.getItem(i).save(stackTag);
 
                 tagList.add(stackTag);
             }
@@ -263,10 +263,10 @@ public final class StackUtils {
             for (int i = 0; i < tagList.size(); i++) {
                 int slot = tagList.getCompound(i).getInt(NBT_SLOT);
 
-                ItemStack stack = ItemStack.read(tagList.getCompound(i));
+                ItemStack stack = ItemStack.of(tagList.getCompound(i));
 
                 if (!stack.isEmpty()) {
-                    inventory.setInventorySlotContents(slot, stack);
+                    inventory.setItem(slot, stack);
                 }
             }
         }
@@ -319,7 +319,7 @@ public final class StackUtils {
         }
 
         // @Volatile
-        stack.write(dummy);
+        stack.save(dummy);
         if (dummy.contains(NBT_FORGE_CAPS)) {
             itemTag.put(NBT_ITEM_CAPS, dummy.get(NBT_FORGE_CAPS));
         }

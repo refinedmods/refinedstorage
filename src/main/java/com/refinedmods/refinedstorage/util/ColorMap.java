@@ -95,7 +95,7 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
             block.getId().getPath(),
             () -> new ColoredBlockItem(
                 block.get(),
-                new Item.Properties().group(RS.MAIN_GROUP),
+                new Item.Properties().tab(RS.MAIN_GROUP),
                 color,
                 BlockUtils.getBlockTranslation(translationBlock.get())
             )
@@ -112,22 +112,22 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
     }
 
     private <S extends BaseBlock> BlockState getNewState(RegistryObject<S> block, BlockState state) {
-        BlockState newState = block.get().getDefaultState();
+        BlockState newState = block.get().defaultBlockState();
 
         if (((NetworkNodeBlock) block.get()).hasConnectedState()) {
-            newState = newState.with(NetworkNodeBlock.CONNECTED, state.get(NetworkNodeBlock.CONNECTED));
+            newState = newState.setValue(NetworkNodeBlock.CONNECTED, state.getValue(NetworkNodeBlock.CONNECTED));
         }
         if (block.get().getDirection() != BlockDirection.NONE) {
-            newState = newState.with(block.get().getDirection().getProperty(), state.get(block.get().getDirection().getProperty()));
+            newState = newState.setValue(block.get().getDirection().getProperty(), state.getValue(block.get().getDirection().getProperty()));
         }
 
         return newState;
     }
 
     public ActionResultType setBlockState(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
-        if (!world.isRemote) {
-            world.setBlockState(pos, newState);
-            if (((ServerPlayerEntity) player).interactionManager.getGameType() != GameType.CREATIVE) {
+        if (!world.isClientSide) {
+            world.setBlockAndUpdate(pos, newState);
+            if (((ServerPlayerEntity) player).gameMode.getGameModeForPlayer() != GameType.CREATIVE) {
                 heldItem.shrink(1);
             }
         }

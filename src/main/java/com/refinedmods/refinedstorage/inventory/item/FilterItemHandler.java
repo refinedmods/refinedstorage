@@ -75,7 +75,7 @@ public class FilterItemHandler extends BaseItemHandler {
         if (icon.isEmpty() && fluidIcon.isEmpty()) {
             filters.addAll(foundFilters);
         } else {
-            tabs.add(new GridTab(foundFilters, FilterItem.getName(filterItem), icon, fluidIcon));
+            tabs.add(new GridTab(foundFilters, FilterItem.getFilterName(filterItem), icon, fluidIcon));
         }
     }
 }

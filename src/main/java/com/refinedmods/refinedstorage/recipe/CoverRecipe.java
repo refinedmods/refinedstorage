@@ -45,13 +45,13 @@ public class CoverRecipe extends SpecialRecipe {
     }
 
     public static ItemStack getResult(ItemStack first, ItemStack second){
-        if (first.getItem().isIn(Tags.Items.NUGGETS_IRON)){
+        if (first.getItem().is(Tags.Items.NUGGETS_IRON)){
             ItemStack stack = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(stack, second);
             stack.setCount(6);
             return stack;
         }
-        if (second.getItem().isIn(Tags.Items.NUGGETS_IRON)){
+        if (second.getItem().is(Tags.Items.NUGGETS_IRON)){
             ItemStack stack = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(stack, first);
             stack.setCount(6);
@@ -64,11 +64,11 @@ public class CoverRecipe extends SpecialRecipe {
     public boolean matches(CraftingInventory inv, World worldIn) {
         List<ItemStack> list = Lists.newArrayList();
         int ingots = 0;
-        for (int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
-                if (itemstack.getItem().isIn(Tags.Items.NUGGETS_IRON)){
+                if (itemstack.getItem().is(Tags.Items.NUGGETS_IRON)){
                     ++ingots;
                 } else if (!stackMatches(itemstack)){
                     return false;
@@ -79,14 +79,14 @@ public class CoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         List<ItemStack> list = Lists.newArrayList();
         int ingots = 0;
-        for (int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
-                if (itemstack.getItem().isIn(Tags.Items.NUGGETS_IRON)){
+                if (itemstack.getItem().is(Tags.Items.NUGGETS_IRON)){
                     ++ingots;
                 } else if (!stackMatches(itemstack)){
                     return ItemStack.EMPTY;
@@ -100,7 +100,7 @@ public class CoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
 

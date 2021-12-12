@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
+
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_VERSION = "Version";
@@ -84,7 +86,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        return new ItemStack(Item.BLOCK_TO_ITEM.get(world.getBlockState(pos).getBlock()), 1);
+        return new ItemStack(Item.BY_BLOCK.get(world.getBlockState(pos).getBlock()), 1);
     }
 
     @Override
@@ -107,7 +109,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void markDirty() {
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             API.instance().getNetworkNodeManager((ServerWorld) world).markForSaving();
         }
     }
@@ -140,7 +142,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void update() {
         if (ticks == 0) {
-            redstonePowered = world.isBlockPowered(pos);
+            redstonePowered = world.hasNeighborSignal(pos);
         }
 
         ++ticks;
@@ -158,7 +160,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                 BlockState blockState = world.getBlockState(pos);
 
                 if (blockState.getBlock() instanceof NetworkNodeBlock && ((NetworkNodeBlock) blockState.getBlock()).hasConnectedState()) {
-                    world.setBlockState(pos, world.getBlockState(pos).with(NetworkNodeBlock.CONNECTED, canUpdate));
+                    world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(NetworkNodeBlock.CONNECTED, canUpdate));
                 }
 
                 if (network != null) {
@@ -177,7 +179,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         if (owner != null) {
-            tag.putUniqueId(NBT_OWNER, owner);
+            tag.putUUID(NBT_OWNER, owner);
         }
 
         tag.putInt(NBT_VERSION, CURRENT_VERSION);
@@ -194,8 +196,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     public void read(CompoundNBT tag) {
-        if (tag.hasUniqueId(NBT_OWNER)) {
-            owner = tag.getUniqueId(NBT_OWNER);
+        if (tag.hasUUID(NBT_OWNER)) {
+            owner = tag.getUUID(NBT_OWNER);
         }
 
         if (tag.contains(NBT_VERSION)) {
@@ -234,19 +236,19 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(world.getTileEntity(pos.offset(facing)));
+            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos.relative(facing)));
             if (oppositeNode == null) {
                 continue;
             }
             if (canConduct(facing) && oppositeNode.canReceive(facing.getOpposite())) {
-                operator.apply(world, pos.offset(facing), facing.getOpposite());
+                operator.apply(world, pos.relative(facing), facing.getOpposite());
             }
         }
     }
 
     @Nullable
     public TileEntity getFacingTile() {
-        return world.getTileEntity(pos.offset(getDirection()));
+        return world.getBlockEntity(pos.relative(getDirection()));
     }
 
     public Direction getDirection() {
@@ -254,7 +256,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             BlockState state = world.getBlockState(pos);
 
             if (state.getBlock() instanceof BaseBlock) {
-                direction = state.get(((BaseBlock) state.getBlock()).getDirection().getProperty());
+                direction = state.getValue(((BaseBlock) state.getBlock()).getDirection().getProperty());
             }
         }
 

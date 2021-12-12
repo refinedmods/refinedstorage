@@ -32,7 +32,7 @@ public class NetworkReceiverBlock extends ColoredNetworkBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        return RSBlocks.NETWORK_RECEIVER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        return RSBlocks.NETWORK_RECEIVER.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
     }
 }

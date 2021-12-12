@@ -26,7 +26,7 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
         ItemStorageDisk disk = new ItemStorageDisk(
             world,
             tag.getInt(ItemStorageDisk.NBT_CAPACITY),
-            tag.contains(ItemStorageDisk.NBT_OWNER) ? tag.getUniqueId(ItemStorageDisk.NBT_OWNER) : null
+            tag.contains(ItemStorageDisk.NBT_OWNER) ? tag.getUUID(ItemStorageDisk.NBT_OWNER) : null
         );
 
         ListNBT list = tag.getList(ItemStorageDisk.NBT_ITEMS, Constants.NBT.TAG_COMPOUND);

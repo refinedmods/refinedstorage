@@ -34,12 +34,12 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
         List<ItemStack> input = new ArrayList<>();
         List<ItemStack> output = new ArrayList<>();
         for (Block block : ForgeRegistries.BLOCKS.getValues()) {
-            Item item = Item.getItemFromBlock(block);
+            Item item = Item.byBlock(block);
             if (item == Items.AIR) {
                 continue;
             }
             NonNullList<ItemStack> subBlocks = NonNullList.create();
-            block.fillItemGroup(ItemGroup.SEARCH, subBlocks);
+            block.fillItemCategory(ItemGroup.TAB_SEARCH, subBlocks);
             for (ItemStack subBlock : subBlocks) {
                 if (CoverManager.isValidCover(subBlock)) {
                     input.add(subBlock);
@@ -49,7 +49,7 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
                 }
             }
         }
-        ingredients.setInputLists(VanillaTypes.ITEM, Arrays.asList(Tags.Items.NUGGETS_IRON.getAllElements().stream().map(ItemStack::new).collect(Collectors.toList()), input));
+        ingredients.setInputLists(VanillaTypes.ITEM, Arrays.asList(Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()), input));
         ingredients.setOutputs(VanillaTypes.ITEM, output);
     }
 
@@ -69,11 +69,11 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
     public void setRecipe(IRecipeLayout recipeLayout, IIngredients ingredients) {
         ItemStack stack = recipeLayout.getFocus(VanillaTypes.ITEM).getValue();
         if (stack.getItem() instanceof CoverItem){
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getAllElements().stream().map(ItemStack::new).collect(Collectors.toList()));
+            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, CoverItem.getItem(stack));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);
         } else {
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getAllElements().stream().map(ItemStack::new).collect(Collectors.toList()));
+            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, stack);
             ItemStack output = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(output, stack);

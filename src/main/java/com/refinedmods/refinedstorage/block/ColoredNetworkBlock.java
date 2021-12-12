@@ -4,6 +4,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ColoredNetworkBlock extends NetworkNodeBlock {
     public ColoredNetworkBlock(Properties props) {
         super(props);
@@ -11,11 +13,11 @@ public class ColoredNetworkBlock extends NetworkNodeBlock {
 
     // Don't do block drops if we change the color.
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock().getClass().equals(newState.getBlock().getClass())) {
             checkIfDirectionHasChanged(state, world, pos, newState);
         } else {
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 }

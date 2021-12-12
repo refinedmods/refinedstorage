@@ -38,20 +38,20 @@ public class FilterUpdateMessage {
         buf.writeInt(message.compare);
         buf.writeInt(message.mode);
         buf.writeBoolean(message.modFilter);
-        buf.writeString(message.name);
+        buf.writeUtf(message.name);
         buf.writeInt(message.type);
     }
 
     public static void handle(FilterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         PlayerEntity player = ctx.get().getSender();
 
-        if (player != null && player.openContainer instanceof FilterContainer) {
+        if (player != null && player.containerMenu instanceof FilterContainer) {
             ctx.get().enqueueWork(() -> {
-                FilterItem.setCompare(((FilterContainer) player.openContainer).getFilterItem(), message.compare);
-                FilterItem.setMode(((FilterContainer) player.openContainer).getFilterItem(), message.mode);
-                FilterItem.setModFilter(((FilterContainer) player.openContainer).getFilterItem(), message.modFilter);
-                FilterItem.setName(((FilterContainer) player.openContainer).getFilterItem(), message.name);
-                FilterItem.setType(((FilterContainer) player.openContainer).getFilterItem(), message.type);
+                FilterItem.setCompare(((FilterContainer) player.containerMenu).getFilterItem(), message.compare);
+                FilterItem.setMode(((FilterContainer) player.containerMenu).getFilterItem(), message.mode);
+                FilterItem.setModFilter(((FilterContainer) player.containerMenu).getFilterItem(), message.modFilter);
+                FilterItem.setName(((FilterContainer) player.containerMenu).getFilterItem(), message.name);
+                FilterItem.setType(((FilterContainer) player.containerMenu).getFilterItem(), message.type);
             });
         }
 

@@ -20,8 +20,8 @@ public class IdGridSorter implements IGridSorter {
         int rightId = 0;
 
         if (left.getIngredient() instanceof ItemStack && right.getIngredient() instanceof ItemStack) {
-            leftId = Item.getIdFromItem(((ItemStack) left.getIngredient()).getItem());
-            rightId = Item.getIdFromItem(((ItemStack) right.getIngredient()).getItem());
+            leftId = Item.getId(((ItemStack) left.getIngredient()).getItem());
+            rightId = Item.getId(((ItemStack) right.getIngredient()).getItem());
         } else if (left.getIngredient() instanceof FluidStack && right.getIngredient() instanceof FluidStack) {
             leftId = Registry.FLUID.getId(((FluidStack) left.getIngredient()).getFluid());
             rightId = Registry.FLUID.getId(((FluidStack) right.getIngredient()).getFluid());

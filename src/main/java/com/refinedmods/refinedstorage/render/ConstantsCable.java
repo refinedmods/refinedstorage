@@ -77,7 +77,7 @@ public class ConstantsCable {
 
     public static VoxelShape addCoverVoxelShapes(VoxelShape shape, IBlockReader world, BlockPos pos){
         if (world != null) {
-            TileEntity entity = world.getTileEntity(pos);
+            TileEntity entity = world.getBlockEntity(pos);
             if (entity instanceof NetworkNodeTile && ((NetworkNodeTile<?>) entity).getNode() instanceof ICoverable) {
                 CoverManager coverManager = ((ICoverable) ((NetworkNodeTile<?>) entity).getNode()).getCoverManager();
                 for (Direction value : Direction.values()) {

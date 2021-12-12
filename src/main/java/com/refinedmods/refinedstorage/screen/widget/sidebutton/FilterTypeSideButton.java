@@ -17,7 +17,7 @@ public class FilterTypeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.type." + filterScreen.getType());
+        return I18n.get("sidebutton.refinedstorage.type") + "\n" + TextFormatting.GRAY + I18n.get("sidebutton.refinedstorage.type." + filterScreen.getType());
     }
 
     @Override

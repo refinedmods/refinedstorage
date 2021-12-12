@@ -19,7 +19,7 @@ class InventoryInventoryWrapper implements IInventoryWrapper {
 
         if (inventory instanceof PlayerInventory) {
             // Don't use PlayerMainInvWrapper to avoid stack animations.
-            this.wrapper = new RangedWrapper(new InvWrapper(inventory), 0, ((PlayerInventory) inventory).mainInventory.size());
+            this.wrapper = new RangedWrapper(new InvWrapper(inventory), 0, ((PlayerInventory) inventory).items.size());
         } else {
             this.wrapper = new InvWrapper(inventory);
         }

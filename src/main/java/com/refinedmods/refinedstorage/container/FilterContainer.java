@@ -53,6 +53,6 @@ public class FilterContainer extends BaseContainer {
 
     @Override
     protected int getDisabledSlotNumber() {
-        return getPlayer().inventory.currentItem;
+        return getPlayer().inventory.selected;
     }
 }

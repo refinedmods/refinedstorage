@@ -65,7 +65,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public void update() {
         super.update();
 
-        if (!canUpdate() || !world.isBlockPresent(pos)) {
+        if (!canUpdate() || !world.isLoaded(pos)) {
             return;
         }
 
@@ -226,7 +226,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
     @Override
     public int getType() {
-        return world.isRemote ? ImporterTile.TYPE.getValue() : type;
+        return world.isClientSide ? ImporterTile.TYPE.getValue() : type;
     }
 
     @Override

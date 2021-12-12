@@ -22,10 +22,10 @@ public class ResultCraftingGridSlot extends CraftingResultSlot {
     @Override
     @Nonnull
     public ItemStack onTake(PlayerEntity player, @Nonnull ItemStack stack) {
-        onCrafting(stack);
+        checkTakeAchievements(stack);
         ForgeHooks.setCraftingPlayer(player);
 
-        if (!player.getEntityWorld().isRemote) {
+        if (!player.getCommandSenderWorld().isClientSide) {
             grid.onCrafted(player, null, null);
         }
 

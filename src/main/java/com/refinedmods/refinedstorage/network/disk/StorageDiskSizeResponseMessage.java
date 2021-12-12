@@ -21,13 +21,13 @@ public class StorageDiskSizeResponseMessage {
     }
 
     public static void encode(StorageDiskSizeResponseMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
         buf.writeInt(message.stored);
         buf.writeInt(message.capacity);
     }
 
     public static StorageDiskSizeResponseMessage decode(PacketBuffer buf) {
-        return new StorageDiskSizeResponseMessage(buf.readUniqueId(), buf.readInt(), buf.readInt());
+        return new StorageDiskSizeResponseMessage(buf.readUUID(), buf.readInt(), buf.readInt());
     }
 
     public static void handle(StorageDiskSizeResponseMessage message, Supplier<NetworkEvent.Context> ctx) {

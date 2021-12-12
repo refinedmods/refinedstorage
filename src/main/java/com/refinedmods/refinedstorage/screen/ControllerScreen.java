@@ -47,7 +47,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/controller.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
         int energyBarHeightNew = Network.getEnergyScaled(ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
 
@@ -81,14 +81,14 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 87, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, 87, I18n.get("container.inventory"));
 
         int x = 33;
         int y = 26;
 
         int slot = scrollbar.getOffset() * 2;
 
-        RenderHelper.setupGui3DDiffuseLighting();
+        RenderHelper.setupFor3DItems();
 
         List<ClientNode> nodes = ControllerTile.NODES.getValue();
 
@@ -100,20 +100,20 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
                 renderItem(matrixStack, x, y + 5, node.getStack());
 
-                float scale = minecraft.getForceUnicodeFont() ? 1F : 0.5F;
+                float scale = minecraft.isEnforceUnicode() ? 1F : 0.5F;
 
-                matrixStack.push();
+                matrixStack.pushPose();
                 matrixStack.scale(scale, scale, 1);
 
                 renderString(
                     matrixStack,
                     RenderUtils.getOffsetOnScale(x + 1, scale),
                     RenderUtils.getOffsetOnScale(y - 2, scale),
-                    trimNameIfNeeded(!minecraft.getForceUnicodeFont(), node.getStack().getDisplayName().getString())
+                    trimNameIfNeeded(!minecraft.isEnforceUnicode(), node.getStack().getHoverName().getString())
                 );
                 renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
-                matrixStack.pop();
+                matrixStack.popPose();
 
                 if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY)) {
                     hoveringNode = node;
@@ -131,11 +131,11 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
         }
 
         if (hoveringNode != null) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
         }
 
         if (RenderUtils.inBounds(ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT, mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage", ControllerTile.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage.energy_stored", ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue()));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerTile.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue()));
         }
     }
 

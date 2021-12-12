@@ -27,7 +27,7 @@ public class PortableGridBlockGridFactory implements IGridFactory {
     @Override
     @Nullable
     public IGrid createFromBlock(PlayerEntity player, BlockPos pos) {
-        TileEntity tile = getRelevantTile(player.world, pos);
+        TileEntity tile = getRelevantTile(player.level, pos);
 
         if (tile instanceof PortableGridTile) {
             return (PortableGridTile) tile;
@@ -39,7 +39,7 @@ public class PortableGridBlockGridFactory implements IGridFactory {
     @Nullable
     @Override
     public TileEntity getRelevantTile(World world, BlockPos pos) {
-        return world.getTileEntity(pos);
+        return world.getBlockEntity(pos);
     }
 
     @Override

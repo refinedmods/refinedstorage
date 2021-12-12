@@ -130,12 +130,12 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(NetworkNodeManager.NAME, world), NetworkNodeManager.NAME);
+        return world.getDataStorage().computeIfAbsent(() -> new NetworkNodeManager(NetworkNodeManager.NAME, world), NetworkNodeManager.NAME);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        return world.getSavedData().getOrCreate(() -> new NetworkManager(NetworkManager.NAME, world), NetworkManager.NAME);
+        return world.getDataStorage().computeIfAbsent(() -> new NetworkManager(NetworkManager.NAME, world), NetworkManager.NAME);
     }
 
     @Override
@@ -195,9 +195,9 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().func_241755_D_(); // Get the overworld
+        ServerWorld world = anyWorld.getServer().overworld(); // Get the overworld
 
-        return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
+        return world.getDataStorage().computeIfAbsent(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
     }
 
     @Nonnull
@@ -209,9 +209,9 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageTrackerManager getStorageTrackerManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().func_241755_D_(); // Get the overworld
+        ServerWorld world = anyWorld.getServer().overworld(); // Get the overworld
 
-        return world.getSavedData().getOrCreate(() -> new StorageTrackerManager(StorageTrackerManager.NAME), StorageTrackerManager.NAME);
+        return world.getDataStorage().computeIfAbsent(() -> new StorageTrackerManager(StorageTrackerManager.NAME), StorageTrackerManager.NAME);
     }
 
     @Override
@@ -295,7 +295,7 @@ public class API implements IRSAPI {
     }
 
     private int getHashCode(CompoundNBT tag, int result) {
-        for (String key : tag.keySet()) {
+        for (String key : tag.getAllKeys()) {
             result = 31 * result + key.hashCode();
             result = getHashCode(tag.get(key), result);
         }

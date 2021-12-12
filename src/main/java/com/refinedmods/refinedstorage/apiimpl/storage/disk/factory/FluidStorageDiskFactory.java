@@ -26,7 +26,7 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
         FluidStorageDisk disk = new FluidStorageDisk(
             world,
             tag.getInt(FluidStorageDisk.NBT_CAPACITY),
-            tag.contains(FluidStorageDisk.NBT_OWNER) ? tag.getUniqueId(FluidStorageDisk.NBT_OWNER) : null
+            tag.contains(FluidStorageDisk.NBT_OWNER) ? tag.getUUID(FluidStorageDisk.NBT_OWNER) : null
         );
 
         ListNBT list = tag.getList(FluidStorageDisk.NBT_FLUIDS, Constants.NBT.TAG_COMPOUND);

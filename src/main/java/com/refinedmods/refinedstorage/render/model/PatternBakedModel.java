@@ -25,18 +25,18 @@ public class PatternBakedModel extends DelegateBakedModel {
         return new ItemOverrideList() {
             @Nullable
             @Override
-            public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+            public IBakedModel resolve(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
                 if (entity != null) {
-                    ICraftingPattern pattern = PatternItem.fromCache(entity.world, stack);
+                    ICraftingPattern pattern = PatternItem.fromCache(entity.level, stack);
 
                     if (canDisplayOutput(stack, pattern)) {
                         ItemStack outputToRender = pattern.getOutputs().get(0);
 
-                        return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(outputToRender, world, entity);
+                        return Minecraft.getInstance().getItemRenderer().getModel(outputToRender, world, entity);
                     }
                 }
 
-                return super.getOverrideModel(model, stack, world, entity);
+                return super.resolve(model, stack, world, entity);
             }
 
             @Override

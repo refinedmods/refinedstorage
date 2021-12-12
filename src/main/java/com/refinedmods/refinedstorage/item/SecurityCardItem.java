@@ -25,21 +25,21 @@ public class SecurityCardItem extends Item {
     private static final String NBT_PERMISSION = "Permission_%d";
 
     public SecurityCardItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
+        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             stack.setTag(new CompoundNBT());
 
             stack.getTag().putString(NBT_OWNER, player.getGameProfile().getId().toString());
             stack.getTag().putString(NBT_OWNER_NAME, player.getGameProfile().getName());
         }
 
-        return ActionResult.resultSuccess(stack);
+        return ActionResult.success(stack);
     }
 
     @Nullable
@@ -74,8 +74,8 @@ public class SecurityCardItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (stack.hasTag() && stack.getTag().contains(NBT_OWNER_NAME)) {
             tooltip.add(new TranslationTextComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).setStyle(Styles.GRAY));
@@ -83,7 +83,7 @@ public class SecurityCardItem extends Item {
 
         for (Permission permission : Permission.values()) {
             if (hasPermission(stack, permission)) {
-                tooltip.add(new StringTextComponent("- ").appendSibling(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
+                tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
             }
         }
     }

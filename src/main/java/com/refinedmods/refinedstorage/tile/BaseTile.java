@@ -33,26 +33,26 @@ public abstract class BaseTile extends TileEntity {
 
     @Override
     public final SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
     }
 
     @Override
     public final void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        readUpdate(packet.getNbtCompound());
+        readUpdate(packet.getTag());
     }
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
+        super.load(state, tag);
 
         readUpdate(tag);
     }
 
     // @Volatile: Copied with some changes from the super method (avoid sending neighbor updates, it's not needed)
     @Override
-    public void markDirty() {
-        if (world != null) {
-            world.markChunkDirty(pos, this);
+    public void setChanged() {
+        if (level != null) {
+            level.blockEntityChanged(worldPosition, this);
         }
     }
 }

@@ -41,19 +41,19 @@ public class FilterItem extends Item {
     public static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     public FilterItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
+        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             if (player.isCrouching()) {
                 return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER.get()));
             }
 
-            player.openContainer(new INamedContainerProvider() {
+            player.openMenu(new INamedContainerProvider() {
                 @Override
                 public ITextComponent getDisplayName() {
                     return new TranslationTextComponent("gui.refinedstorage.filter");
@@ -61,7 +61,7 @@ public class FilterItem extends Item {
 
                 @Override
                 public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-                    return new FilterContainer(player, inventory.getCurrentItem(), windowId);
+                    return new FilterContainer(player, inventory.getSelected(), windowId);
                 }
             });
         }
@@ -70,8 +70,8 @@ public class FilterItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
 
@@ -124,7 +124,7 @@ public class FilterItem extends Item {
         stack.getTag().putBoolean(NBT_MOD_FILTER, modFilter);
     }
 
-    public static String getName(ItemStack stack) {
+    public static String getFilterName(ItemStack stack) {
         return stack.hasTag() && stack.getTag().contains(NBT_NAME) ? stack.getTag().getString(NBT_NAME) : "";
     }
 
@@ -138,7 +138,7 @@ public class FilterItem extends Item {
 
     @Nonnull
     public static ItemStack getIcon(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(NBT_ICON) ? ItemStack.read(stack.getTag().getCompound(NBT_ICON)) : ItemStack.EMPTY;
+        return stack.hasTag() && stack.getTag().contains(NBT_ICON) ? ItemStack.of(stack.getTag().getCompound(NBT_ICON)) : ItemStack.EMPTY;
     }
 
     public static void setIcon(ItemStack stack, ItemStack icon) {

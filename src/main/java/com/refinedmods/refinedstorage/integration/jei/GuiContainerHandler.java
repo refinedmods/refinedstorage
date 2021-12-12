@@ -49,11 +49,11 @@ public class GuiContainerHandler implements IGuiContainerHandler<ContainerScreen
             }
         }
 
-        if (screen.getContainer() instanceof BaseContainer) {
-            for (FluidFilterSlot slot : ((BaseContainer) screen.getContainer()).getFluidSlots()) {
+        if (screen.getMenu() instanceof BaseContainer) {
+            for (FluidFilterSlot slot : ((BaseContainer) screen.getMenu()).getFluidSlots()) {
                 FluidStack fluidInSlot = slot.getFluidInventory().getFluid(slot.getSlotIndex());
 
-                if (!fluidInSlot.isEmpty() && RenderUtils.inBounds(slot.xPos, slot.yPos, 18, 18, mouseX, mouseY)) {
+                if (!fluidInSlot.isEmpty() && RenderUtils.inBounds(slot.x, slot.y, 18, 18, mouseX, mouseY)) {
                     return fluidInSlot;
                 }
             }

@@ -98,9 +98,9 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     private INetwork getNetwork() {
-        World world = server.getWorld(nodeDimension);
+        World world = server.getLevel(nodeDimension);
         if (world != null) {
-            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getTileEntity(nodePos)));
+            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getBlockEntity(nodePos)));
         }
 
         return null;

@@ -17,9 +17,9 @@ public class ResourcePackListener extends ReloadListener<RSResourcePackSection> 
 
     @Override
     protected RSResourcePackSection prepare(IResourceManager resourceManager, IProfiler profiler) {
-        for (ResourcePackInfo info : Minecraft.getInstance().getResourcePackList().getEnabledPacks()) {
+        for (ResourcePackInfo info : Minecraft.getInstance().getResourcePackRepository().getSelectedPacks()) {
             try {
-                RSResourcePackSection section = info.getResourcePack().getMetadata(RSResourcePackSection.DESERIALIZER);
+                RSResourcePackSection section = info.open().getMetadataSection(RSResourcePackSection.DESERIALIZER);
 
                 if (section != null) {
                     return section;

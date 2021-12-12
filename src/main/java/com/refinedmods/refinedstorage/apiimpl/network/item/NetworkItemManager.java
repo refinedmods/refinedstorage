@@ -34,12 +34,12 @@ public class NetworkItemManager implements INetworkItemManager {
             if (node instanceof IWirelessTransmitter &&
                 network.canRun() &&
                 node.isActive() &&
-                ((IWirelessTransmitter) node).getDimension() == player.getEntityWorld().getDimensionKey()) {
+                ((IWirelessTransmitter) node).getDimension() == player.getCommandSenderWorld().dimension()) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 
-                Vector3d pos = player.getPositionVec();
+                Vector3d pos = player.position();
 
-                double distance = Math.sqrt(Math.pow(transmitter.getOrigin().getX() - pos.getX(), 2) + Math.pow(transmitter.getOrigin().getY() - pos.getY(), 2) + Math.pow(transmitter.getOrigin().getZ() - pos.getZ(), 2));
+                double distance = Math.sqrt(Math.pow(transmitter.getOrigin().getX() - pos.x(), 2) + Math.pow(transmitter.getOrigin().getY() - pos.y(), 2) + Math.pow(transmitter.getOrigin().getZ() - pos.z(), 2));
 
                 if (distance < transmitter.getRange()) {
                     inRange = true;
@@ -50,7 +50,7 @@ public class NetworkItemManager implements INetworkItemManager {
         }
 
         if (!inRange) {
-            player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_range"), player.getUniqueID());
+            player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_range"), player.getUUID());
 
             return;
         }

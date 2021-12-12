@@ -25,9 +25,9 @@ import java.util.UUID;
 public class CreateDiskCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("create")
-            .requires(cs -> cs.hasPermissionLevel(2))
+            .requires(cs -> cs.hasPermission(2))
             .then(Commands.argument("player", EntityArgument.player())
-                .then(Commands.argument("id", UUIDArgument.func_239194_a_()).suggests(new StorageDiskIdSuggestionProvider())
+                .then(Commands.argument("id", UUIDArgument.uuid()).suggests(new StorageDiskIdSuggestionProvider())
                     .executes(new CreateDiskCommand())
                 )
             );
@@ -36,11 +36,11 @@ public class CreateDiskCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         PlayerEntity player = EntityArgument.getPlayer(context, "player");
-        UUID id = UUIDArgument.func_239195_a_(context, "id");
+        UUID id = UUIDArgument.getUuid(context, "id");
 
-        IStorageDisk<?> disk = API.instance().getStorageDiskManager(context.getSource().getWorld()).get(id);
+        IStorageDisk<?> disk = API.instance().getStorageDiskManager(context.getSource().getLevel()).get(id);
         if (disk == null) {
-            context.getSource().sendErrorMessage(new TranslationTextComponent("commands.refinedstorage.disk.create.error.disk_not_found", id));
+            context.getSource().sendFailure(new TranslationTextComponent("commands.refinedstorage.disk.create.error.disk_not_found", id));
         } else {
             IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(disk.getFactoryId());
 
@@ -48,29 +48,29 @@ public class CreateDiskCommand implements Command<CommandSource> {
                 ItemStack stack = factory.createDiskItem(disk, id);
 
                 // @Volatile: From GiveCommand
-                boolean flag = player.inventory.addItemStackToInventory(stack);
+                boolean flag = player.inventory.add(stack);
                 if (flag && stack.isEmpty()) {
                     stack.setCount(1);
 
-                    ItemEntity itemEntity = player.dropItem(stack, false);
+                    ItemEntity itemEntity = player.drop(stack, false);
                     if (itemEntity != null) {
                         itemEntity.makeFakeItem();
                     }
 
-                    player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    player.container.detectAndSendChanges();
+                    player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    player.inventoryMenu.broadcastChanges();
                 } else {
-                    ItemEntity itemEntity = player.dropItem(stack, false);
+                    ItemEntity itemEntity = player.drop(stack, false);
                     if (itemEntity != null) {
-                        itemEntity.setNoPickupDelay();
-                        itemEntity.setOwnerId(player.getUniqueID());
+                        itemEntity.setNoPickUpDelay();
+                        itemEntity.setOwner(player.getUUID());
                     }
                 }
 
-                context.getSource().sendFeedback(new TranslationTextComponent(
+                context.getSource().sendSuccess(new TranslationTextComponent(
                     "commands.refinedstorage.disk.create.success",
                     new StringTextComponent(id.toString()).setStyle(Styles.YELLOW),
-                    context.getSource().getDisplayName().deepCopy().setStyle(Styles.YELLOW)
+                    context.getSource().getDisplayName().copy().setStyle(Styles.YELLOW)
                 ), false);
             }
         }

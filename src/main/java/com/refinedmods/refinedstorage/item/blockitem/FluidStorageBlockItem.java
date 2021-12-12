@@ -35,14 +35,14 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     private final FluidStorageType type;
 
     public FluidStorageBlockItem(FluidStorageBlock block) {
-        super(block, new Item.Properties().group(RS.MAIN_GROUP));
+        super(block, new Item.Properties().tab(RS.MAIN_GROUP));
 
         this.type = block.getType();
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
             UUID id = getId(stack);
@@ -65,10 +65,10 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack storageStack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack storageStack = player.getItemInHand(hand);
 
-        if (!world.isRemote && player.isCrouching() && type != FluidStorageType.CREATIVE) {
+        if (!world.isClientSide && player.isCrouching() && type != FluidStorageType.CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 
@@ -81,20 +81,20 @@ public class FluidStorageBlockItem extends BaseBlockItem {
             if (disk == null || disk.getStored() == 0) {
                 ItemStack fluidStoragePart = new ItemStack(FluidStoragePartItem.getByType(type));
 
-                if (!player.inventory.addItemStackToInventory(fluidStoragePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), fluidStoragePart);
+                if (!player.inventory.add(fluidStoragePart.copy())) {
+                    InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), fluidStoragePart);
                 }
 
                 ItemStack processor = new ItemStack(RSItems.PROCESSORS.get(ProcessorItem.Type.BASIC).get());
 
-                if (!player.inventory.addItemStackToInventory(processor.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), processor);
+                if (!player.inventory.add(processor.copy())) {
+                    InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), processor);
                 }
 
                 ItemStack bucket = new ItemStack(Items.BUCKET);
 
-                if (!player.inventory.addItemStackToInventory(bucket.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), bucket);
+                if (!player.inventory.add(bucket.copy())) {
+                    InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), bucket);
                 }
 
                 if (disk != null) {
@@ -115,10 +115,10 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     }
 
     private UUID getId(ItemStack disk) {
-        return disk.getTag().getUniqueId(FluidStorageNetworkNode.NBT_ID);
+        return disk.getTag().getUUID(FluidStorageNetworkNode.NBT_ID);
     }
 
     private boolean isValid(ItemStack disk) {
-        return disk.hasTag() && disk.getTag().hasUniqueId(FluidStorageNetworkNode.NBT_ID);
+        return disk.hasTag() && disk.getTag().hasUUID(FluidStorageNetworkNode.NBT_ID);
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class WirelessTransmitterTile extends NetworkNodeTile<WirelessTransmitterNetworkNode> {
-    public static final TileDataParameter<Integer, WirelessTransmitterTile> RANGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getRange());
+    public static final TileDataParameter<Integer, WirelessTransmitterTile> RANGE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getRange());
 
     public WirelessTransmitterTile() {
         super(RSTiles.WIRELESS_TRANSMITTER);

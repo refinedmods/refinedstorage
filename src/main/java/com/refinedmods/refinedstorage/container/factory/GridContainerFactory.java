@@ -27,7 +27,7 @@ public class GridContainerFactory implements IContainerFactory<GridContainer> {
         }
 
         if (data.readBoolean()) {
-            stack = data.readItemStack();
+            stack = data.readItem();
         }
 
         PlayerSlot slot = new PlayerSlot(data);

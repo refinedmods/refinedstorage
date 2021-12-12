@@ -48,12 +48,12 @@ public class FluidGridHandler implements IFluidGridHandler {
             fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
 
             if (shift) {
-                if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), fluidHandler.getContainer());
+                if (!player.inventory.add(fluidHandler.getContainer().copy())) {
+                    InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
                 }
             } else {
-                player.inventory.setItemStack(fluidHandler.getContainer());
-                player.updateHeldItem();
+                player.inventory.setCarried(fluidHandler.getContainer());
+                player.broadcastCarriedItem();
             }
 
             network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
@@ -86,8 +86,8 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onInsertHeldContainer(ServerPlayerEntity player) {
-        player.inventory.setItemStack(onInsert(player, player.inventory.getItemStack()));
-        player.updateHeldItem();
+        player.inventory.setCarried(onInsert(player, player.inventory.getCarried()));
+        player.broadcastCarriedItem();
     }
 
     @Override

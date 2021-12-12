@@ -44,12 +44,12 @@ public class CrafterManagerContainerProvider implements INamedContainerProvider 
     public static void writeToBuffer(PacketBuffer buf, World world, BlockPos pos) {
         buf.writeBlockPos(pos);
 
-        Map<ITextComponent, List<IItemHandlerModifiable>> containerData = ((CrafterManagerTile) world.getTileEntity(pos)).getNode().getNetwork().getCraftingManager().getNamedContainers();
+        Map<ITextComponent, List<IItemHandlerModifiable>> containerData = ((CrafterManagerTile) world.getBlockEntity(pos)).getNode().getNetwork().getCraftingManager().getNamedContainers();
 
         buf.writeInt(containerData.size());
 
         for (Map.Entry<ITextComponent, List<IItemHandlerModifiable>> entry : containerData.entrySet()) {
-            buf.writeTextComponent(entry.getKey());
+            buf.writeComponent(entry.getKey());
 
             int slots = 0;
             for (IItemHandlerModifiable handler : entry.getValue()) {

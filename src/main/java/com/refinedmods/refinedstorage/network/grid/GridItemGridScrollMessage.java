@@ -21,14 +21,14 @@ public class GridItemGridScrollMessage {
     }
 
     public static GridItemGridScrollMessage decode(PacketBuffer buf) {
-        return new GridItemGridScrollMessage(buf.readBoolean() ? buf.readUniqueId() : null, buf.readBoolean(), buf.readBoolean());
+        return new GridItemGridScrollMessage(buf.readBoolean() ? buf.readUUID() : null, buf.readBoolean(), buf.readBoolean());
     }
 
     public static void encode(GridItemGridScrollMessage message, PacketBuffer buf) {
         boolean hasId = message.id != null;
         buf.writeBoolean(hasId);
         if (hasId) {
-            buf.writeUniqueId(message.id);
+            buf.writeUUID(message.id);
         }
 
         buf.writeBoolean(message.shift);
@@ -38,8 +38,8 @@ public class GridItemGridScrollMessage {
     public static void handle(GridItemGridScrollMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();
-            if (player != null && player.openContainer instanceof GridContainer && ((GridContainer) player.openContainer).getGrid().getItemHandler() != null) {
-                ((GridContainer) player.openContainer).getGrid().getItemHandler().onGridScroll(player, message.id, message.shift, message.up);
+            if (player != null && player.containerMenu instanceof GridContainer && ((GridContainer) player.containerMenu).getGrid().getItemHandler() != null) {
+                ((GridContainer) player.containerMenu).getGrid().getItemHandler().onGridScroll(player, message.id, message.shift, message.up);
             }
         });
         ctx.get().setPacketHandled(true);

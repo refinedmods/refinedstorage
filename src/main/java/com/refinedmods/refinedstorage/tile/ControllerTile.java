@@ -32,9 +32,9 @@ import java.util.List;
 
 public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNetworkNode>, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, ControllerTile> REDSTONE_MODE = RedstoneMode.createParameter();
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNetwork().getEnergyUsage());
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNetwork().getEnergyStorage().getEnergyStored());
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNetwork().getEnergyStorage().getMaxEnergyStored());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNetwork().getEnergyUsage());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getEnergyStored());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getMaxEnergyStored());
     public static final TileDataParameter<List<ClientNode>, ControllerTile> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), ControllerTile::collectClientNodes);
 
     private static final String NBT_ENERGY_TYPE = "EnergyType";
@@ -72,56 +72,56 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
     @Override
     public void readUpdate(CompoundNBT tag) {
         if (tag.contains(NBT_ENERGY_TYPE)) {
-            world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, ControllerBlock.EnergyType.values()[tag.getInt(NBT_ENERGY_TYPE)]));
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(ControllerBlock.ENERGY_TYPE, ControllerBlock.EnergyType.values()[tag.getInt(NBT_ENERGY_TYPE)]));
         }
 
         super.readUpdate(tag);
     }
 
     public INetwork getNetwork() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             if (dummyNetwork == null) {
-                dummyNetwork = new Network(world, pos, type);
+                dummyNetwork = new Network(level, worldPosition, type);
             }
 
             return dummyNetwork;
         }
 
-        INetwork network = API.instance().getNetworkManager((ServerWorld) world).getNetwork(pos);
+        INetwork network = API.instance().getNetworkManager((ServerWorld) level).getNetwork(worldPosition);
 
         if (network == null) {
-            throw new IllegalStateException("No network present at " + pos);
+            throw new IllegalStateException("No network present at " + worldPosition);
         }
 
         return network;
     }
 
     @Override
-    public void validate() {
-        super.validate();
+    public void clearRemoved() {
+        super.clearRemoved();
 
-        if (!world.isRemote) {
-            INetworkManager manager = API.instance().getNetworkManager((ServerWorld) world);
+        if (!level.isClientSide) {
+            INetworkManager manager = API.instance().getNetworkManager((ServerWorld) level);
 
-            if (manager.getNetwork(pos) == null) {
-                manager.setNetwork(pos, new Network(world, pos, type));
+            if (manager.getNetwork(worldPosition) == null) {
+                manager.setNetwork(worldPosition, new Network(level, worldPosition, type));
                 manager.markForSaving();
             }
         }
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
 
-        if (!world.isRemote) {
-            INetworkManager manager = API.instance().getNetworkManager((ServerWorld) world);
+        if (!level.isClientSide) {
+            INetworkManager manager = API.instance().getNetworkManager((ServerWorld) level);
 
-            INetwork network = manager.getNetwork(pos);
+            INetwork network = manager.getNetwork(worldPosition);
 
             removedNetwork = network;
 
-            manager.removeNetwork(pos);
+            manager.removeNetwork(worldPosition);
             manager.markForSaving();
 
             network.onRemoved();

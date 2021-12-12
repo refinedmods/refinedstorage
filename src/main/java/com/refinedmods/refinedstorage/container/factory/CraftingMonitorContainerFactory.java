@@ -13,7 +13,7 @@ public class CraftingMonitorContainerFactory implements IContainerFactory<Crafti
     public CraftingMonitorContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
         BlockPos pos = data.readBlockPos();
 
-        CraftingMonitorTile tile = (CraftingMonitorTile) inv.player.world.getTileEntity(pos);
+        CraftingMonitorTile tile = (CraftingMonitorTile) inv.player.level.getBlockEntity(pos);
 
         return new CraftingMonitorContainer(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile, inv.player, windowId);
     }

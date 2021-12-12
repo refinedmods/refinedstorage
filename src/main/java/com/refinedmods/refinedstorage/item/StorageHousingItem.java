@@ -5,6 +5,6 @@ import net.minecraft.item.Item;
 
 public class StorageHousingItem extends Item {
     public StorageHousingItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
     }
 }

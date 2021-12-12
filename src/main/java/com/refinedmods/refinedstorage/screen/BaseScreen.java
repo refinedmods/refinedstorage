@@ -60,8 +60,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     protected BaseScreen(T container, int xSize, int ySize, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
 
-        this.xSize = xSize;
-        this.ySize = ySize;
+        this.imageWidth = xSize;
+        this.imageHeight = ySize;
     }
 
     private void runActions() {
@@ -82,7 +82,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     @Override
     public void init() {
-        minecraft.keyboardListener.enableRepeatEvents(true);
+        minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
         onPreInit();
 
@@ -99,16 +99,16 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         sideButtonY = 6;
         sideButtons.clear();
 
-        onPostInit(guiLeft, guiTop);
+        onPostInit(leftPos, topPos);
 
         runActions();
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void removed() {
+        super.removed();
 
-        minecraft.keyboardListener.enableRepeatEvents(false);
+        minecraft.keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override
@@ -117,7 +117,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         runActions();
 
-        tick(guiLeft, guiTop);
+        tick(leftPos, topPos);
     }
 
     @Override
@@ -126,26 +126,26 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        renderBackground(matrixStack, guiLeft, guiTop, mouseX, mouseY);
+        renderBackground(matrixStack, leftPos, topPos, mouseX, mouseY);
 
-        for (int i = 0; i < this.container.inventorySlots.size(); ++i) {
-            Slot slot = container.inventorySlots.get(i);
+        for (int i = 0; i < this.menu.slots.size(); ++i) {
+            Slot slot = menu.slots.get(i);
 
-            if (slot.isEnabled() && slot instanceof FluidFilterSlot) {
+            if (slot.isActive() && slot instanceof FluidFilterSlot) {
                 FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!stack.isEmpty()) {
-                    FluidRenderer.INSTANCE.render(matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
+                    FluidRenderer.INSTANCE.render(matrixStack, leftPos + slot.x, topPos + slot.y, stack);
 
                     if (((FluidFilterSlot) slot).isSizeAllowed()) {
-                        renderQuantity(matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderSettings.INSTANCE.getSecondaryColor());
+                        renderQuantity(matrixStack, leftPos + slot.x, topPos + slot.y, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderSettings.INSTANCE.getSecondaryColor());
 
                         GL11.glDisable(GL11.GL_LIGHTING);
                     }
@@ -155,11 +155,11 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mouseX -= guiLeft;
-        mouseY -= guiTop;
+        mouseX -= leftPos;
+        mouseY -= topPos;
 
         renderForeground(matrixStack, mouseX, mouseY);
 
@@ -169,13 +169,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             }
         }
 
-        for (int i = 0; i < this.container.inventorySlots.size(); ++i) {
-            Slot slot = container.inventorySlots.get(i);
+        for (int i = 0; i < this.menu.slots.size(); ++i) {
+            Slot slot = menu.slots.get(i);
 
-            if (slot.isEnabled() && slot instanceof FluidFilterSlot) {
+            if (slot.isActive() && slot instanceof FluidFilterSlot) {
                 FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
-                if (!stack.isEmpty() && RenderUtils.inBounds(slot.xPos, slot.yPos, 17, 17, mouseX, mouseY)) {
+                if (!stack.isEmpty() && RenderUtils.inBounds(slot.x, slot.y, 17, 17, mouseX, mouseY)) {
                     renderTooltip(matrixStack, mouseX, mouseY, stack.getDisplayName().getString());
                 }
             }
@@ -183,42 +183,42 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     @Override
-    protected void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type) {
-        boolean valid = type != ClickType.QUICK_MOVE && minecraft.player.inventory.getItemStack().isEmpty();
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+        boolean valid = type != ClickType.QUICK_MOVE && minecraft.player.inventory.getCarried().isEmpty();
 
-        if (valid && slot instanceof FilterSlot && slot.isEnabled() && ((FilterSlot) slot).isSizeAllowed()) {
-            if (!slot.getStack().isEmpty()) {
+        if (valid && slot instanceof FilterSlot && slot.isActive() && ((FilterSlot) slot).isSizeAllowed()) {
+            if (!slot.getItem().isEmpty()) {
                 if (((FilterSlot) slot).isAlternativesAllowed() && hasControlDown()) {
-                    minecraft.displayGuiScreen(new AlternativesScreen(
+                    minecraft.setScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
                         ALTERNATIVES_TEXT,
-                        slot.getStack(),
+                        slot.getItem(),
                         slot.getSlotIndex()
                     ));
                 } else {
-                    minecraft.displayGuiScreen(new ItemAmountScreen(
+                    minecraft.setScreen(new ItemAmountScreen(
                         this,
                         minecraft.player,
-                        slot.slotNumber,
-                        slot.getStack(),
-                        slot.getSlotStackLimit(),
+                        slot.index,
+                        slot.getItem(),
+                        slot.getMaxStackSize(),
                         ((FilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             parent,
                             minecraft.player,
                             ALTERNATIVES_TEXT,
-                            slot.getStack(),
+                            slot.getItem(),
                             slot.getSlotIndex()
                         )) : null
                     ));
                 }
             }
-        } else if (valid && slot instanceof FluidFilterSlot && slot.isEnabled() && ((FluidFilterSlot) slot).isSizeAllowed()) {
+        } else if (valid && slot instanceof FluidFilterSlot && slot.isActive() && ((FluidFilterSlot) slot).isSizeAllowed()) {
             FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
             if (!stack.isEmpty()) {
                 if (((FluidFilterSlot) slot).isAlternativesAllowed() && hasControlDown()) {
-                    minecraft.displayGuiScreen(new AlternativesScreen(
+                    minecraft.setScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
                         ALTERNATIVES_TEXT,
@@ -226,10 +226,10 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         slot.getSlotIndex()
                     ));
                 } else {
-                    minecraft.displayGuiScreen(new FluidAmountScreen(
+                    minecraft.setScreen(new FluidAmountScreen(
                         this,
                         minecraft.player,
-                        slot.slotNumber,
+                        slot.index,
                         stack,
                         ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount(),
                         ((FluidFilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
@@ -242,10 +242,10 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     ));
                 }
             } else {
-                super.handleMouseClick(slot, slotId, mouseButton, type);
+                super.slotClicked(slot, slotId, mouseButton, type);
             }
         } else {
-            super.handleMouseClick(slot, slotId, mouseButton, type);
+            super.slotClicked(slot, slotId, mouseButton, type);
         }
     }
 
@@ -269,8 +269,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void addSideButton(SideButton button) {
-        button.x = guiLeft - button.getWidth() - 2;
-        button.y = guiTop + sideButtonY;
+        button.x = leftPos - button.getWidth() - 2;
+        button.y = topPos + sideButtonY;
 
         sideButtonY += button.getHeight() + 2;
 
@@ -283,7 +283,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void bindTexture(String namespace, String filenameInTexturesFolder) {
-        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
+        minecraft.getTextureManager().bind(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
     }
 
     public void renderItem(MatrixStack matrixStack, int x, int y, ItemStack stack) {
@@ -293,16 +293,16 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     public void renderItem(MatrixStack matrixStack, int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
         try {
             setBlitOffset(Z_LEVEL_ITEMS);
-            itemRenderer.zLevel = Z_LEVEL_ITEMS;
+            itemRenderer.blitOffset = Z_LEVEL_ITEMS;
 
-            itemRenderer.renderItemIntoGUI(stack, x, y);
+            itemRenderer.renderGuiItem(stack, x, y);
 
             if (overlay) {
-                itemRenderer.renderItemOverlayIntoGUI(font, stack, x, y, "");
+                itemRenderer.renderGuiItemDecorations(font, stack, x, y, "");
             }
 
             setBlitOffset(0);
-            itemRenderer.zLevel = 0;
+            itemRenderer.blitOffset = 0;
 
             if (text != null) {
                 renderQuantity(matrixStack, x, y, text, textColor);
@@ -313,18 +313,18 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderQuantity(MatrixStack matrixStack, int x, int y, String qty, int color) {
-        boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
+        boolean large = minecraft.isEnforceUnicode() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(x, y, Z_LEVEL_QTY);
 
         if (!large) {
             matrixStack.scale(0.5F, 0.5F, 1);
         }
 
-        font.drawStringWithShadow(matrixStack, qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, color);
+        font.drawShadow(matrixStack, qty, (large ? 16 : 30) - font.width(qty), large ? 8 : 22, color);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public void renderString(MatrixStack matrixStack, int x, int y, String message) {
@@ -332,7 +332,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderString(MatrixStack matrixStack, int x, int y, String message, int color) {
-        font.drawString(matrixStack, message, x, y, color);
+        font.draw(matrixStack, message, x, y, color);
     }
 
     public void renderTooltip(MatrixStack matrixStack, int x, int y, String lines) {
@@ -352,7 +352,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public static boolean isKeyDown(KeyBinding keybinding) {
-        return !keybinding.isInvalid() && InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
+        return !keybinding.isUnbound() && InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybinding.getKey().getValue()) &&
             keybinding.getKeyConflictContext().isActive() &&
             keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }

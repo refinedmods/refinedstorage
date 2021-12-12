@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 
 public class FluidStoragePartItem extends Item {
     public FluidStoragePartItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
     }
 
     public static FluidStoragePartItem getByType(FluidStorageType type) {

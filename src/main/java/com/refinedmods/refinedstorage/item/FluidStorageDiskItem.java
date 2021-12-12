@@ -35,7 +35,7 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     private final FluidStorageType type;
 
     public FluidStorageDiskItem(FluidStorageType type) {
-        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
+        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
 
         this.type = type;
     }
@@ -44,7 +44,7 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (!world.isRemote && !stack.hasTag() && entity instanceof PlayerEntity) {
+        if (!world.isClientSide && !stack.hasTag() && entity instanceof PlayerEntity) {
             UUID id = UUID.randomUUID();
 
             API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultFluidDisk((ServerWorld) world, getCapacity(stack), (PlayerEntity) entity));
@@ -55,8 +55,8 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
             UUID id = getId(stack);
@@ -79,17 +79,17 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack diskStack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack diskStack = player.getItemInHand(hand);
 
-        if (!world.isRemote && player.isCrouching() && type != FluidStorageType.CREATIVE) {
+        if (!world.isClientSide && player.isCrouching() && type != FluidStorageType.CREATIVE) {
             IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {
                 ItemStack storagePart = new ItemStack(FluidStoragePartItem.getByType(type), diskStack.getCount());
 
-                if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), storagePart);
+                if (!player.inventory.add(storagePart.copy())) {
+                    InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), storagePart);
                 }
 
                 API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));
@@ -109,18 +109,18 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
 
     @Override
     public UUID getId(ItemStack disk) {
-        return disk.getTag().getUniqueId(NBT_ID);
+        return disk.getTag().getUUID(NBT_ID);
     }
 
     @Override
     public void setId(ItemStack disk, UUID id) {
         disk.setTag(new CompoundNBT());
-        disk.getTag().putUniqueId(NBT_ID, id);
+        disk.getTag().putUUID(NBT_ID, id);
     }
 
     @Override
     public boolean isValid(ItemStack disk) {
-        return disk.hasTag() && disk.getTag().hasUniqueId(NBT_ID);
+        return disk.hasTag() && disk.getTag().hasUUID(NBT_ID);
     }
 
     @Override

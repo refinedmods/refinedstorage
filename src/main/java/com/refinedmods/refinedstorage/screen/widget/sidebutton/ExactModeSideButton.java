@@ -21,12 +21,12 @@ public class ExactModeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        String tooltip = I18n.format("sidebutton.refinedstorage.exact_mode") + "\n" + TextFormatting.GRAY;
+        String tooltip = I18n.get("sidebutton.refinedstorage.exact_mode") + "\n" + TextFormatting.GRAY;
 
         if ((parameter.getValue() & MASK) == MASK) {
-            tooltip += I18n.format("sidebutton.refinedstorage.exact_mode.on");
+            tooltip += I18n.get("sidebutton.refinedstorage.exact_mode.on");
         } else {
-            tooltip += I18n.format("sidebutton.refinedstorage.exact_mode.off");
+            tooltip += I18n.get("sidebutton.refinedstorage.exact_mode.off");
         }
 
         return tooltip;

@@ -48,7 +48,7 @@ public class StorageMonitorTile extends NetworkNodeTile<StorageMonitorNetworkNod
         ItemStack stack = getNode().getItemFilters().getStackInSlot(0);
 
         if (!stack.isEmpty()) {
-            tag.put(NBT_STACK, stack.write(new CompoundNBT()));
+            tag.put(NBT_STACK, stack.save(new CompoundNBT()));
         }
 
         FluidStack fluid = getNode().getFluidFilters().getFluid(0);
@@ -66,7 +66,7 @@ public class StorageMonitorTile extends NetworkNodeTile<StorageMonitorNetworkNod
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
         fluidStack = tag.contains(NBT_FLUIDSTACK) ? FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_FLUIDSTACK)) : FluidStack.EMPTY;
-        itemStack = tag.contains(NBT_STACK) ? ItemStack.read(tag.getCompound(NBT_STACK)) : ItemStack.EMPTY;
+        itemStack = tag.contains(NBT_STACK) ? ItemStack.of(tag.getCompound(NBT_STACK)) : ItemStack.EMPTY;
         type = tag.contains(NBT_TYPE) ? tag.getInt(NBT_TYPE) : IType.ITEMS;
         amount = tag.getInt(NBT_AMOUNT);
     }

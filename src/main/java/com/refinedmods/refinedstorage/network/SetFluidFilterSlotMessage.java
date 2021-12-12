@@ -40,9 +40,9 @@ public class SetFluidFilterSlotMessage {
 
             if (player != null) {
                 ctx.get().enqueueWork(() -> {
-                    Container container = player.openContainer;
+                    Container container = player.containerMenu;
 
-                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.inventorySlots.size()) {
+                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.slots.size()) {
                         handle(message, container);
                     }
                 });

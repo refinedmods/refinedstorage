@@ -40,13 +40,13 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
         ItemStack bucket = ItemStack.EMPTY;
 
-        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-            ItemStack slot = player.inventory.getStackInSlot(i);
+        for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+            ItemStack slot = player.inventory.getItem(i);
 
             if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
                 bucket = StackUtils.EMPTY_BUCKET.copy();
 
-                player.inventory.decrStackSize(i, 1);
+                player.inventory.removeItem(i, 1);
 
                 break;
             }
@@ -59,12 +59,12 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
                 fluidHandler.fill(portableGrid.getFluidStorage().extract(stack, FluidAttributes.BUCKET_VOLUME, IComparer.COMPARE_NBT, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
                 if (shift) {
-                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), fluidHandler.getContainer());
+                    if (!player.inventory.add(fluidHandler.getContainer().copy())) {
+                        InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
                     }
                 } else {
-                    player.inventory.setItemStack(fluidHandler.getContainer());
-                    player.updateHeldItem();
+                    player.inventory.setCarried(fluidHandler.getContainer());
+                    player.broadcastCarriedItem();
                 }
 
                 portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
@@ -98,8 +98,8 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onInsertHeldContainer(ServerPlayerEntity player) {
-        player.inventory.setItemStack(onInsert(player, player.inventory.getItemStack()));
-        player.updateHeldItem();
+        player.inventory.setCarried(onInsert(player, player.inventory.getCarried()));
+        player.broadcastCarriedItem();
     }
 
     @Override

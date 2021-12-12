@@ -23,41 +23,41 @@ public class RecipeGenerator extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> recipeAcceptor) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> recipeAcceptor) {
         // Tag + Color -> Colored Block
-        RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> map.forEach((color, item) -> ShapelessRecipeBuilder.shapelessRecipe(item.get())
-            .addIngredient(tag)
-            .addIngredient(color.getTag())
-            .setGroup(RS.ID)
-            .addCriterion("refinedstorage:controller", InventoryChangeTrigger.Instance.forItems(RSItems.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get()))
-            .build(recipeAcceptor, new ResourceLocation(RS.ID, "coloring_recipes/" + item.getId().getPath()))
+        RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> map.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+            .requires(tag)
+            .requires(color.getTag())
+            .group(RS.ID)
+            .unlockedBy("refinedstorage:controller", InventoryChangeTrigger.Instance.hasItems(RSItems.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get()))
+            .save(recipeAcceptor, new ResourceLocation(RS.ID, "coloring_recipes/" + item.getId().getPath()))
         ));
 
         // Crafting Grid
-        RSItems.CRAFTING_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapelessRecipe(item.get())
-            .addIngredient(RSItems.GRID.get(color).get())
-            .addIngredient(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
-            .addIngredient(ItemTags.makeWrapperTag("refinedstorage:crafting_tables"))
-            .addCriterion(GRID_ID, InventoryChangeTrigger.Instance.forItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
-            .build(recipeAcceptor, new ResourceLocation(RS.ID, "crafting_grid/" + item.getId().getPath()))
+        RSItems.CRAFTING_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+            .requires(RSItems.GRID.get(color).get())
+            .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
+            .requires(ItemTags.bind("refinedstorage:crafting_tables"))
+            .unlockedBy(GRID_ID, InventoryChangeTrigger.Instance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
+            .save(recipeAcceptor, new ResourceLocation(RS.ID, "crafting_grid/" + item.getId().getPath()))
         );
 
         // Fluid Grid
-        RSItems.FLUID_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapelessRecipe(item.get())
-            .addIngredient(RSItems.GRID.get(color).get())
-            .addIngredient(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
-            .addIngredient(Items.BUCKET)
-            .addCriterion(GRID_ID, InventoryChangeTrigger.Instance.forItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
-            .build(recipeAcceptor, new ResourceLocation(RS.ID, "fluid_grid/" + item.getId().getPath()))
+        RSItems.FLUID_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+            .requires(RSItems.GRID.get(color).get())
+            .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
+            .requires(Items.BUCKET)
+            .unlockedBy(GRID_ID, InventoryChangeTrigger.Instance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
+            .save(recipeAcceptor, new ResourceLocation(RS.ID, "fluid_grid/" + item.getId().getPath()))
         );
 
         // Pattern Grid
-        RSItems.PATTERN_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapelessRecipe(item.get())
-            .addIngredient(RSItems.GRID.get(color).get())
-            .addIngredient(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
-            .addIngredient(RSItems.PATTERN.get())
-            .addCriterion(GRID_ID, InventoryChangeTrigger.Instance.forItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
-            .build(recipeAcceptor, new ResourceLocation(RS.ID, "pattern_grid/" + item.getId().getPath()))
+        RSItems.PATTERN_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+            .requires(RSItems.GRID.get(color).get())
+            .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
+            .requires(RSItems.PATTERN.get())
+            .unlockedBy(GRID_ID, InventoryChangeTrigger.Instance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
+            .save(recipeAcceptor, new ResourceLocation(RS.ID, "pattern_grid/" + item.getId().getPath()))
         );
     }
 }

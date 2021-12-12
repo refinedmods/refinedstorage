@@ -18,8 +18,8 @@ import java.util.concurrent.CompletableFuture;
 public class AutocraftingIdSuggestionProvider implements SuggestionProvider<CommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ServerWorld world = DimensionArgument.getDimensionArgument(context, "dimension");
-        BlockPos pos = BlockPosArgument.getBlockPos(context, "pos");
+        ServerWorld world = DimensionArgument.getDimension(context, "dimension");
+        BlockPos pos = BlockPosArgument.getOrLoadBlockPos(context, "pos");
         INetwork network = API.instance().getNetworkManager(world).getNetwork(pos);
 
         if (network != null) {

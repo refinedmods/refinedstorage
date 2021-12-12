@@ -66,7 +66,7 @@ public final class RenderUtils {
             if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 ItemStack stack = stacks.get(i);
 
-                IFormattableTextComponent data = stack.getDisplayName().copyRaw();
+                IFormattableTextComponent data = stack.getHoverName().plainCopy();
 
                 int amount = stack.getCount();
 
@@ -79,7 +79,7 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new StringTextComponent(amount + "x ").appendSibling(data);
+                    data = new StringTextComponent(amount + "x ").append(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -94,7 +94,7 @@ public final class RenderUtils {
             if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 FluidStack stack = stacks.get(i);
 
-                IFormattableTextComponent data = stack.getDisplayName().copyRaw();
+                IFormattableTextComponent data = stack.getDisplayName().plainCopy();
 
                 int amount = stack.getAmount();
 
@@ -107,7 +107,7 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -119,8 +119,8 @@ public final class RenderUtils {
     public static void drawTooltipWithSmallText(MatrixStack matrixStack, List<? extends ITextProperties> textLines, List<String> smallTextLines, boolean showSmallText, @Nonnull ItemStack stack, int mouseX, int mouseY, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
         // RS begin - definitions
         int maxTextWidth = -1;
-        FontRenderer font = Minecraft.getInstance().fontRenderer;
-        float textScale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.7F;
+        FontRenderer font = Minecraft.getInstance().font;
+        float textScale = Minecraft.getInstance().isEnforceUnicode() ? 1F : 0.7F;
         // RS end
 
         if (!textLines.isEmpty()) {
@@ -139,7 +139,7 @@ public final class RenderUtils {
             int tooltipTextWidth = 0;
 
             for (ITextProperties textLine : textLines) {
-                int textLineWidth = font.getStringWidth(textLine.getString());
+                int textLineWidth = font.width(textLine.getString());
                 if (textLineWidth > tooltipTextWidth)
                     tooltipTextWidth = textLineWidth;
             }
@@ -147,7 +147,7 @@ public final class RenderUtils {
             // RS BEGIN
             if (showSmallText) {
                 for (String smallText : smallTextLines) {
-                    int size = (int) (font.getStringWidth(smallText) * textScale);
+                    int size = (int) (font.width(smallText) * textScale);
 
                     if (size > tooltipTextWidth) {
                         tooltipTextWidth = size;
@@ -182,12 +182,12 @@ public final class RenderUtils {
                 List<ITextProperties> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
                     ITextProperties textLine = textLines.get(i);
-                    List<ITextProperties> wrappedLine = font.getCharacterManager().func_238362_b_(textLine, tooltipTextWidth, Style.EMPTY);
+                    List<ITextProperties> wrappedLine = font.getSplitter().splitLines(textLine, tooltipTextWidth, Style.EMPTY);
                     if (i == 0)
                         titleLinesCount = wrappedLine.size();
 
                     for (ITextProperties line : wrappedLine) {
-                        int lineWidth = font.getStringWidth(line.getString());
+                        int lineWidth = font.width(line.getString());
                         if (lineWidth > wrappedTooltipWidth)
                             wrappedTooltipWidth = lineWidth;
                         wrappedTextLines.add(line);
@@ -231,7 +231,7 @@ public final class RenderUtils {
             backgroundColor = colorEvent.getBackground();
             borderColorStart = colorEvent.getBorderStart();
             borderColorEnd = colorEvent.getBorderEnd();
-            Matrix4f matrix = matrixStack.getLast().getMatrix();
+            Matrix4f matrix = matrixStack.last().pose();
 
             GuiUtils.drawGradientRect(matrix, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
             GuiUtils.drawGradientRect(matrix, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
@@ -245,17 +245,17 @@ public final class RenderUtils {
 
             MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, matrixStack, tooltipX, tooltipY, font, tooltipTextWidth, tooltipHeight));
 
-            IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+            IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
             MatrixStack textStack = new MatrixStack();
             textStack.translate(0.0D, 0.0D, zLevel);
-            Matrix4f textLocation = textStack.getLast().getMatrix();
+            Matrix4f textLocation = textStack.last().pose();
 
             int tooltipTop = tooltipY;
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 ITextProperties line = textLines.get(lineNumber);
                 if (line != null)
-                    font.drawEntityText(LanguageMap.getInstance().func_241870_a(line), (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
+                    font.drawInBatch(LanguageMap.getInstance().getVisualOrder(line), (float) tooltipX, (float) tooltipY, -1, true, textLocation, renderType, false, 0, 15728880);
 
                 if (lineNumber + 1 == titleLinesCount)
                     tooltipY += 2;
@@ -263,7 +263,7 @@ public final class RenderUtils {
                 tooltipY += 10;
             }
 
-            renderType.finish();
+            renderType.endBatch();
 
             MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, matrixStack, tooltipX, tooltipTop, font, tooltipTextWidth, tooltipHeight));
 
@@ -281,21 +281,21 @@ public final class RenderUtils {
                     smallTextStack.translate(0.0D, 0.0D, zLevel);
                     smallTextStack.scale(textScale, textScale, 1);
 
-                    IRenderTypeBuffer.Impl renderTypeBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-                    font.renderString(
+                    IRenderTypeBuffer.Impl renderTypeBuffer = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
+                    font.drawInBatch(
                         TextFormatting.GRAY + smallTextLines.get(i),
                         RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                        RenderUtils.getOffsetOnScale(y - (Minecraft.getInstance().getForceUnicodeFont() ? 2 : 0), textScale),
+                        RenderUtils.getOffsetOnScale(y - (Minecraft.getInstance().isEnforceUnicode() ? 2 : 0), textScale),
                         -1,
                         true,
-                        smallTextStack.getLast().getMatrix(),
+                        smallTextStack.last().pose(),
                         renderTypeBuffer,
                         false,
                         0,
                         15728880
                     );
 
-                    renderTypeBuffer.finish();
+                    renderTypeBuffer.endBatch();
 
                     y -= 9;
                 }
@@ -310,7 +310,7 @@ public final class RenderUtils {
     // @Volatile: From Screen#getTooltipFromItem
     public static List<ITextComponent> getTooltipFromItem(ItemStack stack) {
         Minecraft minecraft = Minecraft.getInstance();
-        return stack.getTooltip(minecraft.player, minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        return stack.getTooltipLines(minecraft.player, minecraft.options.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
     }
 
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
@@ -329,7 +329,7 @@ public final class RenderUtils {
         if (format == DefaultVertexFormats.BLOCK) {
             return DefaultVertexFormats.BLOCK;
         } else if (!format.hasUV(1)) { ;
-            return new VertexFormat(ImmutableList.<VertexFormatElement>builder().addAll(format.getElements()).add(DefaultVertexFormats.TEX_2S).build());
+            return new VertexFormat(ImmutableList.<VertexFormatElement>builder().addAll(format.getElements()).add(DefaultVertexFormats.ELEMENT_UV1).build());
         }
 
         return format;
@@ -341,7 +341,7 @@ public final class RenderUtils {
         RenderType originalLayer = MinecraftForgeClient.getRenderLayer();
 
         try {
-            for (RenderType layer : RenderType.getBlockRenderTypes()) {
+            for (RenderType layer : RenderType.chunkBufferLayers()) {
                 ForgeHooksClient.setRenderLayer(layer);
 
                 for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
@@ -353,7 +353,7 @@ public final class RenderUtils {
                         sprite = bakedQuad.getSprite();
                     }
 
-                    if (bakedQuad.getFace() == facing) {
+                    if (bakedQuad.getDirection() == facing) {
                         return bakedQuad.getSprite();
                     }
                 }
@@ -366,7 +366,7 @@ public final class RenderUtils {
 
         if (sprite == null) {
             try {
-                sprite = coverModel.getParticleTexture();
+                sprite = coverModel.getParticleIcon();
             } catch (Exception e) {
                 // NO OP
             }

@@ -47,11 +47,11 @@ public final class NetworkUtils {
     }
 
     public static ActionResultType attempt(World world, BlockPos pos, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
-        if (world.isRemote) {
+        if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
 
-        INetwork network = getNetworkFromNode(getNodeFromTile(world.getTileEntity(pos)));
+        INetwork network = getNetworkFromNode(getNodeFromTile(world.getBlockEntity(pos)));
 
         if (network != null) {
             for (Permission permission : permissionsRequired) {
@@ -69,11 +69,11 @@ public final class NetworkUtils {
     }
 
     public static void extractBucketFromPlayerInventoryOrNetwork(PlayerEntity player, INetwork network, Consumer<ItemStack> onBucketFound) {
-        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-            ItemStack slot = player.inventory.getStackInSlot(i);
+        for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+            ItemStack slot = player.inventory.getItem(i);
 
             if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
-                player.inventory.decrStackSize(i, 1);
+                player.inventory.removeItem(i, 1);
 
                 onBucketFound.accept(StackUtils.EMPTY_BUCKET.copy());
 

@@ -105,14 +105,14 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(((handler, slot, reading) -> {
-            if (player != null && !player.world.isRemote) {
+            if (player != null && !player.level.isClientSide) {
                 ItemStack diskStack = handler.getStackInSlot(slot);
 
                 if (diskStack.isEmpty()) {
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDiskInventory().getStackInSlot(0));
+                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) player.level).getByStack(getDiskInventory().getStackInSlot(0));
 
                     if (diskInSlot != null) {
                         StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
@@ -157,26 +157,26 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
         if (player != null) { //baked model does not need a storage tracker
             if (stack.getTag().contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
-                itemStorageTrackerId = stack.getTag().getUniqueId(NBT_ITEM_STORAGE_TRACKER_ID);
+                itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
             } else {
                 if (stack.getTag().contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
                     getItemStorageTracker().readFromNbt(stack.getTag().getList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
                 }
 
                 UUID id = UUID.randomUUID();
-                stack.getTag().putUniqueId(NBT_ITEM_STORAGE_TRACKER_ID, id);
+                stack.getTag().putUUID(NBT_ITEM_STORAGE_TRACKER_ID, id);
                 itemStorageTrackerId = id;
             }
 
             if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
-                fluidStorageTrackerId = stack.getTag().getUniqueId(NBT_FLUID_STORAGE_TRACKER_ID);
+                fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
             } else {
                 if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
                     getFluidStorageTracker().readFromNbt(stack.getTag().getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
                 }
 
                 UUID id = UUID.randomUUID();
-                stack.getTag().putUniqueId(NBT_FLUID_STORAGE_TRACKER_ID, id);
+                stack.getTag().putUUID(NBT_FLUID_STORAGE_TRACKER_ID, id);
                 fluidStorageTrackerId = id;
             }
         }
@@ -397,7 +397,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     this.itemStorageTrackerId = UUID.randomUUID();
                 }
 
-                this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) player.world).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+                this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) player.level).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
             }
         }
 
@@ -412,7 +412,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     this.fluidStorageTrackerId = UUID.randomUUID();
                 }
 
-                this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) player.world).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+                this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) player.level).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
             }
         }
 
@@ -456,7 +456,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public void onClosed(PlayerEntity player) {
-        if (!player.getEntityWorld().isRemote) {
+        if (!player.getCommandSenderWorld().isClientSide) {
             StackUtils.writeItems(disk, 4, stack.getTag());
         }
     }

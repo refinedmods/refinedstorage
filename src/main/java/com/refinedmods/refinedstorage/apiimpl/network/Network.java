@@ -105,7 +105,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.type = type;
         this.root = new RootNetworkNode(this, world, pos);
         this.nodeGraph.addListener(() -> {
-            TileEntity tile = world.getTileEntity(pos);
+            TileEntity tile = world.getBlockEntity(pos);
 
             if (tile instanceof ControllerTile) {
                 ((ControllerTile) tile).getDataManager().sendParameterToWatchers(ControllerTile.NODES);
@@ -148,16 +148,16 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void update() {
-        if (!world.isRemote) {
-            long tickStart = Util.nanoTime();
+        if (!world.isClientSide) {
+            long tickStart = Util.getNanos();
 
             if (ticks == 0) {
-                redstonePowered = world.isBlockPowered(pos);
+                redstonePowered = world.hasNeighborSignal(pos);
             }
 
             ++ticks;
 
-            amILoaded = world.isBlockPresent(pos);
+            amILoaded = world.isLoaded(pos);
 
             updateEnergyUsage();
 
@@ -205,11 +205,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
                 BlockState state = world.getBlockState(pos);
                 if (state.getBlock() instanceof ControllerBlock) {
-                    world.setBlockState(pos, state.with(ControllerBlock.ENERGY_TYPE, energyType));
+                    world.setBlockAndUpdate(pos, state.setValue(ControllerBlock.ENERGY_TYPE, energyType));
                 }
             }
 
-            tickTimes[tickCounter % tickTimes.length] = Util.nanoTime() - tickStart;
+            tickTimes[tickCounter % tickTimes.length] = Util.getNanos() - tickStart;
             tickCounter++;
         }
     }
@@ -506,7 +506,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         craftingManager.readFromNbt(tag);
 
         if (tag.contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
-            this.itemStorageTrackerId = tag.getUniqueId(NBT_ITEM_STORAGE_TRACKER_ID);
+            this.itemStorageTrackerId = tag.getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) { //TODO: remove next version
                 getItemStorageTracker().readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -514,7 +514,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         }
 
         if (tag.contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
-            this.fluidStorageTrackerId = tag.getUniqueId(NBT_FLUID_STORAGE_TRACKER_ID);
+            this.fluidStorageTrackerId = tag.getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
                 getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -532,11 +532,11 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
         craftingManager.writeToNbt(tag);
         if (itemStorageTrackerId != null) {
-            tag.putUniqueId(NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
+            tag.putUUID(NBT_ITEM_STORAGE_TRACKER_ID, itemStorageTrackerId);
         }
 
         if (fluidStorageTrackerId != null) {
-            tag.putUniqueId(NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
+            tag.putUUID(NBT_FLUID_STORAGE_TRACKER_ID, fluidStorageTrackerId);
         }
 
         return tag;

@@ -30,7 +30,7 @@ public class GridPatternCreateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                TileEntity tile = player.getEntityWorld().getTileEntity(message.pos);
+                TileEntity tile = player.getCommandSenderWorld().getBlockEntity(message.pos);
 
                 if (tile instanceof GridTile && ((GridTile) tile).getNode().getGridType() == GridType.PATTERN) {
                     ((GridTile) tile).getNode().onCreatePattern();

@@ -40,13 +40,13 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
     public void render(StorageMonitorTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i, int i1) {
         Direction direction = Direction.NORTH;
 
-        BlockState state = tile.getWorld().getBlockState(tile.getPos());
+        BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (state.getBlock() instanceof StorageMonitorBlock) {
-            direction = state.get(RSBlocks.STORAGE_MONITOR.get().getDirection().getProperty());
+            direction = state.getValue(RSBlocks.STORAGE_MONITOR.get().getDirection().getProperty());
         }
 
-        final int light = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(direction.getDirectionVec()));
-        final float rotation = (float) (Math.PI * (360 - direction.getOpposite().getHorizontalIndex() * 90) / 180d);
+        final int light = WorldRenderer.getLightColor(tile.getLevel(), tile.getBlockPos().offset(direction.getNormal()));
+        final float rotation = (float) (Math.PI * (360 - direction.getOpposite().get2DDataValue() * 90) / 180d);
 
         final int type = tile.getStackType();
 
@@ -69,64 +69,64 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
     }
 
     private void renderText(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, Direction direction, float rotation, int light, String amount) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
-        float stringOffset = -(Minecraft.getInstance().fontRenderer.getStringWidth(amount) * 0.01F) / 2F;
+        float stringOffset = -(Minecraft.getInstance().font.width(amount) * 0.01F) / 2F;
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
         matrixStack.translate(
-                ((float) direction.getXOffset() * 0.501F) + (direction.getZOffset() * stringOffset),
+                ((float) direction.getStepX() * 0.501F) + (direction.getStepZ() * stringOffset),
                 -0.275,
-                ((float) direction.getZOffset() * 0.501F) - (direction.getXOffset() * stringOffset)
+                ((float) direction.getStepZ() * 0.501F) - (direction.getStepX() * stringOffset)
         );
 
-        matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(direction.getXOffset() * 180, 0, direction.getZOffset() * 180), true));
-        matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
+        matrixStack.mulPose(TransformationHelper.quatFromXYZ(new Vector3f(direction.getStepX() * 180, 0, direction.getStepZ() * 180), true));
+        matrixStack.mulPose(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
 
         matrixStack.scale(0.01F, 0.01F, 0.01F);
 
-        Minecraft.getInstance().fontRenderer.renderString(
+        Minecraft.getInstance().font.drawInBatch(
                 amount,
                 0,
                 0,
                 -1,
                 false,
-                matrixStack.getLast().getMatrix(),
+                matrixStack.last().pose(),
                 renderTypeBuffer,
                 false,
                 0,
                 light
         );
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     @SuppressWarnings("deprecation")
     private void renderItem(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, Direction direction, float rotation, int light, ItemStack itemStack) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
         // Put it in the middle, outwards, and facing the correct direction
         matrixStack.translate(0.5D, 0.5D, 0.5D);
-        matrixStack.translate((float) direction.getXOffset() * 0.501F, 0, (float) direction.getZOffset() * 0.501F);
-        matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
+        matrixStack.translate((float) direction.getStepX() * 0.501F, 0, (float) direction.getStepZ() * 0.501F);
+        matrixStack.mulPose(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
 
         // Make it look "flat"
         matrixStack.scale(0.5F, -0.5F, -0.00005f);
 
         // Fix rotation after making it look flat
-        matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, 0, 180), true));
+        matrixStack.mulPose(TransformationHelper.quatFromXYZ(new Vector3f(0, 0, 180), true));
 
-        IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(itemStack, null, null);
+        IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(itemStack, null, null);
         boolean render3D = itemModel.isGui3d();
 
         if (render3D) {
-            RenderHelper.setupGui3DDiffuseLighting();
+            RenderHelper.setupFor3DItems();
         } else {
-            RenderHelper.setupGuiFlatDiffuseLighting();
+            RenderHelper.setupForFlatItems();
         }
 
-        matrixStack.getLast().getNormal().set(Matrix3f.makeScaleMatrix(1, -1, 1));
-        Minecraft.getInstance().getItemRenderer().renderItem(
+        matrixStack.last().normal().load(Matrix3f.createScaleMatrix(1, -1, 1));
+        Minecraft.getInstance().getItemRenderer().render(
                 itemStack,
                 ItemCameraTransforms.TransformType.GUI,
                 false,
@@ -137,52 +137,52 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
                 itemModel
         );
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     private void renderFluid(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, Direction direction, float rotation, int light, FluidStack fluidStack) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
-        matrixStack.translate((float) direction.getXOffset() * 0.51F, 0.5F, (float) direction.getZOffset() * 0.51F);
-        matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
+        matrixStack.translate((float) direction.getStepX() * 0.51F, 0.5F, (float) direction.getStepZ() * 0.51F);
+        matrixStack.mulPose(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
 
         matrixStack.scale(0.5F, 0.5F, 0.5F);
 
         final Fluid fluid = fluidStack.getFluid();
         final FluidAttributes attributes = fluid.getAttributes();
         final ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
-        final TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
+        final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(PlayerContainer.BLOCK_ATLAS).apply(fluidStill);
         final int fluidColor = attributes.getColor(fluidStack);
 
-        final IVertexBuilder buffer = renderTypeBuffer.getBuffer(RenderType.getText(sprite.getAtlasTexture().getTextureLocation()));
+        final IVertexBuilder buffer = renderTypeBuffer.getBuffer(RenderType.text(sprite.atlas().location()));
 
         final int colorRed = fluidColor >> 16 & 0xFF;
         final int colorGreen = fluidColor >> 8 & 0xFF;
         final int colorBlue = fluidColor & 0xFF;
         final int colorAlpha = fluidColor >> 24 & 0xFF;
 
-        buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -0.5F, 0F)
+        buffer.vertex(matrixStack.last().pose(), -0.5F, -0.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMinU(), sprite.getMinV())
-                .lightmap(light)
+                .uv(sprite.getU0(), sprite.getV0())
+                .uv2(light)
                 .endVertex();
-        buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -0.5F, 0F)
+        buffer.vertex(matrixStack.last().pose(), 0.5F, -0.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMaxU(), sprite.getMinV())
-                .lightmap(light)
+                .uv(sprite.getU1(), sprite.getV0())
+                .uv2(light)
                 .endVertex();
-        buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -1.5F, 0F)
+        buffer.vertex(matrixStack.last().pose(), 0.5F, -1.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMaxU(), sprite.getMaxV())
-                .lightmap(light)
+                .uv(sprite.getU1(), sprite.getV1())
+                .uv2(light)
                 .endVertex();
-        buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -1.5F, 0F)
+        buffer.vertex(matrixStack.last().pose(), -0.5F, -1.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
-                .tex(sprite.getMinU(), sprite.getMaxV())
-                .lightmap(light)
+                .uv(sprite.getU0(), sprite.getV1())
+                .uv2(light)
                 .endVertex();
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 }

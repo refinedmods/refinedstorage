@@ -37,7 +37,7 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void load(CompoundNBT tag) {
         if (tag.contains(NBT_NETWORKS)) {
             ListNBT networksTag = tag.getList(NBT_NETWORKS, Constants.NBT.TAG_COMPOUND);
 
@@ -47,7 +47,7 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
                 CompoundNBT networkTag = networksTag.getCompound(i);
 
                 CompoundNBT data = networkTag.getCompound(NBT_DATA);
-                BlockPos pos = BlockPos.fromLong(networkTag.getLong(NBT_POS));
+                BlockPos pos = BlockPos.of(networkTag.getLong(NBT_POS));
                 int type = networkTag.getInt(NBT_TYPE);
 
                 INetwork network = new Network(world, pos, NetworkType.values()[type]);
@@ -64,14 +64,14 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         ListNBT list = new ListNBT();
 
         for (INetwork network : all()) {
             try {
                 CompoundNBT networkTag = new CompoundNBT();
 
-                networkTag.putLong(NBT_POS, network.getPosition().toLong());
+                networkTag.putLong(NBT_POS, network.getPosition().asLong());
                 networkTag.put(NBT_DATA, network.writeToNbt(new CompoundNBT()));
                 networkTag.putInt(NBT_TYPE, network.getType().ordinal());
 
@@ -121,6 +121,6 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
 
     @Override
     public void markForSaving() {
-        markDirty();
+        setDirty();
     }
 }

@@ -20,8 +20,8 @@ public class ControllerLootFunction extends LootFunction {
     }
 
     @Override
-    protected ItemStack doApply(ItemStack itemStack, LootContext lootContext) {
-        TileEntity tile = lootContext.get(LootParameters.BLOCK_ENTITY);
+    protected ItemStack run(ItemStack itemStack, LootContext lootContext) {
+        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
 
         if (tile instanceof ControllerTile) {
             INetwork network = ((ControllerTile) tile).getRemovedNetwork() == null ? ((ControllerTile) tile).getNetwork() : ((ControllerTile) tile).getRemovedNetwork();
@@ -33,12 +33,12 @@ public class ControllerLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return RSLootFunctions.getController();
     }
 
     public static LootFunction.Builder<?> builder() {
-        return builder(ControllerLootFunction::new);
+        return simpleBuilder(ControllerLootFunction::new);
     }
 
     public static class Serializer extends LootFunction.Serializer<ControllerLootFunction> {

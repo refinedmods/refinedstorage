@@ -9,10 +9,10 @@ public final class DirectionUtils {
     }
 
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        return Direction.getFacingFromVector(
-            (float) (entity.getPosX() - clickedBlock.getX()),
-            (float) (entity.getPosY() - clickedBlock.getY()),
-            (float) (entity.getPosZ() - clickedBlock.getZ())
+        return Direction.getNearest(
+            (float) (entity.getX() - clickedBlock.getX()),
+            (float) (entity.getY() - clickedBlock.getY()),
+            (float) (entity.getZ() - clickedBlock.getZ())
         );
     }
 }

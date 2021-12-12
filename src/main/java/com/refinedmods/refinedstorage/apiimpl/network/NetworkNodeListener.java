@@ -17,14 +17,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class NetworkNodeListener {
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent e) {
-        if (!e.getWorld().isRemote() && e.getEntity() instanceof PlayerEntity) {
+        if (!e.getWorld().isClientSide() && e.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) e.getEntity();
 
-            INetworkNode placed = NetworkUtils.getNodeFromTile(e.getWorld().getTileEntity(e.getPos()));
+            INetworkNode placed = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getPos()));
 
             if (placed != null) {
                 for (Direction facing : Direction.values()) {
-                    INetworkNode node = NetworkUtils.getNodeFromTile(e.getWorld().getTileEntity(e.getBlockSnapshot().getPos().offset(facing)));
+                    INetworkNode node = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getBlockSnapshot().getPos().relative(facing)));
 
                     if (node != null && node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, player)) {
                         WorldUtils.sendNoPermissionMessage(player);
@@ -47,7 +47,7 @@ public class NetworkNodeListener {
 
     private void discoverNode(IWorld world, BlockPos pos) {
         for (Direction facing : Direction.values()) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(world.getTileEntity(pos.offset(facing)));
+            INetworkNode node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos.relative(facing)));
 
             if (node != null && node.getNetwork() != null) {
                 node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
@@ -59,8 +59,8 @@ public class NetworkNodeListener {
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent e) {
-        if (!e.getWorld().isRemote()) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(e.getWorld().getTileEntity(e.getPos()));
+        if (!e.getWorld().isClientSide()) {
+            INetworkNode node = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getPos()));
 
             if (node != null && node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, e.getPlayer())) {
                 WorldUtils.sendNoPermissionMessage(e.getPlayer());

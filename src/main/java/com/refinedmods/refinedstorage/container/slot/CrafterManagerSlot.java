@@ -18,7 +18,7 @@ public class CrafterManagerSlot extends BaseSlot {
     }
 
     @Override
-    public boolean isEnabled() {
-        return yPos >= display.getTopHeight() && yPos < display.getTopHeight() + 18 * display.getVisibleRows() && visible && crafterManager.isActiveOnClient();
+    public boolean isActive() {
+        return y >= display.getTopHeight() && y < display.getTopHeight() + 18 * display.getVisibleRows() && visible && crafterManager.isActiveOnClient();
     }
 }

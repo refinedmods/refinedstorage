@@ -34,6 +34,6 @@ public class CancelAllAutocraftingCommand extends NetworkCommand {
             translationKey = "commands.refinedstorage.network.autocrafting.cancel.single";
         }
 
-        context.getSource().sendFeedback(new TranslationTextComponent(translationKey, new StringTextComponent("" + count).setStyle(Styles.YELLOW)), false);
+        context.getSource().sendSuccess(new TranslationTextComponent(translationKey, new StringTextComponent("" + count).setStyle(Styles.YELLOW)), false);
     }
 }

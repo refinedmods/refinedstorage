@@ -22,8 +22,8 @@ public class StorageBlockLootFunction extends LootFunction {
     }
 
     @Override
-    public ItemStack doApply(ItemStack stack, LootContext lootContext) {
-        TileEntity tile = lootContext.get(LootParameters.BLOCK_ENTITY);
+    public ItemStack run(ItemStack stack, LootContext lootContext) {
+        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
 
         // This code needs to work without the node being removed as well.
         // For example: the Destructor calls getDrops before the node has been removed.
@@ -35,7 +35,7 @@ public class StorageBlockLootFunction extends LootFunction {
             }
 
             stack.setTag(new CompoundNBT());
-            stack.getTag().putUniqueId(StorageNetworkNode.NBT_ID, removedNode.getStorageId());
+            stack.getTag().putUUID(StorageNetworkNode.NBT_ID, removedNode.getStorageId());
         } else if (tile instanceof FluidStorageTile) {
             FluidStorageNetworkNode removedNode = ((FluidStorageTile) tile).getRemovedNode();
             if (removedNode == null) {
@@ -43,14 +43,14 @@ public class StorageBlockLootFunction extends LootFunction {
             }
 
             stack.setTag(new CompoundNBT());
-            stack.getTag().putUniqueId(FluidStorageNetworkNode.NBT_ID, removedNode.getStorageId());
+            stack.getTag().putUUID(FluidStorageNetworkNode.NBT_ID, removedNode.getStorageId());
         }
 
         return stack;
     }
 
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return RSLootFunctions.getStorageBlock();
     }
 

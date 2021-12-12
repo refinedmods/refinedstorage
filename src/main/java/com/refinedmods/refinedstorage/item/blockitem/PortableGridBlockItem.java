@@ -34,7 +34,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     public PortableGridBlockItem(Type type) {
         super(
             type == Type.CREATIVE ? RSBlocks.CREATIVE_PORTABLE_GRID.get() : RSBlocks.PORTABLE_GRID.get(),
-            new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1),
+            new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1),
             type == Type.CREATIVE,
             () -> RS.SERVER_CONFIG.getPortableGrid().getCapacity()
         );
@@ -47,37 +47,37 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, PlayerSlot.getSlotForHand(player, hand));
         }
 
-        return ActionResult.resultSuccess(stack);
+        return ActionResult.success(stack);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         tooltip.add(new TranslationTextComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
+    public ActionResultType useOn(ItemUseContext context) {
         if (context.getPlayer() == null) {
             return ActionResultType.FAIL;
         }
 
         //Place
         if (context.getPlayer().isCrouching()) {
-            return super.onItemUse(context);
+            return super.useOn(context);
         }
 
-        ItemStack stack = context.getPlayer().getHeldItem(context.getHand());
+        ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
 
-        if (!context.getWorld().isRemote) {
+        if (!context.getLevel().isClientSide) {
             API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) context.getPlayer(), stack, PlayerSlot.getSlotForHand(context.getPlayer(), context.getHand()));
         }
 

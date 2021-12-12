@@ -55,13 +55,13 @@ public class CraftingPatternFactory {
                     fillCraftingInputs(inv, stack, inputs, i);
                 }
 
-                Optional<ICraftingRecipe> foundRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);
+                Optional<ICraftingRecipe> foundRecipe = world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, inv, world);
                 if (foundRecipe.isPresent()) {
                     recipe = foundRecipe.get();
 
                     byproducts = recipe.getRemainingItems(inv);
 
-                    ItemStack output = recipe.getCraftingResult(inv);
+                    ItemStack output = recipe.assemble(inv);
 
                     if (!output.isEmpty()) {
                         outputs.add(output);
@@ -102,7 +102,7 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfItem = ItemTags.getCollection().getOwningTags(input.getItem());
+                Collection<ResourceLocation> tagsOfItem = ItemTags.getAllTags().getMatchingTags(input.getItem());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedItemTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -111,11 +111,11 @@ public class CraftingPatternFactory {
                             new TranslationTextComponent(
                                 "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
                                 declaredAllowedTag.toString(),
-                                input.getDisplayName()
+                                input.getHoverName()
                             )
                         );
                     } else {
-                        for (Item element : ItemTags.getCollection().get(declaredAllowedTag).getAllElements()) {
+                        for (Item element : ItemTags.getAllTags().getTag(declaredAllowedTag).getValues()) {
                             possibilities.add(new ItemStack(element, input.getCount()));
                         }
                     }
@@ -141,7 +141,7 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfFluid = FluidTags.getCollection().getOwningTags(input.getFluid());
+                Collection<ResourceLocation> tagsOfFluid = FluidTags.getAllTags().getMatchingTags(input.getFluid());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedFluidTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -154,7 +154,7 @@ public class CraftingPatternFactory {
                             )
                         );
                     } else {
-                        for (Fluid element : FluidTags.getCollection().get(declaredAllowedTag).getAllElements()) {
+                        for (Fluid element : FluidTags.getAllTags().getTag(declaredAllowedTag).getValues()) {
                             possibilities.add(new FluidStack(element, input.getAmount()));
                         }
                     }
@@ -173,9 +173,9 @@ public class CraftingPatternFactory {
     private void fillCraftingInputs(CraftingInventory inv, ItemStack stack, List<NonNullList<ItemStack>> inputs, int i) {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
-        inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
+        inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.of(ItemStack.EMPTY, input));
 
-        inv.setInventorySlotContents(i, input);
+        inv.setItem(i, input);
     }
 
     private void modifyCraftingInputsToUseAlternatives(ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) {
@@ -183,7 +183,7 @@ public class CraftingPatternFactory {
             inputs.clear();
 
             for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
+                inputs.add(i, NonNullList.of(ItemStack.EMPTY, recipe.getIngredients().get(i).getItems()));
             }
         }
     }

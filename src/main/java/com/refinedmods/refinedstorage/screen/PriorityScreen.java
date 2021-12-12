@@ -15,7 +15,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
     public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
         super(parent, new Container(null, 0) {
             @Override
-            public boolean canInteractWith(PlayerEntity player) {
+            public boolean stillValid(PlayerEntity player) {
                 return false;
             }
         }, 164, 92, inventory, new TranslationTextComponent("misc.refinedstorage.priority"));
@@ -69,7 +69,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
     @Override
     protected void onOkButtonPressed(boolean noPreview) {
         try {
-            int amount = Integer.parseInt(amountField.getText());
+            int amount = Integer.parseInt(amountField.getValue());
 
             TileDataManager.setParameter(priority, amount);
 

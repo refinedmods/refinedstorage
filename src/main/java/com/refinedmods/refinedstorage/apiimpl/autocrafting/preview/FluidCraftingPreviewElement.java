@@ -67,25 +67,25 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement {
 
         drawers.getFluidDrawer().draw(matrixStack, x, y, getStack());
 
-        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
+        float scale = Minecraft.getInstance().isEnforceUnicode() ? 1F : 0.5F;
 
         y += 2;
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(scale, scale, 1);
 
         if (toCraft > 0) {
             String format = doesDisableTaskStarting() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, API.instance().getQuantityFormatter().formatInBucketForm(toCraft)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get(format, API.instance().getQuantityFormatter().formatInBucketForm(toCraft)));
 
             y += 7;
         }
 
         if (available > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(available)));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(available)));
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public void addAvailable(int amount) {

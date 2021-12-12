@@ -25,10 +25,10 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     }
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
+    public void broadcastChanges() {
+        super.broadcastChanges();
 
-        if (!getPlayer().world.isRemote) {
+        if (!getPlayer().level.isClientSide) {
             ICraftingManager manager = craftingMonitor.getCraftingManager();
 
             if (manager != null && !addedListener) {
@@ -42,10 +42,10 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity player) {
-        super.onContainerClosed(player);
+    public void removed(PlayerEntity player) {
+        super.removed(player);
 
-        if (!player.getEntityWorld().isRemote) {
+        if (!player.getCommandSenderWorld().isClientSide) {
             craftingMonitor.onClosed(player);
 
             ICraftingManager manager = craftingMonitor.getCraftingManager();
@@ -61,26 +61,26 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
-        if (slot.getHasStack()) {
-            stack = slot.getStack();
+        if (slot.hasItem()) {
+            stack = slot.getItem();
 
             if (index < 4) {
-                if (!mergeItemStack(stack, 4, inventorySlots.size(), false)) {
+                if (!moveItemStackTo(stack, 4, slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(stack, 0, 4, false)) {
+            } else if (!moveItemStackTo(stack, 0, 4, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 

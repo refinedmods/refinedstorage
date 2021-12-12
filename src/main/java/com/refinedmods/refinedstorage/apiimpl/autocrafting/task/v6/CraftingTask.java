@@ -92,7 +92,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
-        this.id = tag.getUniqueId(NBT_ID);
+        this.id = tag.getUUID(NBT_ID);
         this.nodes = new NodeList();
 
         this.ticks = tag.getInt(NBT_TICKS);
@@ -119,7 +119,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
         tag.putInt(NBT_QUANTITY, quantity);
         tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
         tag.putInt(NBT_TICKS, ticks);
-        tag.putUniqueId(NBT_ID, id);
+        tag.putUUID(NBT_ID, id);
         tag.putLong(NBT_EXECUTION_STARTED, startTime);
         tag.put(NBT_INTERNAL_STORAGE, internalStorage.writeToNbt());
         tag.put(NBT_INTERNAL_FLUID_STORAGE, internalFluidStorage.writeToNbt());

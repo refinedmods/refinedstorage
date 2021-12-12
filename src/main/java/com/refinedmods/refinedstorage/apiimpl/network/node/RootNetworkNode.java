@@ -16,6 +16,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
+
 public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     private final INetwork network;
     private final World world;
@@ -54,7 +56,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
         BlockState state = world.getBlockState(pos);
 
         @SuppressWarnings("deprecation")
-        Item item = Item.getItemFromBlock(state.getBlock());
+        Item item = Item.byBlock(state.getBlock());
 
         return new ItemStack(item, 1);
     }
@@ -107,7 +109,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            operator.apply(world, pos.offset(facing), facing.getOpposite());
+            operator.apply(world, pos.relative(facing), facing.getOpposite());
         }
     }
 }

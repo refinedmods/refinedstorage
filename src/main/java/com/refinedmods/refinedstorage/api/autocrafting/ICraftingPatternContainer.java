@@ -202,7 +202,7 @@ public interface ICraftingPatternContainer {
         boolean success = current == null && stacks.isEmpty();
 
         if (!success && action == Action.PERFORM) {
-            LogManager.getLogger().warn("Inventory unexpectedly didn't accept {}, the remainder has been voided!", current != null ? current.getTranslationKey() : null);
+            LogManager.getLogger().warn("Inventory unexpectedly didn't accept {}, the remainder has been voided!", current != null ? current.getDescriptionId() : null);
         }
 
         return success;

@@ -82,7 +82,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() instanceof CraftingMonitorBlock) {
-            return state.get(NetworkNodeBlock.CONNECTED);
+            return state.getValue(NetworkNodeBlock.CONNECTED);
         }
 
         return false;
@@ -94,7 +94,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
         tag.putInt(NBT_TAB_PAGE, tabPage);
 
-        tabSelected.ifPresent(uuid -> tag.putUniqueId(NBT_TAB_SELECTED, uuid));
+        tabSelected.ifPresent(uuid -> tag.putUUID(NBT_TAB_SELECTED, uuid));
 
         return tag;
     }
@@ -107,8 +107,8 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
             tabPage = tag.getInt(NBT_TAB_PAGE);
         }
 
-        if (tag.hasUniqueId(NBT_TAB_SELECTED)) {
-            tabSelected = Optional.of(tag.getUniqueId(NBT_TAB_SELECTED));
+        if (tag.hasUUID(NBT_TAB_SELECTED)) {
+            tabSelected = Optional.of(tag.getUUID(NBT_TAB_SELECTED));
         }
     }
 
@@ -127,12 +127,12 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public Optional<UUID> getTabSelected() {
-        return world.isRemote ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
+        return world.isClientSide ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override
     public int getTabPage() {
-        return world.isRemote ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
+        return world.isClientSide ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
     }
 
     @Override

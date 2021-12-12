@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
+import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
+
 public class WirelessTransmitterNetworkNode extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
@@ -62,7 +64,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public RegistryKey<World> getDimension() {
-        return world.getDimensionKey();
+        return world.dimension();
     }
 
     public BaseItemHandler getUpgrades() {
@@ -81,6 +83,6 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public void visit(Operator operator) {
-        operator.apply(world, pos.offset(Direction.DOWN), Direction.UP);
+        operator.apply(world, pos.relative(Direction.DOWN), Direction.UP);
     }
 }

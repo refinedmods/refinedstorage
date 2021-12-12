@@ -109,11 +109,11 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         long insertedAt = deposit.getValue();
 
         if (System.currentTimeMillis() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
-            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                ItemStack toInsert = player.inventory.getStackInSlot(i);
+            for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+                ItemStack toInsert = player.inventory.getItem(i);
 
                 if (API.instance().getComparer().isEqual(inserted, toInsert, compare)) {
-                    player.inventory.setInventorySlotContents(i, network.insertItemTracked(toInsert, toInsert.getCount()));
+                    player.inventory.setItem(i, network.insertItemTracked(toInsert, toInsert.getCount()));
                 }
             }
         }
@@ -143,7 +143,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, network.insertItemTracked(toInsert, toInsert.getCount()));
+            player.inventory.setItem(player.inventory.selected, network.insertItemTracked(toInsert, toInsert.getCount()));
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
@@ -165,11 +165,11 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
             network.insertFluidTracked(result.getValue(), result.getValue().getAmount());
 
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+            player.inventory.setItem(player.inventory.selected, ItemStack.EMPTY);
 
             ItemStack container = result.getLeft();
-            if (!player.inventory.addItemStackToInventory(container.copy())) {
-                InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), container);
+            if (!player.inventory.add(container.copy())) {
+                InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), container);
             }
         }
     }
@@ -198,8 +198,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
-            if (!result.isEmpty() && !player.inventory.addItemStackToInventory(result.copy())) {
-                InventoryHelper.spawnItemStack(world, player.getPosX(), player.getPosY(), player.getPosZ(), result);
+            if (!result.isEmpty() && !player.inventory.add(result.copy())) {
+                InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), result);
             }
         }
     }
@@ -223,8 +223,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
                 fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
-                if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosX(), player.getPosY(), player.getPosZ(), fluidHandler.getContainer());
+                if (!player.inventory.add(fluidHandler.getContainer().copy())) {
+                    InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
                 }
             }));
         }
@@ -318,7 +318,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     @Override
     public int getType() {
-        return world.isRemote ? StorageMonitorTile.TYPE.getValue() : type;
+        return world.isClientSide ? StorageMonitorTile.TYPE.getValue() : type;
     }
 
     @Override

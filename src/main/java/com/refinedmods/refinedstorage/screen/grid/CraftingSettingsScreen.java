@@ -64,7 +64,7 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
     @Override
     protected void onOkButtonPressed(boolean shiftDown) {
         try {
-            int quantity = Integer.parseInt(amountField.getText());
+            int quantity = Integer.parseInt(amountField.getValue());
 
             RS.NETWORK_HANDLER.sendToServer(new GridCraftingPreviewRequestMessage(stack.getId(), quantity, shiftDown, stack instanceof FluidGridStack));
 

@@ -20,7 +20,7 @@ public class GridSortingTypeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.grid.sorting.type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.grid.sorting.type." + grid.getSortingType());
+        return I18n.get("sidebutton.refinedstorage.grid.sorting.type") + "\n" + TextFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.sorting.type." + grid.getSortingType());
     }
 
     @Override

@@ -36,7 +36,7 @@ public class PlayerSlot {
 
     public ItemStack getStackFromSlot(PlayerEntity player) {
         if (curioSlot == null || !CuriosIntegration.isLoaded()) {
-            return player.inventory.getStackInSlot(slot);
+            return player.inventory.getItem(slot);
         }
 
         LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(player);
@@ -54,7 +54,7 @@ public class PlayerSlot {
         buffer.writeInt(slot);
         buffer.writeBoolean(curioSlot != null);
         if (curioSlot != null) {
-            buffer.writeString(curioSlot);
+            buffer.writeUtf(curioSlot);
         }
     }
 
@@ -67,7 +67,7 @@ public class PlayerSlot {
 
     public static PlayerSlot getSlotForHand(PlayerEntity player, Hand hand) {
         if (hand == Hand.MAIN_HAND) {
-            return new PlayerSlot(player.inventory.currentItem);
+            return new PlayerSlot(player.inventory.selected);
         }
 
         //@Volatile Offhand Slot, could use -1 as we aren't using this anywhere.

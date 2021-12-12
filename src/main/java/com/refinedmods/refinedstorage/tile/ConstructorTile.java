@@ -26,7 +26,7 @@ public class ConstructorTile extends NetworkNodeTile<ConstructorNetworkNode> {
         t.getNode().markDirty();
     });
 
-    public static final TileDataParameter<CompoundNBT, ConstructorTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_NBT, new CompoundNBT(),
+    public static final TileDataParameter<CompoundNBT, ConstructorTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
             t -> t.getNode().getCoverManager().writeToNbt(),
             (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
             (initial, p) -> {});
@@ -69,6 +69,6 @@ public class ConstructorTile extends NetworkNodeTile<ConstructorNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 }

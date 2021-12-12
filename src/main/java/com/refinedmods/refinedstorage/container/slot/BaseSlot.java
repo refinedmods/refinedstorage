@@ -19,7 +19,7 @@ public class BaseSlot extends SlotItemHandler {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isActive() {
         return enableHandler.getAsBoolean();
     }
 }

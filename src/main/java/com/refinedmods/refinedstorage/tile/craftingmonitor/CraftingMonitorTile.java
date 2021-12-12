@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CraftingMonitorTile extends NetworkNodeTile<CraftingMonitorNetworkNode> {
-    public static final TileDataParameter<Optional<UUID>, CraftingMonitorTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.OPTIONAL_UNIQUE_ID, Optional.empty(), t -> t.getNode().getTabSelected(), (t, v) -> {
+    public static final TileDataParameter<Optional<UUID>, CraftingMonitorTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.OPTIONAL_UUID, Optional.empty(), t -> t.getNode().getTabSelected(), (t, v) -> {
         if (v.isPresent() && t.getNode().getTabSelected().isPresent() && v.get().equals(t.getNode().getTabSelected().get())) {
             t.getNode().setTabSelected(Optional.empty());
         } else {
@@ -22,7 +22,7 @@ public class CraftingMonitorTile extends NetworkNodeTile<CraftingMonitorNetworkN
 
         t.getNode().markDirty();
     });
-    public static final TileDataParameter<Integer, CraftingMonitorTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
+    public static final TileDataParameter<Integer, CraftingMonitorTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0) {
             t.getNode().setTabPage(v);
             t.getNode().markDirty();

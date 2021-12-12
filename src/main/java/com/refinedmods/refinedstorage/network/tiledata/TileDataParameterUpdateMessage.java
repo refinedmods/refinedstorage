@@ -44,7 +44,7 @@ public class TileDataParameterUpdateMessage {
 
     public static void handle(TileDataParameterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            Container c = ctx.get().getSender().openContainer;
+            Container c = ctx.get().getSender().containerMenu;
 
             if (c instanceof BaseContainer) {
                 BiConsumer consumer = message.parameter.getValueConsumer();

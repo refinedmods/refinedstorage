@@ -92,10 +92,10 @@ public class CraftingPattern implements ICraftingPattern {
         CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
-            inv.setInventorySlotContents(i, took.get(i));
+            inv.setItem(i, took.get(i));
         }
 
-        ItemStack result = recipe.getCraftingResult(inv);
+        ItemStack result = recipe.assemble(inv);
         if (result.isEmpty()) {
             throw new IllegalStateException("Cannot have empty result");
         }
@@ -125,7 +125,7 @@ public class CraftingPattern implements ICraftingPattern {
         CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
-            inv.setInventorySlotContents(i, took.get(i));
+            inv.setItem(i, took.get(i));
         }
 
         NonNullList<ItemStack> remainingItems = recipe.getRemainingItems(inv);
@@ -269,7 +269,7 @@ public class CraftingPattern implements ICraftingPattern {
         public DummyCraftingInventory() {
             super(new Container(null, 0) {
                 @Override
-                public boolean canInteractWith(PlayerEntity player) {
+                public boolean stillValid(PlayerEntity player) {
                     return true;
                 }
             }, 3, 3);

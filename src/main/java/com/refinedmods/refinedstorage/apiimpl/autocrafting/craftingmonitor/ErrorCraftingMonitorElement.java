@@ -55,7 +55,7 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     @Override
     public void write(PacketBuffer buf) {
         buf.writeResourceLocation(base.getId());
-        buf.writeString(message);
+        buf.writeUtf(message);
 
         base.write(buf);
     }

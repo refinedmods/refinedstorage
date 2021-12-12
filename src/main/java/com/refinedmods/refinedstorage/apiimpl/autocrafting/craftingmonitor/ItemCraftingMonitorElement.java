@@ -58,42 +58,42 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
         drawers.getItemDrawer().draw(matrixStack, x + 4, y + 6, stack);
 
-        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
+        float scale = Minecraft.getInstance().isEnforceUnicode() ? 1F : 0.5F;
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(scale, scale, 1);
 
         int yy = y + 7;
 
         if (stored > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", stored));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.get("gui.refinedstorage.crafting_monitor.stored", stored));
 
             yy += 7;
         }
 
         if (missing > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", missing));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.get("gui.refinedstorage.crafting_monitor.missing", missing));
 
             yy += 7;
         }
 
         if (processing > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.processing", processing));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.get("gui.refinedstorage.crafting_monitor.processing", processing));
 
             yy += 7;
         }
 
         if (scheduled > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.scheduled", scheduled));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.get("gui.refinedstorage.crafting_monitor.scheduled", scheduled));
 
             yy += 7;
         }
 
         if (crafting > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", crafting));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.get("gui.refinedstorage.crafting_monitor.crafting", crafting));
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     @Override

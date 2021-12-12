@@ -13,13 +13,13 @@ import java.util.UUID;
 
 public class CancelSingleAutocraftingCommand extends NetworkCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.argument("id", UUIDArgument.func_239194_a_()).suggests(new AutocraftingIdSuggestionProvider())
+        return Commands.argument("id", UUIDArgument.uuid()).suggests(new AutocraftingIdSuggestionProvider())
             .executes(new CancelSingleAutocraftingCommand());
     }
 
     @Override
     protected int run(CommandContext<CommandSource> context, INetwork network) {
-        UUID id = UUIDArgument.func_239195_a_(context, "id");
+        UUID id = UUIDArgument.getUuid(context, "id");
 
         int count = 0;
 

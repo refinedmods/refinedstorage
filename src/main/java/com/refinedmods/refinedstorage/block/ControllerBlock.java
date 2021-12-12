@@ -52,7 +52,7 @@ public class ControllerBlock extends BaseBlock {
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return name;
         }
 
@@ -70,12 +70,12 @@ public class ControllerBlock extends BaseBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
+        this.registerDefaultState(getStateDefinition().any().setValue(ENERGY_TYPE, EnergyType.OFF));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
 
         builder.add(ENERGY_TYPE);
     }
@@ -96,12 +96,12 @@ public class ControllerBlock extends BaseBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, entity, stack);
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, entity, stack);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromStack -> {
-                TileEntity tile = world.getTileEntity(pos);
+                TileEntity tile = world.getBlockEntity(pos);
 
                 if (tile != null) {
                     tile.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromTile -> energyFromTile.receiveEnergy(energyFromStack.getEnergyStored(), false));
@@ -115,32 +115,32 @@ public class ControllerBlock extends BaseBlock {
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             INetwork network = API.instance().getNetworkManager((ServerWorld) world).getNetwork(pos);
             if (network instanceof Network) {
-                ((Network) network).setRedstonePowered(world.isBlockPowered(pos));
+                ((Network) network).setRedstonePowered(world.hasNeighborSignal(pos));
             }
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = super.onBlockActivated(state, world, pos, player, hand, hit);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = super.use(state, world, pos, player, hand, hit);
         if (result != ActionResultType.PASS) {
             return result;
         }
 
         ColorMap<ControllerBlock> colorMap = type == NetworkType.CREATIVE ? RSBlocks.CREATIVE_CONTROLLER : RSBlocks.CONTROLLER;
-        DyeColor color = DyeColor.getColor(player.getHeldItem(hand));
+        DyeColor color = DyeColor.getColor(player.getItemInHand(hand));
 
         if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
-            BlockState newState = colorMap.get(color).get().getDefaultState().with(ENERGY_TYPE, state.get(ENERGY_TYPE));
+            BlockState newState = colorMap.get(color).get().defaultBlockState().setValue(ENERGY_TYPE, state.getValue(ENERGY_TYPE));
 
-            return RSBlocks.CONTROLLER.setBlockState(newState, player.getHeldItem(hand), world, pos, player);
+            return RSBlocks.CONTROLLER.setBlockState(newState, player.getItemInHand(hand), world, pos, player);
         }
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new INamedContainerProvider() {
@@ -151,7 +151,7 @@ public class ControllerBlock extends BaseBlock {
 
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity player) {
-                        return new ControllerContainer((ControllerTile) world.getTileEntity(pos), player, i);
+                        return new ControllerContainer((ControllerTile) world.getBlockEntity(pos), player, i);
                     }
                 },
                 pos
@@ -162,10 +162,10 @@ public class ControllerBlock extends BaseBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (newState.getBlock() instanceof ControllerBlock) {
             return;
         }
-        super.onReplaced(state, world, pos, newState, isMoving);
+        super.onRemove(state, world, pos, newState, isMoving);
     }
 }

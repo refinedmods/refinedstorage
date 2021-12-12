@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class UpgradeWithEnchantedBookRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<UpgradeWithEnchantedBookRecipe> {
     @Override
-    public UpgradeWithEnchantedBookRecipe read(ResourceLocation recipeId, JsonObject json) {
+    public UpgradeWithEnchantedBookRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
         JsonObject enchantmentInfo = json.getAsJsonObject("enchantment");
 
         ItemStack result = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.getAsJsonPrimitive("result").getAsString())));
@@ -29,8 +29,8 @@ public class UpgradeWithEnchantedBookRecipeSerializer extends ForgeRegistryEntry
 
     @Nullable
     @Override
-    public UpgradeWithEnchantedBookRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-        ItemStack result = buffer.readItemStack();
+    public UpgradeWithEnchantedBookRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        ItemStack result = buffer.readItem();
         Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
         int level = buffer.readInt();
 
@@ -38,9 +38,9 @@ public class UpgradeWithEnchantedBookRecipeSerializer extends ForgeRegistryEntry
     }
 
     @Override
-    public void write(PacketBuffer buffer, UpgradeWithEnchantedBookRecipe recipe) {
-        buffer.writeItemStack(recipe.getResult());
+    public void toNetwork(PacketBuffer buffer, UpgradeWithEnchantedBookRecipe recipe) {
+        buffer.writeItem(recipe.getResult());
         buffer.writeResourceLocation(recipe.getEnchant().enchantment.getRegistryName());
-        buffer.writeInt(recipe.getEnchant().enchantmentLevel);
+        buffer.writeInt(recipe.getEnchant().level);
     }
 }

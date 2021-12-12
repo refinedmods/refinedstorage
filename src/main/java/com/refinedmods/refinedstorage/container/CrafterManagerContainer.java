@@ -63,8 +63,8 @@ public class CrafterManagerContainer extends BaseContainer {
             this.containerData = data;
         }
 
-        this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
+        this.slots.clear();
+        this.lastSlots.clear();
         this.headings.clear();
 
         this.rows = 0;
@@ -91,7 +91,7 @@ public class CrafterManagerContainer extends BaseContainer {
                     @Nonnull
                     @Override
                     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                        if (new PatternItemValidator(getPlayer().getEntityWorld()).test(stack)) {
+                        if (new PatternItemValidator(getPlayer().getCommandSenderWorld()).test(stack)) {
                             return super.insertItem(slot, stack, simulate);
                         }
 
@@ -170,28 +170,28 @@ public class CrafterManagerContainer extends BaseContainer {
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
-        if (slot.getHasStack()) {
-            stack = slot.getStack();
-            if (!new PatternItemValidator(getPlayer().getEntityWorld()).test(stack)) {
+        if (slot.hasItem()) {
+            stack = slot.getItem();
+            if (!new PatternItemValidator(getPlayer().getCommandSenderWorld()).test(stack)) {
                 return ItemStack.EMPTY;
             }
             if (index < 9 * 4) {
-                if (!mergeItemStack(stack, 9 * 4, inventorySlots.size(), false)) {
+                if (!moveItemStackTo(stack, 9 * 4, slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(stack, 0, 9 * 4, false)) {
+            } else if (!moveItemStackTo(stack, 0, 9 * 4, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 

@@ -31,7 +31,7 @@ public class PortableGridBlock extends BaseBlock {
     public static final EnumProperty<PortableGridDiskState> DISK_STATE = EnumProperty.create("disk_state", PortableGridDiskState.class);
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
-    private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 13.2, 16);
+    private static final VoxelShape SHAPE = box(0, 0, 0, 16, 13.2, 16);
 
     private final PortableGridBlockItem.Type type;
 
@@ -39,12 +39,12 @@ public class PortableGridBlock extends BaseBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setDefaultState(getDefaultState().with(DISK_STATE, PortableGridDiskState.NONE).with(ACTIVE, false));
+        this.registerDefaultState(defaultBlockState().setValue(DISK_STATE, PortableGridDiskState.NONE).setValue(ACTIVE, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
 
         builder.add(DISK_STATE);
         builder.add(ACTIVE);
@@ -74,23 +74,23 @@ public class PortableGridBlock extends BaseBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isClientSide) {
             API.instance().getGridManager().openGrid(PortableGridBlockGridFactory.ID, (ServerPlayerEntity) player, pos);
 
-            ((PortableGridTile) world.getTileEntity(pos)).onOpened();
+            ((PortableGridTile) world.getBlockEntity(pos)).onOpened();
         }
 
         return ActionResultType.SUCCESS;
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, placer, stack);
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
 
-        if (!world.isRemote) {
-            ((PortableGridTile) world.getTileEntity(pos)).applyDataFromItemToTile(stack);
-            ((PortableGridTile) world.getTileEntity(pos)).updateState();
+        if (!world.isClientSide) {
+            ((PortableGridTile) world.getBlockEntity(pos)).applyDataFromItemToTile(stack);
+            ((PortableGridTile) world.getBlockEntity(pos)).updateState();
         }
     }
 }

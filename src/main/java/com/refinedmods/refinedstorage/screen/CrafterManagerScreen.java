@@ -39,7 +39,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     protected void onPreInit() {
-        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
+        this.imageHeight = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
         addSideButton(new GridSizeSideButton(this, crafterManager::getSize, size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
-        this.scrollbar.addListener((oldOffset, newOffset) -> container.initSlots(null));
+        this.scrollbar.addListener((oldOffset, newOffset) -> menu.initSlots(null));
 
-        container.initSlots(null);
+        menu.initSlots(null);
 
         int sx = x + 97 + 1;
         int sy = y + 6 + 1;
@@ -61,7 +61,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
             searchField.setResponder(value -> {
                 searchField.updateJei();
 
-                container.initSlots(null);
+                menu.initSlots(null);
             });
             searchField.setMode(crafterManager.getSearchBoxMode());
         } else {
@@ -82,7 +82,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/crafter_manager.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, getTopHeight());
+        blit(matrixStack, x, y, 0, 0, imageWidth, getTopHeight());
 
         int rows = getVisibleRows();
 
@@ -100,17 +100,17 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
                 }
             }
 
-            blit(matrixStack, x, yy, 0, yTextureStart, xSize, 18);
+            blit(matrixStack, x, yy, 0, yTextureStart, imageWidth, 18);
         }
 
         yy += 18;
 
-        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), xSize, getBottomHeight());
+        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth, getBottomHeight());
 
         if (crafterManager.isActiveOnClient()) {
-            for (Slot slot : container.inventorySlots) {
-                if (slot instanceof CrafterManagerSlot && slot.isEnabled()) {
-                    blit(matrixStack, x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
+            for (Slot slot : menu.slots) {
+                if (slot instanceof CrafterManagerSlot && slot.isActive()) {
+                    blit(matrixStack, x + slot.x - 1, y + slot.y - 1, 0, 193, 18, 18);
                 }
             }
         }
@@ -123,10 +123,10 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     @Override
     public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
+        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
-        if (container != null && crafterManager.isActiveOnClient()) {
-            for (Map.Entry<String, Integer> heading : container.getHeadings().entrySet()) {
+        if (menu != null && crafterManager.isActiveOnClient()) {
+            for (Map.Entry<String, Integer> heading : menu.getHeadings().entrySet()) {
                 int y = heading.getValue();
 
                 if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
@@ -137,7 +137,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
                     blit(matrixStack, 7, y, 0, 174, 18 * 9, 18);
 
-                    renderString(matrixStack, 7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
+                    renderString(matrixStack, 7 + 4, y + 6, RenderUtils.shorten(I18n.get(heading.getKey()), 25));
                 }
             }
         }
@@ -163,7 +163,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canWrite()) {
+        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canConsumeInput()) {
             return true;
         }
 
@@ -225,7 +225,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public int getRows() {
-        return !crafterManager.isActiveOnClient() ? 0 : container.getRows();
+        return !crafterManager.isActiveOnClient() ? 0 : menu.getRows();
     }
 
     @Override
@@ -235,7 +235,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public String getSearchFieldText() {
-        return searchField == null ? "" : searchField.getText();
+        return searchField == null ? "" : searchField.getValue();
     }
 
     @Override

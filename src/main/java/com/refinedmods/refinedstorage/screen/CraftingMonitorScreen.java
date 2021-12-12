@@ -56,7 +56,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         @Override
         public void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
-            List<ITextComponent> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName() : requested.getFluid().getDisplayName());
+            List<ITextComponent> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getHoverName() : requested.getFluid().getDisplayName());
             List<String> smallTextLines = Lists.newArrayList();
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
@@ -64,7 +64,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
-            smallTextLines.add(I18n.format("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
+            smallTextLines.add(I18n.get("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
 
             if (hours > 0) {
                 smallTextLines.add(String.format("%02d:%02d:%02d", hours, minutes, seconds));
@@ -85,7 +85,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         @Override
         public void drawIcon(MatrixStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
             if (requested.getItem() != null) {
-                RenderHelper.setupGui3DDiffuseLighting();
+                RenderHelper.setupFor3DItems();
 
                 itemDrawer.draw(matrixStack, x, y, requested.getItem());
             } else {
@@ -164,7 +164,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
     @Override
     public void onPostInit(int x, int y) {
-        this.tabs.init(xSize);
+        this.tabs.init(imageWidth);
 
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new RedstoneModeSideButton(this, craftingMonitor.getRedstoneModeParameter()));
@@ -173,8 +173,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         ITextComponent cancel = new TranslationTextComponent("gui.cancel");
         ITextComponent cancelAll = new TranslationTextComponent("misc.refinedstorage.cancel_all");
 
-        int cancelButtonWidth = 14 + font.getStringWidth(cancel.getString());
-        int cancelAllButtonWidth = 14 + font.getStringWidth(cancelAll.getString());
+        int cancelButtonWidth = 14 + font.width(cancel.getString());
+        int cancelAllButtonWidth = 14 + font.width(cancelAll.getString());
 
         this.cancelButton = addButton(x + 7, y + 201 - 20 - 7, cancelButtonWidth, 20, cancel, false, true, btn -> {
             if (hasValidTabSelected()) {
@@ -250,7 +250,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         bindTexture(RS.ID, "gui/crafting_preview.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
         scrollbar.render(matrixStack);
 
@@ -263,7 +263,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
-        RenderHelper.setupGui3DDiffuseLighting();
+        RenderHelper.setupFor3DItems();
 
         int x = 7;
         int y = 20;

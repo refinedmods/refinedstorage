@@ -14,12 +14,12 @@ public class ControllerBlockItem extends EnergyBlockItem {
     private final ITextComponent displayName;
 
     public ControllerBlockItem(ControllerBlock block, DyeColor color, ITextComponent displayName) {
-        super(block, new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), block.getType() == NetworkType.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
+        super(block, new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1), block.getType() == NetworkType.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
 
         if (color != ColorMap.DEFAULT_COLOR) {
-            this.displayName = new TranslationTextComponent("color.minecraft." + color.getTranslationKey())
-                    .appendString(" ")
-                    .appendSibling(displayName);
+            this.displayName = new TranslationTextComponent("color.minecraft." + color.getName())
+                    .append(" ")
+                    .append(displayName);
         } else {
             this.displayName = displayName;
         }
@@ -27,7 +27,7 @@ public class ControllerBlockItem extends EnergyBlockItem {
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         return displayName;
     }
 }

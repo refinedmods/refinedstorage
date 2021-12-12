@@ -8,6 +8,8 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class BaseBlock extends Block {
     protected BaseBlock(Properties properties) {
         super(properties);
@@ -22,9 +24,9 @@ public abstract class BaseBlock extends Block {
     public BlockState rotate(BlockState state, Rotation rot) {
         BlockDirection dir = getDirection();
         if (dir != BlockDirection.NONE) {
-            Direction newDirection = dir.cycle(state.get(dir.getProperty()));
+            Direction newDirection = dir.cycle(state.getValue(dir.getProperty()));
 
-            return state.with(dir.getProperty(), newDirection);
+            return state.setValue(dir.getProperty(), newDirection);
         }
 
         return super.rotate(state, rot);
@@ -36,8 +38,8 @@ public abstract class BaseBlock extends Block {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onReplaced(state, world, pos, newState, isMoving);
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onRemove(state, world, pos, newState, isMoving);
 
         checkIfDirectionHasChanged(state, world, pos, newState);
     }
@@ -45,14 +47,14 @@ public abstract class BaseBlock extends Block {
     protected void checkIfDirectionHasChanged(BlockState state, World world, BlockPos pos, BlockState newState) {
         if (getDirection() != BlockDirection.NONE &&
             state.getBlock() == newState.getBlock() &&
-            state.get(getDirection().getProperty()) != newState.get(getDirection().getProperty())) {
-            onDirectionChanged(world, pos, newState.get(getDirection().getProperty()));
+            state.getValue(getDirection().getProperty()) != newState.getValue(getDirection().getProperty())) {
+            onDirectionChanged(world, pos, newState.getValue(getDirection().getProperty()));
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
 
         BlockDirection dir = getDirection();
         if (dir != BlockDirection.NONE) {

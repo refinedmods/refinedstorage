@@ -15,13 +15,13 @@ public class ClientProxy {
     }
 
     public static void onReceivedCraftingPreviewResponseMessage(GridCraftingPreviewResponseMessage message) {
-        Screen screen = Minecraft.getInstance().currentScreen;
+        Screen screen = Minecraft.getInstance().screen;
 
         if (screen instanceof CraftingSettingsScreen) {
             screen = ((CraftingSettingsScreen) screen).getParent();
         }
 
-        Minecraft.getInstance().displayGuiScreen(new CraftingPreviewScreen(
+        Minecraft.getInstance().setScreen(new CraftingPreviewScreen(
             screen,
             message.getElements(),
             message.getId(),
@@ -32,7 +32,7 @@ public class ClientProxy {
     }
 
     public static void onReceivedCraftingStartResponseMessage() {
-        Screen screen = Minecraft.getInstance().currentScreen;
+        Screen screen = Minecraft.getInstance().screen;
 
         if (screen instanceof CraftingSettingsScreen) {
             ((CraftingSettingsScreen) screen).close();

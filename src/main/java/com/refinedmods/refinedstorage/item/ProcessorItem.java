@@ -24,6 +24,6 @@ public class ProcessorItem extends Item {
     }
 
     public ProcessorItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
     }
 }

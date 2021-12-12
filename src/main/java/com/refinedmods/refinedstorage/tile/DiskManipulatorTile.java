@@ -32,7 +32,7 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
     public static final TileDataParameter<Integer, DiskManipulatorTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, DiskManipulatorTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, DiskManipulatorTile> TYPE = IType.createParameter();
-    public static final TileDataParameter<Integer, DiskManipulatorTile> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, DiskManipulatorTile> IO_MODE = new TileDataParameter<>(DataSerializers.INT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
         t.getNode().setIoMode(v);
         t.getNode().markDirty();
     });
@@ -83,7 +83,7 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 
     @Nonnull

@@ -21,7 +21,7 @@ public class GridSizeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.grid.size") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.grid.size." + this.sizeSupplier.get());
+        return I18n.get("sidebutton.refinedstorage.grid.size") + "\n" + TextFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.size." + this.sizeSupplier.get());
     }
 
     @Override

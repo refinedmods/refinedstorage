@@ -14,7 +14,7 @@ public class GridFluidInsertHeldMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.openContainer;
+                Container container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     IGrid grid = ((GridContainer) container).getGrid();

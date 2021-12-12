@@ -13,7 +13,7 @@ public class TileInventoryListener implements InventoryListener<BaseItemHandler>
     @Override
     public void onChanged(BaseItemHandler handler, int slot, boolean reading) {
         if (!reading) {
-            tile.markDirty();
+            tile.setChanged();
         }
     }
 }

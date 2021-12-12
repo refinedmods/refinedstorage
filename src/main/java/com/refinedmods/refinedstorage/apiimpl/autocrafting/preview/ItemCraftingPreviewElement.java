@@ -40,14 +40,14 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement {
 
     @Override
     public void write(PacketBuffer buf) {
-        buf.writeItemStack(stack);
+        buf.writeItem(stack);
         buf.writeInt(available);
         buf.writeBoolean(missing);
         buf.writeInt(toCraft);
     }
 
     public static ItemCraftingPreviewElement read(PacketBuffer buf) {
-        ItemStack stack = buf.readItemStack();
+        ItemStack stack = buf.readItem();
         int available = buf.readInt();
         boolean missing = buf.readBoolean();
         int toCraft = buf.readInt();
@@ -67,25 +67,25 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement {
 
         drawers.getItemDrawer().draw(matrixStack, x, y, stack);
 
-        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
+        float scale = Minecraft.getInstance().isEnforceUnicode() ? 1F : 0.5F;
 
         y += 2;
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(scale, scale, 1);
 
         if (toCraft > 0) {
             String format = doesDisableTaskStarting() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, toCraft));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get(format, toCraft));
 
             y += 7;
         }
 
         if (available > 0) {
-            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", available));
+            drawers.getStringDrawer().draw(matrixStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get("gui.refinedstorage.crafting_preview.available", available));
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public void addAvailable(int amount) {

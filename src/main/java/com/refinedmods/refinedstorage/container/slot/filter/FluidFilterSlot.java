@@ -28,7 +28,7 @@ public class FluidFilterSlot extends BaseSlot {
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
         return false;
     }
 
@@ -37,7 +37,7 @@ public class FluidFilterSlot extends BaseSlot {
     }
 
     @Override
-    public boolean canTakeStack(PlayerEntity playerIn) {
+    public boolean mayPickup(PlayerEntity playerIn) {
         return false;
     }
 

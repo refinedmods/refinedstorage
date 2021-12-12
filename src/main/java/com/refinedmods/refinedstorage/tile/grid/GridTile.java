@@ -28,41 +28,41 @@ import java.util.List;
 import java.util.Set;
 
 public class GridTile extends NetworkNodeTile<GridNetworkNode> {
-    public static final TileDataParameter<Integer, GridTile> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getViewType(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> VIEW_TYPE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getViewType(), (t, v) -> {
         if (IGrid.isValidViewType(v)) {
             t.getNode().setViewType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final TileDataParameter<Integer, GridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.getNode().setSortingDirection(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final TileDataParameter<Integer, GridTile> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> SORTING_TYPE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final TileDataParameter<Integer, GridTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
-    public static final TileDataParameter<Integer, GridTile> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSize(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> SIZE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
-    public static final TileDataParameter<Integer, GridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
-    public static final TileDataParameter<Integer, GridTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
             t.getNode().setTabPage(v);
             t.getNode().markDirty();

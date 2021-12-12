@@ -25,7 +25,7 @@ public class GridCraftingPreviewRequestMessage {
 
     public static GridCraftingPreviewRequestMessage decode(PacketBuffer buf) {
         return new GridCraftingPreviewRequestMessage(
-            buf.readUniqueId(),
+            buf.readUUID(),
             buf.readInt(),
             buf.readBoolean(),
             buf.readBoolean()
@@ -33,7 +33,7 @@ public class GridCraftingPreviewRequestMessage {
     }
 
     public static void encode(GridCraftingPreviewRequestMessage message, PacketBuffer buf) {
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.noPreview);
         buf.writeBoolean(message.fluids);
@@ -44,7 +44,7 @@ public class GridCraftingPreviewRequestMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.openContainer;
+                Container container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     IGrid grid = ((GridContainer) container).getGrid();

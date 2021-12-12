@@ -42,9 +42,9 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
-            ItemStack held = player.inventory.getCurrentItem();
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!world.isClientSide) {
+            ItemStack held = player.inventory.getSelected();
 
             if (player.isCrouching()) {
                 return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
@@ -57,7 +57,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
                     pos
                 ));
             } else {
-                StorageMonitorNetworkNode storageMonitor = ((StorageMonitorTile) world.getTileEntity(pos)).getNode();
+                StorageMonitorNetworkNode storageMonitor = ((StorageMonitorTile) world.getBlockEntity(pos)).getNode();
 
                 if (!held.isEmpty()) {
                     return storageMonitor.deposit(player, held);
@@ -72,17 +72,17 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onBlockClicked(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        super.onBlockClicked(state, world, pos, player);
+    public void attack(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        super.attack(state, world, pos, player);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             RayTraceResult result = WorldUtils.rayTracePlayer(world, player);
 
             if (!(result instanceof BlockRayTraceResult)) {
                 return;
             }
 
-            ((StorageMonitorTile) world.getTileEntity(pos)).getNode().extract(player, ((BlockRayTraceResult) result).getFace());
+            ((StorageMonitorTile) world.getBlockEntity(pos)).getNode().extract(player, ((BlockRayTraceResult) result).getDirection());
         }
     }
 

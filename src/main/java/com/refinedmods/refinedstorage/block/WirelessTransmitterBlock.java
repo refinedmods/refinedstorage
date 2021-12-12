@@ -25,12 +25,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class WirelessTransmitterBlock extends ColoredNetworkBlock {
-    private static final VoxelShape SHAPE_DOWN = makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-    private static final VoxelShape SHAPE_UP = makeCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 16.0D, 10.0D);
-    private static final VoxelShape SHAPE_EAST = makeCuboidShape(6.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
-    private static final VoxelShape SHAPE_WEST = makeCuboidShape(0.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-    private static final VoxelShape SHAPE_NORTH = makeCuboidShape(6.0D, 6.0D, 0.0D, 10.0D, 10.0D, 10.0D);
-    private static final VoxelShape SHAPE_SOUTH = makeCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 16.0D);
+    private static final VoxelShape SHAPE_DOWN = box(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
+    private static final VoxelShape SHAPE_UP = box(6.0D, 6.0D, 6.0D, 10.0D, 16.0D, 10.0D);
+    private static final VoxelShape SHAPE_EAST = box(6.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
+    private static final VoxelShape SHAPE_WEST = box(0.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
+    private static final VoxelShape SHAPE_NORTH = box(6.0D, 6.0D, 0.0D, 10.0D, 10.0D, 10.0D);
+    private static final VoxelShape SHAPE_SOUTH = box(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 16.0D);
 
     public WirelessTransmitterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
@@ -55,7 +55,7 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(getDirection().getProperty())) {
+        switch (state.getValue(getDirection().getProperty())) {
             case DOWN:
                 return SHAPE_DOWN;
             case UP:
@@ -75,13 +75,13 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = RSBlocks.WIRELESS_TRANSMITTER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.WIRELESS_TRANSMITTER.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<WirelessTransmitterTile>(

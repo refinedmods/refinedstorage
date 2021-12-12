@@ -11,13 +11,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CrafterManagerTile extends NetworkNodeTile<CrafterManagerNetworkNode> {
-    public static final TileDataParameter<Integer, CrafterManagerTile> SIZE = new TileDataParameter<>(DataSerializers.VARINT, IGrid.SIZE_STRETCH, t -> t.getNode().getSize(), (t, v) -> {
+    public static final TileDataParameter<Integer, CrafterManagerTile> SIZE = new TileDataParameter<>(DataSerializers.INT, IGrid.SIZE_STRETCH, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> BaseScreen.executeLater(CrafterManagerScreen.class, BaseScreen::init));
-    public static final TileDataParameter<Integer, CrafterManagerTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, CrafterManagerTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();

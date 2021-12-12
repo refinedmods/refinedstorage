@@ -92,7 +92,7 @@ public class ItemGridStack implements IGridStack {
     public String getName() {
         if (cachedName == null) {
             try {
-                cachedName = stack.getDisplayName().getString();
+                cachedName = stack.getHoverName().getString();
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
 
@@ -136,7 +136,7 @@ public class ItemGridStack implements IGridStack {
         if (cachedTags == null) {
             cachedTags = new HashSet<>();
 
-            for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(stack.getItem())) {
+            for (ResourceLocation owningTag : ItemTags.getAllTags().getMatchingTags(stack.getItem())) {
                 cachedTags.add(owningTag.getPath());
             }
         }
@@ -200,7 +200,7 @@ public class ItemGridStack implements IGridStack {
             text = "0";
             color = 16733525;
         } else if (craftable) {
-            text = I18n.format("gui.refinedstorage.grid.craft");
+            text = I18n.get("gui.refinedstorage.grid.craft");
         } else if (stack.getCount() > 1) {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }

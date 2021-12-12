@@ -115,9 +115,9 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         }
 
         // Check inventory
-        for (int inventorySlot = 0; inventorySlot < player.inventory.getSizeInventory(); inventorySlot++) {
-            if (!player.inventory.getStackInSlot(inventorySlot).isEmpty()) {
-                tracker.addAvailableStack(player.inventory.getStackInSlot(inventorySlot), null);
+        for (int inventorySlot = 0; inventorySlot < player.inventory.getContainerSize(); inventorySlot++) {
+            if (!player.inventory.getItem(inventorySlot).isEmpty()) {
+                tracker.addAvailableStack(player.inventory.getItem(inventorySlot), null);
             }
         }
 
@@ -125,9 +125,9 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         if (container.getGrid().getGridType().equals(GridType.CRAFTING)) {
             CraftingInventory craftingMatrix = container.getGrid().getCraftingMatrix();
             if (craftingMatrix != null) {
-                for (int matrixSlot = 0; matrixSlot < craftingMatrix.getSizeInventory(); matrixSlot++) {
-                    if (!craftingMatrix.getStackInSlot(matrixSlot).isEmpty()) {
-                        tracker.addAvailableStack(craftingMatrix.getStackInSlot(matrixSlot), null);
+                for (int matrixSlot = 0; matrixSlot < craftingMatrix.getContainerSize(); matrixSlot++) {
+                    if (!craftingMatrix.getItem(matrixSlot).isEmpty()) {
+                        tracker.addAvailableStack(craftingMatrix.getItem(matrixSlot), null);
                     }
                 }
             }
@@ -153,7 +153,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private void move(GridContainer gridContainer, IRecipeLayout recipeLayout) {
         RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
             recipeLayout.getItemStacks().getGuiIngredients(),
-            gridContainer.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList())
+            gridContainer.slots.stream().filter(s -> s.container instanceof CraftingInventory).collect(Collectors.toList())
         ));
     }
 

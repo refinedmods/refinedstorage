@@ -140,7 +140,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.putUniqueId(NBT_ID, storageId);
+        tag.putUUID(NBT_ID, storageId);
 
         return tag;
     }
@@ -149,8 +149,8 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.hasUniqueId(NBT_ID)) {
-            storageId = tag.getUniqueId(NBT_ID);
+        if (tag.hasUUID(NBT_ID)) {
+            storageId = tag.getUUID(NBT_ID);
 
             loadStorage(null);
         }

@@ -34,13 +34,13 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = RSBlocks.SECURITY_MANAGER.changeBlockColor(state, player.getHeldItem(hand), world, pos, player);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = RSBlocks.SECURITY_MANAGER.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
         if (result != ActionResultType.PASS) {
             return result;
         }
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<SecurityManagerTile>(
@@ -51,7 +51,7 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
                 pos
             );
 
-            if (player.getGameProfile().getId().equals(((SecurityManagerTile) world.getTileEntity(pos)).getNode().getOwner())) {
+            if (player.getGameProfile().getId().equals(((SecurityManagerTile) world.getBlockEntity(pos)).getNode().getOwner())) {
                 action.run();
             } else {
                 return NetworkUtils.attempt(world, pos, player, action, Permission.MODIFY, Permission.SECURITY);

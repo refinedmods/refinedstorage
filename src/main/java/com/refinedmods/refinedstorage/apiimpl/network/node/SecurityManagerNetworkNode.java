@@ -35,7 +35,7 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
         .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 invalidate();
             }
 

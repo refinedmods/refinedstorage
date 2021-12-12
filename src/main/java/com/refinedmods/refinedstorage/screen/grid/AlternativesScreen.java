@@ -78,14 +78,14 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         if (item != null) {
             lines.add(new ItemLine(item));
 
-            for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(item.getItem())) {
+            for (ResourceLocation owningTag : ItemTags.getAllTags().getMatchingTags(item.getItem())) {
                 lines.add(new TagLine(owningTag, GridTile.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag)));
 
                 int itemCount = 0;
 
                 ItemListLine line = new ItemListLine();
 
-                for (Item itemInTag : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                for (Item itemInTag : ItemTags.getAllTags().getTag(owningTag).getValues()) {
                     if (itemCount > 0 && itemCount % 8 == 0) {
                         lines.add(line);
                         line = new ItemListLine();
@@ -101,14 +101,14 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         } else if (fluid != null) {
             lines.add(new FluidLine(fluid));
 
-            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluid.getFluid())) {
+            for (ResourceLocation owningTag : FluidTags.getAllTags().getMatchingTags(fluid.getFluid())) {
                 lines.add(new TagLine(owningTag, GridTile.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
 
                 int fluidCount = 0;
 
                 FluidListLine line = new FluidListLine();
 
-                for (Fluid fluidInTag : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                for (Fluid fluidInTag : FluidTags.getAllTags().getTag(owningTag).getValues()) {
                     if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();
@@ -131,7 +131,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
-                lines.get(i).layoutDependantControls(true, guiLeft + xx + 3, guiTop + yy + 3);
+                lines.get(i).layoutDependantControls(true, leftPos + xx + 3, topPos + yy + 3);
 
                 yy += 18;
             }
@@ -155,7 +155,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/alternatives.png");
 
-        blit(matrixStack, x, y, 0, 0, xSize, ySize);
+        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
         scrollbar.render(matrixStack);
     }
@@ -171,7 +171,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
-                lines.get(i).layoutDependantControls(true, guiLeft + x + 3, guiTop + y + 3);
+                lines.get(i).layoutDependantControls(true, leftPos + x + 3, topPos + y + 3);
                 lines.get(i).render(matrixStack, x, y);
 
                 y += 18;
@@ -228,7 +228,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     }
 
     private void close() {
-        minecraft.displayGuiScreen(parent);
+        minecraft.setScreen(parent);
     }
 
     private void apply() {
@@ -238,7 +238,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
             if (line instanceof TagLine) {
                 TagLine tagLine = (TagLine) line;
 
-                if (tagLine.widget.isChecked()) {
+                if (tagLine.widget.selected()) {
                     allowed.add(tagLine.tagName);
                 }
             }
@@ -283,7 +283,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         public void render(MatrixStack matrixStack, int x, int y) {
             RenderSystem.color4f(1, 1, 1, 1);
             renderItem(matrixStack, x + 3, y + 2, item);
-            renderString(matrixStack, x + 4 + 19, y + 7, item.getDisplayName().getString());
+            renderString(matrixStack, x + 4 + 19, y + 7, item.getHoverName().getString());
         }
     }
 

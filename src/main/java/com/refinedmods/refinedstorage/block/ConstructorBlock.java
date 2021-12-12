@@ -28,12 +28,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class ConstructorBlock extends CableBlock {
-    private static final VoxelShape HEAD_NORTH = VoxelShapes.or(makeCuboidShape(2, 2, 0, 14, 14, 2), HOLDER_NORTH);
-    private static final VoxelShape HEAD_EAST = VoxelShapes.or(makeCuboidShape(14, 2, 2, 16, 14, 14), HOLDER_EAST);
-    private static final VoxelShape HEAD_SOUTH = VoxelShapes.or(makeCuboidShape(2, 2, 14, 14, 14, 16), HOLDER_SOUTH);
-    private static final VoxelShape HEAD_WEST = VoxelShapes.or(makeCuboidShape(0, 2, 2, 2, 14, 14), HOLDER_WEST);
-    private static final VoxelShape HEAD_DOWN = VoxelShapes.or(makeCuboidShape(2, 0, 2, 14, 2, 14), HOLDER_DOWN);
-    private static final VoxelShape HEAD_UP = VoxelShapes.or(makeCuboidShape(2, 14, 2, 14, 16, 14), HOLDER_UP);
+    private static final VoxelShape HEAD_NORTH = VoxelShapes.or(box(2, 2, 0, 14, 14, 2), HOLDER_NORTH);
+    private static final VoxelShape HEAD_EAST = VoxelShapes.or(box(14, 2, 2, 16, 14, 14), HOLDER_EAST);
+    private static final VoxelShape HEAD_SOUTH = VoxelShapes.or(box(2, 2, 14, 14, 14, 16), HOLDER_SOUTH);
+    private static final VoxelShape HEAD_WEST = VoxelShapes.or(box(0, 2, 2, 2, 14, 14), HOLDER_WEST);
+    private static final VoxelShape HEAD_DOWN = VoxelShapes.or(box(2, 0, 2, 14, 2, 14), HOLDER_DOWN);
+    private static final VoxelShape HEAD_UP = VoxelShapes.or(box(2, 14, 2, 14, 16, 14), HOLDER_UP);
 
     public ConstructorBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
@@ -62,7 +62,7 @@ public class ConstructorBlock extends CableBlock {
     }
 
     private VoxelShape getHeadShape(BlockState state) {
-        Direction direction = state.get(getDirection().getProperty());
+        Direction direction = state.getValue(getDirection().getProperty());
 
         if (direction == Direction.NORTH) {
             return HEAD_NORTH;
@@ -93,8 +93,8 @@ public class ConstructorBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getHitVec())) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<ConstructorTile>(

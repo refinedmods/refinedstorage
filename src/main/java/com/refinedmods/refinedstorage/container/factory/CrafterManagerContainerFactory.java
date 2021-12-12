@@ -21,10 +21,10 @@ public class CrafterManagerContainerFactory implements IContainerFactory<Crafter
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            data.put(buf.readTextComponent().getString(), buf.readInt());
+            data.put(buf.readComponent().getString(), buf.readInt());
         }
 
-        CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerTile) inv.player.world.getTileEntity(pos), inv.player, windowId);
+        CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerTile) inv.player.level.getBlockEntity(pos), inv.player, windowId);
 
         container.setScreenInfoProvider(new EmptyScreenInfoProvider());
         container.initSlots(data);

@@ -27,8 +27,8 @@ public class ExporterContainer extends BaseContainer {
     }
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
+    public void broadcastChanges() {
+        super.broadcastChanges();
 
         boolean updatedHasRegulatorMode = hasRegulatorMode();
         if (hasRegulatorMode != updatedHasRegulatorMode) {
@@ -39,8 +39,8 @@ public class ExporterContainer extends BaseContainer {
     }
 
     public void initSlots() {
-        this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
+        this.slots.clear();
+        this.lastSlots.clear();
 
         this.transferManager.clearTransfers();
 

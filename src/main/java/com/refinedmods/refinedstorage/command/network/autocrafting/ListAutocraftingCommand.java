@@ -24,13 +24,13 @@ public class ListAutocraftingCommand extends NetworkCommand {
     }
 
     public static void addInfo(CommandContext<CommandSource> context, ICraftingTask task) {
-        context.getSource().sendFeedback(
+        context.getSource().sendSuccess(
             new StringTextComponent(getAmount(task.getRequested()) + "x ")
-                .appendSibling(getName(task.getRequested()).deepCopy().setStyle(Styles.YELLOW))
-                .appendString(" ")
-                .appendString("(" + task.getCompletionPercentage() + "%)")
-                .appendString(" ")
-                .appendSibling(new StringTextComponent("[" + task.getId().toString() + "]").setStyle(Styles.GRAY)),
+                .append(getName(task.getRequested()).copy().setStyle(Styles.YELLOW))
+                .append(" ")
+                .append("(" + task.getCompletionPercentage() + "%)")
+                .append(" ")
+                .append(new StringTextComponent("[" + task.getId().toString() + "]").setStyle(Styles.GRAY)),
             false
         );
     }
@@ -49,7 +49,7 @@ public class ListAutocraftingCommand extends NetworkCommand {
 
     private static ITextComponent getName(ICraftingRequestInfo info) {
         if (info.getItem() != null) {
-            return info.getItem().getDisplayName();
+            return info.getItem().getHoverName();
         }
 
         if (info.getFluid() != null) {

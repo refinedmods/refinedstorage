@@ -56,13 +56,13 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 
-        ItemStack held = player.inventory.getItemStack();
+        ItemStack held = player.inventory.getCarried();
 
         if (single) {
             if (!held.isEmpty() && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.getCount() + 1 > held.getMaxStackSize())) {
                 return;
             }
-        } else if (!player.inventory.getItemStack().isEmpty()) {
+        } else if (!player.inventory.getCarried().isEmpty()) {
             return;
         }
 
@@ -116,10 +116,10 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 if (single && !held.isEmpty()) {
                     held.grow(1);
                 } else {
-                    player.inventory.setItemStack(took);
+                    player.inventory.setCarried(took);
                 }
 
-                player.updateHeldItem();
+                player.broadcastCarriedItem();
             }
 
             portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
@@ -152,11 +152,11 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty() || portableGrid.getStorage() == null || !grid.isGridActive()) {
+        if (player.inventory.getCarried().isEmpty() || portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
 
-        ItemStack stack = player.inventory.getItemStack();
+        ItemStack stack = player.inventory.getCarried();
         int size = single ? 1 : stack.getCount();
 
         portableGrid.getItemStorageTracker().changed(player, stack.copy());
@@ -168,10 +168,10 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 stack.shrink(size);
             }
         } else {
-            player.inventory.setItemStack(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
+            player.inventory.setCarried(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
         }
 
-        player.updateHeldItem();
+        player.broadcastCarriedItem();
 
         portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
     }

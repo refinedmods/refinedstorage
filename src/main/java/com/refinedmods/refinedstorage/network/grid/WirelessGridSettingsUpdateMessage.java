@@ -58,8 +58,8 @@ public class WirelessGridSettingsUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.openContainer instanceof GridContainer) {
-                    IGrid grid = ((GridContainer) player.openContainer).getGrid();
+                if (player.containerMenu instanceof GridContainer) {
+                    IGrid grid = ((GridContainer) player.containerMenu).getGrid();
 
                     if (grid instanceof WirelessGrid) {
                         ItemStack stack = ((WirelessGrid) grid).getStack();

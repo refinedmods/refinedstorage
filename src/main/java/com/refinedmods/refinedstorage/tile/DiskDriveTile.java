@@ -126,7 +126,7 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, worldPosition);
     }
 
     @Nonnull

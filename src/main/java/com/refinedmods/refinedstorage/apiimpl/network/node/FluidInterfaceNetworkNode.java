@@ -45,8 +45,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (!world.isRemote) {
-                ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_IN);
+            if (!world.isClientSide) {
+                ((FluidInterfaceTile) world.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_IN);
             }
 
             markDirty();
@@ -155,7 +155,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.relative(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.isActive() &&
@@ -250,8 +250,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     private void onTankOutChanged() {
-        if (!world.isRemote && world.isBlockPresent(pos)) {
-            ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
+        if (!world.isClientSide && world.isLoaded(pos)) {
+            ((FluidInterfaceTile) world.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
         }
 
         markDirty();

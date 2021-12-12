@@ -50,8 +50,8 @@ public class HollowCoverRecipe extends SpecialRecipe {
     @Override
     public boolean matches(CraftingInventory inv, World worldIn) {
         List<ItemStack> list = Lists.newArrayList();
-        for (int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
                 if (!stackMatches(itemstack)){
@@ -63,10 +63,10 @@ public class HollowCoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         List<ItemStack> list = Lists.newArrayList();
-        for (int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
                 if (!stackMatches(itemstack)){
@@ -78,7 +78,7 @@ public class HollowCoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
 

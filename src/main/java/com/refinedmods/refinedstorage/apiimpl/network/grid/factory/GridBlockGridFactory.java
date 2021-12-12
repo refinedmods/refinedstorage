@@ -27,7 +27,7 @@ public class GridBlockGridFactory implements IGridFactory {
     @Override
     @Nullable
     public IGrid createFromBlock(PlayerEntity player, BlockPos pos) {
-        TileEntity tile = getRelevantTile(player.getEntityWorld(), pos);
+        TileEntity tile = getRelevantTile(player.getCommandSenderWorld(), pos);
 
         if (tile instanceof GridTile) {
             return ((GridTile) tile).getNode();
@@ -39,7 +39,7 @@ public class GridBlockGridFactory implements IGridFactory {
     @Nullable
     @Override
     public TileEntity getRelevantTile(World world, BlockPos pos) {
-        return world.getTileEntity(pos);
+        return world.getBlockEntity(pos);
     }
 
     @Override

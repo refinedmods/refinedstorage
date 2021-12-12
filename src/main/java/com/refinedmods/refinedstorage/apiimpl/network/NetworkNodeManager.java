@@ -39,7 +39,7 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void load(CompoundNBT tag) {
         if (tag.contains(NBT_NODES)) {
             ListNBT nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
 
@@ -50,7 +50,7 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
 
                 ResourceLocation id = new ResourceLocation(nodeTag.getString(NBT_NODE_ID));
                 CompoundNBT data = nodeTag.getCompound(NBT_NODE_DATA);
-                BlockPos pos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS));
+                BlockPos pos = BlockPos.of(nodeTag.getLong(NBT_NODE_POS));
 
                 INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
 
@@ -74,7 +74,7 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         ListNBT list = new ListNBT();
 
         for (INetworkNode node : all()) {
@@ -82,7 +82,7 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
                 CompoundNBT nodeTag = new CompoundNBT();
 
                 nodeTag.putString(NBT_NODE_ID, node.getId().toString());
-                nodeTag.putLong(NBT_NODE_POS, node.getPos().toLong());
+                nodeTag.putLong(NBT_NODE_POS, node.getPos().asLong());
                 nodeTag.put(NBT_NODE_DATA, node.write(new CompoundNBT()));
 
                 list.add(nodeTag);
@@ -131,6 +131,6 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
 
     @Override
     public void markForSaving() {
-        markDirty();
+        setDirty();
     }
 }

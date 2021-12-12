@@ -15,6 +15,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
+import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
+
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private final INetwork network;
     private Set<INetworkNodeGraphEntry> entries = Sets.newConcurrentHashSet();
@@ -34,7 +36,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         Operator operator = new Operator(action);
 
-        INetworkNode originNode = NetworkUtils.getNodeFromTile(world.getTileEntity(origin));
+        INetworkNode originNode = NetworkUtils.getNodeFromTile(world.getBlockEntity(origin));
         if (originNode instanceof INetworkNodeVisitor) {
             ((INetworkNodeVisitor) originNode).visit(operator);
         }
@@ -113,7 +115,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         @Override
         public void apply(World world, BlockPos pos, @Nullable Direction side) {
-            TileEntity tile = world.getTileEntity(pos);
+            TileEntity tile = world.getBlockEntity(pos);
 
             INetworkNode otherNode = NetworkUtils.getNodeFromTile(tile);
             if (otherNode != null) {
@@ -144,7 +146,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         private void dropConflictingBlock(World world, BlockPos pos) {
             if (!network.getPosition().equals(pos)) {
-                Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos));
+                Block.dropResources(world.getBlockState(pos), world, pos, world.getBlockEntity(pos));
 
                 world.removeBlock(pos, false);
             }
@@ -181,7 +183,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                         INetworkNode nodeOnSide = NetworkUtils.getNodeFromTile(tile);
 
                         if (nodeOnSide == node) {
-                            operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
+                            operator.apply(world, pos.relative(checkSide), checkSide.getOpposite());
                         }
                     }
                 }

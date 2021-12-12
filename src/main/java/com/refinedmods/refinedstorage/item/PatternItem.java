@@ -51,7 +51,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final int VERSION = 1;
 
     public PatternItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP).setISTER(() -> PatternItemStackTileRenderer::new));
+        super(new Item.Properties().tab(RS.MAIN_GROUP).setISTER(() -> PatternItemStackTileRenderer::new));
     }
 
     public static ICraftingPattern fromCache(World world, ItemStack stack) {
@@ -70,8 +70,8 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         if (!stack.hasTag()) {
             return;
@@ -105,7 +105,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             }
         } else {
             tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
-            tooltip.add(pattern.getErrorMessage().copyRaw().setStyle(Styles.GRAY));
+            tooltip.add(pattern.getErrorMessage().plainCopy().setStyle(Styles.GRAY));
         }
     }
 
@@ -117,7 +117,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                 tooltip.add(new TranslationTextComponent(
                     "misc.refinedstorage.pattern.allowed_item_tag",
                     tag.toString(),
-                    pattern.getInputs().get(i).get(0).getDisplayName()
+                    pattern.getInputs().get(i).get(0).getHoverName()
                 ).setStyle(Styles.AQUA));
             }
         }
@@ -136,12 +136,12 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        if (!world.isRemote && player.isCrouching()) {
-            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getHeldItem(hand).getCount()));
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        if (!world.isClientSide && player.isCrouching()) {
+            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getItemInHand(hand).getCount()));
         }
 
-        return new ActionResult<>(ActionResultType.PASS, player.getHeldItem(hand));
+        return new ActionResult<>(ActionResultType.PASS, player.getItemInHand(hand));
     }
 
     @Override
@@ -166,7 +166,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             return ItemStack.EMPTY;
         }
 
-        return ItemStack.read(pattern.getTag().getCompound(id));
+        return ItemStack.of(pattern.getTag().getCompound(id));
     }
 
     public static void setOutputSlot(ItemStack pattern, int slot, ItemStack stack) {
@@ -185,7 +185,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             return ItemStack.EMPTY;
         }
 
-        return ItemStack.read(pattern.getTag().getCompound(id));
+        return ItemStack.of(pattern.getTag().getCompound(id));
     }
 
     public static void setFluidInputSlot(ItemStack pattern, int slot, FluidStack stack) {

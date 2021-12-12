@@ -129,7 +129,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.relative(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.isActive() &&
