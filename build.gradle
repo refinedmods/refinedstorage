@@ -8,6 +8,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
 repositories {
     maven {
         url = "https://dvs1.progwml6.com/files/maven/"
@@ -122,6 +126,22 @@ jar {
                 "Implementation-Vendor"   : "refinedmods",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+}
+
+if (System.getenv("CURSEFORGE_TOKEN") != null) {
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_TOKEN")
+        project {
+            id = '243076'
+            changelog = System.getenv("CHANGELOG")
+            changelogType = 'markdown'
+            releaseType = project.version.toString().contains('beta') ? 'beta' : (project.version.toString().contains('alpha') ? 'alpha' : 'release')
+
+            mainArtifact(jar) {
+                displayName = "v$project.version"
+            }
+        }
     }
 }
 
