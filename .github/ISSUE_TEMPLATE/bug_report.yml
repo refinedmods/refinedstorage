@@ -1,0 +1,57 @@
+name: Bug report
+description: Found a bug or encountered a crash? Please report it here.
+labels: [ bug ]
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Provide a summary of the issue in the title above.
+    - type: textarea
+      id: description
+      attributes:
+          label: Describe the bug
+          description: |
+              Be as detailed as possible.
+              If applicable, also tell us what you expected to happen instead.
+      validations:
+          required: true
+    - type: textarea
+      id: reproduce
+      attributes:
+          label: How can we reproduce this bug or crash?
+          description: |
+              Provide us with steps on how to reproduce this issue.
+              Try to reproduce the issue with only Refined Storage installed, if possible.
+          placeholder: |
+              1.
+              2.
+              3.
+      validations:
+          required: true
+    - type: dropdown
+      id: minecraft
+      attributes:
+          label: What Minecraft version is this happening on?
+          options:
+              - Minecraft 1.18.1
+              - Minecraft 1.16.5
+    - type: input
+      id: forge
+      attributes:
+          label: What Forge version is this happening on?
+      validations:
+          required: true
+    - type: input
+      id: rs
+      attributes:
+          label: What Refined Storage version is this happening on?
+          description: |
+              Ensure that you are running on the latest Refined Storage version.
+      validations:
+          required: true
+    - type: textarea
+      id: logs
+      attributes:
+          label: Relevant log output
+          description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+          render: shell

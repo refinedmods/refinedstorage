@@ -9,7 +9,7 @@ jobs:
       - uses: dessant/support-requests@v2
         with:
           github-token: ${{ github.token }}
-          support-label: 'Unsupported'
+          support-label: 'unsupported'
           issue-comment: >
             :wave: @{issue-author}, we no longer support this version of Minecraft.
             Please see https://refinedmods.com/refined-storage/wiki/minecraft-version-support.html

@@ -1,0 +1,23 @@
+name: Enhancement
+description: Do you have a suggestion for a new feature or a way to improve Refined Storage? Let us know.
+labels: [ enhancement ]
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Provide a summary of the enhancement in the title above.
+              
+              Please follow following guidelines before proposing an enchancement:
+              1) Ensure that you are running on the latest Refined Storage version (to ensure that the enhancement does not exist yet).
+              2) Ensure that your enhancement hasn't already been posted. Please look in the closed issues as well (for enhancements that have been denied).
+              
+              We might close your issue, without explanation, if you do not follow these guidelines.
+    - type: textarea
+      id: describe
+      attributes:
+          label: Describe your enhancement
+          description: |
+              Be as detailed as possible.
+              Tell us how your idea should work. Why should we consider this?
+      validations:
+          required: true
