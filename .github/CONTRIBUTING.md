@@ -35,8 +35,6 @@ After releasing:
 
 The build pipeline triggers when a commit is pushed to a branch or pull request.
 
-All tests are run and an aggregated code coverage report is created. After that, a SonarQube analysis is run.
-
 ### Release
 
 The release pipeline triggers when a tag is pushed. This will run all the steps that our build pipeline does.
