@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
 
 public final class TimeUtils {
     private static final long SECOND = 1000;

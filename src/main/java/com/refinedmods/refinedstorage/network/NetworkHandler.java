@@ -9,12 +9,12 @@ import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeResponseMessag
 import com.refinedmods.refinedstorage.network.grid.*;
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage;
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterUpdateMessage;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     private final String protocolVersion = Integer.toString(1);
@@ -74,7 +74,7 @@ public class NetworkHandler {
         handler.registerMessage(id++, SplitPacketMessage.class, SplitPacketMessage::encode, SplitPacketMessage::decode, SplitPacketMessage::handle);
     }
 
-    public void sendTo(ServerPlayerEntity player, Object message) {
+    public void sendTo(ServerPlayer player, Object message) {
         if (!(player instanceof FakePlayer)) {
             if (splitter.shouldMessageBeSplit(message.getClass())) {
                 splitter.sendToPlayer(player, message);

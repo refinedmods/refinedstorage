@@ -6,9 +6,9 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskContainerCont
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ public class PortableItemStorageDisk implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
+    public CompoundTag writeToNbt() {
         return parent.writeToNbt();
     }
 

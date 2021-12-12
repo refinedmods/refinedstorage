@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.inventory.player;
 
 import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -26,7 +26,7 @@ public class PlayerSlot {
         this.slot = slot;
     }
 
-    public PlayerSlot(PacketBuffer buffer) {
+    public PlayerSlot(FriendlyByteBuf buffer) {
         slot = buffer.readInt();
 
         if (buffer.readBoolean()) {
@@ -34,9 +34,18 @@ public class PlayerSlot {
         }
     }
 
-    public ItemStack getStackFromSlot(PlayerEntity player) {
+    public static PlayerSlot getSlotForHand(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.MAIN_HAND) {
+            return new PlayerSlot(player.getInventory().selected);
+        }
+
+        //@Volatile Offhand Slot, could use -1 as we aren't using this anywhere.
+        return new PlayerSlot(40);
+    }
+
+    public ItemStack getStackFromSlot(Player player) {
         if (curioSlot == null || !CuriosIntegration.isLoaded()) {
-            return player.inventory.getItem(slot);
+            return player.getInventory().getItem(slot);
         }
 
         LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(player);
@@ -50,7 +59,7 @@ public class PlayerSlot {
         return stack.orElse(ItemStack.EMPTY);
     }
 
-    public void writePlayerSlot(PacketBuffer buffer) {
+    public void writePlayerSlot(FriendlyByteBuf buffer) {
         buffer.writeInt(slot);
         buffer.writeBoolean(curioSlot != null);
         if (curioSlot != null) {
@@ -63,14 +72,5 @@ public class PlayerSlot {
             return -1;
         }
         return slot;
-    }
-
-    public static PlayerSlot getSlotForHand(PlayerEntity player, Hand hand) {
-        if (hand == Hand.MAIN_HAND) {
-            return new PlayerSlot(player.inventory.selected);
-        }
-
-        //@Volatile Offhand Slot, could use -1 as we aren't using this anywhere.
-        return new PlayerSlot(40);
     }
 }

@@ -4,11 +4,11 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,29 +24,27 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
     private static final String NBT_DATA = "Data";
     private static final String NBT_POS = "Pos";
 
-    private final World world;
+    private final Level world;
 
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
 
-    public NetworkManager(String name, World world) {
-        super(name);
-
+    public NetworkManager(Level world) {
         this.world = world;
     }
 
     @Override
-    public void load(CompoundNBT tag) {
+    public void load(CompoundTag tag) {
         if (tag.contains(NBT_NETWORKS)) {
-            ListNBT networksTag = tag.getList(NBT_NETWORKS, Constants.NBT.TAG_COMPOUND);
+            ListTag networksTag = tag.getList(NBT_NETWORKS, Tag.TAG_COMPOUND);
 
             this.networks.clear();
 
             for (int i = 0; i < networksTag.size(); ++i) {
-                CompoundNBT networkTag = networksTag.getCompound(i);
+                CompoundTag networkTag = networksTag.getCompound(i);
 
-                CompoundNBT data = networkTag.getCompound(NBT_DATA);
+                CompoundTag data = networkTag.getCompound(NBT_DATA);
                 BlockPos pos = BlockPos.of(networkTag.getLong(NBT_POS));
                 int type = networkTag.getInt(NBT_TYPE);
 
@@ -64,15 +62,15 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        ListNBT list = new ListNBT();
+    public CompoundTag save(CompoundTag tag) {
+        ListTag list = new ListTag();
 
         for (INetwork network : all()) {
             try {
-                CompoundNBT networkTag = new CompoundNBT();
+                CompoundTag networkTag = new CompoundTag();
 
                 networkTag.putLong(NBT_POS, network.getPosition().asLong());
-                networkTag.put(NBT_DATA, network.writeToNbt(new CompoundNBT()));
+                networkTag.put(NBT_DATA, network.writeToNbt(new CompoundTag()));
                 networkTag.putInt(NBT_TYPE, network.getType().ordinal());
 
                 list.add(networkTag);

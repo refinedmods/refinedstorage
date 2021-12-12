@@ -4,12 +4,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
-public class ListDiskCommand implements Command<CommandSource> {
-    public static ArgumentBuilder<CommandSource, ?> register() {
+public class ListDiskCommand implements Command<CommandSourceStack> {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("list")
             .requires(cs -> cs.hasPermission(2))
             .executes(new ListDiskCommand())
@@ -17,11 +17,11 @@ public class ListDiskCommand implements Command<CommandSource> {
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) {
+    public int run(CommandContext<CommandSourceStack> context) {
         API.instance().getStorageDiskManager(context.getSource().getLevel())
             .getAll()
             .keySet()
-            .forEach(id -> context.getSource().sendSuccess(new StringTextComponent(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(new TextComponent(id.toString()), false));
 
         return 0;
     }

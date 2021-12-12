@@ -10,12 +10,12 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     public static final int VERSION = 1;
 
     @Nullable
-    private final ServerWorld world;
+    private final ServerLevel world;
     private final int capacity;
     private final Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private final UUID owner;
@@ -41,17 +41,17 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public ItemStorageDisk(@Nullable ServerWorld world, int capacity, @Nullable UUID owner) {
+    public ItemStorageDisk(@Nullable ServerLevel world, int capacity, @Nullable UUID owner) {
         this.world = world;
         this.capacity = capacity;
         this.owner = owner;
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = new CompoundTag();
 
-        ListNBT list = new ListNBT();
+        ListTag list = new ListTag();
 
         for (ItemStack stack : stacks.values()) {
             list.add(StackUtils.serializeStackToNbt(stack));

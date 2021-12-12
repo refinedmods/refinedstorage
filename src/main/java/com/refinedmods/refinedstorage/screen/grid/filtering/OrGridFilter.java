@@ -12,6 +12,16 @@ public class OrGridFilter implements Predicate<IGridStack> {
         this.orPartFilters = orPartFilters;
     }
 
+    public static Predicate<IGridStack> of(List<Predicate<IGridStack>> filters) {
+        if (filters.isEmpty()) {
+            return t -> false;
+        }
+        if (filters.size() == 1) {
+            return filters.get(0);
+        }
+        return new OrGridFilter(filters);
+    }
+
     @Override
     public boolean test(IGridStack gridStack) {
         for (Predicate<IGridStack> part : orPartFilters) {
@@ -21,15 +31,5 @@ public class OrGridFilter implements Predicate<IGridStack> {
         }
 
         return false;
-    }
-
-    public static Predicate<IGridStack> of(List<Predicate<IGridStack>> filters) {
-        if (filters.isEmpty()) {
-            return t -> false;
-        }
-        if (filters.size() == 1) {
-            return filters.get(0);
-        }
-        return new OrGridFilter(filters);
     }
 }

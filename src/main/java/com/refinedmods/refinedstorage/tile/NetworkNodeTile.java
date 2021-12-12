@@ -10,11 +10,12 @@ import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -23,14 +24,12 @@ import javax.annotation.Nullable;
 
 public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile implements INetworkNodeProxy<N>, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, NetworkNodeTile> REDSTONE_MODE = RedstoneMode.createParameter();
-
+    private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
     private N clientNode;
     private N removedNode;
 
-    private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
-
-    protected NetworkNodeTile(TileEntityType<?> tileType) {
-        super(tileType);
+    protected NetworkNodeTile(BlockEntityType<?> tileType, BlockPos pos, BlockState state) {
+        super(tileType, pos, state);
 
         dataManager.addWatchedParameter(REDSTONE_MODE);
     }
@@ -57,7 +56,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
             return clientNode;
         }
 
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) level);
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerLevel) level);
 
         INetworkNode node = manager.getNode(worldPosition);
 
@@ -73,7 +72,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         super.clearRemoved();
 
         if (!level.isClientSide) {
-            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) level);
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerLevel) level);
 
             if (manager.getNode(worldPosition) == null) {
                 manager.setNode(worldPosition, createNode(level, worldPosition));
@@ -87,7 +86,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         super.setRemoved();
 
         if (!level.isClientSide) {
-            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) level);
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerLevel) level);
 
             INetworkNode node = manager.getNode(worldPosition);
 
@@ -108,7 +107,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         return removedNode;
     }
 
-    public abstract N createNode(World world, BlockPos pos);
+    public abstract N createNode(Level world, BlockPos pos);
 
     @Nonnull
     @Override

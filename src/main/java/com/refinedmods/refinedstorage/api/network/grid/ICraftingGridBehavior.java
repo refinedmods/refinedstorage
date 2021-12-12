@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
 import com.refinedmods.refinedstorage.api.util.IStackList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +20,7 @@ public interface ICraftingGridBehavior {
      * @param availableItems the items available for shift crafting
      * @param usedItems      the items used by shift crafting
      */
-    void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems);
+    void onCrafted(INetworkAwareGrid grid, CraftingRecipe recipe, Player player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems);
 
     /**
      * Logic for crafting with shift click (mass crafting).
@@ -28,7 +28,7 @@ public interface ICraftingGridBehavior {
      * @param grid   the grid
      * @param player the player
      */
-    void onCraftedShift(INetworkAwareGrid grid, PlayerEntity player);
+    void onCraftedShift(INetworkAwareGrid grid, Player player);
 
     /**
      * Logic for when a recipe is transferred to the grid.
@@ -37,5 +37,5 @@ public interface ICraftingGridBehavior {
      * @param player the player
      * @param recipe the recipe
      */
-    void onRecipeTransfer(INetworkAwareGrid grid, PlayerEntity player, ItemStack[][] recipe);
+    void onRecipeTransfer(INetworkAwareGrid grid, Player player, ItemStack[][] recipe);
 }

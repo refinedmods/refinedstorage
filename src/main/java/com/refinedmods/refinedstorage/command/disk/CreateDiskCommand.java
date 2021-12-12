@@ -8,39 +8,39 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.command.arguments.UUIDArgument;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.UuidArgument;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 
-public class CreateDiskCommand implements Command<CommandSource> {
-    public static ArgumentBuilder<CommandSource, ?> register() {
+public class CreateDiskCommand implements Command<CommandSourceStack> {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("create")
             .requires(cs -> cs.hasPermission(2))
             .then(Commands.argument("player", EntityArgument.player())
-                .then(Commands.argument("id", UUIDArgument.uuid()).suggests(new StorageDiskIdSuggestionProvider())
+                .then(Commands.argument("id", UuidArgument.uuid()).suggests(new StorageDiskIdSuggestionProvider())
                     .executes(new CreateDiskCommand())
                 )
             );
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        PlayerEntity player = EntityArgument.getPlayer(context, "player");
-        UUID id = UUIDArgument.getUuid(context, "id");
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Player player = EntityArgument.getPlayer(context, "player");
+        UUID id = UuidArgument.getUuid(context, "id");
 
         IStorageDisk<?> disk = API.instance().getStorageDiskManager(context.getSource().getLevel()).get(id);
         if (disk == null) {
-            context.getSource().sendFailure(new TranslationTextComponent("commands.refinedstorage.disk.create.error.disk_not_found", id));
+            context.getSource().sendFailure(new TranslatableComponent("commands.refinedstorage.disk.create.error.disk_not_found", id));
         } else {
             IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(disk.getFactoryId());
 
@@ -48,7 +48,7 @@ public class CreateDiskCommand implements Command<CommandSource> {
                 ItemStack stack = factory.createDiskItem(disk, id);
 
                 // @Volatile: From GiveCommand
-                boolean flag = player.inventory.add(stack);
+                boolean flag = player.getInventory().add(stack);
                 if (flag && stack.isEmpty()) {
                     stack.setCount(1);
 
@@ -57,8 +57,8 @@ public class CreateDiskCommand implements Command<CommandSource> {
                         itemEntity.makeFakeItem();
                     }
 
-                    player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    player.inventoryMenu.broadcastChanges();
+                    player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    // TODO player.getInventory().broadcastChanges();
                 } else {
                     ItemEntity itemEntity = player.drop(stack, false);
                     if (itemEntity != null) {
@@ -67,9 +67,9 @@ public class CreateDiskCommand implements Command<CommandSource> {
                     }
                 }
 
-                context.getSource().sendSuccess(new TranslationTextComponent(
+                context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.refinedstorage.disk.create.success",
-                    new StringTextComponent(id.toString()).setStyle(Styles.YELLOW),
+                    new TextComponent(id.toString()).setStyle(Styles.YELLOW),
                     context.getSource().getDisplayName().copy().setStyle(Styles.YELLOW)
                 ), false);
             }

@@ -11,44 +11,42 @@ import com.refinedmods.refinedstorage.container.transfer.TransferManager;
 import com.refinedmods.refinedstorage.network.FluidFilterSlotUpdateMessage;
 import com.refinedmods.refinedstorage.tile.BaseTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataWatcher;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseContainer extends Container {
+public abstract class BaseContainer extends AbstractContainerMenu {
+    protected final TransferManager transferManager = new TransferManager(this);
     @Nullable
     private final BaseTile tile;
-    @Nullable
-    private TileDataWatcher listener;
-    private final PlayerEntity player;
-
-    protected final TransferManager transferManager = new TransferManager(this);
-
+    private final Player player;
     private final List<FluidFilterSlot> fluidSlots = new ArrayList<>();
     private final List<FluidStack> fluids = new ArrayList<>();
+    @Nullable
+    private TileDataWatcher listener;
 
-    protected BaseContainer(@Nullable ContainerType<?> type, @Nullable BaseTile tile, PlayerEntity player, int windowId) {
+    protected BaseContainer(@Nullable MenuType<?> type, @Nullable BaseTile tile, Player player, int windowId) {
         super(type, windowId);
 
         this.tile = tile;
 
-        if (tile != null && player instanceof ServerPlayerEntity) {
-            listener = new TileDataWatcher((ServerPlayerEntity) player, tile.getDataManager());
+        if (tile != null && player instanceof ServerPlayer) {
+            listener = new TileDataWatcher((ServerPlayer) player, tile.getDataManager());
         }
 
         this.player = player;
     }
 
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
@@ -65,9 +63,9 @@ public abstract class BaseContainer extends Container {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 if (id == disabledSlotNumber) {
-                    addSlot(new LegacyDisabledSlot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+                    addSlot(new LegacyDisabledSlot(player.getInventory(), id, xInventory + x * 18, yInventory + y * 18));
                 } else {
-                    addSlot(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+                    addSlot(new Slot(player.getInventory(), id, xInventory + x * 18, yInventory + y * 18));
                 }
 
                 id++;
@@ -81,9 +79,9 @@ public abstract class BaseContainer extends Container {
             int y = yInventory + 4 + (3 * 18);
 
             if (id == disabledSlotNumber) {
-                addSlot(new LegacyDisabledSlot(player.inventory, id, x, y));
+                addSlot(new LegacyDisabledSlot(player.getInventory(), id, x, y));
             } else {
-                addSlot(new Slot(player.inventory, id, x, y));
+                addSlot(new Slot(player.getInventory(), id, x, y));
             }
 
             id++;
@@ -95,7 +93,7 @@ public abstract class BaseContainer extends Container {
     }
 
     @Override
-    public ItemStack clicked(int id, int dragType, ClickType clickType, PlayerEntity player) {
+    public void clicked(int id, int dragType, ClickType clickType, Player player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         int disabledSlotNumber = getDisabledSlotNumber();
@@ -104,59 +102,59 @@ public abstract class BaseContainer extends Container {
         if (disabledSlotNumber != -1 &&
             clickType == ClickType.SWAP &&
             dragType == disabledSlotNumber) {
-            return ItemStack.EMPTY;
+            return;
         }
 
         if (slot instanceof FilterSlot) {
             if (((FilterSlot) slot).isSizeAllowed()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.set(ItemStack.EMPTY);
-                } else if (!player.inventory.getCarried().isEmpty()) {
-                    slot.set(player.inventory.getCarried().copy());
+                } else if (!player.containerMenu.getCarried().isEmpty()) {
+                    slot.set(player.containerMenu.getCarried().copy());
                 }
-            } else if (player.inventory.getCarried().isEmpty()) {
+            } else if (player.containerMenu.getCarried().isEmpty()) {
                 slot.set(ItemStack.EMPTY);
-            } else if (slot.mayPlace(player.inventory.getCarried())) {
-                slot.set(player.inventory.getCarried().copy());
+            } else if (slot.mayPlace(player.containerMenu.getCarried())) {
+                slot.set(player.containerMenu.getCarried().copy());
             }
 
-            return player.inventory.getCarried();
+            return;
         } else if (slot instanceof FluidFilterSlot) {
             if (((FluidFilterSlot) slot).isSizeAllowed()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     ((FluidFilterSlot) slot).onContainerClicked(ItemStack.EMPTY);
-                } else if (!player.inventory.getCarried().isEmpty()) {
-                    ((FluidFilterSlot) slot).onContainerClicked(player.inventory.getCarried());
+                } else if (!player.containerMenu.getCarried().isEmpty()) {
+                    ((FluidFilterSlot) slot).onContainerClicked(player.containerMenu.getCarried());
                 }
-            } else if (player.inventory.getCarried().isEmpty()) {
+            } else if (player.containerMenu.getCarried().isEmpty()) {
                 ((FluidFilterSlot) slot).onContainerClicked(ItemStack.EMPTY);
             } else {
-                ((FluidFilterSlot) slot).onContainerClicked(player.inventory.getCarried());
+                ((FluidFilterSlot) slot).onContainerClicked(player.containerMenu.getCarried());
             }
 
-            return player.inventory.getCarried();
+            return;
         } else if (slot instanceof LegacyFilterSlot) {
-            if (player.inventory.getCarried().isEmpty()) {
+            if (player.containerMenu.getCarried().isEmpty()) {
                 slot.set(ItemStack.EMPTY);
-            } else if (slot.mayPlace(player.inventory.getCarried())) {
-                slot.set(player.inventory.getCarried().copy());
+            } else if (slot.mayPlace(player.containerMenu.getCarried())) {
+                slot.set(player.containerMenu.getCarried().copy());
             }
 
-            return player.inventory.getCarried();
+            return;
         } else if (slot instanceof LegacyDisabledSlot) {
-            return ItemStack.EMPTY;
+            return;
         }
 
-        return super.clicked(id, dragType, clickType, player);
+        super.clicked(id, dragType, clickType, player);
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int slotIndex) {
+    public ItemStack quickMoveStack(Player player, int slotIndex) {
         return transferManager.transfer(slotIndex);
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return isTileStillThere();
     }
 
@@ -201,7 +199,7 @@ public abstract class BaseContainer extends Container {
             listener.detectAndSendChanges();
         }
 
-        if (this.getPlayer() instanceof ServerPlayerEntity) {
+        if (this.getPlayer() instanceof ServerPlayer) {
             for (int i = 0; i < this.fluidSlots.size(); ++i) {
                 FluidFilterSlot slot = this.fluidSlots.get(i);
 
@@ -211,14 +209,14 @@ public abstract class BaseContainer extends Container {
                 if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
                     this.fluids.set(i, actual.copy());
 
-                    RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new FluidFilterSlotUpdateMessage(((Slot)slot).index, actual));
+                    RS.NETWORK_HANDLER.sendTo((ServerPlayer) getPlayer(), new FluidFilterSlotUpdateMessage(((Slot) slot).index, actual));
                 }
             }
         }
     }
 
     @Override
-    public void removed(PlayerEntity player) {
+    public void removed(Player player) {
         super.removed(player);
 
         if (listener != null) {

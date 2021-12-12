@@ -1,17 +1,13 @@
 package com.refinedmods.refinedstorage.render;
 
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BakedModelOverrideRegistry {
-    public interface BakedModelOverrideFactory {
-        IBakedModel create(IBakedModel base, Map<ResourceLocation, IBakedModel> registry);
-    }
-
     private final Map<ResourceLocation, BakedModelOverrideFactory> registry = new HashMap<>();
 
     public void add(ResourceLocation id, BakedModelOverrideFactory factory) {
@@ -21,5 +17,9 @@ public class BakedModelOverrideRegistry {
     @Nullable
     public BakedModelOverrideFactory get(ResourceLocation id) {
         return registry.get(id);
+    }
+
+    public interface BakedModelOverrideFactory {
+        BakedModel create(BakedModel base, Map<ResourceLocation, BakedModel> registry);
     }
 }

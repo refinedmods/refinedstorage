@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.render.model;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,24 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PortableGridItemBakedModel implements IBakedModel {
-    private final IBakedModel base;
+public class PortableGridItemBakedModel implements BakedModel {
+    private final BakedModel base;
     @Nullable
-    private final IBakedModel disk;
+    private final BakedModel disk;
 
-    public PortableGridItemBakedModel(IBakedModel base, @Nullable IBakedModel disk) {
+    public PortableGridItemBakedModel(BakedModel base, @Nullable BakedModel disk) {
         this.base = base;
         this.disk = disk;
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getTransforms() {
+    public ItemTransforms getTransforms() {
         return base.getTransforms();
     }
 

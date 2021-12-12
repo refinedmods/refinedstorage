@@ -10,12 +10,12 @@ import com.refinedmods.refinedstorage.api.network.INetworkNodeGraphEntry;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.calculator.CalculationResult;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +36,7 @@ public class CraftingManager implements ICraftingManager {
 
     private final INetwork network;
 
-    private final Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private final Map<Component, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
     private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private final List<ICraftingPattern> patterns = new ArrayList<>();
@@ -44,11 +44,9 @@ public class CraftingManager implements ICraftingManager {
     private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private final List<UUID> tasksToCancel = new ArrayList<>();
-    private ListNBT tasksToRead;
-
     private final Map<Object, Long> throttledRequesters = new HashMap<>();
-
     private final Set<ICraftingMonitorListener> listeners = new HashSet<>();
+    private ListTag tasksToRead;
 
     public CraftingManager(INetwork network) {
         this.network = network;
@@ -66,7 +64,7 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers() {
+    public Map<Component, List<IItemHandlerModifiable>> getNamedContainers() {
         return containerInventories;
     }
 
@@ -179,10 +177,10 @@ public class CraftingManager implements ICraftingManager {
 
     private void readTasks() {
         for (int i = 0; i < tasksToRead.size(); ++i) {
-            CompoundNBT taskTag = tasksToRead.getCompound(i);
+            CompoundTag taskTag = tasksToRead.getCompound(i);
 
             ResourceLocation taskType = new ResourceLocation(taskTag.getString(NBT_TASK_TYPE));
-            CompoundNBT taskData = taskTag.getCompound(NBT_TASK_DATA);
+            CompoundTag taskData = taskTag.getCompound(NBT_TASK_DATA);
 
             ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
             if (factory != null) {
@@ -200,19 +198,19 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void readFromNbt(CompoundNBT tag) {
-        this.tasksToRead = tag.getList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
+    public void readFromNbt(CompoundTag tag) {
+        this.tasksToRead = tag.getList(NBT_TASKS, Tag.TAG_COMPOUND);
     }
 
     @Override
-    public CompoundNBT writeToNbt(CompoundNBT tag) {
-        ListNBT list = new ListNBT();
+    public CompoundTag writeToNbt(CompoundTag tag) {
+        ListTag list = new ListTag();
 
         for (ICraftingTask task : tasks.values()) {
-            CompoundNBT taskTag = new CompoundNBT();
+            CompoundTag taskTag = new CompoundTag();
 
             taskTag.putString(NBT_TASK_TYPE, task.getPattern().getCraftingTaskFactoryId().toString());
-            taskTag.put(NBT_TASK_DATA, task.writeToNbt(new CompoundNBT()));
+            taskTag.put(NBT_TASK_DATA, task.writeToNbt(new CompoundTag()));
 
             list.add(taskTag);
         }

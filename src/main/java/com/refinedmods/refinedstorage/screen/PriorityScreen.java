@@ -2,23 +2,23 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class PriorityScreen extends AmountSpecifyingScreen<Container> {
+public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu> {
     private final TileDataParameter<Integer, ?> priority;
 
-    public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
-        super(parent, new Container(null, 0) {
+    public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, Inventory inventory) {
+        super(parent, new AbstractContainerMenu(null, 0) {
             @Override
-            public boolean stillValid(PlayerEntity player) {
+            public boolean stillValid(Player player) {
                 return false;
             }
-        }, 164, 92, inventory, new TranslationTextComponent("misc.refinedstorage.priority"));
+        }, 164, 92, inventory, new TranslatableComponent("misc.refinedstorage.priority"));
 
         this.priority = priority;
     }
@@ -29,8 +29,8 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
     }
 
     @Override
-    protected ITextComponent getOkButtonText() {
-        return new TranslationTextComponent("misc.refinedstorage.set");
+    protected Component getOkButtonText() {
+        return new TranslatableComponent("misc.refinedstorage.set");
     }
 
     @Override

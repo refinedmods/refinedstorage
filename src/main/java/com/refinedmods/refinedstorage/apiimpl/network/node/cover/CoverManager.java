@@ -1,19 +1,17 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node.cover;
 
-import com.refinedmods.refinedstorage.api.network.node.ICoverable;
-import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.Action;
-import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.item.CoverItem;
-import net.minecraft.block.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -24,19 +22,69 @@ import java.util.Map;
 
 public class CoverManager {
 
-    public static String NBT_COVER_MANAGER = "Cover";
-
     public static final ModelProperty<CoverManager> PROPERTY = new ModelProperty<>();
-
     private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_ITEM = "Item";
     private static final String NBT_TYPE = "Type";
-
+    public static String NBT_COVER_MANAGER = "Cover";
     private Map<Direction, Cover> covers = new HashMap<>();
     private NetworkNode node;
 
     public CoverManager(NetworkNode node) {
         this.node = node;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static boolean isValidCover(ItemStack item) {
+        if (item.isEmpty()) {
+            return false;
+        }
+
+        Block block = getBlock(item);
+
+        BlockState state = getBlockState(item);
+
+        return block != null
+            && state != null
+            && isModelSupported(state)
+            && !block.isRandomlyTicking(state)
+            && !(block instanceof EntityBlock)
+            && !state.useShapeForLightOcclusion();
+    }
+
+    private static boolean isModelSupported(BlockState state) {
+        if (state.getRenderShape() != RenderShape.MODEL) {
+            return false;
+        }
+
+        return state.canOcclude();
+    }
+
+    @Nullable
+    public static Block getBlock(ItemStack item) {
+        if (item.isEmpty()) {
+            return null;
+        }
+
+        Block block = Block.byItem(item.getItem());
+
+        if (block == Blocks.AIR) {
+            return null;
+        }
+
+        return block;
+    }
+
+    @Nullable
+    @SuppressWarnings("deprecation")
+    public static BlockState getBlockState(ItemStack item) {
+        Block block = getBlock(item);
+
+        if (block == null) {
+            return null;
+        }
+
+        return block.defaultBlockState();
     }
 
     @Nullable
@@ -75,8 +123,8 @@ public class CoverManager {
     }
 
     @Nullable
-    public Cover removeCover(Direction direction){
-        if (hasCover(direction)){
+    public Cover removeCover(Direction direction) {
+        if (hasCover(direction)) {
             Cover cover = covers.remove(direction);
 
             node.markDirty();
@@ -90,10 +138,10 @@ public class CoverManager {
         return null;
     }
 
-    public void readFromNbt(CompoundNBT nbt) {
+    public void readFromNbt(CompoundTag nbt) {
         covers.clear();
         for (String s : nbt.getAllKeys()) {
-            CompoundNBT tag = nbt.getCompound(s);
+            CompoundTag tag = nbt.getCompound(s);
             if (tag.contains(NBT_DIRECTION) && tag.contains(NBT_ITEM)) {
                 Direction direction = Direction.from3DDataValue(tag.getInt(NBT_DIRECTION));
                 ItemStack item = ItemStack.of(tag.getCompound(NBT_ITEM));
@@ -110,17 +158,17 @@ public class CoverManager {
         }
     }
 
-    public CompoundNBT writeToNbt() {
-        CompoundNBT list = new CompoundNBT();
+    public CompoundTag writeToNbt() {
+        CompoundTag list = new CompoundTag();
 
         for (Map.Entry<Direction, Cover> entry : covers.entrySet()) {
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
 
             tag.putInt(NBT_DIRECTION, entry.getKey().ordinal());
             tag.put(NBT_ITEM, entry.getValue().getStack().serializeNBT());
             tag.putInt(NBT_TYPE, entry.getValue().getType().ordinal());
 
-            list.put(entry.getKey().ordinal() + "",tag);
+            list.put(entry.getKey().ordinal() + "", tag);
         }
         return list;
     }
@@ -141,53 +189,4 @@ public class CoverManager {
         return handler;
     }
 
-    @SuppressWarnings("deprecation")
-    public static boolean isValidCover(ItemStack item) {
-        if (item.isEmpty()) {
-            return false;
-        }
-
-        Block block = getBlock(item);
-
-        BlockState state = getBlockState(item);
-
-        return block != null && state != null && isModelSupported(state) && !block.isRandomlyTicking(state)
-                && !block.hasTileEntity(state) && !state.useShapeForLightOcclusion(); //Changed from 1.12: to use 1.16 methods
-    }
-
-    private static boolean isModelSupported(BlockState state) {
-        if (state.getRenderShape() != BlockRenderType.MODEL) {
-            return false;
-        }
-
-        return state.canOcclude();
-    }
-
-    @Nullable
-    public static Block getBlock(ItemStack item) {
-        if (item.isEmpty()) {
-            return null;
-        }
-
-        Block block = Block.byItem(item.getItem());
-
-        if (block == Blocks.AIR) {
-            return null;
-        }
-
-        return block;
-    }
-
-    @Nullable
-    @SuppressWarnings("deprecation")
-    public static BlockState getBlockState(ItemStack item) {
-        Block block = getBlock(item);
-
-        if (block == null) {
-            return null;
-        }
-
-        return block.defaultBlockState();
-    }
-    
 }

@@ -3,25 +3,22 @@ package com.refinedmods.refinedstorage.recipe;
 
 import com.google.common.collect.Lists;
 import com.refinedmods.refinedstorage.RSItems;
-import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.item.CoverItem;
-import com.refinedmods.refinedstorage.item.WrenchItem;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 
 import java.util.List;
 
-public class CoverRecipe extends SpecialRecipe {
+public class CoverRecipe extends CustomRecipe {
 
-    public static IRecipeSerializer<CoverRecipe> SERIALIZER = new SpecialRecipeSerializer<>(CoverRecipe::new);
+    public static RecipeSerializer<CoverRecipe> SERIALIZER = new SimpleRecipeSerializer<>(CoverRecipe::new);
 
     public CoverRecipe(ResourceLocation idIn) {
         super(idIn);
@@ -44,14 +41,14 @@ public class CoverRecipe extends SpecialRecipe {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack getResult(ItemStack first, ItemStack second){
-        if (first.getItem().is(Tags.Items.NUGGETS_IRON)){
+    public static ItemStack getResult(ItemStack first, ItemStack second) {
+        if (first.is(Tags.Items.NUGGETS_IRON)) {
             ItemStack stack = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(stack, second);
             stack.setCount(6);
             return stack;
         }
-        if (second.getItem().is(Tags.Items.NUGGETS_IRON)){
+        if (second.is(Tags.Items.NUGGETS_IRON)) {
             ItemStack stack = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(stack, first);
             stack.setCount(6);
@@ -61,16 +58,16 @@ public class CoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn) {
+    public boolean matches(CraftingContainer inv, Level worldIn) {
         List<ItemStack> list = Lists.newArrayList();
         int ingots = 0;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
-                if (itemstack.getItem().is(Tags.Items.NUGGETS_IRON)){
+                if (itemstack.is(Tags.Items.NUGGETS_IRON)) {
                     ++ingots;
-                } else if (!stackMatches(itemstack)){
+                } else if (!stackMatches(itemstack)) {
                     return false;
                 }
             }
@@ -79,21 +76,21 @@ public class CoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         List<ItemStack> list = Lists.newArrayList();
         int ingots = 0;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
-                if (itemstack.getItem().is(Tags.Items.NUGGETS_IRON)){
+                if (itemstack.is(Tags.Items.NUGGETS_IRON)) {
                     ++ingots;
-                } else if (!stackMatches(itemstack)){
+                } else if (!stackMatches(itemstack)) {
                     return ItemStack.EMPTY;
                 }
             }
         }
-        if (ingots > 1){
+        if (ingots > 1) {
             return ItemStack.EMPTY;
         }
         return getResult(list);
@@ -105,7 +102,7 @@ public class CoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return SERIALIZER;
     }
 }

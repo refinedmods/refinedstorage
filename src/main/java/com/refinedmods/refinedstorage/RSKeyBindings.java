@@ -1,54 +1,54 @@
 package com.refinedmods.refinedstorage;
 
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class RSKeyBindings {
-    public static final KeyBinding FOCUS_SEARCH_BAR = new KeyBinding(
+    public static final KeyMapping FOCUS_SEARCH_BAR = new KeyMapping(
         "key.refinedstorage.focusSearchBar",
         KeyConflictContext.GUI,
-        InputMappings.Type.KEYSYM,
+        InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_TAB,
         RS.NAME
     );
 
-    public static final KeyBinding CLEAR_GRID_CRAFTING_MATRIX = new KeyBinding(
+    public static final KeyMapping CLEAR_GRID_CRAFTING_MATRIX = new KeyMapping(
         "key.refinedstorage.clearGridCraftingMatrix",
         KeyConflictContext.GUI,
         KeyModifier.CONTROL,
-        InputMappings.Type.KEYSYM,
+        InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_X,
         RS.NAME
     );
 
-    public static final KeyBinding OPEN_WIRELESS_GRID = new KeyBinding(
+    public static final KeyMapping OPEN_WIRELESS_GRID = new KeyMapping(
         "key.refinedstorage.openWirelessGrid",
         KeyConflictContext.IN_GAME,
-        InputMappings.UNKNOWN,
+        InputConstants.UNKNOWN,
         RS.NAME
     );
 
-    public static final KeyBinding OPEN_WIRELESS_FLUID_GRID = new KeyBinding(
+    public static final KeyMapping OPEN_WIRELESS_FLUID_GRID = new KeyMapping(
         "key.refinedstorage.openWirelessFluidGrid",
         KeyConflictContext.IN_GAME,
-        InputMappings.UNKNOWN,
+        InputConstants.UNKNOWN,
         RS.NAME
     );
 
-    public static final KeyBinding OPEN_WIRELESS_CRAFTING_MONITOR = new KeyBinding(
+    public static final KeyMapping OPEN_WIRELESS_CRAFTING_MONITOR = new KeyMapping(
         "key.refinedstorage.openWirelessCraftingMonitor",
         KeyConflictContext.IN_GAME,
-        InputMappings.UNKNOWN,
+        InputConstants.UNKNOWN,
         RS.NAME
     );
 
-    public static final KeyBinding OPEN_PORTABLE_GRID = new KeyBinding(
+    public static final KeyMapping OPEN_PORTABLE_GRID = new KeyMapping(
         "key.refinedstorage.openPortableGrid",
         KeyConflictContext.IN_GAME,
-        InputMappings.UNKNOWN,
+        InputConstants.UNKNOWN,
         RS.NAME
     );
 

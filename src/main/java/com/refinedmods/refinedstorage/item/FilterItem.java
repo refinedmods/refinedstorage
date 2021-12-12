@@ -10,20 +10,20 @@ import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItem
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class FilterItem extends Item {
+    public static final String NBT_FLUID_FILTERS = "FluidFilters";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_MOD_FILTER = "ModFilter";
@@ -38,54 +39,9 @@ public class FilterItem extends Item {
     private static final String NBT_ICON = "Icon";
     private static final String NBT_FLUID_ICON = "FluidIcon";
     private static final String NBT_TYPE = "Type";
-    public static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     public FilterItem() {
         super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
-    }
-
-    @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-
-        if (!world.isClientSide) {
-            if (player.isCrouching()) {
-                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER.get()));
-            }
-
-            player.openMenu(new INamedContainerProvider() {
-                @Override
-                public ITextComponent getDisplayName() {
-                    return new TranslationTextComponent("gui.refinedstorage.filter");
-                }
-
-                @Override
-                public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-                    return new FilterContainer(player, inventory.getSelected(), windowId);
-                }
-            });
-        }
-
-        return new ActionResult<>(ActionResultType.CONSUME, stack);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
-
-        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
-
-        if (isModFilter(stack)) {
-            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
-        }
-
-        RenderUtils.addCombinedItemsToTooltip(tooltip, false, new ConfiguredItemsInFilterItemHandler(stack).getConfiguredItems());
-        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, new ConfiguredFluidsInFilterItemHandler(stack).getConfiguredFluids());
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
     }
 
     public static int getCompare(ItemStack stack) {
@@ -94,7 +50,7 @@ public class FilterItem extends Item {
 
     public static void setCompare(ItemStack stack, int compare) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().putInt(NBT_COMPARE, compare);
@@ -106,7 +62,7 @@ public class FilterItem extends Item {
 
     public static void setMode(ItemStack stack, int mode) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().putInt(NBT_MODE, mode);
@@ -118,7 +74,7 @@ public class FilterItem extends Item {
 
     public static void setModFilter(ItemStack stack, boolean modFilter) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().putBoolean(NBT_MOD_FILTER, modFilter);
@@ -130,7 +86,7 @@ public class FilterItem extends Item {
 
     public static void setName(ItemStack stack, String name) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().putString(NBT_NAME, name);
@@ -143,7 +99,7 @@ public class FilterItem extends Item {
 
     public static void setIcon(ItemStack stack, ItemStack icon) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().put(NBT_ICON, icon.serializeNBT());
@@ -151,13 +107,13 @@ public class FilterItem extends Item {
 
     public static void setFluidIcon(ItemStack stack, @Nullable FluidStack icon) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         if (icon == null) {
             stack.getTag().remove(NBT_FLUID_ICON);
         } else {
-            stack.getTag().put(NBT_FLUID_ICON, icon.writeToNBT(new CompoundNBT()));
+            stack.getTag().put(NBT_FLUID_ICON, icon.writeToNBT(new CompoundTag()));
         }
     }
 
@@ -172,9 +128,53 @@ public class FilterItem extends Item {
 
     public static void setType(ItemStack stack, int type) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().putInt(NBT_TYPE, type);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (!world.isClientSide) {
+            if (player.isCrouching()) {
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, new ItemStack(RSItems.FILTER.get()));
+            }
+
+            player.openMenu(new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return new TranslatableComponent("gui.refinedstorage.filter");
+                }
+
+                @Override
+                public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+                    return new FilterContainer(player, inventory.getSelected(), windowId);
+                }
+            });
+        }
+
+        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
+
+        tooltip.add(new TranslatableComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
+
+        if (isModFilter(stack)) {
+            tooltip.add(new TranslatableComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
+        }
+
+        RenderUtils.addCombinedItemsToTooltip(tooltip, false, new ConfiguredItemsInFilterItemHandler(stack).getConfiguredItems());
+        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, new ConfiguredFluidsInFilterItemHandler(stack).getConfiguredFluids());
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
     }
 }

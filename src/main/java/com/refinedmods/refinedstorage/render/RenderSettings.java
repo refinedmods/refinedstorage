@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.render;
 
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 public class RenderSettings {
     public static final RenderSettings INSTANCE = new RenderSettings();
@@ -20,7 +20,7 @@ public class RenderSettings {
         }
 
         if (secondaryColor == -1) {
-            this.secondaryColor = TextFormatting.WHITE.getColor();
+            this.secondaryColor = ChatFormatting.WHITE.getColor();
         } else {
             this.secondaryColor = secondaryColor;
         }

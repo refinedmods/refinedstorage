@@ -13,11 +13,11 @@ import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -25,13 +25,10 @@ import javax.annotation.Nullable;
 
 public class DetectorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "detector");
-
-    private static final int SPEED = 5;
-
     public static final int MODE_UNDER = 0;
     public static final int MODE_EQUAL = 1;
     public static final int MODE_ABOVE = 2;
-
+    private static final int SPEED = 5;
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_AMOUNT = "Amount";
@@ -49,7 +46,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     private boolean powered = false;
     private boolean wasPowered;
 
-    public DetectorNetworkNode(World world, BlockPos pos) {
+    public DetectorNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -166,7 +163,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
@@ -182,7 +179,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_COMPARE)) {

@@ -7,9 +7,9 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -98,7 +98,7 @@ public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
+    public CompoundTag writeToNbt() {
         return parent.writeToNbt();
     }
 

@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.container.transfer;
 
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
@@ -20,12 +20,12 @@ import java.util.function.Supplier;
 
 public class TransferManager {
     private final Map<IInventoryWrapper, List<IInventoryWrapper>> fromToMap = new HashMap<>();
-    private final Container container;
+    private final AbstractContainerMenu container;
 
     @Nullable
     private Function<Integer, ItemStack> notFoundHandler;
 
-    public TransferManager(Container container) {
+    public TransferManager(AbstractContainerMenu container) {
         this.container = container;
     }
 
@@ -37,31 +37,31 @@ public class TransferManager {
         this.notFoundHandler = handler;
     }
 
-    public void addTransfer(IInventory from, IItemHandler to) {
+    public void addTransfer(Container from, IItemHandler to) {
         addTransfer(new InventoryInventoryWrapper(from), new ItemHandlerInventoryWrapper(to));
     }
 
-    public void addTransfer(IInventory from, IInventory to) {
+    public void addTransfer(Container from, Container to) {
         addTransfer(new InventoryInventoryWrapper(from), new InventoryInventoryWrapper(to));
     }
 
-    public void addFilterTransfer(IInventory from, IItemHandlerModifiable itemTo, FluidInventory fluidTo, Supplier<Integer> typeGetter) {
+    public void addFilterTransfer(Container from, IItemHandlerModifiable itemTo, FluidInventory fluidTo, Supplier<Integer> typeGetter) {
         addTransfer(new InventoryInventoryWrapper(from), new FilterInventoryWrapper(itemTo, fluidTo, typeGetter));
     }
 
-    public void addItemFilterTransfer(IInventory from, IItemHandlerModifiable to) {
+    public void addItemFilterTransfer(Container from, IItemHandlerModifiable to) {
         addTransfer(new InventoryInventoryWrapper(from), new ItemFilterInventoryWrapper(to));
     }
 
-    public void addFluidFilterTransfer(IInventory from, FluidInventory to) {
+    public void addFluidFilterTransfer(Container from, FluidInventory to) {
         addTransfer(new InventoryInventoryWrapper(from), new FluidFilterInventoryWrapper(to));
     }
 
-    public void addTransfer(IItemHandler from, IInventory to) {
+    public void addTransfer(IItemHandler from, Container to) {
         addTransfer(new ItemHandlerInventoryWrapper(from), new InventoryInventoryWrapper(to));
     }
 
-    public void addBiTransfer(IInventory from, IItemHandler to) {
+    public void addBiTransfer(Container from, IItemHandler to) {
         addTransfer(from, to);
         addTransfer(to, from);
     }

@@ -3,11 +3,11 @@ package com.refinedmods.refinedstorage.render.model;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -22,33 +22,17 @@ public class FullbrightBakedModel extends DelegateBakedModel {
             return transformQuads(key.base.getQuads(key.state, key.side, key.random, EmptyModelData.INSTANCE), key.textures);
         }
     });
-
-    public static void invalidateCache() {
-        CACHE.invalidateAll();
-    }
-
     private final Set<ResourceLocation> textures;
     private final boolean doCaching;
-
-    public FullbrightBakedModel(IBakedModel base, boolean doCaching, ResourceLocation... textures) {
+    public FullbrightBakedModel(BakedModel base, boolean doCaching, ResourceLocation... textures) {
         super(base);
 
         this.textures = new HashSet<>(Arrays.asList(textures));
         this.doCaching = doCaching;
     }
 
-    @Override
-    @Nonnull
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
-        if (state == null) {
-            return base.getQuads(state, side, rand, data);
-        }
-
-        if (!doCaching) {
-            return transformQuads(base.getQuads(state, side, rand, data), textures);
-        }
-
-        return CACHE.getUnchecked(new CacheKey(base, textures, rand, state, side));
+    public static void invalidateCache() {
+        CACHE.invalidateAll();
     }
 
     private static List<BakedQuad> transformQuads(List<BakedQuad> oldQuads, Set<ResourceLocation> textures) {
@@ -84,14 +68,28 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         );
     }
 
+    @Override
+    @Nonnull
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+        if (state == null) {
+            return base.getQuads(state, side, rand, data);
+        }
+
+        if (!doCaching) {
+            return transformQuads(base.getQuads(state, side, rand, data), textures);
+        }
+
+        return CACHE.getUnchecked(new CacheKey(base, textures, rand, state, side));
+    }
+
     private static class CacheKey {
-        private final IBakedModel base;
+        private final BakedModel base;
         private final Set<ResourceLocation> textures;
         private final Random random;
         private final BlockState state;
         private final Direction side;
 
-        public CacheKey(IBakedModel base, Set<ResourceLocation> textures, Random random, BlockState state, Direction side) {
+        public CacheKey(BakedModel base, Set<ResourceLocation> textures, Random random, BlockState state, Direction side) {
             this.base = base;
             this.textures = textures;
             this.random = random;

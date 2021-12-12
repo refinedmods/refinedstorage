@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.tile.DiskDriveTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskDriveContainer extends BaseContainer {
-    public DiskDriveContainer(DiskDriveTile diskDrive, PlayerEntity player, int windowId) {
+    public DiskDriveContainer(DiskDriveTile diskDrive, Player player, int windowId) {
         super(RSContainers.DISK_DRIVE, diskDrive, player, windowId);
 
         int x = 80;
@@ -29,7 +29,7 @@ public class DiskDriveContainer extends BaseContainer {
 
         addPlayerInventory(8, 141);
 
-        transferManager.addBiTransfer(player.inventory, diskDrive.getNode().getDisks());
-        transferManager.addFilterTransfer(player.inventory, diskDrive.getNode().getItemFilters(), diskDrive.getNode().getFluidFilters(), diskDrive.getNode()::getType);
+        transferManager.addBiTransfer(player.getInventory(), diskDrive.getNode().getDisks());
+        transferManager.addFilterTransfer(player.getInventory(), diskDrive.getNode().getItemFilters(), diskDrive.getNode().getFluidFilters(), diskDrive.getNode()::getType);
     }
 }

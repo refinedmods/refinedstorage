@@ -16,13 +16,13 @@ import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -61,7 +61,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING).addListener(new NetworkNodeInventoryListener(this));
 
-    public FluidInterfaceNetworkNode(World world, BlockPos pos) {
+    public FluidInterfaceNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -155,7 +155,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.relative(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos.relative(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.isActive() &&
@@ -174,20 +174,20 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 0, tag);
         StackUtils.writeItems(in, 1, tag);
 
-        tag.put(NBT_TANK_IN, tankIn.writeToNBT(new CompoundNBT()));
-        tag.put(NBT_TANK_OUT, tankOut.writeToNBT(new CompoundNBT()));
+        tag.put(NBT_TANK_IN, tankIn.writeToNBT(new CompoundTag()));
+        tag.put(NBT_TANK_OUT, tankOut.writeToNBT(new CompoundTag()));
 
         return tag;
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(upgrades, 0, tag);
@@ -208,7 +208,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.put(NBT_OUT, out.writeToNbt());
@@ -217,7 +217,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_OUT)) {

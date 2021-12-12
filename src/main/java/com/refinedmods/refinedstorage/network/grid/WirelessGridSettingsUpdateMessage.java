@@ -4,11 +4,11 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.tile.grid.WirelessGrid;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -31,7 +31,7 @@ public class WirelessGridSettingsUpdateMessage {
         this.tabPage = tabPage;
     }
 
-    public static WirelessGridSettingsUpdateMessage decode(PacketBuffer buf) {
+    public static WirelessGridSettingsUpdateMessage decode(FriendlyByteBuf buf) {
         return new WirelessGridSettingsUpdateMessage(
             buf.readInt(),
             buf.readInt(),
@@ -43,7 +43,7 @@ public class WirelessGridSettingsUpdateMessage {
         );
     }
 
-    public static void encode(WirelessGridSettingsUpdateMessage message, PacketBuffer buf) {
+    public static void encode(WirelessGridSettingsUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.viewType);
         buf.writeInt(message.sortingDirection);
         buf.writeInt(message.sortingType);
@@ -54,7 +54,7 @@ public class WirelessGridSettingsUpdateMessage {
     }
 
     public static void handle(WirelessGridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        Player player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
@@ -65,7 +65,7 @@ public class WirelessGridSettingsUpdateMessage {
                         ItemStack stack = ((WirelessGrid) grid).getStack();
 
                         if (!stack.hasTag()) {
-                            stack.setTag(new CompoundNBT());
+                            stack.setTag(new CompoundTag());
                         }
 
                         if (IGrid.isValidViewType(message.viewType)) {

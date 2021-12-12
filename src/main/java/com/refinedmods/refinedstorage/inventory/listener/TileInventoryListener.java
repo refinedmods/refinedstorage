@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.inventory.listener;
 
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class TileInventoryListener implements InventoryListener<BaseItemHandler> {
-    private final TileEntity tile;
+    private final BlockEntity tile;
 
-    public TileInventoryListener(TileEntity tile) {
+    public TileInventoryListener(BlockEntity tile) {
         this.tile = tile;
     }
 

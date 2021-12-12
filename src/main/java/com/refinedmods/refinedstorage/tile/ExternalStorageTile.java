@@ -7,15 +7,14 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetwor
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.tile.config.*;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.fluids.FluidStack;
@@ -55,13 +54,11 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
         return capacity;
     });
 
-    public static final TileDataParameter<CompoundNBT, ExternalStorageTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
-            t -> t.getNode().getCoverManager().writeToNbt(),
-            (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> {});
+    public static final TileDataParameter<CompoundTag, ExternalStorageTile> COVER_MANAGER = new TileDataParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
+    });
 
-    public ExternalStorageTile() {
-        super(RSTiles.EXTERNAL_STORAGE);
+    public ExternalStorageTile(BlockPos pos, BlockState state) {
+        super(RSTiles.EXTERNAL_STORAGE, pos, state);
 
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
@@ -75,7 +72,7 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
 
     @Override
     @Nonnull
-    public ExternalStorageNetworkNode createNode(World world, BlockPos pos) {
+    public ExternalStorageNetworkNode createNode(Level world, BlockPos pos) {
         return new ExternalStorageNetworkNode(world, pos);
     }
 
@@ -86,7 +83,7 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
     }
 
     @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         super.writeUpdate(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.getNode().getCoverManager().writeToNbt());
@@ -95,7 +92,7 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
     }
 
     @Override
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
         super.readUpdate(tag);
 
         this.getNode().getCoverManager().readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));

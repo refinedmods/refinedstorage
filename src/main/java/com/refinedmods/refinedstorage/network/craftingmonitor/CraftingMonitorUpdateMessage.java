@@ -9,8 +9,8 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.network.ClientProxy;
 import com.refinedmods.refinedstorage.screen.CraftingMonitorScreen;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,11 +35,7 @@ public class CraftingMonitorUpdateMessage {
         this.tasks = tasks;
     }
 
-    public List<IGridTab> getTasks() {
-        return tasks;
-    }
-
-    public static CraftingMonitorUpdateMessage decode(PacketBuffer buf) {
+    public static CraftingMonitorUpdateMessage decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
 
         List<IGridTab> tasks = new ArrayList<>();
@@ -63,7 +59,7 @@ public class CraftingMonitorUpdateMessage {
             int elementCount = buf.readInt();
 
             for (int j = 0; j < elementCount; ++j) {
-                Function<PacketBuffer, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().get(buf.readResourceLocation());
+                Function<FriendlyByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().get(buf.readResourceLocation());
 
                 if (factory != null) {
                     elements.add(factory.apply(buf));
@@ -76,7 +72,7 @@ public class CraftingMonitorUpdateMessage {
         return new CraftingMonitorUpdateMessage(tasks);
     }
 
-    public static void encode(CraftingMonitorUpdateMessage message, PacketBuffer buf) {
+    public static void encode(CraftingMonitorUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.craftingMonitor.getTasks().size());
 
         for (ICraftingTask task : message.craftingMonitor.getTasks()) {
@@ -101,5 +97,9 @@ public class CraftingMonitorUpdateMessage {
     public static void handle(CraftingMonitorUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingMonitorUpdateMessage(message));
         ctx.get().setPacketHandled(true);
+    }
+
+    public List<IGridTab> getTasks() {
+        return tasks;
     }
 }

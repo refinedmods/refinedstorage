@@ -7,14 +7,13 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.render.collision.CollisionGroup;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +35,7 @@ public class ConstantsCable {
     public static final CollisionGroup HOLDER_DOWN = new CollisionGroup().addItem(getHolderBounds(Direction.DOWN));
 
     @Nonnull
-    public static AxisAlignedBB getCoverBounds(Direction side) {
+    public static AABB getCoverBounds(Direction side) {
         switch (side) {
             case DOWN:
                 return CollisionUtils.getBounds(0, 0, 0, 16, 2, 16);
@@ -56,7 +55,7 @@ public class ConstantsCable {
     }
 
     @Nonnull
-    public static AxisAlignedBB getHolderBounds(Direction side) {
+    public static AABB getHolderBounds(Direction side) {
         switch (side) {
             case DOWN:
                 return CollisionUtils.getBounds(7, 2, 7, 9, 6, 9);
@@ -75,17 +74,17 @@ public class ConstantsCable {
         }
     }
 
-    public static VoxelShape addCoverVoxelShapes(VoxelShape shape, IBlockReader world, BlockPos pos){
+    public static VoxelShape addCoverVoxelShapes(VoxelShape shape, BlockGetter world, BlockPos pos) {
         if (world != null) {
-            TileEntity entity = world.getBlockEntity(pos);
+            BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof NetworkNodeTile && ((NetworkNodeTile<?>) entity).getNode() instanceof ICoverable) {
                 CoverManager coverManager = ((ICoverable) ((NetworkNodeTile<?>) entity).getNode()).getCoverManager();
                 for (Direction value : Direction.values()) {
                     Cover cover = coverManager.getCover(value);
                     if (cover != null) {
-                        shape = VoxelShapes.or(shape, VoxelShapes.create(ConstantsCable.getCoverBounds(value)));
+                        shape = Shapes.or(shape, Shapes.create(ConstantsCable.getCoverBounds(value)));
                         if (cover.getType() == CoverType.NORMAL) {
-                            shape = VoxelShapes.or(shape, VoxelShapes.create(ConstantsCable.getHolderBounds(value)));
+                            shape = Shapes.or(shape, Shapes.create(ConstantsCable.getHolderBounds(value)));
                         }
                     }
                 }

@@ -1,14 +1,14 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class NetworkReceiverNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_receiver");
 
-    public NetworkReceiverNetworkNode(World world, BlockPos pos) {
+    public NetworkReceiverNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 

@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.api.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 /**
  * This {@link FunctionalInterface} is used to define a draw/render function.
@@ -16,5 +16,5 @@ public interface IElementDrawer<T> {
      * @param y           the y axis
      * @param element     the element type
      */
-    void draw(MatrixStack matrixStack, int x, int y, T element);
+    void draw(PoseStack matrixStack, int x, int y, T element);
 }

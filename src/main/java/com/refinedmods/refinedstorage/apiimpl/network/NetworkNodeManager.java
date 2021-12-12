@@ -5,12 +5,12 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import  net.minecraft.nbt.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,30 +26,28 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private final World world;
+    private final Level world;
 
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
-    public NetworkNodeManager(String name, World world) {
-        super(name);
-
+    public NetworkNodeManager(Level world) {
         this.world = world;
     }
 
     @Override
-    public void load(CompoundNBT tag) {
+    public void load(CompoundTag tag) {
         if (tag.contains(NBT_NODES)) {
-            ListNBT nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
+            ListTag nodesTag = tag.getList(NBT_NODES, Tag.TAG_COMPOUND);
 
             this.nodes.clear();
 
             for (int i = 0; i < nodesTag.size(); ++i) {
-                CompoundNBT nodeTag = nodesTag.getCompound(i);
+                CompoundTag nodeTag = nodesTag.getCompound(i);
 
                 ResourceLocation id = new ResourceLocation(nodeTag.getString(NBT_NODE_ID));
-                CompoundNBT data = nodeTag.getCompound(NBT_NODE_DATA);
+                CompoundTag data = nodeTag.getCompound(NBT_NODE_DATA);
                 BlockPos pos = BlockPos.of(nodeTag.getLong(NBT_NODE_POS));
 
                 INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
@@ -74,16 +72,16 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        ListNBT list = new ListNBT();
+    public CompoundTag save(CompoundTag tag) {
+        ListTag list = new ListTag();
 
         for (INetworkNode node : all()) {
             try {
-                CompoundNBT nodeTag = new CompoundNBT();
+                CompoundTag nodeTag = new CompoundTag();
 
                 nodeTag.putString(NBT_NODE_ID, node.getId().toString());
                 nodeTag.putLong(NBT_NODE_POS, node.getPos().asLong());
-                nodeTag.put(NBT_NODE_DATA, node.write(new CompoundNBT()));
+                nodeTag.put(NBT_NODE_DATA, node.write(new CompoundTag()));
 
                 list.add(nodeTag);
             } catch (Throwable t) {

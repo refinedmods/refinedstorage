@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.inventory.item.validator;
 
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 

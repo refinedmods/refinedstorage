@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskManipulatorContainer extends BaseContainer {
-    public DiskManipulatorContainer(DiskManipulatorTile diskManipulator, PlayerEntity player, int windowId) {
+    public DiskManipulatorContainer(DiskManipulatorTile diskManipulator, Player player, int windowId) {
         super(RSContainers.DISK_MANIPULATOR, diskManipulator, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
@@ -34,9 +34,9 @@ public class DiskManipulatorContainer extends BaseContainer {
 
         addPlayerInventory(8, 129);
 
-        transferManager.addBiTransfer(player.inventory, diskManipulator.getNode().getUpgrades());
-        transferManager.addBiTransfer(player.inventory, diskManipulator.getNode().getInputDisks());
-        transferManager.addTransfer(diskManipulator.getNode().getOutputDisks(), player.inventory);
-        transferManager.addFilterTransfer(player.inventory, diskManipulator.getNode().getItemFilters(), diskManipulator.getNode().getFluidFilters(), diskManipulator.getNode()::getType);
+        transferManager.addBiTransfer(player.getInventory(), diskManipulator.getNode().getUpgrades());
+        transferManager.addBiTransfer(player.getInventory(), diskManipulator.getNode().getInputDisks());
+        transferManager.addTransfer(diskManipulator.getNode().getOutputDisks(), player.getInventory());
+        transferManager.addFilterTransfer(player.getInventory(), diskManipulator.getNode().getItemFilters(), diskManipulator.getNode().getFluidFilters(), diskManipulator.getNode()::getType);
     }
 }

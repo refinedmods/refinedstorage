@@ -3,11 +3,11 @@ package com.refinedmods.refinedstorage.screen;
 import com.refinedmods.refinedstorage.container.FluidStorageContainer;
 import com.refinedmods.refinedstorage.tile.FluidStorageTile;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class FluidStorageBlockScreen extends StorageScreen<FluidStorageContainer> {
-    public FluidStorageBlockScreen(FluidStorageContainer container, PlayerInventory inventory, ITextComponent title) {
+    public FluidStorageBlockScreen(FluidStorageContainer container, Inventory inventory, Component title) {
         super(
             container,
             inventory,

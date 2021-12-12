@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.api.autocrafting.task;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.network.INetwork;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public interface ICraftingTask {
      * @param tag the tag
      * @return the written tag
      */
-    CompoundNBT writeToNbt(CompoundNBT tag);
+    CompoundTag writeToNbt(CompoundTag tag);
 
     /**
      * @return the elements of this task for display in the crafting monitor

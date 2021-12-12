@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.network.grid;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainer;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,7 +21,7 @@ public class GridCraftingStartRequestMessage {
         this.fluids = fluids;
     }
 
-    public static GridCraftingStartRequestMessage decode(PacketBuffer buf) {
+    public static GridCraftingStartRequestMessage decode(FriendlyByteBuf buf) {
         return new GridCraftingStartRequestMessage(
             buf.readUUID(),
             buf.readInt(),
@@ -29,18 +29,18 @@ public class GridCraftingStartRequestMessage {
         );
     }
 
-    public static void encode(GridCraftingStartRequestMessage message, PacketBuffer buf) {
+    public static void encode(GridCraftingStartRequestMessage message, FriendlyByteBuf buf) {
         buf.writeUUID(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.fluids);
     }
 
     public static void handle(GridCraftingStartRequestMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayerEntity player = ctx.get().getSender();
+        ServerPlayer player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.containerMenu;
+                AbstractContainerMenu container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     IGrid grid = ((GridContainer) container).getGrid();

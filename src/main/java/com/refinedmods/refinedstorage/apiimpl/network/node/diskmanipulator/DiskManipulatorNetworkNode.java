@@ -23,12 +23,12 @@ import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
@@ -50,35 +50,15 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     private static final String NBT_TYPE = "Type";
     private static final String NBT_IO_MODE = "IOMode";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
-
-    private int compare = IComparer.COMPARE_NBT;
-    private int mode = IWhitelistBlacklist.BLACKLIST;
-    private int type = IType.ITEMS;
-    private int ioMode = IO_MODE_INSERT;
-
     private final IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
     private final IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
-
-    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK) {
-        @Override
-        public int getStackInteractCount() {
-            int count = super.getStackInteractCount();
-
-            if (type == IType.FLUIDS) {
-                count *= FluidAttributes.BUCKET_VOLUME;
-            }
-
-            return count;
-        }
-    }.addListener(new NetworkNodeInventoryListener(this));
-
     private final BaseItemHandler inputDisks = new BaseItemHandler(3)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!world.isClientSide) {
                 StackUtils.createStorages(
-                    (ServerWorld) world,
+                    (ServerLevel) world,
                     handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
@@ -92,14 +72,13 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 }
             }
         });
-
     private final BaseItemHandler outputDisks = new BaseItemHandler(3)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
             if (!world.isClientSide) {
                 StackUtils.createStorages(
-                    (ServerWorld) world,
+                    (ServerLevel) world,
                     handler.getStackInSlot(slot),
                     3 + slot,
                     itemDisks,
@@ -113,13 +92,27 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 }
             }
         }));
-
     private final ProxyItemHandler disks = new ProxyItemHandler(inputDisks, outputDisks);
-
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private int compare = IComparer.COMPARE_NBT;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
+    private int type = IType.ITEMS;
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK) {
+        @Override
+        public int getStackInteractCount() {
+            int count = super.getStackInteractCount();
 
-    public DiskManipulatorNetworkNode(World world, BlockPos pos) {
+            if (type == IType.FLUIDS) {
+                count *= FluidAttributes.BUCKET_VOLUME;
+            }
+
+            return count;
+        }
+    }.addListener(new NetworkNodeInventoryListener(this));
+    private int ioMode = IO_MODE_INSERT;
+
+    public DiskManipulatorNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -439,13 +432,13 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     }
 
     @Override
-    public void setWhitelistBlacklistMode(int mode) {
-        this.mode = mode;
+    public int getWhitelistBlacklistMode() {
+        return this.mode;
     }
 
     @Override
-    public int getWhitelistBlacklistMode() {
-        return this.mode;
+    public void setWhitelistBlacklistMode(int mode) {
+        this.mode = mode;
     }
 
     public int getIoMode() {
@@ -473,7 +466,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(upgrades, 3, tag);
@@ -487,7 +480,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 3, tag);
@@ -498,7 +491,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 1, tag);
@@ -513,7 +506,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 1, tag);

@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class CraftingPatternOutputs {

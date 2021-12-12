@@ -10,13 +10,13 @@ import com.refinedmods.refinedstorage.inventory.item.ConfiguredIconInFilterItemH
 import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItemHandler;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class FilterContainer extends BaseContainer {
     private final ItemStack filterItem;
 
-    public FilterContainer(PlayerEntity player, ItemStack filterItem, int windowId) {
+    public FilterContainer(Player player, ItemStack filterItem, int windowId) {
         super(RSContainers.FILTER, null, player, windowId);
 
         this.filterItem = filterItem;
@@ -44,7 +44,7 @@ public class FilterContainer extends BaseContainer {
 
         addPlayerInventory(8, 149);
 
-        transferManager.addFilterTransfer(player.inventory, filter, fluidFilter, () -> FilterItem.getType(filterItem));
+        transferManager.addFilterTransfer(player.getInventory(), filter, fluidFilter, () -> FilterItem.getType(filterItem));
     }
 
     public ItemStack getFilterItem() {
@@ -53,6 +53,6 @@ public class FilterContainer extends BaseContainer {
 
     @Override
     protected int getDisabledSlotNumber() {
-        return getPlayer().inventory.selected;
+        return getPlayer().getInventory().selected;
     }
 }

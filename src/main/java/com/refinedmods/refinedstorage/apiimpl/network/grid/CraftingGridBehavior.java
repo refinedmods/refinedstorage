@@ -13,15 +13,15 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.hooks.BasicEventHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -30,12 +30,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
     @Override
-    public void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+    public void onCrafted(INetworkAwareGrid grid, CraftingRecipe recipe, Player player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(grid.getCraftingMatrix());
 
         INetwork network = grid.getNetwork();
 
-        CraftingInventory matrix = grid.getCraftingMatrix();
+        CraftingContainer matrix = grid.getCraftingMatrix();
 
         for (int i = 0; i < grid.getCraftingMatrix().getContainerSize(); ++i) {
             ItemStack slot = matrix.getItem(i);
@@ -44,12 +44,12 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             if (i < remainder.size() && !remainder.get(i).isEmpty()) {
                 // If there is no space for the remainder, dump it in the player inventory.
                 if (!slot.isEmpty() && slot.getCount() > 1) {
-                    if (!player.inventory.add(remainder.get(i).copy())) { // If there is no space in the player inventory, try to dump it in the network.
+                    if (!player.getInventory().add(remainder.get(i).copy())) { // If there is no space in the player inventory, try to dump it in the network.
                         ItemStack remainderStack = network == null ? remainder.get(i).copy() : network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), Action.PERFORM);
 
                         // If there is no space in the network, just dump it in the world.
                         if (!remainderStack.isEmpty()) {
-                            InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainderStack);
+                            Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainderStack);
                         }
                     }
 
@@ -87,8 +87,8 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     }
 
     @Override
-    public void onCraftedShift(INetworkAwareGrid grid, PlayerEntity player) {
-        CraftingInventory matrix = grid.getCraftingMatrix();
+    public void onCraftedShift(INetworkAwareGrid grid, Player player) {
+        CraftingContainer matrix = grid.getCraftingMatrix();
         INetwork network = grid.getNetwork();
         List<ItemStack> craftedItemsList = new ArrayList<>();
         ItemStack crafted = grid.getCraftingResult().getItem(0);
@@ -123,8 +123,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         }
 
         for (ItemStack craftedItem : craftedItemsList) {
-            if (!player.inventory.add(craftedItem.copy())) {
-
+            if (!player.getInventory().add(craftedItem.copy())) {
                 ItemStack remainder = craftedItem;
 
                 if (useNetwork) {
@@ -132,7 +131,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 }
 
                 if (!remainder.isEmpty()) {
-                    InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainder);
+                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainder);
                 }
             }
         }
@@ -141,11 +140,11 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         // otherwise it's not being called.
         // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> onCrafting(stack)
         crafted.onCraftedBy(player.level, player, amountCrafted);
-        BasicEventHooks.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
+        ForgeEventFactory.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
         ForgeHooks.setCraftingPlayer(null);
     }
 
-    private void filterDuplicateStacks(INetwork network, CraftingInventory matrix, IStackList<ItemStack> availableItems) {
+    private void filterDuplicateStacks(INetwork network, CraftingContainer matrix, IStackList<ItemStack> availableItems) {
         for (int i = 0; i < matrix.getContainerSize(); ++i) {
             ItemStack stack = network.getItemStorageCache().getList().get(matrix.getItem(i));
 
@@ -157,7 +156,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     }
 
     @Override
-    public void onRecipeTransfer(INetworkAwareGrid grid, PlayerEntity player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(INetworkAwareGrid grid, Player player, ItemStack[][] recipe) {
         INetwork network = grid.getNetwork();
 
         if (network != null && grid.getGridType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
@@ -182,7 +181,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                         }
                     } else {
                         // If we aren't connected, try to insert into player inventory. If it fails, stop.
-                        if (!player.inventory.add(slot.copy())) {
+                        if (!player.getInventory().add(slot.copy())) {
                             return;
                         }
                     }
@@ -228,11 +227,11 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     // If we haven't found anything in the network (or we are disconnected), go look in the player inventory
                     if (!found) {
                         for (ItemStack possibility : possibilities) {
-                            for (int j = 0; j < player.inventory.getContainerSize(); ++j) {
-                                if (API.instance().getComparer().isEqual(possibility, player.inventory.getItem(j), IComparer.COMPARE_NBT)) {
-                                    grid.getCraftingMatrix().setItem(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getItem(j), 1));
+                            for (int j = 0; j < player.getInventory().getContainerSize(); ++j) {
+                                if (API.instance().getComparer().isEqual(possibility, player.getInventory().getItem(j), IComparer.COMPARE_NBT)) {
+                                    grid.getCraftingMatrix().setItem(i, ItemHandlerHelper.copyStackWithSize(player.getInventory().getItem(j), 1));
 
-                                    player.inventory.removeItem(j, 1);
+                                    player.getInventory().removeItem(j, 1);
 
                                     found = true;
 
@@ -258,7 +257,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         }
     }
 
-    private Comparator<ItemStack> compareByItemStackCounts(PlayerEntity player, INetwork network, AtomicReference<Map<Item, ItemStack>> playerItems) {
+    private Comparator<ItemStack> compareByItemStackCounts(Player player, INetwork network, AtomicReference<Map<Item, ItemStack>> playerItems) {
         return Comparator.comparingInt((ItemStack itemStack) -> {
 
             ItemStack stack = network.getItemStorageCache().getList().get(itemStack);
@@ -282,10 +281,10 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         }).reversed();
     }
 
-    private Map<Item, ItemStack> makePlayerInventoryMap(PlayerEntity player, INetwork network) {
+    private Map<Item, ItemStack> makePlayerInventoryMap(Player player, INetwork network) {
         Map<Item, ItemStack> playerItems = new HashMap<>();
-        for (int j = 0; j < player.inventory.getContainerSize(); j++) {
-            ItemStack inventoryStack = player.inventory.getItem(j);
+        for (int j = 0; j < player.getInventory().getContainerSize(); j++) {
+            ItemStack inventoryStack = player.getInventory().getItem(j);
 
             if (inventoryStack.getItem() instanceof ICraftingPatternProvider) {
                 ICraftingPattern pattern = PatternItem.fromCache(network.getWorld(), inventoryStack);

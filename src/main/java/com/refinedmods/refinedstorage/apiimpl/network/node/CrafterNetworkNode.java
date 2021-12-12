@@ -14,17 +14,17 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryLis
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.INameable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -39,32 +39,16 @@ import java.util.UUID;
 
 public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternContainer {
 
-    public enum CrafterMode {
-        IGNORE,
-        SIGNAL_UNLOCKS_AUTOCRAFTING,
-        SIGNAL_LOCKS_AUTOCRAFTING,
-        PULSE_INSERTS_NEXT_SET;
-
-        public static CrafterMode getById(int id) {
-            if (id >= 0 && id < values().length) {
-                return values()[id];
-            }
-
-            return IGNORE;
-        }
-    }
-
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafter");
-
-    private static final ITextComponent DEFAULT_NAME = new TranslationTextComponent("gui.refinedstorage.crafter");
-
+    private static final Component DEFAULT_NAME = new TranslatableComponent("gui.refinedstorage.crafter");
     private static final String NBT_DISPLAY_NAME = "DisplayName";
     private static final String NBT_UUID = "CrafterUuid";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_LOCKED = "Locked";
     private static final String NBT_WAS_POWERED = "WasPowered";
-
-    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
+    private final List<ICraftingPattern> patterns = new ArrayList<>();
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED)
+        .addListener(new NetworkNodeInventoryListener(this));    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
         @Override
         public int getSlotLimit(int slot) {
             return 1;
@@ -93,26 +77,17 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
                 }
             }
         });
-
-    private final List<ICraftingPattern> patterns = new ArrayList<>();
-
-    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED)
-        .addListener(new NetworkNodeInventoryListener(this));
-
     // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
     private boolean visited = false;
-
     private CrafterMode mode = CrafterMode.IGNORE;
     private boolean locked = false;
     private boolean wasPowered;
-
     @Nullable
-    private ITextComponent displayName;
-
+    private Component displayName;
     @Nullable
     private UUID uuid = null;
 
-    public CrafterNetworkNode(World world, BlockPos pos) {
+    public CrafterNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -185,7 +160,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(patternsInventory, 0, tag);
@@ -195,7 +170,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.contains(NBT_DISPLAY_NAME)) {
-            displayName = ITextComponent.Serializer.fromJson(tag.getString(NBT_DISPLAY_NAME));
+            displayName = Component.Serializer.fromJson(tag.getString(NBT_DISPLAY_NAME));
         }
 
         if (tag.hasUUID(NBT_UUID)) {
@@ -221,14 +196,14 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(patternsInventory, 0, tag);
         StackUtils.writeItems(upgrades, 1, tag);
 
         if (displayName != null) {
-            tag.putString(NBT_DISPLAY_NAME, ITextComponent.Serializer.toJson(displayName));
+            tag.putString(NBT_DISPLAY_NAME, Component.Serializer.toJson(displayName));
         }
 
         if (uuid != null) {
@@ -302,7 +277,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
 
     @Override
     @Nullable
-    public TileEntity getConnectedTile() {
+    public BlockEntity getConnectedTile() {
         ICraftingPatternContainer proxy = getRootContainer();
         if (proxy == null) {
             return null;
@@ -313,7 +288,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
 
     @Nullable
     @Override
-    public TileEntity getFacingTile() {
+    public BlockEntity getFacingTile() {
         BlockPos facingPos = pos.relative(getDirection());
         if (!world.isLoaded(facingPos)) {
             return null;
@@ -334,31 +309,31 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         if (displayName != null) {
             return displayName;
         }
 
-        TileEntity facing = getConnectedTile();
+        BlockEntity facing = getConnectedTile();
 
-        if (facing instanceof INameable && ((INameable) facing).getName() != null) {
-            return ((INameable) facing).getName();
+        if (facing instanceof Nameable && ((Nameable) facing).getName() != null) {
+            return ((Nameable) facing).getName();
         }
 
         if (facing != null) {
-            return new TranslationTextComponent(world.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
+            return new TranslatableComponent(world.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
         }
 
         return DEFAULT_NAME;
     }
 
-    public void setDisplayName(ITextComponent displayName) {
-        this.displayName = displayName;
+    @Nullable
+    public Component getDisplayName() {
+        return displayName;
     }
 
-    @Nullable
-    public ITextComponent getDisplayName() {
-        return displayName;
+    public void setDisplayName(Component displayName) {
+        this.displayName = displayName;
     }
 
     @Override
@@ -394,7 +369,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return null;
         }
 
-        INetworkNode facing = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.relative(getDirection()));
+        INetworkNode facing = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos.relative(getDirection()));
         if (!(facing instanceof ICraftingPatternContainer) || facing.getNetwork() != network) {
             return this;
         }
@@ -468,5 +443,22 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             markDirty();
         }
     }
+
+    public enum CrafterMode {
+        IGNORE,
+        SIGNAL_UNLOCKS_AUTOCRAFTING,
+        SIGNAL_LOCKS_AUTOCRAFTING,
+        PULSE_INSERTS_NEXT_SET;
+
+        public static CrafterMode getById(int id) {
+            if (id >= 0 && id < values().length) {
+                return values()[id];
+            }
+
+            return IGNORE;
+        }
+    }
+
+
 
 }

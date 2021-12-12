@@ -6,14 +6,13 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 
@@ -23,18 +22,19 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
     public static final TileDataParameter<Integer, DestructorTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, DestructorTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, DestructorTile> TYPE = IType.createParameter();
-    public static final TileDataParameter<Boolean, DestructorTile> PICKUP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isPickupItem(), (t, v) -> {
+    public static final TileDataParameter<Boolean, DestructorTile> PICKUP = new TileDataParameter<>(EntityDataSerializers.BOOLEAN, false, t -> t.getNode().isPickupItem(), (t, v) -> {
         t.getNode().setPickupItem(v);
         t.getNode().markDirty();
     });
 
-    public static final TileDataParameter<CompoundNBT, DestructorTile> COVER_MANAGER = new TileDataParameter<>(DataSerializers.COMPOUND_TAG, new CompoundNBT(),
-            t -> t.getNode().getCoverManager().writeToNbt(),
-            (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
-            (initial, p) -> {});
+    public static final TileDataParameter<CompoundTag, DestructorTile> COVER_MANAGER = new TileDataParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(),
+        t -> t.getNode().getCoverManager().writeToNbt(),
+        (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
+        (initial, p) -> {
+        });
 
-    public DestructorTile() {
-        super(RSTiles.DESTRUCTOR);
+    public DestructorTile(BlockPos pos, BlockState state) {
+        super(RSTiles.DESTRUCTOR, pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
@@ -45,7 +45,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
 
     @Override
     @Nonnull
-    public DestructorNetworkNode createNode(World world, BlockPos pos) {
+    public DestructorNetworkNode createNode(Level world, BlockPos pos) {
         return new DestructorNetworkNode(world, pos);
     }
 
@@ -56,7 +56,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
     }
 
     @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         super.writeUpdate(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.getNode().getCoverManager().writeToNbt());
@@ -65,7 +65,7 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
     }
 
     @Override
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
         super.readUpdate(tag);
 
         this.getNode().getCoverManager().readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));

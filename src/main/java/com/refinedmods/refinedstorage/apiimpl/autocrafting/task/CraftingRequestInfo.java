@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.task;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -16,7 +16,7 @@ public class CraftingRequestInfo implements ICraftingRequestInfo {
     private ItemStack item;
     private FluidStack fluid;
 
-    public CraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException {
+    public CraftingRequestInfo(CompoundTag tag) throws CraftingTaskReadException {
         if (!tag.getBoolean(NBT_FLUID)) {
             item = StackUtils.deserializeStackFromNbt(tag.getCompound(NBT_STACK));
 
@@ -53,13 +53,13 @@ public class CraftingRequestInfo implements ICraftingRequestInfo {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = new CompoundTag();
 
         tag.putBoolean(NBT_FLUID, fluid != null);
 
         if (fluid != null) {
-            tag.put(NBT_STACK, fluid.writeToNBT(new CompoundNBT()));
+            tag.put(NBT_STACK, fluid.writeToNBT(new CompoundTag()));
         } else {
             tag.put(NBT_STACK, StackUtils.serializeStackToNbt(item));
         }

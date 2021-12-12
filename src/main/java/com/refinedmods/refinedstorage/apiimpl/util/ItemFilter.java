@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.util;
 
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemFilter implements IFilter {
     private final ItemStack stack;

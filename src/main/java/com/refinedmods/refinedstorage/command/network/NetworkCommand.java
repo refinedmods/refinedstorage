@@ -5,28 +5,28 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.BlockPosArgument;
-import net.minecraft.command.arguments.DimensionArgument;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 
-public abstract class NetworkCommand implements Command<CommandSource> {
+public abstract class NetworkCommand implements Command<CommandSourceStack> {
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = DimensionArgument.getDimension(context, "dimension");
-        BlockPos pos = BlockPosArgument.getOrLoadBlockPos(context, "pos");
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
+        BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "pos");
 
         INetwork network = API.instance().getNetworkManager(world).getNetwork(pos);
 
         if (network == null) {
-            context.getSource().sendFailure(new TranslationTextComponent("commands.refinedstorage.network.get.error.not_found"));
+            context.getSource().sendFailure(new TranslatableComponent("commands.refinedstorage.network.get.error.not_found"));
             return 0;
         } else {
             return run(context, network);
         }
     }
 
-    protected abstract int run(CommandContext<CommandSource> context, INetwork network) throws CommandSyntaxException;
+    protected abstract int run(CommandContext<CommandSourceStack> context, INetwork network) throws CommandSyntaxException;
 }

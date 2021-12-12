@@ -1,20 +1,20 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 import java.util.Optional;
 
 public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterContainer> {
-    public NetworkTransmitterScreen(NetworkTransmitterContainer container, PlayerInventory inventory, ITextComponent title) {
+    public NetworkTransmitterScreen(NetworkTransmitterContainer container, Inventory inventory, Component title) {
         super(container, 176, 137, inventory, title);
     }
 
@@ -29,14 +29,14 @@ public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterConta
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/network_transmitter.png");
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
 
         String text;

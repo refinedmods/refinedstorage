@@ -11,9 +11,9 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ProcessingNode extends Node {
@@ -42,14 +42,14 @@ public class ProcessingNode extends Node {
         initSetsToReceive();
     }
 
-    public ProcessingNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public ProcessingNode(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         super(network, tag);
 
-        this.itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
+        this.itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Tag.TAG_COMPOUND));
+        this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Tag.TAG_COMPOUND));
 
-        this.singleItemSetToRequire = SerializationUtil.readItemStackList(tag.getList(NBT_SINGLE_ITEM_SET_TO_REQUIRE, Constants.NBT.TAG_COMPOUND));
-        this.singleFluidSetToRequire = SerializationUtil.readFluidStackList(tag.getList(NBT_SINGLE_FLUID_SET_TO_REQUIRE, Constants.NBT.TAG_COMPOUND));
+        this.singleItemSetToRequire = SerializationUtil.readItemStackList(tag.getList(NBT_SINGLE_ITEM_SET_TO_REQUIRE, Tag.TAG_COMPOUND));
+        this.singleFluidSetToRequire = SerializationUtil.readFluidStackList(tag.getList(NBT_SINGLE_FLUID_SET_TO_REQUIRE, Tag.TAG_COMPOUND));
 
         this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
 
@@ -254,8 +254,8 @@ public class ProcessingNode extends Node {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = super.writeToNbt();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = super.writeToNbt();
 
         tag.put(NBT_ITEMS_RECEIVED, SerializationUtil.writeItemStackList(itemsReceived));
         tag.put(NBT_FLUIDS_RECEIVED, SerializationUtil.writeFluidStackList(fluidsReceived));

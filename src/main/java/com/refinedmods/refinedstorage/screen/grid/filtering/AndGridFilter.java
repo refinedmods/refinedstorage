@@ -12,6 +12,16 @@ public class AndGridFilter implements Predicate<IGridStack> {
         this.andPartFilters = andPartFilters;
     }
 
+    public static Predicate<IGridStack> of(List<Predicate<IGridStack>> filters) {
+        if (filters.isEmpty()) {
+            return t -> true;
+        }
+        if (filters.size() == 1) {
+            return filters.get(0);
+        }
+        return new AndGridFilter(filters);
+    }
+
     @Override
     public boolean test(IGridStack gridStack) {
         for (Predicate<IGridStack> part : andPartFilters) {
@@ -21,15 +31,5 @@ public class AndGridFilter implements Predicate<IGridStack> {
         }
 
         return true;
-    }
-
-    public static Predicate<IGridStack> of(List<Predicate<IGridStack>> filters) {
-        if (filters.isEmpty()) {
-            return t -> true;
-        }
-        if (filters.size() == 1) {
-            return filters.get(0);
-        }
-        return new AndGridFilter(filters);
     }
 }

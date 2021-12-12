@@ -1,20 +1,20 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
-public class StorageScreen<T extends Container> extends BaseScreen<T> {
+public class StorageScreen<T extends AbstractContainerMenu> extends BaseScreen<T> {
     private static final int BAR_X = 8;
     private static final int BAR_Y = 54;
     private static final int BAR_WIDTH = 16;
@@ -26,8 +26,8 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     private final Supplier<Long> capacitySupplier;
 
     public StorageScreen(T container,
-                         PlayerInventory inventory,
-                         ITextComponent title,
+                         Inventory inventory,
+                         Component title,
                          String texture,
                          StorageScreenTileDataParameters dataParameters,
                          Supplier<Long> storedSupplier,
@@ -68,7 +68,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             x + 169 - buttonWidth,
             y + 41, buttonWidth,
             20,
-            new TranslationTextComponent("misc.refinedstorage.priority"),
+            new TranslatableComponent("misc.refinedstorage.priority"),
             true,
             true,
             btn -> minecraft.setScreen(new PriorityScreen(this, dataParameters.getPriorityParameter(), inventory))
@@ -81,7 +81,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, texture);
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
@@ -92,7 +92,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
         renderString(matrixStack, 7, 42, capacitySupplier.get() == -1 ?
             I18n.get("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().formatWithUnits(storedSupplier.get())) :
@@ -111,7 +111,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             renderTooltip(matrixStack, mouseX, mouseY, (capacitySupplier.get() == -1 ?
                 I18n.get("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get())) :
                 I18n.get("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().format(storedSupplier.get()), API.instance().getQuantityFormatter().format(capacitySupplier.get()))
-            ) + "\n" + TextFormatting.GRAY + I18n.get("misc.refinedstorage.storage.full", full));
+            ) + "\n" + ChatFormatting.GRAY + I18n.get("misc.refinedstorage.storage.full", full));
         }
     }
 }

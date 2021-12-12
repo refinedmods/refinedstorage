@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +17,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class GridTransferMessage {
+    private final ItemStack[][] recipe = new ItemStack[9][];
     private Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs;
     private List<Slot> slots;
-
-    private final ItemStack[][] recipe = new ItemStack[9][];
 
     public GridTransferMessage() {
     }
@@ -30,7 +29,7 @@ public class GridTransferMessage {
         this.slots = slots;
     }
 
-    public static GridTransferMessage decode(PacketBuffer buf) {
+    public static GridTransferMessage decode(FriendlyByteBuf buf) {
         GridTransferMessage msg = new GridTransferMessage();
 
         int slots = buf.readInt();
@@ -48,7 +47,7 @@ public class GridTransferMessage {
         return msg;
     }
 
-    public static void encode(GridTransferMessage message, PacketBuffer buf) {
+    public static void encode(GridTransferMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.slots.size());
 
         for (Slot slot : message.slots) {
@@ -73,7 +72,7 @@ public class GridTransferMessage {
     }
 
     public static void handle(GridTransferMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        Player player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {

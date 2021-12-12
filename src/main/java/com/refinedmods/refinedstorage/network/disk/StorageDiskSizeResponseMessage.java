@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.network.disk;
 import com.refinedmods.refinedstorage.api.storage.disk.StorageDiskSyncData;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.StorageDiskSync;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -20,13 +20,13 @@ public class StorageDiskSizeResponseMessage {
         this.capacity = capacity;
     }
 
-    public static void encode(StorageDiskSizeResponseMessage message, PacketBuffer buf) {
+    public static void encode(StorageDiskSizeResponseMessage message, FriendlyByteBuf buf) {
         buf.writeUUID(message.id);
         buf.writeInt(message.stored);
         buf.writeInt(message.capacity);
     }
 
-    public static StorageDiskSizeResponseMessage decode(PacketBuffer buf) {
+    public static StorageDiskSizeResponseMessage decode(FriendlyByteBuf buf) {
         return new StorageDiskSizeResponseMessage(buf.readUUID(), buf.readInt(), buf.readInt());
     }
 

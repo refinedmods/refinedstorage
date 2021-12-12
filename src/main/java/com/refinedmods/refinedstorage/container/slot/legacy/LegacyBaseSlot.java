@@ -1,14 +1,14 @@
 package com.refinedmods.refinedstorage.container.slot.legacy;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
 
 import java.util.function.BooleanSupplier;
 
 public class LegacyBaseSlot extends Slot {
     private BooleanSupplier enableHandler = () -> true;
 
-    public LegacyBaseSlot(IInventory inventory, int inventoryIndex, int x, int y) {
+    public LegacyBaseSlot(Container inventory, int inventoryIndex, int x, int y) {
         super(inventory, inventoryIndex, x, y);
     }
 

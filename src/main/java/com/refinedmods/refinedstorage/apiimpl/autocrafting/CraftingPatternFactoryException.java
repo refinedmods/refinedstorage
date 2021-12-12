@@ -1,15 +1,15 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public class CraftingPatternFactoryException extends Exception {
-    private final transient ITextComponent errorMessage;
+    private final transient Component errorMessage;
 
-    public CraftingPatternFactoryException(ITextComponent errorMessage) {
+    public CraftingPatternFactoryException(Component errorMessage) {
         this.errorMessage = errorMessage;
     }
 
-    public ITextComponent getErrorMessage() {
+    public Component getErrorMessage() {
         return errorMessage;
     }
 }

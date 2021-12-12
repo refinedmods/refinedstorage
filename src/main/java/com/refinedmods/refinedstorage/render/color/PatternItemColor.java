@@ -4,10 +4,10 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.render.model.PatternBakedModel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.item.ItemStack;
 
-public class PatternItemColor implements IItemColor {
+public class PatternItemColor implements ItemColor {
     @Override
     public int getColor(ItemStack stack, int tintIndex) {
         ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().level, stack);

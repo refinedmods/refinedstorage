@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nonnull;
 
@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  * Represents a grid type.
  * Used in {@link IGrid} to determine grid GUI rendering.
  */
-public enum GridType implements IStringSerializable {
+public enum GridType implements StringRepresentable {
     /**
      * A regular grid.
      */

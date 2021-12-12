@@ -3,11 +3,11 @@ package com.refinedmods.refinedstorage.screen;
 import com.refinedmods.refinedstorage.container.StorageContainer;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.StorageTile;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class StorageBlockScreen extends StorageScreen<StorageContainer> {
-    public StorageBlockScreen(StorageContainer container, PlayerInventory inventory, ITextComponent title) {
+    public StorageBlockScreen(StorageContainer container, Inventory inventory, Component title) {
         super(
             container,
             inventory,

@@ -2,16 +2,15 @@ package com.refinedmods.refinedstorage.tile.data;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public class TileDataWatcher {
-    private boolean sentInitial;
-    private final ServerPlayerEntity player;
+    private final ServerPlayer player;
     private final TileDataManager manager;
-
+    private boolean sentInitial;
     private Object[] cache;
 
-    public TileDataWatcher(ServerPlayerEntity player, TileDataManager manager) {
+    public TileDataWatcher(ServerPlayer player, TileDataManager manager) {
         this.player = player;
         this.manager = manager;
 
@@ -21,7 +20,7 @@ public class TileDataWatcher {
         }
     }
 
-    public ServerPlayerEntity getPlayer() {
+    public ServerPlayer getPlayer() {
         return player;
     }
 

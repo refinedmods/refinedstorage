@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.AlternativesContainer;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
@@ -12,18 +12,18 @@ import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
@@ -46,14 +46,14 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     private ItemStack item;
     private FluidStack fluid;
 
-    private AlternativesScreen(Screen parent, PlayerEntity player, ITextComponent title) {
+    private AlternativesScreen(Screen parent, Player player, Component title) {
         super(new AlternativesContainer(player), 175, 143, null, title);
 
         this.parent = parent;
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
     }
 
-    public AlternativesScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack item, int slot) {
+    public AlternativesScreen(Screen parent, Player player, Component title, ItemStack item, int slot) {
         this(parent, player, title);
 
         this.type = IType.ITEMS;
@@ -62,7 +62,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         this.fluid = null;
     }
 
-    public AlternativesScreen(Screen parent, PlayerEntity player, ITextComponent title, FluidStack fluid, int slot) {
+    public AlternativesScreen(Screen parent, Player player, Component title, FluidStack fluid, int slot) {
         this(parent, player, title);
 
         this.type = IType.FLUIDS;
@@ -137,8 +137,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
             }
         }
 
-        Button apply = addButton(x + 7, y + 114, 50, 20, new TranslationTextComponent("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
-        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
+        Button apply = addButton(x + 7, y + 114, 50, 20, new TranslatableComponent("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
+        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -152,7 +152,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/alternatives.png");
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
@@ -161,7 +161,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
 
         int x = 8;
@@ -262,10 +262,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     }
 
     private interface Line {
-        default void render(MatrixStack matrixStack, int x, int y) {
+        default void render(PoseStack matrixStack, int x, int y) {
         }
 
-        default void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
+        default void renderTooltip(PoseStack matrixStack, int x, int y, int mx, int my) {
         }
 
         default void layoutDependantControls(boolean visible, int x, int y) {
@@ -280,8 +280,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int x, int y) {
-            RenderSystem.color4f(1, 1, 1, 1);
+        public void render(PoseStack matrixStack, int x, int y) {
+            RenderSystem.setShaderColor(1, 1, 1, 1);
             renderItem(matrixStack, x + 3, y + 2, item);
             renderString(matrixStack, x + 4 + 19, y + 7, item.getHoverName().getString());
         }
@@ -295,7 +295,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int x, int y) {
+        public void render(PoseStack matrixStack, int x, int y) {
             FluidRenderer.INSTANCE.render(matrixStack, x + 3, y + 2, fluid);
             renderString(matrixStack, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
         }
@@ -307,7 +307,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
         public TagLine(ResourceLocation tagName, boolean checked) {
             this.tagName = tagName;
-            this.widget = addCheckBox(-100, -100, new StringTextComponent(RenderUtils.shorten(tagName.toString(), 22)), checked, btn -> {
+            this.widget = addCheckBox(-100, -100, new TextComponent(RenderUtils.shorten(tagName.toString(), 22)), checked, btn -> {
                 // NO OP
             });
 
@@ -331,7 +331,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int x, int y) {
+        public void render(PoseStack matrixStack, int x, int y) {
             for (ItemStack itemInList : items) {
                 renderItem(matrixStack, x + 3, y, itemInList);
 
@@ -340,7 +340,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         @Override
-        public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
+        public void renderTooltip(PoseStack matrixStack, int x, int y, int mx, int my) {
             for (ItemStack itemInList : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
                     AlternativesScreen.this.renderTooltip(matrixStack, itemInList, mx, my, RenderUtils.getTooltipFromItem(itemInList));
@@ -359,7 +359,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int x, int y) {
+        public void render(PoseStack matrixStack, int x, int y) {
             for (FluidStack fluidInList : fluids) {
                 FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluidInList);
 
@@ -368,7 +368,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         @Override
-        public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
+        public void renderTooltip(PoseStack matrixStack, int x, int y, int mx, int my) {
             for (FluidStack fluidInList : fluids) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
                     AlternativesScreen.this.renderTooltip(matrixStack, mx, my, fluidInList.getDisplayName().getString());

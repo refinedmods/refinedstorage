@@ -5,21 +5,21 @@ import com.mojang.brigadier.context.CommandContext;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.command.network.NetworkCommand;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.UUIDArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.UuidArgument;
 
 import java.util.UUID;
 
 public class CancelSingleAutocraftingCommand extends NetworkCommand {
-    public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.argument("id", UUIDArgument.uuid()).suggests(new AutocraftingIdSuggestionProvider())
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
+        return Commands.argument("id", UuidArgument.uuid()).suggests(new AutocraftingIdSuggestionProvider())
             .executes(new CancelSingleAutocraftingCommand());
     }
 
     @Override
-    protected int run(CommandContext<CommandSource> context, INetwork network) {
-        UUID id = UUIDArgument.getUuid(context, "id");
+    protected int run(CommandContext<CommandSourceStack> context, INetwork network) {
+        UUID id = UuidArgument.getUuid(context, "id");
 
         int count = 0;
 

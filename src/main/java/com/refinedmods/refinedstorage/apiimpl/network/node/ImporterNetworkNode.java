@@ -18,12 +18,12 @@ import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -42,16 +42,13 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK).addListener(new NetworkNodeInventoryListener(this));
-
+    private final CoverManager coverManager;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
-
     private int currentSlot;
 
-    private final CoverManager coverManager;
-
-    public ImporterNetworkNode(World world, BlockPos pos) {
+    public ImporterNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
     }
@@ -70,7 +67,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
         }
 
         if (type == IType.ITEMS) {
-            TileEntity facing = getFacingTile();
+            BlockEntity facing = getFacingTile();
             IItemHandler handler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (facing instanceof DiskDriveTile || handler == null) {
@@ -151,7 +148,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
@@ -167,7 +164,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
@@ -178,7 +175,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
@@ -193,7 +190,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_COMPARE)) {

@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.api.network.item;
 
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
@@ -20,5 +20,5 @@ public interface INetworkItemProvider {
      * @return the network item
      */
     @Nonnull
-    INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot);
+    INetworkItem provide(INetworkItemManager handler, Player player, ItemStack stack, PlayerSlot slot);
 }

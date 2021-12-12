@@ -1,8 +1,9 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
@@ -32,14 +33,13 @@ import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.TimeUtils;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
@@ -49,31 +49,24 @@ import java.util.List;
 @MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
     private static String searchQuery = "";
-
+    private final IGrid grid;
+    private final TabListWidget<GridContainer> tabs;
+    private final int patternScrollOffsetAbsoluteMax = GridNetworkNode.PROCESSING_MATRIX_SIZE / 3 - 3;
     private IGridView view;
-
     private SearchWidget searchField;
     private CheckboxWidget exactPattern;
     private CheckboxWidget processingPattern;
     private CheckboxWidget fluidCheckBox;
-
     private ScrollbarWidget scrollbar;
     private ScrollbarWidget patternScrollbar;
-
-    private final IGrid grid;
-    private final TabListWidget<GridContainer> tabs;
-
     private boolean wasConnected;
     private boolean doSort;
-
-    private final int patternScrollOffsetAbsoluteMax = GridNetworkNode.PROCESSING_MATRIX_SIZE / 3 - 3;
-
     private int slotNumber;
     private int patternScrollOffset;
     private int patternScrollOffsetMax;
     private boolean updatePatternOffset;
 
-    public GridScreen(GridContainer container, IGrid grid, PlayerInventory inventory, ITextComponent title) {
+    public GridScreen(GridContainer container, IGrid grid, Inventory inventory, Component title) {
         super(container, 227, 0, inventory, title);
 
         this.grid = grid;
@@ -97,6 +90,21 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             node.getProcessingMatrix().addListener((handler, slot, reading) -> updatePatternOffset = true);
             node.getProcessingMatrixFluids().addListener((handler, slot, reading) -> updatePatternOffset = true);
         }
+    }
+
+    public static List<IGridSorter> getSorters() {
+        List<IGridSorter> sorters = new LinkedList<>();
+        sorters.add(getDefaultSorter());
+        sorters.add(new QuantityGridSorter());
+        sorters.add(new IdGridSorter());
+        sorters.add(new LastModifiedGridSorter());
+        sorters.add(new InventoryTweaksGridSorter());
+
+        return sorters;
+    }
+
+    public static IGridSorter getDefaultSorter() {
+        return new NameGridSorter();
     }
 
     @Override
@@ -137,7 +145,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             searchField.y = sy;
         }
 
-        addButton(searchField);
+        addRenderableWidget(searchField);
 
         if (grid.getViewType() != -1) {
             addSideButton(new GridViewTypeSideButton(this, grid));
@@ -160,7 +168,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 menu.updatePatternSlotPositions(newOffset);
             });
 
-            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslationTextComponent("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
+            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
                 // Rebuild the inventory slots before the slot change packet arrives.
                 GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.selected());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
@@ -174,7 +182,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 exactPattern = addCheckBox(
                     processingPattern.x + processingPattern.getWidth() + 5,
                     y + getTopHeight() + (getVisibleRows() * 18) + 60,
-                    new TranslationTextComponent("misc.refinedstorage.exact"),
+                    new TranslatableComponent("misc.refinedstorage.exact"),
                     GridTile.EXACT_PATTERN.getValue(),
                     btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.selected())
                 );
@@ -182,7 +190,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             } else {
                 patternScrollbar.setEnabled(true);
 
-                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslationTextComponent("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
+                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
                     TileDataManager.setParameter(GridTile.PROCESSING_TYPE, GridTile.PROCESSING_TYPE.getValue() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
                 });
             }
@@ -195,12 +203,12 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         return grid;
     }
 
-    public void setView(IGridView view) {
-        this.view = view;
-    }
-
     public IGridView getView() {
         return view;
+    }
+
+    public void setView(IGridView view) {
+        this.view = view;
     }
 
     @Override
@@ -325,7 +333,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         tabs.drawBackground(matrixStack, x, y - tabs.getHeight());
 
         if (grid instanceof IPortableGrid) {
@@ -392,7 +400,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         // Drawn in here for bug #1844 (https://github.com/refinedmods/refinedstorage/issues/1844)
@@ -403,7 +411,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
         renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
@@ -414,7 +422,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
 
-        RenderHelper.setupFor3DItems();
+        Lighting.setupFor3DItems();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
@@ -429,7 +437,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
                 matrixStack.pushPose();
-                RenderSystem.disableLighting();
+               // TODO RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
                 fillGradient(matrixStack, x, y, x + 16, y + 16, color, color);
@@ -458,8 +466,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         tabs.drawTooltip(matrixStack, font, mouseX, mouseY);
     }
 
-    private void drawGridTooltip(MatrixStack matrixStack, IGridStack gridStack, int mouseX, int mouseY) {
-        List<ITextComponent> textLines = gridStack.getTooltip(true);
+    private void drawGridTooltip(PoseStack matrixStack, IGridStack gridStack, int mouseX, int mouseY) {
+        List<Component> textLines = gridStack.getTooltip(true);
         List<String> smallTextLines = Lists.newArrayList();
 
         if (!gridStack.isCraftable()) {
@@ -495,19 +503,19 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - leftPos, mouseY - topPos);
 
         if (clickedCreatePattern) {
-            minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
             return true;
         } else if (clickedClear) {
-            minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
 
             return true;
         } else if (grid.isGridActive()) {
-            ItemStack held = menu.getPlayer().inventory.getCarried();
+            ItemStack held = menu.getCarried();
 
             if (isOverSlotArea(mouseX - leftPos, mouseY - topPos) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
                 if (grid.getGridType() == GridType.FLUID) {
@@ -709,20 +717,5 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     public boolean canSort() {
         return doSort || (!hasShiftDown() && !hasControlDown());
-    }
-
-    public static List<IGridSorter> getSorters() {
-        List<IGridSorter> sorters = new LinkedList<>();
-        sorters.add(getDefaultSorter());
-        sorters.add(new QuantityGridSorter());
-        sorters.add(new IdGridSorter());
-        sorters.add(new LastModifiedGridSorter());
-        sorters.add(new InventoryTweaksGridSorter());
-
-        return sorters;
-    }
-
-    public static IGridSorter getDefaultSorter() {
-        return new NameGridSorter();
     }
 }

@@ -4,9 +4,10 @@ import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.apiimpl.network.node.FluidInterfaceNetworkNode;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -25,8 +26,8 @@ public class FluidInterfaceTile extends NetworkNodeTile<FluidInterfaceNetworkNod
     private final LazyOptional<IFluidHandler> tankCapability = LazyOptional.of(() -> getNode().getTank());
     private final LazyOptional<IItemHandler> inCapability = LazyOptional.of(() -> getNode().getIn());
 
-    public FluidInterfaceTile() {
-        super(RSTiles.FLUID_INTERFACE);
+    public FluidInterfaceTile(BlockPos pos, BlockState state) {
+        super(RSTiles.FLUID_INTERFACE, pos, state);
 
         dataManager.addParameter(TANK_IN);
         dataManager.addParameter(TANK_OUT);
@@ -46,7 +47,7 @@ public class FluidInterfaceTile extends NetworkNodeTile<FluidInterfaceNetworkNod
 
     @Override
     @Nonnull
-    public FluidInterfaceNetworkNode createNode(World world, BlockPos pos) {
+    public FluidInterfaceNetworkNode createNode(Level world, BlockPos pos) {
         return new FluidInterfaceNetworkNode(world, pos);
     }
 }

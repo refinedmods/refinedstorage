@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.api.network.node;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,7 +70,7 @@ public interface INetworkNode {
      * @param tag the tag
      * @return the written tag
      */
-    CompoundNBT write(CompoundNBT tag);
+    CompoundTag write(CompoundTag tag);
 
     /**
      * @return the position of this network node
@@ -80,7 +80,7 @@ public interface INetworkNode {
     /**
      * @return the world of this network node
      */
-    World getWorld();
+    Level getWorld();
 
     /**
      * Marks this node as dirty for saving.
@@ -109,13 +109,13 @@ public interface INetworkNode {
     }
 
     /**
-     * @param owner the owner
-     */
-    void setOwner(@Nullable UUID owner);
-
-    /**
      * @return the owner
      */
     @Nullable
     UUID getOwner();
+
+    /**
+     * @param owner the owner
+     */
+    void setOwner(@Nullable UUID owner);
 }

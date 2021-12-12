@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.screen.CraftingMonitorScreen;
 import com.refinedmods.refinedstorage.screen.grid.CraftingPreviewScreen;
 import com.refinedmods.refinedstorage.screen.grid.CraftingSettingsScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class ClientProxy {
     private ClientProxy() {
@@ -27,7 +27,7 @@ public class ClientProxy {
             message.getId(),
             message.getQuantity(),
             message.isFluids(),
-            new TranslationTextComponent("gui.refinedstorage.crafting_preview")
+            new TranslatableComponent("gui.refinedstorage.crafting_preview")
         ));
     }
 

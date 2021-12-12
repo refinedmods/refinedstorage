@@ -2,11 +2,9 @@ package com.refinedmods.refinedstorage.item.blockitem;
 
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.BlockDirection;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-
-import net.minecraft.item.Item.Properties;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BaseBlockItem extends BlockItem {
     private final BaseBlock block;
@@ -18,7 +16,7 @@ public class BaseBlockItem extends BlockItem {
     }
 
     @Override
-    protected boolean placeBlock(BlockItemUseContext context, BlockState state) {
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
         boolean result = super.placeBlock(context, state);
 
         if (result && block.getDirection() != BlockDirection.NONE) {

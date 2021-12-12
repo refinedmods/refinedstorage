@@ -2,11 +2,11 @@ package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.tile.SecurityManagerTile;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -21,7 +21,7 @@ public class SecurityManagerUpdateMessage {
         this.state = state;
     }
 
-    public static SecurityManagerUpdateMessage decode(PacketBuffer buf) {
+    public static SecurityManagerUpdateMessage decode(FriendlyByteBuf buf) {
         BlockPos pos = buf.readBlockPos();
 
         int id = buf.readInt();
@@ -39,18 +39,18 @@ public class SecurityManagerUpdateMessage {
         return new SecurityManagerUpdateMessage(pos, permission, state);
     }
 
-    public static void encode(SecurityManagerUpdateMessage message, PacketBuffer buf) {
+    public static void encode(SecurityManagerUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeBlockPos(message.pos);
         buf.writeInt(message.permission.getId());
         buf.writeBoolean(message.state);
     }
 
     public static void handle(SecurityManagerUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        Player player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                TileEntity tile = player.getCommandSenderWorld().getBlockEntity(message.pos);
+                BlockEntity tile = player.getCommandSenderWorld().getBlockEntity(message.pos);
 
                 if (tile instanceof SecurityManagerTile) {
                     ((SecurityManagerTile) tile).getNode().updatePermission(message.permission, message.state);

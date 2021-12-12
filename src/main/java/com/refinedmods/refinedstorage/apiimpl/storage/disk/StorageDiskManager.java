@@ -6,12 +6,12 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -27,11 +27,9 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
     private static final String NBT_DISK_DATA = "Data";
 
     private final Map<UUID, IStorageDisk> disks = new HashMap<>();
-    private final ServerWorld world;
+    private final ServerLevel world;
 
-    public StorageDiskManager(String name, ServerWorld world) {
-        super(name);
-
+    public StorageDiskManager(ServerLevel world) {
         this.world = world;
     }
 
@@ -94,15 +92,15 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
     }
 
     @Override
-    public void load(CompoundNBT tag) {
+    public void load(CompoundTag tag) {
         if (tag.contains(NBT_DISKS)) {
-            ListNBT disksTag = tag.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
+            ListTag disksTag = tag.getList(NBT_DISKS, Tag.TAG_COMPOUND);
 
             for (int i = 0; i < disksTag.size(); ++i) {
-                CompoundNBT diskTag = disksTag.getCompound(i);
+                CompoundTag diskTag = disksTag.getCompound(i);
 
                 UUID id = diskTag.getUUID(NBT_DISK_ID);
-                CompoundNBT data = diskTag.getCompound(NBT_DISK_DATA);
+                CompoundTag data = diskTag.getCompound(NBT_DISK_DATA);
                 String type = diskTag.getString(NBT_DISK_TYPE);
 
                 IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(new ResourceLocation(type));
@@ -114,11 +112,11 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        ListNBT disksTag = new ListNBT();
+    public CompoundTag save(CompoundTag tag) {
+        ListTag disksTag = new ListTag();
 
         for (Map.Entry<UUID, IStorageDisk> entry : disks.entrySet()) {
-            CompoundNBT diskTag = new CompoundNBT();
+            CompoundTag diskTag = new CompoundTag();
 
             diskTag.putUUID(NBT_DISK_ID, entry.getKey());
             diskTag.put(NBT_DISK_DATA, entry.getValue().writeToNbt());

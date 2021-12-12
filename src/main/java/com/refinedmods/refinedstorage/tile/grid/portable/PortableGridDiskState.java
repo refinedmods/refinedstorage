@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.tile.grid.portable;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum PortableGridDiskState implements IStringSerializable {
+public enum PortableGridDiskState implements StringRepresentable {
     NORMAL(0, "normal"),
     NEAR_CAPACITY(1, "near_capacity"),
     FULL(2, "full"),

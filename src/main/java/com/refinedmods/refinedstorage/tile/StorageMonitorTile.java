@@ -5,10 +5,11 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetwork
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -29,31 +30,31 @@ public class StorageMonitorTile extends NetworkNodeTile<StorageMonitorNetworkNod
     @Nullable
     private FluidStack fluidStack = FluidStack.EMPTY;
 
-    public StorageMonitorTile() {
-        super(RSTiles.STORAGE_MONITOR);
+    public StorageMonitorTile(BlockPos pos, BlockState state) {
+        super(RSTiles.STORAGE_MONITOR, pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
     }
 
     @Override
-    public StorageMonitorNetworkNode createNode(World world, BlockPos pos) {
+    public StorageMonitorNetworkNode createNode(Level world, BlockPos pos) {
         return new StorageMonitorNetworkNode(world, pos);
     }
 
     @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         super.writeUpdate(tag);
 
         ItemStack stack = getNode().getItemFilters().getStackInSlot(0);
 
         if (!stack.isEmpty()) {
-            tag.put(NBT_STACK, stack.save(new CompoundNBT()));
+            tag.put(NBT_STACK, stack.save(new CompoundTag()));
         }
 
         FluidStack fluid = getNode().getFluidFilters().getFluid(0);
         if (!fluid.isEmpty()) {
-            tag.put(NBT_FLUIDSTACK, fluid.writeToNBT(new CompoundNBT()));
+            tag.put(NBT_FLUIDSTACK, fluid.writeToNBT(new CompoundTag()));
         }
 
         tag.putInt(NBT_TYPE, getNode().getType());
@@ -63,7 +64,7 @@ public class StorageMonitorTile extends NetworkNodeTile<StorageMonitorNetworkNod
     }
 
     @Override
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
         super.readUpdate(tag);
         fluidStack = tag.contains(NBT_FLUIDSTACK) ? FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_FLUIDSTACK)) : FluidStack.EMPTY;
         itemStack = tag.contains(NBT_STACK) ? ItemStack.of(tag.getCompound(NBT_STACK)) : ItemStack.EMPTY;

@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.container.ControllerContainer;
@@ -9,10 +10,9 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideB
 import com.refinedmods.refinedstorage.tile.ClientNode;
 import com.refinedmods.refinedstorage.tile.ControllerTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
     private final ScrollbarWidget scrollbar;
 
-    public ControllerScreen(ControllerContainer container, PlayerInventory inventory, ITextComponent title) {
+    public ControllerScreen(ControllerContainer container, Inventory inventory, Component title) {
         super(container, 176, 181, inventory, title);
 
         this.scrollbar = new ScrollbarWidget(this, 157, 20, 12, 59);
@@ -44,7 +44,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/controller.png");
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
@@ -79,7 +79,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
         renderString(matrixStack, 7, 87, I18n.get("container.inventory"));
 
@@ -88,7 +88,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
         int slot = scrollbar.getOffset() * 2;
 
-        RenderHelper.setupFor3DItems();
+        Lighting.setupFor3DItems();
 
         List<ClientNode> nodes = ControllerTile.NODES.getValue();
 

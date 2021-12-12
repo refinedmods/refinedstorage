@@ -3,9 +3,9 @@ package com.refinedmods.refinedstorage.api.autocrafting;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -34,7 +34,7 @@ public interface ICraftingManager {
     /**
      * @return named crafting pattern containers
      */
-    Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers();
+    Map<Component, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
      * Starts a crafting task.
@@ -140,13 +140,13 @@ public interface ICraftingManager {
     /**
      * @param tag the tag to read from
      */
-    void readFromNbt(CompoundNBT tag);
+    void readFromNbt(CompoundTag tag);
 
     /**
      * @param tag the tag to write to
      * @return the written tag
      */
-    CompoundNBT writeToNbt(CompoundNBT tag);
+    CompoundTag writeToNbt(CompoundTag tag);
 
     /**
      * @param listener the listener

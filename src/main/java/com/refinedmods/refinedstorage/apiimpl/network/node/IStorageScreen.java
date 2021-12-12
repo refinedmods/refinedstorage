@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public interface IStorageScreen {
-    ITextComponent getTitle();
+    Component getTitle();
 
     long getStored();
 

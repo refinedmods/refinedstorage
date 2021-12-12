@@ -6,17 +6,17 @@ import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.network.grid.PortableGridItemDeltaMessage;
 import com.refinedmods.refinedstorage.network.grid.PortableGridItemUpdateMessage;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PortableItemGridStorageCacheListener implements IStorageCacheListener<ItemStack> {
     private final IPortableGrid portableGrid;
-    private final ServerPlayerEntity player;
+    private final ServerPlayer player;
 
-    public PortableItemGridStorageCacheListener(IPortableGrid portableGrid, ServerPlayerEntity player) {
+    public PortableItemGridStorageCacheListener(IPortableGrid portableGrid, ServerPlayer player) {
         this.portableGrid = portableGrid;
         this.player = player;
     }

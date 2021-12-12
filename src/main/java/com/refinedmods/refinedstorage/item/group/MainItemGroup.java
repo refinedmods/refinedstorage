@@ -3,10 +3,10 @@ package com.refinedmods.refinedstorage.item.group;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.util.ColorMap;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class MainItemGroup extends ItemGroup {
+public class MainItemGroup extends CreativeModeTab {
     public MainItemGroup() {
         super(RS.ID);
     }

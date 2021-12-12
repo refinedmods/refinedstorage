@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class CraftingPreviewElementFactory {
         for (ItemStack stack : ImmutableList.copyOf(info.getToCraft()).reverse()) {
             int hash = API.instance().getItemStackHashCode(stack);
 
-            ItemCraftingPreviewElement previewStack = map.computeIfAbsent(hash, key -> new ItemCraftingPreviewElement(stack.getStack()));
+            ItemCraftingPreviewElement previewStack = map.computeIfAbsent(hash, key -> new ItemCraftingPreviewElement(stack));
             previewStack.addToCraft(stack.getCount());
         }
 

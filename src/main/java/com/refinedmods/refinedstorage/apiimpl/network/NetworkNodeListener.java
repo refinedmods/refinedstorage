@@ -6,19 +6,19 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.PlayerUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NetworkNodeListener {
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent e) {
-        if (!e.getWorld().isClientSide() && e.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) e.getEntity();
+        if (!e.getWorld().isClientSide() && e.getEntity() instanceof Player) {
+            Player player = (Player) e.getEntity();
 
             INetworkNode placed = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getPos()));
 
@@ -32,7 +32,7 @@ public class NetworkNodeListener {
                         e.setCanceled(true);
 
                         //Fixes desync as we do not cancel the event clientside
-                        PlayerUtils.updateHeldItems((ServerPlayerEntity) player);
+                        PlayerUtils.updateHeldItems((ServerPlayer) player);
 
                         return;
                     }
@@ -45,7 +45,7 @@ public class NetworkNodeListener {
         }
     }
 
-    private void discoverNode(IWorld world, BlockPos pos) {
+    private void discoverNode(LevelAccessor world, BlockPos pos) {
         for (Direction facing : Direction.values()) {
             INetworkNode node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos.relative(facing)));
 

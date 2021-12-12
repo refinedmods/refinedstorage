@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.inventory.item;
 
 import com.refinedmods.refinedstorage.item.FilterItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ConfiguredIconInFilterItemHandler extends ItemStackHandler {

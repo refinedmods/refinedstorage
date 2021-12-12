@@ -10,11 +10,11 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     public static final int VERSION = 1;
 
     @Nullable
-    private final ServerWorld world;
+    private final ServerLevel world;
     private final int capacity;
     private final Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
     private final UUID owner;
@@ -39,20 +39,20 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public FluidStorageDisk(@Nullable ServerWorld world, int capacity, @Nullable UUID owner) {
+    public FluidStorageDisk(@Nullable ServerLevel world, int capacity, @Nullable UUID owner) {
         this.world = world;
         this.capacity = capacity;
         this.owner = owner;
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = new CompoundTag();
 
-        ListNBT list = new ListNBT();
+        ListTag list = new ListTag();
 
         for (FluidStack stack : stacks.values()) {
-            list.add(stack.writeToNBT(new CompoundNBT()));
+            list.add(stack.writeToNBT(new CompoundTag()));
         }
 
         tag.putInt(NBT_VERSION, VERSION);

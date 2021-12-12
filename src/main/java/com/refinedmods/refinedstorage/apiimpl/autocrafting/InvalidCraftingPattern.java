@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -15,9 +15,9 @@ public class InvalidCraftingPattern implements ICraftingPattern {
     private static final String EXCEPTION_MESSAGE = "Crafting pattern is invalid";
 
     private final CraftingPatternContext context;
-    private final ITextComponent errorMessage;
+    private final Component errorMessage;
 
-    public InvalidCraftingPattern(CraftingPatternContext context, ITextComponent errorMessage) {
+    public InvalidCraftingPattern(CraftingPatternContext context, Component errorMessage) {
         this.context = context;
         this.errorMessage = errorMessage;
     }
@@ -39,7 +39,7 @@ public class InvalidCraftingPattern implements ICraftingPattern {
 
     @Nullable
     @Override
-    public ITextComponent getErrorMessage() {
+    public Component getErrorMessage() {
         return errorMessage;
     }
 

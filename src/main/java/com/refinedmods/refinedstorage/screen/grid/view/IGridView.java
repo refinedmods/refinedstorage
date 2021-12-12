@@ -10,12 +10,12 @@ import java.util.UUID;
 public interface IGridView {
     List<IGridStack> getStacks();
 
+    void setStacks(List<IGridStack> stacks);
+
     @Nullable
     IGridStack get(UUID id);
 
     Collection<IGridStack> getAllStacks();
-
-    void setStacks(List<IGridStack> stacks);
 
     void postChange(IGridStack stack, int delta);
 

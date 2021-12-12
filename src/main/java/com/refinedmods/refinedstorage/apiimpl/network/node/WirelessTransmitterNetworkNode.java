@@ -7,22 +7,20 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
-
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
 
 public class WirelessTransmitterNetworkNode extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.RANGE).addListener(new NetworkNodeInventoryListener(this));
 
-    public WirelessTransmitterNetworkNode(World world, BlockPos pos) {
+    public WirelessTransmitterNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -32,7 +30,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(upgrades, 0, tag);
@@ -44,7 +42,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 0, tag);
@@ -63,7 +61,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
     }
 
     @Override
-    public RegistryKey<World> getDimension() {
+    public ResourceKey<Level> getDimension() {
         return world.dimension();
     }
 

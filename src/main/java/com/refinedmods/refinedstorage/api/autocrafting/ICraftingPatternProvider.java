@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.api.autocrafting;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
@@ -19,5 +19,5 @@ public interface ICraftingPatternProvider {
      * @return the crafting pattern
      */
     @Nonnull
-    ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container);
+    ICraftingPattern create(Level world, ItemStack stack, ICraftingPatternContainer container);
 }

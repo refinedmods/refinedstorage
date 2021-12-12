@@ -9,17 +9,17 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode;
-import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -32,24 +32,19 @@ import java.util.List;
 
 public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNetworkNode>, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, ControllerTile> REDSTONE_MODE = RedstoneMode.createParameter();
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNetwork().getEnergyUsage());
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getEnergyStored());
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getMaxEnergyStored());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_USAGE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNetwork().getEnergyUsage());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getEnergyStored());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getMaxEnergyStored());
     public static final TileDataParameter<List<ClientNode>, ControllerTile> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), ControllerTile::collectClientNodes);
 
-    private static final String NBT_ENERGY_TYPE = "EnergyType";
-
-    private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> getNetwork().getEnergyStorage());
     private final LazyOptional<INetworkNodeProxy<RootNetworkNode>> networkNodeProxyCap = LazyOptional.of(() -> this);
-
     private final NetworkType type;
-
     private INetwork removedNetwork;
-
     private Network dummyNetwork;
+    private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> getNetwork().getEnergyStorage());
 
-    public ControllerTile(NetworkType type) {
-        super(type == NetworkType.CREATIVE ? RSTiles.CREATIVE_CONTROLLER : RSTiles.CONTROLLER);
+    public ControllerTile(NetworkType type, BlockPos pos, BlockState state) {
+        super(type == NetworkType.CREATIVE ? RSTiles.CREATIVE_CONTROLLER : RSTiles.CONTROLLER, pos, state);
 
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_USAGE);
@@ -60,22 +55,32 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
         this.type = type;
     }
 
-    @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
-        super.writeUpdate(tag);
+    private static List<ClientNode> collectClientNodes(ControllerTile tile) {
+        List<ClientNode> nodes = new ArrayList<>();
 
-        tag.putInt(NBT_ENERGY_TYPE, ((Network) getNetwork()).getEnergyType().ordinal());
+        for (INetworkNodeGraphEntry entry : tile.getNetwork().getNodeGraph().all()) {
+            if (entry.getNode().isActive()) {
+                ItemStack stack = entry.getNode().getItemStack();
 
-        return tag;
-    }
+                if (stack.isEmpty()) {
+                    continue;
+                }
 
-    @Override
-    public void readUpdate(CompoundNBT tag) {
-        if (tag.contains(NBT_ENERGY_TYPE)) {
-            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(ControllerBlock.ENERGY_TYPE, ControllerBlock.EnergyType.values()[tag.getInt(NBT_ENERGY_TYPE)]));
+                ClientNode clientNode = new ClientNode(stack, 1, entry.getNode().getEnergyUsage());
+
+                if (nodes.contains(clientNode)) {
+                    ClientNode other = nodes.get(nodes.indexOf(clientNode));
+
+                    other.setAmount(other.getAmount() + 1);
+                } else {
+                    nodes.add(clientNode);
+                }
+            }
         }
 
-        super.readUpdate(tag);
+        nodes.sort((a, b) -> Integer.compare(b.getEnergyUsage(), a.getEnergyUsage()));
+
+        return nodes;
     }
 
     public INetwork getNetwork() {
@@ -87,7 +92,7 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
             return dummyNetwork;
         }
 
-        INetwork network = API.instance().getNetworkManager((ServerWorld) level).getNetwork(worldPosition);
+        INetwork network = API.instance().getNetworkManager((ServerLevel) level).getNetwork(worldPosition);
 
         if (network == null) {
             throw new IllegalStateException("No network present at " + worldPosition);
@@ -101,7 +106,7 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
         super.clearRemoved();
 
         if (!level.isClientSide) {
-            INetworkManager manager = API.instance().getNetworkManager((ServerWorld) level);
+            INetworkManager manager = API.instance().getNetworkManager((ServerLevel) level);
 
             if (manager.getNetwork(worldPosition) == null) {
                 manager.setNetwork(worldPosition, new Network(level, worldPosition, type));
@@ -115,7 +120,7 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
         super.setRemoved();
 
         if (!level.isClientSide) {
-            INetworkManager manager = API.instance().getNetworkManager((ServerWorld) level);
+            INetworkManager manager = API.instance().getNetworkManager((ServerLevel) level);
 
             INetwork network = manager.getNetwork(worldPosition);
 
@@ -160,33 +165,5 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
         }
 
         return super.getCapability(cap, direction);
-    }
-
-    private static List<ClientNode> collectClientNodes(ControllerTile tile) {
-        List<ClientNode> nodes = new ArrayList<>();
-
-        for (INetworkNodeGraphEntry entry : tile.getNetwork().getNodeGraph().all()) {
-            if (entry.getNode().isActive()) {
-                ItemStack stack = entry.getNode().getItemStack();
-
-                if (stack.isEmpty()) {
-                    continue;
-                }
-
-                ClientNode clientNode = new ClientNode(stack, 1, entry.getNode().getEnergyUsage());
-
-                if (nodes.contains(clientNode)) {
-                    ClientNode other = nodes.get(nodes.indexOf(clientNode));
-
-                    other.setAmount(other.getAmount() + 1);
-                } else {
-                    nodes.add(clientNode);
-                }
-            }
-        }
-
-        nodes.sort((a, b) -> Integer.compare(b.getEnergyUsage(), a.getEnergyUsage()));
-
-        return nodes;
     }
 }

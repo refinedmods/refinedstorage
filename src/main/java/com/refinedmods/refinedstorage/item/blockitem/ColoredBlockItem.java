@@ -2,23 +2,21 @@ package com.refinedmods.refinedstorage.item.blockitem;
 
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.util.ColorMap;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-
-import net.minecraft.item.Item.Properties;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 
 public class ColoredBlockItem extends BaseBlockItem {
-    private final ITextComponent displayName;
+    private final Component displayName;
 
-    public ColoredBlockItem(BaseBlock block, Properties builder, DyeColor color, ITextComponent displayName) {
+    public ColoredBlockItem(BaseBlock block, Properties builder, DyeColor color, Component displayName) {
         super(block, builder);
 
         if (color != ColorMap.DEFAULT_COLOR) {
-            this.displayName = new TranslationTextComponent("color.minecraft." + color.getName())
-                    .append(" ")
-                    .append(displayName);
+            this.displayName = new TranslatableComponent("color.minecraft." + color.getName())
+                .append(" ")
+                .append(displayName);
         } else {
             this.displayName = displayName;
         }
@@ -26,7 +24,7 @@ public class ColoredBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public ITextComponent getName(ItemStack stack) {
+    public Component getName(ItemStack stack) {
         return displayName;
     }
 }

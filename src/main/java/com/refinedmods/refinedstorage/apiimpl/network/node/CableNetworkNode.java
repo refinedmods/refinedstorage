@@ -4,18 +4,18 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class CableNetworkNode extends NetworkNode implements ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "cable");
 
     private final CoverManager coverManager;
 
-    public CableNetworkNode(World world, BlockPos pos) {
+    public CableNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
     }
@@ -41,15 +41,15 @@ public class CableNetworkNode extends NetworkNode implements ICoverable {
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+    public void read(CompoundTag tag) {
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
             this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
         }
         super.read(tag);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
         return super.write(tag);
     }

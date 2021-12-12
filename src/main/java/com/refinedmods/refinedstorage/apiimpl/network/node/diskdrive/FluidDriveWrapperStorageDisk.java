@@ -8,8 +8,8 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -98,7 +98,7 @@ public class FluidDriveWrapperStorageDisk implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
+    public CompoundTag writeToNbt() {
         return parent.writeToNbt();
     }
 

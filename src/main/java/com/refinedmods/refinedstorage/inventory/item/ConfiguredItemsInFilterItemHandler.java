@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.inventory.item;
 
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ConfiguredItemsInFilterItemHandler extends ItemStackHandler {
@@ -24,7 +24,7 @@ public class ConfiguredItemsInFilterItemHandler extends ItemStackHandler {
         super.onContentsChanged(slot);
 
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         StackUtils.writeItems(this, 0, stack.getTag());

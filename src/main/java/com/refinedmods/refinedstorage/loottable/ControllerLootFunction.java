@@ -5,23 +5,27 @@ import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.tile.ControllerTile;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunction;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.energy.CapabilityEnergy;
 
-public class ControllerLootFunction extends LootFunction {
-    protected ControllerLootFunction(ILootCondition[] conditions) {
+public class ControllerLootFunction extends LootItemConditionalFunction {
+    protected ControllerLootFunction(LootItemCondition[] conditions) {
         super(conditions);
+    }
+
+    public static LootItemConditionalFunction.Builder<?> builder() {
+        return simpleBuilder(ControllerLootFunction::new);
     }
 
     @Override
     protected ItemStack run(ItemStack itemStack, LootContext lootContext) {
-        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
+        BlockEntity tile = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
         if (tile instanceof ControllerTile) {
             INetwork network = ((ControllerTile) tile).getRemovedNetwork() == null ? ((ControllerTile) tile).getNetwork() : ((ControllerTile) tile).getRemovedNetwork();
@@ -33,17 +37,13 @@ public class ControllerLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return RSLootFunctions.getController();
     }
 
-    public static LootFunction.Builder<?> builder() {
-        return simpleBuilder(ControllerLootFunction::new);
-    }
-
-    public static class Serializer extends LootFunction.Serializer<ControllerLootFunction> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<ControllerLootFunction> {
         @Override
-        public ControllerLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {
+        public ControllerLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditions) {
             return new ControllerLootFunction(conditions);
         }
     }

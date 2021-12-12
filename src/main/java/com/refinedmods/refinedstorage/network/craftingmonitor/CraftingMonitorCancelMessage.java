@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -17,11 +17,11 @@ public class CraftingMonitorCancelMessage {
         this.taskId = taskId;
     }
 
-    public static CraftingMonitorCancelMessage decode(PacketBuffer buf) {
+    public static CraftingMonitorCancelMessage decode(FriendlyByteBuf buf) {
         return new CraftingMonitorCancelMessage(buf.readBoolean() ? buf.readUUID() : null);
     }
 
-    public static void encode(CraftingMonitorCancelMessage message, PacketBuffer buf) {
+    public static void encode(CraftingMonitorCancelMessage message, FriendlyByteBuf buf) {
         buf.writeBoolean(message.taskId != null);
 
         if (message.taskId != null) {
@@ -30,7 +30,7 @@ public class CraftingMonitorCancelMessage {
     }
 
     public static void handle(CraftingMonitorCancelMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayerEntity player = ctx.get().getSender();
+        ServerPlayer player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {

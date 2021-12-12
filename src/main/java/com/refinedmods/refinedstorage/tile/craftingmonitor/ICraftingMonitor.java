@@ -3,9 +3,9 @@ package com.refinedmods.refinedstorage.tile.craftingmonitor;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -15,9 +15,9 @@ import java.util.UUID;
 public interface ICraftingMonitor {
     int TABS_PER_PAGE = 7;
 
-    ITextComponent getTitle();
+    Component getTitle();
 
-    void onCancelled(ServerPlayerEntity player, @Nullable UUID id);
+    void onCancelled(ServerPlayer player, @Nullable UUID id);
 
     TileDataParameter<Integer, ?> getRedstoneModeParameter();
 
@@ -28,7 +28,7 @@ public interface ICraftingMonitor {
 
     boolean isActiveOnClient();
 
-    void onClosed(PlayerEntity player);
+    void onClosed(Player player);
 
     Optional<UUID> getTabSelected();
 

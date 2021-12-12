@@ -35,15 +35,15 @@ import com.refinedmods.refinedstorage.tile.ControllerTile;
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import  net.minecraft.nbt.Tag;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -76,16 +76,13 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private final IStorageCache<FluidStack> fluidStorage = new FluidStorageCache(this);
     private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer(), 0);
     private final RootNetworkNode root;
-
-
+    private final BlockPos pos;
+    private final Level world;
+    private final NetworkType type;
     private ItemStorageTracker itemStorageTracker;
     private UUID itemStorageTrackerId;
     private FluidStorageTracker fluidStorageTracker;
     private UUID fluidStorageTrackerId;
-
-    private final BlockPos pos;
-    private final World world;
-    private final NetworkType type;
     private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
     private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -99,18 +96,36 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private long[] tickTimes = new long[100];
     private int tickCounter = 0;
 
-    public Network(World world, BlockPos pos, NetworkType type) {
+    public Network(Level world, BlockPos pos, NetworkType type) {
         this.pos = pos;
         this.world = world;
         this.type = type;
         this.root = new RootNetworkNode(this, world, pos);
         this.nodeGraph.addListener(() -> {
-            TileEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
 
             if (tile instanceof ControllerTile) {
                 ((ControllerTile) tile).getDataManager().sendParameterToWatchers(ControllerTile.NODES);
             }
         });
+    }
+
+    public static int getEnergyScaled(int stored, int capacity, int scale) {
+        return (int) ((float) stored / (float) capacity * (float) scale);
+    }
+
+    public static ControllerBlock.EnergyType getEnergyType(int stored, int capacity) {
+        int energy = getEnergyScaled(stored, capacity, 100);
+
+        if (energy <= 0) {
+            return ControllerBlock.EnergyType.OFF;
+        } else if (energy <= 10) {
+            return ControllerBlock.EnergyType.NEARLY_OFF;
+        } else if (energy <= 20) {
+            return ControllerBlock.EnergyType.NEARLY_ON;
+        }
+
+        return ControllerBlock.EnergyType.ON;
     }
 
     public RootNetworkNode getRoot() {
@@ -236,8 +251,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
         }
 
         nodeGraph.disconnectAll();
-        API.instance().getStorageTrackerManager((ServerWorld) getWorld()).remove(itemStorageTrackerId);
-        API.instance().getStorageTrackerManager((ServerWorld) getWorld()).remove(fluidStorageTrackerId);
+        API.instance().getStorageTrackerManager((ServerLevel) getWorld()).remove(itemStorageTrackerId);
+        API.instance().getStorageTrackerManager((ServerLevel) getWorld()).remove(fluidStorageTrackerId);
     }
 
     @Override
@@ -471,7 +486,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
                 this.itemStorageTrackerId = UUID.randomUUID();
             }
 
-            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) world).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) world).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
         }
 
         return itemStorageTracker;
@@ -484,19 +499,19 @@ public class Network implements INetwork, IRedstoneConfigurable {
                 this.fluidStorageTrackerId = UUID.randomUUID();
             }
 
-            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) world).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) world).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
         }
 
         return fluidStorageTracker;
     }
 
     @Override
-    public World getWorld() {
+    public Level getWorld() {
         return world;
     }
 
     @Override
-    public INetwork readFromNbt(CompoundNBT tag) {
+    public INetwork readFromNbt(CompoundTag tag) {
         if (tag.contains(NBT_ENERGY)) {
             this.energy.setStored(tag.getInt(NBT_ENERGY));
         }
@@ -509,7 +524,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
             this.itemStorageTrackerId = tag.getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) { //TODO: remove next version
-                getItemStorageTracker().readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                getItemStorageTracker().readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Tag.TAG_COMPOUND));
             }
         }
 
@@ -517,7 +532,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
             this.fluidStorageTrackerId = tag.getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
             }
         }
 
@@ -525,7 +540,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     @Override
-    public CompoundNBT writeToNbt(CompoundNBT tag) {
+    public CompoundTag writeToNbt(CompoundTag tag) {
         tag.putInt(NBT_ENERGY, this.energy.getEnergyStored());
 
         redstoneMode.write(tag);
@@ -549,11 +564,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void markDirty() {
-        API.instance().getNetworkManager((ServerWorld) world).markForSaving();
-    }
-
-    public static int getEnergyScaled(int stored, int capacity, int scale) {
-        return (int) ((float) stored / (float) capacity * (float) scale);
+        API.instance().getNetworkManager((ServerLevel) world).markForSaving();
     }
 
     public ControllerBlock.EnergyType getEnergyType() {
@@ -562,20 +573,6 @@ public class Network implements INetwork, IRedstoneConfigurable {
         }
 
         return getEnergyType(this.energy.getEnergyStored(), this.energy.getMaxEnergyStored());
-    }
-
-    public static ControllerBlock.EnergyType getEnergyType(int stored, int capacity) {
-        int energy = getEnergyScaled(stored, capacity, 100);
-
-        if (energy <= 0) {
-            return ControllerBlock.EnergyType.OFF;
-        } else if (energy <= 10) {
-            return ControllerBlock.EnergyType.NEARLY_OFF;
-        } else if (energy <= 20) {
-            return ControllerBlock.EnergyType.NEARLY_ON;
-        }
-
-        return ControllerBlock.EnergyType.ON;
     }
 
     @Override

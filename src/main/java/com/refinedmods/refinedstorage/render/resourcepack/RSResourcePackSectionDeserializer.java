@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.render.resourcepack;
 
 import com.google.gson.JsonObject;
-import net.minecraft.resources.data.IMetadataSectionSerializer;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 
-public class RSResourcePackSectionDeserializer implements IMetadataSectionSerializer<RSResourcePackSection> {
+public class RSResourcePackSectionDeserializer implements MetadataSectionSerializer<RSResourcePackSection> {
     @Override
     public String getMetadataSectionName() {
         return "refinedstorage";

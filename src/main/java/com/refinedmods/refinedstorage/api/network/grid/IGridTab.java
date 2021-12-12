@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public interface IGridTab {
      * @param screenHeight the screen height
      * @param fontRenderer the font renderer
      */
-    void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer);
+    void drawTooltip(PoseStack matrixStack, int x, int y, int screenWidth, int screenHeight, Font fontRenderer);
 
     /**
      * Draws the icon.
@@ -40,5 +40,5 @@ public interface IGridTab {
      * @param x           the x position
      * @param y           the y position
      */
-    void drawIcon(MatrixStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
+    void drawIcon(PoseStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
 }

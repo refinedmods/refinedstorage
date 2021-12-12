@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.energy;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class ItemEnergyStorage extends EnergyStorage {
@@ -22,7 +22,7 @@ public class ItemEnergyStorage extends EnergyStorage {
 
         if (received > 0 && !simulate) {
             if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
+                stack.setTag(new CompoundTag());
             }
 
             stack.getTag().putInt(NBT_ENERGY, getEnergyStored());
@@ -37,7 +37,7 @@ public class ItemEnergyStorage extends EnergyStorage {
 
         if (extracted > 0 && !simulate) {
             if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
+                stack.setTag(new CompoundTag());
             }
 
             stack.getTag().putInt(NBT_ENERGY, getEnergyStored());

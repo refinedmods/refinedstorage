@@ -2,17 +2,51 @@ package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.Styles;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class UpgradeItem extends Item {
+    private final Type type;
+
+    public UpgradeItem(Type type) {
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
+
+        this.type = type;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
+
+        if (type.getFortuneLevel() > 0) {
+            tooltip.add(
+                new TranslatableComponent("enchantment.minecraft.fortune")
+                    .append(" ")
+                    .append(new TranslatableComponent("enchantment.level." + type.getFortuneLevel()))
+                    .setStyle(Styles.GRAY)
+            );
+        }
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return type == Type.SILK_TOUCH ||
+            type == Type.FORTUNE_1 ||
+            type == Type.FORTUNE_2 ||
+            type == Type.FORTUNE_3;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
     public enum Type {
         NORMAL("normal"),
         SPEED("speed"),
@@ -74,39 +108,5 @@ public class UpgradeItem extends Item {
                     return 0;
             }
         }
-    }
-
-    private final Type type;
-
-    public UpgradeItem(Type type) {
-        super(new Item.Properties().tab(RS.MAIN_GROUP));
-
-        this.type = type;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
-
-        if (type.getFortuneLevel() > 0) {
-            tooltip.add(
-                new TranslationTextComponent("enchantment.minecraft.fortune")
-                    .append(" ")
-                    .append(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
-                    .setStyle(Styles.GRAY)
-            );
-        }
-    }
-
-    @Override
-    public boolean isFoil(ItemStack stack) {
-        return type == Type.SILK_TOUCH ||
-            type == Type.FORTUNE_1 ||
-            type == Type.FORTUNE_2 ||
-            type == Type.FORTUNE_3;
-    }
-
-    public Type getType() {
-        return type;
     }
 }

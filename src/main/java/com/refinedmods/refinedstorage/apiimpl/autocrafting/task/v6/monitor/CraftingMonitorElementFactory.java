@@ -12,7 +12,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Crafting
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.Node;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingNode;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.node.ProcessingState;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collection;

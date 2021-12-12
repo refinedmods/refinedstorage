@@ -22,10 +22,10 @@ import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTrackerManager
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -62,7 +62,7 @@ public interface IRSAPI {
      * @param world world
      * @return the network node manager for a given world
      */
-    INetworkNodeManager getNetworkNodeManager(ServerWorld world);
+    INetworkNodeManager getNetworkNodeManager(ServerLevel world);
 
     /**
      * Gets a network manager for a given world.
@@ -70,7 +70,7 @@ public interface IRSAPI {
      * @param world world
      * @return the network manager for a given world
      */
-    INetworkManager getNetworkManager(ServerWorld world);
+    INetworkManager getNetworkManager(ServerLevel world);
 
     /**
      * @return the crafting task registry
@@ -131,7 +131,7 @@ public interface IRSAPI {
      * @return the storage disk manager
      */
     @Nonnull
-    IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld);
+    IStorageDiskManager getStorageDiskManager(ServerLevel anyWorld);
 
     /**
      * @return the storage disk sync manager
@@ -143,7 +143,7 @@ public interface IRSAPI {
      * @return the storage tracker manager
      */
     @Nonnull
-    IStorageTrackerManager getStorageTrackerManager(ServerWorld anyWorld);
+    IStorageTrackerManager getStorageTrackerManager(ServerLevel anyWorld);
 
     /**
      * Adds an external storage provider for the given storage type.
@@ -166,7 +166,7 @@ public interface IRSAPI {
      * @return a storage disk
      */
     @Nonnull
-    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner);
+    IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel world, int capacity, @Nullable Player owner);
 
     /**
      * @param world    the world
@@ -175,7 +175,7 @@ public interface IRSAPI {
      * @return a fluid storage disk
      */
     @Nonnull
-    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner);
+    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel world, int capacity, @Nullable Player owner);
 
     /**
      * Creates crafting request info for an item.
@@ -201,7 +201,7 @@ public interface IRSAPI {
      * @param tag the nbt tag
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException;
+    ICraftingRequestInfo createCraftingRequestInfo(CompoundTag tag) throws CraftingTaskReadException;
 
     /**
      * @param renderHandler the render handler to add

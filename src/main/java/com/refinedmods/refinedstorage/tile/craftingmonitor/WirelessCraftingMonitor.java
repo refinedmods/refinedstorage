@@ -10,15 +10,15 @@ import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
 import com.refinedmods.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -30,11 +30,11 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private final ItemStack stack;
     @Nullable
     private final MinecraftServer server;
-    private final RegistryKey<World> nodeDimension;
+    private final ResourceKey<Level> nodeDimension;
     private final BlockPos nodePos;
+    private final PlayerSlot slot;
     private int tabPage;
     private Optional<UUID> tabSelected;
-    private final PlayerSlot slot;
 
     public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server, PlayerSlot slot) {
         this.stack = stack;
@@ -56,12 +56,12 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("gui.refinedstorage.wireless_crafting_monitor");
+    public Component getTitle() {
+        return new TranslatableComponent("gui.refinedstorage.wireless_crafting_monitor");
     }
 
     @Override
-    public void onCancelled(ServerPlayerEntity player, @Nullable UUID id) {
+    public void onCancelled(ServerPlayer player, @Nullable UUID id) {
         INetwork network = getNetwork();
 
         if (network != null) {
@@ -98,7 +98,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     private INetwork getNetwork() {
-        World world = server.getLevel(nodeDimension);
+        Level world = server.getLevel(nodeDimension);
         if (world != null) {
             return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getBlockEntity(nodePos)));
         }
@@ -116,7 +116,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
+    public void onClosed(Player player) {
         INetwork network = getNetwork();
 
         if (network != null) {

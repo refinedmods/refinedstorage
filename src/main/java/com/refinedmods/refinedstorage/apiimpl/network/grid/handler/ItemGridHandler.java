@@ -16,9 +16,9 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCrafting
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -36,8 +36,89 @@ public class ItemGridHandler implements IItemGridHandler {
         this.network = network;
     }
 
+    public static void onInventoryScroll(IItemGridHandler gridHandler, ServerPlayer player, int slot, boolean shift, boolean up, @Nullable INetwork network) {
+        if (player == null || !(player.containerMenu instanceof GridContainer)) {
+            return;
+        }
+
+        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
+            return;
+        }
+
+        int flags = EXTRACT_SINGLE;
+        ItemStack stackInSlot = player.getInventory().getItem(slot);
+        ItemStack stackOnCursor = player.containerMenu.getCarried();
+
+        if (shift) { // shift
+            flags |= EXTRACT_SHIFT;
+
+            if (!stackInSlot.isEmpty()) {
+                if (up) { // scroll up
+                    player.getInventory().setItem(slot, gridHandler.onInsert(player, stackInSlot, true));
+                } else { // scroll down
+                    gridHandler.onExtract(player, stackInSlot, slot, flags);
+                }
+            }
+        } else { //ctrl
+            if (up) { // scroll up
+                if (!stackOnCursor.isEmpty()) {
+                    gridHandler.onInsert(player, stackOnCursor, true);
+                     // TODO player.broadcastCarriedItem();
+                }
+            } else { //scroll down
+                if (stackOnCursor.isEmpty()) {
+                    gridHandler.onExtract(player, stackInSlot, -1, flags);
+                } else {
+                    gridHandler.onExtract(player, stackOnCursor, -1, flags);
+                }
+            }
+        }
+    }
+
+    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayer player, @Nullable UUID id, boolean shift, boolean up, @Nullable INetwork network) {
+        if (player == null || !(player.containerMenu instanceof GridContainer)) {
+            return;
+        }
+
+        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
+            return;
+        }
+
+        IGrid grid = ((GridContainer) player.containerMenu).getGrid();
+
+        int flags = EXTRACT_SINGLE;
+
+        if (shift && id != null) {
+            flags |= EXTRACT_SHIFT;
+            if (up) { //scroll up, insert hovering stack pulled from Inventory
+                IStorageCache<ItemStack> cache = grid.getStorageCache();
+                if (cache == null || cache.getList().get(id) == null) {
+                    return;
+                }
+
+                for (int i = 0; i < player.getInventory().items.size(); i++) {
+                    if (API.instance().getComparer().isEqual(player.getInventory().getItem(i), cache.getList().get(id), IComparer.COMPARE_NBT)) {
+                        gridHandler.onInsert(player, player.getInventory().getItem(i), true);
+                        break;
+                    }
+                }
+
+            } else { //scroll down, extract hovering item
+                gridHandler.onExtract(player, id, -1, flags);
+            }
+        } else { //ctrl
+            if (!up && id != null) { //scroll down, extract hovering item
+                gridHandler.onExtract(player, id, -1, flags);
+
+            } else if (up && !player.containerMenu.getCarried().isEmpty()) { // insert stack from cursor
+                gridHandler.onInsert(player, player.containerMenu.getCarried(), true);
+                 // TODO player.broadcastCarriedItem();
+            }
+        }
+    }
+
     @Override
-    public void onExtract(ServerPlayerEntity player, ItemStack stack, int preferredSlot, int flags) {
+    public void onExtract(ServerPlayer player, ItemStack stack, int preferredSlot, int flags) {
         StackListEntry<ItemStack> stackEntry = network.getItemStorageCache().getList().getEntry(stack, IComparer.COMPARE_NBT);
         if (stackEntry != null) {
             onExtract(player, stackEntry.getId(), preferredSlot, flags);
@@ -45,7 +126,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags) {
+    public void onExtract(ServerPlayer player, UUID id, int preferredSlot, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(id);
 
         if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
@@ -58,13 +139,13 @@ public class ItemGridHandler implements IItemGridHandler {
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 
-        ItemStack held = player.inventory.getCarried();
+        ItemStack held = player.containerMenu.getCarried();
 
         if (single) {
             if (!held.isEmpty() && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.getCount() + 1 > held.getMaxStackSize())) {
                 return;
             }
-        } else if (!player.inventory.getCarried().isEmpty()) {
+        } else if (!player.containerMenu.getCarried().isEmpty()) {
             return;
         }
 
@@ -119,10 +200,10 @@ public class ItemGridHandler implements IItemGridHandler {
                     if (single && !held.isEmpty()) {
                         held.grow(1);
                     } else {
-                        player.inventory.setCarried(took);
+                        player.containerMenu.setCarried(took);
                     }
 
-                    player.broadcastCarriedItem();
+                     // TODO player.broadcastCarriedItem();
                 }
             }
 
@@ -132,7 +213,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single) {
+    public ItemStack onInsert(ServerPlayer player, ItemStack stack, boolean single) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return stack;
         }
@@ -156,12 +237,12 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
-        if (player.inventory.getCarried().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
+    public void onInsertHeldItem(ServerPlayer player, boolean single) {
+        if (player.containerMenu.getCarried().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return;
         }
 
-        ItemStack stack = player.inventory.getCarried();
+        ItemStack stack = player.containerMenu.getCarried();
         int size = single ? 1 : stack.getCount();
 
         network.getItemStorageTracker().changed(player, stack.copy());
@@ -173,16 +254,16 @@ public class ItemGridHandler implements IItemGridHandler {
                 stack.shrink(size);
             }
         } else {
-            player.inventory.setCarried(network.insertItem(stack, size, Action.PERFORM));
+            player.containerMenu.setCarried(network.insertItem(stack, size, Action.PERFORM));
         }
 
-        player.broadcastCarriedItem();
+         // TODO player.broadcastCarriedItem();
 
         network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getInsertUsage());
     }
 
     @Override
-    public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayer player, UUID id, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -221,7 +302,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity) {
+    public void onCraftingRequested(ServerPlayer player, UUID id, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -237,7 +318,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id) {
+    public void onCraftingCancelRequested(ServerPlayer player, @Nullable UUID id) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -248,93 +329,12 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+    public void onInventoryScroll(ServerPlayer player, int slot, boolean shift, boolean up) {
         onInventoryScroll(this, player, slot, shift, up, network);
     }
 
-    public static void onInventoryScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, int slot, boolean shift, boolean up, @Nullable INetwork network) {
-        if (player == null || !(player.containerMenu instanceof GridContainer)) {
-            return;
-        }
-
-        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
-            return;
-        }
-
-        int flags = EXTRACT_SINGLE;
-        ItemStack stackInSlot = player.inventory.getItem(slot);
-        ItemStack stackOnCursor = player.inventory.getCarried();
-
-        if (shift) { // shift
-            flags |= EXTRACT_SHIFT;
-
-            if (!stackInSlot.isEmpty()) {
-                if (up) { // scroll up
-                    player.inventory.setItem(slot, gridHandler.onInsert(player, stackInSlot, true));
-                } else { // scroll down
-                    gridHandler.onExtract(player, stackInSlot, slot, flags);
-                }
-            }
-        } else { //ctrl
-            if (up) { // scroll up
-                if (!stackOnCursor.isEmpty()) {
-                    gridHandler.onInsert(player, stackOnCursor, true);
-                    player.broadcastCarriedItem();
-                }
-            } else { //scroll down
-                if (stackOnCursor.isEmpty()) {
-                    gridHandler.onExtract(player, stackInSlot, -1, flags);
-                } else {
-                    gridHandler.onExtract(player, stackOnCursor, -1, flags);
-                }
-            }
-        }
-    }
-
     @Override
-    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up) {
+    public void onGridScroll(ServerPlayer player, @Nullable UUID id, boolean shift, boolean up) {
         onGridScroll(this, player, id, shift, up, network);
-    }
-
-    public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up, @Nullable INetwork network) {
-        if (player == null || !(player.containerMenu instanceof GridContainer)) {
-            return;
-        }
-
-        if (network != null && ((up && !network.getSecurityManager().hasPermission(Permission.INSERT, player)) || (!up && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)))) {
-            return;
-        }
-
-        IGrid grid = ((GridContainer) player.containerMenu).getGrid();
-
-        int flags = EXTRACT_SINGLE;
-
-        if (shift && id != null) {
-            flags |= EXTRACT_SHIFT;
-            if (up) { //scroll up, insert hovering stack pulled from Inventory
-                IStorageCache<ItemStack> cache = grid.getStorageCache();
-                if (cache == null || cache.getList().get(id) == null) {
-                    return;
-                }
-
-                for (int i = 0; i < player.inventory.items.size(); i++) {
-                    if (API.instance().getComparer().isEqual(player.inventory.getItem(i), cache.getList().get(id), IComparer.COMPARE_NBT)) {
-                        gridHandler.onInsert(player, player.inventory.getItem(i), true);
-                        break;
-                    }
-                }
-
-            } else { //scroll down, extract hovering item
-                gridHandler.onExtract(player, id, -1, flags);
-            }
-        } else { //ctrl
-            if (!up && id != null) { //scroll down, extract hovering item
-                gridHandler.onExtract(player, id, -1, flags);
-
-            } else if (up && !player.inventory.getCarried().isEmpty()) { // insert stack from cursor
-                gridHandler.onInsert(player, player.inventory.getCarried(), true);
-                player.broadcastCarriedItem();
-            }
-        }
     }
 }

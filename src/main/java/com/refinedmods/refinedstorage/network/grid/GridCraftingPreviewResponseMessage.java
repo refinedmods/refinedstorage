@@ -3,9 +3,9 @@ package com.refinedmods.refinedstorage.network.grid;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.network.ClientProxy;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,23 +25,7 @@ public class GridCraftingPreviewResponseMessage {
         this.fluids = fluids;
     }
 
-    public List<ICraftingPreviewElement> getElements() {
-        return elements;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public boolean isFluids() {
-        return fluids;
-    }
-
-    public static GridCraftingPreviewResponseMessage decode(PacketBuffer buf) {
+    public static GridCraftingPreviewResponseMessage decode(FriendlyByteBuf buf) {
         UUID id = buf.readUUID();
         int quantity = buf.readInt();
         boolean fluids = buf.readBoolean();
@@ -58,7 +42,7 @@ public class GridCraftingPreviewResponseMessage {
         return new GridCraftingPreviewResponseMessage(elements, id, quantity, fluids);
     }
 
-    public static void encode(GridCraftingPreviewResponseMessage message, PacketBuffer buf) {
+    public static void encode(GridCraftingPreviewResponseMessage message, FriendlyByteBuf buf) {
         buf.writeUUID(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.fluids);
@@ -73,5 +57,21 @@ public class GridCraftingPreviewResponseMessage {
     public static void handle(GridCraftingPreviewResponseMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingPreviewResponseMessage(message));
         ctx.get().setPacketHandled(true);
+    }
+
+    public List<ICraftingPreviewElement> getElements() {
+        return elements;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public boolean isFluids() {
+        return fluids;
     }
 }

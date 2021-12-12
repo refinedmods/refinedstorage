@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.item;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class FluidStoragePartItem extends Item {
     public FluidStoragePartItem() {

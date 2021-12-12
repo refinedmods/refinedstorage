@@ -4,18 +4,18 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import java.util.*;
 public class CraftingPatternFactory {
     public static final CraftingPatternFactory INSTANCE = new CraftingPatternFactory();
 
-    public ICraftingPattern create(World world, ICraftingPatternContainer container, ItemStack stack) {
+    public ICraftingPattern create(Level world, ICraftingPatternContainer container, ItemStack stack) {
         CraftingPatternContext context = new CraftingPatternContext(container, stack);
 
         boolean processing = PatternItem.isProcessing(stack);
@@ -36,7 +36,7 @@ public class CraftingPatternFactory {
         NonNullList<ItemStack> byproducts = NonNullList.create();
         List<NonNullList<FluidStack>> fluidInputs = new ArrayList<>();
         NonNullList<FluidStack> fluidOutputs = NonNullList.create();
-        ICraftingRecipe recipe = null;
+        CraftingRecipe recipe = null;
 
         try {
             if (processing) {
@@ -46,16 +46,16 @@ public class CraftingPatternFactory {
                 }
 
                 if (outputs.isEmpty() && fluidOutputs.isEmpty()) {
-                    throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
+                    throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
-                CraftingInventory inv = new CraftingPattern.DummyCraftingInventory();
+                CraftingContainer inv = new CraftingPattern.DummyCraftingInventory();
 
                 for (int i = 0; i < 9; ++i) {
                     fillCraftingInputs(inv, stack, inputs, i);
                 }
 
-                Optional<ICraftingRecipe> foundRecipe = world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, inv, world);
+                Optional<CraftingRecipe> foundRecipe = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, world);
                 if (foundRecipe.isPresent()) {
                     recipe = foundRecipe.get();
 
@@ -70,10 +70,10 @@ public class CraftingPatternFactory {
                             modifyCraftingInputsToUseAlternatives(recipe, inputs);
                         }
                     } else {
-                        throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.no_output"));
+                        throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.no_output"));
                     }
                 } else {
-                    throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
+                    throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
                 }
             }
         } catch (CraftingPatternFactoryException e) {
@@ -108,7 +108,7 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfItem.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                            new TranslationTextComponent(
+                            new TranslatableComponent(
                                 "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
                                 declaredAllowedTag.toString(),
                                 input.getHoverName()
@@ -147,7 +147,7 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfFluid.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                            new TranslationTextComponent(
+                            new TranslatableComponent(
                                 "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
                                 declaredAllowedTag.toString(),
                                 input.getDisplayName()
@@ -170,7 +170,7 @@ public class CraftingPatternFactory {
         }
     }
 
-    private void fillCraftingInputs(CraftingInventory inv, ItemStack stack, List<NonNullList<ItemStack>> inputs, int i) {
+    private void fillCraftingInputs(CraftingContainer inv, ItemStack stack, List<NonNullList<ItemStack>> inputs, int i) {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
         inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.of(ItemStack.EMPTY, input));
@@ -178,7 +178,7 @@ public class CraftingPatternFactory {
         inv.setItem(i, input);
     }
 
-    private void modifyCraftingInputsToUseAlternatives(ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) {
+    private void modifyCraftingInputsToUseAlternatives(CraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) {
         if (!recipe.getIngredients().isEmpty()) {
             inputs.clear();
 

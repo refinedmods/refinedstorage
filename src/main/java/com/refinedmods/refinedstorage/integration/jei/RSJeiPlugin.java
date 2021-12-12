@@ -7,18 +7,22 @@ import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
-import mezz.jei.api.registration.*;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.Collections;
+import net.minecraft.resources.ResourceLocation;
 
 @JeiPlugin
 public class RSJeiPlugin implements IModPlugin {
     private static final ResourceLocation ID = new ResourceLocation(RS.ID, "plugin");
 
     private static IJeiRuntime runtime;
+
+    public static IJeiRuntime getRuntime() {
+        return runtime;
+    }
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -39,10 +43,6 @@ public class RSJeiPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(IJeiRuntime runtime) {
         RSJeiPlugin.runtime = runtime;
-    }
-
-    public static IJeiRuntime getRuntime() {
-        return runtime;
     }
 
     @Override

@@ -6,13 +6,13 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.command.network.autocrafting.CancelAllAutocraftingCommand;
 import com.refinedmods.refinedstorage.command.network.autocrafting.GetAutocraftingCommand;
 import com.refinedmods.refinedstorage.command.network.autocrafting.ListAutocraftingCommand;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.BlockPosArgument;
-import net.minecraft.command.arguments.DimensionArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 
 public class GetNetworkCommand extends NetworkCommand {
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("get")
             .requires(cs -> cs.hasPermission(2))
             .then(Commands.argument("dimension", DimensionArgument.dimension())
@@ -26,7 +26,7 @@ public class GetNetworkCommand extends NetworkCommand {
     }
 
     @Override
-    protected int run(CommandContext<CommandSource> context, INetwork network) {
+    protected int run(CommandContext<CommandSourceStack> context, INetwork network) {
         ListNetworkCommand.sendInfo(context, new ListNetworkCommand.NetworkInList(network), true);
         return 0;
     }

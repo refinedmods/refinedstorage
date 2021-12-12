@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class CraftingPatternContext {
     private final ICraftingPatternContainer container;

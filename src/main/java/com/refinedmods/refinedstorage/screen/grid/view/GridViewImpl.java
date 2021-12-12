@@ -14,15 +14,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GridViewImpl implements IGridView {
+    protected final Map<UUID, IGridStack> map = new HashMap<>();
     private final GridScreen screen;
-    private boolean canCraft;
-    private boolean active = false;
-
     private final IGridSorter defaultSorter;
     private final List<IGridSorter> sorters;
-
+    private boolean canCraft;
+    private boolean active = false;
     private List<IGridStack> stacks = new ArrayList<>();
-    protected final Map<UUID, IGridStack> map = new HashMap<>();
 
     public GridViewImpl(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.screen = screen;
@@ -33,6 +31,15 @@ public class GridViewImpl implements IGridView {
     @Override
     public List<IGridStack> getStacks() {
         return stacks;
+    }
+
+    @Override
+    public void setStacks(List<IGridStack> stacks) {
+        map.clear();
+
+        for (IGridStack stack : stacks) {
+            map.put(stack.getId(), stack);
+        }
     }
 
     @Override
@@ -54,9 +61,9 @@ public class GridViewImpl implements IGridView {
 
         if (screen.getGrid().isGridActive()) {
             this.stacks = map.values().stream()
-                    .filter(getActiveFilters())
-                    .sorted(getActiveSort())
-                    .collect(Collectors.toCollection(ArrayList::new));
+                .filter(getActiveFilters())
+                .sorted(getActiveSort())
+                .collect(Collectors.toCollection(ArrayList::new));
             this.active = true;
         } else {
             this.stacks = new ArrayList<>();
@@ -70,18 +77,18 @@ public class GridViewImpl implements IGridView {
         IGrid grid = screen.getGrid();
         SortingDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? SortingDirection.DESCENDING : SortingDirection.ASCENDING;
         return Stream.concat(Stream.of(defaultSorter), sorters.stream().filter(s -> s.isApplicable(grid)))
-                .map(sorter -> (Comparator<IGridStack>) (o1, o2) -> sorter.compare(o1, o2, sortingDirection))
-                .reduce((l, r) -> r.thenComparing(l))
-                .orElseThrow(IllegalStateException::new);  // There is at least 1 value in the stream (i.e. defaultSorter)
+            .map(sorter -> (Comparator<IGridStack>) (o1, o2) -> sorter.compare(o1, o2, sortingDirection))
+            .reduce((l, r) -> r.thenComparing(l))
+            .orElseThrow(IllegalStateException::new);  // There is at least 1 value in the stream (i.e. defaultSorter)
     }
 
     private Predicate<IGridStack> getActiveFilters() {
         IGrid grid = screen.getGrid();
 
         Predicate<IGridStack> filters = GridFilterParser.getFilters(
-                grid,
-                screen.getSearchFieldText(),
-                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
+            grid,
+            screen.getSearchFieldText(),
+            (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
         );
 
         if (screen.getGrid().getViewType() != IGrid.VIEW_TYPE_CRAFTABLES) {
@@ -91,8 +98,8 @@ public class GridViewImpl implements IGridView {
                 // and we aren't in "view only craftables" mode,
                 // we don't want the duplicate stacks and we will remove this stack.
                 if (stack.isCraftable() &&
-                        stack.getOtherId() != null &&
-                        map.containsKey(stack.getOtherId())) {
+                    stack.getOtherId() != null &&
+                    map.containsKey(stack.getOtherId())) {
                     return false;
                 }
 
@@ -100,15 +107,6 @@ public class GridViewImpl implements IGridView {
             };
         } else {
             return filters;
-        }
-    }
-
-    @Override
-    public void setStacks(List<IGridStack> stacks) {
-        map.clear();
-
-        for (IGridStack stack : stacks) {
-            map.put(stack.getId(), stack);
         }
     }
 
@@ -131,8 +129,8 @@ public class GridViewImpl implements IGridView {
         // This means that on the second delta packet it would still crash because the map wouldn't be empty anymore.
         IGridStack craftingStack;
         if (!stack.isCraftable() &&
-                stack.getOtherId() != null &&
-                map.containsKey(stack.getOtherId())) {
+            stack.getOtherId() != null &&
+            map.containsKey(stack.getOtherId())) {
             craftingStack = map.get(stack.getOtherId());
 
             craftingStack.updateOtherId(stack.getId());

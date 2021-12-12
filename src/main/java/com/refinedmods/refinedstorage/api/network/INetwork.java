@@ -10,10 +10,10 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -244,7 +244,7 @@ public interface INetwork {
     /**
      * @return the world where this network is in
      */
-    World getWorld();
+    Level getWorld();
 
     /**
      * @return the position of this network in the world
@@ -254,13 +254,13 @@ public interface INetwork {
     /**
      * @return a read network
      */
-    INetwork readFromNbt(CompoundNBT tag);
+    INetwork readFromNbt(CompoundTag tag);
 
     /**
      * @param tag the tag to write to
      * @return a written tag
      */
-    CompoundNBT writeToNbt(CompoundNBT tag);
+    CompoundTag writeToNbt(CompoundTag tag);
 
     /**
      * @return sampled tick times

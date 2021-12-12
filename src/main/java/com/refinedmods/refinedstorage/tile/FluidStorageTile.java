@@ -10,9 +10,10 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
@@ -25,8 +26,8 @@ public class FluidStorageTile extends NetworkNodeTile<FluidStorageNetworkNode> {
 
     private final FluidStorageType type;
 
-    public FluidStorageTile(FluidStorageType type) {
-        super(getType(type));
+    public FluidStorageTile(FluidStorageType type, BlockPos pos, BlockState state) {
+        super(getType(type), pos, state);
 
         this.type = type;
 
@@ -37,7 +38,7 @@ public class FluidStorageTile extends NetworkNodeTile<FluidStorageNetworkNode> {
         dataManager.addWatchedParameter(ACCESS_TYPE);
     }
 
-    public static TileEntityType<FluidStorageTile> getType(FluidStorageType type) {
+    public static BlockEntityType<FluidStorageTile> getType(FluidStorageType type) {
         switch (type) {
             case SIXTY_FOUR_K:
                 return RSTiles.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK;
@@ -60,7 +61,7 @@ public class FluidStorageTile extends NetworkNodeTile<FluidStorageNetworkNode> {
 
     @Override
     @Nonnull
-    public FluidStorageNetworkNode createNode(World world, BlockPos pos) {
+    public FluidStorageNetworkNode createNode(Level world, BlockPos pos) {
         return new FluidStorageNetworkNode(world, pos, type);
     }
 }

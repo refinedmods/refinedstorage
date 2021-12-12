@@ -7,29 +7,60 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.DimensionArgument;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
 
-public class ListNetworkCommand implements Command<CommandSource> {
+public class ListNetworkCommand implements Command<CommandSourceStack> {
     private static final DecimalFormat TIME_FORMATTER = new DecimalFormat("########0.000");
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("list")
             .requires(cs -> cs.hasPermission(2))
             .then(Commands.argument("dimension", DimensionArgument.dimension())
                 .executes(new ListNetworkCommand()));
     }
 
+    public static void sendInfo(CommandContext<CommandSourceStack> context, NetworkInList listItem, boolean detailed) {
+        context.getSource().sendSuccess(
+            new TranslatableComponent(
+                "commands.refinedstorage.network.list.pos",
+                listItem.network.getPosition().getX(),
+                listItem.network.getPosition().getY(),
+                listItem.network.getPosition().getZ()
+            )
+                .append(" [")
+                .append(new TranslatableComponent(
+                    "commands.refinedstorage.network.list.tick_times",
+                    new TextComponent(TIME_FORMATTER.format(listItem.tickTime)).setStyle(Styles.YELLOW),
+                    new TextComponent(TIME_FORMATTER.format(listItem.tps)).setStyle(Styles.YELLOW)
+                ))
+                .append("]"), false);
+
+        if (detailed) {
+            context.getSource().sendSuccess(new TranslatableComponent("commands.refinedstorage.network.list.autocrafting_tasks",
+                new TextComponent(listItem.network.getCraftingManager().getTasks().size() + "").setStyle(Styles.YELLOW)
+            ), false);
+
+            context.getSource().sendSuccess(new TranslatableComponent("commands.refinedstorage.network.list.nodes",
+                new TextComponent(listItem.network.getNodeGraph().all().size() + "").setStyle(Styles.YELLOW)
+            ), false);
+
+            context.getSource().sendSuccess(new TranslatableComponent("commands.refinedstorage.network.list.energy_usage",
+                new TextComponent(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
+            ), false);
+        }
+    }
+
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = DimensionArgument.getDimension(context, "dimension");
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
 
         API.instance().getNetworkManager(world)
             .all()
@@ -59,37 +90,6 @@ public class ListNetworkCommand implements Command<CommandSource> {
                 sum += v;
             }
             return sum / values.length;
-        }
-    }
-
-    public static void sendInfo(CommandContext<CommandSource> context, NetworkInList listItem, boolean detailed) {
-        context.getSource().sendSuccess(
-            new TranslationTextComponent(
-                "commands.refinedstorage.network.list.pos",
-                listItem.network.getPosition().getX(),
-                listItem.network.getPosition().getY(),
-                listItem.network.getPosition().getZ()
-            )
-                .append(" [")
-                .append(new TranslationTextComponent(
-                    "commands.refinedstorage.network.list.tick_times",
-                    new StringTextComponent(TIME_FORMATTER.format(listItem.tickTime)).setStyle(Styles.YELLOW),
-                    new StringTextComponent(TIME_FORMATTER.format(listItem.tps)).setStyle(Styles.YELLOW)
-                ))
-                .append("]"), false);
-
-        if (detailed) {
-            context.getSource().sendSuccess(new TranslationTextComponent("commands.refinedstorage.network.list.autocrafting_tasks",
-                new StringTextComponent(listItem.network.getCraftingManager().getTasks().size() + "").setStyle(Styles.YELLOW)
-            ), false);
-
-            context.getSource().sendSuccess(new TranslationTextComponent("commands.refinedstorage.network.list.nodes",
-                new StringTextComponent(listItem.network.getNodeGraph().all().size() + "").setStyle(Styles.YELLOW)
-            ), false);
-
-            context.getSource().sendSuccess(new TranslationTextComponent("commands.refinedstorage.network.list.energy_usage",
-                new StringTextComponent(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
-            ), false);
         }
     }
 }

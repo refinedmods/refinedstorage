@@ -6,12 +6,12 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 
@@ -20,14 +20,14 @@ public class PortableGridBlockGridFactory implements IGridFactory {
 
     @Override
     @Nullable
-    public IGrid createFromStack(PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+    public IGrid createFromStack(Player player, ItemStack stack, PlayerSlot slot) {
         return null;
     }
 
     @Override
     @Nullable
-    public IGrid createFromBlock(PlayerEntity player, BlockPos pos) {
-        TileEntity tile = getRelevantTile(player.level, pos);
+    public IGrid createFromBlock(Player player, BlockPos pos) {
+        BlockEntity tile = getRelevantTile(player.level, pos);
 
         if (tile instanceof PortableGridTile) {
             return (PortableGridTile) tile;
@@ -38,7 +38,7 @@ public class PortableGridBlockGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public TileEntity getRelevantTile(World world, BlockPos pos) {
+    public BlockEntity getRelevantTile(Level world, BlockPos pos) {
         return world.getBlockEntity(pos);
     }
 

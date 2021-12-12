@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -15,12 +15,10 @@ import java.util.Set;
 public class AllowedTagList {
     private static final String NBT_ALLOWED_ITEM_TAGS = "AllowedItemTags";
     private static final String NBT_ALLOWED_FLUID_TAGS = "AllowedFluidTags";
-
-    private List<Set<ResourceLocation>> allowedItemTags = new ArrayList<>();
-    private List<Set<ResourceLocation>> allowedFluidTags = new ArrayList<>();
-
     @Nullable
     private final Runnable listener;
+    private List<Set<ResourceLocation>> allowedItemTags = new ArrayList<>();
+    private List<Set<ResourceLocation>> allowedFluidTags = new ArrayList<>();
 
     public AllowedTagList(@Nullable Runnable listener, int size) {
         for (int i = 0; i < size; ++i) {
@@ -31,8 +29,8 @@ public class AllowedTagList {
         this.listener = listener;
     }
 
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = new CompoundTag();
 
         tag.put(NBT_ALLOWED_ITEM_TAGS, getList(allowedItemTags));
         tag.put(NBT_ALLOWED_FLUID_TAGS, getList(allowedFluidTags));
@@ -40,23 +38,23 @@ public class AllowedTagList {
         return tag;
     }
 
-    public void readFromNbt(CompoundNBT tag) {
+    public void readFromNbt(CompoundTag tag) {
         if (tag.contains(NBT_ALLOWED_ITEM_TAGS)) {
-            applyList(allowedItemTags, tag.getList(NBT_ALLOWED_ITEM_TAGS, Constants.NBT.TAG_LIST));
+            applyList(allowedItemTags, tag.getList(NBT_ALLOWED_ITEM_TAGS, Tag.TAG_LIST));
         }
 
         if (tag.contains(NBT_ALLOWED_FLUID_TAGS)) {
-            applyList(allowedFluidTags, tag.getList(NBT_ALLOWED_FLUID_TAGS, Constants.NBT.TAG_LIST));
+            applyList(allowedFluidTags, tag.getList(NBT_ALLOWED_FLUID_TAGS, Tag.TAG_LIST));
         }
     }
 
-    private ListNBT getList(List<Set<ResourceLocation>> tagsPerSlot) {
-        ListNBT list = new ListNBT();
+    private ListTag getList(List<Set<ResourceLocation>> tagsPerSlot) {
+        ListTag list = new ListTag();
 
         for (Set<ResourceLocation> tags : tagsPerSlot) {
-            ListNBT subList = new ListNBT();
+            ListTag subList = new ListTag();
 
-            tags.forEach(t -> subList.add(StringNBT.valueOf(t.toString())));
+            tags.forEach(t -> subList.add(StringTag.valueOf(t.toString())));
 
             list.add(subList);
         }
@@ -64,9 +62,9 @@ public class AllowedTagList {
         return list;
     }
 
-    private void applyList(List<Set<ResourceLocation>> list, ListNBT tagList) {
+    private void applyList(List<Set<ResourceLocation>> list, ListTag tagList) {
         for (int i = 0; i < tagList.size(); ++i) {
-            ListNBT subList = tagList.getList(i);
+            ListTag subList = tagList.getList(i);
 
             for (int j = 0; j < subList.size(); ++j) {
                 list.get(i).add(new ResourceLocation(subList.getString(j)));
@@ -78,14 +76,14 @@ public class AllowedTagList {
         return allowedItemTags;
     }
 
-    public List<Set<ResourceLocation>> getAllowedFluidTags() {
-        return allowedFluidTags;
-    }
-
     public void setAllowedItemTags(List<Set<ResourceLocation>> allowedItemTags) {
         this.allowedItemTags = allowedItemTags;
 
         notifyListener();
+    }
+
+    public List<Set<ResourceLocation>> getAllowedFluidTags() {
+        return allowedFluidTags;
     }
 
     public void setAllowedFluidTags(List<Set<ResourceLocation>> allowedFluidTags) {

@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.api.network;
 
 import com.refinedmods.refinedstorage.api.util.Action;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +31,7 @@ public interface INetworkNodeVisitor {
          * @param pos   the position
          * @param side  the side
          */
-        void apply(World world, BlockPos pos, @Nullable Direction side);
+        void apply(Level world, BlockPos pos, @Nullable Direction side);
 
         /**
          * Returns whether the network graph is scanning in simulation mode.

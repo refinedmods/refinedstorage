@@ -7,31 +7,32 @@ import com.refinedmods.refinedstorage.screen.DetectorScreen;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
 public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
     public static final TileDataParameter<Integer, DetectorTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, DetectorTile> TYPE = IType.createParameter();
-    public static final TileDataParameter<Integer, DetectorTile> MODE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, DetectorTile> MODE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getMode(), (t, v) -> {
         if (v == DetectorNetworkNode.MODE_UNDER || v == DetectorNetworkNode.MODE_EQUAL || v == DetectorNetworkNode.MODE_ABOVE) {
             t.getNode().setMode(v);
             t.getNode().markDirty();
         }
     });
-    public static final TileDataParameter<Integer, DetectorTile> AMOUNT = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getAmount(), (t, v) -> {
+    public static final TileDataParameter<Integer, DetectorTile> AMOUNT = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
     }, (initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen -> detectorScreen.updateAmountField(value)));
 
     private static final String NBT_POWERED = "Powered";
 
-    public DetectorTile() {
-        super(RSTiles.DETECTOR);
+    public DetectorTile(BlockPos pos, BlockState state) {
+        super(RSTiles.DETECTOR, pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
@@ -40,14 +41,14 @@ public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
     }
 
     @Override
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
         getNode().setPowered(tag.getBoolean(NBT_POWERED));
 
         super.readUpdate(tag);
     }
 
     @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         super.writeUpdate(tag);
 
         tag.putBoolean(NBT_POWERED, getNode().isPowered());
@@ -57,7 +58,7 @@ public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
 
     @Override
     @Nonnull
-    public DetectorNetworkNode createNode(World world, BlockPos pos) {
+    public DetectorNetworkNode createNode(Level world, BlockPos pos) {
         return new DetectorNetworkNode(world, pos);
     }
 }

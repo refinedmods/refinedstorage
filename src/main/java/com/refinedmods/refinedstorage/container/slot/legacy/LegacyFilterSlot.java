@@ -1,19 +1,19 @@
 package com.refinedmods.refinedstorage.container.slot.legacy;
 
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 public class LegacyFilterSlot extends LegacyBaseSlot {
-    public LegacyFilterSlot(IInventory inventory, int inventoryIndex, int x, int y) {
+    public LegacyFilterSlot(Container inventory, int inventoryIndex, int x, int y) {
         super(inventory, inventoryIndex, x, y);
     }
 
     @Override
-    public boolean mayPickup(PlayerEntity player) {
+    public boolean mayPickup(Player player) {
         return false;
     }
 

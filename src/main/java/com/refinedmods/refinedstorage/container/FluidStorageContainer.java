@@ -3,10 +3,10 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.tile.FluidStorageTile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class FluidStorageContainer extends BaseContainer {
-    public FluidStorageContainer(FluidStorageTile fluidStorage, PlayerEntity player, int windowId) {
+    public FluidStorageContainer(FluidStorageTile fluidStorage, Player player, int windowId) {
         super(RSContainers.FLUID_STORAGE_BLOCK, fluidStorage, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
@@ -15,6 +15,6 @@ public class FluidStorageContainer extends BaseContainer {
 
         addPlayerInventory(8, 141);
 
-        transferManager.addFluidFilterTransfer(player.inventory, fluidStorage.getNode().getFilters());
+        transferManager.addFluidFilterTransfer(player.getInventory(), fluidStorage.getNode().getFilters());
     }
 }

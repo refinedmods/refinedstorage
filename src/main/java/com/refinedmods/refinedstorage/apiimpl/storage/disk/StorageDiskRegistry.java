@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.storage.disk;
 
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskRegistry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

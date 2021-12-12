@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.api.storage.disk;
 
 import com.refinedmods.refinedstorage.api.storage.StorageType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 

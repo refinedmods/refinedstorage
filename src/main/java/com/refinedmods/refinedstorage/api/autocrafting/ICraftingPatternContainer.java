@@ -2,11 +2,11 @@ package com.refinedmods.refinedstorage.api.autocrafting;
 
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -62,12 +62,12 @@ public interface ICraftingPatternContainer {
      * @return the tile that this container is connected to, or null if no tile is present
      */
     @Nullable
-    TileEntity getConnectedTile();
+    BlockEntity getConnectedTile();
 
     /**
      * @return the tile that this container is facing
      */
-    TileEntity getFacingTile();
+    BlockEntity getFacingTile();
 
     /**
      * @return the direction to the facing tile
@@ -90,7 +90,7 @@ public interface ICraftingPatternContainer {
      *
      * @return the name of this container
      */
-    ITextComponent getName();
+    Component getName();
 
     /**
      * @return the position of this container

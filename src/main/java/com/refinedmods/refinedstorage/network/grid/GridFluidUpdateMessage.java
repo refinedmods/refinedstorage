@@ -8,18 +8,17 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.view.GridViewImpl;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class GridFluidUpdateMessage {
-    private INetwork network;
-
     private final boolean canCraft;
+    private INetwork network;
     private List<IGridStack> stacks = new ArrayList<>();
 
     public GridFluidUpdateMessage(boolean canCraft, List<IGridStack> stacks) {
@@ -32,7 +31,7 @@ public class GridFluidUpdateMessage {
         this.canCraft = canCraft;
     }
 
-    public static GridFluidUpdateMessage decode(PacketBuffer buf) {
+    public static GridFluidUpdateMessage decode(FriendlyByteBuf buf) {
         boolean canCraft = buf.readBoolean();
 
         int size = buf.readInt();
@@ -46,7 +45,7 @@ public class GridFluidUpdateMessage {
         return new GridFluidUpdateMessage(canCraft, stacks);
     }
 
-    public static void encode(GridFluidUpdateMessage message, PacketBuffer buf) {
+    public static void encode(GridFluidUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeBoolean(message.canCraft);
 
         int size = message.network.getFluidStorageCache().getList().getStacks().size() + message.network.getFluidStorageCache().getCraftablesList().getStacks().size();

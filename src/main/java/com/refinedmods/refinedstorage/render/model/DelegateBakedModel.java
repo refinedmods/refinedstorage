@@ -1,22 +1,22 @@
 package com.refinedmods.refinedstorage.render.model;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class DelegateBakedModel implements IBakedModel {
-    protected final IBakedModel base;
+public class DelegateBakedModel implements BakedModel {
+    protected final BakedModel base;
 
-    public DelegateBakedModel(IBakedModel base) {
+    public DelegateBakedModel(BakedModel base) {
         this.base = base;
     }
 
@@ -53,19 +53,19 @@ public class DelegateBakedModel implements IBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return base.getOverrides();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getTransforms() {
+    public ItemTransforms getTransforms() {
         return base.getTransforms();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack matrixStack) {
+    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack matrixStack) {
         return base.handlePerspective(cameraTransformType, matrixStack);
     }
 }

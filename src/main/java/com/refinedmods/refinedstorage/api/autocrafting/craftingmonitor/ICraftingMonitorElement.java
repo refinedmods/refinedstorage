@@ -1,11 +1,11 @@
 package com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +23,7 @@ public interface ICraftingMonitorElement {
      * @param drawers     the drawers that this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers);
+    void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers);
 
     /**
      * Returns the id for the base of this element, used for sorting in the {@link CraftingMonitorElementList}
@@ -42,7 +42,7 @@ public interface ICraftingMonitorElement {
     /**
      * @return the tooltip of this element
      */
-    default List<ITextComponent> getTooltip() {
+    default List<Component> getTooltip() {
         return Collections.emptyList();
     }
 
@@ -51,7 +51,7 @@ public interface ICraftingMonitorElement {
      *
      * @param buf the buffer
      */
-    void write(PacketBuffer buf);
+    void write(FriendlyByteBuf buf);
 
     /**
      * Merge an element into the current element.

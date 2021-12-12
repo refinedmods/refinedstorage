@@ -1,17 +1,17 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
@@ -24,11 +24,10 @@ public class ItemGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
 
     private final Logger logger = LogManager.getLogger(getClass());
-
+    private final ItemStack stack;
     private UUID id;
     @Nullable
     private UUID otherId;
-    private final ItemStack stack;
     private boolean craftable;
     @Nullable
     private StorageTrackerEntry entry;
@@ -38,7 +37,7 @@ public class ItemGridStack implements IGridStack {
     private String cachedName;
     private String cachedModId;
     private String cachedModName;
-    private List<ITextComponent> cachedTooltip;
+    private List<Component> cachedTooltip;
 
     public ItemGridStack(ItemStack stack) {
         this.stack = stack;
@@ -52,15 +51,15 @@ public class ItemGridStack implements IGridStack {
         this.entry = entry;
     }
 
-    public void setZeroed(boolean zeroed) {
-        this.zeroed = zeroed;
-    }
-
     @Nullable
     static String getModNameByModId(String modId) {
         Optional<? extends ModContainer> modContainer = ModList.get().getModContainerById(modId);
 
         return modContainer.map(container -> container.getModInfo().getDisplayName()).orElse(null);
+    }
+
+    public void setZeroed(boolean zeroed) {
+        this.zeroed = zeroed;
     }
 
     public ItemStack getStack() {
@@ -145,16 +144,16 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public List<ITextComponent> getTooltip(boolean bypassCache) {
+    public List<Component> getTooltip(boolean bypassCache) {
         if (bypassCache || cachedTooltip == null) {
-            List<ITextComponent> tooltip;
+            List<Component> tooltip;
             try {
                 tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
 
                 tooltip = new ArrayList<>();
-                tooltip.add(new StringTextComponent(ERROR_PLACEHOLDER));
+                tooltip.add(new TextComponent(ERROR_PLACEHOLDER));
             }
 
             if (bypassCache) {
@@ -192,7 +191,7 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y) {
+    public void draw(PoseStack matrixStack, BaseScreen<?> screen, int x, int y) {
         String text = null;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
 

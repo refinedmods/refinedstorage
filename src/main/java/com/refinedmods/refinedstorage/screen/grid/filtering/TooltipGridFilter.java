@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen.grid.filtering;
 
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -15,7 +15,7 @@ public class TooltipGridFilter implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
-        List<ITextComponent> stackTooltip = stack.getTooltip(false);
+        List<Component> stackTooltip = stack.getTooltip(false);
 
         for (int i = 1; i < stackTooltip.size(); ++i) {
             if (stackTooltip.get(i).getString().toLowerCase().contains(tooltip.toLowerCase())) {

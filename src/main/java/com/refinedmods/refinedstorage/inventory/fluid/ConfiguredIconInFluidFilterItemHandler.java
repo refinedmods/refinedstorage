@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.inventory.fluid;
 
 import com.refinedmods.refinedstorage.item.FilterItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ConfiguredIconInFluidFilterItemHandler extends FluidInventory {
@@ -11,7 +11,7 @@ public class ConfiguredIconInFluidFilterItemHandler extends FluidInventory {
 
         this.addListener((handler, slot, reading) -> {
             if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
+                stack.setTag(new CompoundTag());
             }
 
             FilterItem.setFluidIcon(stack, getFluid(slot));

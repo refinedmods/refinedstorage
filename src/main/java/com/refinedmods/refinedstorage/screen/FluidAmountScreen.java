@@ -4,10 +4,10 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.FluidAmountContainer;
 import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -21,8 +21,8 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
     @Nullable
     private final UnaryOperator<Screen> alternativesScreenFactory;
 
-    public FluidAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
-        super(parent, new FluidAmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.fluid_amount"));
+    public FluidAmountScreen(BaseScreen parent, Player player, int containerSlot, FluidStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
+        super(parent, new FluidAmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), new TranslatableComponent("gui.refinedstorage.fluid_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -40,7 +40,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
+            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslatableComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -69,8 +69,8 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
     }
 
     @Override
-    protected ITextComponent getOkButtonText() {
-        return new TranslationTextComponent("misc.refinedstorage.set");
+    protected Component getOkButtonText() {
+        return new TranslatableComponent("misc.refinedstorage.set");
     }
 
     @Override

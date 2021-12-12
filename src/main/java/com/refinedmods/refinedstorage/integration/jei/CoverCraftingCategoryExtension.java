@@ -7,16 +7,14 @@ import com.refinedmods.refinedstorage.recipe.CoverRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICustomCraftingCategoryExtension;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Size2i;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -39,7 +37,7 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
                 continue;
             }
             NonNullList<ItemStack> subBlocks = NonNullList.create();
-            block.fillItemCategory(ItemGroup.TAB_SEARCH, subBlocks);
+            block.fillItemCategory(CreativeModeTab.TAB_SEARCH, subBlocks);
             for (ItemStack subBlock : subBlocks) {
                 if (CoverManager.isValidCover(subBlock)) {
                     input.add(subBlock);
@@ -68,7 +66,7 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, IIngredients ingredients) {
         ItemStack stack = recipeLayout.getFocus(VanillaTypes.ITEM).getValue();
-        if (stack.getItem() instanceof CoverItem){
+        if (stack.getItem() instanceof CoverItem) {
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, CoverItem.getItem(stack));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);

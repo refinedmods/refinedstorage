@@ -6,12 +6,12 @@ import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CraftingSettingsContainer extends BaseContainer {
-    public CraftingSettingsContainer(PlayerEntity player, IGridStack stack) {
+    public CraftingSettingsContainer(Player player, IGridStack stack) {
         super(null, null, player, 0);
 
         if (stack instanceof FluidGridStack) {

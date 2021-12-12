@@ -1,11 +1,11 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +22,7 @@ public interface IGridFactory {
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromStack(PlayerEntity player, ItemStack stack, PlayerSlot slot);
+    IGrid createFromStack(Player player, ItemStack stack, PlayerSlot slot);
 
     /**
      * Creates a grid from a block. Used when {@link #getType()} is BLOCK.
@@ -32,7 +32,7 @@ public interface IGridFactory {
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromBlock(PlayerEntity player, BlockPos pos);
+    IGrid createFromBlock(Player player, BlockPos pos);
 
     /**
      * Returns a possible tile for this grid if {@link #getType()} is BLOCK.
@@ -42,7 +42,7 @@ public interface IGridFactory {
      * @return the tile, or null if no tile is required
      */
     @Nullable
-    TileEntity getRelevantTile(World world, BlockPos pos);
+    BlockEntity getRelevantTile(Level world, BlockPos pos);
 
     /**
      * @return the type

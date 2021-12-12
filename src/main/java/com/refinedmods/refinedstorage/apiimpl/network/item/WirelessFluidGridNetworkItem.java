@@ -10,20 +10,20 @@ import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.WirelessFluid
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessFluidGridItem;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class WirelessFluidGridNetworkItem implements INetworkItem {
     private final INetworkItemManager handler;
-    private final PlayerEntity player;
+    private final Player player;
     private final ItemStack stack;
     private final PlayerSlot slot;
 
-    public WirelessFluidGridNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+    public WirelessFluidGridNetworkItem(INetworkItemManager handler, Player player, ItemStack stack, PlayerSlot slot) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
@@ -31,7 +31,7 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
     }
 
     @Override
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
@@ -54,7 +54,7 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
             return false;
         }
 
-        API.instance().getGridManager().openGrid(WirelessFluidGridGridFactory.ID, (ServerPlayerEntity) player, stack, slot);
+        API.instance().getGridManager().openGrid(WirelessFluidGridGridFactory.ID, (ServerPlayer) player, stack, slot);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessFluidGrid().getOpenUsage());
 
@@ -79,6 +79,6 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
     }
 
     private void sendOutOfEnergyMessage() {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getDescriptionId())), player.getUUID());
+        player.sendMessage(new TranslatableComponent("misc.refinedstorage.network_item.out_of_energy", new TranslatableComponent(stack.getItem().getDescriptionId())), player.getUUID());
     }
 }

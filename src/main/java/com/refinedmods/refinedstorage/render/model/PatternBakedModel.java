@@ -6,44 +6,17 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternRenderHan
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverride;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
 public class PatternBakedModel extends DelegateBakedModel {
-    public PatternBakedModel(IBakedModel base) {
+    public PatternBakedModel(BakedModel base) {
         super(base);
-    }
-
-    @Override
-    public ItemOverrideList getOverrides() {
-        return new ItemOverrideList() {
-            @Nullable
-            @Override
-            public IBakedModel resolve(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-                if (entity != null) {
-                    ICraftingPattern pattern = PatternItem.fromCache(entity.level, stack);
-
-                    if (canDisplayOutput(stack, pattern)) {
-                        ItemStack outputToRender = pattern.getOutputs().get(0);
-
-                        return Minecraft.getInstance().getItemRenderer().getModel(outputToRender, world, entity);
-                    }
-                }
-
-                return super.resolve(model, stack, world, entity);
-            }
-
-            @Override
-            public ImmutableList<ItemOverride> getOverrides() {
-                return base.getOverrides().getOverrides();
-            }
-        };
     }
 
     public static boolean canDisplayOutput(ItemStack patternStack, ICraftingPattern pattern) {
@@ -56,5 +29,31 @@ public class PatternBakedModel extends DelegateBakedModel {
         }
 
         return false;
+    }
+
+    @Override
+    public ItemOverrides getOverrides() {
+        return new ItemOverrides() {
+            @Nullable
+            @Override
+            public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p) {
+                if (entity != null) {
+                    ICraftingPattern pattern = PatternItem.fromCache(entity.level, stack);
+
+                    if (canDisplayOutput(stack, pattern)) {
+                        ItemStack outputToRender = pattern.getOutputs().get(0);
+
+                        return Minecraft.getInstance().getItemRenderer().getModel(outputToRender, world, entity, p);
+                    }
+                }
+
+                return super.resolve(model, stack, world, entity, p);
+            }
+
+            @Override
+            public ImmutableList<BakedOverride> getOverrides() {
+                return base.getOverrides().getOverrides();
+            }
+        };
     }
 }

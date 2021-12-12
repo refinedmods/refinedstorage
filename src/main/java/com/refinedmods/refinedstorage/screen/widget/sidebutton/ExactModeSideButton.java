@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 
 public class ExactModeSideButton extends SideButton {
     private static final int MASK = IComparer.COMPARE_NBT;
@@ -21,7 +21,7 @@ public class ExactModeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        String tooltip = I18n.get("sidebutton.refinedstorage.exact_mode") + "\n" + TextFormatting.GRAY;
+        String tooltip = I18n.get("sidebutton.refinedstorage.exact_mode") + "\n" + ChatFormatting.GRAY;
 
         if ((parameter.getValue() & MASK) == MASK) {
             tooltip += I18n.get("sidebutton.refinedstorage.exact_mode.on");
@@ -33,7 +33,7 @@ public class ExactModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(MatrixStack matrixStack, int x, int y) {
+    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
         int ty = 16 * 12;
         int tx = (parameter.getValue() & MASK) == MASK ? 0 : 16;
 

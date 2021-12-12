@@ -9,8 +9,8 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     public int getCapacity() {
         return parent.getCapacity();
     }
-    
+
     @Nullable
     @Override
     public UUID getOwner() {
@@ -58,7 +58,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
+    public CompoundTag writeToNbt() {
         return parent.writeToNbt();
     }
 

@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.api.network.item;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Represents a network item (an item that is connected to the network somehow).
@@ -12,7 +12,7 @@ public interface INetworkItem {
     /**
      * @return the player using the network item
      */
-    PlayerEntity getPlayer();
+    Player getPlayer();
 
     /**
      * Called when the network item is being opened.

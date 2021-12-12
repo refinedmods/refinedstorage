@@ -6,10 +6,10 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -146,8 +146,8 @@ public class NodeRequirements {
         return toReturn;
     }
 
-    public void readFromNbt(CompoundNBT tag) throws CraftingTaskReadException {
-        ListNBT itemRequirementsTag = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
+    public void readFromNbt(CompoundTag tag) throws CraftingTaskReadException {
+        ListTag itemRequirementsTag = tag.getList(NBT_ITEMS_TO_USE, Tag.TAG_LIST);
         for (int i = 0; i < itemRequirementsTag.size(); i++) {
             itemRequirements.put(i, SerializationUtil.readItemStackList(itemRequirementsTag.getList(i)));
         }
@@ -157,7 +157,7 @@ public class NodeRequirements {
             itemsNeededPerCraft.put(i, itemsNeededPerCraftTag.get(i));
         }
 
-        ListNBT fluidRequirementsTag = tag.getList(NBT_FLUIDS_TO_USE, Constants.NBT.TAG_LIST);
+        ListTag fluidRequirementsTag = tag.getList(NBT_FLUIDS_TO_USE, Tag.TAG_LIST);
         for (int i = 0; i < fluidRequirementsTag.size(); i++) {
             fluidRequirements.put(i, SerializationUtil.readFluidStackList(fluidRequirementsTag.getList(i)));
         }
@@ -168,8 +168,8 @@ public class NodeRequirements {
         }
     }
 
-    public CompoundNBT writeToNbt(CompoundNBT tag) {
-        ListNBT itemRequirementsTag = new ListNBT();
+    public CompoundTag writeToNbt(CompoundTag tag) {
+        ListTag itemRequirementsTag = new ListTag();
         for (IStackList<ItemStack> list : itemRequirements.values()) {
             itemRequirementsTag.add(SerializationUtil.writeItemStackList(list));
         }
@@ -177,7 +177,7 @@ public class NodeRequirements {
 
         tag.putIntArray(NBT_ITEMS_NEEDED_PER_CRAFT, Ints.toArray(itemsNeededPerCraft.values()));
 
-        ListNBT fluidRequirementsTag = new ListNBT();
+        ListTag fluidRequirementsTag = new ListTag();
         for (IStackList<FluidStack> list : fluidRequirements.values()) {
             fluidRequirementsTag.add(SerializationUtil.writeFluidStackList(list));
         }

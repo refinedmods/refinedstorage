@@ -4,10 +4,10 @@ import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.util.ItemStackKey;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class ItemStorageTracker implements IStorageTracker<ItemStack> {
     }
 
     @Override
-    public void changed(PlayerEntity player, ItemStack stack) {
+    public void changed(Player player, ItemStack stack) {
         changes.put(new ItemStackKey(stack), new StorageTrackerEntry(System.currentTimeMillis(), player.getName().getString()));
 
         listener.run();
@@ -37,9 +37,9 @@ public class ItemStorageTracker implements IStorageTracker<ItemStack> {
     }
 
     @Override
-    public void readFromNbt(ListNBT list) {
+    public void readFromNbt(ListTag list) {
         for (int i = 0; i < list.size(); ++i) {
-            CompoundNBT tag = list.getCompound(i);
+            CompoundTag tag = list.getCompound(i);
 
             ItemStack stack = StackUtils.deserializeStackFromNbt(tag.getCompound(NBT_STACK));
 
@@ -50,11 +50,11 @@ public class ItemStorageTracker implements IStorageTracker<ItemStack> {
     }
 
     @Override
-    public ListNBT serializeNbt() {
-        ListNBT list = new ListNBT();
+    public ListTag serializeNbt() {
+        ListTag list = new ListTag();
 
         for (Map.Entry<ItemStackKey, StorageTrackerEntry> entry : changes.entrySet()) {
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
 
             tag.putLong(NBT_TIME, entry.getValue().getTime());
             tag.putString(NBT_NAME, entry.getValue().getName());

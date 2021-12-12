@@ -7,9 +7,9 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -27,7 +27,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, boolean shift) {
+    public void onExtract(ServerPlayer player, UUID id, boolean shift) {
         if (!portableGrid.isGridActive()) {
             return;
         }
@@ -40,13 +40,13 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
         ItemStack bucket = ItemStack.EMPTY;
 
-        for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
-            ItemStack slot = player.inventory.getItem(i);
+        for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+            ItemStack slot = player.getInventory().getItem(i);
 
             if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
                 bucket = StackUtils.EMPTY_BUCKET.copy();
 
-                player.inventory.removeItem(i, 1);
+                player.getInventory().removeItem(i, 1);
 
                 break;
             }
@@ -59,12 +59,12 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
                 fluidHandler.fill(portableGrid.getFluidStorage().extract(stack, FluidAttributes.BUCKET_VOLUME, IComparer.COMPARE_NBT, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
                 if (shift) {
-                    if (!player.inventory.add(fluidHandler.getContainer().copy())) {
-                        InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
+                    if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
+                        Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
                     }
                 } else {
-                    player.inventory.setCarried(fluidHandler.getContainer());
-                    player.broadcastCarriedItem();
+                    player.containerMenu.setCarried(fluidHandler.getContainer());
+                    // TODO player.broadcastCarriedItem();
                 }
 
                 portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
@@ -74,7 +74,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
+    public ItemStack onInsert(ServerPlayer player, ItemStack container) {
         if (!portableGrid.isGridActive()) {
             return container;
         }
@@ -97,18 +97,18 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onInsertHeldContainer(ServerPlayerEntity player) {
-        player.inventory.setCarried(onInsert(player, player.inventory.getCarried()));
-        player.broadcastCarriedItem();
+    public void onInsertHeldContainer(ServerPlayer player) {
+        player.containerMenu.setCarried(onInsert(player, player.containerMenu.getCarried()));
+        // TODO player.broadcastCarriedItem();
     }
 
     @Override
-    public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayer player, UUID id, int quantity, boolean noPreview) {
         // NO OP
     }
 
     @Override
-    public void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity) {
+    public void onCraftingRequested(ServerPlayer player, UUID id, int quantity) {
         // NO OP
     }
 }

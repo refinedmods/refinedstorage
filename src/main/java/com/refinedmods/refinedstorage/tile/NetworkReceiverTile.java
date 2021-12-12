@@ -2,19 +2,20 @@ package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkReceiverNetworkNode;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
 public class NetworkReceiverTile extends NetworkNodeTile<NetworkReceiverNetworkNode> {
-    public NetworkReceiverTile() {
-        super(RSTiles.NETWORK_RECEIVER);
+    public NetworkReceiverTile(BlockPos pos, BlockState state) {
+        super(RSTiles.NETWORK_RECEIVER, pos, state);
     }
 
     @Override
     @Nonnull
-    public NetworkReceiverNetworkNode createNode(World world, BlockPos pos) {
+    public NetworkReceiverNetworkNode createNode(Level world, BlockPos pos) {
         return new NetworkReceiverNetworkNode(world, pos);
     }
 }

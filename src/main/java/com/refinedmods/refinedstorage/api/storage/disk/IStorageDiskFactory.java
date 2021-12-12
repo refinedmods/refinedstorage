@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.api.storage.disk;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public interface IStorageDiskFactory<T> {
      * @param tag   the tag
      * @return the storage disk
      */
-    IStorageDisk<T> createFromNbt(ServerWorld world, CompoundNBT tag);
+    IStorageDisk<T> createFromNbt(ServerLevel world, CompoundTag tag);
 
     /**
      * Creates a storage disk item based on ID.
@@ -39,5 +39,5 @@ public interface IStorageDiskFactory<T> {
      * @param owner    the owner, or null if no owner
      * @return the storage disk
      */
-    IStorageDisk<T> create(ServerWorld world, int capacity, @Nullable UUID owner);
+    IStorageDisk<T> create(ServerLevel world, int capacity, @Nullable UUID owner);
 }

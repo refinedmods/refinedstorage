@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.api.storage.disk;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.Map;

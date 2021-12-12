@@ -7,23 +7,23 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageN
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.tile.FluidStorageTile;
 import com.refinedmods.refinedstorage.tile.StorageTile;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunction;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public class StorageBlockLootFunction extends LootFunction {
-    protected StorageBlockLootFunction(ILootCondition[] conditions) {
+public class StorageBlockLootFunction extends LootItemConditionalFunction {
+    protected StorageBlockLootFunction(LootItemCondition[] conditions) {
         super(conditions);
     }
 
     @Override
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
+        BlockEntity tile = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
         // This code needs to work without the node being removed as well.
         // For example: the Destructor calls getDrops before the node has been removed.
@@ -34,7 +34,7 @@ public class StorageBlockLootFunction extends LootFunction {
                 removedNode = ((StorageTile) tile).getNode();
             }
 
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
             stack.getTag().putUUID(StorageNetworkNode.NBT_ID, removedNode.getStorageId());
         } else if (tile instanceof FluidStorageTile) {
             FluidStorageNetworkNode removedNode = ((FluidStorageTile) tile).getRemovedNode();
@@ -42,7 +42,7 @@ public class StorageBlockLootFunction extends LootFunction {
                 removedNode = ((FluidStorageTile) tile).getNode();
             }
 
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
             stack.getTag().putUUID(FluidStorageNetworkNode.NBT_ID, removedNode.getStorageId());
         }
 
@@ -50,13 +50,13 @@ public class StorageBlockLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return RSLootFunctions.getStorageBlock();
     }
 
-    public static class Serializer extends LootFunction.Serializer<StorageBlockLootFunction> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<StorageBlockLootFunction> {
         @Override
-        public StorageBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {
+        public StorageBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditions) {
             return new StorageBlockLootFunction(conditions);
         }
     }

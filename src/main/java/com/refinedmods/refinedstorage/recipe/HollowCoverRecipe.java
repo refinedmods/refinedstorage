@@ -3,22 +3,20 @@ package com.refinedmods.refinedstorage.recipe;
 
 import com.google.common.collect.Lists;
 import com.refinedmods.refinedstorage.RSItems;
-import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.item.CoverItem;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class HollowCoverRecipe extends SpecialRecipe {
+public class HollowCoverRecipe extends CustomRecipe {
 
-    public static IRecipeSerializer<HollowCoverRecipe> SERIALIZER = new SpecialRecipeSerializer<>(HollowCoverRecipe::new);
+    public static RecipeSerializer<HollowCoverRecipe> SERIALIZER = new SimpleRecipeSerializer<>(HollowCoverRecipe::new);
 
     public HollowCoverRecipe(ResourceLocation idIn) {
         super(idIn);
@@ -40,7 +38,7 @@ public class HollowCoverRecipe extends SpecialRecipe {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack getResult(ItemStack first){
+    public static ItemStack getResult(ItemStack first) {
         ItemStack stack = CoverItem.getItem(first);
         ItemStack result = new ItemStack(RSItems.HOLLOW_COVER.get());
         CoverItem.setItem(result, stack);
@@ -48,13 +46,13 @@ public class HollowCoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn) {
+    public boolean matches(CraftingContainer inv, Level worldIn) {
         List<ItemStack> list = Lists.newArrayList();
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
-                if (!stackMatches(itemstack)){
+                if (!stackMatches(itemstack)) {
                     return false;
                 }
             }
@@ -63,13 +61,13 @@ public class HollowCoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         List<ItemStack> list = Lists.newArrayList();
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
-                if (!stackMatches(itemstack)){
+                if (!stackMatches(itemstack)) {
                     return ItemStack.EMPTY;
                 }
             }
@@ -83,7 +81,7 @@ public class HollowCoverRecipe extends SpecialRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return SERIALIZER;
     }
 }

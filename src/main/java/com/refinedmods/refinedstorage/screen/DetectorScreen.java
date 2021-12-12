@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
@@ -9,17 +9,17 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButt
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.refinedmods.refinedstorage.tile.DetectorTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
 
 public class DetectorScreen extends BaseScreen<DetectorContainer> {
-    private TextFieldWidget amountField;
+    private EditBox amountField;
 
-    public DetectorScreen(DetectorContainer container, PlayerInventory inventory, ITextComponent title) {
+    public DetectorScreen(DetectorContainer container, Inventory inventory, Component title) {
         super(container, 176, 137, inventory, title);
     }
 
@@ -31,7 +31,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
 
         addSideButton(new ExactModeSideButton(this, DetectorTile.COMPARE));
 
-        amountField = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.lineHeight, new StringTextComponent(""));
+        amountField = new EditBox(font, x + 41 + 1, y + 23 + 1, 50, font.lineHeight, new TextComponent(""));
         amountField.setValue(String.valueOf(DetectorTile.AMOUNT.getValue()));
         amountField.setBordered(false);
         amountField.setVisible(true);
@@ -48,7 +48,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
             }
         });
 
-        addButton(amountField);
+        addRenderableWidget(amountField);
     }
 
     public void updateAmountField(int amount) {
@@ -61,14 +61,14 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/detector.png");
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
         renderString(matrixStack, 7, 43, I18n.get("container.inventory"));
     }

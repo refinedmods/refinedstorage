@@ -15,15 +15,15 @@ import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -63,7 +63,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     private int oldAmount = -1;
 
-    public StorageMonitorNetworkNode(World world, BlockPos pos) {
+    public StorageMonitorNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -86,48 +86,48 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         }
     }
 
-    public ActionResultType depositAll(PlayerEntity player) {
+    public InteractionResult depositAll(Player player) {
         if (getType() != IType.ITEMS) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         if (network == null) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         Pair<ItemStack, Long> deposit = deposits.get(player.getGameProfile().getName());
 
         if (deposit == null) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         ItemStack inserted = deposit.getKey();
         long insertedAt = deposit.getValue();
 
         if (System.currentTimeMillis() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
-            for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
-                ItemStack toInsert = player.inventory.getItem(i);
+            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+                ItemStack toInsert = player.getInventory().getItem(i);
 
                 if (API.instance().getComparer().isEqual(inserted, toInsert, compare)) {
-                    player.inventory.setItem(i, network.insertItemTracked(toInsert, toInsert.getCount()));
+                    player.getInventory().setItem(i, network.insertItemTracked(toInsert, toInsert.getCount()));
                 }
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    public ActionResultType deposit(PlayerEntity player, ItemStack toInsert) {
+    public InteractionResult deposit(Player player, ItemStack toInsert) {
         if (network == null) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         if (getType() == IType.ITEMS) {
@@ -136,20 +136,20 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             depositFluids(player, toInsert);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private void depositItems(PlayerEntity player, ItemStack toInsert) {
+    private void depositItems(Player player, ItemStack toInsert) {
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
-            player.inventory.setItem(player.inventory.selected, network.insertItemTracked(toInsert, toInsert.getCount()));
+            player.getInventory().setItem(player.getInventory().selected, network.insertItemTracked(toInsert, toInsert.getCount()));
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
     }
 
-    private void depositFluids(PlayerEntity player, ItemStack toInsert) {
+    private void depositFluids(Player player, ItemStack toInsert) {
         FluidStack filter = fluidFilter.getFluid(0);
 
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(toInsert, true);
@@ -165,16 +165,16 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
             network.insertFluidTracked(result.getValue(), result.getValue().getAmount());
 
-            player.inventory.setItem(player.inventory.selected, ItemStack.EMPTY);
+            player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
 
             ItemStack container = result.getLeft();
-            if (!player.inventory.add(container.copy())) {
-                InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), container);
+            if (!player.getInventory().add(container.copy())) {
+                Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), container);
             }
         }
     }
 
-    public void extract(PlayerEntity player, Direction side) {
+    public void extract(Player player, Direction side) {
         if (network == null || getDirection() != side) {
             return;
         }
@@ -190,7 +190,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         }
     }
 
-    private void extractItems(PlayerEntity player) {
+    private void extractItems(Player player) {
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         int toExtract = player.isCrouching() ? 1 : filter.getMaxStackSize();
@@ -198,13 +198,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
-            if (!result.isEmpty() && !player.inventory.add(result.copy())) {
-                InventoryHelper.dropItemStack(world, player.getX(), player.getY(), player.getZ(), result);
+            if (!result.isEmpty() && !player.getInventory().add(result.copy())) {
+                Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), result);
             }
         }
     }
 
-    private void extractFluids(PlayerEntity player) {
+    private void extractFluids(Player player) {
         FluidStack filter = fluidFilter.getFluid(0);
 
         if (filter.isEmpty()) {
@@ -223,8 +223,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
                 fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
-                if (!player.inventory.add(fluidHandler.getContainer().copy())) {
-                    InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
+                if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
+                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
                 }
             }));
         }
@@ -255,7 +255,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
@@ -269,7 +269,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_COMPARE)) {

@@ -1,35 +1,31 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.integration.jei.GridRecipeTransferHandler;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class ScrollbarWidget implements IGuiEventListener {
+public class ScrollbarWidget implements GuiEventListener {
     private static final int SCROLLER_HEIGHT = 15;
 
     private final int x;
     private final int y;
     private final int width;
     private final int height;
+    private final List<ScrollbarWidgetListener> listeners = new LinkedList<>();
+    private final BaseScreen<?> screen;
     private boolean enabled = false;
-
     private int offset;
     private int maxOffset;
-
     private boolean clicked = false;
     private boolean small = false;
-
-    private final List<ScrollbarWidgetListener> listeners = new LinkedList<>();
-
-    private final BaseScreen<?> screen;
 
     public ScrollbarWidget(BaseScreen<?> screen, int x, int y, int width, int height) {
         this.screen = screen;
@@ -56,16 +52,16 @@ public class ScrollbarWidget implements IGuiEventListener {
         return height;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
 
-    public void render(MatrixStack matrixStack) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void render(PoseStack matrixStack) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         screen.bindTexture(RS.ID, "icons.png");
         if (small) {
@@ -73,7 +69,6 @@ public class ScrollbarWidget implements IGuiEventListener {
         } else {
             screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
         }
-
     }
 
     @Override

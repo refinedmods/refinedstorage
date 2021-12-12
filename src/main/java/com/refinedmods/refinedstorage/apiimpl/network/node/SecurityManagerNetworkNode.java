@@ -12,11 +12,11 @@ import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.SecurityCardItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -29,9 +29,10 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "security_manager");
 
     private final List<ISecurityCard> cards = new ArrayList<>();
-    private ISecurityCard globalCard;
-
-    private final BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
+    private final BaseItemHandler editCard = new BaseItemHandler(1)
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
+        .addListener(new NetworkNodeInventoryListener(this));
+    private ISecurityCard globalCard;    private final BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
         .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
@@ -44,11 +45,7 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
             }
         }));
 
-    private final BaseItemHandler editCard = new BaseItemHandler(1)
-        .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
-        .addListener(new NetworkNodeInventoryListener(this));
-
-    public SecurityManagerNetworkNode(World world, BlockPos pos) {
+    public SecurityManagerNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -106,7 +103,7 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(cardsInv, 0, tag);
@@ -119,7 +116,7 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(cardsInv, 0, tag);
@@ -166,4 +163,6 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(cardsInv, editCard);
     }
+
+
 }

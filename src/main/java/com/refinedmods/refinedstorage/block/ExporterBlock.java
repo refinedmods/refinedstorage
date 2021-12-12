@@ -8,55 +8,53 @@ import com.refinedmods.refinedstorage.tile.ExporterTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 
 public class ExporterBlock extends CableBlock {
     private static final VoxelShape LINE_NORTH_1 = box(6, 6, 0, 10, 10, 2);
     private static final VoxelShape LINE_NORTH_2 = box(5, 5, 2, 11, 11, 4);
     private static final VoxelShape LINE_NORTH_3 = box(3, 3, 4, 13, 13, 6);
-    private static final VoxelShape LINE_NORTH = VoxelShapes.or(LINE_NORTH_1, LINE_NORTH_2, LINE_NORTH_3);
+    private static final VoxelShape LINE_NORTH = Shapes.or(LINE_NORTH_1, LINE_NORTH_2, LINE_NORTH_3);
 
     private static final VoxelShape LINE_EAST_1 = box(14, 6, 6, 16, 10, 10);
     private static final VoxelShape LINE_EAST_2 = box(12, 5, 5, 14, 11, 11);
     private static final VoxelShape LINE_EAST_3 = box(10, 3, 3, 12, 13, 13);
-    private static final VoxelShape LINE_EAST = VoxelShapes.or(LINE_EAST_1, LINE_EAST_2, LINE_EAST_3);
+    private static final VoxelShape LINE_EAST = Shapes.or(LINE_EAST_1, LINE_EAST_2, LINE_EAST_3);
 
     private static final VoxelShape LINE_SOUTH_1 = box(6, 6, 14, 10, 10, 16);
     private static final VoxelShape LINE_SOUTH_2 = box(5, 5, 12, 11, 11, 14);
     private static final VoxelShape LINE_SOUTH_3 = box(3, 3, 10, 13, 13, 12);
-    private static final VoxelShape LINE_SOUTH = VoxelShapes.or(LINE_SOUTH_1, LINE_SOUTH_2, LINE_SOUTH_3);
+    private static final VoxelShape LINE_SOUTH = Shapes.or(LINE_SOUTH_1, LINE_SOUTH_2, LINE_SOUTH_3);
 
     private static final VoxelShape LINE_WEST_1 = box(0, 6, 6, 2, 10, 10);
     private static final VoxelShape LINE_WEST_2 = box(2, 5, 5, 4, 11, 11);
     private static final VoxelShape LINE_WEST_3 = box(4, 3, 3, 6, 13, 13);
-    private static final VoxelShape LINE_WEST = VoxelShapes.or(LINE_WEST_1, LINE_WEST_2, LINE_WEST_3);
+    private static final VoxelShape LINE_WEST = Shapes.or(LINE_WEST_1, LINE_WEST_2, LINE_WEST_3);
 
     private static final VoxelShape LINE_UP_1 = box(6, 14, 6, 10, 16, 10);
     private static final VoxelShape LINE_UP_2 = box(5, 12, 5, 11, 14, 11);
     private static final VoxelShape LINE_UP_3 = box(3, 10, 3, 13, 12, 13);
-    private static final VoxelShape LINE_UP = VoxelShapes.or(LINE_UP_1, LINE_UP_2, LINE_UP_3);
+    private static final VoxelShape LINE_UP = Shapes.or(LINE_UP_1, LINE_UP_2, LINE_UP_3);
 
     private static final VoxelShape LINE_DOWN_1 = box(6, 0, 6, 10, 2, 10);
     private static final VoxelShape LINE_DOWN_2 = box(5, 2, 5, 11, 4, 11);
     private static final VoxelShape LINE_DOWN_3 = box(3, 4, 3, 13, 6, 13);
-    private static final VoxelShape LINE_DOWN = VoxelShapes.or(LINE_DOWN_1, LINE_DOWN_2, LINE_DOWN_3);
+    private static final VoxelShape LINE_DOWN = Shapes.or(LINE_DOWN_1, LINE_DOWN_2, LINE_DOWN_3);
 
     public ExporterBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
@@ -68,11 +66,11 @@ public class ExporterBlock extends CableBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext ctx) {
         return ConstantsCable.addCoverVoxelShapes(ShapeCache.getOrCreate(state, s -> {
             VoxelShape shape = getCableShape(s);
 
-            shape = VoxelShapes.or(shape, getLineShape(s));
+            shape = Shapes.or(shape, getLineShape(s));
 
             return shape;
         }), world, pos);
@@ -106,23 +104,22 @@ public class ExporterBlock extends CableBlock {
             return LINE_DOWN;
         }
 
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ExporterTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ExporterTile(pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!world.isClientSide && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getLocation())) {
             return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
-                (ServerPlayerEntity) player,
+                (ServerPlayer) player,
                 new PositionalTileContainerProvider<ExporterTile>(
-                    new TranslationTextComponent("gui.refinedstorage.exporter"),
+                    new TranslatableComponent("gui.refinedstorage.exporter"),
                     (tile, windowId, inventory, p) -> new ExporterContainer(tile, player, windowId),
                     pos
                 ),
@@ -130,6 +127,6 @@ public class ExporterBlock extends CableBlock {
             ));
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

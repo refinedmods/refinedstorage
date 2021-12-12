@@ -10,15 +10,15 @@ import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     private Optional<UUID> tabSelected = Optional.empty();
     private int tabPage;
 
-    public CraftingMonitorNetworkNode(World world, BlockPos pos) {
+    public CraftingMonitorNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -50,12 +50,12 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("gui.refinedstorage.crafting_monitor");
+    public Component getTitle() {
+        return new TranslatableComponent("gui.refinedstorage.crafting_monitor");
     }
 
     @Override
-    public void onCancelled(ServerPlayerEntity player, @Nullable UUID id) {
+    public void onCancelled(ServerPlayer player, @Nullable UUID id) {
         if (network != null) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
@@ -89,7 +89,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.putInt(NBT_TAB_PAGE, tabPage);
@@ -100,7 +100,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         if (tag.contains(NBT_TAB_PAGE)) {
@@ -112,16 +112,8 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
         }
     }
 
-    public void setTabSelected(Optional<UUID> tabSelected) {
-        this.tabSelected = tabSelected;
-    }
-
-    public void setTabPage(int tabPage) {
-        this.tabPage = tabPage;
-    }
-
     @Override
-    public void onClosed(PlayerEntity player) {
+    public void onClosed(Player player) {
         // NO OP
     }
 
@@ -130,9 +122,17 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
         return world.isClientSide ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
     }
 
+    public void setTabSelected(Optional<UUID> tabSelected) {
+        this.tabSelected = tabSelected;
+    }
+
     @Override
     public int getTabPage() {
         return world.isClientSide ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
+    }
+
+    public void setTabPage(int tabPage) {
+        this.tabPage = tabPage;
     }
 
     @Override

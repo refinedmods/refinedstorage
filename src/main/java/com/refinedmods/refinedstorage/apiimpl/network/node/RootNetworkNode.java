@@ -3,27 +3,25 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
-
 public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     private final INetwork network;
-    private final World world;
+    private final Level world;
     private final BlockPos pos;
 
-    public RootNetworkNode(INetwork network, World world, BlockPos pos) {
+    public RootNetworkNode(INetwork network, Level world, BlockPos pos) {
         this.network = network;
         this.world = world;
         this.pos = pos;
@@ -34,15 +32,15 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
         return null;
     }
 
-    @Override
-    public void setOwner(@Nullable UUID owner) {
-        // NO OP
-    }
-
     @Nullable
     @Override
     public UUID getOwner() {
         return null;
+    }
+
+    @Override
+    public void setOwner(@Nullable UUID owner) {
+        // NO OP
     }
 
     @Override
@@ -87,7 +85,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         return tag;
     }
 
@@ -97,7 +95,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public World getWorld() {
+    public Level getWorld() {
         return world;
     }
 

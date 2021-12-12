@@ -7,28 +7,23 @@ import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridG
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.render.Styles;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class PortableGridBlockItem extends EnergyBlockItem {
-    public enum Type {
-        NORMAL,
-        CREATIVE
-    }
-
     private final Type type;
 
     public PortableGridBlockItem(Type type) {
@@ -47,27 +42,27 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!world.isClientSide) {
-            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, PlayerSlot.getSlotForHand(player, hand));
+            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayer) player, stack, PlayerSlot.getSlotForHand(player, hand));
         }
 
-        return ActionResult.success(stack);
+        return InteractionResultHolder.success(stack);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
+        tooltip.add(new TranslatableComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if (context.getPlayer() == null) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
 
         //Place
@@ -78,14 +73,14 @@ public class PortableGridBlockItem extends EnergyBlockItem {
         ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
 
         if (!context.getLevel().isClientSide) {
-            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) context.getPlayer(), stack, PlayerSlot.getSlotForHand(context.getPlayer(), context.getHand()));
+            API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayer) context.getPlayer(), stack, PlayerSlot.getSlotForHand(context.getPlayer(), context.getHand()));
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public int getEntityLifespan(ItemStack stack, World world) {
+    public int getEntityLifespan(ItemStack stack, Level world) {
         return Integer.MAX_VALUE;
     }
 
@@ -102,5 +97,10 @@ public class PortableGridBlockItem extends EnergyBlockItem {
         }
 
         return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
+    }
+
+    public enum Type {
+        NORMAL,
+        CREATIVE
     }
 }

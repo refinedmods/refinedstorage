@@ -4,9 +4,9 @@ import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class FluidStorageTracker implements IStorageTracker<FluidStack> {
     }
 
     @Override
-    public void changed(PlayerEntity player, FluidStack stack) {
+    public void changed(Player player, FluidStack stack) {
         changes.put(new Key(stack), new StorageTrackerEntry(System.currentTimeMillis(), player.getName().getString()));
 
         listener.run();
@@ -37,9 +37,9 @@ public class FluidStorageTracker implements IStorageTracker<FluidStack> {
     }
 
     @Override
-    public void readFromNbt(ListNBT list) {
+    public void readFromNbt(ListTag list) {
         for (int i = 0; i < list.size(); ++i) {
-            CompoundNBT tag = list.getCompound(i);
+            CompoundTag tag = list.getCompound(i);
 
             FluidStack stack = FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_STACK));
 
@@ -50,15 +50,15 @@ public class FluidStorageTracker implements IStorageTracker<FluidStack> {
     }
 
     @Override
-    public ListNBT serializeNbt() {
-        ListNBT list = new ListNBT();
+    public ListTag serializeNbt() {
+        ListTag list = new ListTag();
 
         for (Map.Entry<Key, StorageTrackerEntry> entry : changes.entrySet()) {
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
 
             tag.putLong(NBT_TIME, entry.getValue().getTime());
             tag.putString(NBT_NAME, entry.getValue().getName());
-            tag.put(NBT_STACK, entry.getKey().stack.writeToNBT(new CompoundNBT()));
+            tag.put(NBT_STACK, entry.getKey().stack.writeToNBT(new CompoundTag()));
 
             list.add(tag);
         }

@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.container;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class AlternativesContainer extends BaseContainer {
-    public AlternativesContainer(PlayerEntity player) {
+    public AlternativesContainer(Player player) {
         super(null, null, player, 0);
     }
 }

@@ -20,12 +20,13 @@ import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import com.refinedmods.refinedstorage.tile.BaseTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
@@ -44,7 +45,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     private List<Slot> fluidPatternSlots = new ArrayList<>();
     private int patternScrollOffset;
 
-    public GridContainer(IGrid grid, @Nullable BaseTile gridTile, PlayerEntity player, int windowId) {
+    public GridContainer(IGrid grid, @Nullable BaseTile gridTile, Player player, int windowId) {
         super(RSContainers.GRID, gridTile, player, windowId);
 
         this.grid = grid;
@@ -97,13 +98,13 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                             IFluidGridHandler fluidHandler = grid.getFluidHandler();
 
                             if (fluidHandler != null) {
-                                slot.set(fluidHandler.onInsert((ServerPlayerEntity) getPlayer(), stack));
+                                slot.set(fluidHandler.onInsert((ServerPlayer) getPlayer(), stack));
                             }
                         } else {
                             IItemGridHandler itemHandler = grid.getItemHandler();
 
                             if (itemHandler != null) {
-                                slot.set(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack, false));
+                                slot.set(itemHandler.onInsert((ServerPlayer) getPlayer(), stack, false));
                             } else if (slot instanceof CraftingGridSlot && moveItemStackTo(stack, 14, 14 + (9 * 4), false)) {
                                 slot.setChanged();
 
@@ -128,7 +129,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     private void addPortableGridSlots() {
         addSlot(new SlotItemHandler(((IPortableGrid) grid).getDiskInventory(), 0, 204, 6));
 
-        transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDiskInventory());
+        transferManager.addBiTransfer(getPlayer().getInventory(), ((IPortableGrid) grid).getDiskInventory());
     }
 
     private void addFilterSlots() {
@@ -142,7 +143,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             addSlot(new SlotItemHandler(grid.getFilter(), i, 204, yStart + (18 * i)));
         }
 
-        transferManager.addBiTransfer(getPlayer().inventory, grid.getFilter());
+        transferManager.addBiTransfer(getPlayer().getInventory(), grid.getFilter());
     }
 
     private void addCraftingSlots() {
@@ -174,7 +175,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         addSlot(new SlotItemHandler(((GridNetworkNode) grid).getPatterns(), 0, 172, headerAndSlots + 4));
         addSlot(new SlotItemHandler(((GridNetworkNode) grid).getPatterns(), 1, 172, headerAndSlots + 40));
 
-        transferManager.addBiTransfer(getPlayer().inventory, ((GridNetworkNode) grid).getPatterns());
+        transferManager.addBiTransfer(getPlayer().getInventory(), ((GridNetworkNode) grid).getPatterns());
 
         // Processing patterns
         int ox = 8;
@@ -277,10 +278,10 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             Slot slot = slots.get(i);
 
             if (slot instanceof CraftingGridSlot || slot == craftingResultSlot || slot == patternResultSlot) {
-                for (IContainerListener listener : containerListeners) {
-                    // @Volatile: We can't use IContainerListener#sendSlotContents since ServerPlayerEntity blocks CraftingResultSlot changes...
-                    if (listener instanceof ServerPlayerEntity) {
-                        ((ServerPlayerEntity) listener).connection.send(new SSetSlotPacket(containerId, i, slot.getItem()));
+                for (ContainerListener listener : containerListeners) {
+                    // @Volatile: We can't use ContainerSynchronizer#sendInitialData since ServerPlayerEntity blocks CraftingResultSlot changes...
+                    if (listener instanceof ServerPlayer) {
+                        ((ServerPlayer) listener).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), i, slot.getItem()));
                     }
                 }
             }
@@ -301,7 +302,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                     storageCache = null;
                 }
             } else if (storageCacheListener == null) { // The grid came online.
-                storageCacheListener = grid.createListener((ServerPlayerEntity) getPlayer());
+                storageCacheListener = grid.createListener((ServerPlayer) getPlayer());
                 storageCache = grid.getStorageCache();
 
                 storageCache.addListener(storageCacheListener);
@@ -312,7 +313,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     }
 
     @Override
-    public void removed(PlayerEntity player) {
+    public void removed(Player player) {
         super.removed(player);
 
         if (!player.getCommandSenderWorld().isClientSide) {

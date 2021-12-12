@@ -4,10 +4,10 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.tile.grid.WirelessFluidGrid;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -28,7 +28,7 @@ public class WirelessFluidGridSettingsUpdateMessage {
         this.tabPage = tabPage;
     }
 
-    public static WirelessFluidGridSettingsUpdateMessage decode(PacketBuffer buf) {
+    public static WirelessFluidGridSettingsUpdateMessage decode(FriendlyByteBuf buf) {
         return new WirelessFluidGridSettingsUpdateMessage(
             buf.readInt(),
             buf.readInt(),
@@ -39,7 +39,7 @@ public class WirelessFluidGridSettingsUpdateMessage {
         );
     }
 
-    public static void encode(WirelessFluidGridSettingsUpdateMessage message, PacketBuffer buf) {
+    public static void encode(WirelessFluidGridSettingsUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.sortingDirection);
         buf.writeInt(message.sortingType);
         buf.writeInt(message.searchBoxMode);
@@ -49,7 +49,7 @@ public class WirelessFluidGridSettingsUpdateMessage {
     }
 
     public static void handle(WirelessFluidGridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        Player player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {

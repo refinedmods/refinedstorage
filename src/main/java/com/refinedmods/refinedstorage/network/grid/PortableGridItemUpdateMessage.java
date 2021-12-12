@@ -7,9 +7,9 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.view.GridViewImpl;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class PortableGridItemUpdateMessage {
         this.portableGrid = portableGrid;
     }
 
-    public static PortableGridItemUpdateMessage decode(PacketBuffer buf) {
+    public static PortableGridItemUpdateMessage decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
 
         List<IGridStack> stacks = new ArrayList<>();
@@ -40,7 +40,7 @@ public class PortableGridItemUpdateMessage {
         return new PortableGridItemUpdateMessage(stacks);
     }
 
-    public static void encode(PortableGridItemUpdateMessage message, PacketBuffer buf) {
+    public static void encode(PortableGridItemUpdateMessage message, FriendlyByteBuf buf) {
         int size = message.portableGrid.getItemCache().getList().getStacks().size();
 
         buf.writeInt(size);

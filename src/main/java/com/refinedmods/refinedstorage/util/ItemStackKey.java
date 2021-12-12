@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.util;
 
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public final class ItemStackKey {
     private final ItemStack stack;

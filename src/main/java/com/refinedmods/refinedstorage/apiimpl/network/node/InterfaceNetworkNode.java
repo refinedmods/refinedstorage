@@ -14,13 +14,13 @@ import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -43,7 +43,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
 
     private int currentSlot = 0;
 
-    public InterfaceNetworkNode(World world, BlockPos pos) {
+    public InterfaceNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -129,7 +129,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.relative(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos.relative(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.isActive() &&
@@ -155,7 +155,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(importItems, 0, tag);
@@ -169,7 +169,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(importItems, 0, tag);
@@ -180,7 +180,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(exportFilterItems, 1, tag);
@@ -191,7 +191,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(exportFilterItems, 1, tag);

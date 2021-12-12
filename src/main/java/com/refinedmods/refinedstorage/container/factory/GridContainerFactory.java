@@ -5,18 +5,18 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.BaseTile;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import  net.minecraftforge.network.IContainerFactory;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class GridContainerFactory implements IContainerFactory<GridContainer> {
     @Override
-    public GridContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+    public GridContainer create(int windowId, Inventory inv, FriendlyByteBuf data) {
         ResourceLocation id = data.readResourceLocation();
 
         BlockPos pos = null;
@@ -32,7 +32,7 @@ public class GridContainerFactory implements IContainerFactory<GridContainer> {
 
         PlayerSlot slot = new PlayerSlot(data);
 
-        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos, slot);
+        Pair<IGrid, BlockEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos, slot);
 
         return new GridContainer(grid.getLeft(), grid.getRight() instanceof BaseTile ? (BaseTile) grid.getRight() : null, inv.player, windowId);
     }

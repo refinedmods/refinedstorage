@@ -9,12 +9,12 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
 public class SerializationUtil {
@@ -24,8 +24,8 @@ public class SerializationUtil {
     private SerializationUtil() {
     }
 
-    public static ListNBT writeItemStackList(IStackList<ItemStack> stacks) {
-        ListNBT list = new ListNBT();
+    public static ListTag writeItemStackList(IStackList<ItemStack> stacks) {
+        ListTag list = new ListTag();
 
         for (StackListEntry<ItemStack> entry : stacks.getStacks()) {
             list.add(StackUtils.serializeStackToNbt(entry.getStack()));
@@ -34,7 +34,7 @@ public class SerializationUtil {
         return list;
     }
 
-    public static IStackList<ItemStack> readItemStackList(ListNBT list) throws CraftingTaskReadException {
+    public static IStackList<ItemStack> readItemStackList(ListTag list) throws CraftingTaskReadException {
         IStackList<ItemStack> stacks = API.instance().createItemStackList();
 
         for (int i = 0; i < list.size(); ++i) {
@@ -50,17 +50,17 @@ public class SerializationUtil {
         return stacks;
     }
 
-    public static ListNBT writeFluidStackList(IStackList<FluidStack> stacks) {
-        ListNBT list = new ListNBT();
+    public static ListTag writeFluidStackList(IStackList<FluidStack> stacks) {
+        ListTag list = new ListTag();
 
         for (StackListEntry<FluidStack> entry : stacks.getStacks()) {
-            list.add(entry.getStack().writeToNBT(new CompoundNBT()));
+            list.add(entry.getStack().writeToNBT(new CompoundTag()));
         }
 
         return list;
     }
 
-    public static IStackList<FluidStack> readFluidStackList(ListNBT list) throws CraftingTaskReadException {
+    public static IStackList<FluidStack> readFluidStackList(ListTag list) throws CraftingTaskReadException {
         IStackList<FluidStack> stacks = API.instance().createFluidStackList();
 
         for (int i = 0; i < list.size(); ++i) {
@@ -76,8 +76,8 @@ public class SerializationUtil {
         return stacks;
     }
 
-    public static CompoundNBT writePatternToNbt(ICraftingPattern pattern) {
-        CompoundNBT tag = new CompoundNBT();
+    public static CompoundTag writePatternToNbt(ICraftingPattern pattern) {
+        CompoundTag tag = new CompoundTag();
 
         tag.put(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
         tag.putLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().asLong());
@@ -85,10 +85,10 @@ public class SerializationUtil {
         return tag;
     }
 
-    public static ICraftingPattern readPatternFromNbt(CompoundNBT tag, World world) throws CraftingTaskReadException {
+    public static ICraftingPattern readPatternFromNbt(CompoundTag tag, Level world) throws CraftingTaskReadException {
         BlockPos containerPos = BlockPos.of(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
-        INetworkNode node = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(containerPos);
+        INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(containerPos);
 
         if (node instanceof ICraftingPatternContainer) {
             ItemStack stack = ItemStack.of(tag.getCompound(NBT_PATTERN_STACK));

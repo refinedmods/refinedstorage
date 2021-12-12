@@ -7,23 +7,23 @@ import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.BlockDirection;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.item.blockitem.ColoredBlockItem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameType;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -102,10 +102,10 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
         );
     }
 
-    public <S extends BaseBlock> ActionResultType changeBlockColor(BlockState state, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
+    public <S extends BaseBlock> InteractionResult changeBlockColor(BlockState state, ItemStack heldItem, Level world, BlockPos pos, Player player) {
         DyeColor color = DyeColor.getColor(heldItem);
         if (color == null || state.getBlock().equals(map.get(color).get())) {
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
 
         return setBlockState(getNewState((RegistryObject<S>) map.get(color), state), heldItem, world, pos, player);
@@ -124,14 +124,14 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
         return newState;
     }
 
-    public ActionResultType setBlockState(BlockState newState, ItemStack heldItem, World world, BlockPos pos, PlayerEntity player) {
+    public InteractionResult setBlockState(BlockState newState, ItemStack heldItem, Level world, BlockPos pos, Player player) {
         if (!world.isClientSide) {
             world.setBlockAndUpdate(pos, newState);
-            if (((ServerPlayerEntity) player).gameMode.getGameModeForPlayer() != GameType.CREATIVE) {
+            if (((ServerPlayer) player).gameMode.getGameModeForPlayer() != GameType.CREATIVE) {
                 heldItem.shrink(1);
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

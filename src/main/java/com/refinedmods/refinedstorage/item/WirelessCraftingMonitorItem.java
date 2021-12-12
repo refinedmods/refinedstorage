@@ -5,10 +5,10 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.apiimpl.network.item.WirelessCraftingMonitorNetworkItem;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -17,28 +17,12 @@ import java.util.UUID;
 public class WirelessCraftingMonitorItem extends NetworkItem {
     public static final String NBT_TAB_SELECTED = "TabSelected";
     public static final String NBT_TAB_PAGE = "TabPage";
-
-    public enum Type {
-        NORMAL,
-        CREATIVE
-    }
-
     private final Type type;
 
     public WirelessCraftingMonitorItem(Type type) {
         super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
 
         this.type = type;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    @Nonnull
-    @Override
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
-        return new WirelessCraftingMonitorNetworkItem(handler, player, stack, slot);
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {
@@ -51,7 +35,7 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
 
     public static void setTabSelected(ItemStack stack, Optional<UUID> tabSelected) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         if (tabSelected.isPresent()) {
@@ -72,9 +56,24 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
 
     public static void setTabPage(ItemStack stack, int tabPage) {
         if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
 
         stack.getTag().putInt(NBT_TAB_PAGE, tabPage);
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    @Nonnull
+    @Override
+    public INetworkItem provide(INetworkItemManager handler, Player player, ItemStack stack, PlayerSlot slot) {
+        return new WirelessCraftingMonitorNetworkItem(handler, player, stack, slot);
+    }
+
+    public enum Type {
+        NORMAL,
+        CREATIVE
     }
 }

@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting.task;
 
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

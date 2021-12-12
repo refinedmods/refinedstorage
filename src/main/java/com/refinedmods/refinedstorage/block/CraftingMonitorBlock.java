@@ -7,19 +7,16 @@ import com.refinedmods.refinedstorage.container.factory.CraftingMonitorContainer
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 public class CraftingMonitorBlock extends ColoredNetworkBlock {
     public CraftingMonitorBlock() {
@@ -31,17 +28,16 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
         return BlockDirection.HORIZONTAL;
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new CraftingMonitorTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CraftingMonitorTile(pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType result = RSBlocks.CRAFTING_MONITOR.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
-        if (result != ActionResultType.PASS) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        InteractionResult result = RSBlocks.CRAFTING_MONITOR.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
+        if (result != InteractionResult.PASS) {
             return result;
         }
 
@@ -49,13 +45,13 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
             CraftingMonitorTile tile = (CraftingMonitorTile) world.getBlockEntity(pos);
 
             return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
-                (ServerPlayerEntity) player,
+                (ServerPlayer) player,
                 new CraftingMonitorContainerProvider(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile),
                 pos
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

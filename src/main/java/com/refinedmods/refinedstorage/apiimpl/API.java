@@ -41,12 +41,12 @@ import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.ModFileScanData;
@@ -59,7 +59,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class API implements IRSAPI {
     private static final Logger LOGGER = LogManager.getLogger(API.class);
@@ -89,23 +88,23 @@ public class API implements IRSAPI {
         List<ModFileScanData.AnnotationData> annotations = ModList.get().getAllScanData().stream()
             .map(ModFileScanData::getAnnotations)
             .flatMap(Collection::stream)
-            .filter(a -> annotationType.equals(a.getAnnotationType()))
-            .collect(Collectors.toList());
+            .filter(a -> annotationType.equals(a.annotationType()))
+            .toList();
 
         LOGGER.info("Found {} RS API injection {}", annotations.size(), annotations.size() == 1 ? "point" : "points");
 
         for (ModFileScanData.AnnotationData annotation : annotations) {
             try {
-                Class<?> clazz = Class.forName(annotation.getClassType().getClassName());
-                Field field = clazz.getField(annotation.getMemberName());
+                Class<?> clazz = Class.forName(annotation.clazz().getClassName());
+                Field field = clazz.getField(annotation.memberName());
 
                 if (field.getType() == IRSAPI.class) {
                     field.set(null, INSTANCE);
                 }
 
-                LOGGER.info("Injected RS API in {} {}", annotation.getClassType().getClassName(), annotation.getMemberName());
+                LOGGER.info("Injected RS API in {} {}", annotation.clazz().getClassName(), annotation.memberName());
             } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-                LOGGER.error("Could not inject RS API in {} {}", annotation.getClassType().getClassName(), annotation.getMemberName(), e);
+                LOGGER.error("Could not inject RS API in {} {}", annotation.clazz().getClassName(), annotation.memberName(), e);
             }
         }
     }
@@ -129,13 +128,21 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        return world.getDataStorage().computeIfAbsent(() -> new NetworkNodeManager(NetworkNodeManager.NAME, world), NetworkNodeManager.NAME);
+    public INetworkNodeManager getNetworkNodeManager(ServerLevel world) {
+        return world.getDataStorage().computeIfAbsent(tag -> {
+            NetworkNodeManager manager = new NetworkNodeManager( world);
+            manager.load(tag);
+            return manager;
+        }, () -> new NetworkNodeManager(world), NetworkNodeManager.NAME);
     }
 
     @Override
-    public INetworkManager getNetworkManager(ServerWorld world) {
-        return world.getDataStorage().computeIfAbsent(() -> new NetworkManager(NetworkManager.NAME, world), NetworkManager.NAME);
+    public INetworkManager getNetworkManager(ServerLevel world) {
+        return world.getDataStorage().computeIfAbsent(tag -> {
+            NetworkManager manager = new NetworkManager(world);
+            manager.load(tag);
+            return manager;
+        }, () -> new NetworkManager(world), NetworkManager.NAME);
     }
 
     @Override
@@ -194,10 +201,14 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().overworld(); // Get the overworld
+    public IStorageDiskManager getStorageDiskManager(ServerLevel anyWorld) {
+        ServerLevel world = anyWorld.getServer().overworld(); // Get the overworld
 
-        return world.getDataStorage().computeIfAbsent(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
+        return world.getDataStorage().computeIfAbsent(tag -> {
+            StorageDiskManager manager = new StorageDiskManager(world);
+            manager.load(tag);
+            return manager;
+        }, () -> new StorageDiskManager( world), StorageDiskManager.NAME);
     }
 
     @Nonnull
@@ -208,10 +219,14 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IStorageTrackerManager getStorageTrackerManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().overworld(); // Get the overworld
+    public IStorageTrackerManager getStorageTrackerManager(ServerLevel anyWorld) {
+        ServerLevel world = anyWorld.getServer().overworld(); // Get the overworld
 
-        return world.getDataStorage().computeIfAbsent(() -> new StorageTrackerManager(StorageTrackerManager.NAME), StorageTrackerManager.NAME);
+        return world.getDataStorage().computeIfAbsent(tag -> {
+            StorageTrackerManager manager = new StorageTrackerManager();
+            manager.load(tag);
+            return manager;
+        }, StorageTrackerManager::new, StorageTrackerManager.NAME);
     }
 
     @Override
@@ -228,7 +243,7 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel world, int capacity, @Nullable Player owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
@@ -238,7 +253,7 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity, @Nullable PlayerEntity owner) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel world, int capacity, @Nullable Player owner) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
@@ -257,7 +272,7 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException {
+    public ICraftingRequestInfo createCraftingRequestInfo(CompoundTag tag) throws CraftingTaskReadException {
         return new CraftingRequestInfo(tag);
     }
 
@@ -282,11 +297,11 @@ public class API implements IRSAPI {
         return result;
     }
 
-    private int getHashCode(INBT tag, int result) {
-        if (tag instanceof CompoundNBT) {
-            result = getHashCode((CompoundNBT) tag, result);
-        } else if (tag instanceof ListNBT) {
-            result = getHashCode((ListNBT) tag, result);
+    private int getHashCode(Tag tag, int result) {
+        if (tag instanceof CompoundTag) {
+            result = getHashCode((CompoundTag) tag, result);
+        } else if (tag instanceof ListTag) {
+            result = getHashCode((ListTag) tag, result);
         } else {
             result = 31 * result + tag.hashCode();
         }
@@ -294,7 +309,7 @@ public class API implements IRSAPI {
         return result;
     }
 
-    private int getHashCode(CompoundNBT tag, int result) {
+    private int getHashCode(CompoundTag tag, int result) {
         for (String key : tag.getAllKeys()) {
             result = 31 * result + key.hashCode();
             result = getHashCode(tag.get(key), result);
@@ -303,8 +318,8 @@ public class API implements IRSAPI {
         return result;
     }
 
-    private int getHashCode(ListNBT tag, int result) {
-        for (INBT tagItem : tag) {
+    private int getHashCode(ListTag tag, int result) {
+        for (Tag tagItem : tag) {
             result = getHashCode(tagItem, result);
         }
 

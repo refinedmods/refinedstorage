@@ -5,10 +5,10 @@ import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class ExternalStorageContainer extends BaseContainer {
-    public ExternalStorageContainer(ExternalStorageTile externalStorage, PlayerEntity player, int windowId) {
+    public ExternalStorageContainer(ExternalStorageTile externalStorage, Player player, int windowId) {
         super(RSContainers.EXTERNAL_STORAGE, externalStorage, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
@@ -21,6 +21,6 @@ public class ExternalStorageContainer extends BaseContainer {
 
         addPlayerInventory(8, 141);
 
-        transferManager.addFilterTransfer(player.inventory, externalStorage.getNode().getItemFilters(), externalStorage.getNode().getFluidFilters(), externalStorage.getNode()::getType);
+        transferManager.addFilterTransfer(player.getInventory(), externalStorage.getNode().getItemFilters(), externalStorage.getNode().getFluidFilters(), externalStorage.getNode()::getType);
     }
 }

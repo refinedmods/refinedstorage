@@ -23,15 +23,15 @@ import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,15 +46,12 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     public static final ResourceLocation THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "1024k_fluid_storage_block");
     public static final ResourceLocation FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "4096k_fluid_storage_block");
     public static final ResourceLocation CREATIVE_FLUID_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "creative_fluid_storage_block");
-
+    public static final String NBT_ID = "Id";
     private static final Logger LOGGER = LogManager.getLogger(FluidStorageNetworkNode.class);
-
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_FILTERS = "Filters";
-    public static final String NBT_ID = "Id";
-
     private final FluidInventory filters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private final FluidStorageType type;
@@ -67,7 +64,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     private UUID storageId = UUID.randomUUID();
     private IStorageDisk<FluidStack> storage;
 
-    public FluidStorageNetworkNode(World world, BlockPos pos, FluidStorageType type) {
+    public FluidStorageNetworkNode(Level world, BlockPos pos, FluidStorageType type) {
         super(world, pos);
 
         this.type = type;
@@ -137,7 +134,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.putUUID(NBT_ID, storageId);
@@ -146,7 +143,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         if (tag.hasUUID(NBT_ID)) {
@@ -156,17 +153,21 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         }
     }
 
-    public void loadStorage(@Nullable PlayerEntity owner) {
-        IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
+    public void loadStorage(@Nullable Player owner) {
+        IStorageDisk disk = API.instance().getStorageDiskManager((ServerLevel) world).get(storageId);
 
         if (disk == null) {
-            disk = API.instance().createDefaultFluidDisk((ServerWorld) world, type.getCapacity(), owner);
+            disk = API.instance().createDefaultFluidDisk((ServerLevel) world, type.getCapacity(), owner);
 
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk);
-            API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+            API.instance().getStorageDiskManager((ServerLevel) world).set(storageId, disk);
+            API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
         }
 
         this.storage = new FluidStorageWrapperStorageDisk(this, disk);
+    }
+
+    public UUID getStorageId() {
+        return storageId;
     }
 
     public void setStorageId(UUID id) {
@@ -175,16 +176,12 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         markDirty();
     }
 
-    public UUID getStorageId() {
-        return storageId;
-    }
-
     public IStorageDisk<FluidStack> getStorage() {
         return storage;
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.put(NBT_FILTERS, filters.writeToNbt());
@@ -198,7 +195,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_FILTERS)) {
@@ -249,8 +246,8 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("block.refinedstorage." + type.getName() + "_fluid_storage_block");
+    public Component getTitle() {
+        return new TranslatableComponent("block.refinedstorage." + type.getName() + "_fluid_storage_block");
     }
 
     @Override

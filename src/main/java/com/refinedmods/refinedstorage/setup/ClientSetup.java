@@ -19,27 +19,26 @@ import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory
 import com.refinedmods.refinedstorage.screen.factory.GridScreenFactory;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -106,7 +105,7 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "cable"), (base, registry) -> new BakedModelCableCover(base));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "exporter"), (base, registry) -> new BakedModelCableCover(base));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "importer"), (base, registry) -> new BakedModelCableCover(base));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) ->  new BakedModelCableCover(new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected"))));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new BakedModelCableCover(new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected"))));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "destructor"), (base, registry) -> new BakedModelCableCover(new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/destructor/cutouts/connected"))));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "external_storage"), (base, registry) -> new BakedModelCableCover(base));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "cover"), (base, registry) -> new BakedModelCover(ItemStack.EMPTY, CoverType.NORMAL));
@@ -160,7 +159,7 @@ public class ClientSetup {
         API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
 
         API.instance().addPatternRenderHandler(pattern -> {
-            Container container = Minecraft.getInstance().player.containerMenu;
+            AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 
             if (container instanceof CrafterManagerContainer) {
                 for (Slot slot : container.slots) {
@@ -174,7 +173,7 @@ public class ClientSetup {
         });
 
         API.instance().addPatternRenderHandler(pattern -> {
-            Container container = Minecraft.getInstance().player.containerMenu;
+            AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 
             if (container instanceof CrafterContainer) {
                 for (int i = 0; i < 9; ++i) {
@@ -207,30 +206,30 @@ public class ClientSetup {
     public void onClientSetup(FMLClientSetupEvent e) {
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
 
-        ScreenManager.register(RSContainers.FILTER, FilterScreen::new);
-        ScreenManager.register(RSContainers.CONTROLLER, ControllerScreen::new);
-        ScreenManager.register(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
-        ScreenManager.register(RSContainers.GRID, new GridScreenFactory());
-        ScreenManager.register(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
-        ScreenManager.register(RSContainers.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
-        ScreenManager.register(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
-        ScreenManager.register(RSContainers.IMPORTER, ImporterScreen::new);
-        ScreenManager.register(RSContainers.EXPORTER, ExporterScreen::new);
-        ScreenManager.register(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
-        ScreenManager.register(RSContainers.RELAY, RelayScreen::new);
-        ScreenManager.register(RSContainers.DETECTOR, DetectorScreen::new);
-        ScreenManager.register(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
-        ScreenManager.register(RSContainers.INTERFACE, InterfaceScreen::new);
-        ScreenManager.register(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
-        ScreenManager.register(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
-        ScreenManager.register(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
-        ScreenManager.register(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
-        ScreenManager.register(RSContainers.DESTRUCTOR, DestructorScreen::new);
-        ScreenManager.register(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
-        ScreenManager.register(RSContainers.CRAFTER, CrafterScreen::new);
-        ScreenManager.register(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
-        ScreenManager.register(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
-        ScreenManager.register(RSContainers.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        MenuScreens.register(RSContainers.FILTER, FilterScreen::new);
+        MenuScreens.register(RSContainers.CONTROLLER, ControllerScreen::new);
+        MenuScreens.register(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
+        MenuScreens.register(RSContainers.GRID, new GridScreenFactory());
+        MenuScreens.register(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
+        MenuScreens.register(RSContainers.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
+        MenuScreens.register(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
+        MenuScreens.register(RSContainers.IMPORTER, ImporterScreen::new);
+        MenuScreens.register(RSContainers.EXPORTER, ExporterScreen::new);
+        MenuScreens.register(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
+        MenuScreens.register(RSContainers.RELAY, RelayScreen::new);
+        MenuScreens.register(RSContainers.DETECTOR, DetectorScreen::new);
+        MenuScreens.register(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
+        MenuScreens.register(RSContainers.INTERFACE, InterfaceScreen::new);
+        MenuScreens.register(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
+        MenuScreens.register(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
+        MenuScreens.register(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
+        MenuScreens.register(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
+        MenuScreens.register(RSContainers.DESTRUCTOR, DestructorScreen::new);
+        MenuScreens.register(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
+        MenuScreens.register(RSContainers.CRAFTER, CrafterScreen::new);
+        MenuScreens.register(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
+        MenuScreens.register(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        MenuScreens.register(RSContainers.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
@@ -239,72 +238,72 @@ public class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
-        RSBlocks.CONTROLLER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTER_MANAGER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTING_MONITOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.DETECTOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.DISK_MANIPULATOR.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTING_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.PATTERN_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.FLUID_GRID.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.NETWORK_RECEIVER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.RELAY.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.SECURITY_MANAGER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> RenderTypeLookup.setRenderLayer(block.get(), RenderType.cutout()));
-        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
+        RSBlocks.CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTER_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTING_MONITOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.DETECTOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.DISK_MANIPULATOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.CRAFTING_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.PATTERN_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.FLUID_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.NETWORK_RECEIVER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.RELAY.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.SECURITY_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+        ItemBlockRenderTypes.setRenderLayer(RSBlocks.CABLE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
 
-        ClientRegistry.bindTileEntityRenderer(RSTiles.STORAGE_MONITOR, StorageMonitorTileRenderer::new);
+        BlockEntityRenderers.register(RSTiles.STORAGE_MONITOR, ctx -> new StorageMonitorTileRenderer());
 
-        e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
+        Minecraft.getInstance().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
 
-        ItemModelsProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+        ItemProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
 
-        RSItems.CONTROLLER.values().forEach(controller -> ItemModelsProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
-        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemModelsProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
 
-        ItemModelsProperties.register(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.register(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemProperties.register(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemProperties.register(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.register(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.register(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemProperties.register(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemProperties.register(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemModelsProperties.register(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemModelsProperties.register(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemProperties.register(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        ItemProperties.register(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
     }
 
     @SubscribeEvent
-    public void addReloadListener(AddReloadListenerEvent event){
+    public void addReloadListener(AddReloadListenerEvent event) {
         event.addListener(new ResourcePackListener());
     }
 
     @SubscribeEvent
     public void onModelRegistry(ModelRegistryEvent e) {
-        ModelLoader.addSpecialModel(DISK_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_FULL_RESOURCE);
-        ModelLoader.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
+        ForgeModelBakery.addSpecialModel(DISK_RESOURCE);
+        ForgeModelBakery.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
+        ForgeModelBakery.addSpecialModel(DISK_FULL_RESOURCE);
+        ForgeModelBakery.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
 
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
 
         for (DyeColor color : DyeColor.values()) {
-            ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
+            ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
         }
 
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
-        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
+        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
     }
 
     @SubscribeEvent
@@ -321,8 +320,8 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public void onTextureStitch(TextureStitchEvent.Pre event){
-        if (event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS))
-            event.addSprite(new ResourceLocation(RS.ID ,"block/cable_part_border"));
+    public void onTextureStitch(TextureStitchEvent.Pre event) {
+        if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS))
+            event.addSprite(new ResourceLocation(RS.ID, "block/cable_part_border"));
     }
 }

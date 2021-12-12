@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.block.CrafterManagerBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CrafterManagerNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafter_manager");
@@ -20,7 +20,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     private int size = IGrid.SIZE_STRETCH;
     private int searchBoxMode = IGrid.SEARCH_BOX_MODE_NORMAL;
 
-    public CrafterManagerNetworkNode(World world, BlockPos pos) {
+    public CrafterManagerNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -43,7 +43,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_SIZE, size);
@@ -53,7 +53,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_SIZE)) {

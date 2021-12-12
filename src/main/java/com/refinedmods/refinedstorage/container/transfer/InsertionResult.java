@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container.transfer;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 class InsertionResult {
     private final InsertionResultType type;

@@ -3,9 +3,9 @@ package com.refinedmods.refinedstorage.network.tiledata;
 import com.refinedmods.refinedstorage.container.BaseContainer;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -19,7 +19,7 @@ public class TileDataParameterUpdateMessage {
         this.value = value;
     }
 
-    public static TileDataParameterUpdateMessage decode(PacketBuffer buf) {
+    public static TileDataParameterUpdateMessage decode(FriendlyByteBuf buf) {
         int id = buf.readInt();
 
         TileDataParameter parameter = TileDataManager.getParameter(id);
@@ -36,7 +36,7 @@ public class TileDataParameterUpdateMessage {
         return new TileDataParameterUpdateMessage(parameter, value);
     }
 
-    public static void encode(TileDataParameterUpdateMessage message, PacketBuffer buf) {
+    public static void encode(TileDataParameterUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.parameter.getId());
 
         message.parameter.getSerializer().write(buf, message.value);
@@ -44,7 +44,7 @@ public class TileDataParameterUpdateMessage {
 
     public static void handle(TileDataParameterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            Container c = ctx.get().getSender().containerMenu;
+            AbstractContainerMenu c = ctx.get().getSender().containerMenu;
 
             if (c instanceof BaseContainer) {
                 BiConsumer consumer = message.parameter.getValueConsumer();

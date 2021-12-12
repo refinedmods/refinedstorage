@@ -3,9 +3,9 @@ package com.refinedmods.refinedstorage.network;
 import com.refinedmods.refinedstorage.container.FilterContainer;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -24,7 +24,7 @@ public class FilterUpdateMessage {
         this.type = type;
     }
 
-    public static FilterUpdateMessage decode(PacketBuffer buf) {
+    public static FilterUpdateMessage decode(FriendlyByteBuf buf) {
         return new FilterUpdateMessage(
             buf.readInt(),
             buf.readInt(),
@@ -34,7 +34,7 @@ public class FilterUpdateMessage {
         );
     }
 
-    public static void encode(FilterUpdateMessage message, PacketBuffer buf) {
+    public static void encode(FilterUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.compare);
         buf.writeInt(message.mode);
         buf.writeBoolean(message.modFilter);
@@ -43,7 +43,7 @@ public class FilterUpdateMessage {
     }
 
     public static void handle(FilterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        Player player = ctx.get().getSender();
 
         if (player != null && player.containerMenu instanceof FilterContainer) {
             ctx.get().enqueueWork(() -> {

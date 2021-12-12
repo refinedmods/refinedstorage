@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class ClientNode {
     private final ItemStack stack;
-    private int amount;
     private final int energyUsage;
+    private int amount;
 
     public ClientNode(ItemStack stack, int amount, int energyUsage) {
         this.stack = stack;

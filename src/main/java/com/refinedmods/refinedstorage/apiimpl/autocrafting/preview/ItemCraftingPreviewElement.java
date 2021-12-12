@@ -1,15 +1,15 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -34,19 +34,7 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement {
         this.toCraft = toCraft;
     }
 
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    @Override
-    public void write(PacketBuffer buf) {
-        buf.writeItem(stack);
-        buf.writeInt(available);
-        buf.writeBoolean(missing);
-        buf.writeInt(toCraft);
-    }
-
-    public static ItemCraftingPreviewElement read(PacketBuffer buf) {
+    public static ItemCraftingPreviewElement read(FriendlyByteBuf buf) {
         ItemStack stack = buf.readItem();
         int available = buf.readInt();
         boolean missing = buf.readBoolean();
@@ -55,9 +43,21 @@ public class ItemCraftingPreviewElement implements ICraftingPreviewElement {
         return new ItemCraftingPreviewElement(stack, available, missing, toCraft);
     }
 
+    public ItemStack getStack() {
+        return stack;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeItem(stack);
+        buf.writeInt(available);
+        buf.writeBoolean(missing);
+        buf.writeInt(toCraft);
+    }
+
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
+    public void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing) {
             drawers.getOverlayDrawer().draw(matrixStack, x, y, 0xFFF2DEDE);
         }

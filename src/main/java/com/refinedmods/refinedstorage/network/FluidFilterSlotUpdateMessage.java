@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -18,12 +18,12 @@ public class FluidFilterSlotUpdateMessage {
         this.stack = stack;
     }
 
-    public static void encode(FluidFilterSlotUpdateMessage message, PacketBuffer buf) {
+    public static void encode(FluidFilterSlotUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.containerSlot);
         message.stack.writeToPacket(buf);
     }
 
-    public static FluidFilterSlotUpdateMessage decode(PacketBuffer buf) {
+    public static FluidFilterSlotUpdateMessage decode(FriendlyByteBuf buf) {
         return new FluidFilterSlotUpdateMessage(buf.readInt(), FluidStack.readFromPacket(buf));
     }
 

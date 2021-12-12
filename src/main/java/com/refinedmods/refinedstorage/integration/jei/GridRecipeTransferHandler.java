@@ -9,15 +9,15 @@ import com.refinedmods.refinedstorage.network.grid.GridTransferMessage;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer> {
+public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer, Object> {
     public static final GridRecipeTransferHandler INSTANCE = new GridRecipeTransferHandler();
 
     private static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
@@ -42,7 +42,12 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
+    public Class<Object> getRecipeClass() {
+        return Object.class;
+    }
+
+    @Override
+    public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull Player player, boolean maxTransfer, boolean doTransfer) {
         if (!(container.getScreenInfoProvider() instanceof GridScreen)) {
             return null;
         }
@@ -50,15 +55,15 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         GridType type = container.getGrid().getGridType();
 
         if (type == GridType.CRAFTING) {
-            return transferRecipeForCraftingGrid(container, recipeLayout, player, doTransfer);
+            return transferRecipeForCraftingGrid(container, recipe, recipeLayout, player, doTransfer);
         } else if (type == GridType.PATTERN) {
-            return transferRecipeForPatternGrid(container, recipeLayout, player, doTransfer);
+            return transferRecipeForPatternGrid(container, recipe, recipeLayout, player, doTransfer);
         }
 
         return null;
     }
 
-    private RecipeTransferCraftingGridError transferRecipeForCraftingGrid(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
+    private RecipeTransferCraftingGridError transferRecipeForCraftingGrid(GridContainer container, Object recipe, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
         IngredientTracker tracker = createTracker(container, recipeLayout, player, doTransfer);
 
         if (doTransfer) {
@@ -72,7 +77,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
                     )
                 ));
             } else {
-                moveItems(container, recipeLayout, tracker);
+                moveItems(container, recipe, recipeLayout, tracker);
             }
         } else {
             if (tracker.hasMissing()) {
@@ -83,11 +88,11 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private IRecipeTransferError transferRecipeForPatternGrid(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
+    private IRecipeTransferError transferRecipeForPatternGrid(GridContainer container, Object recipe, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
         IngredientTracker tracker = createTracker(container, recipeLayout, player, doTransfer);
 
         if (doTransfer) {
-            moveItems(container, recipeLayout, tracker);
+            moveItems(container, recipe, recipeLayout, tracker);
         } else {
             if (tracker.isAutocraftingAvailable()) {
                 return new RecipeTransferPatternGridError(tracker);
@@ -97,7 +102,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, PlayerEntity player, boolean doTransfer) {
+    private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
         IngredientTracker tracker = new IngredientTracker(recipeLayout, doTransfer);
 
         // Using IGridView#getStacks will return a *filtered* list of items in the view,
@@ -115,15 +120,15 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         }
 
         // Check inventory
-        for (int inventorySlot = 0; inventorySlot < player.inventory.getContainerSize(); inventorySlot++) {
-            if (!player.inventory.getItem(inventorySlot).isEmpty()) {
-                tracker.addAvailableStack(player.inventory.getItem(inventorySlot), null);
+        for (int inventorySlot = 0; inventorySlot < player.getInventory().getContainerSize(); inventorySlot++) {
+            if (!player.getInventory().getItem(inventorySlot).isEmpty()) {
+                tracker.addAvailableStack(player.getInventory().getItem(inventorySlot), null);
             }
         }
 
         // Check grid crafting slots
         if (container.getGrid().getGridType().equals(GridType.CRAFTING)) {
-            CraftingInventory craftingMatrix = container.getGrid().getCraftingMatrix();
+            CraftingContainer craftingMatrix = container.getGrid().getCraftingMatrix();
             if (craftingMatrix != null) {
                 for (int matrixSlot = 0; matrixSlot < craftingMatrix.getContainerSize(); matrixSlot++) {
                     if (!craftingMatrix.getItem(matrixSlot).isEmpty()) {
@@ -140,10 +145,10 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return System.currentTimeMillis() - lastTransferTimeMs <= TRANSFER_SCROLLBAR_DELAY_MS;
     }
 
-    private void moveItems(GridContainer gridContainer, IRecipeLayout recipeLayout, IngredientTracker tracker) {
+    private void moveItems(GridContainer gridContainer, Object recipe, IRecipeLayout recipeLayout, IngredientTracker tracker) {
         this.lastTransferTimeMs = System.currentTimeMillis();
 
-        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
+        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !(recipe instanceof CraftingRecipe)) {
             moveForProcessing(recipeLayout, tracker);
         } else {
             move(gridContainer, recipeLayout);
@@ -153,7 +158,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private void move(GridContainer gridContainer, IRecipeLayout recipeLayout) {
         RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
             recipeLayout.getItemStacks().getGuiIngredients(),
-            gridContainer.slots.stream().filter(s -> s.container instanceof CraftingInventory).collect(Collectors.toList())
+            gridContainer.slots.stream().filter(s -> s.container instanceof CraftingContainer).collect(Collectors.toList())
         ));
     }
 

@@ -24,15 +24,15 @@ import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
 import com.refinedmods.refinedstorage.tile.config.*;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.logging.log4j.LogManager;
@@ -54,7 +54,9 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
-
+    private final List<IExternalStorage<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
+    private final List<IExternalStorage<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
+    private final CoverManager coverManager;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
@@ -62,12 +64,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    private final List<IExternalStorage<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
-    private final List<IExternalStorage<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
-
-    private final CoverManager coverManager;
-
-    public ExternalStorageNetworkNode(World world, BlockPos pos) {
+    public ExternalStorageNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
     }
@@ -122,7 +119,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 0, tag);
@@ -140,7 +137,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 0, tag);
@@ -213,7 +210,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         itemStorages.clear();
         fluidStorages.clear();
 
-        TileEntity facing = getFacingTile();
+        BlockEntity facing = getFacingTile();
 
         if (facing != null) {
             if (type == IType.ITEMS) {
@@ -250,8 +247,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("gui.refinedstorage:external_storage");
+    public Component getTitle() {
+        return new TranslatableComponent("gui.refinedstorage:external_storage");
     }
 
     @Override
@@ -270,16 +267,6 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
     @Override
-    public boolean acceptsItem(ItemStack stack) {
-        return IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack);
-    }
-
-    @Override
-    public boolean acceptsFluid(FluidStack stack) {
-        return IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack);
-    }
-
-    @Override
     public void setAccessType(AccessType type) {
         this.accessType = type;
 
@@ -289,6 +276,16 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         }
 
         markDirty();
+    }
+
+    @Override
+    public boolean acceptsItem(ItemStack stack) {
+        return IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack);
+    }
+
+    @Override
+    public boolean acceptsFluid(FluidStack stack) {
+        return IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack);
     }
 
     @Override
@@ -331,7 +328,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
@@ -340,9 +337,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
 
-
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());

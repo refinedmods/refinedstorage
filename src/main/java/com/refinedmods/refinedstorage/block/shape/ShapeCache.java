@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block.shape;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.api.autocrafting.preview;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -16,7 +16,7 @@ public interface ICraftingPreviewElementRegistry {
      * @param id      the id, as specified in {@link ICraftingPreviewElement#getId()}
      * @param factory the factory
      */
-    void add(ResourceLocation id, Function<PacketBuffer, ICraftingPreviewElement> factory);
+    void add(ResourceLocation id, Function<FriendlyByteBuf, ICraftingPreviewElement> factory);
 
     /**
      * Returns a factory from the registry.
@@ -25,5 +25,5 @@ public interface ICraftingPreviewElementRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    Function<PacketBuffer, ICraftingPreviewElement> get(ResourceLocation id);
+    Function<FriendlyByteBuf, ICraftingPreviewElement> get(ResourceLocation id);
 }

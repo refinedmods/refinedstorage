@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.util.DirectionUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
 import java.util.Arrays;
 

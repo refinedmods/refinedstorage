@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.container.transfer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -11,15 +11,15 @@ import net.minecraftforge.items.wrapper.RangedWrapper;
 import java.util.Objects;
 
 class InventoryInventoryWrapper implements IInventoryWrapper {
-    private final IInventory inventory;
+    private final Container inventory;
     private final IItemHandler wrapper;
 
-    InventoryInventoryWrapper(IInventory inventory) {
+    InventoryInventoryWrapper(Container inventory) {
         this.inventory = inventory;
 
-        if (inventory instanceof PlayerInventory) {
+        if (inventory instanceof Inventory) {
             // Don't use PlayerMainInvWrapper to avoid stack animations.
-            this.wrapper = new RangedWrapper(new InvWrapper(inventory), 0, ((PlayerInventory) inventory).items.size());
+            this.wrapper = new RangedWrapper(new InvWrapper(inventory), 0, ((Inventory) inventory).items.size());
         } else {
             this.wrapper = new InvWrapper(inventory);
         }

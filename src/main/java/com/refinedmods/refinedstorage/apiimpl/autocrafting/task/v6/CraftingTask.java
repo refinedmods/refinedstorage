@@ -20,10 +20,10 @@ import com.refinedmods.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -56,13 +56,11 @@ public class CraftingTask implements ICraftingTask, NodeListener {
     private final NodeList nodes;
     private final IStackList<ItemStack> toExtractInitial;
     private final IStackList<FluidStack> toExtractInitialFluids;
-
+    private final CraftingMonitorElementFactory craftingMonitorElementFactory = new CraftingMonitorElementFactory();
     private int ticks;
     private long startTime = -1;
     private int totalSteps;
     private int currentStep;
-
-    private final CraftingMonitorElementFactory craftingMonitorElementFactory = new CraftingMonitorElementFactory();
 
     public CraftingTask(INetwork network,
                         ICraftingRequestInfo requested,
@@ -86,7 +84,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
         this.toExtractInitialFluids = toExtractInitialFluids;
     }
 
-    public CraftingTask(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public CraftingTask(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         this.network = network;
 
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
@@ -103,10 +101,10 @@ public class CraftingTask implements ICraftingTask, NodeListener {
         this.internalStorage = new ItemStorageDiskFactory().createFromNbt(null, tag.getCompound(NBT_INTERNAL_STORAGE));
         this.internalFluidStorage = new FluidStorageDiskFactory().createFromNbt(null, tag.getCompound(NBT_INTERNAL_FLUID_STORAGE));
 
-        this.toExtractInitial = SerializationUtil.readItemStackList(tag.getList(NBT_TO_EXTRACT_INITIAL, Constants.NBT.TAG_COMPOUND));
-        this.toExtractInitialFluids = SerializationUtil.readFluidStackList(tag.getList(NBT_TO_EXTRACT_INITIAL_FLUIDS, Constants.NBT.TAG_COMPOUND));
+        this.toExtractInitial = SerializationUtil.readItemStackList(tag.getList(NBT_TO_EXTRACT_INITIAL, Tag.TAG_COMPOUND));
+        this.toExtractInitialFluids = SerializationUtil.readFluidStackList(tag.getList(NBT_TO_EXTRACT_INITIAL_FLUIDS, Tag.TAG_COMPOUND));
 
-        ListNBT nodeList = tag.getList(NBT_CRAFTS, Constants.NBT.TAG_COMPOUND);
+        ListTag nodeList = tag.getList(NBT_CRAFTS, Tag.TAG_COMPOUND);
         for (int i = 0; i < nodeList.size(); ++i) {
             Node node = Node.fromNbt(network, nodeList.getCompound(i));
             nodes.put(node.getPattern(), node);
@@ -114,7 +112,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
     }
 
     @Override
-    public CompoundNBT writeToNbt(CompoundNBT tag) {
+    public CompoundTag writeToNbt(CompoundTag tag) {
         tag.put(NBT_REQUESTED, requested.writeToNbt());
         tag.putInt(NBT_QUANTITY, quantity);
         tag.put(NBT_PATTERN, SerializationUtil.writePatternToNbt(pattern));
@@ -128,7 +126,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
         tag.putInt(NBT_TOTAL_STEPS, totalSteps);
         tag.putInt(NBT_CURRENT_STEP, currentStep);
 
-        ListNBT nodeList = new ListNBT();
+        ListTag nodeList = new ListTag();
         for (Node node : this.nodes.all()) {
             nodeList.add(node.writeToNbt());
         }

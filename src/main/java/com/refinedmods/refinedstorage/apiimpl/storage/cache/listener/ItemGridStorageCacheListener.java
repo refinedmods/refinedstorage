@@ -7,17 +7,17 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.network.grid.GridItemDeltaMessage;
 import com.refinedmods.refinedstorage.network.grid.GridItemUpdateMessage;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemGridStorageCacheListener implements IStorageCacheListener<ItemStack> {
-    private final ServerPlayerEntity player;
+    private final ServerPlayer player;
     private final INetwork network;
 
-    public ItemGridStorageCacheListener(ServerPlayerEntity player, INetwork network) {
+    public ItemGridStorageCacheListener(ServerPlayer player, INetwork network) {
         this.player = player;
         this.network = network;
     }

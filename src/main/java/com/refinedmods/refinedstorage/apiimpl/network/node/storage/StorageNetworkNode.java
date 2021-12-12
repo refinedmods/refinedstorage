@@ -24,15 +24,15 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,14 +47,11 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     public static final ResourceLocation SIXTEEN_K_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "16k_storage_block");
     public static final ResourceLocation SIXTY_FOUR_K_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "64k_storage_block");
     public static final ResourceLocation CREATIVE_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "creative_storage_block");
-
+    public static final String NBT_ID = "Id";
     private static final Logger LOGGER = LogManager.getLogger(StorageNetworkNode.class);
-
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
-    public static final String NBT_ID = "Id";
-
     private final BaseItemHandler filters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
     private final ItemStorageType type;
@@ -67,7 +64,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     private UUID storageId = UUID.randomUUID();
     private IStorageDisk<ItemStack> storage;
 
-    public StorageNetworkNode(World world, BlockPos pos, ItemStorageType type) {
+    public StorageNetworkNode(Level world, BlockPos pos, ItemStorageType type) {
         super(world, pos);
 
         this.type = type;
@@ -137,7 +134,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.putUUID(NBT_ID, storageId);
@@ -146,7 +143,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         if (tag.hasUUID(NBT_ID)) {
@@ -156,17 +153,21 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         }
     }
 
-    public void loadStorage(@Nullable PlayerEntity owner) {
-        IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
+    public void loadStorage(@Nullable Player owner) {
+        IStorageDisk disk = API.instance().getStorageDiskManager((ServerLevel) world).get(storageId);
 
         if (disk == null) {
-            disk = API.instance().createDefaultItemDisk((ServerWorld) world, type.getCapacity(), owner);
+            disk = API.instance().createDefaultItemDisk((ServerLevel) world, type.getCapacity(), owner);
 
-            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk);
-            API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+            API.instance().getStorageDiskManager((ServerLevel) world).set(storageId, disk);
+            API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
         }
 
         this.storage = new ItemStorageWrapperStorageDisk(this, disk);
+    }
+
+    public UUID getStorageId() {
+        return storageId;
     }
 
     public void setStorageId(UUID id) {
@@ -175,16 +176,12 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         markDirty();
     }
 
-    public UUID getStorageId() {
-        return storageId;
-    }
-
     public IStorageDisk<ItemStack> getStorage() {
         return storage;
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(filters, 0, tag);
@@ -199,7 +196,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(filters, 0, tag);
@@ -248,8 +245,8 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("block.refinedstorage." + type.getName() + "_storage_block");
+    public Component getTitle() {
+        return new TranslatableComponent("block.refinedstorage." + type.getName() + "_storage_block");
     }
 
     @Override

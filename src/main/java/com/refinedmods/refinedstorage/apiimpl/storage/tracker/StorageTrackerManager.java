@@ -4,9 +4,9 @@ import com.refinedmods.refinedstorage.api.storage.StorageType;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTrackerManager;
 import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,15 +22,10 @@ public class StorageTrackerManager extends RSWorldSavedData implements IStorageT
 
     private final Map<UUID, IStorageTracker<?>> trackers = new HashMap<>();
 
-    public StorageTrackerManager(String name) {
-        super(name);
-    }
-
     @Override
     public void markForSaving() {
         this.setDirty();
     }
-
 
     @Override
     public IStorageTracker<?> getOrCreate(UUID uuid, StorageType type) {
@@ -55,15 +50,15 @@ public class StorageTrackerManager extends RSWorldSavedData implements IStorageT
     }
 
     @Override
-    public void load(CompoundNBT nbt) {
+    public void load(CompoundTag nbt) {
         if (nbt.contains(NBT_TRACKERS)) {
-            ListNBT trackerTags = nbt.getList(NBT_TRACKERS, Constants.NBT.TAG_COMPOUND);
+            ListTag trackerTags = nbt.getList(NBT_TRACKERS, Tag.TAG_COMPOUND);
 
             for (int i = 0; i < trackerTags.size(); ++i) {
-                CompoundNBT trackerTag = trackerTags.getCompound(i);
+                CompoundTag trackerTag = trackerTags.getCompound(i);
 
                 UUID id = trackerTag.getUUID(NBT_TRACKER_ID);
-                ListNBT data = trackerTag.getList(NBT_TRACKER_DATA, Constants.NBT.TAG_COMPOUND);
+                ListTag data = trackerTag.getList(NBT_TRACKER_DATA, Tag.TAG_COMPOUND);
                 StorageType type = StorageType.values()[trackerTag.getInt(NBT_TRACKER_TYPE)];
 
                 IStorageTracker<?> tracker = getOrCreate(id, type);
@@ -73,11 +68,11 @@ public class StorageTrackerManager extends RSWorldSavedData implements IStorageT
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        ListNBT trackerListTag = new ListNBT();
+    public CompoundTag save(CompoundTag compound) {
+        ListTag trackerListTag = new ListTag();
 
         for (Map.Entry<UUID, IStorageTracker<?>> entry : trackers.entrySet()) {
-            CompoundNBT trackerTag = new CompoundNBT();
+            CompoundTag trackerTag = new CompoundTag();
 
             trackerTag.putUUID(NBT_TRACKER_ID, entry.getKey());
             trackerTag.put(NBT_TRACKER_DATA, entry.getValue().serializeNbt());

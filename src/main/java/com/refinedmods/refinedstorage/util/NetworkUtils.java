@@ -7,12 +7,12 @@ import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -22,7 +22,7 @@ public final class NetworkUtils {
     }
 
     @Nullable
-    public static INetworkNode getNodeFromTile(@Nullable TileEntity tile) {
+    public static INetworkNode getNodeFromTile(@Nullable BlockEntity tile) {
         if (tile != null) {
             INetworkNodeProxy<?> proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
             if (proxy != null) {
@@ -42,13 +42,13 @@ public final class NetworkUtils {
         return null;
     }
 
-    public static ActionResultType attemptModify(World world, BlockPos pos, PlayerEntity player, Runnable action) {
+    public static InteractionResult attemptModify(Level world, BlockPos pos, Player player, Runnable action) {
         return attempt(world, pos, player, action, Permission.MODIFY);
     }
 
-    public static ActionResultType attempt(World world, BlockPos pos, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
+    public static InteractionResult attempt(Level world, BlockPos pos, Player player, Runnable action, Permission... permissionsRequired) {
         if (world.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         INetwork network = getNetworkFromNode(getNodeFromTile(world.getBlockEntity(pos)));
@@ -58,22 +58,22 @@ public final class NetworkUtils {
                 if (!network.getSecurityManager().hasPermission(permission, player)) {
                     WorldUtils.sendNoPermissionMessage(player);
 
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
 
         action.run();
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    public static void extractBucketFromPlayerInventoryOrNetwork(PlayerEntity player, INetwork network, Consumer<ItemStack> onBucketFound) {
-        for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
-            ItemStack slot = player.inventory.getItem(i);
+    public static void extractBucketFromPlayerInventoryOrNetwork(Player player, INetwork network, Consumer<ItemStack> onBucketFound) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+            ItemStack slot = player.getInventory().getItem(i);
 
             if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
-                player.inventory.removeItem(i, 1);
+                player.getInventory().removeItem(i, 1);
 
                 onBucketFound.accept(StackUtils.EMPTY_BUCKET.copy());
 

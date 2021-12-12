@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.util;
 
 import com.refinedmods.refinedstorage.api.storage.AccessType;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public final class AccessTypeUtils {
     private static final String NBT_ACCESS_TYPE = "AccessType";
@@ -9,11 +9,11 @@ public final class AccessTypeUtils {
     private AccessTypeUtils() {
     }
 
-    public static void writeAccessType(CompoundNBT tag, AccessType type) {
+    public static void writeAccessType(CompoundTag tag, AccessType type) {
         tag.putInt(NBT_ACCESS_TYPE, type.getId());
     }
 
-    public static AccessType readAccessType(CompoundNBT tag) {
+    public static AccessType readAccessType(CompoundTag tag) {
         return tag.contains(NBT_ACCESS_TYPE) ? getAccessType(tag.getInt(NBT_ACCESS_TYPE)) : AccessType.INSERT_EXTRACT;
     }
 

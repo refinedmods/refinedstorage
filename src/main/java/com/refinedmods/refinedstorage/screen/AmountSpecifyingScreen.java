@@ -1,32 +1,32 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class AmountSpecifyingScreen<T extends Container> extends BaseScreen<T> {
+public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> extends BaseScreen<T> {
     private final BaseScreen<T> parent;
 
-    protected TextFieldWidget amountField;
+    protected EditBox amountField;
     protected Button okButton;
     protected Button cancelButton;
 
-    protected AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
+    protected AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, Inventory playerInventory, Component title) {
         super(container, width, height, playerInventory, title);
 
         this.parent = parent;
     }
 
-    protected abstract ITextComponent getOkButtonText();
+    protected abstract Component getOkButtonText();
 
     protected abstract String getTexture();
 
@@ -55,9 +55,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         Pair<Integer, Integer> pos = getOkCancelPos();
 
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
+        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
 
-        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new StringTextComponent(""));
+        amountField = new EditBox(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new TextComponent(""));
         amountField.setBordered(false);
         amountField.setVisible(true);
         amountField.setValue(String.valueOf(getDefaultAmount()));
@@ -65,7 +65,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         amountField.setCanLoseFocus(false);
         amountField.changeFocus(true);
 
-        addButton(amountField);
+        addRenderableWidget(amountField);
 
         setFocused(amountField);
 
@@ -77,9 +77,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         for (int i = 0; i < 3; ++i) {
             int increment = increments[i];
 
-            ITextComponent text = new StringTextComponent("+" + increment);
+            Component text = new TextComponent("+" + increment);
             if (text.getString().equals("+1000")) {
-                text = new StringTextComponent("+1B");
+                text = new TextComponent("+1B");
             }
 
             addButton(x + xx, y + 20, width, 20, text, true, true, btn -> onIncrementButtonClicked(increment));
@@ -92,9 +92,9 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         for (int i = 0; i < 3; ++i) {
             int increment = increments[i];
 
-            ITextComponent text = new StringTextComponent("-" + increment);
+            Component text = new TextComponent("-" + increment);
             if (text.getString().equals("-1000")) {
-                text = new StringTextComponent("-1B");
+                text = new TextComponent("-1B");
             }
 
             addButton(x + xx, y + imageHeight - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));
@@ -154,7 +154,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, getTexture());
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
@@ -163,7 +163,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
     }
 

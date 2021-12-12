@@ -1,36 +1,34 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.grid.AlternativesScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.CheckboxButton;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
@@ -41,7 +39,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class BaseScreen<T extends Container> extends ContainerScreen<T> {
+public abstract class BaseScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
     public static final int Z_LEVEL_ITEMS = 100;
     public static final int Z_LEVEL_TOOLTIPS = 500;
     public static final int Z_LEVEL_QTY = 300;
@@ -49,24 +47,41 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
-    private static final ITextComponent ALTERNATIVES_TEXT = new TranslationTextComponent("gui.refinedstorage.alternatives");
+    private static final Component ALTERNATIVES_TEXT = new TranslatableComponent("gui.refinedstorage.alternatives");
 
     private final List<SideButton> sideButtons = new ArrayList<>();
 
     private final Logger logger = LogManager.getLogger(getClass());
 
+    protected final Inventory inventory;
+
     private int sideButtonY;
 
-    protected BaseScreen(T container, int xSize, int ySize, PlayerInventory inventory, ITextComponent title) {
+    protected BaseScreen(T container, int xSize, int ySize, Inventory inventory, Component title) {
         super(container, inventory, title);
 
         this.imageWidth = xSize;
         this.imageHeight = ySize;
+        this.inventory = inventory;
+    }
+
+    public static boolean isKeyDown(KeyMapping keybinding) {
+        return !keybinding.isUnbound() && InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybinding.getKey().getValue()) &&
+            keybinding.getKeyConflictContext().isActive() &&
+            keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
+    }
+
+    public static <T> void executeLater(Class<T> clazz, Consumer<T> callback) {
+        ACTIONS.computeIfAbsent(clazz, key -> new ArrayDeque<>()).add(callback);
+    }
+
+    public static void executeLater(Consumer<AbstractContainerScreen> callback) {
+        executeLater(AbstractContainerScreen.class, callback);
     }
 
     private void runActions() {
         runActions(getClass());
-        runActions(ContainerScreen.class);
+        runActions(AbstractContainerScreen.class);
     }
 
     private void runActions(Class clazz) {
@@ -88,13 +103,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         super.init();
 
-        if (CraftingTweaksIntegration.isLoaded()) {
-            buttons.removeIf(b -> !CraftingTweaksIntegration.isCraftingTweaksClass(b.getClass()));
-            children.removeIf(c -> !CraftingTweaksIntegration.isCraftingTweaksClass(c.getClass()));
-        } else {
-            buttons.clear();
-            children.clear();
-        }
+        // TODO: what about craft tweaker buttons?
+        this.clearWidgets();
 
         sideButtonY = 6;
         sideButtons.clear();
@@ -112,16 +122,14 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
+    protected void containerTick() {
+        super.containerTick();
         runActions();
-
         tick(leftPos, topPos);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -130,8 +138,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderBg(PoseStack matrixStack, float renderPartialTicks, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         renderBackground(matrixStack, leftPos, topPos, mouseX, mouseY);
 
@@ -155,16 +163,16 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     @Override
-    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX -= leftPos;
         mouseY -= topPos;
 
         renderForeground(matrixStack, mouseX, mouseY);
 
-        for (Widget button : this.buttons) {
-            if (button instanceof SideButton && button.isHovered()) {
+        for (Widget button : this.renderables) {
+            if (button instanceof SideButton && ((SideButton) button).isHoveredOrFocused()) {
                 renderTooltip(matrixStack, mouseX, mouseY, ((SideButton) button).getTooltip());
             }
         }
@@ -184,7 +192,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     @Override
     protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
-        boolean valid = type != ClickType.QUICK_MOVE && minecraft.player.inventory.getCarried().isEmpty();
+        boolean valid = type != ClickType.QUICK_MOVE && minecraft.player.containerMenu.getCarried().isEmpty();
 
         if (valid && slot instanceof FilterSlot && slot.isActive() && ((FilterSlot) slot).isSizeAllowed()) {
             if (!slot.getItem().isEmpty()) {
@@ -249,21 +257,21 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    public CheckboxWidget addCheckBox(int x, int y, ITextComponent text, boolean checked, Consumer<CheckboxButton> onPress) {
+    public CheckboxWidget addCheckBox(int x, int y, Component text, boolean checked, Consumer<Checkbox> onPress) {
         CheckboxWidget checkBox = new CheckboxWidget(x, y, text, checked, onPress);
 
-        this.addButton(checkBox);
+        this.addRenderableWidget(checkBox);
 
         return checkBox;
     }
 
-    public Button addButton(int x, int y, int w, int h, ITextComponent text, boolean enabled, boolean visible, Button.IPressable onPress) {
+    public Button addButton(int x, int y, int w, int h, Component text, boolean enabled, boolean visible, Button.OnPress onPress) {
         Button button = new Button(x, y, w, h, text, onPress);
 
         button.active = enabled;
         button.visible = visible;
 
-        this.addButton(button);
+        this.addRenderableWidget(button);
 
         return button;
     }
@@ -275,7 +283,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         sideButtonY += button.getHeight() + 2;
 
         sideButtons.add(button);
-        this.addButton(button);
+        this.addRenderableWidget(button);
     }
 
     public List<SideButton> getSideButtons() {
@@ -283,14 +291,14 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void bindTexture(String namespace, String filenameInTexturesFolder) {
-        minecraft.getTextureManager().bind(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
+        RenderSystem.setShaderTexture(0, TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
     }
 
-    public void renderItem(MatrixStack matrixStack, int x, int y, ItemStack stack) {
+    public void renderItem(PoseStack matrixStack, int x, int y, ItemStack stack) {
         renderItem(matrixStack, x, y, stack, false, null, 0);
     }
 
-    public void renderItem(MatrixStack matrixStack, int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
+    public void renderItem(PoseStack matrixStack, int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
         try {
             setBlitOffset(Z_LEVEL_ITEMS);
             itemRenderer.blitOffset = Z_LEVEL_ITEMS;
@@ -312,7 +320,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    public void renderQuantity(MatrixStack matrixStack, int x, int y, String qty, int color) {
+    public void renderQuantity(PoseStack matrixStack, int x, int y, String qty, int color) {
         boolean large = minecraft.isEnforceUnicode() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
         matrixStack.pushPose();
@@ -327,49 +335,35 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         matrixStack.popPose();
     }
 
-    public void renderString(MatrixStack matrixStack, int x, int y, String message) {
+    public void renderString(PoseStack matrixStack, int x, int y, String message) {
         renderString(matrixStack, x, y, message, RenderSettings.INSTANCE.getPrimaryColor());
     }
 
-    public void renderString(MatrixStack matrixStack, int x, int y, String message, int color) {
+    public void renderString(PoseStack matrixStack, int x, int y, String message, int color) {
         font.draw(matrixStack, message, x, y, color);
     }
 
-    public void renderTooltip(MatrixStack matrixStack, int x, int y, String lines) {
+    public void renderTooltip(PoseStack matrixStack, int x, int y, String lines) {
         renderTooltip(matrixStack, ItemStack.EMPTY, x, y, lines);
     }
 
-    public void renderTooltip(MatrixStack matrixStack, @Nonnull ItemStack stack, int x, int y, String lines) {
-        renderTooltip(matrixStack, stack, x, y, Arrays.stream(lines.split("\n")).map(StringTextComponent::new).collect(Collectors.toList()));
+    public void renderTooltip(PoseStack matrixStack, @Nonnull ItemStack stack, int x, int y, String lines) {
+        renderTooltip(matrixStack, stack, x, y, Arrays.stream(lines.split("\n")).map(TextComponent::new).collect(Collectors.toList()));
     }
 
-    public void renderTooltip(MatrixStack matrixStack, @Nonnull ItemStack stack, int x, int y, List<ITextComponent> lines) {
-        GuiUtils.drawHoveringText(stack, matrixStack, lines, x, y, width, height, -1, font);
+    public void renderTooltip(PoseStack matrixStack, @Nonnull ItemStack stack, int x, int y, List<Component> lines) {
+        renderComponentTooltip(matrixStack, lines, x, y, stack);
     }
 
     protected void onPreInit() {
         // NO OP
     }
 
-    public static boolean isKeyDown(KeyBinding keybinding) {
-        return !keybinding.isUnbound() && InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybinding.getKey().getValue()) &&
-            keybinding.getKeyConflictContext().isActive() &&
-            keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
-    }
-
     public abstract void onPostInit(int x, int y);
 
     public abstract void tick(int x, int y);
 
-    public abstract void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY);
+    public abstract void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY);
 
-    public abstract void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY);
-
-    public static <T> void executeLater(Class<T> clazz, Consumer<T> callback) {
-        ACTIONS.computeIfAbsent(clazz, key -> new ArrayDeque<>()).add(callback);
-    }
-
-    public static void executeLater(Consumer<ContainerScreen> callback) {
-        executeLater(ContainerScreen.class, callback);
-    }
+    public abstract void renderForeground(PoseStack matrixStack, int mouseX, int mouseY);
 }

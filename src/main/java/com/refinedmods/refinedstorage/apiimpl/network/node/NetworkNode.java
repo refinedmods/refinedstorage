@@ -9,22 +9,20 @@ import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
-
-import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
@@ -43,15 +41,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
     // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
     // having multiple different instances of the same network node.
-    protected World world;
+    protected Level world;
     protected BlockPos pos;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-    private boolean redstonePowered = false;
     @Nullable
     protected UUID owner;
     protected String version;
-
+    private boolean redstonePowered = false;
     private Direction direction;
 
     // Disable throttling for the first tick.
@@ -64,7 +61,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
 
-    protected NetworkNode(World world, BlockPos pos) {
+    protected NetworkNode(Level world, BlockPos pos) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
@@ -110,7 +107,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void markDirty() {
         if (!world.isClientSide) {
-            API.instance().getNetworkNodeManager((ServerWorld) world).markForSaving();
+            API.instance().getNetworkNodeManager((ServerLevel) world).markForSaving();
         }
     }
 
@@ -177,7 +174,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         if (owner != null) {
             tag.putUUID(NBT_OWNER, owner);
         }
@@ -189,13 +186,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return tag;
     }
 
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         redstoneMode.write(tag);
 
         return tag;
     }
 
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         if (tag.hasUUID(NBT_OWNER)) {
             owner = tag.getUUID(NBT_OWNER);
         }
@@ -207,7 +204,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         readConfiguration(tag);
     }
 
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         redstoneMode = RedstoneMode.read(tag);
     }
 
@@ -223,7 +220,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public World getWorld() {
+    public Level getWorld() {
         return world;
     }
 
@@ -247,7 +244,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Nullable
-    public TileEntity getFacingTile() {
+    public BlockEntity getFacingTile() {
         return world.getBlockEntity(pos.relative(getDirection()));
     }
 
@@ -277,15 +274,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
+    @Nullable
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
     public void setOwner(@Nullable UUID owner) {
         this.owner = owner;
 
         markDirty();
-    }
-
-    @Override
-    @Nullable
-    public UUID getOwner() {
-        return owner;
     }
 }

@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.inventory.item;
 
 import com.refinedmods.refinedstorage.inventory.listener.InventoryListener;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -62,7 +62,7 @@ public class BaseItemHandler extends ItemStackHandler {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT tag) {
+    public void deserializeNBT(CompoundTag tag) {
         super.deserializeNBT(tag);
 
         this.empty = stacks.stream().allMatch(ItemStack::isEmpty);

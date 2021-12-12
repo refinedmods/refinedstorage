@@ -6,14 +6,14 @@ import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.tile.ExporterTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ExporterContainer extends BaseContainer {
     private final ExporterTile exporter;
     private boolean hasRegulatorMode;
 
-    public ExporterContainer(ExporterTile exporter, PlayerEntity player, int windowId) {
+    public ExporterContainer(ExporterTile exporter, Player player, int windowId) {
         super(RSContainers.EXPORTER, exporter, player, windowId);
 
         this.exporter = exporter;
@@ -70,7 +70,7 @@ public class ExporterContainer extends BaseContainer {
 
         addPlayerInventory(8, 55);
 
-        transferManager.addBiTransfer(getPlayer().inventory, exporter.getNode().getUpgrades());
-        transferManager.addFilterTransfer(getPlayer().inventory, exporter.getNode().getItemFilters(), exporter.getNode().getFluidFilters(), exporter.getNode()::getType);
+        transferManager.addBiTransfer(getPlayer().getInventory(), exporter.getNode().getUpgrades());
+        transferManager.addFilterTransfer(getPlayer().getInventory(), exporter.getNode().getItemFilters(), exporter.getNode().getFluidFilters(), exporter.getNode()::getType);
     }
 }

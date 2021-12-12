@@ -24,12 +24,12 @@ import com.refinedmods.refinedstorage.tile.config.*;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -50,23 +50,17 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private static final int DISK_STATE_UPDATE_THROTTLE = 30;
 
     private static final Logger LOGGER = LogManager.getLogger(DiskDriveNetworkNode.class);
-
-    private int ticksSinceBlockUpdateRequested;
-    private boolean blockUpdateRequested;
-
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
-
     private final IStorageDisk[] itemDisks = new IStorageDisk[8];
     private final IStorageDisk[] fluidDisks = new IStorageDisk[8];
-
     private final BaseItemHandler disks = new BaseItemHandler(8)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!world.isClientSide) {
                 StackUtils.createStorages(
-                    (ServerWorld) world,
+                    (ServerLevel) world,
                     handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
@@ -85,14 +79,15 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                 }
             }
         });
-
+    private int ticksSinceBlockUpdateRequested;
+    private boolean blockUpdateRequested;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
 
-    public DiskDriveNetworkNode(World world, BlockPos pos) {
+    public DiskDriveNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -175,7 +170,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(disks, 0, tag);
@@ -187,7 +182,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(disks, 0, tag);
@@ -196,7 +191,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 1, tag);
@@ -213,7 +208,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 1, tag);

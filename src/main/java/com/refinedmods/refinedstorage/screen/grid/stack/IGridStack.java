@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,7 +26,7 @@ public interface IGridStack {
 
     Set<String> getTags();
 
-    List<ITextComponent> getTooltip(boolean bypassCache);
+    List<Component> getTooltip(boolean bypassCache);
 
     int getQuantity();
 
@@ -34,7 +34,7 @@ public interface IGridStack {
 
     String getFormattedFullQuantity();
 
-    void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y);
+    void draw(PoseStack matrixStack, BaseScreen<?> screen, int x, int y);
 
     Object getIngredient();
 

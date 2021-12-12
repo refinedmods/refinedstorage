@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -16,15 +16,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiContainerHandler implements IGuiContainerHandler<ContainerScreen<?>> {
+public class GuiContainerHandler implements IGuiContainerHandler<AbstractContainerScreen<?>> {
     @Override
-    public List<Rectangle2d> getGuiExtraAreas(ContainerScreen<?> screen) {
+    public List<Rect2i> getGuiExtraAreas(AbstractContainerScreen<?> screen) {
         if (screen instanceof BaseScreen) {
             List<SideButton> sideButtons = ((BaseScreen) screen).getSideButtons();
 
-            List<Rectangle2d> rectangles = new ArrayList<>();
+            List<Rect2i> rectangles = new ArrayList<>();
             for (SideButton sideButton : sideButtons) {
-                rectangles.add(new Rectangle2d(sideButton.x, sideButton.y, sideButton.getWidth(), sideButton.getHeight()));
+                rectangles.add(new Rect2i(sideButton.x, sideButton.y, sideButton.getWidth(), sideButton.getHeight()));
             }
 
             return rectangles;
@@ -35,7 +35,7 @@ public class GuiContainerHandler implements IGuiContainerHandler<ContainerScreen
 
     @Nullable
     @Override
-    public Object getIngredientUnderMouse(ContainerScreen screen, double mouseX, double mouseY) {
+    public Object getIngredientUnderMouse(AbstractContainerScreen screen, double mouseX, double mouseY) {
         mouseX -= screen.getGuiLeft();
         mouseY -= screen.getGuiTop();
 

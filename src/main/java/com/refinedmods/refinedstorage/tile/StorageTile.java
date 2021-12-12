@@ -10,9 +10,10 @@ import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
@@ -25,8 +26,8 @@ public class StorageTile extends NetworkNodeTile<StorageNetworkNode> {
 
     private final ItemStorageType type;
 
-    public StorageTile(ItemStorageType type) {
-        super(getType(type));
+    public StorageTile(ItemStorageType type, BlockPos pos, BlockState state) {
+        super(getType(type), pos, state);
 
         this.type = type;
 
@@ -37,7 +38,7 @@ public class StorageTile extends NetworkNodeTile<StorageNetworkNode> {
         dataManager.addWatchedParameter(ACCESS_TYPE);
     }
 
-    public static TileEntityType<StorageTile> getType(ItemStorageType type) {
+    public static BlockEntityType<StorageTile> getType(ItemStorageType type) {
         switch (type) {
             case ONE_K:
                 return RSTiles.ONE_K_STORAGE_BLOCK;
@@ -60,7 +61,7 @@ public class StorageTile extends NetworkNodeTile<StorageNetworkNode> {
 
     @Override
     @Nonnull
-    public StorageNetworkNode createNode(World world, BlockPos pos) {
+    public StorageNetworkNode createNode(Level world, BlockPos pos) {
         return new StorageNetworkNode(world, pos, type);
     }
 }

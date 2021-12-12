@@ -6,8 +6,8 @@ import com.refinedmods.refinedstorage.api.network.security.ISecurityCard;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.refinedmods.refinedstorage.api.network.security.ISecurityManager;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.management.OpList;
+import net.minecraft.server.players.ServerOpList;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +23,8 @@ public class SecurityManager implements ISecurityManager {
     }
 
     @Override
-    public boolean hasPermission(Permission permission, PlayerEntity player) {
-        OpList ops = player.getServer().getPlayerList().getOps();
+    public boolean hasPermission(Permission permission, Player player) {
+        ServerOpList ops = player.getServer().getPlayerList().getOps();
 
         if (ops.get(player.getGameProfile()) != null) {
             return true;

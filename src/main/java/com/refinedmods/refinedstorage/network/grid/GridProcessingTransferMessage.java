@@ -7,11 +7,11 @@ import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class GridProcessingTransferMessage {
         this.fluidOutputs = fluidOutputs;
     }
 
-    public static GridProcessingTransferMessage decode(PacketBuffer buf) {
+    public static GridProcessingTransferMessage decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
 
         List<ItemStack> inputs = new ArrayList<>(size);
@@ -67,7 +67,7 @@ public class GridProcessingTransferMessage {
         return new GridProcessingTransferMessage(inputs, outputs, fluidInputs, fluidOutputs);
     }
 
-    public static void encode(GridProcessingTransferMessage message, PacketBuffer buf) {
+    public static void encode(GridProcessingTransferMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.inputs.size());
 
         for (ItemStack stack : message.inputs) {
@@ -94,7 +94,7 @@ public class GridProcessingTransferMessage {
     }
 
     public static void handle(GridProcessingTransferMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        Player player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {

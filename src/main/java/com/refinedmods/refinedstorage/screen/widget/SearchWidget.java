@@ -1,28 +1,28 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
 import com.refinedmods.refinedstorage.integration.jei.RSJeiPlugin;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchWidget extends TextFieldWidget {
+public class SearchWidget extends EditBox {
     private static final List<String> HISTORY = new ArrayList<>();
 
     private int mode;
     private int historyIndex = -1;
 
-    public SearchWidget(FontRenderer fontRenderer, int x, int y, int width) {
-        super(fontRenderer, x, y, width, fontRenderer.lineHeight, new StringTextComponent(""));
+    public SearchWidget(Font fontRenderer, int x, int y, int width) {
+        super(fontRenderer, x, y, width, fontRenderer.lineHeight, new TextComponent(""));
 
         this.setBordered(false);
         this.setVisible(true);
@@ -41,8 +41,8 @@ public class SearchWidget extends TextFieldWidget {
 
     private boolean canSyncFromJEINow() {
         return (this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
-                this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED)
-                && JeiIntegration.isLoaded();
+            this.mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED)
+            && JeiIntegration.isLoaded();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class SearchWidget extends TextFieldWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
             setTextFromJEI();
         }

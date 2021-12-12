@@ -4,11 +4,11 @@ import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ElementDrawers<T extends Container> implements IElementDrawers {
+public class ElementDrawers<T extends AbstractContainerMenu> implements IElementDrawers {
     protected final BaseScreen<T> screen;
 
     public ElementDrawers(BaseScreen<T> screen) {

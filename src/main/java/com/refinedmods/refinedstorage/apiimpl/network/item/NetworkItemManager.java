@@ -8,24 +8,24 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemProvider;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkItemManager implements INetworkItemManager {
     private final INetwork network;
-    private final Map<PlayerEntity, INetworkItem> items = new ConcurrentHashMap<>();
+    private final Map<Player, INetworkItem> items = new ConcurrentHashMap<>();
 
     public NetworkItemManager(INetwork network) {
         this.network = network;
     }
 
     @Override
-    public void open(PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+    public void open(Player player, ItemStack stack, PlayerSlot slot) {
         boolean inRange = false;
 
         for (INetworkNodeGraphEntry entry : network.getNodeGraph().all()) {
@@ -37,7 +37,7 @@ public class NetworkItemManager implements INetworkItemManager {
                 ((IWirelessTransmitter) node).getDimension() == player.getCommandSenderWorld().dimension()) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 
-                Vector3d pos = player.position();
+                Vec3 pos = player.position();
 
                 double distance = Math.sqrt(Math.pow(transmitter.getOrigin().getX() - pos.x(), 2) + Math.pow(transmitter.getOrigin().getY() - pos.y(), 2) + Math.pow(transmitter.getOrigin().getZ() - pos.z(), 2));
 
@@ -50,7 +50,7 @@ public class NetworkItemManager implements INetworkItemManager {
         }
 
         if (!inRange) {
-            player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_range"), player.getUUID());
+            player.sendMessage(new TranslatableComponent("misc.refinedstorage.network_item.out_of_range"), player.getUUID());
 
             return;
         }
@@ -63,17 +63,17 @@ public class NetworkItemManager implements INetworkItemManager {
     }
 
     @Override
-    public void close(PlayerEntity player) {
+    public void close(Player player) {
         items.remove(player);
     }
 
     @Override
-    public INetworkItem getItem(PlayerEntity player) {
+    public INetworkItem getItem(Player player) {
         return items.get(player);
     }
 
     @Override
-    public void drainEnergy(PlayerEntity player, int energy) {
+    public void drainEnergy(Player player, int energy) {
         INetworkItem item = getItem(player);
 
         if (item != null) {

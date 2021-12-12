@@ -40,16 +40,16 @@ import com.refinedmods.refinedstorage.network.grid.PortableGridSettingsUpdateMes
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -64,45 +64,82 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
     static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker"; // TODO: remove next version
     static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";
-
+    private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
+    private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
+    private final PlayerSlot slot;
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
     @Nullable
     private IStorageDisk storage;
     @Nullable
     private IStorageCache cache;
-
-    private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
-    private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
-
     @Nullable
-    private PlayerEntity player;
+    private Player player;
     private ItemStack stack;
-    private final PlayerSlot slot;
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+        .addListener((handler, slot, reading) -> {
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundTag());
+            }
 
+            StackUtils.writeItems(handler, 0, stack.getTag());
+        });
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
     private int tabPage;
     private int size;
-
     private ItemStorageTracker itemStorageTracker;
     private UUID itemStorageTrackerId;
     private FluidStorageTracker fluidStorageTracker;
     private UUID fluidStorageTrackerId;
 
-    private final List<IFilter> filters = new ArrayList<>();
-    private final List<IGridTab> tabs = new ArrayList<>();
+    public PortableGrid(@Nullable Player player, ItemStack stack, PlayerSlot slot) {
+        this.player = player;
+        this.stack = stack;
+        this.slot = slot;
 
-    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
-        .addListener((handler, slot, reading) -> {
-            if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
+        this.sortingType = WirelessGridItem.getSortingType(stack);
+        this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
+        this.searchBoxMode = WirelessGridItem.getSearchBoxMode(stack);
+        this.tabSelected = WirelessGridItem.getTabSelected(stack);
+        this.tabPage = WirelessGridItem.getTabPage(stack);
+        this.size = WirelessGridItem.getSize(stack);
+
+        if (!stack.hasTag()) {
+            stack.setTag(new CompoundTag());
+        }
+        if (player != null) { //baked model does not need a storage tracker
+            if (stack.getTag().contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
+                itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
+            } else {
+                if (stack.getTag().contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
+                    getItemStorageTracker().readFromNbt(stack.getTag().getList(NBT_STORAGE_TRACKER, Tag.TAG_COMPOUND));
+                }
+
+                UUID id = UUID.randomUUID();
+                stack.getTag().putUUID(NBT_ITEM_STORAGE_TRACKER_ID, id);
+                itemStorageTrackerId = id;
             }
 
-            StackUtils.writeItems(handler, 0, stack.getTag());
-        });
+            if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
+                fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
+            } else {
+                if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
+                    getFluidStorageTracker().readFromNbt(stack.getTag().getList(NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
+                }
 
-    private final BaseItemHandler disk = new BaseItemHandler(1)
+                UUID id = UUID.randomUUID();
+                stack.getTag().putUUID(NBT_FLUID_STORAGE_TRACKER_ID, id);
+                fluidStorageTrackerId = id;
+            }
+        }
+
+
+        StackUtils.readItems(disk, 4, stack.getTag());
+        StackUtils.readItems(filter, 0, stack.getTag());
+    }    private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(((handler, slot, reading) -> {
             if (player != null && !player.level.isClientSide) {
@@ -112,7 +149,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) player.level).getByStack(getDiskInventory().getStackInSlot(0));
+                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerLevel) player.level).getByStack(getDiskInventory().getStackInSlot(0));
 
                     if (diskInSlot != null) {
                         StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
@@ -139,52 +176,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                 StackUtils.writeItems(handler, 4, stack.getTag());
             }
         }));
-
-    public PortableGrid(@Nullable PlayerEntity player, ItemStack stack, PlayerSlot slot) {
-        this.player = player;
-        this.stack = stack;
-        this.slot = slot;
-
-        this.sortingType = WirelessGridItem.getSortingType(stack);
-        this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
-        this.searchBoxMode = WirelessGridItem.getSearchBoxMode(stack);
-        this.tabSelected = WirelessGridItem.getTabSelected(stack);
-        this.tabPage = WirelessGridItem.getTabPage(stack);
-        this.size = WirelessGridItem.getSize(stack);
-
-        if (!stack.hasTag()) {
-            stack.setTag(new CompoundNBT());
-        }
-        if (player != null) { //baked model does not need a storage tracker
-            if (stack.getTag().contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
-                itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
-            } else {
-                if (stack.getTag().contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
-                    getItemStorageTracker().readFromNbt(stack.getTag().getList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
-                }
-
-                UUID id = UUID.randomUUID();
-                stack.getTag().putUUID(NBT_ITEM_STORAGE_TRACKER_ID, id);
-                itemStorageTrackerId = id;
-            }
-
-            if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
-                fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
-            } else {
-                if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                    getFluidStorageTracker().readFromNbt(stack.getTag().getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
-                }
-
-                UUID id = UUID.randomUUID();
-                stack.getTag().putUUID(NBT_FLUID_STORAGE_TRACKER_ID, id);
-                fluidStorageTrackerId = id;
-            }
-        }
-
-
-        StackUtils.readItems(disk, 4, stack.getTag());
-        StackUtils.readItems(filter, 0, stack.getTag());
-    }
 
     public void onOpen() {
         drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getOpenUsage());
@@ -230,7 +221,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         return disk;
     }
 
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
@@ -246,7 +237,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public IStorageCacheListener createListener(ServerPlayerEntity player) {
+    public IStorageCacheListener createListener(ServerPlayer player) {
         return getGridType() == GridType.FLUID ? new PortableFluidGridStorageCacheListener(this, player) : new PortableItemGridStorageCacheListener(this, player);
     }
 
@@ -273,8 +264,8 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("gui.refinedstorage.portable_grid");
+    public Component getTitle() {
+        return new TranslatableComponent("gui.refinedstorage.portable_grid");
     }
 
     @Override
@@ -397,7 +388,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     this.itemStorageTrackerId = UUID.randomUUID();
                 }
 
-                this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) player.level).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+                this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) player.level).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
             }
         }
 
@@ -412,7 +403,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     this.fluidStorageTrackerId = UUID.randomUUID();
                 }
 
-                this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerWorld) player.level).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+                this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) player.level).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
             }
         }
 
@@ -420,12 +411,12 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public CraftingInventory getCraftingMatrix() {
+    public CraftingContainer getCraftingMatrix() {
         return null;
     }
 
     @Override
-    public CraftResultInventory getCraftingResult() {
+    public ResultContainer getCraftingResult() {
         return null;
     }
 
@@ -435,27 +426,27 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+    public void onCrafted(Player player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 
     @Override
-    public void onClear(PlayerEntity player) {
+    public void onClear(Player player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(PlayerEntity player) {
+    public void onCraftedShift(Player player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(Player player, ItemStack[][] recipe) {
         // NO OP
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
+    public void onClosed(Player player) {
         if (!player.getCommandSenderWorld().isClientSide) {
             StackUtils.writeItems(disk, 4, stack.getTag());
         }
@@ -528,4 +519,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }
+
+
 }

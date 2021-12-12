@@ -7,17 +7,17 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.network.grid.GridFluidDeltaMessage;
 import com.refinedmods.refinedstorage.network.grid.GridFluidUpdateMessage;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
-    private final ServerPlayerEntity player;
+    private final ServerPlayer player;
     private final INetwork network;
 
-    public FluidGridStorageCacheListener(ServerPlayerEntity player, INetwork network) {
+    public FluidGridStorageCacheListener(ServerPlayer player, INetwork network) {
         this.player = player;
         this.network = network;
     }

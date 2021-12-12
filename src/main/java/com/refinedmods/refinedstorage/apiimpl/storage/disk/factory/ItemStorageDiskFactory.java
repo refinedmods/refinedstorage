@@ -8,12 +8,12 @@ import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.refinedmods.refinedstorage.item.StorageDiskItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -22,14 +22,14 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
     @Override
-    public IStorageDisk<ItemStack> createFromNbt(ServerWorld world, CompoundNBT tag) {
+    public IStorageDisk<ItemStack> createFromNbt(ServerLevel world, CompoundTag tag) {
         ItemStorageDisk disk = new ItemStorageDisk(
             world,
             tag.getInt(ItemStorageDisk.NBT_CAPACITY),
             tag.contains(ItemStorageDisk.NBT_OWNER) ? tag.getUUID(ItemStorageDisk.NBT_OWNER) : null
         );
 
-        ListNBT list = tag.getList(ItemStorageDisk.NBT_ITEMS, Constants.NBT.TAG_COMPOUND);
+        ListTag list = tag.getList(ItemStorageDisk.NBT_ITEMS, Tag.TAG_COMPOUND);
 
         for (int i = 0; i < list.size(); ++i) {
             ItemStack stack = StackUtils.deserializeStackFromNbt(list.getCompound(i));
@@ -71,7 +71,7 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
     }
 
     @Override
-    public IStorageDisk<ItemStack> create(ServerWorld world, int capacity, @Nullable UUID owner) {
+    public IStorageDisk<ItemStack> create(ServerLevel world, int capacity, @Nullable UUID owner) {
         return new ItemStorageDisk(world, capacity, owner);
     }
 }

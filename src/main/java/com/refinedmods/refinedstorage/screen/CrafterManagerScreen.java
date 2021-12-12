@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterManagerNetworkNode;
@@ -16,10 +16,10 @@ import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
@@ -31,7 +31,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     private ScrollbarWidget scrollbar;
     private SearchWidget searchField;
 
-    public CrafterManagerScreen(CrafterManagerContainer container, PlayerInventory inventory, ITextComponent title) {
+    public CrafterManagerScreen(CrafterManagerContainer container, Inventory inventory, Component title) {
         super(container, 193, 0, inventory, title);
 
         this.crafterManager = ((CrafterManagerTile) container.getTile()).getNode();
@@ -69,7 +69,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
             searchField.y = sy;
         }
 
-        addButton(searchField);
+        addRenderableWidget(searchField);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/crafter_manager.png");
 
         blit(matrixStack, x, y, 0, 0, imageWidth, getTopHeight());
@@ -121,7 +121,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
         renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
@@ -130,8 +130,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
                 int y = heading.getValue();
 
                 if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
-                    RenderSystem.disableLighting();
-                    RenderSystem.color3f(1, 1, 1);
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
 
                     bindTexture(RS.ID, "gui/crafter_manager.png");
 

@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ public interface IGridManager {
      * @param player the player
      * @param pos    the block position
      */
-    void openGrid(ResourceLocation id, ServerPlayerEntity player, BlockPos pos);
+    void openGrid(ResourceLocation id, ServerPlayer player, BlockPos pos);
 
     /**
      * Opens a grid. Can only be called on the server.
@@ -38,7 +38,7 @@ public interface IGridManager {
      * @param stack  the stack
      * @param slot   the slot in the players inventory or curio slot, otherwise -1
      */
-    void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, PlayerSlot slot);
+    void openGrid(ResourceLocation id, ServerPlayer player, ItemStack stack, PlayerSlot slot);
 
     /**
      * Creates a grid.
@@ -51,5 +51,5 @@ public interface IGridManager {
      * @return a grid, or null if an error has occurred
      */
     @Nullable
-    Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, PlayerSlot slot);
+    Pair<IGrid, BlockEntity> createGrid(ResourceLocation id, Player player, @Nullable ItemStack stack, @Nullable BlockPos pos, PlayerSlot slot);
 }

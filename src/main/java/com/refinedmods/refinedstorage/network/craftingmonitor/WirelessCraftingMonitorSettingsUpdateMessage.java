@@ -2,9 +2,9 @@ package com.refinedmods.refinedstorage.network.craftingmonitor;
 
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +19,7 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
         this.tabPage = tabPage;
     }
 
-    public static WirelessCraftingMonitorSettingsUpdateMessage decode(PacketBuffer buf) {
+    public static WirelessCraftingMonitorSettingsUpdateMessage decode(FriendlyByteBuf buf) {
         Optional<UUID> tabSelected = Optional.empty();
 
         if (buf.readBoolean()) {
@@ -31,7 +31,7 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
         return new WirelessCraftingMonitorSettingsUpdateMessage(tabSelected, tabPage);
     }
 
-    public static void encode(WirelessCraftingMonitorSettingsUpdateMessage message, PacketBuffer buf) {
+    public static void encode(WirelessCraftingMonitorSettingsUpdateMessage message, FriendlyByteBuf buf) {
         buf.writeBoolean(message.tabSelected.isPresent());
 
         message.tabSelected.ifPresent(buf::writeUUID);
@@ -40,7 +40,7 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
     }
 
     public static void handle(WirelessCraftingMonitorSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayerEntity player = ctx.get().getSender();
+        ServerPlayer player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {

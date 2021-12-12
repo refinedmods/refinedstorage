@@ -6,11 +6,11 @@ import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICrafting
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
@@ -18,7 +18,7 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     private final ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
-    public CraftingMonitorContainer(ContainerType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, PlayerEntity player, int windowId) {
+    public CraftingMonitorContainer(MenuType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, Player player, int windowId) {
         super(type, craftingMonitorTile, player, windowId);
 
         this.craftingMonitor = craftingMonitor;
@@ -42,7 +42,7 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     }
 
     @Override
-    public void removed(PlayerEntity player) {
+    public void removed(Player player) {
         super.removed(player);
 
         if (!player.getCommandSenderWorld().isClientSide) {
@@ -61,7 +61,7 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
@@ -99,6 +99,6 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
 
     @Override
     public void onChanged() {
-        RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new CraftingMonitorUpdateMessage(craftingMonitor));
+        RS.NETWORK_HANDLER.sendTo((ServerPlayer) getPlayer(), new CraftingMonitorUpdateMessage(craftingMonitor));
     }
 }

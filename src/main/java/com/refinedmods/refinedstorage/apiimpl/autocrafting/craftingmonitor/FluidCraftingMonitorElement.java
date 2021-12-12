@@ -1,16 +1,16 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,13 +20,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
     private static final int COLOR_PROCESSING = 0xFFD9EDF7;
     private static final int COLOR_MISSING = 0xFFF2DEDE;
     private static final int COLOR_SCHEDULED = 0xFFE8E5CA;
     private static final int COLOR_CRAFTING = 0xFFADDBC6;
-
-    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
-
     private final FluidStack stack;
     private int stored;
     private int missing;
@@ -43,9 +41,20 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
         this.crafting = crafting;
     }
 
+    public static FluidCraftingMonitorElement read(FriendlyByteBuf buf) {
+        return new FluidCraftingMonitorElement(
+            FluidStack.readFromPacket(buf),
+            buf.readInt(),
+            buf.readInt(),
+            buf.readInt(),
+            buf.readInt(),
+            buf.readInt()
+        );
+    }
+
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
+    public void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing > 0) {
             drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_MISSING);
         } else if (processing > 0) {
@@ -108,29 +117,18 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Nullable
     @Override
-    public List<ITextComponent> getTooltip() {
+    public List<Component> getTooltip() {
         return Collections.singletonList(stack.getFluid().getAttributes().getDisplayName(stack));
     }
 
     @Override
-    public void write(PacketBuffer buf) {
+    public void write(FriendlyByteBuf buf) {
         stack.writeToPacket(buf);
         buf.writeInt(stored);
         buf.writeInt(missing);
         buf.writeInt(processing);
         buf.writeInt(scheduled);
         buf.writeInt(crafting);
-    }
-
-    public static FluidCraftingMonitorElement read(PacketBuffer buf) {
-        return new FluidCraftingMonitorElement(
-            FluidStack.readFromPacket(buf),
-            buf.readInt(),
-            buf.readInt(),
-            buf.readInt(),
-            buf.readInt(),
-            buf.readInt()
-        );
     }
 
     @Override
@@ -170,6 +168,10 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
             this.stack = stack;
         }
 
+        public static FluidCraftingMonitorElement.Builder forStack(FluidStack stack) {
+            return new FluidCraftingMonitorElement.Builder(stack);
+        }
+
         public FluidCraftingMonitorElement.Builder stored(int stored) {
             this.stored = stored;
             return this;
@@ -197,10 +199,6 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
         public FluidCraftingMonitorElement build() {
             return new FluidCraftingMonitorElement(stack, stored, missing, processing, scheduled, crafting);
-        }
-
-        public static FluidCraftingMonitorElement.Builder forStack(FluidStack stack) {
-            return new FluidCraftingMonitorElement.Builder(stack);
         }
     }
 }

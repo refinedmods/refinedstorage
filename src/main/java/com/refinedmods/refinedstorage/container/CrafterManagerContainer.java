@@ -12,10 +12,10 @@ import com.refinedmods.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -27,14 +27,14 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class CrafterManagerContainer extends BaseContainer {
-    private IScreenInfoProvider screenInfoProvider;
     private final CrafterManagerNetworkNode crafterManager;
-    private Map<String, Integer> containerData;
     private final Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
     private final Map<String, Integer> headings = new HashMap<>();
+    private IScreenInfoProvider screenInfoProvider;
+    private Map<String, Integer> containerData;
     private int rows;
 
-    public CrafterManagerContainer(CrafterManagerTile crafterManager, PlayerEntity player, int windowId) {
+    public CrafterManagerContainer(CrafterManagerTile crafterManager, Player player, int windowId) {
         super(RSContainers.CRAFTER_MANAGER, crafterManager, player, windowId);
 
         this.crafterManager = crafterManager.getNode();
@@ -48,7 +48,7 @@ public class CrafterManagerContainer extends BaseContainer {
         addPlayerInventory(8, screenInfoProvider.getYPlayerInventory());
 
         if (crafterManager.getNetwork() != null) {
-            for (Map.Entry<ITextComponent, List<IItemHandlerModifiable>> entry : crafterManager.getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
+            for (Map.Entry<Component, List<IItemHandlerModifiable>> entry : crafterManager.getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
                 for (IItemHandlerModifiable handler : entry.getValue()) {
                     for (int i = 0; i < handler.getSlots(); ++i) {
                         addSlot(new CrafterManagerSlot(handler, i, 0, 0, true, screenInfoProvider, crafterManager));
@@ -170,7 +170,7 @@ public class CrafterManagerContainer extends BaseContainer {
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);

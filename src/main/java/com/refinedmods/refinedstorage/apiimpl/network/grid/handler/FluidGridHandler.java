@@ -12,9 +12,9 @@ import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMe
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -33,7 +33,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, boolean shift) {
+    public void onExtract(ServerPlayer player, UUID id, boolean shift) {
         FluidStack stack = network.getFluidStorageCache().getList().get(id);
 
         if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
@@ -48,12 +48,12 @@ public class FluidGridHandler implements IFluidGridHandler {
             fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
 
             if (shift) {
-                if (!player.inventory.add(fluidHandler.getContainer().copy())) {
-                    InventoryHelper.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
+                if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
+                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
                 }
             } else {
-                player.inventory.setCarried(fluidHandler.getContainer());
-                player.broadcastCarriedItem();
+                player.containerMenu.setCarried(fluidHandler.getContainer());
+                // TODO player.broadcastCarriedItem();
             }
 
             network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
@@ -62,7 +62,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
+    public ItemStack onInsert(ServerPlayer player, ItemStack container) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player) || !network.canRun()) {
             return container;
         }
@@ -85,13 +85,13 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onInsertHeldContainer(ServerPlayerEntity player) {
-        player.inventory.setCarried(onInsert(player, player.inventory.getCarried()));
-        player.broadcastCarriedItem();
+    public void onInsertHeldContainer(ServerPlayer player) {
+        player.containerMenu.setCarried(onInsert(player, player.containerMenu.getCarried()));
+        // TODO player.broadcastCarriedItem();
     }
 
     @Override
-    public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayer player, UUID id, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -133,7 +133,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity) {
+    public void onCraftingRequested(ServerPlayer player, UUID id, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }

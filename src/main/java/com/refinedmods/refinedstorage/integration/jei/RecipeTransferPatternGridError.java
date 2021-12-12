@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
     }
 
     @Override
-    protected List<ITextComponent> drawIngredientHighlights(MatrixStack stack, int recipeX, int recipeY) {
-        List<ITextComponent> message = new ArrayList<>();
-        message.add(new TranslationTextComponent("jei.tooltip.transfer"));
+    protected List<Component> drawIngredientHighlights(PoseStack stack, int recipeX, int recipeY) {
+        List<Component> message = new ArrayList<>();
+        message.add(new TranslatableComponent("jei.tooltip.transfer"));
 
         boolean craftMessage = false;
 
@@ -28,7 +28,7 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
         }
 
         if (craftMessage) {
-            message.add(new TranslationTextComponent("gui.refinedstorage.jei.transfer.autocrafting_available").withStyle(TextFormatting.BLUE));
+            message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.autocrafting_available").withStyle(ChatFormatting.BLUE));
         }
 
         return message;

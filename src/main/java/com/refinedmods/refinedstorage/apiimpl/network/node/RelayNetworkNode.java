@@ -2,15 +2,15 @@ package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class RelayNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "relay");
 
-    public RelayNetworkNode(World world, BlockPos pos) {
+    public RelayNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
 
         this.redstoneMode = RedstoneMode.LOW;

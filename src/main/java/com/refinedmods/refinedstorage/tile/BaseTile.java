@@ -1,50 +1,50 @@
 package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BaseTile extends TileEntity {
+public abstract class BaseTile extends BlockEntity {
     protected final TileDataManager dataManager = new TileDataManager(this);
 
-    protected BaseTile(TileEntityType<?> tileType) {
-        super(tileType);
+    public BaseTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     public TileDataManager getDataManager() {
         return dataManager;
     }
 
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         return tag;
     }
 
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
     }
 
     @Override
-    public final CompoundNBT getUpdateTag() {
+    public final CompoundTag getUpdateTag() {
         return writeUpdate(super.getUpdateTag());
     }
 
     @Override
-    public final SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
+    public final ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::getUpdateTag);
     }
 
     @Override
-    public final void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
+    public final void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
         readUpdate(packet.getTag());
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        super.load(state, tag);
-
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
         readUpdate(tag);
     }
 
@@ -52,7 +52,7 @@ public abstract class BaseTile extends TileEntity {
     @Override
     public void setChanged() {
         if (level != null) {
-            level.blockEntityChanged(worldPosition, this);
+            level.blockEntityChanged(worldPosition);
         }
     }
 }

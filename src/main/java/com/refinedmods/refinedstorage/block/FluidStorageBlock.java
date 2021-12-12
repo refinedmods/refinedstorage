@@ -7,21 +7,18 @@ import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerP
 import com.refinedmods.refinedstorage.tile.FluidStorageTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 public class FluidStorageBlock extends NetworkNodeBlock {
     private final FluidStorageType type;
@@ -37,7 +34,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
         if (!world.isClientSide) {
             FluidStorageNetworkNode storage = ((FluidStorageTile) world.getBlockEntity(pos)).getNode();
 
@@ -45,30 +42,29 @@ public class FluidStorageBlock extends NetworkNodeBlock {
                 storage.setStorageId(stack.getTag().getUUID(FluidStorageNetworkNode.NBT_ID));
             }
 
-            storage.loadStorage(player instanceof PlayerEntity ? (PlayerEntity) player : null);
+            storage.loadStorage(player instanceof Player ? (Player) player : null);
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
         super.setPlacedBy(world, pos, state, player, stack);
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FluidStorageTile(type);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FluidStorageTile(type, pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!world.isClientSide) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayerEntity) player, new PositionalTileContainerProvider<FluidStorageTile>(
+            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<FluidStorageTile>(
                 ((FluidStorageTile) world.getBlockEntity(pos)).getNode().getTitle(),
                 (tile, windowId, inventory, p) -> new FluidStorageContainer(tile, player, windowId),
                 pos
             ), pos));
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

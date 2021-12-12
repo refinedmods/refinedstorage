@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.api.network;
 
 import com.refinedmods.refinedstorage.api.util.Action;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -18,7 +18,7 @@ public interface INetworkNodeGraph {
      * @param world  the origin world
      * @param origin the origin, usually the network position
      */
-    void invalidate(Action action, World world, BlockPos origin);
+    void invalidate(Action action, Level world, BlockPos origin);
 
     /**
      * Runs an action on the network.

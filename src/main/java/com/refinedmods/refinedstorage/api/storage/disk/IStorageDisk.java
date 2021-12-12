@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.api.storage.disk;
 
 import com.refinedmods.refinedstorage.api.storage.IStorage;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public interface IStorageDisk<T> extends IStorage<T> {
     /**
      * Writes the storage to NBT.
      */
-    CompoundNBT writeToNbt();
+    CompoundTag writeToNbt();
 
     /**
      * @return the factory id as registered in {@link IStorageDiskRegistry}

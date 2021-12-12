@@ -2,19 +2,20 @@ package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.apiimpl.network.node.SecurityManagerNetworkNode;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
 public class SecurityManagerTile extends NetworkNodeTile<SecurityManagerNetworkNode> {
-    public SecurityManagerTile() {
-        super(RSTiles.SECURITY_MANAGER);
+    public SecurityManagerTile(BlockPos pos, BlockState state) {
+        super(RSTiles.SECURITY_MANAGER, pos, state);
     }
 
     @Override
     @Nonnull
-    public SecurityManagerNetworkNode createNode(World world, BlockPos pos) {
+    public SecurityManagerNetworkNode createNode(Level world, BlockPos pos) {
         return new SecurityManagerNetworkNode(world, pos);
     }
 }

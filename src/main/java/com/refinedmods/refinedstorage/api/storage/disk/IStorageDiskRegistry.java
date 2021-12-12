@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.api.storage.disk;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 

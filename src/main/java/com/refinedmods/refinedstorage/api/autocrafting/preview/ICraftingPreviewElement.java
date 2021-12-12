@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.api.autocrafting.preview;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,7 +18,7 @@ public interface ICraftingPreviewElement {
      * @param drawers     the drawers this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers);
+    void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers);
 
     /**
      * @return true when this crafting preview elements signifies an error that disables starting a task
@@ -28,7 +28,7 @@ public interface ICraftingPreviewElement {
     /**
      * @param buf buffer to write to
      */
-    void write(PacketBuffer buf);
+    void write(FriendlyByteBuf buf);
 
     /**
      * Returns the id of this element, used for serialization and deserialization over the network.

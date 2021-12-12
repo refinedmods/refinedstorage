@@ -11,21 +11,21 @@ import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
 public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
     private final INetworkItemManager handler;
-    private final PlayerEntity player;
+    private final Player player;
     private final ItemStack stack;
     private final PlayerSlot slot;
 
-    public WirelessCraftingMonitorNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
+    public WirelessCraftingMonitorNetworkItem(INetworkItemManager handler, Player player, ItemStack stack, PlayerSlot slot) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
@@ -33,7 +33,7 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
     }
 
     @Override
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
@@ -60,7 +60,7 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
         WirelessCraftingMonitor wirelessCraftingMonitor = new WirelessCraftingMonitor(stack, player.getServer(), slot);
 
         NetworkHooks.openGui(
-            (ServerPlayerEntity) player,
+            (ServerPlayer) player,
             new CraftingMonitorContainerProvider(RSContainers.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null), slot::writePlayerSlot);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessCraftingMonitor().getOpenUsage());
@@ -86,6 +86,6 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
     }
 
     private void sendOutOfEnergyMessage() {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getDescriptionId())), player.getUUID());
+        player.sendMessage(new TranslatableComponent("misc.refinedstorage.network_item.out_of_energy", new TranslatableComponent(stack.getItem().getDescriptionId())), player.getUUID());
     }
 }

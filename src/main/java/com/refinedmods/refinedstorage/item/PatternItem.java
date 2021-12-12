@@ -13,19 +13,23 @@ import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.refinedmods.refinedstorage.util.ItemStackKey;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -34,9 +38,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class PatternItem extends Item implements ICraftingPatternProvider {
+public class PatternItem extends Item implements ICraftingPatternProvider, IItemRenderProperties {
     private static final Map<ItemStackKey, ICraftingPattern> CACHE = new HashMap<>();
 
     private static final String NBT_VERSION = "Version";
@@ -50,11 +55,28 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     private static final int VERSION = 1;
 
+    private final NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(() -> new PatternItemStackTileRenderer(
+        Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+        Minecraft.getInstance().getEntityModels()
+    ));
+
     public PatternItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP).setISTER(() -> PatternItemStackTileRenderer::new));
+        super(new Item.Properties().tab(RS.MAIN_GROUP));
     }
 
-    public static ICraftingPattern fromCache(World world, ItemStack stack) {
+    @Override
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        super.initializeClient(consumer);
+
+        consumer.accept(new IItemRenderProperties() {
+            @Override
+            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                return renderer.get();
+            }
+        });
+    }
+
+    public static ICraftingPattern fromCache(Level world, ItemStack stack) {
         ICraftingPattern pattern = CACHE.computeIfAbsent(
             new ItemStackKey(stack),
             s -> CraftingPatternFactory.INSTANCE.create(world, null, s.getStack())
@@ -69,90 +91,9 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         return pattern;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
-
-        if (!stack.hasTag()) {
-            return;
-        }
-
-        ICraftingPattern pattern = fromCache(world, stack);
-
-        if (pattern.isValid()) {
-            if (Screen.hasShiftDown() || isProcessing(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
-
-                RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
-                RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : FluidStack.EMPTY).collect(Collectors.toList()));
-
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.outputs").setStyle(Styles.YELLOW));
-            }
-
-            RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
-            RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidOutputs());
-
-            if (pattern instanceof CraftingPattern && ((CraftingPattern) pattern).getAllowedTagList() != null) {
-                addAllowedTags(tooltip, (CraftingPattern) pattern);
-            }
-
-            if (isExact(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").setStyle(Styles.BLUE));
-            }
-
-            if (isProcessing(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.processing").setStyle(Styles.BLUE));
-            }
-        } else {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
-            tooltip.add(pattern.getErrorMessage().plainCopy().setStyle(Styles.GRAY));
-        }
-    }
-
-    public void addAllowedTags(List<ITextComponent> tooltip, CraftingPattern pattern) {
-        for (int i = 0; i < pattern.getAllowedTagList().getAllowedItemTags().size(); ++i) {
-            Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedItemTags().get(i);
-
-            for (ResourceLocation tag : allowedTags) {
-                tooltip.add(new TranslationTextComponent(
-                    "misc.refinedstorage.pattern.allowed_item_tag",
-                    tag.toString(),
-                    pattern.getInputs().get(i).get(0).getHoverName()
-                ).setStyle(Styles.AQUA));
-            }
-        }
-
-        for (int i = 0; i < pattern.getAllowedTagList().getAllowedFluidTags().size(); ++i) {
-            Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedFluidTags().get(i);
-
-            for (ResourceLocation tag : allowedTags) {
-                tooltip.add(new TranslationTextComponent(
-                    "misc.refinedstorage.pattern.allowed_fluid_tag",
-                    tag.toString(),
-                    pattern.getFluidInputs().get(i).get(0).getDisplayName()
-                ).setStyle(Styles.AQUA));
-            }
-        }
-    }
-
-    @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (!world.isClientSide && player.isCrouching()) {
-            return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getItemInHand(hand).getCount()));
-        }
-
-        return new ActionResult<>(ActionResultType.PASS, player.getItemInHand(hand));
-    }
-
-    @Override
-    @Nonnull
-    public ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container) {
-        return CraftingPatternFactory.INSTANCE.create(world, container, stack);
-    }
-
     public static void setInputSlot(ItemStack pattern, int slot, ItemStack stack) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
         pattern.getTag().put(String.format(NBT_INPUT_SLOT, slot), stack.serializeNBT());
@@ -171,7 +112,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setOutputSlot(ItemStack pattern, int slot, ItemStack stack) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
         pattern.getTag().put(String.format(NBT_OUTPUT_SLOT, slot), stack.serializeNBT());
@@ -190,10 +131,10 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setFluidInputSlot(ItemStack pattern, int slot, FluidStack stack) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
-        pattern.getTag().put(String.format(NBT_FLUID_INPUT_SLOT, slot), stack.writeToNBT(new CompoundNBT()));
+        pattern.getTag().put(String.format(NBT_FLUID_INPUT_SLOT, slot), stack.writeToNBT(new CompoundTag()));
     }
 
     public static FluidStack getFluidInputSlot(ItemStack pattern, int slot) {
@@ -208,10 +149,10 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setFluidOutputSlot(ItemStack pattern, int slot, FluidStack stack) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
-        pattern.getTag().put(String.format(NBT_FLUID_OUTPUT_SLOT, slot), stack.writeToNBT(new CompoundNBT()));
+        pattern.getTag().put(String.format(NBT_FLUID_OUTPUT_SLOT, slot), stack.writeToNBT(new CompoundTag()));
     }
 
     public static FluidStack getFluidOutputSlot(ItemStack pattern, int slot) {
@@ -230,7 +171,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setProcessing(ItemStack pattern, boolean processing) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
         pattern.getTag().putBoolean(NBT_PROCESSING, processing);
@@ -246,7 +187,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setExact(ItemStack pattern, boolean exact) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
         pattern.getTag().putBoolean(NBT_EXACT, exact);
@@ -254,7 +195,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setToCurrentVersion(ItemStack pattern) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
         pattern.getTag().putInt(NBT_VERSION, VERSION);
@@ -262,7 +203,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static void setAllowedTags(ItemStack pattern, AllowedTagList allowedTagList) {
         if (!pattern.hasTag()) {
-            pattern.setTag(new CompoundNBT());
+            pattern.setTag(new CompoundTag());
         }
 
         pattern.getTag().put(NBT_ALLOWED_TAGS, allowedTagList.writeToNbt());
@@ -279,5 +220,86 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         allowedTagList.readFromNbt(pattern.getTag().getCompound(NBT_ALLOWED_TAGS));
 
         return allowedTagList;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
+
+        if (!stack.hasTag()) {
+            return;
+        }
+
+        ICraftingPattern pattern = fromCache(world, stack);
+
+        if (pattern.isValid()) {
+            if (Screen.hasShiftDown() || isProcessing(stack)) {
+                tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
+
+                RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
+                RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : FluidStack.EMPTY).collect(Collectors.toList()));
+
+                tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.outputs").setStyle(Styles.YELLOW));
+            }
+
+            RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
+            RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidOutputs());
+
+            if (pattern instanceof CraftingPattern && ((CraftingPattern) pattern).getAllowedTagList() != null) {
+                addAllowedTags(tooltip, (CraftingPattern) pattern);
+            }
+
+            if (isExact(stack)) {
+                tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.exact").setStyle(Styles.BLUE));
+            }
+
+            if (isProcessing(stack)) {
+                tooltip.add(new TranslatableComponent("misc.refinedstorage.processing").setStyle(Styles.BLUE));
+            }
+        } else {
+            tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
+            tooltip.add(pattern.getErrorMessage().plainCopy().setStyle(Styles.GRAY));
+        }
+    }
+
+    public void addAllowedTags(List<Component> tooltip, CraftingPattern pattern) {
+        for (int i = 0; i < pattern.getAllowedTagList().getAllowedItemTags().size(); ++i) {
+            Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedItemTags().get(i);
+
+            for (ResourceLocation tag : allowedTags) {
+                tooltip.add(new TranslatableComponent(
+                    "misc.refinedstorage.pattern.allowed_item_tag",
+                    tag.toString(),
+                    pattern.getInputs().get(i).get(0).getHoverName()
+                ).setStyle(Styles.AQUA));
+            }
+        }
+
+        for (int i = 0; i < pattern.getAllowedTagList().getAllowedFluidTags().size(); ++i) {
+            Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedFluidTags().get(i);
+
+            for (ResourceLocation tag : allowedTags) {
+                tooltip.add(new TranslatableComponent(
+                    "misc.refinedstorage.pattern.allowed_fluid_tag",
+                    tag.toString(),
+                    pattern.getFluidInputs().get(i).get(0).getDisplayName()
+                ).setStyle(Styles.AQUA));
+            }
+        }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        if (!world.isClientSide && player.isCrouching()) {
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getItemInHand(hand).getCount()));
+        }
+
+        return new InteractionResultHolder<>(InteractionResult.PASS, player.getItemInHand(hand));
+    }
+
+    @Override
+    @Nonnull
+    public ICraftingPattern create(Level world, ItemStack stack, ICraftingPatternContainer container) {
+        return CraftingPatternFactory.INSTANCE.create(world, container, stack);
     }
 }

@@ -8,9 +8,9 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public class GridFluidDeltaMessage {
         this.clientDeltas = clientDeltas;
     }
 
-    public static GridFluidDeltaMessage decode(PacketBuffer buf) {
+    public static GridFluidDeltaMessage decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
 
         List<Pair<IGridStack, Integer>> clientDeltas = new LinkedList<>();
@@ -48,7 +48,7 @@ public class GridFluidDeltaMessage {
         return new GridFluidDeltaMessage(clientDeltas);
     }
 
-    public static void encode(GridFluidDeltaMessage message, PacketBuffer buf) {
+    public static void encode(GridFluidDeltaMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.deltas.size());
 
         for (StackListResult<FluidStack> delta : message.deltas) {

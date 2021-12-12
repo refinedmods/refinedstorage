@@ -3,10 +3,10 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.tile.StorageTile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class StorageContainer extends BaseContainer {
-    public StorageContainer(StorageTile storage, PlayerEntity player, int windowId) {
+    public StorageContainer(StorageTile storage, Player player, int windowId) {
         super(RSContainers.STORAGE_BLOCK, storage, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
@@ -15,6 +15,6 @@ public class StorageContainer extends BaseContainer {
 
         addPlayerInventory(8, 141);
 
-        transferManager.addItemFilterTransfer(player.inventory, storage.getNode().getFilters());
+        transferManager.addItemFilterTransfer(player.getInventory(), storage.getNode().getFilters());
     }
 }

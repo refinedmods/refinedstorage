@@ -17,26 +17,25 @@ import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -46,7 +45,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DestructorNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
@@ -62,23 +60,21 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
-
+    private final CoverManager coverManager;
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> tool = createTool());
-
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
-    private ItemStack tool = createTool();
 
-    private final CoverManager coverManager;
-
-    public DestructorNetworkNode(World world, BlockPos pos) {
+    public DestructorNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
     }
+
+    private ItemStack tool = createTool();
 
     @Override
     public int getEnergyUsage() {
@@ -105,23 +101,18 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     private void pickupItems() {
         BlockPos front = pos.relative(getDirection());
 
-        List<Entity> droppedItems = new ArrayList<>();
+        List<ItemEntity> droppedItems = world.getEntitiesOfClass(ItemEntity.class, new AABB(front));
 
-        Chunk chunk = world.getChunkAt(front);
-        chunk.getEntities((Entity)null, new AxisAlignedBB(front), droppedItems, null);
+        for (ItemEntity entity : droppedItems) {
+            ItemStack droppedItem = ((ItemEntity) entity).getItem();
 
-        for (Entity entity : droppedItems) {
-            if (entity instanceof ItemEntity) {
-                ItemStack droppedItem = ((ItemEntity) entity).getItem();
+            if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) &&
+                network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE).isEmpty()) {
+                network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
-                if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) &&
-                    network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE).isEmpty()) {
-                    network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
+                entity.remove(Entity.RemovalReason.DISCARDED);
 
-                    entity.remove();
-
-                    break;
-                }
+                break;
             }
         }
     }
@@ -130,12 +121,12 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         BlockPos front = pos.relative(getDirection());
         BlockState frontBlockState = world.getBlockState(front);
         Block frontBlock = frontBlockState.getBlock();
-        ItemStack frontStack = frontBlock.getPickBlock(
+        ItemStack frontStack = frontBlock.getCloneItemStack(
             frontBlockState,
-            new BlockRayTraceResult(Vector3d.ZERO, getDirection().getOpposite(), front, false),
+            new BlockHitResult(Vec3.ZERO, getDirection().getOpposite(), front, false),
             world,
             front,
-            WorldUtils.getFakePlayer((ServerWorld) world, getOwner())
+            WorldUtils.getFakePlayer((ServerLevel) world, getOwner())
         );
 
         if (!frontStack.isEmpty() &&
@@ -143,10 +134,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
             frontBlockState.getDestroySpeed(world, front) != -1.0) {
             List<ItemStack> drops = Block.getDrops(
                 frontBlockState,
-                (ServerWorld) world,
+                (ServerLevel) world,
                 front,
                 world.getBlockEntity(front),
-                WorldUtils.getFakePlayer((ServerWorld) world, getOwner()),
+                WorldUtils.getFakePlayer((ServerLevel) world, getOwner()),
                 tool
             );
 
@@ -156,10 +147,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                 }
             }
 
-            BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, WorldUtils.getFakePlayer((ServerWorld) world, getOwner()));
+            BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, WorldUtils.getFakePlayer((ServerLevel) world, getOwner()));
 
             if (!MinecraftForge.EVENT_BUS.post(e)) {
-                frontBlock.playerWillDestroy(world, front, frontBlockState, WorldUtils.getFakePlayer((ServerWorld) world, getOwner()));
+                frontBlock.playerWillDestroy(world, front, frontBlockState, WorldUtils.getFakePlayer((ServerLevel) world, getOwner()));
 
                 world.removeBlock(front, false);
 
@@ -167,7 +158,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                     // We check if the controller isn't null here because when a destructor faces a node and removes it
                     // it will essentially remove this block itself from the network without knowing
                     if (network == null) {
-                        InventoryHelper.dropItemStack(world, front.getX(), front.getY(), front.getZ(), drop);
+                        Containers.dropItemStack(world, front.getX(), front.getY(), front.getZ(), drop);
                     } else {
                         network.insertItemTracked(drop, drop.getCount());
                     }
@@ -181,10 +172,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         BlockState frontBlockState = world.getBlockState(front);
         Block frontBlock = frontBlockState.getBlock();
 
-        if (frontBlock instanceof FlowingFluidBlock) {
+        if (frontBlock instanceof LiquidBlock) {
             // @Volatile: Logic from FlowingFluidBlock#pickupFluid
-            if (frontBlockState.getValue(FlowingFluidBlock.LEVEL) == 0) {
-                Fluid fluid = ((FlowingFluidBlock) frontBlock).getFluid();
+            if (frontBlockState.getValue(LiquidBlock.LEVEL) == 0) {
+                Fluid fluid = ((LiquidBlock) frontBlock).getFluid();
 
                 FluidStack stack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
 
@@ -252,10 +243,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
-        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
             this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
         }
 
@@ -268,7 +259,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
@@ -279,7 +270,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
@@ -295,7 +286,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_COMPARE)) {
@@ -364,4 +355,6 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     public CoverManager getCoverManager() {
         return coverManager;
     }
+
+
 }

@@ -5,10 +5,10 @@ import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridG
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.NetworkItem;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -19,16 +19,16 @@ public class OpenNetworkItemMessage {
         this.slot = slot;
     }
 
-    public static OpenNetworkItemMessage decode(PacketBuffer buf) {
+    public static OpenNetworkItemMessage decode(FriendlyByteBuf buf) {
         return new OpenNetworkItemMessage(new PlayerSlot(buf));
     }
 
-    public static void encode(OpenNetworkItemMessage message, PacketBuffer buf) {
+    public static void encode(OpenNetworkItemMessage message, FriendlyByteBuf buf) {
         message.slot.writePlayerSlot(buf);
     }
 
     public static void handle(OpenNetworkItemMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayerEntity player = ctx.get().getSender();
+        ServerPlayer player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {

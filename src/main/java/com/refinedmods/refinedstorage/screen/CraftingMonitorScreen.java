@@ -1,8 +1,9 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
@@ -20,14 +21,13 @@ import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -37,83 +37,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> {
-    public static class Task implements IGridTab {
-        private final UUID id;
-        private final ICraftingRequestInfo requested;
-        private final int qty;
-        private final long executionStarted;
-        private final int completionPercentage;
-        private final List<ICraftingMonitorElement> elements;
-
-        public Task(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
-            this.id = id;
-            this.requested = requested;
-            this.qty = qty;
-            this.executionStarted = executionStarted;
-            this.completionPercentage = completionPercentage;
-            this.elements = elements;
-        }
-
-        @Override
-        public void drawTooltip(MatrixStack matrixStack, int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
-            List<ITextComponent> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getHoverName() : requested.getFluid().getDisplayName());
-            List<String> smallTextLines = Lists.newArrayList();
-
-            int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
-            int hours = totalSecs / 3600;
-            int minutes = (totalSecs % 3600) / 60;
-            int seconds = totalSecs % 60;
-
-            smallTextLines.add(I18n.get("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
-
-            if (hours > 0) {
-                smallTextLines.add(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-            } else {
-                smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
-            }
-
-            smallTextLines.add(String.format("%d%%", completionPercentage));
-
-            RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
-        }
-
-        @Override
-        public List<IFilter> getFilters() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void drawIcon(MatrixStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
-            if (requested.getItem() != null) {
-                RenderHelper.setupFor3DItems();
-
-                itemDrawer.draw(matrixStack, x, y, requested.getItem());
-            } else {
-                fluidDrawer.draw(matrixStack, x, y, requested.getFluid());
-
-                RenderSystem.enableAlphaTest();
-            }
-        }
-    }
-
     private static final int ROWS = 5;
-
     private static final int ITEM_WIDTH = 73;
     private static final int ITEM_HEIGHT = 29;
-
+    private final ScrollbarWidget scrollbar;
+    private final ICraftingMonitor craftingMonitor;
+    private final TabListWidget<CraftingMonitorContainer> tabs;
+    private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, ITEM_WIDTH, ITEM_HEIGHT);
     private Button cancelButton;
     private Button cancelAllButton;
-
-    private final ScrollbarWidget scrollbar;
-
-    private final ICraftingMonitor craftingMonitor;
-
     private List<IGridTab> tasks = Collections.emptyList();
-    private final TabListWidget<CraftingMonitorContainer> tabs;
 
-    private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, ITEM_WIDTH, ITEM_HEIGHT);
-
-    public CraftingMonitorScreen(CraftingMonitorContainer container, PlayerInventory inventory, ITextComponent title) {
+    public CraftingMonitorScreen(CraftingMonitorContainer container, Inventory inventory, Component title) {
         super(container, 254, 201, inventory, title);
 
         this.craftingMonitor = container.getCraftingMonitor();
@@ -170,8 +105,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             addSideButton(new RedstoneModeSideButton(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
-        ITextComponent cancel = new TranslationTextComponent("gui.cancel");
-        ITextComponent cancelAll = new TranslationTextComponent("misc.refinedstorage.cancel_all");
+        Component cancel = new TranslatableComponent("gui.cancel");
+        Component cancelAll = new TranslatableComponent("misc.refinedstorage.cancel_all");
 
         int cancelButtonWidth = 14 + font.width(cancel.getString());
         int cancelAllButtonWidth = 14 + font.width(cancelAll.getString());
@@ -243,7 +178,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         if (craftingMonitor.isActiveOnClient()) {
             tabs.drawBackground(matrixStack, x, y - tabs.getHeight());
         }
@@ -258,17 +193,17 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
-        RenderHelper.setupFor3DItems();
+        Lighting.setupFor3DItems();
 
         int x = 7;
         int y = 20;
 
-        List<ITextComponent> tooltip = null;
+        List<Component> tooltip = null;
 
         for (int i = 0; i < 3 * 5; ++i) {
             if (item < getElements().size()) {
@@ -326,5 +261,62 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
         return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    }
+
+    public static class Task implements IGridTab {
+        private final UUID id;
+        private final ICraftingRequestInfo requested;
+        private final int qty;
+        private final long executionStarted;
+        private final int completionPercentage;
+        private final List<ICraftingMonitorElement> elements;
+
+        public Task(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
+            this.id = id;
+            this.requested = requested;
+            this.qty = qty;
+            this.executionStarted = executionStarted;
+            this.completionPercentage = completionPercentage;
+            this.elements = elements;
+        }
+
+        @Override
+        public void drawTooltip(PoseStack matrixStack, int x, int y, int screenWidth, int screenHeight, Font fontRenderer) {
+            List<Component> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getHoverName() : requested.getFluid().getDisplayName());
+            List<String> smallTextLines = Lists.newArrayList();
+
+            int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
+            int hours = totalSecs / 3600;
+            int minutes = (totalSecs % 3600) / 60;
+            int seconds = totalSecs % 60;
+
+            smallTextLines.add(I18n.get("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
+
+            if (hours > 0) {
+                smallTextLines.add(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+            } else {
+                smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+            }
+
+            smallTextLines.add(String.format("%d%%", completionPercentage));
+
+            RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
+        }
+
+        @Override
+        public List<IFilter> getFilters() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void drawIcon(PoseStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+            if (requested.getItem() != null) {
+                Lighting.setupFor3DItems();
+
+                itemDrawer.draw(matrixStack, x, y, requested.getItem());
+            } else {
+                fluidDrawer.draw(matrixStack, x, y, requested.getFluid());
+            }
+        }
     }
 }

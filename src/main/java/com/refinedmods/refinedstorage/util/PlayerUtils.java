@@ -1,18 +1,17 @@
 package com.refinedmods.refinedstorage.util;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 
 public class PlayerUtils {
-
-
-    public static void updateHeldItems(ServerPlayerEntity player) {
-        int mainHandSlot = player.inventory.selected;
-        int offHandSlot = 40; //TODO: @Volatile In 1.17 there is a global variable for this
+    public static void updateHeldItems(ServerPlayer player) {
+        int mainHandSlot = player.getInventory().selected;
+        int offHandSlot = Inventory.SLOT_OFFHAND;
 
         //See ClientPlayNetHandler#HandleSetSlot for the awful vanilla code that makes this necessary
         // -2 as that directly sets the inventory slots
-        player.connection.send(new SSetSlotPacket(-2, mainHandSlot, player.inventory.getItem(mainHandSlot)));
-        player.connection.send(new SSetSlotPacket(-2, offHandSlot, player.inventory.getItem(offHandSlot)));
+        player.connection.send(new ClientboundContainerSetSlotPacket(-2, player.containerMenu.incrementStateId(), mainHandSlot, player.getInventory().getItem(mainHandSlot)));
+        player.connection.send(new ClientboundContainerSetSlotPacket(-2, player.containerMenu.incrementStateId(), offHandSlot, player.getInventory().getItem(offHandSlot)));
     }
 }

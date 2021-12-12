@@ -4,11 +4,11 @@ import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class FluidInterfaceContainer extends BaseContainer {
-    public FluidInterfaceContainer(FluidInterfaceTile fluidInterface, PlayerEntity player, int windowId) {
+    public FluidInterfaceContainer(FluidInterfaceTile fluidInterface, Player player, int windowId) {
         super(RSContainers.FLUID_INTERFACE, fluidInterface, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
@@ -20,7 +20,7 @@ public class FluidInterfaceContainer extends BaseContainer {
 
         addPlayerInventory(8, 122);
 
-        transferManager.addBiTransfer(player.inventory, fluidInterface.getNode().getIn());
-        transferManager.addFluidFilterTransfer(player.inventory, fluidInterface.getNode().getOut());
+        transferManager.addBiTransfer(player.getInventory(), fluidInterface.getNode().getIn());
+        transferManager.addFluidFilterTransfer(player.getInventory(), fluidInterface.getNode().getOut());
     }
 }

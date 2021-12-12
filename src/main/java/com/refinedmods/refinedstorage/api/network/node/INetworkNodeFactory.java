@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.api.network.node;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
@@ -19,5 +19,5 @@ public interface INetworkNodeFactory {
      * @return the network node
      */
     @Nonnull
-    INetworkNode create(CompoundNBT tag, World world, BlockPos pos);
+    INetworkNode create(CompoundTag tag, Level world, BlockPos pos);
 }

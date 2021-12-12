@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadExce
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class Node {
@@ -15,21 +15,18 @@ public abstract class Node {
     private static final String NBT_IS_PROCESSING = "IsProcessing";
     private static final String NBT_QUANTITY = "Quantity";
     private static final String NBT_QUANTITY_TOTAL = "TotalQuantity";
-
+    protected final NodeRequirements requirements = new NodeRequirements();
     private final boolean root;
     private final ICraftingPattern pattern;
-
     protected int quantity;
     protected int totalQuantity;
-
-    protected final NodeRequirements requirements = new NodeRequirements();
 
     protected Node(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
         this.root = root;
     }
 
-    protected Node(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    protected Node(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
         this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
@@ -37,7 +34,7 @@ public abstract class Node {
         this.requirements.readFromNbt(tag);
     }
 
-    public static Node fromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public static Node fromNbt(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new ProcessingNode(network, tag) : new CraftingNode(network, tag);
     }
 
@@ -71,8 +68,8 @@ public abstract class Node {
         return requirements;
     }
 
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = new CompoundTag();
 
         tag.putInt(NBT_QUANTITY, quantity);
         tag.putInt(NBT_QUANTITY_TOTAL, totalQuantity);

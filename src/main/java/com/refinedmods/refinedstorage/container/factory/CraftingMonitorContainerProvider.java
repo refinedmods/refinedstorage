@@ -3,35 +3,35 @@ package com.refinedmods.refinedstorage.container.factory;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 
 import javax.annotation.Nullable;
 
-public class CraftingMonitorContainerProvider implements INamedContainerProvider {
+public class CraftingMonitorContainerProvider implements MenuProvider {
     private final ICraftingMonitor craftingMonitor;
     @Nullable
     private final CraftingMonitorTile tile;
-    private final ContainerType<CraftingMonitorContainer> containerType;
+    private final MenuType<CraftingMonitorContainer> containerType;
 
-    public CraftingMonitorContainerProvider(ContainerType<CraftingMonitorContainer> containerType, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile tile) {
+    public CraftingMonitorContainerProvider(MenuType<CraftingMonitorContainer> containerType, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile tile) {
         this.containerType = containerType;
         this.craftingMonitor = craftingMonitor;
         this.tile = tile;
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return craftingMonitor.getTitle();
     }
 
     @Nullable
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
         return new CraftingMonitorContainer(containerType, craftingMonitor, tile, playerEntity, windowId);
     }
 }

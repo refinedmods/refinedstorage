@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
@@ -8,11 +8,11 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,13 +20,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
     private static final int COLOR_PROCESSING = 0xFFD9EDF7;
     private static final int COLOR_MISSING = 0xFFF2DEDE;
     private static final int COLOR_SCHEDULED = 0xFFE8E5CA;
     private static final int COLOR_CRAFTING = 0xFFADDBC6;
-
-    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
-
     private final ItemStack stack;
     private int stored;
     private int missing;
@@ -43,9 +41,20 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
         this.crafting = crafting;
     }
 
+    public static ItemCraftingMonitorElement read(FriendlyByteBuf buf) {
+        return new ItemCraftingMonitorElement(
+            StackUtils.readItemStack(buf),
+            buf.readInt(),
+            buf.readInt(),
+            buf.readInt(),
+            buf.readInt(),
+            buf.readInt()
+        );
+    }
+
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
+    public void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers) {
         if (missing > 0) {
             drawers.getOverlayDrawer().draw(matrixStack, x, y, COLOR_MISSING);
         } else if (processing > 0) {
@@ -108,29 +117,18 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Nullable
     @Override
-    public List<ITextComponent> getTooltip() {
+    public List<Component> getTooltip() {
         return RenderUtils.getTooltipFromItem(this.stack);
     }
 
     @Override
-    public void write(PacketBuffer buf) {
+    public void write(FriendlyByteBuf buf) {
         StackUtils.writeItemStack(buf, stack);
         buf.writeInt(stored);
         buf.writeInt(missing);
         buf.writeInt(processing);
         buf.writeInt(scheduled);
         buf.writeInt(crafting);
-    }
-
-    public static ItemCraftingMonitorElement read(PacketBuffer buf) {
-        return new ItemCraftingMonitorElement(
-            StackUtils.readItemStack(buf),
-            buf.readInt(),
-            buf.readInt(),
-            buf.readInt(),
-            buf.readInt(),
-            buf.readInt()
-        );
     }
 
     @Override
@@ -170,6 +168,10 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
             this.stack = stack;
         }
 
+        public static Builder forStack(ItemStack stack) {
+            return new Builder(stack);
+        }
+
         public Builder stored(int stored) {
             this.stored = stored;
             return this;
@@ -197,10 +199,6 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
         public ItemCraftingMonitorElement build() {
             return new ItemCraftingMonitorElement(stack, stored, missing, processing, scheduled, crafting);
-        }
-
-        public static Builder forStack(ItemStack stack) {
-            return new Builder(stack);
         }
     }
 }

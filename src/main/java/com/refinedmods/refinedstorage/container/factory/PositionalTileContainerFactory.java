@@ -1,17 +1,13 @@
 package com.refinedmods.refinedstorage.container.factory;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import  net.minecraftforge.network.IContainerFactory;
 
-public class PositionalTileContainerFactory<C extends Container, T extends TileEntity> implements IContainerFactory<C> {
-    public interface Factory<C, T> {
-        C create(int windowId, PlayerInventory inv, T tile);
-    }
-
+public class PositionalTileContainerFactory<C extends AbstractContainerMenu, T extends BlockEntity> implements IContainerFactory<C> {
     private final Factory<C, T> factory;
 
     public PositionalTileContainerFactory(Factory<C, T> factory) {
@@ -19,11 +15,15 @@ public class PositionalTileContainerFactory<C extends Container, T extends TileE
     }
 
     @Override
-    public C create(int windowId, PlayerInventory inv, PacketBuffer data) {
+    public C create(int windowId, Inventory inv, FriendlyByteBuf data) {
         BlockPos pos = data.readBlockPos();
 
         T tile = (T) inv.player.level.getBlockEntity(pos);
 
         return factory.create(windowId, inv, tile);
+    }
+
+    public interface Factory<C, T> {
+        C create(int windowId, Inventory inv, T tile);
     }
 }

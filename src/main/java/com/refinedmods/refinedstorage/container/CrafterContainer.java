@@ -2,11 +2,11 @@ package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.tile.CrafterTile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class CrafterContainer extends BaseContainer {
-    public CrafterContainer(CrafterTile crafter, PlayerEntity player, int windowId) {
+    public CrafterContainer(CrafterTile crafter, Player player, int windowId) {
         super(RSContainers.CRAFTER, crafter, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
@@ -19,7 +19,7 @@ public class CrafterContainer extends BaseContainer {
 
         addPlayerInventory(8, 55);
 
-        transferManager.addBiTransfer(player.inventory, crafter.getNode().getUpgrades());
-        transferManager.addBiTransfer(player.inventory, crafter.getNode().getPatternInventory());
+        transferManager.addBiTransfer(player.getInventory(), crafter.getNode().getUpgrades());
+        transferManager.addBiTransfer(player.getInventory(), crafter.getNode().getPatternInventory());
     }
 }

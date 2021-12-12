@@ -9,16 +9,14 @@ import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import mezz.jei.api.gui.handlers.IGhostIngredientHandler.Target;
 
 public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScreen> {
     @Override
@@ -30,12 +28,12 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
                 continue;
             }
 
-            Rectangle2d bounds = new Rectangle2d(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 17, 17);
+            Rect2i bounds = new Rect2i(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 17, 17);
 
             if (ingredient instanceof ItemStack && (slot instanceof LegacyFilterSlot || slot instanceof FilterSlot)) {
                 targets.add(new Target<I>() {
                     @Override
-                    public Rectangle2d getArea() {
+                    public Rect2i getArea() {
                         return bounds;
                     }
 
@@ -49,7 +47,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
             } else if (ingredient instanceof FluidStack && slot instanceof FluidFilterSlot) {
                 targets.add(new Target<I>() {
                     @Override
-                    public Rectangle2d getArea() {
+                    public Rect2i getArea() {
                         return bounds;
                     }
 

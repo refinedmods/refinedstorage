@@ -49,29 +49,30 @@ import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,37 +80,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PortableGridTile extends BaseTile implements ITickableTileEntity, IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
+public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
     public static final TileDataParameter<Integer, PortableGridTile> REDSTONE_MODE = RedstoneMode.createParameter();
-    private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
             t.setChanged();
         }
     }, (initial, p) -> GridTile.trySortGrid(initial));
-    private static final TileDataParameter<Integer, PortableGridTile> SORTING_TYPE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSortingType, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SORTING_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.setChanged();
         }
     }, (initial, p) -> GridTile.trySortGrid(initial));
-    private static final TileDataParameter<Integer, PortableGridTile> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSearchBoxMode, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SEARCH_BOX_MODE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
-    private static final TileDataParameter<Integer, PortableGridTile> SIZE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getSize, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> SIZE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-    private static final TileDataParameter<Integer, PortableGridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getTabSelected, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> TAB_SELECTED = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.setChanged();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
-    private static final TileDataParameter<Integer, PortableGridTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.INT, 0, PortableGridTile::getTabPage, (t, v) -> {
+    private static final TileDataParameter<Integer, PortableGridTile> TAB_PAGE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);
             t.setChanged();
@@ -124,26 +125,29 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_ENCHANTMENTS = "Enchantments"; // @Volatile: Minecraft specific nbt key, see EnchantmentHelper
 
+    private final PortableGridBlockItem.Type type;
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new TileInventoryListener(this));
+    private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
+    private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
     private EnergyStorage energyStorage = createEnergyStorage(0);
     private final LazyOptional<EnergyStorage> energyStorageCap = LazyOptional.of(() -> energyStorage);
-
-    private final PortableGridBlockItem.Type type;
-
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
     private int tabPage;
     private int size;
-
     private GridType clientGridType;
-
-    private final List<IFilter> filters = new ArrayList<>();
-    private final List<IGridTab> tabs = new ArrayList<>();
-
-    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new TileInventoryListener(this));
+    @Nullable
+    private IStorageDisk storage;
+    @Nullable
+    private IStorageCache cache;
+    private PortableGridDiskState diskState = PortableGridDiskState.NONE;
+    private boolean active;
+    private ItemStorageTracker itemStorageTracker;
     private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new TileInventoryListener(this))
@@ -158,29 +162,14 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 }
             }
         });
-
-    @Nullable
-    private IStorageDisk storage;
-    @Nullable
-    private IStorageCache cache;
-
-    private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
-    private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
-
-    private PortableGridDiskState diskState = PortableGridDiskState.NONE;
-    private boolean active;
-
-    private ItemStorageTracker itemStorageTracker;
     private UUID itemStorageTrackerId;
     private FluidStorageTracker fluidStorageTracker;
     private UUID fluidStorageTrackerId;
-
-    private ListNBT enchants = null;
-
+    private ListTag enchants = null;
     private boolean loadNextTick;
 
-    public PortableGridTile(PortableGridBlockItem.Type type) {
-        super(type == PortableGridBlockItem.Type.CREATIVE ? RSTiles.CREATIVE_PORTABLE_GRID : RSTiles.PORTABLE_GRID);
+    public PortableGridTile(PortableGridBlockItem.Type type, BlockPos pos, BlockState state) {
+        super(type == PortableGridBlockItem.Type.CREATIVE ? RSTiles.CREATIVE_PORTABLE_GRID : RSTiles.PORTABLE_GRID, pos, state);
 
         this.type = type;
 
@@ -200,7 +189,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             this.storage = null;
             this.cache = null;
         } else {
-            IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerWorld) level).getByStack(getDiskInventory().getStackInSlot(0));
+            IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerLevel) level).getByStack(getDiskInventory().getStackInSlot(0));
 
             if (diskInSlot != null) {
                 StorageType diskType = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
@@ -256,7 +245,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
             } else {
                 if (stack.getTag().contains(PortableGrid.NBT_STORAGE_TRACKER)) { //TODO: remove next version
-                    getItemStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                    getItemStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_STORAGE_TRACKER, Tag.TAG_COMPOUND));
                 }
             }
 
@@ -264,12 +253,12 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
                 fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
             } else {
                 if (stack.getTag().contains(PortableGrid.NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                    getFluidStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                    getFluidStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
                 }
             }
 
             if (stack.getTag().contains(NBT_ENCHANTMENTS)) {
-                enchants = stack.getTag().getList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
+                enchants = stack.getTag().getList(NBT_ENCHANTMENTS, Tag.TAG_COMPOUND);
             }
         }
 
@@ -277,7 +266,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     public void applyDataFromTileToItem(ItemStack stack) {
-        stack.setTag(new CompoundNBT());
+        stack.setTag(new CompoundTag());
 
         stack.getTag().putInt(GridNetworkNode.NBT_SORTING_DIRECTION, sortingDirection);
         stack.getTag().putInt(GridNetworkNode.NBT_SORTING_TYPE, sortingType);
@@ -333,7 +322,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public IStorageCacheListener createListener(ServerPlayerEntity player) {
+    public IStorageCacheListener createListener(ServerPlayer player) {
         return getServerGridType() == GridType.FLUID ? new PortableFluidGridStorageCacheListener(this, player) : new PortableItemGridStorageCacheListener(this, player);
     }
 
@@ -360,8 +349,8 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("gui.refinedstorage.portable_grid");
+    public Component getTitle() {
+        return new TranslatableComponent("gui.refinedstorage.portable_grid");
     }
 
     @Override
@@ -374,9 +363,17 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         return level.isClientSide ? SORTING_TYPE.getValue() : sortingType;
     }
 
+    public void setSortingType(int sortingType) {
+        this.sortingType = sortingType;
+    }
+
     @Override
     public int getSortingDirection() {
         return level.isClientSide ? SORTING_DIRECTION.getValue() : sortingDirection;
+    }
+
+    public void setSortingDirection(int sortingDirection) {
+        this.sortingDirection = sortingDirection;
     }
 
     @Override
@@ -384,14 +381,26 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         return level.isClientSide ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
+    public void setSearchBoxMode(int searchBoxMode) {
+        this.searchBoxMode = searchBoxMode;
+    }
+
     @Override
     public int getTabSelected() {
         return level.isClientSide ? TAB_SELECTED.getValue() : tabSelected;
     }
 
+    public void setTabSelected(int tabSelected) {
+        this.tabSelected = tabSelected;
+    }
+
     @Override
     public int getTabPage() {
         return level.isClientSide ? TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
+    }
+
+    public void setTabPage(int page) {
+        this.tabPage = page;
     }
 
     @Override
@@ -402,26 +411,6 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     @Override
     public int getSize() {
         return level.isClientSide ? SIZE.getValue() : size;
-    }
-
-    public void setSortingType(int sortingType) {
-        this.sortingType = sortingType;
-    }
-
-    public void setSortingDirection(int sortingDirection) {
-        this.sortingDirection = sortingDirection;
-    }
-
-    public void setSearchBoxMode(int searchBoxMode) {
-        this.searchBoxMode = searchBoxMode;
-    }
-
-    public void setTabSelected(int tabSelected) {
-        this.tabSelected = tabSelected;
-    }
-
-    public void setTabPage(int page) {
-        this.tabPage = page;
     }
 
     public void setSize(int size) {
@@ -507,12 +496,12 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public CraftingInventory getCraftingMatrix() {
+    public CraftingContainer getCraftingMatrix() {
         return null;
     }
 
     @Override
-    public CraftResultInventory getCraftingResult() {
+    public ResultContainer getCraftingResult() {
         return null;
     }
 
@@ -522,27 +511,27 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+    public void onCrafted(Player player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 
     @Override
-    public void onClear(PlayerEntity player) {
+    public void onClear(Player player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(PlayerEntity player) {
+    public void onCraftedShift(Player player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(Player player, ItemStack[][] recipe) {
         // NO OP
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
+    public void onClosed(Player player) {
         // NO OP
     }
 
@@ -658,8 +647,8 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         tag.putInt(GridNetworkNode.NBT_SORTING_DIRECTION, sortingDirection);
         tag.putInt(GridNetworkNode.NBT_SORTING_TYPE, sortingType);
@@ -685,13 +674,11 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         if (enchants != null) {
             tag.put(NBT_ENCHANTMENTS, enchants);
         }
-
-        return tag;
     }
 
     @Override
-    public void load(BlockState blockState, CompoundNBT tag) {
-        super.load(blockState, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
         if (tag.contains(GridNetworkNode.NBT_SORTING_DIRECTION)) {
             sortingDirection = tag.getInt(GridNetworkNode.NBT_SORTING_DIRECTION);
@@ -730,7 +717,7 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             itemStorageTrackerId = tag.getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
-                getItemStorageTracker().readFromNbt(tag.getList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                getItemStorageTracker().readFromNbt(tag.getList(NBT_STORAGE_TRACKER, Tag.TAG_COMPOUND));
             }
         }
 
@@ -738,24 +725,24 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
             fluidStorageTrackerId = tag.getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
         } else {
             if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
             }
         }
 
         if (tag.contains(NBT_ENCHANTMENTS)) {
-            enchants = tag.getList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
+            enchants = tag.getList(NBT_ENCHANTMENTS, Tag.TAG_COMPOUND);
         }
     }
 
     @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         tag.putInt(NBT_TYPE, getServerGridType().ordinal());
 
         return super.writeUpdate(tag);
     }
 
     @Override
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
         super.readUpdate(tag);
 
         clientGridType = GridType.values()[tag.getInt(NBT_TYPE)];
@@ -792,12 +779,11 @@ public class PortableGridTile extends BaseTile implements ITickableTileEntity, I
         return AccessType.INSERT_EXTRACT;
     }
 
-    @Override
-    public void tick() {
-        if (loadNextTick) {
-            active = isGridActive();
-            diskState = getDiskState();
-            loadNextTick = false;
+    public static void serverTick(PortableGridTile tile) {
+        if (tile.loadNextTick) {
+            tile.active = tile.isGridActive();
+            tile.diskState = tile.getDiskState();
+            tile.loadNextTick = false;
         }
     }
 }

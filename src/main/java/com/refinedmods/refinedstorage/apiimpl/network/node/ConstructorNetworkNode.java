@@ -16,24 +16,24 @@ import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.Position;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.PositionImpl;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -44,8 +44,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class ConstructorNetworkNode extends NetworkNode implements IComparable, IType, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "constructor");
@@ -63,14 +61,12 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK)
         .addListener(new NetworkNodeInventoryListener(this));
-
+    private final CoverManager coverManager;
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
     private boolean drop = false;
 
-    private final CoverManager coverManager;
-
-    public ConstructorNetworkNode(World world, BlockPos pos) {
+    public ConstructorNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
     }
@@ -109,22 +105,22 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
                 network.getCraftingManager().request(this, stack, FluidAttributes.BUCKET_VOLUME);
             }
         } else if (!world.getBlockState(front).getFluidState().isSource()) {
-            FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
+            FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerLevel) world, getOwner()), world, InteractionHand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
         }
     }
 
     private void extractAndPlaceBlock(ItemStack stack) {
         ItemStack took = network.extractItem(stack, 1, compare, Action.SIMULATE);
         if (!took.isEmpty()) {
-            BlockItemUseContext ctx = new ConstructorBlockItemUseContext(
+            BlockPlaceContext ctx = new ConstructorBlockItemUseContext(
                 world,
-                WorldUtils.getFakePlayer((ServerWorld) world, getOwner()),
-                Hand.MAIN_HAND,
+                WorldUtils.getFakePlayer((ServerLevel) world, getOwner()),
+                InteractionHand.MAIN_HAND,
                 took,
-                new BlockRayTraceResult(Vector3d.ZERO, getDirection(), pos, false)
+                new BlockHitResult(Vec3.ZERO, getDirection(), pos, false)
             );
 
-            ActionResultType result = ForgeHooks.onPlaceItemIntoWorld(ctx);
+            InteractionResult result = ForgeHooks.onPlaceItemIntoWorld(ctx);
             if (result.consumesAction()) {
                 network.extractItem(stack, 1, Action.PERFORM);
             }
@@ -139,7 +135,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(stack, upgrades.getStackInteractCount(), compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
-            DefaultDispenseItemBehavior.spawnItem(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+            DefaultDispenseItemBehavior.spawnItem(world, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             network.getCraftingManager().request(this, stack, 1);
         }
@@ -178,10 +174,10 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
-        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
             this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
         }
 
@@ -194,7 +190,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
@@ -205,7 +201,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
@@ -220,7 +216,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_COMPARE)) {
@@ -286,6 +282,12 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         return coverManager;
     }
 
+    private static class ConstructorBlockItemUseContext extends BlockPlaceContext {
+        public ConstructorBlockItemUseContext(Level world, @Nullable Player player, InteractionHand hand, ItemStack stack, BlockHitResult rayTraceResult) {
+            super(world, player, hand, stack, rayTraceResult);
+        }
+    }
+
     private class NetworkFluidHandler implements IFluidHandler {
         private final FluidStack resource;
 
@@ -329,12 +331,6 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
             return network.extractFluid(resource, resource.getAmount(), compare, action == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
-        }
-    }
-
-    private static class ConstructorBlockItemUseContext extends BlockItemUseContext {
-        public ConstructorBlockItemUseContext(World world, @Nullable PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult rayTraceResult) {
-            super(world, player, hand, stack, rayTraceResult);
         }
     }
 }

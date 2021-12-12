@@ -8,18 +8,19 @@ import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -32,7 +33,7 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
     public static final TileDataParameter<Integer, DiskManipulatorTile> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, DiskManipulatorTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, DiskManipulatorTile> TYPE = IType.createParameter();
-    public static final TileDataParameter<Integer, DiskManipulatorTile> IO_MODE = new TileDataParameter<>(DataSerializers.INT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, DiskManipulatorTile> IO_MODE = new TileDataParameter<>(EntityDataSerializers.INT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
         t.getNode().setIoMode(v);
         t.getNode().markDirty();
     });
@@ -45,8 +46,8 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
 
     private final DiskState[] diskState = new DiskState[6];
 
-    public DiskManipulatorTile() {
-        super(RSTiles.DISK_MANIPULATOR);
+    public DiskManipulatorTile(BlockPos pos, BlockState state) {
+        super(RSTiles.DISK_MANIPULATOR, pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
@@ -57,13 +58,13 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
     }
 
     @Override
-    public CompoundNBT writeUpdate(CompoundNBT tag) {
+    public CompoundTag writeUpdate(CompoundTag tag) {
         super.writeUpdate(tag);
 
-        ListNBT list = new ListNBT();
+        ListTag list = new ListTag();
 
         for (DiskState state : getNode().getDiskState()) {
-            list.add(IntNBT.valueOf(state.ordinal()));
+            list.add(IntTag.valueOf(state.ordinal()));
         }
 
         tag.put(NBT_DISK_STATE, list);
@@ -72,10 +73,10 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
     }
 
     @Override
-    public void readUpdate(CompoundNBT tag) {
+    public void readUpdate(CompoundTag tag) {
         super.readUpdate(tag);
 
-        ListNBT list = tag.getList(NBT_DISK_STATE, Constants.NBT.TAG_INT);
+        ListTag list = tag.getList(NBT_DISK_STATE, Tag.TAG_INT);
 
         for (int i = 0; i < list.size(); ++i) {
             diskState[i] = DiskState.values()[list.getInt(i)];
@@ -104,7 +105,7 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
 
     @Override
     @Nonnull
-    public DiskManipulatorNetworkNode createNode(World world, BlockPos pos) {
+    public DiskManipulatorNetworkNode createNode(Level world, BlockPos pos) {
         return new DiskManipulatorNetworkNode(world, pos);
     }
 }

@@ -1,13 +1,13 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
@@ -20,12 +20,20 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
         this.recursedPattern = recursedPattern;
     }
 
+    public static ErrorCraftingPreviewElement read(FriendlyByteBuf buf) {
+        int errorIdx = buf.readInt();
+        CalculationResultType error = errorIdx >= 0 && errorIdx < CalculationResultType.values().length ? CalculationResultType.values()[errorIdx] : CalculationResultType.TOO_COMPLEX;
+        ItemStack stack = buf.readItem();
+
+        return new ErrorCraftingPreviewElement(error, stack);
+    }
+
     public ItemStack getRecursedPattern() {
         return recursedPattern;
     }
 
     @Override
-    public void draw(MatrixStack matrixStack, int x, int y, IElementDrawers drawers) {
+    public void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers) {
         // NO OP
     }
 
@@ -35,21 +43,13 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     }
 
     @Override
-    public void write(PacketBuffer buf) {
+    public void write(FriendlyByteBuf buf) {
         buf.writeInt(type.ordinal());
         buf.writeItem(recursedPattern);
     }
 
     public CalculationResultType getType() {
         return type;
-    }
-
-    public static ErrorCraftingPreviewElement read(PacketBuffer buf) {
-        int errorIdx = buf.readInt();
-        CalculationResultType error = errorIdx >= 0 && errorIdx < CalculationResultType.values().length ? CalculationResultType.values()[errorIdx] : CalculationResultType.TOO_COMPLEX;
-        ItemStack stack = buf.readItem();
-
-        return new ErrorCraftingPreviewElement(error, stack);
     }
 
     @Override

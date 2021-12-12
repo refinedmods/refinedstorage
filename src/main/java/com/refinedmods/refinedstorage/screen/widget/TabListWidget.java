@@ -1,44 +1,34 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TabListWidget<T extends Container> {
-    public interface ITabListListener {
-        void onSelectionChanged(int tab);
-
-        void onPageChanged(int page);
-    }
-
+public class TabListWidget<T extends AbstractContainerMenu> {
     private final BaseScreen<?> screen;
     private final ElementDrawers<T> drawers;
-
     private final Supplier<List<IGridTab>> tabs;
-    private int tabHovering;
     private final int tabsPerPage;
     private final Supplier<Integer> pages;
     private final Supplier<Integer> page;
     private final Supplier<Integer> selected;
-    private boolean hadTabs;
-
     private final List<ITabListListener> listeners = new LinkedList<>();
-
+    private int tabHovering;
+    private boolean hadTabs;
     private Button left;
     private Button right;
-
     public TabListWidget(BaseScreen<T> screen, ElementDrawers<T> drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.screen = screen;
         this.drawers = drawers;
@@ -50,15 +40,15 @@ public class TabListWidget<T extends Container> {
     }
 
     public void init(int width) {
-        this.left = screen.addButton(screen.getGuiLeft(), screen.getGuiTop() - 22, 20, 20, new StringTextComponent("<"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
-        this.right = screen.addButton(screen.getGuiLeft() + width - 22, screen.getGuiTop() - 22, 20, 20, new StringTextComponent(">"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
+        this.left = screen.addButton(screen.getGuiLeft(), screen.getGuiTop() - 22, 20, 20, new TextComponent("<"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
+        this.right = screen.addButton(screen.getGuiLeft() + width - 22, screen.getGuiTop() - 22, 20, 20, new TextComponent(">"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
     }
 
     public void addListener(ITabListListener listener) {
         listeners.add(listener);
     }
 
-    public void drawForeground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY, boolean visible) {
+    public void drawForeground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY, boolean visible) {
         this.tabHovering = -1;
 
         if (visible) {
@@ -97,7 +87,7 @@ public class TabListWidget<T extends Container> {
         right.active = page.get() < pages.get();
     }
 
-    public void drawBackground(MatrixStack matrixStack, int x, int y) {
+    public void drawBackground(PoseStack matrixStack, int x, int y) {
         int j = 0;
         for (int i = page.get() * tabsPerPage; i < (page.get() * tabsPerPage) + tabsPerPage; ++i) {
             if (i < tabs.get().size()) {
@@ -118,7 +108,7 @@ public class TabListWidget<T extends Container> {
         return 0;
     }
 
-    private void drawTab(MatrixStack matrixStack, IGridTab tab, boolean foregroundLayer, int x, int y, int index, int num) {
+    private void drawTab(PoseStack matrixStack, IGridTab tab, boolean foregroundLayer, int x, int y, int index, int num) {
         boolean isSelected = index == selected.get();
 
         if ((foregroundLayer && !isSelected) || (!foregroundLayer && isSelected)) {
@@ -127,8 +117,6 @@ public class TabListWidget<T extends Container> {
 
         int tx = x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * num);
         int ty = y;
-
-        RenderSystem.enableAlphaTest();
 
         screen.bindTexture(RS.ID, "icons.png");
 
@@ -159,7 +147,7 @@ public class TabListWidget<T extends Container> {
         tab.drawIcon(matrixStack, otx + 6, ty + 9 - (!isSelected ? 3 : 0), drawers.getItemDrawer(), drawers.getFluidDrawer());
     }
 
-    public void drawTooltip(MatrixStack matrixStack, FontRenderer fontRenderer, int mouseX, int mouseY) {
+    public void drawTooltip(PoseStack matrixStack, Font fontRenderer, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
             tabs.get().get(tabHovering).drawTooltip(matrixStack, mouseX, mouseY, screen.width, screen.height, fontRenderer);
         }
@@ -173,5 +161,11 @@ public class TabListWidget<T extends Container> {
         }
 
         return false;
+    }
+
+    public interface ITabListListener {
+        void onSelectionChanged(int tab);
+
+        void onPageChanged(int page);
     }
 }

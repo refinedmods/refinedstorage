@@ -4,14 +4,14 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.item.ProcessorItem;
 import com.refinedmods.refinedstorage.util.ColorMap;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.item.Items;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.Items;
 
 import java.util.function.Consumer;
 
@@ -23,13 +23,13 @@ public class RecipeGenerator extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> recipeAcceptor) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeAcceptor) {
         // Tag + Color -> Colored Block
         RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> map.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
             .requires(tag)
             .requires(color.getTag())
             .group(RS.ID)
-            .unlockedBy("refinedstorage:controller", InventoryChangeTrigger.Instance.hasItems(RSItems.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get()))
+            .unlockedBy("refinedstorage:controller", InventoryChangeTrigger.TriggerInstance.hasItems(RSItems.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get()))
             .save(recipeAcceptor, new ResourceLocation(RS.ID, "coloring_recipes/" + item.getId().getPath()))
         ));
 
@@ -38,7 +38,7 @@ public class RecipeGenerator extends RecipeProvider {
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
             .requires(ItemTags.bind("refinedstorage:crafting_tables"))
-            .unlockedBy(GRID_ID, InventoryChangeTrigger.Instance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
+            .unlockedBy(GRID_ID, InventoryChangeTrigger.TriggerInstance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
             .save(recipeAcceptor, new ResourceLocation(RS.ID, "crafting_grid/" + item.getId().getPath()))
         );
 
@@ -47,7 +47,7 @@ public class RecipeGenerator extends RecipeProvider {
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
             .requires(Items.BUCKET)
-            .unlockedBy(GRID_ID, InventoryChangeTrigger.Instance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
+            .unlockedBy(GRID_ID, InventoryChangeTrigger.TriggerInstance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
             .save(recipeAcceptor, new ResourceLocation(RS.ID, "fluid_grid/" + item.getId().getPath()))
         );
 
@@ -56,7 +56,7 @@ public class RecipeGenerator extends RecipeProvider {
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
             .requires(RSItems.PATTERN.get())
-            .unlockedBy(GRID_ID, InventoryChangeTrigger.Instance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
+            .unlockedBy(GRID_ID, InventoryChangeTrigger.TriggerInstance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
             .save(recipeAcceptor, new ResourceLocation(RS.ID, "pattern_grid/" + item.getId().getPath()))
         );
     }

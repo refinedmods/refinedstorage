@@ -8,11 +8,11 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
+import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 public class CraftingNode extends Node {
@@ -26,12 +26,12 @@ public class CraftingNode extends Node {
         this.recipe = recipe;
     }
 
-    public CraftingNode(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    public CraftingNode(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         super(network, tag);
 
         this.recipe = NonNullList.create();
 
-        ListNBT tookList = tag.getList(NBT_RECIPE, Constants.NBT.TAG_COMPOUND);
+        ListTag tookList = tag.getList(NBT_RECIPE, Tag.TAG_COMPOUND);
         for (int i = 0; i < tookList.size(); ++i) {
             recipe.add(StackUtils.deserializeStackFromNbt(tookList.getCompound(i)));
         }
@@ -83,10 +83,10 @@ public class CraftingNode extends Node {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
-        CompoundNBT tag = super.writeToNbt();
+    public CompoundTag writeToNbt() {
+        CompoundTag tag = super.writeToNbt();
 
-        ListNBT tookList = new ListNBT();
+        ListTag tookList = new ListTag();
         for (ItemStack took : this.recipe) {
             tookList.add(StackUtils.serializeStackToNbt(took));
         }

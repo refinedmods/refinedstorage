@@ -4,11 +4,11 @@ import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.OutputSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.tile.InterfaceTile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class InterfaceContainer extends BaseContainer {
-    public InterfaceContainer(InterfaceTile tile, PlayerEntity player, int windowId) {
+    public InterfaceContainer(InterfaceTile tile, Player player, int windowId) {
         super(RSContainers.INTERFACE, tile, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
@@ -29,8 +29,8 @@ public class InterfaceContainer extends BaseContainer {
 
         addPlayerInventory(8, 134);
 
-        transferManager.addBiTransfer(player.inventory, tile.getNode().getUpgrades());
-        transferManager.addBiTransfer(player.inventory, tile.getNode().getImportItems());
-        transferManager.addTransfer(tile.getNode().getExportItems(), player.inventory);
+        transferManager.addBiTransfer(player.getInventory(), tile.getNode().getUpgrades());
+        transferManager.addBiTransfer(player.getInventory(), tile.getNode().getImportItems());
+        transferManager.addTransfer(tile.getNode().getExportItems(), player.getInventory());
     }
 }

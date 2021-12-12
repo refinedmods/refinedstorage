@@ -1,16 +1,16 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,17 +23,17 @@ public class FluidGridStack implements IGridStack {
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final UUID id;
+    private final FluidStack stack;
+    private final boolean craftable;
     @Nullable
     private UUID otherId;
-    private final FluidStack stack;
     @Nullable
     private StorageTrackerEntry entry;
-    private final boolean craftable;
     private boolean zeroed;
 
     private Set<String> cachedTags;
     private String cachedName;
-    private List<ITextComponent> cachedTooltip;
+    private List<Component> cachedTooltip;
     private String cachedModId;
     private String cachedModName;
 
@@ -131,15 +131,15 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public List<ITextComponent> getTooltip(boolean bypassCache) {
+    public List<Component> getTooltip(boolean bypassCache) {
         if (bypassCache || cachedTooltip == null) {
-            List<ITextComponent> tooltip;
+            List<Component> tooltip;
             try {
                 tooltip = Arrays.asList(stack.getDisplayName());
             } catch (Throwable t) {
                 logger.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
 
-                tooltip = Arrays.asList(new StringTextComponent(ERROR_PLACEHOLDER));
+                tooltip = Arrays.asList(new TextComponent(ERROR_PLACEHOLDER));
             }
 
             if (bypassCache) {
@@ -177,7 +177,7 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(MatrixStack matrixStack, BaseScreen<?> screen, int x, int y) {
+    public void draw(PoseStack matrixStack, BaseScreen<?> screen, int x, int y) {
         FluidRenderer.INSTANCE.render(matrixStack, x, y, stack);
 
         String text;

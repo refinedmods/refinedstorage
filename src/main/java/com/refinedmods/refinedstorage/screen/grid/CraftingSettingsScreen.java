@@ -7,23 +7,23 @@ import com.refinedmods.refinedstorage.screen.AmountSpecifyingScreen;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidAttributes;
 
 public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainer> {
     private final IGridStack stack;
 
-    public CraftingSettingsScreen(BaseScreen parent, PlayerEntity player, IGridStack stack) {
-        super(parent, new CraftingSettingsContainer(player, stack), 172, 99, player.inventory, new TranslationTextComponent("container.crafting"));
+    public CraftingSettingsScreen(BaseScreen parent, Player player, IGridStack stack) {
+        super(parent, new CraftingSettingsContainer(player, stack), 172, 99, player.getInventory(), new TranslatableComponent("container.crafting"));
 
         this.stack = stack;
     }
 
     @Override
-    protected ITextComponent getOkButtonText() {
-        return new TranslationTextComponent("misc.refinedstorage.start");
+    protected Component getOkButtonText() {
+        return new TranslatableComponent("misc.refinedstorage.start");
     }
 
     @Override

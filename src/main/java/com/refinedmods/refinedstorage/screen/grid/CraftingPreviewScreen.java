@@ -1,7 +1,8 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
@@ -16,16 +17,15 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CraftingPreviewScreen extends BaseScreen<Container> {
+public class CraftingPreviewScreen extends BaseScreen<AbstractContainerMenu> {
     private static final int VISIBLE_ROWS = 5;
 
     private final List<ICraftingPreviewElement> elements;
@@ -46,16 +46,14 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     private final UUID id;
     private final int quantity;
     private final boolean fluids;
-
+    private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this);
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
 
-    private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this);
-
-    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids, ITextComponent title) {
-        super(new Container(null, 0) {
+    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids, Component title) {
+        super(new AbstractContainerMenu(null, 0) {
             @Override
-            public boolean stillValid(@Nonnull PlayerEntity player) {
+            public boolean stillValid(@Nonnull Player player) {
                 return false;
             }
         }, 254, 201, null, title);
@@ -72,9 +70,9 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addButton(x + 55, y + 201 - 20 - 7, 50, 20, new TranslationTextComponent("gui.cancel"), true, true, btn -> close());
+        addButton(x + 55, y + 201 - 20 - 7, 50, 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
 
-        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, new TranslationTextComponent("misc.refinedstorage.start"), true, true, btn -> startRequest());
+        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, new TranslatableComponent("misc.refinedstorage.start"), true, true, btn -> startRequest());
         startButton.active = elements.stream().noneMatch(ICraftingPreviewElement::doesDisableTaskStarting);
     }
 
@@ -94,7 +92,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/crafting_preview.png");
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
@@ -107,7 +105,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     }
 
     @Override
-    public void renderForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
         renderString(matrixStack, 7, 7, title.getString());
 
         int x = 7;
@@ -123,10 +121,10 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
         }
     }
 
-    private void renderPreview(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y) {
+    private void renderPreview(PoseStack matrixStack, int mouseX, int mouseY, int x, int y) {
         int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
-        RenderHelper.setupFor3DItems();
+        Lighting.setupFor3DItems();
         RenderSystem.enableDepthTest();
 
         this.hoveringStack = null;
@@ -148,7 +146,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
         }
     }
 
-    private void renderElement(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, ICraftingPreviewElement element) {
+    private void renderElement(PoseStack matrixStack, int mouseX, int mouseY, int x, int y, ICraftingPreviewElement element) {
         element.draw(matrixStack, x, y + 5, drawers);
 
         if (RenderUtils.inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
@@ -160,7 +158,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
         }
     }
 
-    private void renderError(MatrixStack matrixStack, int x, int y, float scale, ErrorCraftingPreviewElement errorElement) {
+    private void renderError(PoseStack matrixStack, int x, int y, float scale, ErrorCraftingPreviewElement errorElement) {
         matrixStack.pushPose();
         matrixStack.scale(scale, scale, 1);
 
@@ -180,12 +178,12 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
         matrixStack.popPose();
     }
 
-    private void renderTooComplexError(MatrixStack matrixStack, int x, int y, float scale) {
+    private void renderTooComplexError(PoseStack matrixStack, int x, int y, float scale) {
         renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.get("gui.refinedstorage.crafting_preview.error.too_complex.0"));
         renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.get("gui.refinedstorage.crafting_preview.error.too_complex.1"));
     }
 
-    private void renderRecursiveError(MatrixStack matrixStack, int x, int y, float scale, ItemStack recursedPattern) {
+    private void renderRecursiveError(PoseStack matrixStack, int x, int y, float scale, ItemStack recursedPattern) {
         renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.get("gui.refinedstorage.crafting_preview.error.recursive.0"));
         renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.get("gui.refinedstorage.crafting_preview.error.recursive.1"));
         renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), I18n.get("gui.refinedstorage.crafting_preview.error.recursive.2"));
@@ -200,10 +198,9 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
             if (output != null) {
                 renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getHoverName().getString());
 
-                RenderHelper.setupFor3DItems();
+                Lighting.setupFor3DItems();
                 RenderSystem.enableDepthTest();
                 renderItem(matrixStack, x + 5, yy, output);
-                RenderHelper.turnOff();
 
                 yy += 17;
             }
@@ -211,7 +208,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (hoveringStack != null) {
@@ -222,7 +219,7 @@ public class CraftingPreviewScreen extends BaseScreen<Container> {
                 mouseY,
                 hoveringStack.getTooltipLines(
                     Minecraft.getInstance().player,
-                    Minecraft.getInstance().options.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL
+                    Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL
                 )
             );
         } else if (hoveringFluid != null) {

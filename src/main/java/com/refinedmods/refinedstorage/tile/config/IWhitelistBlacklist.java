@@ -4,9 +4,9 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -14,8 +14,8 @@ public interface IWhitelistBlacklist {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
-    static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter() {
-        return new TileDataParameter<>(DataSerializers.INT, 0, t -> ((IWhitelistBlacklist) t.getNode()).getWhitelistBlacklistMode(), (t, v) -> {
+    static <T extends BlockEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter() {
+        return new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> ((IWhitelistBlacklist) t.getNode()).getWhitelistBlacklistMode(), (t, v) -> {
             if (v == WHITELIST || v == BLACKLIST) {
                 ((IWhitelistBlacklist) t.getNode()).setWhitelistBlacklistMode(v);
             }
@@ -74,7 +74,7 @@ public interface IWhitelistBlacklist {
         return false;
     }
 
-    void setWhitelistBlacklistMode(int mode);
-
     int getWhitelistBlacklistMode();
+
+    void setWhitelistBlacklistMode(int mode);
 }

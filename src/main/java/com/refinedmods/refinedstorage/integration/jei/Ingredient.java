@@ -1,14 +1,14 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 
 class Ingredient {
     private final IGuiIngredient<ItemStack> guiIngredient;
-    private UUID craftStackId;
     private final int required;
+    private UUID craftStackId;
     private int fulfilled;
 
     public Ingredient(IGuiIngredient<ItemStack> guiIngredient) {

@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.tile.ConstructorTile;
 import com.refinedmods.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ConstructorContainer extends BaseContainer {
-    public ConstructorContainer(ConstructorTile constructor, PlayerEntity player, int windowId) {
+    public ConstructorContainer(ConstructorTile constructor, Player player, int windowId) {
         super(RSContainers.CONSTRUCTOR, constructor, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
@@ -21,7 +21,7 @@ public class ConstructorContainer extends BaseContainer {
 
         addPlayerInventory(8, 55);
 
-        transferManager.addBiTransfer(player.inventory, constructor.getNode().getUpgrades());
-        transferManager.addFilterTransfer(player.inventory, constructor.getNode().getItemFilters(), constructor.getNode().getFluidFilters(), constructor.getNode()::getType);
+        transferManager.addBiTransfer(player.getInventory(), constructor.getNode().getUpgrades());
+        transferManager.addFilterTransfer(player.getInventory(), constructor.getNode().getItemFilters(), constructor.getNode().getFluidFilters(), constructor.getNode()::getType);
     }
 }

@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.network.grid;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainer;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -23,7 +23,7 @@ public class GridCraftingPreviewRequestMessage {
         this.fluids = fluids;
     }
 
-    public static GridCraftingPreviewRequestMessage decode(PacketBuffer buf) {
+    public static GridCraftingPreviewRequestMessage decode(FriendlyByteBuf buf) {
         return new GridCraftingPreviewRequestMessage(
             buf.readUUID(),
             buf.readInt(),
@@ -32,7 +32,7 @@ public class GridCraftingPreviewRequestMessage {
         );
     }
 
-    public static void encode(GridCraftingPreviewRequestMessage message, PacketBuffer buf) {
+    public static void encode(GridCraftingPreviewRequestMessage message, FriendlyByteBuf buf) {
         buf.writeUUID(message.id);
         buf.writeInt(message.quantity);
         buf.writeBoolean(message.noPreview);
@@ -40,11 +40,11 @@ public class GridCraftingPreviewRequestMessage {
     }
 
     public static void handle(GridCraftingPreviewRequestMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayerEntity player = ctx.get().getSender();
+        ServerPlayer player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                Container container = player.containerMenu;
+                AbstractContainerMenu container = player.containerMenu;
 
                 if (container instanceof GridContainer) {
                     IGrid grid = ((GridContainer) container).getGrid();

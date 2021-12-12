@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.container.slot.filter;
 
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 

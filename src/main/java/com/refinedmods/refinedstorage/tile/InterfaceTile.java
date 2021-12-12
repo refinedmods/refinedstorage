@@ -4,9 +4,10 @@ import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.apiimpl.network.node.InterfaceNetworkNode;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,8 +21,8 @@ public class InterfaceTile extends NetworkNodeTile<InterfaceNetworkNode> {
 
     private final LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
 
-    public InterfaceTile() {
-        super(RSTiles.INTERFACE);
+    public InterfaceTile(BlockPos pos, BlockState state) {
+        super(RSTiles.INTERFACE, pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
     }
@@ -38,7 +39,7 @@ public class InterfaceTile extends NetworkNodeTile<InterfaceNetworkNode> {
 
     @Override
     @Nonnull
-    public InterfaceNetworkNode createNode(World world, BlockPos pos) {
+    public InterfaceNetworkNode createNode(Level world, BlockPos pos) {
         return new InterfaceNetworkNode(world, pos);
     }
 }

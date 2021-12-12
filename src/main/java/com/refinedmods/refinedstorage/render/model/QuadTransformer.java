@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.render.model;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.TransformationMatrix;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Transformation;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.TRSRTransformer;
@@ -20,10 +20,10 @@ public final class QuadTransformer {
     private QuadTransformer() {
     }
 
-    public static List<BakedQuad> getTransformedQuads(IBakedModel model, Direction facing, @Nullable Vector3f translation, BlockState state, Random rand, Direction side) {
+    public static List<BakedQuad> getTransformedQuads(BakedModel model, Direction facing, @Nullable Vector3f translation, BlockState state, Random rand, Direction side) {
         double r = Math.PI * (360 - facing.getOpposite().get2DDataValue() * 90) / 180d;
 
-        TransformationMatrix transformation = new TransformationMatrix(translation, TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false), null, null);
+        Transformation transformation = new Transformation(translation, TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false), null, null);
 
         ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 

@@ -5,25 +5,26 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.items.IItemHandler;
 
-public abstract class NetworkNodeBlock extends BaseBlock {
+public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-    protected NetworkNodeBlock(AbstractBlock.Properties props) {
+    protected NetworkNodeBlock(BlockBehaviour.Properties props) {
         super(props);
 
         if (hasConnectedState()) {
@@ -33,11 +34,11 @@ public abstract class NetworkNodeBlock extends BaseBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
 
         if (!world.isClientSide) {
-            INetworkNode node = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos);
+            INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos);
             if (node instanceof NetworkNode) {
                 ((NetworkNode) node).setRedstonePowered(world.hasNeighborSignal(pos));
             }
@@ -46,9 +47,9 @@ public abstract class NetworkNodeBlock extends BaseBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
 
             if (tile instanceof NetworkNodeTile) {
                 IItemHandler handler = ((NetworkNodeTile) tile).getNode().getDrops();
@@ -60,7 +61,7 @@ public abstract class NetworkNodeBlock extends BaseBlock {
                         drops.add(handler.getStackInSlot(i));
                     }
 
-                    InventoryHelper.dropContents(world, pos, drops);
+                    Containers.dropContents(world, pos, drops);
                 }
             }
         }
@@ -70,10 +71,10 @@ public abstract class NetworkNodeBlock extends BaseBlock {
     }
 
     @Override
-    protected void onDirectionChanged(World world, BlockPos pos, Direction newDirection) {
+    protected void onDirectionChanged(Level world, BlockPos pos, Direction newDirection) {
         super.onDirectionChanged(world, pos, newDirection);
 
-        TileEntity tile = world.getBlockEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof INetworkNodeProxy) {
             INetworkNode node = ((INetworkNodeProxy) tile).getNode();
 
@@ -84,17 +85,12 @@ public abstract class NetworkNodeBlock extends BaseBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
 
         if (hasConnectedState()) {
             builder.add(CONNECTED);
         }
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
     }
 
     public boolean hasConnectedState() {

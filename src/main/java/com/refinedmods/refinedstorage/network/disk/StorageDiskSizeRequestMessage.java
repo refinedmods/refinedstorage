@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.network.disk;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -16,11 +16,11 @@ public class StorageDiskSizeRequestMessage {
         this.id = id;
     }
 
-    public static StorageDiskSizeRequestMessage decode(PacketBuffer buf) {
+    public static StorageDiskSizeRequestMessage decode(FriendlyByteBuf buf) {
         return new StorageDiskSizeRequestMessage(buf.readUUID());
     }
 
-    public static void encode(StorageDiskSizeRequestMessage message, PacketBuffer buf) {
+    public static void encode(StorageDiskSizeRequestMessage message, FriendlyByteBuf buf) {
         buf.writeUUID(message.id);
     }
 

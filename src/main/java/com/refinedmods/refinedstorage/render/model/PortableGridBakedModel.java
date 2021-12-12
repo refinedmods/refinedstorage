@@ -8,14 +8,14 @@ import com.refinedmods.refinedstorage.block.PortableGridBlock;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGrid;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridDiskState;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,12 +25,12 @@ import java.util.Objects;
 import java.util.Random;
 
 public class PortableGridBakedModel extends DelegateBakedModel {
-    private final IBakedModel baseConnected;
-    private final IBakedModel baseDisconnected;
-    private final IBakedModel disk;
-    private final IBakedModel diskNearCapacity;
-    private final IBakedModel diskFull;
-    private final IBakedModel diskDisconnected;
+    private final BakedModel baseConnected;
+    private final BakedModel baseDisconnected;
+    private final BakedModel disk;
+    private final BakedModel diskNearCapacity;
+    private final BakedModel diskFull;
+    private final BakedModel diskDisconnected;
 
     private final CustomItemOverrideList itemOverrideList = new CustomItemOverrideList();
 
@@ -51,7 +51,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
                 key.side
             ));
 
-            IBakedModel diskModel = getDiskModel(diskState);
+            BakedModel diskModel = getDiskModel(diskState);
             if (diskModel != null) {
                 quads.addAll(QuadTransformer.getTransformedQuads(diskModel, direction, null, key.state, key.random, key.side));
             }
@@ -60,12 +60,12 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         }
     });
 
-    public PortableGridBakedModel(IBakedModel baseConnected,
-                                  IBakedModel baseDisconnected,
-                                  IBakedModel disk,
-                                  IBakedModel diskNearCapacity,
-                                  IBakedModel diskFull,
-                                  IBakedModel diskDisconnected) {
+    public PortableGridBakedModel(BakedModel baseConnected,
+                                  BakedModel baseDisconnected,
+                                  BakedModel disk,
+                                  BakedModel diskNearCapacity,
+                                  BakedModel diskFull,
+                                  BakedModel diskDisconnected) {
         super(baseConnected);
 
         this.baseConnected = baseConnected;
@@ -77,7 +77,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     }
 
     @Nullable
-    private IBakedModel getDiskModel(PortableGridDiskState state) {
+    private BakedModel getDiskModel(PortableGridDiskState state) {
         switch (state) {
             case NORMAL:
                 return disk;
@@ -95,7 +95,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return itemOverrideList;
     }
 
@@ -106,20 +106,6 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         }
 
         return super.getQuads(state, side, rand);
-    }
-
-    private class CustomItemOverrideList extends ItemOverrideList {
-        @Nullable
-        @Override
-        public IBakedModel resolve(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-            PortableGrid portableGrid = new PortableGrid(null, stack, new PlayerSlot(-1));
-
-            if (portableGrid.isGridActive()) {
-                return new PortableGridItemBakedModel(baseConnected, getDiskModel(portableGrid.getDiskState()));
-            } else {
-                return new PortableGridItemBakedModel(baseDisconnected, getDiskModel(portableGrid.getDiskState()));
-            }
-        }
     }
 
     private static class CacheKey {
@@ -146,6 +132,20 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Override
         public int hashCode() {
             return Objects.hash(state, side, random);
+        }
+    }
+
+    private class CustomItemOverrideList extends ItemOverrides {
+        @Nullable
+        @Override
+        public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p) {
+            PortableGrid portableGrid = new PortableGrid(null, stack, new PlayerSlot(-1));
+
+            if (portableGrid.isGridActive()) {
+                return new PortableGridItemBakedModel(baseConnected, getDiskModel(portableGrid.getDiskState()));
+            } else {
+                return new PortableGridItemBakedModel(baseDisconnected, getDiskModel(portableGrid.getDiskState()));
+            }
         }
     }
 }

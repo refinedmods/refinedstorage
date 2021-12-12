@@ -2,24 +2,24 @@ package com.refinedmods.refinedstorage.network.tiledata;
 
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class TileDataParameterMessage {
-    private final TileEntity tile;
+    private final BlockEntity tile;
     private final TileDataParameter parameter;
     private final boolean initial;
 
-    public TileDataParameterMessage(TileEntity tile, TileDataParameter parameter, boolean initial) {
+    public TileDataParameterMessage(BlockEntity tile, TileDataParameter parameter, boolean initial) {
         this.tile = tile;
         this.parameter = parameter;
         this.initial = initial;
     }
 
-    public static TileDataParameterMessage decode(PacketBuffer buf) {
+    public static TileDataParameterMessage decode(FriendlyByteBuf buf) {
         int id = buf.readInt();
         boolean initial = buf.readBoolean();
 
@@ -36,7 +36,7 @@ public class TileDataParameterMessage {
         return new TileDataParameterMessage(null, null, initial);
     }
 
-    public static void encode(TileDataParameterMessage message, PacketBuffer buf) {
+    public static void encode(TileDataParameterMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.parameter.getId());
         buf.writeBoolean(message.initial);
 

@@ -1,16 +1,16 @@
 package com.refinedmods.refinedstorage.util;
 
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public final class CollisionUtils {
     private CollisionUtils() {
     }
 
-    public static boolean isInBounds(VoxelShape shape, BlockPos pos, Vector3d hit) {
-        AxisAlignedBB aabb = shape.bounds().move(pos);
+    public static boolean isInBounds(VoxelShape shape, BlockPos pos, Vec3 hit) {
+        AABB aabb = shape.bounds().move(pos);
 
         return hit.x >= aabb.minX
             && hit.x <= aabb.maxX
@@ -20,8 +20,8 @@ public final class CollisionUtils {
             && hit.z <= aabb.maxZ;
     }
 
-    public static AxisAlignedBB getBounds(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
-        return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
+    public static AABB getBounds(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
+        return new AABB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
     }
 
 }

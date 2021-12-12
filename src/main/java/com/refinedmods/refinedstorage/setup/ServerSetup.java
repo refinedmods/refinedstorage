@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.command.disk.ListDiskCommand;
 import com.refinedmods.refinedstorage.command.network.GetNetworkCommand;
 import com.refinedmods.refinedstorage.command.network.ListNetworkCommand;
 import com.refinedmods.refinedstorage.command.pattern.PatternDumpCommand;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.Commands;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

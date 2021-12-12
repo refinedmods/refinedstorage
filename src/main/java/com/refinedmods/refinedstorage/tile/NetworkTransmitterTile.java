@@ -4,11 +4,12 @@ import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkTransmitterNetworkNode;
 import com.refinedmods.refinedstorage.tile.data.RSSerializers;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNetworkNode> {
-    public static final TileDataParameter<Integer, NetworkTransmitterTile> DISTANCE = new TileDataParameter<>(DataSerializers.INT, 0, t -> t.getNode().getDistance());
+    public static final TileDataParameter<Integer, NetworkTransmitterTile> DISTANCE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getDistance());
     public static final TileDataParameter<Optional<ResourceLocation>, NetworkTransmitterTile> RECEIVER_DIMENSION = new TileDataParameter<>(RSSerializers.OPTIONAL_RESOURCE_LOCATION_SERIALIZER, Optional.empty(), t -> {
         if (t.getNode().getReceiverDimension() != null) {
             return Optional.of(t.getNode().getReceiverDimension().location());
@@ -30,8 +31,8 @@ public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNe
 
     private final LazyOptional<IItemHandler> networkCardCapability = LazyOptional.of(() -> getNode().getNetworkCard());
 
-    public NetworkTransmitterTile() {
-        super(RSTiles.NETWORK_TRANSMITTER);
+    public NetworkTransmitterTile(BlockPos pos, BlockState state) {
+        super(RSTiles.NETWORK_TRANSMITTER, pos, state);
 
         dataManager.addWatchedParameter(DISTANCE);
         dataManager.addWatchedParameter(RECEIVER_DIMENSION);
@@ -39,7 +40,7 @@ public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNe
 
     @Override
     @Nonnull
-    public NetworkTransmitterNetworkNode createNode(World world, BlockPos pos) {
+    public NetworkTransmitterNetworkNode createNode(Level world, BlockPos pos) {
         return new NetworkTransmitterNetworkNode(world, pos);
     }
 

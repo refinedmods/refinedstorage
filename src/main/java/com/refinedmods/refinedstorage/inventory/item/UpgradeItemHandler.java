@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.inventory.item;
 
 import com.refinedmods.refinedstorage.inventory.item.validator.UpgradeItemValidator;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class UpgradeItemHandler extends BaseItemHandler {
     public UpgradeItemHandler(int size, UpgradeItem.Type... supportedUpgrades) {

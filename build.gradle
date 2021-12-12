@@ -26,6 +26,7 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 version = '1.10.0'
 def env = System.getenv()
@@ -35,10 +36,14 @@ if (env.BUILD_NUMBER) {
 group = 'com.refinedmods'
 archivesBaseName = 'refinedstorage'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xmaxerrs" << "999"
+}
 
 minecraft {
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'official', version: '1.18.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -51,12 +56,6 @@ minecraft {
                     source sourceSets.main
                 }
             }
-        }
-
-        intellijClient {
-            parent runs.client
-            ideaModule "${project.name}.main"
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
 
         server {
@@ -96,19 +95,7 @@ processResources {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.16.5-36.1.31'
-
-    compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.106:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.106")
-
-    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3202662')
-
-    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3330406')
-
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.2:api")
-
-    /*minecraft 'net.minecraftforge:forge:1.18.1-39.0.0'
+	minecraft 'net.minecraftforge:forge:1.18.1-39.0.0'
 
     compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41")
@@ -118,11 +105,7 @@ dependencies {
     compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3545611')
 
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4:api")*/
-
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.2')
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4:api")
 }
 
 jar {

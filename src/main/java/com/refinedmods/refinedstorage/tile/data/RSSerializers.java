@@ -3,21 +3,18 @@ package com.refinedmods.refinedstorage.tile.data;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.tile.ClientNode;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.IDataSerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.*;
 
 public final class RSSerializers {
-    private RSSerializers() {
-    }
-
-    public static final IDataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new IDataSerializer<List<ClientNode>>() {
+    public static final EntityDataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new EntityDataSerializer<List<ClientNode>>() {
         @Override
-        public void write(PacketBuffer buf, List<ClientNode> nodes) {
+        public void write(FriendlyByteBuf buf, List<ClientNode> nodes) {
             buf.writeInt(nodes.size());
 
             for (ClientNode node : nodes) {
@@ -28,7 +25,7 @@ public final class RSSerializers {
         }
 
         @Override
-        public List<ClientNode> read(PacketBuffer buf) {
+        public List<ClientNode> read(FriendlyByteBuf buf) {
             List<ClientNode> nodes = new ArrayList<>();
 
             int size = buf.readInt();
@@ -41,7 +38,7 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<List<ClientNode>> createAccessor(int id) {
+        public EntityDataAccessor<List<ClientNode>> createAccessor(int id) {
             return null;
         }
 
@@ -50,20 +47,19 @@ public final class RSSerializers {
             return value;
         }
     };
-
-    public static final IDataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new IDataSerializer<FluidStack>() {
+    public static final EntityDataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new EntityDataSerializer<FluidStack>() {
         @Override
-        public void write(PacketBuffer buf, FluidStack value) {
+        public void write(FriendlyByteBuf buf, FluidStack value) {
             value.writeToPacket(buf);
         }
 
         @Override
-        public FluidStack read(PacketBuffer buf) {
+        public FluidStack read(FriendlyByteBuf buf) {
             return FluidStack.readFromPacket(buf);
         }
 
         @Override
-        public DataParameter<FluidStack> createAccessor(int id) {
+        public EntityDataAccessor<FluidStack> createAccessor(int id) {
             return null;
         }
 
@@ -72,20 +68,19 @@ public final class RSSerializers {
             return value;
         }
     };
-
-    public static final IDataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new IDataSerializer<AccessType>() {
+    public static final EntityDataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new EntityDataSerializer<AccessType>() {
         @Override
-        public void write(PacketBuffer buf, AccessType value) {
+        public void write(FriendlyByteBuf buf, AccessType value) {
             buf.writeInt(value.getId());
         }
 
         @Override
-        public AccessType read(PacketBuffer buf) {
+        public AccessType read(FriendlyByteBuf buf) {
             return AccessTypeUtils.getAccessType(buf.readInt());
         }
 
         @Override
-        public DataParameter<AccessType> createAccessor(int id) {
+        public EntityDataAccessor<AccessType> createAccessor(int id) {
             return null;
         }
 
@@ -94,20 +89,19 @@ public final class RSSerializers {
             return value;
         }
     };
-
-    public static final IDataSerializer<Long> LONG_SERIALIZER = new IDataSerializer<Long>() {
+    public static final EntityDataSerializer<Long> LONG_SERIALIZER = new EntityDataSerializer<Long>() {
         @Override
-        public void write(PacketBuffer buf, Long value) {
+        public void write(FriendlyByteBuf buf, Long value) {
             buf.writeLong(value);
         }
 
         @Override
-        public Long read(PacketBuffer buf) {
+        public Long read(FriendlyByteBuf buf) {
             return buf.readLong();
         }
 
         @Override
-        public DataParameter<Long> createAccessor(int id) {
+        public EntityDataAccessor<Long> createAccessor(int id) {
             return null;
         }
 
@@ -116,17 +110,16 @@ public final class RSSerializers {
             return value;
         }
     };
-
-    public static final IDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION_SERIALIZER = new IDataSerializer<Optional<ResourceLocation>>() {
+    public static final EntityDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION_SERIALIZER = new EntityDataSerializer<Optional<ResourceLocation>>() {
         @Override
-        public void write(PacketBuffer buf, Optional<ResourceLocation> value) {
+        public void write(FriendlyByteBuf buf, Optional<ResourceLocation> value) {
             buf.writeBoolean(value.isPresent());
 
             value.ifPresent(buf::writeResourceLocation);
         }
 
         @Override
-        public Optional<ResourceLocation> read(PacketBuffer buf) {
+        public Optional<ResourceLocation> read(FriendlyByteBuf buf) {
             if (!buf.readBoolean()) {
                 return Optional.empty();
             }
@@ -135,7 +128,7 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<Optional<ResourceLocation>> createAccessor(int id) {
+        public EntityDataAccessor<Optional<ResourceLocation>> createAccessor(int id) {
             return null;
         }
 
@@ -144,10 +137,9 @@ public final class RSSerializers {
             return value;
         }
     };
-
-    public static final IDataSerializer<List<Set<ResourceLocation>>> LIST_OF_SET_SERIALIZER = new IDataSerializer<List<Set<ResourceLocation>>>() {
+    public static final EntityDataSerializer<List<Set<ResourceLocation>>> LIST_OF_SET_SERIALIZER = new EntityDataSerializer<List<Set<ResourceLocation>>>() {
         @Override
-        public void write(PacketBuffer buf, List<Set<ResourceLocation>> value) {
+        public void write(FriendlyByteBuf buf, List<Set<ResourceLocation>> value) {
             buf.writeInt(value.size());
 
             for (Set<ResourceLocation> values : value) {
@@ -158,7 +150,7 @@ public final class RSSerializers {
         }
 
         @Override
-        public List<Set<ResourceLocation>> read(PacketBuffer buf) {
+        public List<Set<ResourceLocation>> read(FriendlyByteBuf buf) {
             List<Set<ResourceLocation>> value = new ArrayList<>();
 
             int size = buf.readInt();
@@ -178,7 +170,7 @@ public final class RSSerializers {
         }
 
         @Override
-        public DataParameter<List<Set<ResourceLocation>>> createAccessor(int id) {
+        public EntityDataAccessor<List<Set<ResourceLocation>>> createAccessor(int id) {
             return null;
         }
 
@@ -187,4 +179,7 @@ public final class RSSerializers {
             return value;
         }
     };
+
+    private RSSerializers() {
+    }
 }

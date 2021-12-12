@@ -5,14 +5,14 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -23,13 +23,13 @@ public class CraftingPattern implements ICraftingPattern {
     private final boolean processing;
     private final boolean exact;
     @Nullable
-    private final ICraftingRecipe recipe;
+    private final CraftingRecipe recipe;
     private final CraftingPatternInputs inputs;
     private final CraftingPatternOutputs outputs;
     @Nullable
     private final AllowedTagList allowedTagList;
 
-    public CraftingPattern(CraftingPatternContext context, boolean processing, boolean exact, @Nullable ICraftingRecipe recipe, CraftingPatternInputs inputs, CraftingPatternOutputs outputs, @Nullable AllowedTagList allowedTagList) {
+    public CraftingPattern(CraftingPatternContext context, boolean processing, boolean exact, @Nullable CraftingRecipe recipe, CraftingPatternInputs inputs, CraftingPatternOutputs outputs, @Nullable AllowedTagList allowedTagList) {
         this.context = context;
         this.processing = processing;
         this.exact = exact;
@@ -61,7 +61,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Nullable
     @Override
-    public ITextComponent getErrorMessage() {
+    public Component getErrorMessage() {
         return null;
     }
 
@@ -89,7 +89,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingInventory inv = new DummyCraftingInventory();
+        CraftingContainer inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setItem(i, took.get(i));
@@ -122,7 +122,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingInventory inv = new DummyCraftingInventory();
+        CraftingContainer inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setItem(i, took.get(i));
@@ -265,11 +265,11 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    public static class DummyCraftingInventory extends CraftingInventory {
+    public static class DummyCraftingInventory extends CraftingContainer {
         public DummyCraftingInventory() {
-            super(new Container(null, 0) {
+            super(new AbstractContainerMenu(null, 0) {
                 @Override
-                public boolean stillValid(PlayerEntity player) {
+                public boolean stillValid(Player player) {
                     return true;
                 }
             }, 3, 3);

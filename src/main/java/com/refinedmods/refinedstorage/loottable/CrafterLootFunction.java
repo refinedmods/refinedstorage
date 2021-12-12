@@ -5,22 +5,26 @@ import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterNetworkNode;
 import com.refinedmods.refinedstorage.tile.CrafterTile;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunction;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public class CrafterLootFunction extends LootFunction {
-    protected CrafterLootFunction(ILootCondition[] conditions) {
+public class CrafterLootFunction extends LootItemConditionalFunction {
+    protected CrafterLootFunction(LootItemCondition[] conditions) {
         super(conditions);
+    }
+
+    public static LootItemConditionalFunction.Builder<?> builder() {
+        return simpleBuilder(CrafterLootFunction::new);
     }
 
     @Override
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        TileEntity tile = lootContext.getParamOrNull(LootParameters.BLOCK_ENTITY);
+        BlockEntity tile = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
         CrafterNetworkNode removedNode = ((CrafterTile) tile).getRemovedNode();
         if (removedNode == null) {
@@ -35,17 +39,13 @@ public class CrafterLootFunction extends LootFunction {
     }
 
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return RSLootFunctions.getCrafter();
     }
 
-    public static LootFunction.Builder<?> builder() {
-        return simpleBuilder(CrafterLootFunction::new);
-    }
-
-    public static class Serializer extends LootFunction.Serializer<CrafterLootFunction> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<CrafterLootFunction> {
         @Override
-        public CrafterLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditions) {
+        public CrafterLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditions) {
             return new CrafterLootFunction(conditions);
         }
     }

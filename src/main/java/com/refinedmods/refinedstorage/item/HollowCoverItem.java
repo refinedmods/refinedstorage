@@ -2,9 +2,9 @@ package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
-public class HollowCoverItem extends CoverItem{
+public class HollowCoverItem extends CoverItem {
 
     public HollowCoverItem() {
         super();

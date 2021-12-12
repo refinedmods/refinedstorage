@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.GuiComponent;
 
 public class CraftingMonitorElementDrawers extends ElementDrawers<CraftingMonitorContainer> {
     private final IElementDrawer<Integer> overlayDrawer;
@@ -15,16 +15,12 @@ public class CraftingMonitorElementDrawers extends ElementDrawers<CraftingMonito
         super(screen);
 
         this.overlayDrawer = (matrixStack, x, y, color) -> {
-            RenderSystem.color4f(1, 1, 1, 1);
-            RenderSystem.disableLighting();
-
-            AbstractGui.fill(matrixStack, x, y, x + itemWidth, y + itemHeight, color);
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            GuiComponent.fill(matrixStack, x, y, x + itemWidth, y + itemHeight, color);
         };
 
         this.errorDrawer = (matrixStack, x, y, nothing) -> {
-            RenderSystem.color4f(1, 1, 1, 1);
-            RenderSystem.disableLighting();
-
+            RenderSystem.setShaderColor(1, 1, 1, 1);
             screen.bindTexture(RS.ID, "gui/crafting_preview.png");
             screen.blit(matrixStack, x + itemWidth - 12 - 2, y + itemHeight - 12 - 2, 0, 244, 12, 12);
         };

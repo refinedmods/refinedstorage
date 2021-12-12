@@ -1,21 +1,21 @@
 package com.refinedmods.refinedstorage.util;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
 
 public final class BlockUtils {
-    public static final AbstractBlock.Properties DEFAULT_ROCK_PROPERTIES = AbstractBlock.Properties.of(Material.STONE).strength(1.9F).sound(SoundType.STONE);
-    public static final AbstractBlock.Properties DEFAULT_GLASS_PROPERTIES = AbstractBlock.Properties.of(Material.GLASS).sound(SoundType.GLASS).strength(0.35F);
+    public static final BlockBehaviour.Properties DEFAULT_ROCK_PROPERTIES = BlockBehaviour.Properties.of(Material.STONE).strength(1.9F).sound(SoundType.STONE);
+    public static final BlockBehaviour.Properties DEFAULT_GLASS_PROPERTIES = BlockBehaviour.Properties.of(Material.GLASS).sound(SoundType.GLASS).strength(0.35F);
 
     private BlockUtils() {
     }
 
     // Block#getTranslatedName is client only
-    public static ITextComponent getBlockTranslation(Block block) {
-        return new TranslationTextComponent(block.getDescriptionId());
+    public static Component getBlockTranslation(Block block) {
+        return new TranslatableComponent(block.getDescriptionId());
     }
 }

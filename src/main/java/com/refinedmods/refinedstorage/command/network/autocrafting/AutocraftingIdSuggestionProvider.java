@@ -7,19 +7,19 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.BlockPosArgument;
-import net.minecraft.command.arguments.DimensionArgument;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.concurrent.CompletableFuture;
 
-public class AutocraftingIdSuggestionProvider implements SuggestionProvider<CommandSource> {
+public class AutocraftingIdSuggestionProvider implements SuggestionProvider<CommandSourceStack> {
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ServerWorld world = DimensionArgument.getDimension(context, "dimension");
-        BlockPos pos = BlockPosArgument.getOrLoadBlockPos(context, "pos");
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
+        BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "pos");
         INetwork network = API.instance().getNetworkManager(world).getNetwork(pos);
 
         if (network != null) {

@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.api.storage.externalstorage;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ public interface IExternalStorageProvider<T> {
      * @param direction the direction of the external storage
      * @return true if the provider can provide, false otherwise
      */
-    boolean canProvide(TileEntity tile, Direction direction);
+    boolean canProvide(BlockEntity tile, Direction direction);
 
     /**
      * @param context   the context of the external storage
@@ -25,7 +25,7 @@ public interface IExternalStorageProvider<T> {
      * @return the external storage handler
      */
     @Nonnull
-    IExternalStorage<T> provide(IExternalStorageContext context, TileEntity tile, Direction direction);
+    IExternalStorage<T> provide(IExternalStorageContext context, BlockEntity tile, Direction direction);
 
     /**
      * Returns the priority of this external storage provider.

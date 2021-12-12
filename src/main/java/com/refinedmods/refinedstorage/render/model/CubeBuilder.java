@@ -1,13 +1,13 @@
 package com.refinedmods.refinedstorage.render.model;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.ArrayList;
@@ -18,47 +18,9 @@ import java.util.function.Function;
 
 public class CubeBuilder {
 
-    public enum UvRotation {
-        CLOCKWISE_0,
-        CLOCKWISE_90,
-        CLOCKWISE_180,
-        CLOCKWISE_270
-    }
-
-    private static class Uv {
-        private float xFrom;
-        private float xTo;
-        private float yFrom;
-        private float yTo;
-    }
-
-    public static class Face {
-        private Direction face;
-        private TextureAtlasSprite sprite;
-        private int light;
-        private UvRotation uvRotation = UvRotation.CLOCKWISE_0;
-
-        public Face(Direction face, TextureAtlasSprite sprite) {
-            this.face = face;
-            this.sprite = sprite;
-        }
-
-        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation) {
-            this(face, sprite);
-
-            this.uvRotation = uvRotation;
-        }
-
-        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation, int light) {
-            this(face, sprite, uvRotation);
-
-            this.light = light;
-        }
-    }
-
     private Vector3f from;
     private Vector3f to;
-    private VertexFormat format = DefaultVertexFormats.BLOCK; //Changed from Item
+    private VertexFormat format = DefaultVertexFormat.BLOCK; //Changed from Item
     private Map<Direction, Face> faces = new HashMap<>();
     private int color = 0xFFFFFFFF;
 
@@ -349,5 +311,43 @@ public class CubeBuilder {
             }
         }
     }
-    
+
+    public enum UvRotation {
+        CLOCKWISE_0,
+        CLOCKWISE_90,
+        CLOCKWISE_180,
+        CLOCKWISE_270
+    }
+
+    private static class Uv {
+        private float xFrom;
+        private float xTo;
+        private float yFrom;
+        private float yTo;
+    }
+
+    public static class Face {
+        private Direction face;
+        private TextureAtlasSprite sprite;
+        private int light;
+        private UvRotation uvRotation = UvRotation.CLOCKWISE_0;
+
+        public Face(Direction face, TextureAtlasSprite sprite) {
+            this.face = face;
+            this.sprite = sprite;
+        }
+
+        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation) {
+            this(face, sprite);
+
+            this.uvRotation = uvRotation;
+        }
+
+        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation, int light) {
+            this(face, sprite, uvRotation);
+
+            this.light = light;
+        }
+    }
+
 }

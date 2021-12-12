@@ -10,19 +10,20 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryLis
 import com.refinedmods.refinedstorage.item.NetworkCardItem;
 import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
 public class NetworkTransmitterNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
-
+    private BlockPos receiver;
+    private ResourceKey<Level> receiverDimension;
     private final BaseItemHandler networkCard = new BaseItemHandler(1)
         .addValidator(new ItemValidator(RSItems.NETWORK_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
@@ -42,15 +43,12 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
             }
         });
 
-    private BlockPos receiver;
-    private RegistryKey<World> receiverDimension;
-
-    public NetworkTransmitterNetworkNode(World world, BlockPos pos) {
+    public NetworkTransmitterNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         StackUtils.writeItems(networkCard, 0, tag);
@@ -59,7 +57,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
         StackUtils.readItems(networkCard, 0, tag);
@@ -85,7 +83,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     @Nullable
-    public RegistryKey<World> getReceiverDimension() {
+    public ResourceKey<Level> getReceiverDimension() {
         return receiverDimension;
     }
 
@@ -116,7 +114,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                World dimensionWorld = world.getServer().getLevel(receiverDimension);
+                Level dimensionWorld = world.getServer().getLevel(receiverDimension);
 
                 if (dimensionWorld != null && dimensionWorld.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
                     operator.apply(dimensionWorld, receiver, null);

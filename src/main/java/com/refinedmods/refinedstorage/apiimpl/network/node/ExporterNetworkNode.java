@@ -17,11 +17,11 @@ import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -38,8 +38,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
-
-    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
+    private final CoverManager coverManager;    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && !getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
@@ -68,15 +67,12 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 }
             }
         });
-
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
 
     private int filterSlot;
 
-    private final CoverManager coverManager;
-
-    public ExporterNetworkNode(World world, BlockPos pos) {
+    public ExporterNetworkNode(Level world, BlockPos pos) {
         super(world, pos);
         this.coverManager = new CoverManager(this);
     }
@@ -247,7 +243,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         super.write(tag);
 
         tag.put(CoverManager.NBT_COVER_MANAGER, this.coverManager.writeToNbt());
@@ -257,7 +253,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public CompoundNBT writeConfiguration(CompoundNBT tag) {
+    public CompoundTag writeConfiguration(CompoundTag tag) {
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
@@ -271,10 +267,10 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
-        if (tag.contains(CoverManager.NBT_COVER_MANAGER)){
+        if (tag.contains(CoverManager.NBT_COVER_MANAGER)) {
             this.coverManager.readFromNbt(tag.getCompound(CoverManager.NBT_COVER_MANAGER));
         }
 
@@ -282,7 +278,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void readConfiguration(CompoundNBT tag) {
+    public void readConfiguration(CompoundTag tag) {
         super.readConfiguration(tag);
 
         if (tag.contains(NBT_COMPARE)) {
@@ -335,4 +331,6 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public CoverManager getCoverManager() {
         return coverManager;
     }
+
+
 }

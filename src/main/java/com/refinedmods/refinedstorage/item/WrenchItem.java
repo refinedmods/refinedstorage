@@ -6,15 +6,14 @@ import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
-import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Rotation;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class WrenchItem extends Item {
@@ -23,9 +22,9 @@ public class WrenchItem extends Item {
     }
 
     @Override
-    public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext ctx) {
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext ctx) {
         if (ctx.getLevel().isClientSide) {
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
 
         INetworkNode node = NetworkUtils.getNodeFromTile(ctx.getLevel().getBlockEntity(ctx.getClickedPos()));
@@ -33,24 +32,24 @@ public class WrenchItem extends Item {
         if (network != null && !network.getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
             WorldUtils.sendNoPermissionMessage(ctx.getPlayer());
 
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
         BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());
 
-        if (node instanceof ICoverable && ((ICoverable) node).getCoverManager().hasCover(ctx.getClickedFace())){
+        if (node instanceof ICoverable && ((ICoverable) node).getCoverManager().hasCover(ctx.getClickedFace())) {
             Cover cover = ((ICoverable) node).getCoverManager().removeCover(ctx.getClickedFace());
-            if (cover != null){
+            if (cover != null) {
                 ItemStack stack1 = cover.getType().createStack();
                 CoverItem.setItem(stack1, cover.getStack());
                 ItemHandlerHelper.giveItemToPlayer(ctx.getPlayer(), stack1);
                 ctx.getLevel().sendBlockUpdated(ctx.getClickedPos(), state, state, 3);
                 ctx.getLevel().updateNeighborsAt(ctx.getClickedPos(), ctx.getLevel().getBlockState(ctx.getClickedPos()).getBlock());
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
         ctx.getLevel().setBlockAndUpdate(ctx.getClickedPos(), state.rotate(ctx.getLevel(), ctx.getClickedPos(), Rotation.CLOCKWISE_90));
 
-        return ActionResultType.CONSUME;
+        return InteractionResult.CONSUME;
     }
 }

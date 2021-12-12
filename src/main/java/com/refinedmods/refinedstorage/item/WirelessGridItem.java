@@ -7,34 +7,19 @@ import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.apiimpl.network.item.WirelessGridNetworkItem;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 public class WirelessGridItem extends NetworkItem {
-    public enum Type {
-        NORMAL,
-        CREATIVE
-    }
-
     private final Type type;
 
     public WirelessGridItem(Type type) {
         super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessGrid().getCapacity());
 
         this.type = type;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    @Override
-    @Nonnull
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, PlayerSlot slot) {
-        return new WirelessGridNetworkItem(handler, player, stack, slot);
     }
 
     public static int getViewType(ItemStack stack) {
@@ -63,5 +48,20 @@ public class WirelessGridItem extends NetworkItem {
 
     public static int getSize(ItemStack stack) {
         return (stack.hasTag() && stack.getTag().contains(GridNetworkNode.NBT_SIZE)) ? stack.getTag().getInt(GridNetworkNode.NBT_SIZE) : IGrid.SIZE_STRETCH;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    @Nonnull
+    public INetworkItem provide(INetworkItemManager handler, Player player, ItemStack stack, PlayerSlot slot) {
+        return new WirelessGridNetworkItem(handler, player, stack, slot);
+    }
+
+    public enum Type {
+        NORMAL,
+        CREATIVE
     }
 }

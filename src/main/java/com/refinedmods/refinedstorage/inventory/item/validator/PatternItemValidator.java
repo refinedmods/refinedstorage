@@ -3,15 +3,15 @@ package com.refinedmods.refinedstorage.inventory.item.validator;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Predicate;
 
 public class PatternItemValidator implements Predicate<ItemStack> {
-    private final World world;
+    private final Level world;
 
-    public PatternItemValidator(World world) {
+    public PatternItemValidator(Level world) {
         this.world = world;
     }
 

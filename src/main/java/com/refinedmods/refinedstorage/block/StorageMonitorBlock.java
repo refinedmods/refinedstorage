@@ -3,24 +3,25 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
 import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
+import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.StorageMonitorTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -34,23 +35,22 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
         return BlockDirection.HORIZONTAL;
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new StorageMonitorTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new StorageMonitorTile(pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!world.isClientSide) {
-            ItemStack held = player.inventory.getSelected();
+            ItemStack held = player.containerMenu.getCarried();
 
             if (player.isCrouching()) {
                 return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
-                    (ServerPlayerEntity) player,
+                    (ServerPlayer) player,
                     new PositionalTileContainerProvider<StorageMonitorTile>(
-                        new TranslationTextComponent("gui.refinedstorage.storage_monitor"),
+                        new TranslatableComponent("gui.refinedstorage.storage_monitor"),
                         (tile, windowId, inventory, p) -> new StorageMonitorContainer(tile, player, windowId),
                         pos
                     ),
@@ -67,22 +67,22 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void attack(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+    public void attack(BlockState state, Level world, BlockPos pos, Player player) {
         super.attack(state, world, pos, player);
 
         if (!world.isClientSide) {
-            RayTraceResult result = WorldUtils.rayTracePlayer(world, player);
+            HitResult result = WorldUtils.rayTracePlayer(world, player);
 
-            if (!(result instanceof BlockRayTraceResult)) {
+            if (!(result instanceof BlockHitResult)) {
                 return;
             }
 
-            ((StorageMonitorTile) world.getBlockEntity(pos)).getNode().extract(player, ((BlockRayTraceResult) result).getDirection());
+            ((StorageMonitorTile) world.getBlockEntity(pos)).getNode().extract(player, ((BlockHitResult) result).getDirection());
         }
     }
 

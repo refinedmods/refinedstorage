@@ -2,11 +2,11 @@ package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.tile.WirelessTransmitterTile;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class WirelessTransmitterContainer extends BaseContainer {
-    public WirelessTransmitterContainer(WirelessTransmitterTile wirelessTransmitter, PlayerEntity player, int windowId) {
+    public WirelessTransmitterContainer(WirelessTransmitterTile wirelessTransmitter, Player player, int windowId) {
         super(RSContainers.WIRELESS_TRANSMITTER, wirelessTransmitter, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
@@ -15,6 +15,6 @@ public class WirelessTransmitterContainer extends BaseContainer {
 
         addPlayerInventory(8, 55);
 
-        transferManager.addBiTransfer(player.inventory, wirelessTransmitter.getNode().getUpgrades());
+        transferManager.addBiTransfer(player.getInventory(), wirelessTransmitter.getNode().getUpgrades());
     }
 }

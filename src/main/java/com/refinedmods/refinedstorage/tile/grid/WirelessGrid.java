@@ -19,18 +19,18 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -38,13 +38,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessGrid implements INetworkAwareGrid {
-    private ItemStack stack;
     @Nullable
     private final MinecraftServer server;
-    private final RegistryKey<World> nodeDimension;
+    private final ResourceKey<Level> nodeDimension;
     private final BlockPos nodePos;
     private final PlayerSlot slot;
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private ItemStack stack;
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+        .addListener((handler, slot, reading) -> {
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundTag());
+            }
 
+            StackUtils.writeItems(handler, 0, stack.getTag());
+        });
     private int viewType;
     private int sortingType;
     private int sortingDirection;
@@ -52,17 +61,6 @@ public class WirelessGrid implements INetworkAwareGrid {
     private int tabSelected;
     private int tabPage;
     private int size;
-
-    private final List<IFilter> filters = new ArrayList<>();
-    private final List<IGridTab> tabs = new ArrayList<>();
-    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
-        .addListener((handler, slot, reading) -> {
-            if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
-            }
-
-            StackUtils.writeItems(handler, 0, stack.getTag());
-        });
 
     public WirelessGrid(ItemStack stack, @Nullable MinecraftServer server, PlayerSlot slot) {
         this.stack = stack;
@@ -96,7 +94,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = server.getLevel(nodeDimension);
+        Level world = server.getLevel(nodeDimension);
         if (world != null) {
             return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getBlockEntity(nodePos)));
         }
@@ -105,7 +103,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public IStorageCacheListener createListener(ServerPlayerEntity player) {
+    public IStorageCacheListener createListener(ServerPlayer player) {
         return new ItemGridStorageCacheListener(player, getNetwork());
     }
 
@@ -142,8 +140,8 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public ITextComponent getTitle() {
-        return new TranslationTextComponent("gui.refinedstorage.grid");
+    public Component getTitle() {
+        return new TranslatableComponent("gui.refinedstorage.grid");
     }
 
     @Override
@@ -263,12 +261,12 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public CraftingInventory getCraftingMatrix() {
+    public CraftingContainer getCraftingMatrix() {
         return null;
     }
 
     @Override
-    public CraftResultInventory getCraftingResult() {
+    public ResultContainer getCraftingResult() {
         return null;
     }
 
@@ -278,22 +276,22 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+    public void onCrafted(Player player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 
     @Override
-    public void onClear(PlayerEntity player) {
+    public void onClear(Player player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(PlayerEntity player) {
+    public void onCraftedShift(Player player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(Player player, ItemStack[][] recipe) {
         // NO OP
     }
 
@@ -308,7 +306,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
+    public void onClosed(Player player) {
         INetwork network = getNetwork();
 
         if (network != null) {

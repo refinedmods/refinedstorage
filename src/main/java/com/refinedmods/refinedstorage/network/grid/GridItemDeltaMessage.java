@@ -8,9 +8,9 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public class GridItemDeltaMessage {
         this.clientDeltas = clientDeltas;
     }
 
-    public static GridItemDeltaMessage decode(PacketBuffer buf) {
+    public static GridItemDeltaMessage decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
 
         List<Pair<IGridStack, Integer>> clientDeltas = new LinkedList<>();
@@ -48,7 +48,7 @@ public class GridItemDeltaMessage {
         return new GridItemDeltaMessage(clientDeltas);
     }
 
-    public static void encode(GridItemDeltaMessage message, PacketBuffer buf) {
+    public static void encode(GridItemDeltaMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.deltas.size());
 
         for (StackListResult<ItemStack> delta : message.deltas) {

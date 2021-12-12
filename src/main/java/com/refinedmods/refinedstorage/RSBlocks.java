@@ -7,11 +7,11 @@ import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.*;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.util.ColorMap;
-import net.minecraft.block.Block;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -19,13 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class RSBlocks {
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
-
-    private static final String GRID_SUFFIX = "_grid";
-
     public static final RegistryObject<ImporterBlock> IMPORTER;
     public static final RegistryObject<ExporterBlock> EXPORTER;
-
     public static final RegistryObject<QuartzEnrichedIronBlock> QUARTZ_ENRICHED_IRON;
     public static final RegistryObject<MachineCasingBlock> MACHINE_CASING;
     public static final RegistryObject<CableBlock> CABLE;
@@ -40,7 +35,8 @@ public final class RSBlocks {
     public static final RegistryObject<DestructorBlock> DESTRUCTOR;
     public static final RegistryObject<PortableGridBlock> PORTABLE_GRID;
     public static final RegistryObject<PortableGridBlock> CREATIVE_PORTABLE_GRID;
-
+    public static final List<RegistryObject<? extends Block>> COLORED_BLOCKS = new ArrayList<>();
+    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
     public static final ColorMap<CrafterBlock> CRAFTER = new ColorMap<>(BLOCKS);
     public static final ColorMap<RelayBlock> RELAY = new ColorMap<>(BLOCKS);
     public static final ColorMap<NetworkTransmitterBlock> NETWORK_TRANSMITTER = new ColorMap<>(BLOCKS);
@@ -57,8 +53,7 @@ public final class RSBlocks {
     public static final ColorMap<CrafterManagerBlock> CRAFTER_MANAGER = new ColorMap<>(BLOCKS);
     public static final ColorMap<CraftingMonitorBlock> CRAFTING_MONITOR = new ColorMap<>(BLOCKS);
     public static final ColorMap<DetectorBlock> DETECTOR = new ColorMap<>(BLOCKS);
-
-    public static final List<RegistryObject<? extends Block>> COLORED_BLOCKS = new ArrayList<>();
+    private static final String GRID_SUFFIX = "_grid";
 
     static {
         QUARTZ_ENRICHED_IRON = BLOCKS.register("quartz_enriched_iron_block", QuartzEnrichedIronBlock::new);

@@ -18,8 +18,8 @@ public class CuriosIntegration {
     }
 
     @SubscribeEvent
-    public void registerSlots(InterModEnqueueEvent event){
-        InterModComms.sendTo(ID, SlotTypeMessage.REGISTER_TYPE,()-> SlotTypePreset.BELT.getMessageBuilder().build());
-        InterModComms.sendTo(ID, SlotTypeMessage.REGISTER_TYPE,()-> SlotTypePreset.BODY.getMessageBuilder().build());
+    public void registerSlots(InterModEnqueueEvent event) {
+        InterModComms.sendTo(ID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BELT.getMessageBuilder().build());
+        InterModComms.sendTo(ID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BODY.getMessageBuilder().build());
     }
 }

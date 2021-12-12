@@ -7,9 +7,9 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -28,7 +28,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, ItemStack stack, int preferredSlot, int flags) {
+    public void onExtract(ServerPlayer player, ItemStack stack, int preferredSlot, int flags) {
         if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
@@ -39,7 +39,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags) {
+    public void onExtract(ServerPlayer player, UUID id, int preferredSlot, int flags) {
         if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
@@ -56,13 +56,13 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 
-        ItemStack held = player.inventory.getCarried();
+        ItemStack held = player.containerMenu.getCarried();
 
         if (single) {
             if (!held.isEmpty() && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.getCount() + 1 > held.getMaxStackSize())) {
                 return;
             }
-        } else if (!player.inventory.getCarried().isEmpty()) {
+        } else if (!player.containerMenu.getCarried().isEmpty()) {
             return;
         }
 
@@ -116,10 +116,10 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 if (single && !held.isEmpty()) {
                     held.grow(1);
                 } else {
-                    player.inventory.setCarried(took);
+                    player.containerMenu.setCarried(took);
                 }
 
-                player.broadcastCarriedItem();
+                // TODO player.broadcastCarriedItem();
             }
 
             portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
@@ -128,7 +128,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single) {
+    public ItemStack onInsert(ServerPlayer player, ItemStack stack, boolean single) {
         if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return stack;
         }
@@ -151,12 +151,12 @@ public class PortableItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
-        if (player.inventory.getCarried().isEmpty() || portableGrid.getStorage() == null || !grid.isGridActive()) {
+    public void onInsertHeldItem(ServerPlayer player, boolean single) {
+        if (player.containerMenu.getCarried().isEmpty() || portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
 
-        ItemStack stack = player.inventory.getCarried();
+        ItemStack stack = player.containerMenu.getCarried();
         int size = single ? 1 : stack.getCount();
 
         portableGrid.getItemStorageTracker().changed(player, stack.copy());
@@ -168,36 +168,36 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 stack.shrink(size);
             }
         } else {
-            player.inventory.setCarried(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
+            player.containerMenu.setCarried(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
         }
 
-        player.broadcastCarriedItem();
+        // TODO player.broadcastCarriedItem();
 
         portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
     }
 
     @Override
-    public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayer player, UUID id, int quantity, boolean noPreview) {
         // NO OP
     }
 
     @Override
-    public void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity) {
+    public void onCraftingRequested(ServerPlayer player, UUID id, int quantity) {
         // NO OP
     }
 
     @Override
-    public void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id) {
+    public void onCraftingCancelRequested(ServerPlayer player, @Nullable UUID id) {
         // NO OP
     }
 
     @Override
-    public void onInventoryScroll(ServerPlayerEntity player, int slot, boolean shift, boolean up) {
+    public void onInventoryScroll(ServerPlayer player, int slot, boolean shift, boolean up) {
         ItemGridHandler.onInventoryScroll(this, player, slot, shift, up, null);
     }
 
     @Override
-    public void onGridScroll(ServerPlayerEntity player, @Nullable UUID id, boolean shift, boolean up) {
+    public void onGridScroll(ServerPlayer player, @Nullable UUID id, boolean shift, boolean up) {
         ItemGridHandler.onGridScroll(this, player, id, shift, up, null);
     }
 }

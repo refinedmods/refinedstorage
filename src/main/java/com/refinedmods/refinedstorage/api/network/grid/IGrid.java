@@ -6,12 +6,12 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.api.util.IStackList;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -48,6 +48,53 @@ public interface IGrid {
     int SIZE_MEDIUM = 2;
     int SIZE_LARGE = 3;
 
+    static boolean isValidViewType(int type) {
+        return type == VIEW_TYPE_NORMAL ||
+            type == VIEW_TYPE_CRAFTABLES ||
+            type == VIEW_TYPE_NON_CRAFTABLES;
+    }
+
+    static boolean isValidSearchBoxMode(int mode) {
+        return mode == SEARCH_BOX_MODE_NORMAL ||
+            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
+    }
+
+    static boolean isSearchBoxModeWithAutoselection(int mode) {
+        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
+    }
+
+    static boolean doesSearchBoxModeUseJEI(int mode) {
+        return mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
+    }
+
+    static boolean isValidSortingType(int type) {
+        return type == SORTING_TYPE_QUANTITY ||
+            type == SORTING_TYPE_NAME ||
+            type == SORTING_TYPE_ID ||
+            type == SORTING_TYPE_INVENTORYTWEAKS ||
+            type == SORTING_TYPE_LAST_MODIFIED;
+    }
+
+    static boolean isValidSortingDirection(int direction) {
+        return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
+    }
+
+    static boolean isValidSize(int size) {
+        return size == SIZE_STRETCH ||
+            size == SIZE_SMALL ||
+            size == SIZE_MEDIUM ||
+            size == SIZE_LARGE;
+    }
+
     /**
      * @return the grid type
      */
@@ -57,7 +104,7 @@ public interface IGrid {
      * @param player the player to create a listener for
      * @return a listener for this grid, will be attached to the storage cache in {@link #getStorageCache()}
      */
-    IStorageCacheListener createListener(ServerPlayerEntity player);
+    IStorageCacheListener createListener(ServerPlayer player);
 
     /**
      * @return the storage cache for this grid, or null if this grid is unavailable
@@ -92,7 +139,7 @@ public interface IGrid {
     /**
      * @return the title
      */
-    ITextComponent getTitle();
+    Component getTitle();
 
     /**
      * @return the view type
@@ -188,13 +235,13 @@ public interface IGrid {
      * @return the crafting matrix, or null if not a crafting grid
      */
     @Nullable
-    CraftingInventory getCraftingMatrix();
+    CraftingContainer getCraftingMatrix();
 
     /**
      * @return the crafting result inventory, or null if not a crafting grid
      */
     @Nullable
-    CraftResultInventory getCraftingResult();
+    ResultContainer getCraftingResult();
 
     /**
      * Called when the crafting matrix changes.
@@ -208,19 +255,19 @@ public interface IGrid {
      * @param availableItems the items available for shift crafting
      * @param usedItems      the items used by shift crafting
      */
-    void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems);
+    void onCrafted(Player player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems);
 
     /**
      * Called when the clear button is pressed in the pattern grid or crafting grid.
      */
-    void onClear(PlayerEntity player);
+    void onClear(Player player);
 
     /**
      * Called when an item is crafted with shift click (up to 64 items) in a crafting grid.
      *
      * @param player the player that crafted the item
      */
-    void onCraftedShift(PlayerEntity player);
+    void onCraftedShift(Player player);
 
     /**
      * Called when a JEI recipe transfer occurs.
@@ -228,14 +275,14 @@ public interface IGrid {
      * @param player the player
      * @param recipe a 9*x array stack array, where x is the possible combinations for the given slot
      */
-    void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe);
+    void onRecipeTransfer(Player player, ItemStack[][] recipe);
 
     /**
      * Called when the grid is closed.
      *
      * @param player the player
      */
-    void onClosed(PlayerEntity player);
+    void onClosed(Player player);
 
     /**
      * @return true if the grid is active, false otherwise
@@ -246,51 +293,4 @@ public interface IGrid {
      * @return the slot id where this grid is located, if applicable, otherwise -1
      */
     int getSlotId();
-
-    static boolean isValidViewType(int type) {
-        return type == VIEW_TYPE_NORMAL ||
-            type == VIEW_TYPE_CRAFTABLES ||
-            type == VIEW_TYPE_NON_CRAFTABLES;
-    }
-
-    static boolean isValidSearchBoxMode(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL ||
-            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
-    }
-
-    static boolean isSearchBoxModeWithAutoselection(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
-    }
-
-    static boolean doesSearchBoxModeUseJEI(int mode) {
-        return mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
-    }
-
-    static boolean isValidSortingType(int type) {
-        return type == SORTING_TYPE_QUANTITY ||
-            type == SORTING_TYPE_NAME ||
-            type == SORTING_TYPE_ID ||
-            type == SORTING_TYPE_INVENTORYTWEAKS ||
-            type == SORTING_TYPE_LAST_MODIFIED;
-    }
-
-    static boolean isValidSortingDirection(int direction) {
-        return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
-    }
-
-    static boolean isValidSize(int size) {
-        return size == SIZE_STRETCH ||
-            size == SIZE_SMALL ||
-            size == SIZE_MEDIUM ||
-            size == SIZE_LARGE;
-    }
 }
