@@ -63,7 +63,6 @@ public class ItemGridHandler implements IItemGridHandler {
             if (up) { // scroll up
                 if (!stackOnCursor.isEmpty()) {
                     gridHandler.onInsert(player, stackOnCursor, true);
-                     // TODO player.broadcastCarriedItem();
                 }
             } else { //scroll down
                 if (stackOnCursor.isEmpty()) {
@@ -112,7 +111,6 @@ public class ItemGridHandler implements IItemGridHandler {
 
             } else if (up && !player.containerMenu.getCarried().isEmpty()) { // insert stack from cursor
                 gridHandler.onInsert(player, player.containerMenu.getCarried(), true);
-                 // TODO player.broadcastCarriedItem();
             }
         }
     }
@@ -202,8 +200,6 @@ public class ItemGridHandler implements IItemGridHandler {
                     } else {
                         player.containerMenu.setCarried(took);
                     }
-
-                     // TODO player.broadcastCarriedItem();
                 }
             }
 
@@ -256,8 +252,6 @@ public class ItemGridHandler implements IItemGridHandler {
         } else {
             player.containerMenu.setCarried(network.insertItem(stack, size, Action.PERFORM));
         }
-
-         // TODO player.broadcastCarriedItem();
 
         network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getInsertUsage());
     }

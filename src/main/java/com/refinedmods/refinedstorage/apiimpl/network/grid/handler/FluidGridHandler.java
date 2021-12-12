@@ -53,7 +53,6 @@ public class FluidGridHandler implements IFluidGridHandler {
                 }
             } else {
                 player.containerMenu.setCarried(fluidHandler.getContainer());
-                // TODO player.broadcastCarriedItem();
             }
 
             network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
@@ -87,7 +86,6 @@ public class FluidGridHandler implements IFluidGridHandler {
     @Override
     public void onInsertHeldContainer(ServerPlayer player) {
         player.containerMenu.setCarried(onInsert(player, player.containerMenu.getCarried()));
-        // TODO player.broadcastCarriedItem();
     }
 
     @Override

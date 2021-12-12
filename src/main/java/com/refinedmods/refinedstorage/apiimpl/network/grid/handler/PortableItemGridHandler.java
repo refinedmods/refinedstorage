@@ -118,8 +118,6 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 } else {
                     player.containerMenu.setCarried(took);
                 }
-
-                // TODO player.broadcastCarriedItem();
             }
 
             portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
@@ -170,8 +168,6 @@ public class PortableItemGridHandler implements IItemGridHandler {
         } else {
             player.containerMenu.setCarried(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
         }
-
-        // TODO player.broadcastCarriedItem();
 
         portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
     }

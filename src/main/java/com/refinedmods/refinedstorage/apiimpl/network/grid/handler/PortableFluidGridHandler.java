@@ -64,7 +64,6 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
                     }
                 } else {
                     player.containerMenu.setCarried(fluidHandler.getContainer());
-                    // TODO player.broadcastCarriedItem();
                 }
 
                 portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
@@ -99,7 +98,6 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
     @Override
     public void onInsertHeldContainer(ServerPlayer player) {
         player.containerMenu.setCarried(onInsert(player, player.containerMenu.getCarried()));
-        // TODO player.broadcastCarriedItem();
     }
 
     @Override
