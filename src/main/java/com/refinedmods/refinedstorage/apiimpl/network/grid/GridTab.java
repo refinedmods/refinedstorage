@@ -1,13 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
@@ -39,12 +36,9 @@ public class GridTab implements IGridTab {
     }
 
     @Override
-    public void drawTooltip(PoseStack matrixStack, int x, int y, int screenWidth, int screenHeight, Font fontRenderer) {
+    public void drawTooltip(PoseStack matrixStack, int x, int y, Screen screen) {
         if (name != null) {
-            Screen screen = Minecraft.getInstance().screen;
-            if (screen != null) {
-                screen.renderTooltip(matrixStack, name, x, y);
-            }
+            screen.renderTooltip(matrixStack, name, x, y);
         }
     }
 

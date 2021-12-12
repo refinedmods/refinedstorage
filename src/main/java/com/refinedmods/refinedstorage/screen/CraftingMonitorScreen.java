@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -21,10 +20,11 @@ import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.Font;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -281,26 +281,28 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         @Override
-        public void drawTooltip(PoseStack matrixStack, int x, int y, int screenWidth, int screenHeight, Font fontRenderer) {
-            List<Component> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getHoverName() : requested.getFluid().getDisplayName());
-            List<String> smallTextLines = Lists.newArrayList();
+        public void drawTooltip(PoseStack matrixStack, int x, int y, Screen screen) {
+            List<Component> lines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getHoverName() : requested.getFluid().getDisplayName());
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
             int hours = totalSecs / 3600;
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
-            smallTextLines.add(I18n.get("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
+            lines.add(new TranslatableComponent(
+                "gui.refinedstorage.crafting_monitor.tooltip.requested",
+                requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)
+            ).withStyle(ChatFormatting.GRAY));
 
             if (hours > 0) {
-                smallTextLines.add(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+                lines.add(new TextComponent(String.format("%02d:%02d:%02d", hours, minutes, seconds)).withStyle(ChatFormatting.GRAY));
             } else {
-                smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+                lines.add(new TextComponent(String.format("%02d:%02d", minutes, seconds)).withStyle(ChatFormatting.GRAY));
             }
 
-            smallTextLines.add(String.format("%d%%", completionPercentage));
+            lines.add(new TextComponent(String.format("%d%%", completionPercentage)).withStyle(ChatFormatting.GRAY));
 
-            RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
+            screen.renderComponentTooltip(matrixStack, lines, x, y);
         }
 
         @Override

@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.api.network.grid;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,14 +24,12 @@ public interface IGridTab {
     /**
      * Draws the tooltip of this tab at the given position.
      *
-     * @param matrixStack  the matrix stack
-     * @param x            the x position
-     * @param y            the y position
-     * @param screenWidth  the screen width
-     * @param screenHeight the screen height
-     * @param fontRenderer the font renderer
+     * @param matrixStack the matrix stack
+     * @param x           the x position
+     * @param y           the y position
+     * @param screen      the screen
      */
-    void drawTooltip(PoseStack matrixStack, int x, int y, int screenWidth, int screenHeight, Font fontRenderer);
+    void drawTooltip(PoseStack matrixStack, int x, int y, Screen screen);
 
     /**
      * Draws the icon.

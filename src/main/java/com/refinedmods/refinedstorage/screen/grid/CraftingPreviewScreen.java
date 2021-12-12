@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -50,13 +51,13 @@ public class CraftingPreviewScreen extends BaseScreen<AbstractContainerMenu> {
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
 
-    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids, Component title) {
+    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids, Component title, Inventory inventory) {
         super(new AbstractContainerMenu(null, 0) {
             @Override
             public boolean stillValid(@Nonnull Player player) {
                 return false;
             }
-        }, 254, 201, null, title);
+        }, 254, 201, inventory, title);
 
         this.elements = new ArrayList<>(elements);
         this.parent = parent;

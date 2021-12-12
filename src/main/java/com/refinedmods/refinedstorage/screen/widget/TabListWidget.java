@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
@@ -29,6 +28,7 @@ public class TabListWidget<T extends AbstractContainerMenu> {
     private boolean hadTabs;
     private Button left;
     private Button right;
+
     public TabListWidget(BaseScreen<T> screen, ElementDrawers<T> drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.screen = screen;
         this.drawers = drawers;
@@ -149,7 +149,7 @@ public class TabListWidget<T extends AbstractContainerMenu> {
 
     public void drawTooltip(PoseStack matrixStack, Font fontRenderer, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
-            tabs.get().get(tabHovering).drawTooltip(matrixStack, mouseX, mouseY, screen.width, screen.height, fontRenderer);
+            tabs.get().get(tabHovering).drawTooltip(matrixStack, mouseX, mouseY, screen);
         }
     }
 

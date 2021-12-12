@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -33,9 +32,11 @@ import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.TimeUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
@@ -467,19 +468,24 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     private void drawGridTooltip(PoseStack matrixStack, IGridStack gridStack, int mouseX, int mouseY) {
         List<Component> textLines = gridStack.getTooltip(true);
-        List<String> smallTextLines = Lists.newArrayList();
 
-        if (!gridStack.isCraftable()) {
-            smallTextLines.add(I18n.get("misc.refinedstorage.total", gridStack.getFormattedFullQuantity()));
+        ItemStack stackContext = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
+
+        if (RS.CLIENT_CONFIG.getGrid().getDetailedTooltip()) {
+            Style detailedTextStyle = Style.EMPTY.applyFormat(ChatFormatting.GRAY).withItalic(true);
+
+            if (!gridStack.isCraftable()) {
+                textLines.add(new TranslatableComponent("misc.refinedstorage.total", gridStack.getFormattedFullQuantity())
+                    .withStyle(detailedTextStyle));
+            }
+
+            if (gridStack.getTrackerEntry() != null) {
+                textLines.add(new TranslatableComponent(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()))
+                    .withStyle(detailedTextStyle));
+            }
         }
 
-        if (gridStack.getTrackerEntry() != null) {
-            smallTextLines.add(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()));
-        }
-
-        ItemStack stack = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
-
-        RenderUtils.drawTooltipWithSmallText(matrixStack, textLines, smallTextLines, RS.CLIENT_CONFIG.getGrid().getDetailedTooltip(), stack, mouseX, mouseY, width, height, font);
+        renderTooltip(matrixStack, stackContext, mouseX, mouseY, textLines);
     }
 
     @Override
