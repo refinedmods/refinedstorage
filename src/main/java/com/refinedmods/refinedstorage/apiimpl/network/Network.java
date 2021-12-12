@@ -43,7 +43,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import  net.minecraft.nbt.Tag;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -59,9 +58,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private static final int THROTTLE_ACTIVE_TO_INACTIVE = 4;
 
     private static final String NBT_ENERGY = "Energy";
-    private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker"; //TODO: remove next version
     private static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
-    private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker"; //TODO: remove next version
     private static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";
 
     private static final Logger LOGGER = LogManager.getLogger(Network.class);
@@ -522,18 +519,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
         if (tag.contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
             this.itemStorageTrackerId = tag.getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
-        } else {
-            if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) { //TODO: remove next version
-                getItemStorageTracker().readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-            }
         }
 
         if (tag.contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
             this.fluidStorageTrackerId = tag.getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
-        } else {
-            if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-            }
         }
 
         return this;

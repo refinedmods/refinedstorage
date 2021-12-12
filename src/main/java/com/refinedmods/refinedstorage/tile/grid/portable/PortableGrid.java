@@ -49,7 +49,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -60,9 +59,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainerContext {
-    static final String NBT_STORAGE_TRACKER = "StorageTracker"; //TODO: remove next version
     static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
-    static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker"; // TODO: remove next version
     static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";
     private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
     private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
@@ -114,10 +111,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             if (stack.getTag().contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
                 itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
             } else {
-                if (stack.getTag().contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
-                    getItemStorageTracker().readFromNbt(stack.getTag().getList(NBT_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-                }
-
                 UUID id = UUID.randomUUID();
                 stack.getTag().putUUID(NBT_ITEM_STORAGE_TRACKER_ID, id);
                 itemStorageTrackerId = id;
@@ -126,10 +119,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
                 fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
             } else {
-                if (stack.getTag().contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                    getFluidStorageTracker().readFromNbt(stack.getTag().getList(NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-                }
-
                 UUID id = UUID.randomUUID();
                 stack.getTag().putUUID(NBT_FLUID_STORAGE_TRACKER_ID, id);
                 fluidStorageTrackerId = id;

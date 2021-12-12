@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.math.Vector3f;
-import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
@@ -38,12 +37,6 @@ public class CubeBuilder {
 
     public CubeBuilder color(int color) {
         this.color = color;
-
-        return this;
-    }
-
-    public CubeBuilder lightmap() {
-        this.format = RenderUtils.getFormatWithLightMap(format);
 
         return this;
     }

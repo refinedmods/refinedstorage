@@ -63,7 +63,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -117,9 +116,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
         }
     });
 
-    private static final String NBT_STORAGE_TRACKER = "StorageTracker"; //TODO: remove next version
     private static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
-    private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker"; //TODO: remove next version
     private static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_ENERGY = "Energy";
@@ -243,18 +240,10 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
             this.redstoneMode = RedstoneMode.read(stack.getTag());
             if (stack.getTag().contains(PortableGrid.NBT_ITEM_STORAGE_TRACKER_ID)) {
                 itemStorageTrackerId = stack.getTag().getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
-            } else {
-                if (stack.getTag().contains(PortableGrid.NBT_STORAGE_TRACKER)) { //TODO: remove next version
-                    getItemStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-                }
             }
 
             if (stack.getTag().contains(PortableGrid.NBT_FLUID_STORAGE_TRACKER_ID)) {
                 fluidStorageTrackerId = stack.getTag().getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
-            } else {
-                if (stack.getTag().contains(PortableGrid.NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                    getFluidStorageTracker().readFromNbt(stack.getTag().getList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-                }
             }
 
             if (stack.getTag().contains(NBT_ENCHANTMENTS)) {
@@ -715,18 +704,10 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
         if (tag.contains(NBT_ITEM_STORAGE_TRACKER_ID)) {
             itemStorageTrackerId = tag.getUUID(NBT_ITEM_STORAGE_TRACKER_ID);
-        } else {
-            if (tag.contains(NBT_STORAGE_TRACKER)) { //TODO: remove next version
-                getItemStorageTracker().readFromNbt(tag.getList(NBT_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-            }
         }
 
         if (tag.contains(NBT_FLUID_STORAGE_TRACKER_ID)) {
             fluidStorageTrackerId = tag.getUUID(NBT_FLUID_STORAGE_TRACKER_ID);
-        } else {
-            if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) { //TODO: remove next version
-                getFluidStorageTracker().readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Tag.TAG_COMPOUND));
-            }
         }
 
         if (tag.contains(NBT_ENCHANTMENTS)) {

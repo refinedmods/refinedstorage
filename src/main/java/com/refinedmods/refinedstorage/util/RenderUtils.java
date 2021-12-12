@@ -1,11 +1,7 @@
 package com.refinedmods.refinedstorage.util;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
@@ -114,7 +110,7 @@ public final class RenderUtils {
 
     // @Volatile: Copied with some tweaks from GuiUtils#drawHoveringText(@Nonnull final ItemStack stack, List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)
     public static void drawTooltipWithSmallText(PoseStack matrixStack, List<? extends FormattedText> textLines, List<String> smallTextLines, boolean showSmallText, @Nonnull ItemStack stack, int mouseX, int mouseY, int screenWidth, int screenHeight, Font fontRenderer) {
-       // TODO
+        // TODO
     }
 
     // @Volatile: From Screen#getTooltipFromItem
@@ -125,24 +121,6 @@ public final class RenderUtils {
 
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
         return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
-    }
-
-    public static boolean isLightMapDisabled() {
-        return false;
-    }
-
-    public static VertexFormat getFormatWithLightMap(VertexFormat format) {
-        if (isLightMapDisabled()) {
-            return format;
-        }
-
-        if (format == DefaultVertexFormat.BLOCK) {
-            return DefaultVertexFormat.BLOCK;
-        } else if (!format.hasUV(1)) {
-           // TODO return new VertexFormat(ImmutableList.<VertexFormatElement>builder().addAll(format.getElements()).add(DefaultVertexFormat.ELEMENT_UV1).build());
-        }
-
-        return format;
     }
 
     public static TextureAtlasSprite getSprite(BakedModel coverModel, BlockState coverState, Direction facing, Random rand) {
