@@ -278,7 +278,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
 
             if (slot instanceof CraftingGridSlot || slot == craftingResultSlot || slot == patternResultSlot) {
                 for (ContainerListener listener : containerListeners) {
-                    // @Volatile: We can't use ContainerSynchronizer#sendInitialData since ServerPlayerEntity blocks CraftingResultSlot changes...
+                    // @Volatile: We can't use ContainerListener#slotChanged since ServerPlayer blocks ResultSlot changes...
                     if (listener instanceof ServerPlayer) {
                         ((ServerPlayer) listener).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), i, slot.getItem()));
                     }

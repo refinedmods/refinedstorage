@@ -136,9 +136,9 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             }
         }
 
-        // @Volatile: This is some logic copied from CraftingResultSlot#onCrafting. We call this manually for shift clicking because
+        // @Volatile: This is some logic copied from ResultSlot#checkTakeAchievements. We call this manually for shift clicking because
         // otherwise it's not being called.
-        // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> onCrafting(stack)
+        // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> checkTakeAchievements(stack)
         crafted.onCraftedBy(player.level, player, amountCrafted);
         ForgeEventFactory.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
         ForgeHooks.setCraftingPlayer(null);

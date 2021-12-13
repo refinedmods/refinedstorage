@@ -79,7 +79,7 @@ public class ListNetworkCommand implements Command<CommandSourceStack> {
 
         public NetworkInList(INetwork network) {
             this.network = network;
-            // @Volatile: From CommandTps
+            // @Volatile: From TPSCommand
             this.tickTime = mean(network.getTickTimes()) * 1.0E-6D;
             this.tps = Math.min(1000.0 / tickTime, 20);
         }

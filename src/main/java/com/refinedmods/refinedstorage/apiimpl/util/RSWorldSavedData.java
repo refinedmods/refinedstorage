@@ -20,30 +20,28 @@ public abstract class RSWorldSavedData extends SavedData {
     public abstract CompoundTag save(CompoundTag compound);
 
     @Override
-    public void save(File fileIn) {
-        //@Volatile Mostly Copied from WorldSavedData
+    public void save(File file) {
+        // @Volatile Mostly Copied from SavedData
         if (this.isDirty()) {
-            File tempFile = fileIn.toPath().getParent().resolve(fileIn.getName() + ".temp").toFile();
+            File tempFile = file.toPath().getParent().resolve(file.getName() + ".temp").toFile();
 
-            CompoundTag compoundnbt = new CompoundTag();
-            compoundnbt.put("data", this.save(new CompoundTag()));
-            compoundnbt.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+            CompoundTag tag = new CompoundTag();
+            tag.put("data", this.save(new CompoundTag()));
+            tag.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
 
             try {
-                NbtIo.writeCompressed(compoundnbt, tempFile);
-                if (fileIn.exists()) {
-                    if (!fileIn.delete()) {
-                        LOGGER.error("Failed To delete " + fileIn.getName());
+                NbtIo.writeCompressed(tag, tempFile);
+                if (file.exists()) {
+                    if (!file.delete()) {
+                        LOGGER.error("Failed to delete " + file.getName());
                     }
                 }
-                if (!tempFile.renameTo(fileIn)) {
+                if (!tempFile.renameTo(file)) {
                     LOGGER.error("Failed to rename " + tempFile.getName());
                 }
-
-            } catch (IOException ioexception) {
-                LOGGER.error("Could not save data {}", this, ioexception);
+            } catch (IOException e) {
+                LOGGER.error("Could not save data {}", this, e);
             }
-
             this.setDirty(false);
         }
     }
