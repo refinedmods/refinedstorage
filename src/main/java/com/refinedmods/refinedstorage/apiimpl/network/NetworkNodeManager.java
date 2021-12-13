@@ -8,9 +8,9 @@ import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import  net.minecraft.nbt.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,14 +26,14 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private final Level world;
+    private final Level level;
 
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
-    public NetworkNodeManager(Level world) {
-        this.world = world;
+    public NetworkNodeManager(Level level) {
+        this.level = level;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class NetworkNodeManager extends RSWorldSavedData implements INetworkNode
                     INetworkNode node = null;
 
                     try {
-                        node = factory.create(data, world, pos);
+                        node = factory.create(data, level, pos);
                     } catch (Throwable t) {
                         logger.error("Could not read network node", t);
                     }

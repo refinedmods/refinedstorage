@@ -34,17 +34,17 @@ public class CrafterManagerBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        InteractionResult result = RSBlocks.CRAFTER_MANAGER.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        InteractionResult result = RSBlocks.CRAFTER_MANAGER.changeBlockColor(state, player.getItemInHand(hand), level, pos, player);
         if (result != InteractionResult.PASS) {
             return result;
         }
 
-        if (!world.isClientSide) {
-            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
+        if (!level.isClientSide) {
+            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new CrafterManagerContainerProvider((CrafterManagerTile) world.getBlockEntity(pos)),
-                buf -> CrafterManagerContainerProvider.writeToBuffer(buf, world, pos)
+                new CrafterManagerContainerProvider((CrafterManagerTile) level.getBlockEntity(pos)),
+                buf -> CrafterManagerContainerProvider.writeToBuffer(buf, level, pos)
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }
 

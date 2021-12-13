@@ -37,12 +37,12 @@ public interface IGridFactory {
     /**
      * Returns a possible tile for this grid if {@link #getType()} is BLOCK.
      *
-     * @param world the world
+     * @param level the level
      * @param pos   the position
      * @return the tile, or null if no tile is required
      */
     @Nullable
-    BlockEntity getRelevantTile(Level world, BlockPos pos);
+    BlockEntity getRelevantTile(Level level, BlockPos pos);
 
     /**
      * @return the type

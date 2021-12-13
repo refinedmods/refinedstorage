@@ -13,11 +13,11 @@ public interface ICraftingPatternProvider {
     /**
      * Creates a crafting pattern.
      *
-     * @param world     the world
+     * @param level     the level
      * @param stack     the pattern stack, the implementor needs to copy it
      * @param container the {@link ICraftingPatternContainer} where the pattern is in
      * @return the crafting pattern
      */
     @Nonnull
-    ICraftingPattern create(Level world, ItemStack stack, ICraftingPatternContainer container);
+    ICraftingPattern create(Level level, ItemStack stack, ICraftingPatternContainer container);
 }

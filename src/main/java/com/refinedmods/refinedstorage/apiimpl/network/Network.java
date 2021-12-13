@@ -74,7 +74,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer(), 0);
     private final RootNetworkNode root;
     private final BlockPos pos;
-    private final Level world;
+    private final Level level;
     private final NetworkType type;
     private ItemStorageTracker itemStorageTracker;
     private UUID itemStorageTrackerId;
@@ -93,13 +93,13 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private long[] tickTimes = new long[100];
     private int tickCounter = 0;
 
-    public Network(Level world, BlockPos pos, NetworkType type) {
+    public Network(Level level, BlockPos pos, NetworkType type) {
         this.pos = pos;
-        this.world = world;
+        this.level = level;
         this.type = type;
-        this.root = new RootNetworkNode(this, world, pos);
+        this.root = new RootNetworkNode(this, level, pos);
         this.nodeGraph.addListener(() -> {
-            BlockEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = level.getBlockEntity(pos);
 
             if (tile instanceof ControllerTile) {
                 ((ControllerTile) tile).getDataManager().sendParameterToWatchers(ControllerTile.NODES);
@@ -160,16 +160,16 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void update() {
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             long tickStart = Util.getNanos();
 
             if (ticks == 0) {
-                redstonePowered = world.hasNeighborSignal(pos);
+                redstonePowered = level.hasNeighborSignal(pos);
             }
 
             ++ticks;
 
-            amILoaded = world.isLoaded(pos);
+            amILoaded = level.isLoaded(pos);
 
             updateEnergyUsage();
 
@@ -203,7 +203,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
                     LOGGER.debug("Network at position {} changed running state to {}, causing an invalidation of the node graph", pos, couldRun);
 
-                    nodeGraph.invalidate(Action.PERFORM, world, pos);
+                    nodeGraph.invalidate(Action.PERFORM, level, pos);
                     securityManager.invalidate();
                 }
             } else {
@@ -215,9 +215,9 @@ public class Network implements INetwork, IRedstoneConfigurable {
             if (lastEnergyType != energyType) {
                 lastEnergyType = energyType;
 
-                BlockState state = world.getBlockState(pos);
+                BlockState state = level.getBlockState(pos);
                 if (state.getBlock() instanceof ControllerBlock) {
-                    world.setBlockAndUpdate(pos, state.setValue(ControllerBlock.ENERGY_TYPE, energyType));
+                    level.setBlockAndUpdate(pos, state.setValue(ControllerBlock.ENERGY_TYPE, energyType));
                 }
             }
 
@@ -248,8 +248,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
         }
 
         nodeGraph.disconnectAll();
-        API.instance().getStorageTrackerManager((ServerLevel) getWorld()).remove(itemStorageTrackerId);
-        API.instance().getStorageTrackerManager((ServerLevel) getWorld()).remove(fluidStorageTrackerId);
+        API.instance().getStorageTrackerManager((ServerLevel) getLevel()).remove(itemStorageTrackerId);
+        API.instance().getStorageTrackerManager((ServerLevel) getLevel()).remove(fluidStorageTrackerId);
     }
 
     @Override
@@ -483,7 +483,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
                 this.itemStorageTrackerId = UUID.randomUUID();
             }
 
-            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) world).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+            this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) level).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
         }
 
         return itemStorageTracker;
@@ -496,15 +496,15 @@ public class Network implements INetwork, IRedstoneConfigurable {
                 this.fluidStorageTrackerId = UUID.randomUUID();
             }
 
-            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) world).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+            this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) level).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
         }
 
         return fluidStorageTracker;
     }
 
     @Override
-    public Level getWorld() {
-        return world;
+    public Level getLevel() {
+        return level;
     }
 
     @Override
@@ -553,7 +553,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void markDirty() {
-        API.instance().getNetworkManager((ServerLevel) world).markForSaving();
+        API.instance().getNetworkManager((ServerLevel) level).markForSaving();
     }
 
     public ControllerBlock.EnergyType getEnergyType() {

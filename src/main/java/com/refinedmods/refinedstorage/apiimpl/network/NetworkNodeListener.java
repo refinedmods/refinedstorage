@@ -50,7 +50,7 @@ public class NetworkNodeListener {
             INetworkNode node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos.relative(facing)));
 
             if (node != null && node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getLevel(), node.getNetwork().getPosition());
 
                 return;
             }

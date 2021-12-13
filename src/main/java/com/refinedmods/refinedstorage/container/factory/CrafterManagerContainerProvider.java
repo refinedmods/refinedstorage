@@ -25,10 +25,10 @@ public class CrafterManagerContainerProvider implements MenuProvider {
         this.tile = tile;
     }
 
-    public static void writeToBuffer(FriendlyByteBuf buf, Level world, BlockPos pos) {
+    public static void writeToBuffer(FriendlyByteBuf buf, Level level, BlockPos pos) {
         buf.writeBlockPos(pos);
 
-        Map<Component, List<IItemHandlerModifiable>> containerData = ((CrafterManagerTile) world.getBlockEntity(pos)).getNode().getNetwork().getCraftingManager().getNamedContainers();
+        Map<Component, List<IItemHandlerModifiable>> containerData = ((CrafterManagerTile) level.getBlockEntity(pos)).getNode().getNetwork().getCraftingManager().getNamedContainers();
 
         buf.writeInt(containerData.size());
 

@@ -21,7 +21,7 @@ public class WirelessTransmitterTile extends NetworkNodeTile<WirelessTransmitter
 
     @Override
     @Nonnull
-    public WirelessTransmitterNetworkNode createNode(Level world, BlockPos pos) {
-        return new WirelessTransmitterNetworkNode(world, pos);
+    public WirelessTransmitterNetworkNode createNode(Level level, BlockPos pos) {
+        return new WirelessTransmitterNetworkNode(level, pos);
     }
 }

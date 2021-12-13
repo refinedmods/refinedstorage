@@ -24,14 +24,14 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
     private static final String NBT_DATA = "Data";
     private static final String NBT_POS = "Pos";
 
-    private final Level world;
+    private final Level level;
 
     private final Logger logger = LogManager.getLogger(getClass());
 
     private final ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
 
-    public NetworkManager(Level world) {
-        this.world = world;
+    public NetworkManager(Level level) {
+        this.level = level;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class NetworkManager extends RSWorldSavedData implements INetworkManager 
                 BlockPos pos = BlockPos.of(networkTag.getLong(NBT_POS));
                 int type = networkTag.getInt(NBT_TYPE);
 
-                INetwork network = new Network(world, pos, NetworkType.values()[type]);
+                INetwork network = new Network(level, pos, NetworkType.values()[type]);
 
                 try {
                     network = network.readFromNbt(data);

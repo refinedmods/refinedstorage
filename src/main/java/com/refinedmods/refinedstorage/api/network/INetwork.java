@@ -242,12 +242,12 @@ public interface INetwork {
     IStorageTracker<FluidStack> getFluidStorageTracker();
 
     /**
-     * @return the world where this network is in
+     * @return the level where this network is in
      */
-    Level getWorld();
+    Level getLevel();
 
     /**
-     * @return the position of this network in the world
+     * @return the position of this network in the level
      */
     BlockPos getPosition();
 

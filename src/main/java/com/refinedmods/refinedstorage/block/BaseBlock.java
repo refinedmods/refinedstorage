@@ -30,23 +30,23 @@ public abstract class BaseBlock extends Block {
         return super.rotate(state, rot);
     }
 
-    protected void onDirectionChanged(Level world, BlockPos pos, Direction newDirection) {
+    protected void onDirectionChanged(Level level, BlockPos pos, Direction newDirection) {
         // NO OP
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onRemove(state, world, pos, newState, isMoving);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onRemove(state, level, pos, newState, isMoving);
 
-        checkIfDirectionHasChanged(state, world, pos, newState);
+        checkIfDirectionHasChanged(state, level, pos, newState);
     }
 
-    protected void checkIfDirectionHasChanged(BlockState state, Level world, BlockPos pos, BlockState newState) {
+    protected void checkIfDirectionHasChanged(BlockState state, Level level, BlockPos pos, BlockState newState) {
         if (getDirection() != BlockDirection.NONE &&
             state.getBlock() == newState.getBlock() &&
             state.getValue(getDirection().getProperty()) != newState.getValue(getDirection().getProperty())) {
-            onDirectionChanged(world, pos, newState.getValue(getDirection().getProperty()));
+            onDirectionChanged(level, pos, newState.getValue(getDirection().getProperty()));
         }
     }
 

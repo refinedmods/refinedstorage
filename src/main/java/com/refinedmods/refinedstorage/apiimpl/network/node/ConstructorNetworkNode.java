@@ -66,8 +66,8 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     private int type = IType.ITEMS;
     private boolean drop = false;
 
-    public ConstructorNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public ConstructorNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
         this.coverManager = new CoverManager(this);
     }
 
@@ -80,7 +80,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0 && world.isLoaded(pos)) {
+        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0 && level.isLoaded(pos)) {
             if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
                 ItemStack stack = itemFilters.getStackInSlot(0);
 
@@ -104,8 +104,8 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                 network.getCraftingManager().request(this, stack, FluidAttributes.BUCKET_VOLUME);
             }
-        } else if (!world.getBlockState(front).getFluidState().isSource()) {
-            FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerLevel) world, getOwner()), world, InteractionHand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
+        } else if (!level.getBlockState(front).getFluidState().isSource()) {
+            FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerLevel) level, getOwner()), level, InteractionHand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
         }
     }
 
@@ -113,8 +113,8 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(stack, 1, compare, Action.SIMULATE);
         if (!took.isEmpty()) {
             BlockPlaceContext ctx = new ConstructorBlockItemUseContext(
-                world,
-                WorldUtils.getFakePlayer((ServerLevel) world, getOwner()),
+                level,
+                WorldUtils.getFakePlayer((ServerLevel) level, getOwner()),
                 InteractionHand.MAIN_HAND,
                 took,
                 new BlockHitResult(Vec3.ZERO, getDirection(), pos, false)
@@ -135,7 +135,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(stack, upgrades.getStackInteractCount(), compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
-            DefaultDispenseItemBehavior.spawnItem(world, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+            DefaultDispenseItemBehavior.spawnItem(level, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             network.getCraftingManager().request(this, stack, 1);
         }
@@ -145,7 +145,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(stack, 1, compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
-            world.addFreshEntity(new FireworkRocketEntity(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
+            level.addFreshEntity(new FireworkRocketEntity(level, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
         }
     }
 
@@ -257,7 +257,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
     @Override
     public int getType() {
-        return world.isClientSide ? ConstructorTile.TYPE.getValue() : type;
+        return level.isClientSide ? ConstructorTile.TYPE.getValue() : type;
     }
 
     @Override
@@ -283,8 +283,8 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private static class ConstructorBlockItemUseContext extends BlockPlaceContext {
-        public ConstructorBlockItemUseContext(Level world, @Nullable Player player, InteractionHand hand, ItemStack stack, BlockHitResult rayTraceResult) {
-            super(world, player, hand, stack, rayTraceResult);
+        public ConstructorBlockItemUseContext(Level level, @Nullable Player player, InteractionHand hand, ItemStack stack, BlockHitResult rayTraceResult) {
+            super(level, player, hand, stack, rayTraceResult);
         }
     }
 

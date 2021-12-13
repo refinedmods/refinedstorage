@@ -36,8 +36,8 @@ public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
 
     @Override
     @Nonnull
-    public ImporterNetworkNode createNode(Level world, BlockPos pos) {
-        return new ImporterNetworkNode(world, pos);
+    public ImporterNetworkNode createNode(Level level, BlockPos pos) {
+        return new ImporterNetworkNode(level, pos);
     }
 
     @Nonnull

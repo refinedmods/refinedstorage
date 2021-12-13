@@ -48,8 +48,8 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     private int type = IType.ITEMS;
     private int currentSlot;
 
-    public ImporterNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public ImporterNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
         this.coverManager = new CoverManager(this);
     }
 
@@ -62,7 +62,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public void update() {
         super.update();
 
-        if (!canUpdate() || !world.isLoaded(pos)) {
+        if (!canUpdate() || !level.isLoaded(pos)) {
             return;
         }
 
@@ -223,7 +223,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
     @Override
     public int getType() {
-        return world.isClientSide ? ImporterTile.TYPE.getValue() : type;
+        return level.isClientSide ? ImporterTile.TYPE.getValue() : type;
     }
 
     @Override

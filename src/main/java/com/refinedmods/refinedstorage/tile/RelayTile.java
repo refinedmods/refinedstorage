@@ -15,7 +15,7 @@ public class RelayTile extends NetworkNodeTile<RelayNetworkNode> {
 
     @Override
     @Nonnull
-    public RelayNetworkNode createNode(Level world, BlockPos pos) {
-        return new RelayNetworkNode(world, pos);
+    public RelayNetworkNode createNode(Level level, BlockPos pos) {
+        return new RelayNetworkNode(level, pos);
     }
 }

@@ -61,12 +61,12 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, entity, stack);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, entity, stack);
 
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromStack -> {
-                BlockEntity tile = world.getBlockEntity(pos);
+                BlockEntity tile = level.getBlockEntity(pos);
 
                 if (tile != null) {
                     tile.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromTile -> energyFromTile.receiveEnergy(energyFromStack.getEnergyStored(), false));
@@ -77,21 +77,21 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, blockIn, fromPos, isMoving);
 
-        if (!world.isClientSide) {
-            INetwork network = API.instance().getNetworkManager((ServerLevel) world).getNetwork(pos);
+        if (!level.isClientSide) {
+            INetwork network = API.instance().getNetworkManager((ServerLevel) level).getNetwork(pos);
             if (network instanceof Network) {
-                ((Network) network).setRedstonePowered(world.hasNeighborSignal(pos));
+                ((Network) network).setRedstonePowered(level.hasNeighborSignal(pos));
             }
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        InteractionResult result = super.use(state, world, pos, player, hand, hit);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        InteractionResult result = super.use(state, level, pos, player, hand, hit);
         if (result != InteractionResult.PASS) {
             return result;
         }
@@ -102,11 +102,11 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
         if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
             BlockState newState = colorMap.get(color).get().defaultBlockState().setValue(ENERGY_TYPE, state.getValue(ENERGY_TYPE));
 
-            return RSBlocks.CONTROLLER.setBlockState(newState, player.getItemInHand(hand), world, pos, player);
+            return RSBlocks.CONTROLLER.setBlockState(newState, player.getItemInHand(hand), level, pos, player);
         }
 
-        if (!world.isClientSide) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
+        if (!level.isClientSide) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new MenuProvider() {
                     @Override
@@ -116,7 +116,7 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
 
                     @Override
                     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player player) {
-                        return new ControllerContainer((ControllerTile) world.getBlockEntity(pos), player, i);
+                        return new ControllerContainer((ControllerTile) level.getBlockEntity(pos), player, i);
                     }
                 },
                 pos
@@ -127,11 +127,11 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (newState.getBlock() instanceof ControllerBlock) {
             return;
         }
-        super.onRemove(state, world, pos, newState, isMoving);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override

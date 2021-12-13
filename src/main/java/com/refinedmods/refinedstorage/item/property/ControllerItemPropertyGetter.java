@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class ControllerItemPropertyGetter implements ItemPropertyFunction {
     @Override
-    public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p) {
+    public float call(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int p) {
         IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY).orElse(null);
         if (storage != null) {
             return Network.getEnergyType(storage.getEnergyStored(), storage.getMaxEnergyStored()).ordinal();

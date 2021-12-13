@@ -26,8 +26,8 @@ public class CableTile extends NetworkNodeTile<CableNetworkNode> {
 
     @Override
     @Nonnull
-    public CableNetworkNode createNode(Level world, BlockPos pos) {
-        return new CableNetworkNode(world, pos);
+    public CableNetworkNode createNode(Level level, BlockPos pos) {
+        return new CableNetworkNode(level, pos);
     }
 
     @Nonnull

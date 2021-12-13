@@ -22,8 +22,8 @@ import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.FluidStorageD
 import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class CraftingTask implements ICraftingTask, NodeListener {
 
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
         this.quantity = tag.getInt(NBT_QUANTITY);
-        this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
+        this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getLevel());
         this.id = tag.getUUID(NBT_ID);
         this.nodes = new NodeList();
 

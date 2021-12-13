@@ -29,7 +29,7 @@ public abstract class Node {
     protected Node(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
-        this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
+        this.pattern = SerializationUtil.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getLevel());
         this.root = tag.getBoolean(NBT_ROOT);
         this.requirements.readFromNbt(tag);
     }

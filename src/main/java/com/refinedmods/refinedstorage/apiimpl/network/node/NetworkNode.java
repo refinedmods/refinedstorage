@@ -41,7 +41,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
     // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
     // having multiple different instances of the same network node.
-    protected Level world;
+    protected Level level;
     protected BlockPos pos;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -61,12 +61,12 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
 
-    protected NetworkNode(Level world, BlockPos pos) {
-        if (world == null) {
+    protected NetworkNode(Level level, BlockPos pos) {
+        if (level == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        this.world = world;
+        this.level = level;
         this.pos = pos;
     }
 
@@ -83,7 +83,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        return new ItemStack(Item.BY_BLOCK.get(world.getBlockState(pos).getBlock()), 1);
+        return new ItemStack(Item.BY_BLOCK.get(level.getBlockState(pos).getBlock()), 1);
     }
 
     @Override
@@ -106,8 +106,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void markDirty() {
-        if (!world.isClientSide) {
-            API.instance().getNetworkNodeManager((ServerLevel) world).markForSaving();
+        if (!level.isClientSide) {
+            API.instance().getNetworkNodeManager((ServerLevel) level).markForSaving();
         }
     }
 
@@ -139,7 +139,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void update() {
         if (ticks == 0) {
-            redstonePowered = world.hasNeighborSignal(pos);
+            redstonePowered = level.hasNeighborSignal(pos);
         }
 
         ++ticks;
@@ -154,17 +154,17 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                 couldUpdate = canUpdate;
                 throttlingDisabled = false;
 
-                BlockState blockState = world.getBlockState(pos);
+                BlockState blockState = level.getBlockState(pos);
 
                 if (blockState.getBlock() instanceof NetworkNodeBlock && ((NetworkNodeBlock) blockState.getBlock()).hasConnectedState()) {
-                    world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(NetworkNodeBlock.CONNECTED, canUpdate));
+                    level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(NetworkNodeBlock.CONNECTED, canUpdate));
                 }
 
                 if (network != null) {
                     onConnectedStateChange(network, canUpdate, ConnectivityStateChangeCause.REDSTONE_MODE_OR_NETWORK_ENERGY_CHANGE);
 
                     if (shouldRebuildGraphOnChange()) {
-                        network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());
+                        network.getNodeGraph().invalidate(Action.PERFORM, network.getLevel(), network.getPosition());
                     }
                 }
             }
@@ -220,10 +220,9 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public Level getWorld() {
-        return world;
+    public Level getLevel() {
+        return level;
     }
-
 
     @Override
     public boolean canConduct(Direction direction) {
@@ -233,24 +232,24 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos.relative(facing)));
+            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(level.getBlockEntity(pos.relative(facing)));
             if (oppositeNode == null) {
                 continue;
             }
             if (canConduct(facing) && oppositeNode.canReceive(facing.getOpposite())) {
-                operator.apply(world, pos.relative(facing), facing.getOpposite());
+                operator.apply(level, pos.relative(facing), facing.getOpposite());
             }
         }
     }
 
     @Nullable
     public BlockEntity getFacingTile() {
-        return world.getBlockEntity(pos.relative(getDirection()));
+        return level.getBlockEntity(pos.relative(getDirection()));
     }
 
     public Direction getDirection() {
         if (direction == null) {
-            BlockState state = world.getBlockState(pos);
+            BlockState state = level.getBlockState(pos);
 
             if (state.getBlock() instanceof BaseBlock) {
                 direction = state.getValue(((BaseBlock) state.getBlock()).getDirection().getProperty());

@@ -7,7 +7,6 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ExternalStorageContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
@@ -29,8 +28,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nullable;
 
 public class ExternalStorageBlock extends CableBlock {
     private static final VoxelShape HEAD_NORTH = Shapes.or(box(3, 3, 0, 13, 13, 2), HOLDER_NORTH);
@@ -97,9 +94,9 @@ public class ExternalStorageBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new PositionalTileContainerProvider<ExternalStorageTile>(
                     new TranslatableComponent("gui.refinedstorage.external_storage"),
@@ -115,11 +112,11 @@ public class ExternalStorageBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
-        if (!world.isClientSide) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos));
+        if (!level.isClientSide) {
+            INetworkNode node = NetworkUtils.getNodeFromTile(level.getBlockEntity(pos));
 
             if (node instanceof ExternalStorageNetworkNode &&
                 node.getNetwork() != null &&

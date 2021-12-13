@@ -23,15 +23,15 @@ public interface INetworkNodeVisitor {
      */
     interface Operator {
         /**
-         * Calling this method in {@link #visit(Operator)} will make the network graph scan the given world and position.
+         * Calling this method in {@link #visit(Operator)} will make the network graph scan the given level and position.
          * If there is another {@link INetworkNodeVisitor} at that position, it will call that visitor.
          * If there is no {@link INetworkNodeVisitor} at that position, it will use a default implementation which scans neighbors.
          *
-         * @param world the world
+         * @param level the level
          * @param pos   the position
          * @param side  the side
          */
-        void apply(Level world, BlockPos pos, @Nullable Direction side);
+        void apply(Level level, BlockPos pos, @Nullable Direction side);
 
         /**
          * Returns whether the network graph is scanning in simulation mode.

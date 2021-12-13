@@ -4,7 +4,6 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetwor
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.container.StorageContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.StorageTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -15,7 +14,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,9 +36,9 @@ public class StorageBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (!world.isClientSide) {
-            StorageNetworkNode storage = ((StorageTile) world.getBlockEntity(pos)).getNode();
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        if (!level.isClientSide) {
+            StorageNetworkNode storage = ((StorageTile) level.getBlockEntity(pos)).getNode();
 
             if (stack.hasTag() && stack.getTag().hasUUID(StorageNetworkNode.NBT_ID)) {
                 storage.setStorageId(stack.getTag().getUUID(StorageNetworkNode.NBT_ID));
@@ -50,7 +48,7 @@ public class StorageBlock extends NetworkNodeBlock {
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
-        super.setPlacedBy(world, pos, state, entity, stack);
+        super.setPlacedBy(level, pos, state, entity, stack);
     }
 
     @Override
@@ -60,10 +58,10 @@ public class StorageBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!world.isClientSide) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<StorageTile>(
-                ((StorageTile) world.getBlockEntity(pos)).getNode().getTitle(),
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (!level.isClientSide) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<StorageTile>(
+                ((StorageTile) level.getBlockEntity(pos)).getNode().getTitle(),
                 (tile, windowId, inventory, p) -> new StorageContainer(tile, player, windowId),
                 pos
             ), pos));

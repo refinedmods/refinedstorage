@@ -26,7 +26,7 @@ public class NetworkNodeGraphEntry implements INetworkNodeGraphEntry {
 
         NetworkNodeGraphEntry otherItem = (NetworkNodeGraphEntry) other;
 
-        if (node.getWorld().dimension() != otherItem.node.getWorld().dimension()) {
+        if (node.getLevel().dimension() != otherItem.node.getLevel().dimension()) {
             return false;
         }
 
@@ -36,7 +36,7 @@ public class NetworkNodeGraphEntry implements INetworkNodeGraphEntry {
     @Override
     public int hashCode() {
         int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().dimension().hashCode();
+        result = 31 * result + node.getLevel().dimension().hashCode();
         return result;
     }
 }

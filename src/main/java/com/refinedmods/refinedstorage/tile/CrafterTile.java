@@ -32,8 +32,8 @@ public class CrafterTile extends NetworkNodeTile<CrafterNetworkNode> {
 
     @Override
     @Nonnull
-    public CrafterNetworkNode createNode(Level world, BlockPos pos) {
-        return new CrafterNetworkNode(world, pos);
+    public CrafterNetworkNode createNode(Level level, BlockPos pos) {
+        return new CrafterNetworkNode(level, pos);
     }
 
     @Nonnull

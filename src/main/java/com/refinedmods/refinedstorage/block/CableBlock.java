@@ -9,7 +9,6 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.tile.CableTile;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -134,7 +133,7 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
     }
 
     @Override
-    protected void onDirectionChanged(Level world, BlockPos pos, Direction newDirection) {
+    protected void onDirectionChanged(Level level, BlockPos pos, Direction newDirection) {
         // rotate() in BaseBlock "stupidly" changes the direction without checking if our cable connections are still valid.
         // You'd expect that cable connections are not changing when simply changing the direction.
         // But they need to. For example, when rotating a constructor to connect to a neighboring cable, the connection to that neighbor
@@ -142,25 +141,25 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
         // This is already checked in hasNode().
         // But since rotate() doesn't invalidate that connection, we need to do it here.
         // Ideally, this code would be in rotate(). But rotate() doesn't have any data about the position and world, so we need to do it here.
-        world.setBlockAndUpdate(pos, getState(world.getBlockState(pos), world, pos));
+        level.setBlockAndUpdate(pos, getState(level.getBlockState(pos), level, pos));
 
 
         //when rotating skip rotations blocked by covers
         BlockDirection dir = getDirection();
         if (dir != BlockDirection.NONE) {
-            if (isSideCovered(world.getBlockEntity(pos), newDirection)) {
-                BlockState newState = rotate(world.getBlockState(pos), Rotation.CLOCKWISE_90);
-                world.setBlockAndUpdate(pos, newState);
+            if (isSideCovered(level.getBlockEntity(pos), newDirection)) {
+                BlockState newState = rotate(level.getBlockState(pos), Rotation.CLOCKWISE_90);
+                level.setBlockAndUpdate(pos, newState);
             }
         }
 
-        super.onDirectionChanged(world, pos, newDirection);
+        super.onDirectionChanged(level, pos, newDirection);
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        world.setBlockAndUpdate(pos, getState(world.getBlockState(pos), world, pos));
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, blockIn, fromPos, isMoving);
+        level.setBlockAndUpdate(pos, getState(level.getBlockState(pos), level, pos));
     }
 
     @Nullable

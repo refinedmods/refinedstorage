@@ -46,14 +46,14 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading) {
-                WorldUtils.updateBlock(world, pos);
+                WorldUtils.updateBlock(level, pos);
             }
         });
 
     private final FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
         .addListener((handler, slot, reading) -> {
             if (!reading) {
-                WorldUtils.updateBlock(world, pos);
+                WorldUtils.updateBlock(level, pos);
             }
         });
     private final Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
@@ -63,8 +63,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     private int oldAmount = -1;
 
-    public StorageMonitorNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public StorageMonitorNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         } else if (oldAmount != newAmount) {
             oldAmount = newAmount;
 
-            WorldUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(level, pos);
         }
     }
 
@@ -199,7 +199,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
             if (!result.isEmpty() && !player.getInventory().add(result.copy())) {
-                Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), result);
+                Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), result);
             }
         }
     }
@@ -249,7 +249,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     public void setCompare(int compare) {
         this.compare = compare;
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, pos);
 
         markDirty();
     }
@@ -318,14 +318,14 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     @Override
     public int getType() {
-        return world.isClientSide ? StorageMonitorTile.TYPE.getValue() : type;
+        return level.isClientSide ? StorageMonitorTile.TYPE.getValue() : type;
     }
 
     @Override
     public void setType(int type) {
         this.type = type;
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, pos);
         markDirty();
     }
 

@@ -35,8 +35,8 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     private Optional<UUID> tabSelected = Optional.empty();
     private int tabPage;
 
-    public CraftingMonitorNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public CraftingMonitorNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public boolean isActiveOnClient() {
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(pos);
 
         if (state.getBlock() instanceof CraftingMonitorBlock) {
             return state.getValue(NetworkNodeBlock.CONNECTED);
@@ -119,7 +119,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public Optional<UUID> getTabSelected() {
-        return world.isClientSide ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
+        return level.isClientSide ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
     }
 
     public void setTabSelected(Optional<UUID> tabSelected) {
@@ -128,7 +128,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public int getTabPage() {
-        return world.isClientSide ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
+        return level.isClientSide ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
     }
 
     public void setTabPage(int tabPage) {

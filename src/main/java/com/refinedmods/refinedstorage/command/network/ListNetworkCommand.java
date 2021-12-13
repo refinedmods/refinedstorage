@@ -60,9 +60,9 @@ public class ListNetworkCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
+        ServerLevel level = DimensionArgument.getDimension(context, "dimension");
 
-        API.instance().getNetworkManager(world)
+        API.instance().getNetworkManager(level)
             .all()
             .stream()
             .map(NetworkInList::new)

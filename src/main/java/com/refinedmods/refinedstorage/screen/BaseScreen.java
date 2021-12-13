@@ -41,20 +41,15 @@ import java.util.stream.Collectors;
 
 public abstract class BaseScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
     public static final int Z_LEVEL_ITEMS = 100;
-    public static final int Z_LEVEL_TOOLTIPS = 500;
     public static final int Z_LEVEL_QTY = 300;
 
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
     private static final Component ALTERNATIVES_TEXT = new TranslatableComponent("gui.refinedstorage.alternatives");
-
-    private final List<SideButton> sideButtons = new ArrayList<>();
-
-    private final Logger logger = LogManager.getLogger(getClass());
-
     protected final Inventory inventory;
-
+    private final List<SideButton> sideButtons = new ArrayList<>();
+    private final Logger logger = LogManager.getLogger(getClass());
     private int sideButtonY;
 
     protected BaseScreen(T container, int xSize, int ySize, Inventory inventory, Component title) {

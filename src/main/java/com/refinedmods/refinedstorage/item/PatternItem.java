@@ -64,22 +64,10 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
         super(new Item.Properties().tab(RS.MAIN_GROUP));
     }
 
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        super.initializeClient(consumer);
-
-        consumer.accept(new IItemRenderProperties() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return renderer.get();
-            }
-        });
-    }
-
-    public static ICraftingPattern fromCache(Level world, ItemStack stack) {
+    public static ICraftingPattern fromCache(Level level, ItemStack stack) {
         ICraftingPattern pattern = CACHE.computeIfAbsent(
             new ItemStackKey(stack),
-            s -> CraftingPatternFactory.INSTANCE.create(world, null, s.getStack())
+            s -> CraftingPatternFactory.INSTANCE.create(level, null, s.getStack())
         );
 
         // A number that is not too crazy but hopefully is not normally reachable,
@@ -223,14 +211,26 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        super.initializeClient(consumer);
+
+        consumer.accept(new IItemRenderProperties() {
+            @Override
+            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                return renderer.get();
+            }
+        });
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (!stack.hasTag()) {
             return;
         }
 
-        ICraftingPattern pattern = fromCache(world, stack);
+        ICraftingPattern pattern = fromCache(level, stack);
 
         if (pattern.isValid()) {
             if (Screen.hasShiftDown() || isProcessing(stack)) {
@@ -289,8 +289,8 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        if (!world.isClientSide && player.isCrouching()) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide && player.isCrouching()) {
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, new ItemStack(RSItems.PATTERN.get(), player.getItemInHand(hand).getCount()));
         }
 
@@ -299,7 +299,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
 
     @Override
     @Nonnull
-    public ICraftingPattern create(Level world, ItemStack stack, ICraftingPatternContainer container) {
-        return CraftingPatternFactory.INSTANCE.create(world, container, stack);
+    public ICraftingPattern create(Level level, ItemStack stack, ICraftingPatternContainer container) {
+        return CraftingPatternFactory.INSTANCE.create(level, container, stack);
     }
 }

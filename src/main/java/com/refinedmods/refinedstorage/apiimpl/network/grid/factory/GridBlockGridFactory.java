@@ -38,8 +38,8 @@ public class GridBlockGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public BlockEntity getRelevantTile(Level world, BlockPos pos) {
-        return world.getBlockEntity(pos);
+    public BlockEntity getRelevantTile(Level level, BlockPos pos) {
+        return level.getBlockEntity(pos);
     }
 
     @Override

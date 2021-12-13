@@ -24,7 +24,7 @@ import java.util.*;
 public class CraftingPatternFactory {
     public static final CraftingPatternFactory INSTANCE = new CraftingPatternFactory();
 
-    public ICraftingPattern create(Level world, ICraftingPatternContainer container, ItemStack stack) {
+    public ICraftingPattern create(Level level, ICraftingPatternContainer container, ItemStack stack) {
         CraftingPatternContext context = new CraftingPatternContext(container, stack);
 
         boolean processing = PatternItem.isProcessing(stack);
@@ -55,7 +55,7 @@ public class CraftingPatternFactory {
                     fillCraftingInputs(inv, stack, inputs, i);
                 }
 
-                Optional<CraftingRecipe> foundRecipe = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, world);
+                Optional<CraftingRecipe> foundRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, level);
                 if (foundRecipe.isPresent()) {
                     recipe = foundRecipe.get();
 

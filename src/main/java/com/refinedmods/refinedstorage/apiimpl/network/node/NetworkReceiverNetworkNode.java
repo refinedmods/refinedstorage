@@ -8,8 +8,8 @@ import net.minecraft.world.level.Level;
 public class NetworkReceiverNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_receiver");
 
-    public NetworkReceiverNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public NetworkReceiverNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override

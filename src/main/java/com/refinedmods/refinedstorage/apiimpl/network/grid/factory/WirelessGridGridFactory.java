@@ -32,7 +32,7 @@ public class WirelessGridGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public BlockEntity getRelevantTile(Level world, BlockPos pos) {
+    public BlockEntity getRelevantTile(Level level, BlockPos pos) {
         return null;
     }
 

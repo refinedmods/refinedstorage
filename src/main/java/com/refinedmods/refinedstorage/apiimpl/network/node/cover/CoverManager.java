@@ -113,7 +113,7 @@ public class CoverManager {
             node.markDirty();
 
             if (node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getLevel(), node.getNetwork().getPosition());
             }
 
             return true;
@@ -130,7 +130,7 @@ public class CoverManager {
             node.markDirty();
 
             if (node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getLevel(), node.getNetwork().getPosition());
             }
 
             return cover;

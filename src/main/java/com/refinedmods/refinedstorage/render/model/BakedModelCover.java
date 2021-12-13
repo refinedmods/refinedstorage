@@ -37,6 +37,7 @@ public class BakedModelCover extends BakedModelCableCover {
     });
     private ItemStack stack;
     private CoverType type;
+
     public BakedModelCover(ItemStack stack, CoverType type) {
         super(null);
 
@@ -59,7 +60,7 @@ public class BakedModelCover extends BakedModelCableCover {
     public ItemOverrides getOverrides() {
         return new ItemOverrides() {
             @Override
-            public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p) {
+            public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int p) {
                 return new BakedModelCover(stack, type);
             }
         };

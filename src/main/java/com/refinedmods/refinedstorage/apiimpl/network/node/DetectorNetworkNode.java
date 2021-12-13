@@ -46,8 +46,8 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     private boolean powered = false;
     private boolean wasPowered;
 
-    public DetectorNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public DetectorNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -59,11 +59,11 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (powered != wasPowered && world.isLoaded(pos)) {
+        if (powered != wasPowered && level.isLoaded(pos)) {
             wasPowered = powered;
 
-            world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(DetectorBlock.POWERED, powered));
-            world.updateNeighborsAt(pos, world.getBlockState(pos).getBlock());
+            level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(DetectorBlock.POWERED, powered));
+            level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
         }
 
         if (canUpdate() && ticks % SPEED == 0) {
@@ -212,7 +212,7 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return world.isClientSide ? DetectorTile.TYPE.getValue() : type;
+        return level.isClientSide ? DetectorTile.TYPE.getValue() : type;
     }
 
     @Override

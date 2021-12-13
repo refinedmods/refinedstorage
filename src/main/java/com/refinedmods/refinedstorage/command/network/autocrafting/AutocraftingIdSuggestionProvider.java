@@ -18,9 +18,9 @@ import java.util.concurrent.CompletableFuture;
 public class AutocraftingIdSuggestionProvider implements SuggestionProvider<CommandSourceStack> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
+        ServerLevel level = DimensionArgument.getDimension(context, "dimension");
         BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "pos");
-        INetwork network = API.instance().getNetworkManager(world).getNetwork(pos);
+        INetwork network = API.instance().getNetworkManager(level).getNetwork(pos);
 
         if (network != null) {
             network.getCraftingManager().getTasks().forEach(task -> builder.suggest(task.getId().toString()));

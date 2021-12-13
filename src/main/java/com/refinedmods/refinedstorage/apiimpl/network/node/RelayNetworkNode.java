@@ -10,9 +10,8 @@ import net.minecraft.world.level.Level;
 public class RelayNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "relay");
 
-    public RelayNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
-
+    public RelayNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
         this.redstoneMode = RedstoneMode.LOW;
     }
 

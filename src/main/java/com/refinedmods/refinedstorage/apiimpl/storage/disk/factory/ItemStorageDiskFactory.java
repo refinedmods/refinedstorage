@@ -10,10 +10,10 @@ import com.refinedmods.refinedstorage.item.StorageDiskItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -22,9 +22,9 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
     @Override
-    public IStorageDisk<ItemStack> createFromNbt(ServerLevel world, CompoundTag tag) {
+    public IStorageDisk<ItemStack> createFromNbt(ServerLevel level, CompoundTag tag) {
         ItemStorageDisk disk = new ItemStorageDisk(
-            world,
+            level,
             tag.getInt(ItemStorageDisk.NBT_CAPACITY),
             tag.contains(ItemStorageDisk.NBT_OWNER) ? tag.getUUID(ItemStorageDisk.NBT_OWNER) : null
         );
@@ -71,7 +71,7 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
     }
 
     @Override
-    public IStorageDisk<ItemStack> create(ServerLevel world, int capacity, @Nullable UUID owner) {
-        return new ItemStorageDisk(world, capacity, owner);
+    public IStorageDisk<ItemStack> create(ServerLevel level, int capacity, @Nullable UUID owner) {
+        return new ItemStorageDisk(level, capacity, owner);
     }
 }

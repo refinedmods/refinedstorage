@@ -41,8 +41,8 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (isValid(stack)) {
             UUID id = getId(stack);
@@ -65,16 +65,16 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack storageStack = player.getItemInHand(hand);
 
-        if (!world.isClientSide && player.isCrouching() && type != FluidStorageType.CREATIVE) {
+        if (!level.isClientSide && player.isCrouching() && type != FluidStorageType.CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 
             if (isValid(storageStack)) {
                 diskId = getId(storageStack);
-                disk = API.instance().getStorageDiskManager((ServerLevel) world).get(diskId);
+                disk = API.instance().getStorageDiskManager((ServerLevel) level).get(diskId);
             }
 
             // Newly created fluid storages won't have a tag yet, so allow invalid disks as well.
@@ -82,24 +82,24 @@ public class FluidStorageBlockItem extends BaseBlockItem {
                 ItemStack fluidStoragePart = new ItemStack(FluidStoragePartItem.getByType(type));
 
                 if (!player.getInventory().add(fluidStoragePart.copy())) {
-                    Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), fluidStoragePart);
+                    Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), fluidStoragePart);
                 }
 
                 ItemStack processor = new ItemStack(RSItems.PROCESSORS.get(ProcessorItem.Type.BASIC).get());
 
                 if (!player.getInventory().add(processor.copy())) {
-                    Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), processor);
+                    Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), processor);
                 }
 
                 ItemStack bucket = new ItemStack(Items.BUCKET);
 
                 if (!player.getInventory().add(bucket.copy())) {
-                    Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), bucket);
+                    Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), bucket);
                 }
 
                 if (disk != null) {
-                    API.instance().getStorageDiskManager((ServerLevel) world).remove(diskId);
-                    API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
+                    API.instance().getStorageDiskManager((ServerLevel) level).remove(diskId);
+                    API.instance().getStorageDiskManager((ServerLevel) level).markForSaving();
                 }
 
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING.get()));
@@ -110,7 +110,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public int getEntityLifespan(ItemStack stack, Level world) {
+    public int getEntityLifespan(ItemStack stack, Level level) {
         return Integer.MAX_VALUE;
     }
 

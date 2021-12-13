@@ -4,7 +4,6 @@ import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ImporterContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.ImporterTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
@@ -25,8 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nullable;
 
 public class ImporterBlock extends CableBlock {
     private static final VoxelShape LINE_NORTH_1 = box(6, 6, 4, 10, 10, 6);
@@ -116,9 +113,9 @@ public class ImporterBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getLocation())) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getLocation())) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new PositionalTileContainerProvider<ImporterTile>(
                     new TranslatableComponent("gui.refinedstorage.importer"),

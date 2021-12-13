@@ -85,16 +85,16 @@ public class SerializationUtil {
         return tag;
     }
 
-    public static ICraftingPattern readPatternFromNbt(CompoundTag tag, Level world) throws CraftingTaskReadException {
+    public static ICraftingPattern readPatternFromNbt(CompoundTag tag, Level level) throws CraftingTaskReadException {
         BlockPos containerPos = BlockPos.of(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
-        INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(containerPos);
+        INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) level).getNode(containerPos);
 
         if (node instanceof ICraftingPatternContainer) {
             ItemStack stack = ItemStack.of(tag.getCompound(NBT_PATTERN_STACK));
 
             if (stack.getItem() instanceof ICraftingPatternProvider) {
-                return ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) node);
+                return ((ICraftingPatternProvider) stack.getItem()).create(level, stack, (ICraftingPatternContainer) node);
             } else {
                 throw new CraftingTaskReadException("Pattern stack is not a crafting pattern provider");
             }

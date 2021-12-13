@@ -78,9 +78,9 @@ public interface INetworkNode {
     BlockPos getPos();
 
     /**
-     * @return the world of this network node
+     * @return the level of this network node
      */
-    Level getWorld();
+    Level getLevel();
 
     /**
      * Marks this node as dirty for saving.

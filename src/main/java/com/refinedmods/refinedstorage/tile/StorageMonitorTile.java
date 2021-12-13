@@ -38,8 +38,8 @@ public class StorageMonitorTile extends NetworkNodeTile<StorageMonitorNetworkNod
     }
 
     @Override
-    public StorageMonitorNetworkNode createNode(Level world, BlockPos pos) {
-        return new StorageMonitorNetworkNode(world, pos);
+    public StorageMonitorNetworkNode createNode(Level level, BlockPos pos) {
+        return new StorageMonitorNetworkNode(level, pos);
     }
 
     @Override

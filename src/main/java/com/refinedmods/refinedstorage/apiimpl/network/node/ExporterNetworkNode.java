@@ -38,7 +38,8 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
-    private final CoverManager coverManager;    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
+    private final CoverManager coverManager;
+    private int compare = IComparer.COMPARE_NBT;    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && !getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
@@ -67,13 +68,11 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 }
             }
         });
-    private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
-
     private int filterSlot;
 
-    public ExporterNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public ExporterNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
         this.coverManager = new CoverManager(this);
     }
 
@@ -86,7 +85,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (canUpdate() && ticks % upgrades.getSpeed() == 0 && world.isLoaded(pos)) {
+        if (canUpdate() && ticks % upgrades.getSpeed() == 0 && level.isLoaded(pos)) {
             if (type == IType.ITEMS) {
                 IItemHandler handler = WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
@@ -307,7 +306,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return world.isClientSide ? ExporterTile.TYPE.getValue() : type;
+        return level.isClientSide ? ExporterTile.TYPE.getValue() : type;
     }
 
     @Override
@@ -331,6 +330,8 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public CoverManager getCoverManager() {
         return coverManager;
     }
+
+
 
 
 }

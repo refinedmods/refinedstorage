@@ -35,16 +35,16 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        InteractionResult result = RSBlocks.CRAFTING_MONITOR.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        InteractionResult result = RSBlocks.CRAFTING_MONITOR.changeBlockColor(state, player.getItemInHand(hand), level, pos, player);
         if (result != InteractionResult.PASS) {
             return result;
         }
 
-        if (!world.isClientSide) {
-            CraftingMonitorTile tile = (CraftingMonitorTile) world.getBlockEntity(pos);
+        if (!level.isClientSide) {
+            CraftingMonitorTile tile = (CraftingMonitorTile) level.getBlockEntity(pos);
 
-            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new CraftingMonitorContainerProvider(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile),
                 pos

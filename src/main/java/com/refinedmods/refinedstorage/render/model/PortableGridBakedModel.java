@@ -138,7 +138,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     private class CustomItemOverrideList extends ItemOverrides {
         @Nullable
         @Override
-        public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p) {
+        public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int p) {
             PortableGrid portableGrid = new PortableGrid(null, stack, new PlayerSlot(-1));
 
             if (portableGrid.isGridActive()) {

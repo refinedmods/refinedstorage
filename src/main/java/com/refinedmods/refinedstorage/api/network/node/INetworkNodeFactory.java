@@ -14,10 +14,10 @@ public interface INetworkNodeFactory {
      * Creates a network node.
      *
      * @param tag   the tag on disk
-     * @param world the world
+     * @param level the level
      * @param pos   the pos
      * @return the network node
      */
     @Nonnull
-    INetworkNode create(CompoundTag tag, Level world, BlockPos pos);
+    INetworkNode create(CompoundTag tag, Level level, BlockPos pos);
 }

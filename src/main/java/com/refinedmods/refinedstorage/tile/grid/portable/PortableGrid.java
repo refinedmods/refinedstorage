@@ -128,6 +128,10 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         StackUtils.readItems(disk, 4, stack.getTag());
         StackUtils.readItems(filter, 0, stack.getTag());
+    }
+
+    public void onOpen() {
+        drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getOpenUsage());
     }    private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(((handler, slot, reading) -> {
@@ -165,10 +169,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                 StackUtils.writeItems(handler, 4, stack.getTag());
             }
         }));
-
-    public void onOpen() {
-        drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getOpenUsage());
-    }
 
     public ItemStack getStack() {
         return stack;
@@ -508,6 +508,8 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }
+
+
 
 
 }

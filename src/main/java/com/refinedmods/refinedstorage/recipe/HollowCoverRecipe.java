@@ -46,7 +46,7 @@ public class HollowCoverRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(CraftingContainer inv, Level level) {
         List<ItemStack> list = Lists.newArrayList();
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack = inv.getItem(i);

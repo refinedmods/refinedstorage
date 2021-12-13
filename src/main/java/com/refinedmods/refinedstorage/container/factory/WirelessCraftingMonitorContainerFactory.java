@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonit
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraftforge.network.IContainerFactory;
+import net.minecraftforge.network.IContainerFactory;
 
 public class WirelessCraftingMonitorContainerFactory implements IContainerFactory<CraftingMonitorContainer> {
     @Override

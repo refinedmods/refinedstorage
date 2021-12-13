@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 public class NetworkItemPropertyGetter implements ItemPropertyFunction {
     @Override
-    public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p) {
+    public float call(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int p) {
         return entity != null && NetworkItem.isValid(stack) ? 1.0f : 0.0f;
     }
 }

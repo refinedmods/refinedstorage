@@ -33,11 +33,11 @@ public class CrafterBlock extends ColoredNetworkBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, placer, stack);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!world.isClientSide) {
-            BlockEntity tile = world.getBlockEntity(pos);
+        if (!level.isClientSide) {
+            BlockEntity tile = level.getBlockEntity(pos);
 
             if (tile instanceof CrafterTile && stack.hasCustomHoverName()) {
                 ((CrafterTile) tile).getNode().setDisplayName(stack.getHoverName());
@@ -48,17 +48,17 @@ public class CrafterBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        InteractionResult result = RSBlocks.CRAFTER.changeBlockColor(state, player.getItemInHand(hand), world, pos, player);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        InteractionResult result = RSBlocks.CRAFTER.changeBlockColor(state, player.getItemInHand(hand), level, pos, player);
         if (result != InteractionResult.PASS) {
             return result;
         }
 
-        if (!world.isClientSide) {
-            return NetworkUtils.attempt(world, pos, player, () -> NetworkHooks.openGui(
+        if (!level.isClientSide) {
+            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new PositionalTileContainerProvider<CrafterTile>(
-                    ((CrafterTile) world.getBlockEntity(pos)).getNode().getName(),
+                    ((CrafterTile) level.getBlockEntity(pos)).getNode().getName(),
                     (tile, windowId, inventory, p) -> new CrafterContainer(tile, player, windowId),
                     pos
                 ),

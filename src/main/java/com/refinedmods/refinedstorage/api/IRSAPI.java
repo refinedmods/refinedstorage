@@ -57,20 +57,20 @@ public interface IRSAPI {
     INetworkNodeRegistry getNetworkNodeRegistry();
 
     /**
-     * Gets a network node manager for a given world.
+     * Gets a network node manager for a given level.
      *
-     * @param world world
-     * @return the network node manager for a given world
+     * @param level level
+     * @return the network node manager for a given level
      */
-    INetworkNodeManager getNetworkNodeManager(ServerLevel world);
+    INetworkNodeManager getNetworkNodeManager(ServerLevel level);
 
     /**
-     * Gets a network manager for a given world.
+     * Gets a network manager for a given level.
      *
-     * @param world world
-     * @return the network manager for a given world
+     * @param level level
+     * @return the network manager for a given level
      */
-    INetworkManager getNetworkManager(ServerLevel world);
+    INetworkManager getNetworkManager(ServerLevel level);
 
     /**
      * @return the crafting task registry
@@ -127,11 +127,11 @@ public interface IRSAPI {
     IStorageDiskRegistry getStorageDiskRegistry();
 
     /**
-     * @param anyWorld any world associated with the server
+     * @param level any level associated with the server
      * @return the storage disk manager
      */
     @Nonnull
-    IStorageDiskManager getStorageDiskManager(ServerLevel anyWorld);
+    IStorageDiskManager getStorageDiskManager(ServerLevel level);
 
     /**
      * @return the storage disk sync manager
@@ -143,7 +143,7 @@ public interface IRSAPI {
      * @return the storage tracker manager
      */
     @Nonnull
-    IStorageTrackerManager getStorageTrackerManager(ServerLevel anyWorld);
+    IStorageTrackerManager getStorageTrackerManager(ServerLevel level);
 
     /**
      * Adds an external storage provider for the given storage type.
@@ -160,22 +160,22 @@ public interface IRSAPI {
     <T> Set<IExternalStorageProvider<T>> getExternalStorageProviders(StorageType type);
 
     /**
-     * @param world    the world
+     * @param level    the level
      * @param capacity the capacity
      * @param owner    the owner or null if no owner
      * @return a storage disk
      */
     @Nonnull
-    IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel world, int capacity, @Nullable Player owner);
+    IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel level, int capacity, @Nullable Player owner);
 
     /**
-     * @param world    the world
+     * @param level    the level
      * @param capacity the capacity in mB
      * @param owner    the owner or null if no owner
      * @return a fluid storage disk
      */
     @Nonnull
-    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel world, int capacity, @Nullable Player owner);
+    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel level, int capacity, @Nullable Player owner);
 
     /**
      * Creates crafting request info for an item.

@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.DetectorContainer;
 import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.DetectorTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
@@ -27,8 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nullable;
 
 public class DetectorBlock extends ColoredNetworkBlock {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
@@ -70,18 +67,18 @@ public class DetectorBlock extends ColoredNetworkBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ColorMap<DetectorBlock> colorMap = RSBlocks.DETECTOR;
         DyeColor color = DyeColor.getColor(player.getItemInHand(hand));
 
         if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
             BlockState newState = colorMap.get(color).get().defaultBlockState().setValue(POWERED, state.getValue(POWERED));
 
-            return RSBlocks.DETECTOR.setBlockState(newState, player.getItemInHand(hand), world, pos, player);
+            return RSBlocks.DETECTOR.setBlockState(newState, player.getItemInHand(hand), level, pos, player);
         }
 
-        if (!world.isClientSide) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
+        if (!level.isClientSide) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new PositionalTileContainerProvider<DetectorTile>(
                     new TranslatableComponent("gui.refinedstorage.detector"),

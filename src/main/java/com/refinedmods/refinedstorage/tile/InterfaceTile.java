@@ -39,7 +39,7 @@ public class InterfaceTile extends NetworkNodeTile<InterfaceNetworkNode> {
 
     @Override
     @Nonnull
-    public InterfaceNetworkNode createNode(Level world, BlockPos pos) {
-        return new InterfaceNetworkNode(world, pos);
+    public InterfaceNetworkNode createNode(Level level, BlockPos pos) {
+        return new InterfaceNetworkNode(level, pos);
     }
 }

@@ -34,9 +34,9 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
-        if (!world.isClientSide) {
-            FluidStorageNetworkNode storage = ((FluidStorageTile) world.getBlockEntity(pos)).getNode();
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
+        if (!level.isClientSide) {
+            FluidStorageNetworkNode storage = ((FluidStorageTile) level.getBlockEntity(pos)).getNode();
 
             if (stack.hasTag() && stack.getTag().hasUUID(FluidStorageNetworkNode.NBT_ID)) {
                 storage.setStorageId(stack.getTag().getUUID(FluidStorageNetworkNode.NBT_ID));
@@ -46,7 +46,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
         }
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
-        super.setPlacedBy(world, pos, state, player, stack);
+        super.setPlacedBy(level, pos, state, player, stack);
     }
 
     @Override
@@ -56,10 +56,10 @@ public class FluidStorageBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!world.isClientSide) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<FluidStorageTile>(
-                ((FluidStorageTile) world.getBlockEntity(pos)).getNode().getTitle(),
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (!level.isClientSide) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<FluidStorageTile>(
+                ((FluidStorageTile) level.getBlockEntity(pos)).getNode().getTitle(),
                 (tile, windowId, inventory, p) -> new FluidStorageContainer(tile, player, windowId),
                 pos
             ), pos));

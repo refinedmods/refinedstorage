@@ -30,7 +30,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     public static final int VERSION = 1;
 
     @Nullable
-    private final ServerLevel world;
+    private final ServerLevel level;
     private final int capacity;
     private final Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
     private final UUID owner;
@@ -39,8 +39,8 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public FluidStorageDisk(@Nullable ServerLevel world, int capacity, @Nullable UUID owner) {
-        this.world = world;
+    public FluidStorageDisk(@Nullable ServerLevel level, int capacity, @Nullable UUID owner) {
+        this.level = level;
         this.capacity = capacity;
         this.owner = owner;
     }
@@ -216,8 +216,8 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
             listener.onChanged();
         }
 
-        if (world != null) {
-            API.instance().getStorageDiskManager(world).markForSaving();
+        if (level != null) {
+            API.instance().getStorageDiskManager(level).markForSaving();
         }
     }
 }

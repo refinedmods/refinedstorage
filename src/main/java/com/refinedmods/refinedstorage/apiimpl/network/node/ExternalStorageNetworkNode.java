@@ -64,8 +64,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    public ExternalStorageNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public ExternalStorageNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
         this.coverManager = new CoverManager(this);
     }
 
@@ -87,7 +87,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     public void update() {
         super.update();
 
-        if (canUpdate() && world.isLoaded(pos)) {
+        if (canUpdate() && level.isLoaded(pos)) {
             if (networkTicks++ == 0) {
                 updateStorage(network, InvalidateCause.INITIAL_TICK_INVALIDATION);
 
@@ -290,7 +290,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     @Override
     public int getType() {
-        return world.isClientSide ? ExternalStorageTile.TYPE.getValue() : type;
+        return level.isClientSide ? ExternalStorageTile.TYPE.getValue() : type;
     }
 
     @Override

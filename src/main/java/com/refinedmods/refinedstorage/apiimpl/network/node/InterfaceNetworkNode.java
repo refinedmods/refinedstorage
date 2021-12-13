@@ -43,8 +43,8 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
 
     private int currentSlot = 0;
 
-    public InterfaceNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public InterfaceNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos.relative(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerLevel) level).getNode(pos.relative(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.isActive() &&

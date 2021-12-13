@@ -42,8 +42,8 @@ public class ConstructorTile extends NetworkNodeTile<ConstructorNetworkNode> {
 
     @Override
     @Nonnull
-    public ConstructorNetworkNode createNode(Level world, BlockPos pos) {
-        return new ConstructorNetworkNode(world, pos);
+    public ConstructorNetworkNode createNode(Level level, BlockPos pos) {
+        return new ConstructorNetworkNode(level, pos);
     }
 
     @Nonnull

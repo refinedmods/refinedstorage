@@ -33,7 +33,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    WorldUtils.updateBlock(diskManipulator.getWorld(), diskManipulator.getPos());
+                    WorldUtils.updateBlock(diskManipulator.getLevel(), diskManipulator.getPos());
                 }
             },
             diskManipulator

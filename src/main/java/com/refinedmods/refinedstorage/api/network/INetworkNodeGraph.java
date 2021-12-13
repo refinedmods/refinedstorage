@@ -15,10 +15,10 @@ public interface INetworkNodeGraph {
      * Rebuilds the network graph.
      *
      * @param action whether to perform or simulate
-     * @param world  the origin world
+     * @param level  the origin level
      * @param origin the origin, usually the network position
      */
-    void invalidate(Action action, Level world, BlockPos origin);
+    void invalidate(Action action, Level level, BlockPos origin);
 
     /**
      * Runs an action on the network.

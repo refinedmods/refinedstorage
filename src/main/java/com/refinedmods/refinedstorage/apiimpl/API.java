@@ -128,21 +128,21 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeManager getNetworkNodeManager(ServerLevel world) {
-        return world.getDataStorage().computeIfAbsent(tag -> {
-            NetworkNodeManager manager = new NetworkNodeManager( world);
+    public INetworkNodeManager getNetworkNodeManager(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(tag -> {
+            NetworkNodeManager manager = new NetworkNodeManager(level);
             manager.load(tag);
             return manager;
-        }, () -> new NetworkNodeManager(world), NetworkNodeManager.NAME);
+        }, () -> new NetworkNodeManager(level), NetworkNodeManager.NAME);
     }
 
     @Override
-    public INetworkManager getNetworkManager(ServerLevel world) {
-        return world.getDataStorage().computeIfAbsent(tag -> {
-            NetworkManager manager = new NetworkManager(world);
+    public INetworkManager getNetworkManager(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(tag -> {
+            NetworkManager manager = new NetworkManager(level);
             manager.load(tag);
             return manager;
-        }, () -> new NetworkManager(world), NetworkManager.NAME);
+        }, () -> new NetworkManager(level), NetworkManager.NAME);
     }
 
     @Override
@@ -201,14 +201,14 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IStorageDiskManager getStorageDiskManager(ServerLevel anyWorld) {
-        ServerLevel world = anyWorld.getServer().overworld(); // Get the overworld
+    public IStorageDiskManager getStorageDiskManager(ServerLevel level) {
+        ServerLevel overworld = level.getServer().overworld(); // Get the overworld
 
-        return world.getDataStorage().computeIfAbsent(tag -> {
-            StorageDiskManager manager = new StorageDiskManager(world);
+        return overworld.getDataStorage().computeIfAbsent(tag -> {
+            StorageDiskManager manager = new StorageDiskManager(overworld);
             manager.load(tag);
             return manager;
-        }, () -> new StorageDiskManager( world), StorageDiskManager.NAME);
+        }, () -> new StorageDiskManager(overworld), StorageDiskManager.NAME);
     }
 
     @Nonnull
@@ -219,10 +219,10 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IStorageTrackerManager getStorageTrackerManager(ServerLevel anyWorld) {
-        ServerLevel world = anyWorld.getServer().overworld(); // Get the overworld
+    public IStorageTrackerManager getStorageTrackerManager(ServerLevel level) {
+        ServerLevel overworld = level.getServer().overworld(); // Get the overworld
 
-        return world.getDataStorage().computeIfAbsent(tag -> {
+        return overworld.getDataStorage().computeIfAbsent(tag -> {
             StorageTrackerManager manager = new StorageTrackerManager();
             manager.load(tag);
             return manager;
@@ -243,22 +243,22 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel world, int capacity, @Nullable Player owner) {
-        if (world == null) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel level, int capacity, @Nullable Player owner) {
+        if (level == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new ItemStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
+        return new ItemStorageDisk(level, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel world, int capacity, @Nullable Player owner) {
-        if (world == null) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel level, int capacity, @Nullable Player owner) {
+        if (level == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
 
-        return new FluidStorageDisk(world, capacity, owner == null ? null : owner.getGameProfile().getId());
+        return new FluidStorageDisk(level, capacity, owner == null ? null : owner.getGameProfile().getId());
     }
 
     @Override

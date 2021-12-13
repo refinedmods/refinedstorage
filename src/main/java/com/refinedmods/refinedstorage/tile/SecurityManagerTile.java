@@ -15,7 +15,7 @@ public class SecurityManagerTile extends NetworkNodeTile<SecurityManagerNetworkN
 
     @Override
     @Nonnull
-    public SecurityManagerNetworkNode createNode(Level world, BlockPos pos) {
-        return new SecurityManagerNetworkNode(world, pos);
+    public SecurityManagerNetworkNode createNode(Level level, BlockPos pos) {
+        return new SecurityManagerNetworkNode(level, pos);
     }
 }

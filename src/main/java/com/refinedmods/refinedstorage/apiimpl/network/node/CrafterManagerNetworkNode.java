@@ -20,8 +20,8 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     private int size = IGrid.SIZE_STRETCH;
     private int searchBoxMode = IGrid.SEARCH_BOX_MODE_NORMAL;
 
-    public CrafterManagerNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public CrafterManagerNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public int getSize() {
-        return world.isClientSide ? CrafterManagerTile.SIZE.getValue() : size;
+        return level.isClientSide ? CrafterManagerTile.SIZE.getValue() : size;
     }
 
     public void setSize(int size) {
@@ -66,7 +66,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public int getSearchBoxMode() {
-        return world.isClientSide ? CrafterManagerTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return level.isClientSide ? CrafterManagerTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {
@@ -74,7 +74,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public boolean isActiveOnClient() {
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(pos);
 
         if (state.getBlock() instanceof CrafterManagerBlock) {
             return state.getValue(NetworkNodeBlock.CONNECTED);

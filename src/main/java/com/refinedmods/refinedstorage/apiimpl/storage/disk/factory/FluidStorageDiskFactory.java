@@ -9,10 +9,10 @@ import com.refinedmods.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.refinedmods.refinedstorage.item.FluidStorageDiskItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -22,9 +22,9 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
 
     @Override
-    public IStorageDisk<FluidStack> createFromNbt(ServerLevel world, CompoundTag tag) {
+    public IStorageDisk<FluidStack> createFromNbt(ServerLevel level, CompoundTag tag) {
         FluidStorageDisk disk = new FluidStorageDisk(
-            world,
+            level,
             tag.getInt(FluidStorageDisk.NBT_CAPACITY),
             tag.contains(FluidStorageDisk.NBT_OWNER) ? tag.getUUID(FluidStorageDisk.NBT_OWNER) : null
         );
@@ -69,7 +69,7 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
     }
 
     @Override
-    public IStorageDisk<FluidStack> create(ServerLevel world, int capacity, @Nullable UUID owner) {
-        return new FluidStorageDisk(world, capacity, owner);
+    public IStorageDisk<FluidStack> create(ServerLevel level, int capacity, @Nullable UUID owner) {
+        return new FluidStorageDisk(level, capacity, owner);
     }
 }

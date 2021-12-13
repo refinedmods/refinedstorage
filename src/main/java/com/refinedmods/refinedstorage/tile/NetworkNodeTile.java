@@ -98,7 +98,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
             manager.markForSaving();
 
             if (node != null && node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getLevel(), node.getNetwork().getPosition());
             }
         }
     }
@@ -107,7 +107,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         return removedNode;
     }
 
-    public abstract N createNode(Level world, BlockPos pos);
+    public abstract N createNode(Level level, BlockPos pos);
 
     @Nonnull
     @Override

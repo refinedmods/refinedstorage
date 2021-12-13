@@ -45,8 +45,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (!world.isClientSide) {
-                ((FluidInterfaceTile) world.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_IN);
+            if (!level.isClientSide) {
+                ((FluidInterfaceTile) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_IN);
             }
 
             markDirty();
@@ -61,8 +61,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING).addListener(new NetworkNodeInventoryListener(this));
 
-    public FluidInterfaceNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public FluidInterfaceNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos.relative(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerLevel) level).getNode(pos.relative(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.isActive() &&
@@ -250,8 +250,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     private void onTankOutChanged() {
-        if (!world.isClientSide && world.isLoaded(pos)) {
-            ((FluidInterfaceTile) world.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
+        if (!level.isClientSide && level.isLoaded(pos)) {
+            ((FluidInterfaceTile) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
         }
 
         markDirty();

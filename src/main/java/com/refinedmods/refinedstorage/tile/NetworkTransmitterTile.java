@@ -40,8 +40,8 @@ public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNe
 
     @Override
     @Nonnull
-    public NetworkTransmitterNetworkNode createNode(Level world, BlockPos pos) {
-        return new NetworkTransmitterNetworkNode(world, pos);
+    public NetworkTransmitterNetworkNode createNode(Level level, BlockPos pos) {
+        return new NetworkTransmitterNetworkNode(level, pos);
     }
 
     @Nonnull

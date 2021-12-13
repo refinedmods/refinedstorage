@@ -24,6 +24,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
     });
     private final Set<ResourceLocation> textures;
     private final boolean doCaching;
+
     public FullbrightBakedModel(BakedModel base, boolean doCaching, ResourceLocation... textures) {
         super(base);
 

@@ -20,8 +20,8 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.RANGE).addListener(new NetworkNodeInventoryListener(this));
 
-    public WirelessTransmitterNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public WirelessTransmitterNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public ResourceKey<Level> getDimension() {
-        return world.dimension();
+        return level.dimension();
     }
 
     public BaseItemHandler getUpgrades() {
@@ -81,6 +81,6 @@ public class WirelessTransmitterNetworkNode extends NetworkNode implements IWire
 
     @Override
     public void visit(Operator operator) {
-        operator.apply(world, pos.relative(Direction.DOWN), Direction.UP);
+        operator.apply(level, pos.relative(Direction.DOWN), Direction.UP);
     }
 }

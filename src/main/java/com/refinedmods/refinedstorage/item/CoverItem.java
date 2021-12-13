@@ -62,8 +62,8 @@ public class CoverItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
         ItemStack item = getItem(stack);
 
         if (!item.isEmpty()) {
@@ -111,23 +111,23 @@ public class CoverItem extends Item {
     public InteractionResult useOn(UseOnContext context) {
         BlockPos pos = context.getClickedPos();
         Direction facing = context.getClickedFace();
-        Level world = context.getLevel();
+        Level level = context.getLevel();
 
         ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
 
-        BlockEntity tile = world.getBlockEntity(pos);
+        BlockEntity tile = level.getBlockEntity(pos);
 
         // Support placing on the bottom side without too much hassle.
-        if (!canPlaceOn(world, pos, facing)) {
+        if (!canPlaceOn(level, pos, facing)) {
             pos = pos.above();
 
             facing = Direction.DOWN;
 
-            tile = world.getBlockEntity(pos);
+            tile = level.getBlockEntity(pos);
         }
 
-        if (canPlaceOn(world, pos, facing)) {
-            if (world.isClientSide) {
+        if (canPlaceOn(level, pos, facing)) {
+            if (level.isClientSide) {
                 ModelDataManager.requestModelDataRefresh(tile);
                 return InteractionResult.SUCCESS;
             }
@@ -143,8 +143,8 @@ public class CoverItem extends Item {
             if (((ICoverable) node).getCoverManager().setCover(facing, createCover(getItem(stack)))) {
                 context.getPlayer().getItemInHand(context.getHand()).shrink(1);
 
-                WorldUtils.updateBlock(world, pos);
-                API.instance().getNetworkNodeManager((ServerLevel) world).markForSaving();
+                WorldUtils.updateBlock(level, pos);
+                API.instance().getNetworkNodeManager((ServerLevel) level).markForSaving();
                 return InteractionResult.SUCCESS;
             }
 
@@ -155,8 +155,10 @@ public class CoverItem extends Item {
     }
 
 
-    private boolean canPlaceOn(Level world, BlockPos pos, Direction facing) {
-        return world.getBlockEntity(pos) instanceof NetworkNodeTile && ((NetworkNodeTile<?>) world.getBlockEntity(pos)).getNode() instanceof ICoverable && !CableBlock.hasVisualConnectionOnSide(world.getBlockState(pos), facing);
+    private boolean canPlaceOn(Level level, BlockPos pos, Direction facing) {
+        return level.getBlockEntity(pos) instanceof NetworkNodeTile
+            && ((NetworkNodeTile<?>) level.getBlockEntity(pos)).getNode() instanceof ICoverable
+            && !CableBlock.hasVisualConnectionOnSide(level.getBlockState(pos), facing);
     }
 
     protected Cover createCover(ItemStack stack) {

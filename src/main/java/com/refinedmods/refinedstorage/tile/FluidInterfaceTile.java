@@ -47,7 +47,7 @@ public class FluidInterfaceTile extends NetworkNodeTile<FluidInterfaceNetworkNod
 
     @Override
     @Nonnull
-    public FluidInterfaceNetworkNode createNode(Level world, BlockPos pos) {
-        return new FluidInterfaceNetworkNode(world, pos);
+    public FluidInterfaceNetworkNode createNode(Level level, BlockPos pos) {
+        return new FluidInterfaceNetworkNode(level, pos);
     }
 }

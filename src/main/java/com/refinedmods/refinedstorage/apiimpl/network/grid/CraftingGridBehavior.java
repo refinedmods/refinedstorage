@@ -287,7 +287,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             ItemStack inventoryStack = player.getInventory().getItem(j);
 
             if (inventoryStack.getItem() instanceof ICraftingPatternProvider) {
-                ICraftingPattern pattern = PatternItem.fromCache(network.getWorld(), inventoryStack);
+                ICraftingPattern pattern = PatternItem.fromCache(network.getLevel(), inventoryStack);
                 if (pattern.isValid()) {
                     for (ItemStack stack : pattern.getOutputs()) {
                         if (!stack.isEmpty()) {

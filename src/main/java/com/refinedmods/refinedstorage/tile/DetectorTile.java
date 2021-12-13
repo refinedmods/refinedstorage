@@ -58,7 +58,7 @@ public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
 
     @Override
     @Nonnull
-    public DetectorNetworkNode createNode(Level world, BlockPos pos) {
-        return new DetectorNetworkNode(world, pos);
+    public DetectorNetworkNode createNode(Level level, BlockPos pos) {
+        return new DetectorNetworkNode(level, pos);
     }
 }

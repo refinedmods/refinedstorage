@@ -33,57 +33,26 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         t.getNode().setExactPattern(v);
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.updateExactPattern(p)));
-    public static final TileDataParameter<Integer, GridTile> VIEW_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getViewType(), (t, v) -> {
+    public static final TileDataParameter<Integer, GridTile> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));    public static final TileDataParameter<Integer, GridTile> VIEW_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getViewType(), (t, v) -> {
         if (IGrid.isValidViewType(v)) {
             t.getNode().setViewType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final TileDataParameter<Integer, GridTile> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-    public static final TileDataParameter<Integer, GridTile> SORTING_DIRECTION = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
+    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_ITEM_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedItemTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedItemTags(v));
+    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_FLUID_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedFluidTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedFluidTags(v));    public static final TileDataParameter<Integer, GridTile> SORTING_DIRECTION = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.getNode().setSortingDirection(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_ITEM_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedItemTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedItemTags(v));
-    public static final TileDataParameter<Integer, GridTile> SORTING_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
+    private final GridType type;
+    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());    public static final TileDataParameter<Integer, GridTile> SORTING_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_FLUID_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedFluidTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedFluidTags(v));
-    public static final TileDataParameter<Integer, GridTile> SEARCH_BOX_MODE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
-        if (IGrid.isValidSearchBoxMode(v)) {
-            t.getNode().setSearchBoxMode(v);
-            t.getNode().markDirty();
-        }
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
-    private final GridType type;
-    public static final TileDataParameter<Integer, GridTile> SIZE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
-        if (IGrid.isValidSize(v)) {
-            t.getNode().setSize(v);
-            t.getNode().markDirty();
-        }
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
-    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
-    public static final TileDataParameter<Integer, GridTile> TAB_SELECTED = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
-        t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
-        t.getNode().markDirty();
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
-    public static final TileDataParameter<Integer, GridTile> TAB_PAGE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
-        if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
-            t.getNode().setTabPage(v);
-            t.getNode().markDirty();
-        }
-    });
-    public static final TileDataParameter<Boolean, GridTile> PROCESSING_PATTERN = new TileDataParameter<>(EntityDataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
-        t.getNode().setProcessingPattern(v);
-        t.getNode().clearMatrix();
-        t.getNode().markDirty();
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-
     public GridTile(GridType type, BlockPos pos, BlockState state) {
         super(getType(type), pos, state);
 
@@ -103,12 +72,16 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         dataManager.addParameter(ALLOWED_FLUID_TAGS);
     }
 
-
     public static void trySortGrid(boolean initial) {
         if (!initial) {
             BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
         }
-    }
+    }    public static final TileDataParameter<Integer, GridTile> SEARCH_BOX_MODE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
+        if (IGrid.isValidSearchBoxMode(v)) {
+            t.getNode().setSearchBoxMode(v);
+            t.getNode().markDirty();
+        }
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
 
     public static BlockEntityType<GridTile> getType(GridType type) {
         switch (type) {
@@ -127,9 +100,14 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
 
     @Override
     @Nonnull
-    public GridNetworkNode createNode(Level world, BlockPos pos) {
-        return new GridNetworkNode(world, pos, type);
-    }
+    public GridNetworkNode createNode(Level level, BlockPos pos) {
+        return new GridNetworkNode(level, pos, type);
+    }    public static final TileDataParameter<Integer, GridTile> SIZE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
+        if (IGrid.isValidSize(v)) {
+            t.getNode().setSize(v);
+            t.getNode().markDirty();
+        }
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
 
     @Nonnull
     @Override
@@ -140,4 +118,30 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
 
         return super.getCapability(cap, direction);
     }
+    public static final TileDataParameter<Integer, GridTile> TAB_SELECTED = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
+        t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
+        t.getNode().markDirty();
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
+    public static final TileDataParameter<Integer, GridTile> TAB_PAGE = new TileDataParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
+        if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
+            t.getNode().setTabPage(v);
+            t.getNode().markDirty();
+        }
+    });
+    public static final TileDataParameter<Boolean, GridTile> PROCESSING_PATTERN = new TileDataParameter<>(EntityDataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
+        t.getNode().setProcessingPattern(v);
+        t.getNode().clearMatrix();
+        t.getNode().markDirty();
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
+
+
+
+
+
+
+
+
+
+
+
 }

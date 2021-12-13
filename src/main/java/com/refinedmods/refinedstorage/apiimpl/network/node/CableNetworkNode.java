@@ -15,8 +15,8 @@ public class CableNetworkNode extends NetworkNode implements ICoverable {
 
     private final CoverManager coverManager;
 
-    public CableNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public CableNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
         this.coverManager = new CoverManager(this);
     }
 

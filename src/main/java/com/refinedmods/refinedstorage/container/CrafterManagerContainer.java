@@ -116,7 +116,7 @@ public class CrafterManagerContainer extends BaseContainer {
                     if (stack.isEmpty()) {
                         visible = false;
                     } else {
-                        ICraftingPattern pattern = PatternItem.fromCache(crafterManager.getWorld(), stack);
+                        ICraftingPattern pattern = PatternItem.fromCache(crafterManager.getLevel(), stack);
 
                         visible = false;
 

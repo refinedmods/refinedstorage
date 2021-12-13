@@ -80,7 +80,14 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
     private static final String NBT_ALLOWED_TAGS = "AllowedTags";
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags, PROCESSING_MATRIX_SIZE);
-    private final ResultContainer result = new ResultContainer();    private final AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
+    private final ResultContainer result = new ResultContainer();
+    private final BaseItemHandler processingMatrix = new BaseItemHandler(PROCESSING_MATRIX_SIZE * 2)
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!reading && slot < PROCESSING_MATRIX_SIZE) {
+                allowedTagList.clearItemTags(slot);
+            }
+        });    private final AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
         @Override
         public boolean stillValid(Player player) {
             return false;
@@ -88,31 +95,27 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
         @Override
         public void slotsChanged(Container inventory) {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 onCraftingMatrixChanged();
             }
         }
     };
-    private final BaseItemHandler processingMatrix = new BaseItemHandler(PROCESSING_MATRIX_SIZE * 2)
-        .addListener(new NetworkNodeInventoryListener(this))
-        .addListener((handler, slot, reading) -> {
-            if (!reading && slot < PROCESSING_MATRIX_SIZE) {
-                allowedTagList.clearItemTags(slot);
-            }
-        });
     private final FluidInventory processingMatrixFluids = new FluidInventory(PROCESSING_MATRIX_SIZE * 2, FluidAttributes.BUCKET_VOLUME * 64)
         .addListener(new NetworkNodeFluidInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < PROCESSING_MATRIX_SIZE) {
                 allowedTagList.clearFluidTags(slot);
             }
-        });    private final CraftingContainer matrix = new CraftingContainer(craftingContainer, 3, 3);
+        });
     private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
-    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IFilter> filters = new ArrayList<>();    private final CraftingContainer matrix = new CraftingContainer(craftingContainer, 3, 3);
     private final List<IGridTab> tabs = new ArrayList<>();
     private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
     private final GridType type;
-    private CraftingRecipe currentRecipe;    private final BaseItemHandler patterns = new BaseItemHandler(2) {
+    private CraftingRecipe currentRecipe;
+    private boolean readingInventory;
+    private int viewType = VIEW_TYPE_NORMAL;
+    private int sortingDirection = SORTING_DIRECTION_DESCENDING;    private final BaseItemHandler patterns = new BaseItemHandler(2) {
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);
@@ -165,9 +168,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 markDirty();
             }
         }));
-    private boolean readingInventory;
-    private int viewType = VIEW_TYPE_NORMAL;
-    private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_QUANTITY;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
     private int size = SIZE_STRETCH;
@@ -176,9 +176,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private boolean exactPattern = true;
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
-
-    public GridNetworkNode(Level world, BlockPos pos, GridType type) {
-        super(world, pos);
+    public GridNetworkNode(Level level, BlockPos pos, GridType type) {
+        super(level, pos);
 
         this.type = type;
     }
@@ -205,7 +204,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private void updateAllowedTags() {
         markDirty();
 
-        BlockEntity tile = world.getBlockEntity(pos);
+        BlockEntity tile = level.getBlockEntity(pos);
 
         if (tile instanceof GridTile) {
             ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_ITEM_TAGS);
@@ -238,7 +237,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     public boolean isProcessingPattern() {
-        return world.isClientSide ? GridTile.PROCESSING_PATTERN.getValue() : processingPattern;
+        return level.isClientSide ? GridTile.PROCESSING_PATTERN.getValue() : processingPattern;
     }
 
     public void setProcessingPattern(boolean processingPattern) {
@@ -340,8 +339,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onCraftingMatrixChanged() {
-        if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
-            currentRecipe = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, matrix, world).orElse(null);
+        if (currentRecipe == null || !currentRecipe.matches(matrix, level)) {
+            currentRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, matrix, level).orElse(null);
         }
 
         if (currentRecipe == null) {
@@ -383,7 +382,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public boolean isGridActive() {
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(pos);
 
         if (state.getBlock() instanceof GridBlock) {
             return state.getValue(NetworkNodeBlock.CONNECTED);
@@ -528,7 +527,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getViewType() {
-        return world.isClientSide ? GridTile.VIEW_TYPE.getValue() : viewType;
+        return level.isClientSide ? GridTile.VIEW_TYPE.getValue() : viewType;
     }
 
     public void setViewType(int viewType) {
@@ -537,7 +536,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSortingDirection() {
-        return world.isClientSide ? GridTile.SORTING_DIRECTION.getValue() : sortingDirection;
+        return level.isClientSide ? GridTile.SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     public void setSortingDirection(int sortingDirection) {
@@ -546,7 +545,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSortingType() {
-        return world.isClientSide ? GridTile.SORTING_TYPE.getValue() : sortingType;
+        return level.isClientSide ? GridTile.SORTING_TYPE.getValue() : sortingType;
     }
 
     public void setSortingType(int sortingType) {
@@ -555,7 +554,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSearchBoxMode() {
-        return world.isClientSide ? GridTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return level.isClientSide ? GridTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {
@@ -564,7 +563,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSize() {
-        return world.isClientSide ? GridTile.SIZE.getValue() : size;
+        return level.isClientSide ? GridTile.SIZE.getValue() : size;
     }
 
     public void setSize(int size) {
@@ -573,7 +572,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getTabSelected() {
-        return world.isClientSide ? GridTile.TAB_SELECTED.getValue() : tabSelected;
+        return level.isClientSide ? GridTile.TAB_SELECTED.getValue() : tabSelected;
     }
 
     public void setTabSelected(int tabSelected) {
@@ -582,7 +581,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getTabPage() {
-        return world.isClientSide ? GridTile.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
+        return level.isClientSide ? GridTile.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
     }
 
     public void setTabPage(int page) {
@@ -633,7 +632,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getType() {
-        return world.isClientSide ? GridTile.PROCESSING_TYPE.getValue() : processingType;
+        return level.isClientSide ? GridTile.PROCESSING_TYPE.getValue() : processingType;
     }
 
     @Override
@@ -771,6 +770,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 return new CombinedInvWrapper(filter);
         }
     }
+
+
 
 
 

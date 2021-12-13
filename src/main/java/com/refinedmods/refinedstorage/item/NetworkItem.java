@@ -74,11 +74,11 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isClientSide) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getItemInHand(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUUID()));
+        if (!level.isClientSide) {
+            applyNetwork(level.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getItemInHand(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUUID()));
         }
 
         return InteractionResultHolder.success(stack);
@@ -114,8 +114,8 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (isValid(stack)) {
             tooltip.add(new TranslatableComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));

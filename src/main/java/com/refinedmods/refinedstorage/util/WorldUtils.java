@@ -34,11 +34,11 @@ public final class WorldUtils {
     private WorldUtils() {
     }
 
-    public static void updateBlock(@Nullable Level world, BlockPos pos) {
-        if (world != null && world.isLoaded(pos)) {
-            BlockState state = world.getBlockState(pos);
+    public static void updateBlock(@Nullable Level level, BlockPos pos) {
+        if (level != null && level.isLoaded(pos)) {
+            BlockState state = level.getBlockState(pos);
 
-            world.sendBlockUpdated(pos, state, state, 1 | 2);
+            level.sendBlockUpdated(pos, state, state, 1 | 2);
         }
     }
 
@@ -67,31 +67,31 @@ public final class WorldUtils {
         return null;
     }
 
-    public static FakePlayer getFakePlayer(ServerLevel world, @Nullable UUID owner) {
+    public static FakePlayer getFakePlayer(ServerLevel level, @Nullable UUID owner) {
         if (owner != null) {
-            GameProfileCache profileCache = world.getServer().getProfileCache();
+            GameProfileCache profileCache = level.getServer().getProfileCache();
 
             Optional<GameProfile> profile = profileCache.get(owner);
 
             if (profile.isPresent()) {
-                return FakePlayerFactory.get(world, profile.get());
+                return FakePlayerFactory.get(level, profile.get());
             }
         }
 
-        return FakePlayerFactory.getMinecraft(world);
+        return FakePlayerFactory.getMinecraft(level);
     }
 
     public static void sendNoPermissionMessage(Player player) {
         player.sendMessage(new TranslatableComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED), player.getUUID());
     }
 
-    public static HitResult rayTracePlayer(Level world, Player player) {
+    public static HitResult rayTracePlayer(Level level, Player player) {
         double reachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 
         Vec3 base = player.getEyePosition(1.0F);
         Vec3 look = player.getLookAngle();
         Vec3 target = base.add(look.x * reachDistance, look.y * reachDistance, look.z * reachDistance);
 
-        return world.clip(new ClipContext(base, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+        return level.clip(new ClipContext(base, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
     }
 }

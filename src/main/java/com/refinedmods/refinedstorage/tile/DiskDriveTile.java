@@ -148,7 +148,7 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
 
     @Override
     @Nonnull
-    public DiskDriveNetworkNode createNode(Level world, BlockPos pos) {
-        return new DiskDriveNetworkNode(world, pos);
+    public DiskDriveNetworkNode createNode(Level level, BlockPos pos) {
+        return new DiskDriveNetworkNode(level, pos);
     }
 }

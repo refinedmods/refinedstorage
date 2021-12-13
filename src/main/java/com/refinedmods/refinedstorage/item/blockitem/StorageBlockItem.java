@@ -38,8 +38,8 @@ public class StorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (isValid(stack)) {
             UUID id = getId(stack);
@@ -62,17 +62,17 @@ public class StorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack storageStack = player.getItemInHand(hand);
         int count = storageStack.getCount();
 
-        if (!world.isClientSide && player.isCrouching() && type != ItemStorageType.CREATIVE) {
+        if (!level.isClientSide && player.isCrouching() && type != ItemStorageType.CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 
             if (isValid(storageStack)) {
                 diskId = getId(storageStack);
-                disk = API.instance().getStorageDiskManager((ServerLevel) world).get(diskId);
+                disk = API.instance().getStorageDiskManager((ServerLevel) level).get(diskId);
             }
 
             // Newly created storages won't have a tag yet, so allow invalid disks as well.
@@ -81,12 +81,12 @@ public class StorageBlockItem extends BaseBlockItem {
                 storagePart.setCount(count);
 
                 if (!player.getInventory().add(storagePart.copy())) {
-                    Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), storagePart);
+                    Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), storagePart);
                 }
 
                 if (disk != null) {
-                    API.instance().getStorageDiskManager((ServerLevel) world).remove(diskId);
-                    API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
+                    API.instance().getStorageDiskManager((ServerLevel) level).remove(diskId);
+                    API.instance().getStorageDiskManager((ServerLevel) level).markForSaving();
                 }
 
                 ItemStack stack = new ItemStack(RSBlocks.MACHINE_CASING.get());
@@ -99,7 +99,7 @@ public class StorageBlockItem extends BaseBlockItem {
     }
 
     @Override
-    public int getEntityLifespan(ItemStack stack, Level world) {
+    public int getEntityLifespan(ItemStack stack, Level level) {
         return Integer.MAX_VALUE;
     }
 

@@ -15,7 +15,7 @@ public class NetworkReceiverTile extends NetworkNodeTile<NetworkReceiverNetworkN
 
     @Override
     @Nonnull
-    public NetworkReceiverNetworkNode createNode(Level world, BlockPos pos) {
-        return new NetworkReceiverNetworkNode(world, pos);
+    public NetworkReceiverNetworkNode createNode(Level level, BlockPos pos) {
+        return new NetworkReceiverNetworkNode(level, pos);
     }
 }

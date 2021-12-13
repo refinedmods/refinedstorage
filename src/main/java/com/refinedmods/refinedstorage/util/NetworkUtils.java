@@ -42,16 +42,16 @@ public final class NetworkUtils {
         return null;
     }
 
-    public static InteractionResult attemptModify(Level world, BlockPos pos, Player player, Runnable action) {
-        return attempt(world, pos, player, action, Permission.MODIFY);
+    public static InteractionResult attemptModify(Level level, BlockPos pos, Player player, Runnable action) {
+        return attempt(level, pos, player, action, Permission.MODIFY);
     }
 
-    public static InteractionResult attempt(Level world, BlockPos pos, Player player, Runnable action, Permission... permissionsRequired) {
-        if (world.isClientSide) {
+    public static InteractionResult attempt(Level level, BlockPos pos, Player player, Runnable action, Permission... permissionsRequired) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
 
-        INetwork network = getNetworkFromNode(getNodeFromTile(world.getBlockEntity(pos)));
+        INetwork network = getNetworkFromNode(getNodeFromTile(level.getBlockEntity(pos)));
 
         if (network != null) {
             for (Permission permission : permissionsRequired) {

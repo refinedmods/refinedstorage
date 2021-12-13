@@ -32,11 +32,14 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     private final BaseItemHandler editCard = new BaseItemHandler(1)
         .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this));
-    private ISecurityCard globalCard;    private final BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
+    private ISecurityCard globalCard;
+    public SecurityManagerNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
+    }    private final BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
         .addValidator(new ItemValidator(RSItems.SECURITY_CARD.get()))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 invalidate();
             }
 
@@ -44,10 +47,6 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
                 network.getSecurityManager().invalidate();
             }
         }));
-
-    public SecurityManagerNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
-    }
 
     @Override
     public int getEnergyUsage() {
@@ -163,6 +162,8 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(cardsInv, editCard);
     }
+
+
 
 
 }

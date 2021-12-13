@@ -45,8 +45,8 @@ public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
 
     @Override
     @Nonnull
-    public DestructorNetworkNode createNode(Level world, BlockPos pos) {
-        return new DestructorNetworkNode(world, pos);
+    public DestructorNetworkNode createNode(Level level, BlockPos pos) {
+        return new DestructorNetworkNode(level, pos);
     }
 
     @Nonnull

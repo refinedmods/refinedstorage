@@ -61,8 +61,8 @@ public class FluidStorageTile extends NetworkNodeTile<FluidStorageNetworkNode> {
 
     @Override
     @Nonnull
-    public FluidStorageNetworkNode createNode(Level world, BlockPos pos) {
-        return new FluidStorageNetworkNode(world, pos, type);
+    public FluidStorageNetworkNode createNode(Level level, BlockPos pos) {
+        return new FluidStorageNetworkNode(level, pos, type);
     }
 }
 

@@ -25,8 +25,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-
 public class ConstructorBlock extends CableBlock {
     private static final VoxelShape HEAD_NORTH = Shapes.or(box(2, 2, 0, 14, 14, 2), HOLDER_NORTH);
     private static final VoxelShape HEAD_EAST = Shapes.or(box(14, 2, 2, 16, 14, 14), HOLDER_EAST);
@@ -92,9 +90,9 @@ public class ConstructorBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
-            return NetworkUtils.attemptModify(world, pos, player, () -> NetworkHooks.openGui(
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
                 new PositionalTileContainerProvider<ConstructorTile>(
                     new TranslatableComponent("gui.refinedstorage.constructor"),

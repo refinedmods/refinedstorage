@@ -42,10 +42,10 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayer) player, stack, PlayerSlot.getSlotForHand(player, hand));
         }
 
@@ -53,8 +53,8 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         tooltip.add(new TranslatableComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
     }
@@ -80,7 +80,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     }
 
     @Override
-    public int getEntityLifespan(ItemStack stack, Level world) {
+    public int getEntityLifespan(ItemStack stack, Level level) {
         return Integer.MAX_VALUE;
     }
 

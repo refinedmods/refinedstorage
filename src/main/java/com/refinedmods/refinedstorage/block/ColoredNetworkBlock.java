@@ -11,11 +11,11 @@ public abstract class ColoredNetworkBlock extends NetworkNodeBlock {
 
     // Don't do block drops if we change the color.
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock().getClass().equals(newState.getBlock().getClass())) {
-            checkIfDirectionHasChanged(state, world, pos, newState);
+            checkIfDirectionHasChanged(state, level, pos, newState);
         } else {
-            super.onRemove(state, world, pos, newState, isMoving);
+            super.onRemove(state, level, pos, newState, isMoving);
         }
     }
 }

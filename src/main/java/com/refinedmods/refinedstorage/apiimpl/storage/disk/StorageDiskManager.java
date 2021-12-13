@@ -8,10 +8,10 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -27,10 +27,10 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
     private static final String NBT_DISK_DATA = "Data";
 
     private final Map<UUID, IStorageDisk> disks = new HashMap<>();
-    private final ServerLevel world;
+    private final ServerLevel level;
 
-    public StorageDiskManager(ServerLevel world) {
-        this.world = world;
+    public StorageDiskManager(ServerLevel level) {
+        this.level = level;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class StorageDiskManager extends RSWorldSavedData implements IStorageDisk
 
                 IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(new ResourceLocation(type));
                 if (factory != null) {
-                    disks.put(id, factory.createFromNbt(world, data));
+                    disks.put(id, factory.createFromNbt(level, data));
                 }
             }
         }

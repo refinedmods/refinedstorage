@@ -48,7 +48,9 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     private static final String NBT_WAS_POWERED = "WasPowered";
     private final List<ICraftingPattern> patterns = new ArrayList<>();
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED)
-        .addListener(new NetworkNodeInventoryListener(this));    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
+        .addListener(new NetworkNodeInventoryListener(this));
+    // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
+    private boolean visited = false;    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
         @Override
         public int getSlotLimit(int slot) {
             return 1;
@@ -64,11 +66,11 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return super.insertItem(slot, stack, simulate);
         }
     }
-        .addValidator(new PatternItemValidator(world))
+        .addValidator(new PatternItemValidator(level))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading) {
-                if (!world.isClientSide) {
+                if (!level.isClientSide) {
                     invalidate();
                 }
 
@@ -77,8 +79,6 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
                 }
             }
         });
-    // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
-    private boolean visited = false;
     private CrafterMode mode = CrafterMode.IGNORE;
     private boolean locked = false;
     private boolean wasPowered;
@@ -86,9 +86,8 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     private Component displayName;
     @Nullable
     private UUID uuid = null;
-
-    public CrafterNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public CrafterNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     private void invalidate() {
@@ -98,7 +97,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             ItemStack patternStack = patternsInventory.getStackInSlot(i);
 
             if (!patternStack.isEmpty()) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(world, patternStack, this);
+                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(level, patternStack, this);
 
                 if (pattern.isValid()) {
                     patterns.add(pattern);
@@ -120,8 +119,8 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             invalidate();
         }
 
-        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET && world.isLoaded(pos)) {
-            if (world.hasNeighborSignal(pos)) {
+        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET && level.isLoaded(pos)) {
+            if (level.hasNeighborSignal(pos)) {
                 this.wasPowered = true;
 
                 markDirty();
@@ -290,11 +289,11 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     @Override
     public BlockEntity getFacingTile() {
         BlockPos facingPos = pos.relative(getDirection());
-        if (!world.isLoaded(facingPos)) {
+        if (!level.isLoaded(facingPos)) {
             return null;
         }
 
-        return world.getBlockEntity(facingPos);
+        return level.getBlockEntity(facingPos);
     }
 
     @Override
@@ -321,7 +320,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         }
 
         if (facing != null) {
-            return new TranslatableComponent(world.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
+            return new TranslatableComponent(level.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
         }
 
         return DEFAULT_NAME;
@@ -369,7 +368,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return null;
         }
 
-        INetworkNode facing = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos.relative(getDirection()));
+        INetworkNode facing = API.instance().getNetworkNodeManager((ServerLevel) level).getNode(pos.relative(getDirection()));
         if (!(facing instanceof ICraftingPatternContainer) || facing.getNetwork() != network) {
             return this;
         }
@@ -413,9 +412,9 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             case IGNORE:
                 return false;
             case SIGNAL_LOCKS_AUTOCRAFTING:
-                return world.hasNeighborSignal(pos);
+                return level.hasNeighborSignal(pos);
             case SIGNAL_UNLOCKS_AUTOCRAFTING:
-                return !world.hasNeighborSignal(pos);
+                return !level.hasNeighborSignal(pos);
             case PULSE_INSERTS_NEXT_SET:
                 return locked;
             default:
@@ -458,6 +457,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return IGNORE;
         }
     }
+
 
 
 

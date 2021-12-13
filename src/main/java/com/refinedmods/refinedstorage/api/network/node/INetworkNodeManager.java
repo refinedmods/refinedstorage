@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
- * This is a registry for network nodes in the world.
+ * This is a registry for network nodes in the level.
  */
 public interface INetworkNodeManager {
     /**

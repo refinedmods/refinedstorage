@@ -61,7 +61,7 @@ public class StorageTile extends NetworkNodeTile<StorageNetworkNode> {
 
     @Override
     @Nonnull
-    public StorageNetworkNode createNode(Level world, BlockPos pos) {
-        return new StorageNetworkNode(world, pos, type);
+    public StorageNetworkNode createNode(Level level, BlockPos pos) {
+        return new StorageNetworkNode(level, pos, type);
     }
 }

@@ -11,8 +11,8 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 public class CraftingNode extends Node {

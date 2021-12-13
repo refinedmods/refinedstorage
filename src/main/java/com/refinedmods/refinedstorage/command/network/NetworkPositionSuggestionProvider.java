@@ -15,9 +15,9 @@ import java.util.concurrent.CompletableFuture;
 public class NetworkPositionSuggestionProvider implements SuggestionProvider<CommandSourceStack> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
+        ServerLevel level = DimensionArgument.getDimension(context, "dimension");
 
-        API.instance().getNetworkManager(world).all().forEach(network -> builder.suggest(network.getPosition().getX() + " " + network.getPosition().getY() + " " + network.getPosition().getZ()));
+        API.instance().getNetworkManager(level).all().forEach(network -> builder.suggest(network.getPosition().getX() + " " + network.getPosition().getY() + " " + network.getPosition().getZ()));
 
         return builder.buildFuture();
     }

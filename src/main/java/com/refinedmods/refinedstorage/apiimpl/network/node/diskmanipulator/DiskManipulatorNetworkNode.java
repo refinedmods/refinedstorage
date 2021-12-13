@@ -56,9 +56,9 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 StackUtils.createStorages(
-                    (ServerLevel) world,
+                    (ServerLevel) level,
                     handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
@@ -68,7 +68,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 );
 
                 if (!reading) {
-                    WorldUtils.updateBlock(world, pos);
+                    WorldUtils.updateBlock(level, pos);
                 }
             }
         });
@@ -76,9 +76,9 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 StackUtils.createStorages(
-                    (ServerLevel) world,
+                    (ServerLevel) level,
                     handler.getStackInSlot(slot),
                     3 + slot,
                     itemDisks,
@@ -88,7 +88,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 );
 
                 if (!reading) {
-                    WorldUtils.updateBlock(world, pos);
+                    WorldUtils.updateBlock(level, pos);
                 }
             }
         }));
@@ -112,8 +112,8 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     }.addListener(new NetworkNodeInventoryListener(this));
     private int ioMode = IO_MODE_INSERT;
 
-    public DiskManipulatorNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public DiskManipulatorNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -413,7 +413,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return world.isClientSide ? DiskManipulatorTile.TYPE.getValue() : type;
+        return level.isClientSide ? DiskManipulatorTile.TYPE.getValue() : type;
     }
 
     @Override

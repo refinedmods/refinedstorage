@@ -39,12 +39,12 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
             }
 
             if (network != null) {
-                network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());
+                network.getNodeGraph().invalidate(Action.PERFORM, network.getLevel(), network.getPosition());
             }
         });
 
-    public NetworkTransmitterNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public NetworkTransmitterNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.dimension() == receiverDimension;
+        return level.dimension() == receiverDimension;
     }
 
     private boolean canTransmit() {
@@ -114,14 +114,14 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                Level dimensionWorld = world.getServer().getLevel(receiverDimension);
+                Level dimensionWorld = level.getServer().getLevel(receiverDimension);
 
                 if (dimensionWorld != null && dimensionWorld.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
                     operator.apply(dimensionWorld, receiver, null);
                 }
             } else {
-                if (world.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
-                    operator.apply(world, receiver, null);
+                if (level.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
+                    operator.apply(level, receiver, null);
                 }
             }
         }

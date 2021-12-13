@@ -64,8 +64,8 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     private UUID storageId = UUID.randomUUID();
     private IStorageDisk<FluidStack> storage;
 
-    public FluidStorageNetworkNode(Level world, BlockPos pos, FluidStorageType type) {
-        super(world, pos);
+    public FluidStorageNetworkNode(Level level, BlockPos pos, FluidStorageType type) {
+        super(level, pos);
 
         this.type = type;
     }
@@ -154,13 +154,13 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     }
 
     public void loadStorage(@Nullable Player owner) {
-        IStorageDisk disk = API.instance().getStorageDiskManager((ServerLevel) world).get(storageId);
+        IStorageDisk disk = API.instance().getStorageDiskManager((ServerLevel) level).get(storageId);
 
         if (disk == null) {
-            disk = API.instance().createDefaultFluidDisk((ServerLevel) world, type.getCapacity(), owner);
+            disk = API.instance().createDefaultFluidDisk((ServerLevel) level, type.getCapacity(), owner);
 
-            API.instance().getStorageDiskManager((ServerLevel) world).set(storageId, disk);
-            API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
+            API.instance().getStorageDiskManager((ServerLevel) level).set(storageId, disk);
+            API.instance().getStorageDiskManager((ServerLevel) level).markForSaving();
         }
 
         this.storage = new FluidStorageWrapperStorageDisk(this, disk);

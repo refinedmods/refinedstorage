@@ -105,7 +105,7 @@ public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkN
 
     @Override
     @Nonnull
-    public DiskManipulatorNetworkNode createNode(Level world, BlockPos pos) {
-        return new DiskManipulatorNetworkNode(world, pos);
+    public DiskManipulatorNetworkNode createNode(Level level, BlockPos pos) {
+        return new DiskManipulatorNetworkNode(level, pos);
     }
 }

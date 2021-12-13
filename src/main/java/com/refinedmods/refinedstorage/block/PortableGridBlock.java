@@ -83,23 +83,23 @@ public class PortableGridBlock extends BaseBlock implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide) {
             API.instance().getGridManager().openGrid(PortableGridBlockGridFactory.ID, (ServerPlayer) player, pos);
 
-            ((PortableGridTile) world.getBlockEntity(pos)).onOpened();
+            ((PortableGridTile) level.getBlockEntity(pos)).onOpened();
         }
 
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, placer, stack);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!world.isClientSide) {
-            ((PortableGridTile) world.getBlockEntity(pos)).applyDataFromItemToTile(stack);
-            ((PortableGridTile) world.getBlockEntity(pos)).updateState();
+        if (!level.isClientSide) {
+            ((PortableGridTile) level.getBlockEntity(pos)).applyDataFromItemToTile(stack);
+            ((PortableGridTile) level.getBlockEntity(pos)).updateState();
         }
     }
 }

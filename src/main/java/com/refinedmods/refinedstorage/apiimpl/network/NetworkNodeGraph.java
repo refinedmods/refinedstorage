@@ -27,12 +27,12 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     @Override
-    public void invalidate(Action action, Level world, BlockPos origin) {
+    public void invalidate(Action action, Level level, BlockPos origin) {
         this.invalidating = true;
 
         Operator operator = new Operator(action);
 
-        INetworkNode originNode = NetworkUtils.getNodeFromTile(world.getBlockEntity(origin));
+        INetworkNode originNode = NetworkUtils.getNodeFromTile(level.getBlockEntity(origin));
         if (originNode instanceof INetworkNodeVisitor) {
             ((INetworkNodeVisitor) originNode).visit(operator);
         }
@@ -92,19 +92,19 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     protected Level getWorld() {
-        return network.getWorld();
+        return network.getLevel();
     }
 
     private static class Visitor implements INetworkNodeVisitor {
         private final INetworkNode node;
-        private final Level world;
+        private final Level level;
         private final BlockPos pos;
         private final Direction side;
         private final BlockEntity tile;
 
-        Visitor(INetworkNode node, Level world, BlockPos pos, Direction side, BlockEntity tile) {
+        Visitor(INetworkNode node, Level level, BlockPos pos, Direction side, BlockEntity tile) {
             this.node = node;
-            this.world = world;
+            this.level = level;
             this.pos = pos;
             this.side = side;
             this.tile = tile;
@@ -120,7 +120,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                         INetworkNode nodeOnSide = NetworkUtils.getNodeFromTile(tile);
 
                         if (nodeOnSide == node) {
-                            operator.apply(world, pos.relative(checkSide), checkSide.getOpposite());
+                            operator.apply(level, pos.relative(checkSide), checkSide.getOpposite());
                         }
                     }
                 }
@@ -143,8 +143,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         @Override
-        public void apply(Level world, BlockPos pos, @Nullable Direction side) {
-            BlockEntity tile = world.getBlockEntity(pos);
+        public void apply(Level level, BlockPos pos, @Nullable Direction side) {
+            BlockEntity tile = level.getBlockEntity(pos);
 
             INetworkNode otherNode = NetworkUtils.getNodeFromTile(tile);
             if (otherNode != null) {
@@ -152,7 +152,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                 if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
                     if (action == Action.PERFORM) {
-                        dropConflictingBlock(world, pos);
+                        dropConflictingBlock(level, pos);
                     }
 
                     return;
@@ -168,16 +168,15 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                     previousEntries.remove(otherNodeItem);
 
-                    toCheck.add(new Visitor(otherNode, world, pos, side, tile));
+                    toCheck.add(new Visitor(otherNode, level, pos, side, tile));
                 }
             }
         }
 
-        private void dropConflictingBlock(Level world, BlockPos pos) {
+        private void dropConflictingBlock(Level level, BlockPos pos) {
             if (!network.getPosition().equals(pos)) {
-                Block.dropResources(world.getBlockState(pos), world, pos, world.getBlockEntity(pos));
-
-                world.removeBlock(pos, false);
+                Block.dropResources(level.getBlockState(pos), level, pos, level.getBlockEntity(pos));
+                level.removeBlock(pos, false);
             }
         }
 

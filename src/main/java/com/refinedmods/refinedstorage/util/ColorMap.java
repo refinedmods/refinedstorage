@@ -102,13 +102,13 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
         );
     }
 
-    public <S extends BaseBlock> InteractionResult changeBlockColor(BlockState state, ItemStack heldItem, Level world, BlockPos pos, Player player) {
+    public <S extends BaseBlock> InteractionResult changeBlockColor(BlockState state, ItemStack heldItem, Level level, BlockPos pos, Player player) {
         DyeColor color = DyeColor.getColor(heldItem);
         if (color == null || state.getBlock().equals(map.get(color).get())) {
             return InteractionResult.PASS;
         }
 
-        return setBlockState(getNewState((RegistryObject<S>) map.get(color), state), heldItem, world, pos, player);
+        return setBlockState(getNewState((RegistryObject<S>) map.get(color), state), heldItem, level, pos, player);
     }
 
     private <S extends BaseBlock> BlockState getNewState(RegistryObject<S> block, BlockState state) {
@@ -124,9 +124,9 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
         return newState;
     }
 
-    public InteractionResult setBlockState(BlockState newState, ItemStack heldItem, Level world, BlockPos pos, Player player) {
-        if (!world.isClientSide) {
-            world.setBlockAndUpdate(pos, newState);
+    public InteractionResult setBlockState(BlockState newState, ItemStack heldItem, Level level, BlockPos pos, Player player) {
+        if (!level.isClientSide) {
+            level.setBlockAndUpdate(pos, newState);
             if (((ServerPlayer) player).gameMode.getGameModeForPlayer() != GameType.CREATIVE) {
                 heldItem.shrink(1);
             }

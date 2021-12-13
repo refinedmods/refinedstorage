@@ -15,10 +15,10 @@ import net.minecraft.server.level.ServerLevel;
 public abstract class NetworkCommand implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerLevel world = DimensionArgument.getDimension(context, "dimension");
+        ServerLevel level = DimensionArgument.getDimension(context, "dimension");
         BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "pos");
 
-        INetwork network = API.instance().getNetworkManager(world).getNetwork(pos);
+        INetwork network = API.instance().getNetworkManager(level).getNetwork(pos);
 
         if (network == null) {
             context.getSource().sendFailure(new TranslatableComponent("commands.refinedstorage.network.get.error.not_found"));

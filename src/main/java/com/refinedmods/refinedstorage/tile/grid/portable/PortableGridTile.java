@@ -1,128 +1,55 @@
 package com.refinedmods.refinedstorage.tile.grid.portable;
 
-import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSTiles;
-import com.refinedmods.refinedstorage.api.network.grid.GridType;
-import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridListener;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
-import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
-import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler;
-import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.refinedmods.refinedstorage.api.storage.AccessType;
-import com.refinedmods.refinedstorage.api.storage.StorageType;
-import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
-import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
-import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
-import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
-import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
-import com.refinedmods.refinedstorage.api.util.IFilter;
-import com.refinedmods.refinedstorage.api.util.IStackList;
-import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.network.grid.handler.PortableFluidGridHandler;
-import com.refinedmods.refinedstorage.apiimpl.network.grid.handler.PortableItemGridHandler;
-import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
-import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
-import com.refinedmods.refinedstorage.apiimpl.storage.cache.PortableFluidStorageCache;
-import com.refinedmods.refinedstorage.apiimpl.storage.cache.PortableItemStorageCache;
-import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.PortableFluidGridStorageCacheListener;
-import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.PortableItemGridStorageCacheListener;
-import com.refinedmods.refinedstorage.apiimpl.storage.disk.PortableFluidStorageDisk;
-import com.refinedmods.refinedstorage.apiimpl.storage.disk.PortableItemStorageDisk;
-import com.refinedmods.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
-import com.refinedmods.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
-import com.refinedmods.refinedstorage.block.PortableGridBlock;
-import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
-import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
-import com.refinedmods.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
-import com.refinedmods.refinedstorage.inventory.listener.TileInventoryListener;
-import com.refinedmods.refinedstorage.item.WirelessGridItem;
-import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.tile.BaseTile;
 import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.tile.grid.GridTile;
-import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
     public static final TileDataParameter<Integer, PortableGridTile> REDSTONE_MODE = RedstoneMode.createParameter();
-    private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
+    private static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";    private static final TileDataParameter<Integer, PortableGridTile> SORTING_DIRECTION = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
             t.setChanged();
         }
     }, (initial, p) -> GridTile.trySortGrid(initial));
-    private static final TileDataParameter<Integer, PortableGridTile> SORTING_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSortingType, (t, v) -> {
+    private static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";    private static final TileDataParameter<Integer, PortableGridTile> SORTING_TYPE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.setChanged();
         }
     }, (initial, p) -> GridTile.trySortGrid(initial));
-    private static final TileDataParameter<Integer, PortableGridTile> SEARCH_BOX_MODE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSearchBoxMode, (t, v) -> {
+    private static final String NBT_TYPE = "Type";    private static final TileDataParameter<Integer, PortableGridTile> SEARCH_BOX_MODE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
-    private static final TileDataParameter<Integer, PortableGridTile> SIZE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSize, (t, v) -> {
+    private static final String NBT_ENERGY = "Energy";    private static final TileDataParameter<Integer, PortableGridTile> SIZE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-    private static final TileDataParameter<Integer, PortableGridTile> TAB_SELECTED = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getTabSelected, (t, v) -> {
+    private static final String NBT_ENCHANTMENTS = "Enchantments"; // @Volatile: Minecraft specific nbt key, see EnchantmentHelper    private static final TileDataParameter<Integer, PortableGridTile> TAB_SELECTED = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.setChanged();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
-    private static final TileDataParameter<Integer, PortableGridTile> TAB_PAGE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getTabPage, (t, v) -> {
+    private final PortableGridBlockItem.Type type;    private static final TileDataParameter<Integer, PortableGridTile> TAB_PAGE = new TileDataParameter<>(EntityDataSerializers.INT, 0, PortableGridTile::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);
             t.setChanged();
         }
     });
-
-    private static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
-    private static final String NBT_FLUID_STORAGE_TRACKER_ID = "FluidStorageTrackerId";
-    private static final String NBT_TYPE = "Type";
-    private static final String NBT_ENERGY = "Energy";
-    private static final String NBT_ENCHANTMENTS = "Enchantments"; // @Volatile: Minecraft specific nbt key, see EnchantmentHelper
-
-    private final PortableGridBlockItem.Type type;
     private final List<IFilter> filters = new ArrayList<>();
     private final List<IGridTab> tabs = new ArrayList<>();
     private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new TileInventoryListener(this));
@@ -145,26 +72,11 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean active;
     private ItemStorageTracker itemStorageTracker;
-    private final BaseItemHandler disk = new BaseItemHandler(1)
-        .addValidator(new StorageDiskItemValidator())
-        .addListener(new TileInventoryListener(this))
-        .addListener((handler, slot, reading) -> {
-            if (level != null && !level.isClientSide) {
-                loadStorage();
-
-                if (!reading) {
-                    updateState();
-
-                    WorldUtils.updateBlock(level, worldPosition); // Re-send grid type
-                }
-            }
-        });
     private UUID itemStorageTrackerId;
     private FluidStorageTracker fluidStorageTracker;
     private UUID fluidStorageTrackerId;
     private ListTag enchants = null;
     private boolean loadNextTick;
-
     public PortableGridTile(PortableGridBlockItem.Type type, BlockPos pos, BlockState state) {
         super(type == PortableGridBlockItem.Type.CREATIVE ? RSTiles.CREATIVE_PORTABLE_GRID : RSTiles.PORTABLE_GRID, pos, state);
 
@@ -178,6 +90,27 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(TAB_PAGE);
     }
+
+    public static void serverTick(PortableGridTile tile) {
+        if (tile.loadNextTick) {
+            tile.active = tile.isGridActive();
+            tile.diskState = tile.getDiskState();
+            tile.loadNextTick = false;
+        }
+    }    private final BaseItemHandler disk = new BaseItemHandler(1)
+        .addValidator(new StorageDiskItemValidator())
+        .addListener(new TileInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (level != null && !level.isClientSide) {
+                loadStorage();
+
+                if (!reading) {
+                    updateState();
+
+                    WorldUtils.updateBlock(level, worldPosition); // Re-send grid type
+                }
+            }
+        });
 
     private void loadStorage() {
         ItemStack diskStack = getDiskInventory().getStackInSlot(0);
@@ -760,11 +693,17 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
         return AccessType.INSERT_EXTRACT;
     }
 
-    public static void serverTick(PortableGridTile tile) {
-        if (tile.loadNextTick) {
-            tile.active = tile.isGridActive();
-            tile.diskState = tile.getDiskState();
-            tile.loadNextTick = false;
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

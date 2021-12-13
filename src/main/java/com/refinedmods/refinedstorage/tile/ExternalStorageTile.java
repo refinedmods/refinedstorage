@@ -72,8 +72,8 @@ public class ExternalStorageTile extends NetworkNodeTile<ExternalStorageNetworkN
 
     @Override
     @Nonnull
-    public ExternalStorageNetworkNode createNode(Level world, BlockPos pos) {
-        return new ExternalStorageNetworkNode(world, pos);
+    public ExternalStorageNetworkNode createNode(Level level, BlockPos pos) {
+        return new ExternalStorageNetworkNode(level, pos);
     }
 
     @Nonnull

@@ -38,8 +38,8 @@ public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
 
     @Override
     @Nonnull
-    public ExporterNetworkNode createNode(Level world, BlockPos pos) {
-        return new ExporterNetworkNode(world, pos);
+    public ExporterNetworkNode createNode(Level level, BlockPos pos) {
+        return new ExporterNetworkNode(level, pos);
     }
 
     @Nonnull

@@ -60,10 +60,10 @@ public class SecurityCardItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             stack.setTag(new CompoundTag());
 
             stack.getTag().putString(NBT_OWNER, player.getGameProfile().getId().toString());
@@ -74,8 +74,8 @@ public class SecurityCardItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (stack.hasTag() && stack.getTag().contains(NBT_OWNER_NAME)) {
             tooltip.add(new TranslatableComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).setStyle(Styles.GRAY));

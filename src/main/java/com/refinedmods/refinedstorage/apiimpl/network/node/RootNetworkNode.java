@@ -18,12 +18,12 @@ import java.util.UUID;
 
 public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     private final INetwork network;
-    private final Level world;
+    private final Level level;
     private final BlockPos pos;
 
-    public RootNetworkNode(INetwork network, Level world, BlockPos pos) {
+    public RootNetworkNode(INetwork network, Level level, BlockPos pos) {
         this.network = network;
-        this.world = world;
+        this.level = level;
         this.pos = pos;
     }
 
@@ -51,7 +51,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(pos);
 
         @SuppressWarnings("deprecation")
         Item item = Item.byBlock(state.getBlock());
@@ -95,8 +95,8 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public Level getWorld() {
-        return world;
+    public Level getLevel() {
+        return level;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            operator.apply(world, pos.relative(facing), facing.getOpposite());
+            operator.apply(level, pos.relative(facing), facing.getOpposite());
         }
     }
 }

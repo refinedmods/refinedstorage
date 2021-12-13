@@ -14,6 +14,7 @@ public class PositionalTileContainerProvider<T extends BlockEntity> implements M
     private final Component name;
     private final Provider<T> provider;
     private final BlockPos pos;
+
     public PositionalTileContainerProvider(Component name, Provider<T> provider, BlockPos pos) {
         this.name = name;
         this.provider = provider;

@@ -31,7 +31,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     public static final int VERSION = 1;
 
     @Nullable
-    private final ServerLevel world;
+    private final ServerLevel level;
     private final int capacity;
     private final Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private final UUID owner;
@@ -41,8 +41,8 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public ItemStorageDisk(@Nullable ServerLevel world, int capacity, @Nullable UUID owner) {
-        this.world = world;
+    public ItemStorageDisk(@Nullable ServerLevel level, int capacity, @Nullable UUID owner) {
+        this.level = level;
         this.capacity = capacity;
         this.owner = owner;
     }
@@ -222,8 +222,8 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
             listener.onChanged();
         }
 
-        if (world != null) {
-            API.instance().getStorageDiskManager(world).markForSaving();
+        if (level != null) {
+            API.instance().getStorageDiskManager(level).markForSaving();
         }
     }
 

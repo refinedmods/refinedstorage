@@ -41,22 +41,22 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, level, entity, slot, selected);
 
-        if (!world.isClientSide && !stack.hasTag() && entity instanceof Player) {
+        if (!level.isClientSide && !stack.hasTag() && entity instanceof Player) {
             UUID id = UUID.randomUUID();
 
-            API.instance().getStorageDiskManager((ServerLevel) world).set(id, API.instance().createDefaultItemDisk((ServerLevel) world, getCapacity(stack), (Player) entity));
-            API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
+            API.instance().getStorageDiskManager((ServerLevel) level).set(id, API.instance().createDefaultItemDisk((ServerLevel) level, getCapacity(stack), (Player) entity));
+            API.instance().getStorageDiskManager((ServerLevel) level).markForSaving();
 
             setId(stack, id);
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (isValid(stack)) {
             UUID id = getId(stack);
@@ -79,21 +79,21 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack diskStack = player.getItemInHand(hand);
 
-        if (!world.isClientSide && player.isCrouching() && type != ItemStorageType.CREATIVE) {
-            IStorageDisk disk = API.instance().getStorageDiskManager((ServerLevel) world).getByStack(diskStack);
+        if (!level.isClientSide && player.isCrouching() && type != ItemStorageType.CREATIVE) {
+            IStorageDisk disk = API.instance().getStorageDiskManager((ServerLevel) level).getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {
                 ItemStack storagePart = new ItemStack(StoragePartItem.getByType(type), diskStack.getCount());
 
                 if (!player.getInventory().add(storagePart.copy())) {
-                    Containers.dropItemStack(world, player.getX(), player.getY(), player.getZ(), storagePart);
+                    Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), storagePart);
                 }
 
-                API.instance().getStorageDiskManager((ServerLevel) world).remove(getId(diskStack));
-                API.instance().getStorageDiskManager((ServerLevel) world).markForSaving();
+                API.instance().getStorageDiskManager((ServerLevel) level).remove(getId(diskStack));
+                API.instance().getStorageDiskManager((ServerLevel) level).markForSaving();
 
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING.get()));
             }
@@ -103,7 +103,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
     }
 
     @Override
-    public int getEntityLifespan(ItemStack stack, Level world) {
+    public int getEntityLifespan(ItemStack stack, Level level) {
         return Integer.MAX_VALUE;
     }
 

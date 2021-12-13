@@ -58,9 +58,9 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 StackUtils.createStorages(
-                    (ServerLevel) world,
+                    (ServerLevel) level,
                     handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
@@ -75,7 +75,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                 }
 
                 if (!reading) {
-                    WorldUtils.updateBlock(world, pos);
+                    WorldUtils.updateBlock(level, pos);
                 }
             }
         });
@@ -87,8 +87,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
 
-    public DiskDriveNetworkNode(Level world, BlockPos pos) {
-        super(world, pos);
+    public DiskDriveNetworkNode(Level level, BlockPos pos) {
+        super(level, pos);
     }
 
     public IStorageDisk[] getItemDisks() {
@@ -125,7 +125,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
             ++ticksSinceBlockUpdateRequested;
 
             if (ticksSinceBlockUpdateRequested > DISK_STATE_UPDATE_THROTTLE) {
-                WorldUtils.updateBlock(world, pos);
+                WorldUtils.updateBlock(level, pos);
 
                 this.blockUpdateRequested = false;
                 this.ticksSinceBlockUpdateRequested = 0;
@@ -148,7 +148,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
         network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
 
-        WorldUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(level, pos);
     }
 
     @Override
@@ -323,7 +323,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
     @Override
     public int getType() {
-        return world.isClientSide ? DiskDriveTile.TYPE.getValue() : type;
+        return level.isClientSide ? DiskDriveTile.TYPE.getValue() : type;
     }
 
     @Override

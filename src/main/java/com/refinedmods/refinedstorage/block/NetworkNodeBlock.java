@@ -34,22 +34,22 @@ public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock 
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, blockIn, fromPos, isMoving);
 
-        if (!world.isClientSide) {
-            INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) world).getNode(pos);
+        if (!level.isClientSide) {
+            INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) level).getNode(pos);
             if (node instanceof NetworkNode) {
-                ((NetworkNode) node).setRedstonePowered(world.hasNeighborSignal(pos));
+                ((NetworkNode) node).setRedstonePowered(level.hasNeighborSignal(pos));
             }
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = level.getBlockEntity(pos);
 
             if (tile instanceof NetworkNodeTile) {
                 IItemHandler handler = ((NetworkNodeTile) tile).getNode().getDrops();
@@ -61,20 +61,20 @@ public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock 
                         drops.add(handler.getStackInSlot(i));
                     }
 
-                    Containers.dropContents(world, pos, drops);
+                    Containers.dropContents(level, pos, drops);
                 }
             }
         }
 
         // Call onReplaced after the drops check so the tile still exists
-        super.onRemove(state, world, pos, newState, isMoving);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
-    protected void onDirectionChanged(Level world, BlockPos pos, Direction newDirection) {
-        super.onDirectionChanged(world, pos, newDirection);
+    protected void onDirectionChanged(Level level, BlockPos pos, Direction newDirection) {
+        super.onDirectionChanged(level, pos, newDirection);
 
-        BlockEntity tile = world.getBlockEntity(pos);
+        BlockEntity tile = level.getBlockEntity(pos);
         if (tile instanceof INetworkNodeProxy) {
             INetworkNode node = ((INetworkNodeProxy) tile).getNode();
 

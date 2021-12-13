@@ -12,8 +12,8 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import  net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ProcessingNode extends Node {
