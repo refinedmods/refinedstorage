@@ -8,9 +8,9 @@ import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.grid.GridTile;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -79,7 +79,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
             lines.add(new ItemLine(item));
 
             for (ResourceLocation owningTag : ItemTags.getAllTags().getMatchingTags(item.getItem())) {
-                lines.add(new TagLine(owningTag, GridTile.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag)));
+                lines.add(new TagLine(owningTag, GridBlockEntity.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag)));
 
                 int itemCount = 0;
 
@@ -102,7 +102,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
             lines.add(new FluidLine(fluid));
 
             for (ResourceLocation owningTag : FluidTags.getAllTags().getMatchingTags(fluid.getFluid())) {
-                lines.add(new TagLine(owningTag, GridTile.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
+                lines.add(new TagLine(owningTag, GridBlockEntity.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
 
                 int fluidCount = 0;
 
@@ -245,17 +245,17 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
         }
 
         if (type == IType.ITEMS) {
-            List<Set<ResourceLocation>> existing = GridTile.ALLOWED_ITEM_TAGS.getValue();
+            List<Set<ResourceLocation>> existing = GridBlockEntity.ALLOWED_ITEM_TAGS.getValue();
 
             existing.set(slot, allowed);
 
-            TileDataManager.setParameter(GridTile.ALLOWED_ITEM_TAGS, existing);
+            BlockEntitySynchronizationManager.setParameter(GridBlockEntity.ALLOWED_ITEM_TAGS, existing);
         } else if (type == IType.FLUIDS) {
-            List<Set<ResourceLocation>> existing = GridTile.ALLOWED_FLUID_TAGS.getValue();
+            List<Set<ResourceLocation>> existing = GridBlockEntity.ALLOWED_FLUID_TAGS.getValue();
 
             existing.set(slot, allowed);
 
-            TileDataManager.setParameter(GridTile.ALLOWED_FLUID_TAGS, existing);
+            BlockEntitySynchronizationManager.setParameter(GridBlockEntity.ALLOWED_FLUID_TAGS, existing);
         }
 
         close();

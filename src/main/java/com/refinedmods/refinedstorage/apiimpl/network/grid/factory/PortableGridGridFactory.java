@@ -4,8 +4,8 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridFactoryType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGrid;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +36,7 @@ public class PortableGridGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public BlockEntity getRelevantTile(Level level, BlockPos pos) {
+    public BlockEntity getRelevantBlockEntity(Level level, BlockPos pos) {
         return null;
     }
 

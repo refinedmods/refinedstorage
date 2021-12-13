@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.DetectorModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
-import com.refinedmods.refinedstorage.tile.DetectorTile;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
+import com.refinedmods.refinedstorage.blockentity.DetectorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -25,14 +25,14 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new TypeSideButton(this, DetectorTile.TYPE));
+        addSideButton(new TypeSideButton(this, DetectorBlockEntity.TYPE));
 
         addSideButton(new DetectorModeSideButton(this));
 
-        addSideButton(new ExactModeSideButton(this, DetectorTile.COMPARE));
+        addSideButton(new ExactModeSideButton(this, DetectorBlockEntity.COMPARE));
 
         amountField = new EditBox(font, x + 41 + 1, y + 23 + 1, 50, font.lineHeight, new TextComponent(""));
-        amountField.setValue(String.valueOf(DetectorTile.AMOUNT.getValue()));
+        amountField.setValue(String.valueOf(DetectorBlockEntity.AMOUNT.getValue()));
         amountField.setBordered(false);
         amountField.setVisible(true);
         amountField.setCanLoseFocus(true);
@@ -42,7 +42,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
             try {
                 int result = Integer.parseInt(value);
 
-                TileDataManager.setParameter(DetectorTile.AMOUNT, result);
+                BlockEntitySynchronizationManager.setParameter(DetectorBlockEntity.AMOUNT, result);
             } catch (NumberFormatException e) {
                 // NO OP
             }

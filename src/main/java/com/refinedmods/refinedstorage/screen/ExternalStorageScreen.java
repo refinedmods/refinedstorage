@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.refinedmods.refinedstorage.container.ExternalStorageContainer;
-import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -13,16 +13,16 @@ public class ExternalStorageScreen extends StorageScreen<ExternalStorageContaine
             inventory,
             title,
             "gui/storage.png",
-            new StorageScreenTileDataParameters(
-                ExternalStorageTile.TYPE,
-                NetworkNodeTile.REDSTONE_MODE,
-                ExternalStorageTile.COMPARE,
-                ExternalStorageTile.WHITELIST_BLACKLIST,
-                ExternalStorageTile.PRIORITY,
-                ExternalStorageTile.ACCESS_TYPE
+            new StorageScreenSynchronizationParameters(
+                ExternalStorageBlockEntity.TYPE,
+                NetworkNodeBlockEntity.REDSTONE_MODE,
+                ExternalStorageBlockEntity.COMPARE,
+                ExternalStorageBlockEntity.WHITELIST_BLACKLIST,
+                ExternalStorageBlockEntity.PRIORITY,
+                ExternalStorageBlockEntity.ACCESS_TYPE
             ),
-            ExternalStorageTile.STORED::getValue,
-            ExternalStorageTile.CAPACITY::getValue
+            ExternalStorageBlockEntity.STORED::getValue,
+            ExternalStorageBlockEntity.CAPACITY::getValue
         );
     }
 }

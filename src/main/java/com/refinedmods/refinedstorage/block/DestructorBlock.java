@@ -2,9 +2,9 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.DestructorContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.tile.DestructorTile;
+import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -44,7 +44,7 @@ public class DestructorBlock extends CableBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DestructorTile(pos, state);
+        return new DestructorBlockEntity(pos, state);
     }
 
     @Override
@@ -94,9 +94,9 @@ public class DestructorBlock extends CableBlock {
         if (!level.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<DestructorTile>(
+                new BlockEntityMenuProvider<DestructorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.destructor"),
-                    (tile, windowId, inventory, p) -> new DestructorContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DestructorContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

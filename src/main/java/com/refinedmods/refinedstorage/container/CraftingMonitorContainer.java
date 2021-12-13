@@ -4,8 +4,8 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -18,8 +18,8 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     private final ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
-    public CraftingMonitorContainer(MenuType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, Player player, int windowId) {
-        super(type, craftingMonitorTile, player, windowId);
+    public CraftingMonitorContainer(MenuType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorBlockEntity blockEntity, Player player, int windowId) {
+        super(type, blockEntity, player, windowId);
 
         this.craftingMonitor = craftingMonitor;
     }

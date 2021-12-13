@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.container.DiskDriveContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.DiskDriveTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public class DiskDriveBlock extends NetworkNodeBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DiskDriveTile(pos, state);
+        return new DiskDriveBlockEntity(pos, state);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class DiskDriveBlock extends NetworkNodeBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<DiskDriveTile>(
+                new BlockEntityMenuProvider<DiskDriveBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.disk_drive"),
-                    (tile, windowId, inventory, p) -> new DiskDriveContainer(tile, p, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DiskDriveContainer(blockEntity, p, windowId),
                     pos
                 ),
                 pos

@@ -3,13 +3,13 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.tile.DestructorTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DestructorContainer extends BaseContainer {
-    public DestructorContainer(DestructorTile destructor, Player player, int windowId) {
+    public DestructorContainer(DestructorBlockEntity destructor, Player player, int windowId) {
         super(RSContainers.DESTRUCTOR, destructor, player, windowId);
 
         for (int i = 0; i < 4; ++i) {

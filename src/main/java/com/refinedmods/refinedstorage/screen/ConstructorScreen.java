@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.ConstructorDropSi
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
-import com.refinedmods.refinedstorage.tile.ConstructorTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.ConstructorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,11 +20,11 @@ public class ConstructorScreen extends BaseScreen<ConstructorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
 
-        addSideButton(new TypeSideButton(this, ConstructorTile.TYPE));
+        addSideButton(new TypeSideButton(this, ConstructorBlockEntity.TYPE));
 
-        addSideButton(new ExactModeSideButton(this, ConstructorTile.COMPARE));
+        addSideButton(new ExactModeSideButton(this, ConstructorBlockEntity.COMPARE));
         addSideButton(new ConstructorDropSideButton(this));
     }
 

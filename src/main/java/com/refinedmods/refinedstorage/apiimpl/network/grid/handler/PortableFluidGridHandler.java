@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.network.grid.handler.IFluidGridHandler
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;

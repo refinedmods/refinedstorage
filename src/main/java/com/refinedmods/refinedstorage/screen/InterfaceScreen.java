@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.InterfaceContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.InterfaceTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,9 +18,9 @@ public class InterfaceScreen extends BaseScreen<InterfaceContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
 
-        addSideButton(new ExactModeSideButton(this, InterfaceTile.COMPARE));
+        addSideButton(new ExactModeSideButton(this, InterfaceBlockEntity.COMPARE));
     }
 
     @Override

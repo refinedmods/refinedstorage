@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.container.FilterContainer;
 import com.refinedmods.refinedstorage.inventory.fluid.ConfiguredFluidsInFilterItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItemHandler;
 import com.refinedmods.refinedstorage.render.Styles;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

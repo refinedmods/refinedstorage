@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.FluidInterfaceContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public class FluidInterfaceBlock extends NetworkNodeBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FluidInterfaceTile(pos, state);
+        return new FluidInterfaceBlockEntity(pos, state);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class FluidInterfaceBlock extends NetworkNodeBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<FluidInterfaceTile>(
+                new BlockEntityMenuProvider<FluidInterfaceBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.fluid_interface"),
-                    (tile, windowId, inventory, p) -> new FluidInterfaceContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new FluidInterfaceContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

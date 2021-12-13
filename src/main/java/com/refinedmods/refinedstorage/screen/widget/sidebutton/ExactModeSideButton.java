@@ -3,17 +3,17 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class ExactModeSideButton extends SideButton {
     private static final int MASK = IComparer.COMPARE_NBT;
 
-    private final TileDataParameter<Integer, ?> parameter;
+    private final BlockEntitySynchronizationParameter<Integer, ?> parameter;
 
-    public ExactModeSideButton(BaseScreen<?> screen, TileDataParameter<Integer, ?> parameter) {
+    public ExactModeSideButton(BaseScreen<?> screen, BlockEntitySynchronizationParameter<Integer, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;
@@ -42,6 +42,6 @@ public class ExactModeSideButton extends SideButton {
 
     @Override
     public void onPress() {
-        TileDataManager.setParameter(parameter, parameter.getValue() ^ MASK);
+        BlockEntitySynchronizationManager.setParameter(parameter, parameter.getValue() ^ MASK);
     }
 }

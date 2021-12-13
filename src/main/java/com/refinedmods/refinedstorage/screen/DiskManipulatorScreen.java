@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
-import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,11 +17,11 @@ public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainer> 
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
         addSideButton(new IoModeSideButton(this));
-        addSideButton(new TypeSideButton(this, DiskManipulatorTile.TYPE));
-        addSideButton(new WhitelistBlacklistSideButton(this, DiskManipulatorTile.WHITELIST_BLACKLIST));
-        addSideButton(new ExactModeSideButton(this, DiskManipulatorTile.COMPARE));
+        addSideButton(new TypeSideButton(this, DiskManipulatorBlockEntity.TYPE));
+        addSideButton(new WhitelistBlacklistSideButton(this, DiskManipulatorBlockEntity.WHITELIST_BLACKLIST));
+        addSideButton(new ExactModeSideButton(this, DiskManipulatorBlockEntity.COMPARE));
     }
 
     @Override

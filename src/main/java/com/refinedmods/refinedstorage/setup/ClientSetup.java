@@ -13,7 +13,7 @@ import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
-import com.refinedmods.refinedstorage.render.tesr.StorageMonitorTileRenderer;
+import com.refinedmods.refinedstorage.render.blockentity.StorageMonitorBlockEntityRenderer;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
 import com.refinedmods.refinedstorage.screen.factory.GridScreenFactory;
@@ -261,7 +261,7 @@ public class ClientSetup {
         ItemBlockRenderTypes.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
 
-        BlockEntityRenderers.register(RSTiles.STORAGE_MONITOR, ctx -> new StorageMonitorTileRenderer());
+        BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR, ctx -> new StorageMonitorBlockEntityRenderer());
 
         Minecraft.getInstance().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
 

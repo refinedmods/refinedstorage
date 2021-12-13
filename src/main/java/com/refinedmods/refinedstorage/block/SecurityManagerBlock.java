@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.SecurityManagerContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.SecurityManagerTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -40,15 +40,15 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<SecurityManagerTile>(
+                new BlockEntityMenuProvider<SecurityManagerBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.security_manager"),
-                    (tile, windowId, inventory, p) -> new SecurityManagerContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new SecurityManagerContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos
             );
 
-            if (player.getGameProfile().getId().equals(((SecurityManagerTile) level.getBlockEntity(pos)).getNode().getOwner())) {
+            if (player.getGameProfile().getId().equals(((SecurityManagerBlockEntity) level.getBlockEntity(pos)).getNode().getOwner())) {
                 action.run();
             } else {
                 return NetworkUtils.attempt(level, pos, player, action, Permission.MODIFY, Permission.SECURITY);
@@ -60,7 +60,7 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SecurityManagerTile(pos, state);
+        return new SecurityManagerBlockEntity(pos, state);
     }
 
     @Override

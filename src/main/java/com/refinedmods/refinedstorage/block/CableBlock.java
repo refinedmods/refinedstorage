@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.tile.CableTile;
+import com.refinedmods.refinedstorage.blockentity.CableBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -190,22 +190,22 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
             return false;
         }
 
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile == null) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity == null) {
             return false;
         }
 
-        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
-            && !isSideCovered(tile, direction)
+        return blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
+            && !isSideCovered(blockEntity, direction)
             && !isSideCovered(world.getBlockEntity(pos.relative(direction)), direction.getOpposite());
     }
 
-    private boolean isSideCovered(BlockEntity tile, Direction direction) {
-        if (tile == null) {
+    private boolean isSideCovered(BlockEntity blockEntity, Direction direction) {
+        if (blockEntity == null) {
             return false;
         }
 
-        Optional<INetworkNode> node = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode);
+        Optional<INetworkNode> node = blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode);
 
         if (node.isPresent() && node.get() instanceof ICoverable) {
             Cover cover = ((ICoverable) node.get()).getCoverManager().getCover(direction);
@@ -238,7 +238,7 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CableTile(pos, state);
+        return new CableBlockEntity(pos, state);
     }
 
     @Override

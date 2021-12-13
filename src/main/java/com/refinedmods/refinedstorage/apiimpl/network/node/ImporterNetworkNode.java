@@ -11,11 +11,11 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.tile.DiskDriveTile;
-import com.refinedmods.refinedstorage.tile.ImporterTile;
-import com.refinedmods.refinedstorage.tile.config.IComparable;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
+import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.ImporterBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IComparable;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
@@ -67,10 +67,10 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
         }
 
         if (type == IType.ITEMS) {
-            BlockEntity facing = getFacingTile();
+            BlockEntity facing = getFacingBlockEntity();
             IItemHandler handler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
 
-            if (facing instanceof DiskDriveTile || handler == null) {
+            if (facing instanceof DiskDriveBlockEntity || handler == null) {
                 return;
             }
 
@@ -100,7 +100,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
                 }
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
+            IFluidHandler handler = WorldUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
             if (handler != null) {
                 FluidStack stack = handler.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
@@ -223,7 +223,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
     @Override
     public int getType() {
-        return level.isClientSide ? ImporterTile.TYPE.getValue() : type;
+        return level.isClientSide ? ImporterBlockEntity.TYPE.getValue() : type;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class WrenchItem extends Item {
             return InteractionResult.CONSUME;
         }
 
-        INetworkNode node = NetworkUtils.getNodeFromTile(ctx.getLevel().getBlockEntity(ctx.getClickedPos()));
+        INetworkNode node = NetworkUtils.getNodeFromBlockEntity(ctx.getLevel().getBlockEntity(ctx.getClickedPos()));
         INetwork network = NetworkUtils.getNetworkFromNode(node);
         if (network != null && !network.getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
             WorldUtils.sendNoPermissionMessage(ctx.getPlayer());

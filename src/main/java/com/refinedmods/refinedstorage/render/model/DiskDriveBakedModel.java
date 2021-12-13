@@ -6,7 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
-import com.refinedmods.refinedstorage.tile.DiskDriveTile;
+import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -103,7 +103,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
-        DiskState[] diskState = data.getData(DiskDriveTile.DISK_STATE_PROPERTY);
+        DiskState[] diskState = data.getData(DiskDriveBlockEntity.DISK_STATE_PROPERTY);
 
         if (diskState == null) {
             return base.getQuads(state, side, rand, data);

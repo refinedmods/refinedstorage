@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.container.factory;
 
 import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
 import com.refinedmods.refinedstorage.screen.EmptyScreenInfoProvider;
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
+import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +24,7 @@ public class CrafterManagerContainerFactory implements IContainerFactory<Crafter
             data.put(buf.readComponent().getString(), buf.readInt());
         }
 
-        CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerTile) inv.player.level.getBlockEntity(pos), inv.player, windowId);
+        CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerBlockEntity) inv.player.level.getBlockEntity(pos), inv.player, windowId);
 
         container.setScreenInfoProvider(new EmptyScreenInfoProvider());
         container.initSlots(data);

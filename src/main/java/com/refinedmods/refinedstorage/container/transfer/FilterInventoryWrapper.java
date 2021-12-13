@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.container.transfer;
 
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 

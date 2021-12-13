@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
-import com.refinedmods.refinedstorage.tile.FluidStorageTile;
-import com.refinedmods.refinedstorage.tile.StorageTile;
+import com.refinedmods.refinedstorage.blockentity.FluidStorageBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.StorageBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,23 +23,23 @@ public class StorageBlockLootFunction extends LootItemConditionalFunction {
 
     @Override
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        BlockEntity tile = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
         // This code needs to work without the node being removed as well.
         // For example: the Destructor calls getDrops before the node has been removed.
 
-        if (tile instanceof StorageTile) {
-            StorageNetworkNode removedNode = ((StorageTile) tile).getRemovedNode();
+        if (blockEntity instanceof StorageBlockEntity) {
+            StorageNetworkNode removedNode = ((StorageBlockEntity) blockEntity).getRemovedNode();
             if (removedNode == null) {
-                removedNode = ((StorageTile) tile).getNode();
+                removedNode = ((StorageBlockEntity) blockEntity).getNode();
             }
 
             stack.setTag(new CompoundTag());
             stack.getTag().putUUID(StorageNetworkNode.NBT_ID, removedNode.getStorageId());
-        } else if (tile instanceof FluidStorageTile) {
-            FluidStorageNetworkNode removedNode = ((FluidStorageTile) tile).getRemovedNode();
+        } else if (blockEntity instanceof FluidStorageBlockEntity) {
+            FluidStorageNetworkNode removedNode = ((FluidStorageBlockEntity) blockEntity).getRemovedNode();
             if (removedNode == null) {
-                removedNode = ((FluidStorageTile) tile).getNode();
+                removedNode = ((FluidStorageBlockEntity) blockEntity).getNode();
             }
 
             stack.setTag(new CompoundTag());

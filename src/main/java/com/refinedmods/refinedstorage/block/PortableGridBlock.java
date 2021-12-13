@@ -2,9 +2,9 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.PortableGridBlockGridFactory;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridDiskState;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridDiskState;
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -66,16 +66,16 @@ public class PortableGridBlock extends BaseBlock implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PortableGridTile(type, pos, state);
+        return new PortableGridBlockEntity(type, pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide ? null : new BlockEntityTicker<T>() {
             @Override
-            public void tick(Level level, BlockPos pos, BlockState state, T tile) {
-                if (tile instanceof PortableGridTile) {
-                    PortableGridTile.serverTick((PortableGridTile) tile);
+            public void tick(Level level, BlockPos pos, BlockState state, T blockEntity) {
+                if (blockEntity instanceof PortableGridBlockEntity) {
+                    PortableGridBlockEntity.serverTick((PortableGridBlockEntity) blockEntity);
                 }
             }
         };
@@ -87,7 +87,7 @@ public class PortableGridBlock extends BaseBlock implements EntityBlock {
         if (!level.isClientSide) {
             API.instance().getGridManager().openGrid(PortableGridBlockGridFactory.ID, (ServerPlayer) player, pos);
 
-            ((PortableGridTile) level.getBlockEntity(pos)).onOpened();
+            ((PortableGridBlockEntity) level.getBlockEntity(pos)).onOpened();
         }
 
         return InteractionResult.SUCCESS;
@@ -98,8 +98,8 @@ public class PortableGridBlock extends BaseBlock implements EntityBlock {
         super.setPlacedBy(level, pos, state, placer, stack);
 
         if (!level.isClientSide) {
-            ((PortableGridTile) level.getBlockEntity(pos)).applyDataFromItemToTile(stack);
-            ((PortableGridTile) level.getBlockEntity(pos)).updateState();
+            ((PortableGridBlockEntity) level.getBlockEntity(pos)).applyDataFromItemToBlockEntity(stack);
+            ((PortableGridBlockEntity) level.getBlockEntity(pos)).updateState();
         }
     }
 }

@@ -31,9 +31,9 @@ import com.refinedmods.refinedstorage.apiimpl.storage.tracker.FluidStorageTracke
 import com.refinedmods.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.energy.BaseEnergyStorage;
-import com.refinedmods.refinedstorage.tile.ControllerTile;
-import com.refinedmods.refinedstorage.tile.config.IRedstoneConfigurable;
-import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
+import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
+import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -99,10 +99,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.type = type;
         this.root = new RootNetworkNode(this, level, pos);
         this.nodeGraph.addListener(() -> {
-            BlockEntity tile = level.getBlockEntity(pos);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
 
-            if (tile instanceof ControllerTile) {
-                ((ControllerTile) tile).getDataManager().sendParameterToWatchers(ControllerTile.NODES);
+            if (blockEntity instanceof ControllerBlockEntity) {
+                ((ControllerBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(ControllerBlockEntity.NODES);
             }
         });
     }

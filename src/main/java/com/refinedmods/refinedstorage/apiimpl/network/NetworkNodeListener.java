@@ -20,11 +20,11 @@ public class NetworkNodeListener {
         if (!e.getWorld().isClientSide() && e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
 
-            INetworkNode placed = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getPos()));
+            INetworkNode placed = NetworkUtils.getNodeFromBlockEntity(e.getWorld().getBlockEntity(e.getPos()));
 
             if (placed != null) {
                 for (Direction facing : Direction.values()) {
-                    INetworkNode node = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getBlockSnapshot().getPos().relative(facing)));
+                    INetworkNode node = NetworkUtils.getNodeFromBlockEntity(e.getWorld().getBlockEntity(e.getBlockSnapshot().getPos().relative(facing)));
 
                     if (node != null && node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, player)) {
                         WorldUtils.sendNoPermissionMessage(player);
@@ -47,7 +47,7 @@ public class NetworkNodeListener {
 
     private void discoverNode(LevelAccessor world, BlockPos pos) {
         for (Direction facing : Direction.values()) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(world.getBlockEntity(pos.relative(facing)));
+            INetworkNode node = NetworkUtils.getNodeFromBlockEntity(world.getBlockEntity(pos.relative(facing)));
 
             if (node != null && node.getNetwork() != null) {
                 node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getLevel(), node.getNetwork().getPosition());
@@ -60,7 +60,7 @@ public class NetworkNodeListener {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent e) {
         if (!e.getWorld().isClientSide()) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(e.getWorld().getBlockEntity(e.getPos()));
+            INetworkNode node = NetworkUtils.getNodeFromBlockEntity(e.getWorld().getBlockEntity(e.getPos()));
 
             if (node != null && node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, e.getPlayer())) {
                 WorldUtils.sendNoPermissionMessage(e.getPlayer());

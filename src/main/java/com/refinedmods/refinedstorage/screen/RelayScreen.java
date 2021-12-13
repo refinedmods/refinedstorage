@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.RelayContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,7 +16,7 @@ public class RelayScreen extends BaseScreen<RelayContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
     }
 
     @Override

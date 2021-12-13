@@ -12,9 +12,9 @@ import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.CrafterManagerSearchBoxModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.GridSizeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
+import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
     public CrafterManagerScreen(CrafterManagerContainer container, Inventory inventory, Component title) {
         super(container, 193, 0, inventory, title);
 
-        this.crafterManager = ((CrafterManagerTile) container.getTile()).getNode();
+        this.crafterManager = ((CrafterManagerBlockEntity) container.getBlockEntity()).getNode();
     }
 
     @Override
@@ -44,9 +44,9 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
         addSideButton(new CrafterManagerSearchBoxModeSideButton(this));
-        addSideButton(new GridSizeSideButton(this, crafterManager::getSize, size -> TileDataManager.setParameter(CrafterManagerTile.SIZE, size)));
+        addSideButton(new GridSizeSideButton(this, crafterManager::getSize, size -> BlockEntitySynchronizationManager.setParameter(CrafterManagerBlockEntity.SIZE, size)));
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
         this.scrollbar.addListener((oldOffset, newOffset) -> menu.initSlots(null));

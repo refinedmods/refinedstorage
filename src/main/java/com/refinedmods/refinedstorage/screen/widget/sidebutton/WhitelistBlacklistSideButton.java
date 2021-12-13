@@ -2,16 +2,16 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
+import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class WhitelistBlacklistSideButton extends SideButton {
-    private final TileDataParameter<Integer, ?> parameter;
+    private final BlockEntitySynchronizationParameter<Integer, ?> parameter;
 
-    public WhitelistBlacklistSideButton(BaseScreen<?> screen, TileDataParameter<Integer, ?> parameter) {
+    public WhitelistBlacklistSideButton(BaseScreen<?> screen, BlockEntitySynchronizationParameter<Integer, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;
@@ -29,6 +29,6 @@ public class WhitelistBlacklistSideButton extends SideButton {
 
     @Override
     public void onPress() {
-        TileDataManager.setParameter(parameter, parameter.getValue() == IWhitelistBlacklist.WHITELIST ? IWhitelistBlacklist.BLACKLIST : IWhitelistBlacklist.WHITELIST);
+        BlockEntitySynchronizationManager.setParameter(parameter, parameter.getValue() == IWhitelistBlacklist.WHITELIST ? IWhitelistBlacklist.BLACKLIST : IWhitelistBlacklist.WHITELIST);
     }
 }

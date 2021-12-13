@@ -8,10 +8,10 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
-import com.refinedmods.refinedstorage.tile.StorageMonitorTile;
-import com.refinedmods.refinedstorage.tile.config.IComparable;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
+import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IComparable;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
@@ -318,7 +318,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     @Override
     public int getType() {
-        return level.isClientSide ? StorageMonitorTile.TYPE.getValue() : type;
+        return level.isClientSide ? StorageMonitorBlockEntity.TYPE.getValue() : type;
     }
 
     @Override

@@ -260,7 +260,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return null;
         }
 
-        return WorldUtils.getItemHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
+        return WorldUtils.getItemHandler(proxy.getFacingBlockEntity(), proxy.getDirection().getOpposite());
     }
 
     @Nullable
@@ -271,29 +271,18 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return null;
         }
 
-        return WorldUtils.getFluidHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
+        return WorldUtils.getFluidHandler(proxy.getFacingBlockEntity(), proxy.getDirection().getOpposite());
     }
 
     @Override
     @Nullable
-    public BlockEntity getConnectedTile() {
+    public BlockEntity getConnectedBlockEntity() {
         ICraftingPatternContainer proxy = getRootContainer();
         if (proxy == null) {
             return null;
         }
 
-        return proxy.getFacingTile();
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity getFacingTile() {
-        BlockPos facingPos = pos.relative(getDirection());
-        if (!level.isLoaded(facingPos)) {
-            return null;
-        }
-
-        return level.getBlockEntity(facingPos);
+        return proxy.getFacingBlockEntity();
     }
 
     @Override
@@ -313,7 +302,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return displayName;
         }
 
-        BlockEntity facing = getConnectedTile();
+        BlockEntity facing = getConnectedBlockEntity();
 
         if (facing instanceof Nameable && ((Nameable) facing).getName() != null) {
             return ((Nameable) facing).getName();

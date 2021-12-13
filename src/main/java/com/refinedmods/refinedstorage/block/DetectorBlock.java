@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.DetectorContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.DetectorTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.DetectorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -60,9 +60,9 @@ public class DetectorBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
-        BlockEntity tile = world.getBlockEntity(pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        return (tile instanceof DetectorTile && ((DetectorTile) tile).getNode().isPowered()) ? 15 : 0;
+        return (blockEntity instanceof DetectorBlockEntity && ((DetectorBlockEntity) blockEntity).getNode().isPowered()) ? 15 : 0;
     }
 
     @Override
@@ -80,9 +80,9 @@ public class DetectorBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<DetectorTile>(
+                new BlockEntityMenuProvider<DetectorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.detector"),
-                    (tile, windowId, inventory, p) -> new DetectorContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DetectorContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos
@@ -94,6 +94,6 @@ public class DetectorBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DetectorTile(pos, state);
+        return new DetectorBlockEntity(pos, state);
     }
 }

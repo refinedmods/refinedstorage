@@ -3,13 +3,13 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskManipulatorContainer extends BaseContainer {
-    public DiskManipulatorContainer(DiskManipulatorTile diskManipulator, Player player, int windowId) {
+    public DiskManipulatorContainer(DiskManipulatorBlockEntity diskManipulator, Player player, int windowId) {
         super(RSContainers.DISK_MANIPULATOR, diskManipulator, player, windowId);
 
         for (int i = 0; i < 4; ++i) {

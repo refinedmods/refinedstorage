@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DiskManipulatorTile(pos, state);
+        return new DiskManipulatorBlockEntity(pos, state);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<DiskManipulatorTile>(
+                new BlockEntityMenuProvider<DiskManipulatorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.disk_manipulator"),
-                    (tile, windowId, inventory, p) -> new DiskManipulatorContainer(tile, p, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DiskManipulatorContainer(blockEntity, p, windowId),
                     pos
                 ),
                 pos

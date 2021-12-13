@@ -8,8 +8,8 @@ import com.refinedmods.refinedstorage.item.SecurityCardItem;
 import com.refinedmods.refinedstorage.network.SecurityManagerUpdateMessage;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import com.refinedmods.refinedstorage.tile.SecurityManagerTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -18,18 +18,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> {
-    private final SecurityManagerTile securityManager;
+    private final SecurityManagerBlockEntity securityManager;
     private final CheckboxWidget[] permissions = new CheckboxWidget[Permission.values().length];
 
     public SecurityManagerScreen(SecurityManagerContainer container, Inventory inventory, Component title) {
         super(container, 176, 234, inventory, title);
 
-        this.securityManager = (SecurityManagerTile) container.getTile();
+        this.securityManager = (SecurityManagerBlockEntity) container.getBlockEntity();
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
 
         int padding = 15;
 

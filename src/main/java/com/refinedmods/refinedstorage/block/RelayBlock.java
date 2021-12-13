@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.RelayContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.RelayTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.RelayBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public class RelayBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new RelayTile(pos, state);
+        return new RelayBlockEntity(pos, state);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class RelayBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<RelayTile>(
+                new BlockEntityMenuProvider<RelayBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.relay"),
-                    (tile, windowId, inventory, p) -> new RelayContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new RelayContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.block.CrafterManagerBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
+import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +35,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public int getSize() {
-        return level.isClientSide ? CrafterManagerTile.SIZE.getValue() : size;
+        return level.isClientSide ? CrafterManagerBlockEntity.SIZE.getValue() : size;
     }
 
     public void setSize(int size) {
@@ -66,7 +66,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
     }
 
     public int getSearchBoxMode() {
-        return level.isClientSide ? CrafterManagerTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return level.isClientSide ? CrafterManagerBlockEntity.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {

@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.factory.CrafterManagerContainerProvider;
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
+import com.refinedmods.refinedstorage.container.factory.CrafterManagerMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public class CrafterManagerBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrafterManagerTile(pos, state);
+        return new CrafterManagerBlockEntity(pos, state);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class CrafterManagerBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new CrafterManagerContainerProvider((CrafterManagerTile) level.getBlockEntity(pos)),
-                buf -> CrafterManagerContainerProvider.writeToBuffer(buf, level, pos)
+                new CrafterManagerMenuProvider((CrafterManagerBlockEntity) level.getBlockEntity(pos)),
+                buf -> CrafterManagerMenuProvider.writeToBuffer(buf, level, pos)
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }
 

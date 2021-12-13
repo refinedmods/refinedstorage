@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;

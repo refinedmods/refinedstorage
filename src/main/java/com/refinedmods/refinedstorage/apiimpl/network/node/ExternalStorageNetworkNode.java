@@ -20,8 +20,8 @@ import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
-import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
-import com.refinedmods.refinedstorage.tile.config.*;
+import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.*;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
@@ -210,13 +210,13 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         itemStorages.clear();
         fluidStorages.clear();
 
-        BlockEntity facing = getFacingTile();
+        BlockEntity facing = getFacingBlockEntity();
 
         if (facing != null) {
             if (type == IType.ITEMS) {
                 for (IExternalStorageProvider<ItemStack> provider : API.instance().<ItemStack>getExternalStorageProviders(StorageType.ITEM)) {
                     if (provider.canProvide(facing, getDirection())) {
-                        itemStorages.add(provider.provide(this, getFacingTile(), getDirection()));
+                        itemStorages.add(provider.provide(this, getFacingBlockEntity(), getDirection()));
 
                         break;
                     }
@@ -224,7 +224,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
             } else if (type == IType.FLUIDS) {
                 for (IExternalStorageProvider<FluidStack> provider : API.instance().<FluidStack>getExternalStorageProviders(StorageType.FLUID)) {
                     if (provider.canProvide(facing, getDirection())) {
-                        fluidStorages.add(provider.provide(this, getFacingTile(), getDirection()));
+                        fluidStorages.add(provider.provide(this, getFacingBlockEntity(), getDirection()));
 
                         break;
                     }
@@ -253,12 +253,12 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     @Override
     public long getStored() {
-        return ExternalStorageTile.STORED.getValue();
+        return ExternalStorageBlockEntity.STORED.getValue();
     }
 
     @Override
     public long getCapacity() {
-        return ExternalStorageTile.CAPACITY.getValue();
+        return ExternalStorageBlockEntity.CAPACITY.getValue();
     }
 
     @Override
@@ -290,7 +290,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     @Override
     public int getType() {
-        return level.isClientSide ? ExternalStorageTile.TYPE.getValue() : type;
+        return level.isClientSide ? ExternalStorageBlockEntity.TYPE.getValue() : type;
     }
 
     @Override

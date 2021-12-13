@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.container.FluidStorageContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.FluidStorageTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.FluidStorageBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
         if (!level.isClientSide) {
-            FluidStorageNetworkNode storage = ((FluidStorageTile) level.getBlockEntity(pos)).getNode();
+            FluidStorageNetworkNode storage = ((FluidStorageBlockEntity) level.getBlockEntity(pos)).getNode();
 
             if (stack.hasTag() && stack.getTag().hasUUID(FluidStorageNetworkNode.NBT_ID)) {
                 storage.setStorageId(stack.getTag().getUUID(FluidStorageNetworkNode.NBT_ID));
@@ -51,16 +51,16 @@ public class FluidStorageBlock extends NetworkNodeBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FluidStorageTile(type, pos, state);
+        return new FluidStorageBlockEntity(type, pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<FluidStorageTile>(
-                ((FluidStorageTile) level.getBlockEntity(pos)).getNode().getTitle(),
-                (tile, windowId, inventory, p) -> new FluidStorageContainer(tile, player, windowId),
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new BlockEntityMenuProvider<FluidStorageBlockEntity>(
+                ((FluidStorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
+                (blockEntity, windowId, inventory, p) -> new FluidStorageContainer(blockEntity, player, windowId),
                 pos
             ), pos));
         }

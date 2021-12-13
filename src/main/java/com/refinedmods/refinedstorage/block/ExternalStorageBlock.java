@@ -5,9 +5,9 @@ import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ExternalStorageContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
+import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -89,7 +89,7 @@ public class ExternalStorageBlock extends CableBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ExternalStorageTile(pos, state);
+        return new ExternalStorageBlockEntity(pos, state);
     }
 
     @Override
@@ -98,9 +98,9 @@ public class ExternalStorageBlock extends CableBlock {
         if (!level.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<ExternalStorageTile>(
+                new BlockEntityMenuProvider<ExternalStorageBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.external_storage"),
-                    (tile, windowId, inventory, p) -> new ExternalStorageContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new ExternalStorageContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos
@@ -116,7 +116,7 @@ public class ExternalStorageBlock extends CableBlock {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
         if (!level.isClientSide) {
-            INetworkNode node = NetworkUtils.getNodeFromTile(level.getBlockEntity(pos));
+            INetworkNode node = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(pos));
 
             if (node instanceof ExternalStorageNetworkNode &&
                 node.getNetwork() != null &&

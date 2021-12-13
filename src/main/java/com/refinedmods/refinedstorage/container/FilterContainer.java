@@ -9,7 +9,7 @@ import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.ConfiguredIconInFilterItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItemHandler;
 import com.refinedmods.refinedstorage.item.FilterItem;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 

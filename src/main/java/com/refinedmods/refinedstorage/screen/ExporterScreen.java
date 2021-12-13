@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
-import com.refinedmods.refinedstorage.tile.ExporterTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.ExporterBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,16 +23,16 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
     }
 
     private boolean hasRegulatorMode() {
-        return ((ExporterTile) menu.getTile()).getNode().getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR);
+        return ((ExporterBlockEntity) menu.getBlockEntity()).getNode().getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR);
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
 
-        addSideButton(new TypeSideButton(this, ExporterTile.TYPE));
+        addSideButton(new TypeSideButton(this, ExporterBlockEntity.TYPE));
 
-        addSideButton(new ExactModeSideButton(this, ExporterTile.COMPARE));
+        addSideButton(new ExactModeSideButton(this, ExporterBlockEntity.COMPARE));
     }
 
     @Override

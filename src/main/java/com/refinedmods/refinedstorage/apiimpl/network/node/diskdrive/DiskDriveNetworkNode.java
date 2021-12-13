@@ -14,13 +14,13 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
+import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.*;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
-import com.refinedmods.refinedstorage.tile.DiskDriveTile;
-import com.refinedmods.refinedstorage.tile.config.*;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
@@ -323,7 +323,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
     @Override
     public int getType() {
-        return level.isClientSide ? DiskDriveTile.TYPE.getValue() : type;
+        return level.isClientSide ? DiskDriveBlockEntity.TYPE.getValue() : type;
     }
 
     @Override

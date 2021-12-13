@@ -3,13 +3,13 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.tile.DiskDriveTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskDriveContainer extends BaseContainer {
-    public DiskDriveContainer(DiskDriveTile diskDrive, Player player, int windowId) {
+    public DiskDriveContainer(DiskDriveBlockEntity diskDrive, Player player, int windowId) {
         super(RSContainers.DISK_DRIVE, diskDrive, player, windowId);
 
         int x = 80;

@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.InterfaceContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.InterfaceTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public class InterfaceBlock extends NetworkNodeBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new InterfaceTile(pos, state);
+        return new InterfaceBlockEntity(pos, state);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class InterfaceBlock extends NetworkNodeBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<InterfaceTile>(
+                new BlockEntityMenuProvider<InterfaceBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.interface"),
-                    (tile, windowId, inventory, p) -> new InterfaceContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new InterfaceContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.NetworkTransmitterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public class NetworkTransmitterBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new NetworkTransmitterTile(pos, state);
+        return new NetworkTransmitterBlockEntity(pos, state);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class NetworkTransmitterBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<NetworkTransmitterTile>(
+                new BlockEntityMenuProvider<NetworkTransmitterBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.network_transmitter"),
-                    (tile, windowId, inventory, p) -> new NetworkTransmitterContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new NetworkTransmitterContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

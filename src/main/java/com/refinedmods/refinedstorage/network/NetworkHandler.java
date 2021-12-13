@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.network.craftingmonitor.WirelessCraftingMo
 import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeRequestMessage;
 import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeResponseMessage;
 import com.refinedmods.refinedstorage.network.grid.*;
-import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterMessage;
-import com.refinedmods.refinedstorage.network.tiledata.TileDataParameterUpdateMessage;
+import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParameterMessage;
+import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParamaterUpdateMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -34,8 +34,8 @@ public class NetworkHandler {
         handler.registerMessage(id++, StorageDiskSizeResponseMessage.class, StorageDiskSizeResponseMessage::encode, StorageDiskSizeResponseMessage::decode, StorageDiskSizeResponseMessage::handle);
         handler.registerMessage(id++, FilterUpdateMessage.class, FilterUpdateMessage::encode, FilterUpdateMessage::decode, FilterUpdateMessage::handle);
         handler.registerMessage(id++, FluidFilterSlotUpdateMessage.class, FluidFilterSlotUpdateMessage::encode, FluidFilterSlotUpdateMessage::decode, FluidFilterSlotUpdateMessage::handle);
-        handler.registerMessage(id++, TileDataParameterMessage.class, TileDataParameterMessage::encode, TileDataParameterMessage::decode, (msg, ctx) -> TileDataParameterMessage.handle(ctx));
-        handler.registerMessage(id++, TileDataParameterUpdateMessage.class, TileDataParameterUpdateMessage::encode, TileDataParameterUpdateMessage::decode, TileDataParameterUpdateMessage::handle);
+        handler.registerMessage(id++, BlockEntitySynchronizationParameterMessage.class, BlockEntitySynchronizationParameterMessage::encode, BlockEntitySynchronizationParameterMessage::decode, (msg, ctx) -> BlockEntitySynchronizationParameterMessage.handle(ctx));
+        handler.registerMessage(id++, BlockEntitySynchronizationParamaterUpdateMessage.class, BlockEntitySynchronizationParamaterUpdateMessage::encode, BlockEntitySynchronizationParamaterUpdateMessage::decode, BlockEntitySynchronizationParamaterUpdateMessage::handle);
         splitter.registerMessage(id++, GridItemUpdateMessage.class, GridItemUpdateMessage::encode, GridItemUpdateMessage::decode, GridItemUpdateMessage::handle);
         splitter.registerMessage(id++, GridItemDeltaMessage.class, GridItemDeltaMessage::encode, GridItemDeltaMessage::decode, GridItemDeltaMessage::handle);
         handler.registerMessage(id++, GridItemPullMessage.class, GridItemPullMessage::encode, GridItemPullMessage::decode, GridItemPullMessage::handle);

@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.network.ClientProxy;
 import com.refinedmods.refinedstorage.screen.CraftingMonitorScreen;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;

@@ -32,7 +32,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         Operator operator = new Operator(action);
 
-        INetworkNode originNode = NetworkUtils.getNodeFromTile(level.getBlockEntity(origin));
+        INetworkNode originNode = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(origin));
         if (originNode instanceof INetworkNodeVisitor) {
             ((INetworkNodeVisitor) originNode).visit(operator);
         }
@@ -100,14 +100,14 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         private final Level level;
         private final BlockPos pos;
         private final Direction side;
-        private final BlockEntity tile;
+        private final BlockEntity blockEntity;
 
-        Visitor(INetworkNode node, Level level, BlockPos pos, Direction side, BlockEntity tile) {
+        Visitor(INetworkNode node, Level level, BlockPos pos, Direction side, BlockEntity blockEntity) {
             this.node = node;
             this.level = level;
             this.pos = pos;
             this.side = side;
-            this.tile = tile;
+            this.blockEntity = blockEntity;
         }
 
         @Override
@@ -117,7 +117,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             } else {
                 for (Direction checkSide : Direction.values()) {
                     if (checkSide != side) { // Avoid going backward
-                        INetworkNode nodeOnSide = NetworkUtils.getNodeFromTile(tile);
+                        INetworkNode nodeOnSide = NetworkUtils.getNodeFromBlockEntity(blockEntity);
 
                         if (nodeOnSide == node) {
                             operator.apply(level, pos.relative(checkSide), checkSide.getOpposite());
@@ -144,9 +144,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         @Override
         public void apply(Level level, BlockPos pos, @Nullable Direction side) {
-            BlockEntity tile = level.getBlockEntity(pos);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
 
-            INetworkNode otherNode = NetworkUtils.getNodeFromTile(tile);
+            INetworkNode otherNode = NetworkUtils.getNodeFromBlockEntity(blockEntity);
             if (otherNode != null) {
                 NetworkNodeGraphEntry otherNodeItem = new NetworkNodeGraphEntry(otherNode);
 
@@ -168,7 +168,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                     previousEntries.remove(otherNodeItem);
 
-                    toCheck.add(new Visitor(otherNode, level, pos, side, tile));
+                    toCheck.add(new Visitor(otherNode, level, pos, side, blockEntity));
                 }
             }
         }

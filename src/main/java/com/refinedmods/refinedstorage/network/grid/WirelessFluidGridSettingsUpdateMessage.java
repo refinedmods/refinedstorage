@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.network.grid;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.container.GridContainer;
-import com.refinedmods.refinedstorage.tile.grid.WirelessFluidGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.WirelessFluidGrid;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.block.CraftingMonitorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -62,8 +62,8 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     }
 
     @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return NetworkNodeTile.REDSTONE_MODE;
+    public BlockEntitySynchronizationParameter<Integer, ?> getRedstoneModeParameter() {
+        return NetworkNodeBlockEntity.REDSTONE_MODE;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public Optional<UUID> getTabSelected() {
-        return level.isClientSide ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
+        return level.isClientSide ? CraftingMonitorBlockEntity.TAB_SELECTED.getValue() : tabSelected;
     }
 
     public void setTabSelected(Optional<UUID> tabSelected) {
@@ -128,7 +128,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public int getTabPage() {
-        return level.isClientSide ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
+        return level.isClientSide ? CraftingMonitorBlockEntity.TAB_PAGE.getValue() : tabPage;
     }
 
     public void setTabPage(int tabPage) {
@@ -137,13 +137,13 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public void onTabSelectionChanged(Optional<UUID> tab) {
-        TileDataManager.setParameter(CraftingMonitorTile.TAB_SELECTED, tab);
+        BlockEntitySynchronizationManager.setParameter(CraftingMonitorBlockEntity.TAB_SELECTED, tab);
     }
 
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0) {
-            TileDataManager.setParameter(CraftingMonitorTile.TAB_PAGE, page);
+            BlockEntitySynchronizationManager.setParameter(CraftingMonitorBlockEntity.TAB_PAGE, page);
         }
     }
 

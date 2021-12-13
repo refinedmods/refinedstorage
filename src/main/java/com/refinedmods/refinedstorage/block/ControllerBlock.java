@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.container.ControllerContainer;
-import com.refinedmods.refinedstorage.tile.ControllerTile;
+import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -66,10 +66,10 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
 
         if (!level.isClientSide) {
             stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromStack -> {
-                BlockEntity tile = level.getBlockEntity(pos);
+                BlockEntity blockEntity = level.getBlockEntity(pos);
 
-                if (tile != null) {
-                    tile.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromTile -> energyFromTile.receiveEnergy(energyFromStack.getEnergyStored(), false));
+                if (blockEntity != null) {
+                    blockEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromBlockEntity -> energyFromBlockEntity.receiveEnergy(energyFromStack.getEnergyStored(), false));
                 }
             });
         }
@@ -116,7 +116,7 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
 
                     @Override
                     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player player) {
-                        return new ControllerContainer((ControllerTile) level.getBlockEntity(pos), player, i);
+                        return new ControllerContainer((ControllerBlockEntity) level.getBlockEntity(pos), player, i);
                     }
                 },
                 pos
@@ -136,7 +136,7 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ControllerTile(type, pos, state);
+        return new ControllerBlockEntity(type, pos, state);
     }
 
     public enum EnergyType implements StringRepresentable {

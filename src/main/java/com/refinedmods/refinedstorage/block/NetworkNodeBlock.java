@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -49,10 +49,10 @@ public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock 
     @SuppressWarnings("deprecation")
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tile = level.getBlockEntity(pos);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
 
-            if (tile instanceof NetworkNodeTile) {
-                IItemHandler handler = ((NetworkNodeTile) tile).getNode().getDrops();
+            if (blockEntity instanceof NetworkNodeBlockEntity) {
+                IItemHandler handler = ((NetworkNodeBlockEntity) blockEntity).getNode().getDrops();
 
                 if (handler != null) {
                     NonNullList<ItemStack> drops = NonNullList.create();
@@ -74,9 +74,9 @@ public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock 
     protected void onDirectionChanged(Level level, BlockPos pos, Direction newDirection) {
         super.onDirectionChanged(level, pos, newDirection);
 
-        BlockEntity tile = level.getBlockEntity(pos);
-        if (tile instanceof INetworkNodeProxy) {
-            INetworkNode node = ((INetworkNodeProxy) tile).getNode();
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof INetworkNodeProxy) {
+            INetworkNode node = ((INetworkNodeProxy) blockEntity).getNode();
 
             if (node instanceof NetworkNode) {
                 ((NetworkNode) node).onDirectionChanged(newDirection);

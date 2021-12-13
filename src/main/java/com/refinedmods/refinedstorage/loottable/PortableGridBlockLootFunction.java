@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.loottable;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.RSLootFunctions;
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -19,10 +19,10 @@ public class PortableGridBlockLootFunction extends LootItemConditionalFunction {
 
     @Override
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        BlockEntity tile = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
-        if (tile instanceof PortableGridTile) {
-            ((PortableGridTile) tile).applyDataFromTileToItem(stack);
+        if (blockEntity instanceof PortableGridBlockEntity) {
+            ((PortableGridBlockEntity) blockEntity).applyDataFromBlockEntityToItem(stack);
         }
 
         return stack;

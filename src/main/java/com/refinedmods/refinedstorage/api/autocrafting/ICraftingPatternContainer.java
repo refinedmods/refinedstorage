@@ -59,18 +59,18 @@ public interface ICraftingPatternContainer {
     IFluidHandler getConnectedFluidInventory();
 
     /**
-     * @return the tile that this container is connected to, or null if no tile is present
+     * @return the block entity that this container is connected to, or null if no block entity is present
      */
     @Nullable
-    BlockEntity getConnectedTile();
+    BlockEntity getConnectedBlockEntity();
 
     /**
-     * @return the tile that this container is facing
+     * @return the block entity that this container is facing
      */
-    BlockEntity getFacingTile();
+    BlockEntity getFacingBlockEntity();
 
     /**
-     * @return the direction to the facing tile
+     * @return the direction to the facing block entity
      */
     Direction getDirection();
 

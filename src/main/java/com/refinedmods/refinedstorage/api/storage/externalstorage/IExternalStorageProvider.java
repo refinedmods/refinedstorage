@@ -12,20 +12,20 @@ import javax.annotation.Nonnull;
  */
 public interface IExternalStorageProvider<T> {
     /**
-     * @param tile      the tile
-     * @param direction the direction of the external storage
+     * @param blockEntity the block entity
+     * @param direction   the direction of the external storage
      * @return true if the provider can provide, false otherwise
      */
-    boolean canProvide(BlockEntity tile, Direction direction);
+    boolean canProvide(BlockEntity blockEntity, Direction direction);
 
     /**
-     * @param context   the context of the external storage
-     * @param tile      the tile
-     * @param direction the direction of the external storage
+     * @param context     the context of the external storage
+     * @param blockEntity the block entity
+     * @param direction   the direction of the external storage
      * @return the external storage handler
      */
     @Nonnull
-    IExternalStorage<T> provide(IExternalStorageContext context, BlockEntity tile, Direction direction);
+    IExternalStorage<T> provide(IExternalStorageContext context, BlockEntity blockEntity, Direction direction);
 
     /**
      * Returns the priority of this external storage provider.

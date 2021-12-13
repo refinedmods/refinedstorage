@@ -2,9 +2,9 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.container.ImporterContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.tile.ImporterTile;
+import com.refinedmods.refinedstorage.blockentity.ImporterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -108,7 +108,7 @@ public class ImporterBlock extends CableBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ImporterTile(pos, state);
+        return new ImporterBlockEntity(pos, state);
     }
 
     @Override
@@ -117,9 +117,9 @@ public class ImporterBlock extends CableBlock {
         if (!level.isClientSide && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getLocation())) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<ImporterTile>(
+                new BlockEntityMenuProvider<ImporterBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.importer"),
-                    (tile, windowId, inventory, p) -> new ImporterContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new ImporterContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

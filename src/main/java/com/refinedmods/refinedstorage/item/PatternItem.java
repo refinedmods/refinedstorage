@@ -10,7 +10,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPatternFactory;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.render.Styles;
-import com.refinedmods.refinedstorage.render.tesr.PatternItemStackTileRenderer;
+import com.refinedmods.refinedstorage.render.blockentity.PatternItemBlockEntityRenderer;
 import com.refinedmods.refinedstorage.util.ItemStackKey;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -55,7 +55,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
 
     private static final int VERSION = 1;
 
-    private final NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(() -> new PatternItemStackTileRenderer(
+    private final NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(() -> new PatternItemBlockEntityRenderer(
         Minecraft.getInstance().getBlockEntityRenderDispatcher(),
         Minecraft.getInstance().getEntityModels()
     ));

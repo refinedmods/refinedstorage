@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.container.StorageContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.StorageTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.StorageBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -38,7 +38,7 @@ public class StorageBlock extends NetworkNodeBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (!level.isClientSide) {
-            StorageNetworkNode storage = ((StorageTile) level.getBlockEntity(pos)).getNode();
+            StorageNetworkNode storage = ((StorageBlockEntity) level.getBlockEntity(pos)).getNode();
 
             if (stack.hasTag() && stack.getTag().hasUUID(StorageNetworkNode.NBT_ID)) {
                 storage.setStorageId(stack.getTag().getUUID(StorageNetworkNode.NBT_ID));
@@ -53,16 +53,16 @@ public class StorageBlock extends NetworkNodeBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new StorageTile(type, pos, state);
+        return new StorageBlockEntity(type, pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new PositionalTileContainerProvider<StorageTile>(
-                ((StorageTile) level.getBlockEntity(pos)).getNode().getTitle(),
-                (tile, windowId, inventory, p) -> new StorageContainer(tile, player, windowId),
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new BlockEntityMenuProvider<StorageBlockEntity>(
+                ((StorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
+                (blockEntity, windowId, inventory, p) -> new StorageContainer(blockEntity, player, windowId),
                 pos
             ), pos));
         }

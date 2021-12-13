@@ -9,8 +9,8 @@ import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
 import com.refinedmods.refinedstorage.container.transfer.TransferManager;
 import com.refinedmods.refinedstorage.network.FluidFilterSlotUpdateMessage;
-import com.refinedmods.refinedstorage.tile.BaseTile;
-import com.refinedmods.refinedstorage.tile.data.TileDataWatcher;
+import com.refinedmods.refinedstorage.blockentity.BaseBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationWatcher;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,20 +27,20 @@ import java.util.List;
 public abstract class BaseContainer extends AbstractContainerMenu {
     protected final TransferManager transferManager = new TransferManager(this);
     @Nullable
-    private final BaseTile tile;
+    private final BaseBlockEntity blockEntity;
     private final Player player;
     private final List<FluidFilterSlot> fluidSlots = new ArrayList<>();
     private final List<FluidStack> fluids = new ArrayList<>();
     @Nullable
-    private TileDataWatcher listener;
+    private BlockEntitySynchronizationWatcher listener;
 
-    protected BaseContainer(@Nullable MenuType<?> type, @Nullable BaseTile tile, Player player, int windowId) {
+    protected BaseContainer(@Nullable MenuType<?> type, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
         super(type, windowId);
 
-        this.tile = tile;
+        this.blockEntity = blockEntity;
 
-        if (tile != null && player instanceof ServerPlayer) {
-            listener = new TileDataWatcher((ServerPlayer) player, tile.getDataManager());
+        if (blockEntity != null && player instanceof ServerPlayer) {
+            listener = new BlockEntitySynchronizationWatcher((ServerPlayer) player, blockEntity.getDataManager());
         }
 
         this.player = player;
@@ -51,8 +51,8 @@ public abstract class BaseContainer extends AbstractContainerMenu {
     }
 
     @Nullable
-    public BaseTile getTile() {
-        return tile;
+    public BaseBlockEntity getBlockEntity() {
+        return blockEntity;
     }
 
     protected void addPlayerInventory(int xInventory, int yInventory) {
@@ -155,14 +155,13 @@ public abstract class BaseContainer extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return isTileStillThere();
+        return isBlockEntityStillPresent();
     }
 
-    private boolean isTileStillThere() {
-        if (tile != null) {
-            return tile.getLevel().getBlockEntity(tile.getBlockPos()) == tile;
+    private boolean isBlockEntityStillPresent() {
+        if (blockEntity != null) {
+            return blockEntity.getLevel().getBlockEntity(blockEntity.getBlockPos()) == blockEntity;
         }
-
         return true;
     }
 
@@ -195,7 +194,7 @@ public abstract class BaseContainer extends AbstractContainerMenu {
 
         // Prevent sending changes about a tile that doesn't exist anymore.
         // This prevents crashes when sending network node data (network node would crash because it no longer exists and we're querying it from the various tile data parameters).
-        if (listener != null && isTileStillThere()) {
+        if (listener != null && isBlockEntityStillPresent()) {
             listener.detectAndSendChanges();
         }
 

@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.factory.CraftingMonitorContainerProvider;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
+import com.refinedmods.refinedstorage.container.factory.CraftingMonitorMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CraftingMonitorTile(pos, state);
+        return new CraftingMonitorBlockEntity(pos, state);
     }
 
     @Override
@@ -42,11 +42,11 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            CraftingMonitorTile tile = (CraftingMonitorTile) level.getBlockEntity(pos);
+            CraftingMonitorBlockEntity blockEntity = (CraftingMonitorBlockEntity) level.getBlockEntity(pos);
 
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new CraftingMonitorContainerProvider(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile),
+                new CraftingMonitorMenuProvider(RSContainers.CRAFTING_MONITOR, blockEntity.getNode(), blockEntity),
                 pos
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }

@@ -38,11 +38,11 @@ import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.recipe.CoverRecipe;
 import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
-import com.refinedmods.refinedstorage.tile.*;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.grid.GridTile;
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
+import com.refinedmods.refinedstorage.blockentity.*;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -154,55 +154,55 @@ public class CommonSetup {
     }
 
     @SubscribeEvent
-    public void onRegisterTiles(RegistryEvent.Register<BlockEntityType<?>> e) {
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerTile(NetworkType.NORMAL, pos, state), RSBlocks.CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "controller")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerTile(NetworkType.CREATIVE, pos, state), RSBlocks.CREATIVE_CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "creative_controller")));
-        e.getRegistry().register(BlockEntityType.Builder.of(CableTile::new, RSBlocks.CABLE.get()).build(null).setRegistryName(RS.ID, "cable"));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(DiskDriveTile::new, RSBlocks.DISK_DRIVE.get()).build(null).setRegistryName(RS.ID, "disk_drive")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new GridTile(GridType.NORMAL, pos, state), RSBlocks.GRID.getBlocks()).build(null).setRegistryName(RS.ID, "grid")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new GridTile(GridType.CRAFTING, pos, state), RSBlocks.CRAFTING_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "crafting_grid")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new GridTile(GridType.PATTERN, pos, state), RSBlocks.PATTERN_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "pattern_grid")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new GridTile(GridType.FLUID, pos, state), RSBlocks.FLUID_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "fluid_grid")));
+    public void onRegisterBlockEntities(RegistryEvent.Register<BlockEntityType<?>> e) {
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.NORMAL, pos, state), RSBlocks.CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "controller")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.CREATIVE, pos, state), RSBlocks.CREATIVE_CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "creative_controller")));
+        e.getRegistry().register(BlockEntityType.Builder.of(CableBlockEntity::new, RSBlocks.CABLE.get()).build(null).setRegistryName(RS.ID, "cable"));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DiskDriveBlockEntity::new, RSBlocks.DISK_DRIVE.get()).build(null).setRegistryName(RS.ID, "disk_drive")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.NORMAL, pos, state), RSBlocks.GRID.getBlocks()).build(null).setRegistryName(RS.ID, "grid")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.CRAFTING, pos, state), RSBlocks.CRAFTING_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "crafting_grid")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.PATTERN, pos, state), RSBlocks.PATTERN_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "pattern_grid")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.FLUID, pos, state), RSBlocks.FLUID_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "fluid_grid")));
 
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new StorageTile(ItemStorageType.ONE_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.ONE_K).get()).build(null).setRegistryName(RS.ID, "1k_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new StorageTile(ItemStorageType.FOUR_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.FOUR_K).get()).build(null).setRegistryName(RS.ID, "4k_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new StorageTile(ItemStorageType.SIXTEEN_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.SIXTEEN_K).get()).build(null).setRegistryName(RS.ID, "16k_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new StorageTile(ItemStorageType.SIXTY_FOUR_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.SIXTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "64k_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new StorageTile(ItemStorageType.CREATIVE, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.CREATIVE).get()).build(null).setRegistryName(RS.ID, "creative_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.ONE_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.ONE_K).get()).build(null).setRegistryName(RS.ID, "1k_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.FOUR_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.FOUR_K).get()).build(null).setRegistryName(RS.ID, "4k_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.SIXTEEN_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.SIXTEEN_K).get()).build(null).setRegistryName(RS.ID, "16k_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.SIXTY_FOUR_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.SIXTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "64k_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.CREATIVE, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.CREATIVE).get()).build(null).setRegistryName(RS.ID, "creative_storage_block")));
 
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageTile(FluidStorageType.SIXTY_FOUR_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.SIXTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "64k_fluid_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageTile(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K).get()).build(null).setRegistryName(RS.ID, "256k_fluid_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageTile(FluidStorageType.THOUSAND_TWENTY_FOUR_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.THOUSAND_TWENTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "1024k_fluid_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageTile(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K).get()).build(null).setRegistryName(RS.ID, "4096k_fluid_storage_block")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageTile(FluidStorageType.CREATIVE, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.CREATIVE).get()).build(null).setRegistryName(RS.ID, "creative_fluid_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.SIXTY_FOUR_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.SIXTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "64k_fluid_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K).get()).build(null).setRegistryName(RS.ID, "256k_fluid_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.THOUSAND_TWENTY_FOUR_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.THOUSAND_TWENTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "1024k_fluid_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K).get()).build(null).setRegistryName(RS.ID, "4096k_fluid_storage_block")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.CREATIVE, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.CREATIVE).get()).build(null).setRegistryName(RS.ID, "creative_fluid_storage_block")));
 
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(ExternalStorageTile::new, RSBlocks.EXTERNAL_STORAGE.get()).build(null).setRegistryName(RS.ID, "external_storage")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(ImporterTile::new, RSBlocks.IMPORTER.get()).build(null).setRegistryName(RS.ID, "importer")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(ExporterTile::new, RSBlocks.EXPORTER.get()).build(null).setRegistryName(RS.ID, "exporter")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(NetworkReceiverTile::new, RSBlocks.NETWORK_RECEIVER.getBlocks()).build(null).setRegistryName(RS.ID, "network_receiver")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(NetworkTransmitterTile::new, RSBlocks.NETWORK_TRANSMITTER.getBlocks()).build(null).setRegistryName(RS.ID, "network_transmitter")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(RelayTile::new, RSBlocks.RELAY.getBlocks()).build(null).setRegistryName(RS.ID, "relay")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(DetectorTile::new, RSBlocks.DETECTOR.getBlocks()).build(null).setRegistryName(RS.ID, "detector")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(SecurityManagerTile::new, RSBlocks.SECURITY_MANAGER.getBlocks()).build(null).setRegistryName(RS.ID, "security_manager")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(InterfaceTile::new, RSBlocks.INTERFACE.get()).build(null).setRegistryName(RS.ID, "interface")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(FluidInterfaceTile::new, RSBlocks.FLUID_INTERFACE.get()).build(null).setRegistryName(RS.ID, "fluid_interface")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(WirelessTransmitterTile::new, RSBlocks.WIRELESS_TRANSMITTER.getBlocks()).build(null).setRegistryName(RS.ID, "wireless_transmitter")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(StorageMonitorTile::new, RSBlocks.STORAGE_MONITOR.get()).build(null).setRegistryName(RS.ID, "storage_monitor")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(ConstructorTile::new, RSBlocks.CONSTRUCTOR.get()).build(null).setRegistryName(RS.ID, "constructor")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(DestructorTile::new, RSBlocks.DESTRUCTOR.get()).build(null).setRegistryName(RS.ID, "destructor")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(DiskManipulatorTile::new, RSBlocks.DISK_MANIPULATOR.getBlocks()).build(null).setRegistryName(RS.ID, "disk_manipulator")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(CrafterTile::new, RSBlocks.CRAFTER.getBlocks()).build(null).setRegistryName(RS.ID, "crafter")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(CrafterManagerTile::new, RSBlocks.CRAFTER_MANAGER.getBlocks()).build(null).setRegistryName(RS.ID, "crafter_manager")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of(CraftingMonitorTile::new, RSBlocks.CRAFTING_MONITOR.getBlocks()).build(null).setRegistryName(RS.ID, "crafting_monitor")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ExternalStorageBlockEntity::new, RSBlocks.EXTERNAL_STORAGE.get()).build(null).setRegistryName(RS.ID, "external_storage")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ImporterBlockEntity::new, RSBlocks.IMPORTER.get()).build(null).setRegistryName(RS.ID, "importer")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ExporterBlockEntity::new, RSBlocks.EXPORTER.get()).build(null).setRegistryName(RS.ID, "exporter")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(NetworkReceiverBlockEntity::new, RSBlocks.NETWORK_RECEIVER.getBlocks()).build(null).setRegistryName(RS.ID, "network_receiver")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(NetworkTransmitterBlockEntity::new, RSBlocks.NETWORK_TRANSMITTER.getBlocks()).build(null).setRegistryName(RS.ID, "network_transmitter")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(RelayBlockEntity::new, RSBlocks.RELAY.getBlocks()).build(null).setRegistryName(RS.ID, "relay")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DetectorBlockEntity::new, RSBlocks.DETECTOR.getBlocks()).build(null).setRegistryName(RS.ID, "detector")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(SecurityManagerBlockEntity::new, RSBlocks.SECURITY_MANAGER.getBlocks()).build(null).setRegistryName(RS.ID, "security_manager")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(InterfaceBlockEntity::new, RSBlocks.INTERFACE.get()).build(null).setRegistryName(RS.ID, "interface")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(FluidInterfaceBlockEntity::new, RSBlocks.FLUID_INTERFACE.get()).build(null).setRegistryName(RS.ID, "fluid_interface")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(WirelessTransmitterBlockEntity::new, RSBlocks.WIRELESS_TRANSMITTER.getBlocks()).build(null).setRegistryName(RS.ID, "wireless_transmitter")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(StorageMonitorBlockEntity::new, RSBlocks.STORAGE_MONITOR.get()).build(null).setRegistryName(RS.ID, "storage_monitor")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ConstructorBlockEntity::new, RSBlocks.CONSTRUCTOR.get()).build(null).setRegistryName(RS.ID, "constructor")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DestructorBlockEntity::new, RSBlocks.DESTRUCTOR.get()).build(null).setRegistryName(RS.ID, "destructor")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DiskManipulatorBlockEntity::new, RSBlocks.DISK_MANIPULATOR.getBlocks()).build(null).setRegistryName(RS.ID, "disk_manipulator")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(CrafterBlockEntity::new, RSBlocks.CRAFTER.getBlocks()).build(null).setRegistryName(RS.ID, "crafter")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(CrafterManagerBlockEntity::new, RSBlocks.CRAFTER_MANAGER.getBlocks()).build(null).setRegistryName(RS.ID, "crafter_manager")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(CraftingMonitorBlockEntity::new, RSBlocks.CRAFTING_MONITOR.getBlocks()).build(null).setRegistryName(RS.ID, "crafting_monitor")));
 
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridTile(PortableGridBlockItem.Type.CREATIVE, pos, state), RSBlocks.CREATIVE_PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "creative_portable_grid")));
-        e.getRegistry().register(registerTileDataParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridTile(PortableGridBlockItem.Type.NORMAL, pos, state), RSBlocks.PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "portable_grid")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridBlockEntity(PortableGridBlockItem.Type.CREATIVE, pos, state), RSBlocks.CREATIVE_PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "creative_portable_grid")));
+        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridBlockEntity(PortableGridBlockItem.Type.NORMAL, pos, state), RSBlocks.PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "portable_grid")));
     }
 
-    private <T extends BlockEntity> BlockEntityType<T> registerTileDataParameters(BlockEntityType<T> t) {
-        BaseTile tile = (BaseTile) t.create(BlockPos.ZERO, null);
+    private <T extends BlockEntity> BlockEntityType<T> registerSynchronizationParameters(BlockEntityType<T> t) {
+        BaseBlockEntity blockEntity = (BaseBlockEntity) t.create(BlockPos.ZERO, null);
 
-        tile.getDataManager().getParameters().forEach(TileDataManager::registerParameter);
+        blockEntity.getDataManager().getParameters().forEach(BlockEntitySynchronizationManager::registerParameter);
 
         return t;
     }
@@ -211,25 +211,25 @@ public class CommonSetup {
     public void onRegisterContainers(RegistryEvent.Register<MenuType<?>> e) {
         e.getRegistry().register(IForgeMenuType.create((windowId, inv, data) -> new FilterContainer(inv.player, inv.getSelected(), windowId)).setRegistryName(RS.ID, "filter"));
         e.getRegistry().register(IForgeMenuType.create(((windowId, inv, data) -> new ControllerContainer(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<DiskDriveContainer, DiskDriveTile>((windowId, inv, tile) -> new DiskDriveContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DiskDriveContainer, DiskDriveBlockEntity>((windowId, inv, blockEntity) -> new DiskDriveContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));
         e.getRegistry().register(IForgeMenuType.create(new GridContainerFactory()).setRegistryName(RS.ID, "grid"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<StorageContainer, StorageTile>((windowId, inv, tile) -> new StorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_block"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<FluidStorageContainer, FluidStorageTile>((windowId, inv, tile) -> new FluidStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "fluid_storage_block"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<ExternalStorageContainer, ExternalStorageTile>((windowId, inv, tile) -> new ExternalStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "external_storage"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<ImporterContainer, ImporterTile>((windowId, inv, tile) -> new ImporterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "importer"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<ExporterContainer, ExporterTile>((windowId, inv, tile) -> new ExporterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "exporter"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<NetworkTransmitterContainer, NetworkTransmitterTile>((windowId, inv, tile) -> new NetworkTransmitterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "network_transmitter"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<RelayContainer, RelayTile>((windowId, inv, tile) -> new RelayContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "relay"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<DetectorContainer, DetectorTile>((windowId, inv, tile) -> new DetectorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "detector"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<SecurityManagerContainer, SecurityManagerTile>((windowId, inv, tile) -> new SecurityManagerContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "security_manager"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<InterfaceContainer, InterfaceTile>((windowId, inv, tile) -> new InterfaceContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "interface"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<FluidInterfaceContainer, FluidInterfaceTile>((windowId, inv, tile) -> new FluidInterfaceContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "fluid_interface"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<WirelessTransmitterContainer, WirelessTransmitterTile>((windowId, inv, tile) -> new WirelessTransmitterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "wireless_transmitter"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<StorageMonitorContainer, StorageMonitorTile>((windowId, inv, tile) -> new StorageMonitorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_monitor"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<ConstructorContainer, ConstructorTile>((windowId, inv, tile) -> new ConstructorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "constructor"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<DestructorContainer, DestructorTile>((windowId, inv, tile) -> new DestructorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "destructor"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<DiskManipulatorContainer, DiskManipulatorTile>((windowId, inv, tile) -> new DiskManipulatorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_manipulator"));
-        e.getRegistry().register(IForgeMenuType.create(new PositionalTileContainerFactory<CrafterContainer, CrafterTile>((windowId, inv, tile) -> new CrafterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "crafter"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<StorageContainer, StorageBlockEntity>((windowId, inv, blockEntity) -> new StorageContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "storage_block"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<FluidStorageContainer, FluidStorageBlockEntity>((windowId, inv, blockEntity) -> new FluidStorageContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "fluid_storage_block"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ExternalStorageContainer, ExternalStorageBlockEntity>((windowId, inv, blockEntity) -> new ExternalStorageContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "external_storage"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ImporterContainer, ImporterBlockEntity>((windowId, inv, blockEntity) -> new ImporterContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "importer"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ExporterContainer, ExporterBlockEntity>((windowId, inv, blockEntity) -> new ExporterContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "exporter"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<NetworkTransmitterContainer, NetworkTransmitterBlockEntity>((windowId, inv, blockEntity) -> new NetworkTransmitterContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "network_transmitter"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<RelayContainer, RelayBlockEntity>((windowId, inv, blockEntity) -> new RelayContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "relay"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DetectorContainer, DetectorBlockEntity>((windowId, inv, blockEntity) -> new DetectorContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "detector"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<SecurityManagerContainer, SecurityManagerBlockEntity>((windowId, inv, blockEntity) -> new SecurityManagerContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "security_manager"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<InterfaceContainer, InterfaceBlockEntity>((windowId, inv, blockEntity) -> new InterfaceContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "interface"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<FluidInterfaceContainer, FluidInterfaceBlockEntity>((windowId, inv, blockEntity) -> new FluidInterfaceContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "fluid_interface"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<WirelessTransmitterContainer, WirelessTransmitterBlockEntity>((windowId, inv, blockEntity) -> new WirelessTransmitterContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "wireless_transmitter"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<StorageMonitorContainer, StorageMonitorBlockEntity>((windowId, inv, blockEntity) -> new StorageMonitorContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "storage_monitor"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ConstructorContainer, ConstructorBlockEntity>((windowId, inv, blockEntity) -> new ConstructorContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "constructor"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DestructorContainer, DestructorBlockEntity>((windowId, inv, blockEntity) -> new DestructorContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "destructor"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DiskManipulatorContainer, DiskManipulatorBlockEntity>((windowId, inv, blockEntity) -> new DiskManipulatorContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "disk_manipulator"));
+        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<CrafterContainer, CrafterBlockEntity>((windowId, inv, blockEntity) -> new CrafterContainer(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "crafter"));
         e.getRegistry().register(IForgeMenuType.create(new CrafterManagerContainerFactory()).setRegistryName(RS.ID, "crafter_manager"));
         e.getRegistry().register(IForgeMenuType.create(new CraftingMonitorContainerFactory()).setRegistryName(RS.ID, "crafting_monitor"));
         e.getRegistry().register(IForgeMenuType.create(new WirelessCraftingMonitorContainerFactory()).setRegistryName(RS.ID, "wireless_crafting_monitor"));

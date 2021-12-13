@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
-import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
+import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -232,7 +232,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            INetworkNode oppositeNode = NetworkUtils.getNodeFromTile(level.getBlockEntity(pos.relative(facing)));
+            INetworkNode oppositeNode = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(pos.relative(facing)));
             if (oppositeNode == null) {
                 continue;
             }
@@ -243,8 +243,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Nullable
-    public BlockEntity getFacingTile() {
-        return level.getBlockEntity(pos.relative(getDirection()));
+    public BlockEntity getFacingBlockEntity() {
+        BlockPos facingPos = pos.relative(getDirection());
+        if (!level.isLoaded(facingPos)) {
+            return null;
+        }
+
+        return level.getBlockEntity(facingPos);
     }
 
     public Direction getDirection() {

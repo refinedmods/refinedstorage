@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.block;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.CrafterContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -37,11 +37,11 @@ public class CrafterBlock extends ColoredNetworkBlock {
         super.setPlacedBy(level, pos, state, placer, stack);
 
         if (!level.isClientSide) {
-            BlockEntity tile = level.getBlockEntity(pos);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
 
-            if (tile instanceof CrafterTile && stack.hasCustomHoverName()) {
-                ((CrafterTile) tile).getNode().setDisplayName(stack.getHoverName());
-                ((CrafterTile) tile).getNode().markDirty();
+            if (blockEntity instanceof CrafterBlockEntity && stack.hasCustomHoverName()) {
+                ((CrafterBlockEntity) blockEntity).getNode().setDisplayName(stack.getHoverName());
+                ((CrafterBlockEntity) blockEntity).getNode().markDirty();
             }
         }
     }
@@ -57,9 +57,9 @@ public class CrafterBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<CrafterTile>(
-                    ((CrafterTile) level.getBlockEntity(pos)).getNode().getName(),
-                    (tile, windowId, inventory, p) -> new CrafterContainer(tile, player, windowId),
+                new BlockEntityMenuProvider<CrafterBlockEntity>(
+                    ((CrafterBlockEntity) level.getBlockEntity(pos)).getNode().getName(),
+                    (blockEntity, windowId, inventory, p) -> new CrafterContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos
@@ -76,6 +76,6 @@ public class CrafterBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrafterTile(pos, state);
+        return new CrafterBlockEntity(pos, state);
     }
 }

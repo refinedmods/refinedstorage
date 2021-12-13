@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkReceiverBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +19,7 @@ public class NetworkReceiverBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new NetworkReceiverTile(pos, state);
+        return new NetworkReceiverBlockEntity(pos, state);
     }
 
     @Override

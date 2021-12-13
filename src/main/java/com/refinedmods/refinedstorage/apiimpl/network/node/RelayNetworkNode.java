@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.tile.config.RedstoneMode;
+import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;

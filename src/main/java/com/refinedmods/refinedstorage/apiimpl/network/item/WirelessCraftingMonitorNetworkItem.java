@@ -6,10 +6,10 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.factory.CraftingMonitorContainerProvider;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.WirelessCraftingMonitor;
+import com.refinedmods.refinedstorage.container.factory.CraftingMonitorMenuProvider;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -61,7 +61,7 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
 
         NetworkHooks.openGui(
             (ServerPlayer) player,
-            new CraftingMonitorContainerProvider(RSContainers.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null), slot::writePlayerSlot);
+            new CraftingMonitorMenuProvider(RSContainers.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null), slot::writePlayerSlot);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessCraftingMonitor().getOpenUsage());
 

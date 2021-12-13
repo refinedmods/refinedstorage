@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
 import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.StorageMonitorTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
@@ -33,7 +33,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new StorageMonitorTile(pos, state);
+        return new StorageMonitorBlockEntity(pos, state);
     }
 
     @Override
@@ -45,15 +45,15 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
             if (player.isCrouching()) {
                 return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                     (ServerPlayer) player,
-                    new PositionalTileContainerProvider<StorageMonitorTile>(
+                    new BlockEntityMenuProvider<StorageMonitorBlockEntity>(
                         new TranslatableComponent("gui.refinedstorage.storage_monitor"),
-                        (tile, windowId, inventory, p) -> new StorageMonitorContainer(tile, player, windowId),
+                        (blockEntity, windowId, inventory, p) -> new StorageMonitorContainer(blockEntity, player, windowId),
                         pos
                     ),
                     pos
                 ));
             } else {
-                StorageMonitorNetworkNode storageMonitor = ((StorageMonitorTile) level.getBlockEntity(pos)).getNode();
+                StorageMonitorNetworkNode storageMonitor = ((StorageMonitorBlockEntity) level.getBlockEntity(pos)).getNode();
 
                 if (!held.isEmpty()) {
                     return storageMonitor.deposit(player, held);
@@ -78,7 +78,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
                 return;
             }
 
-            ((StorageMonitorTile) level.getBlockEntity(pos)).getNode().extract(player, ((BlockHitResult) result).getDirection());
+            ((StorageMonitorBlockEntity) level.getBlockEntity(pos)).getNode().extract(player, ((BlockHitResult) result).getDirection());
         }
     }
 

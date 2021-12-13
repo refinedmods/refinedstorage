@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.NetworkCardItem;
-import com.refinedmods.refinedstorage.tile.NetworkReceiverTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkReceiverBlockEntity;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -116,11 +116,11 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
             if (!isSameDimension()) {
                 Level dimensionWorld = level.getServer().getLevel(receiverDimension);
 
-                if (dimensionWorld != null && dimensionWorld.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
+                if (dimensionWorld != null && dimensionWorld.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
                     operator.apply(dimensionWorld, receiver, null);
                 }
             } else {
-                if (level.getBlockEntity(receiver) instanceof NetworkReceiverTile) {
+                if (level.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
                     operator.apply(level, receiver, null);
                 }
             }

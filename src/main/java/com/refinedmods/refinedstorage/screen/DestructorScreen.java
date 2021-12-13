@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.DestructorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
-import com.refinedmods.refinedstorage.tile.DestructorTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,13 +17,13 @@ public class DestructorScreen extends BaseScreen<DestructorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
 
-        addSideButton(new TypeSideButton(this, DestructorTile.TYPE));
+        addSideButton(new TypeSideButton(this, DestructorBlockEntity.TYPE));
 
-        addSideButton(new WhitelistBlacklistSideButton(this, DestructorTile.WHITELIST_BLACKLIST));
+        addSideButton(new WhitelistBlacklistSideButton(this, DestructorBlockEntity.WHITELIST_BLACKLIST));
 
-        addSideButton(new ExactModeSideButton(this, DestructorTile.COMPARE));
+        addSideButton(new ExactModeSideButton(this, DestructorBlockEntity.COMPARE));
 
         addSideButton(new DestructorPickupSideButton(this));
     }

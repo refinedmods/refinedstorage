@@ -7,7 +7,7 @@ import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
-import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
+import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -113,7 +113,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
     @Override
     @Nonnull
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
-        DiskState[] diskState = data.getData(DiskManipulatorTile.DISK_STATE_PROPERTY);
+        DiskState[] diskState = data.getData(DiskManipulatorBlockEntity.DISK_STATE_PROPERTY);
 
         if (diskState == null) {
             return base.getQuads(state, side, rand, data);

@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainers;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
+import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class CrafterContainer extends BaseContainer {
-    public CrafterContainer(CrafterTile crafter, Player player, int windowId) {
+    public CrafterContainer(CrafterBlockEntity crafter, Player player, int windowId) {
         super(RSContainers.CRAFTER, crafter, player, windowId);
 
         for (int i = 0; i < 9; ++i) {

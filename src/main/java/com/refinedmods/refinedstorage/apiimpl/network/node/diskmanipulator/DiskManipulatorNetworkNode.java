@@ -9,6 +9,10 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IComparable;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.ProxyItemHandler;
@@ -17,10 +21,6 @@ import com.refinedmods.refinedstorage.inventory.item.validator.StorageDiskItemVa
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.tile.DiskManipulatorTile;
-import com.refinedmods.refinedstorage.tile.config.IComparable;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
@@ -413,7 +413,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return level.isClientSide ? DiskManipulatorTile.TYPE.getValue() : type;
+        return level.isClientSide ? DiskManipulatorBlockEntity.TYPE.getValue() : type;
     }
 
     @Override

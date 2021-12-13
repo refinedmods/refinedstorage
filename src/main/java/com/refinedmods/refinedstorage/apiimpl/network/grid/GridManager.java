@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.grid.GridFactoryType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
-import com.refinedmods.refinedstorage.container.factory.GridContainerProvider;
+import com.refinedmods.refinedstorage.container.factory.GridMenuProvider;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +43,7 @@ public class GridManager implements IGridManager {
             return;
         }
 
-        NetworkHooks.openGui(player, new GridContainerProvider(grid.getLeft(), grid.getRight()), buf -> {
+        NetworkHooks.openGui(player, new GridMenuProvider(grid.getLeft(), grid.getRight()), buf -> {
             buf.writeResourceLocation(id);
 
             buf.writeBoolean(pos != null);
@@ -70,7 +70,7 @@ public class GridManager implements IGridManager {
         }
 
         IGrid grid = null;
-        BlockEntity tile = factory.getRelevantTile(player.level, pos);
+        BlockEntity blockEntity = factory.getRelevantBlockEntity(player.level, pos);
 
         if (factory.getType() == GridFactoryType.STACK) {
             grid = factory.createFromStack(player, stack, slot);
@@ -82,6 +82,6 @@ public class GridManager implements IGridManager {
             return null;
         }
 
-        return Pair.of(grid, tile);
+        return Pair.of(grid, blockEntity);
     }
 }

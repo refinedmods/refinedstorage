@@ -15,13 +15,13 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
+import com.refinedmods.refinedstorage.blockentity.FluidStorageBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IAccessType;
+import com.refinedmods.refinedstorage.blockentity.config.IComparable;
+import com.refinedmods.refinedstorage.blockentity.config.IPrioritizable;
+import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
-import com.refinedmods.refinedstorage.tile.FluidStorageTile;
-import com.refinedmods.refinedstorage.tile.config.IAccessType;
-import com.refinedmods.refinedstorage.tile.config.IComparable;
-import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
-import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -252,7 +252,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
 
     @Override
     public long getStored() {
-        return FluidStorageTile.STORED.getValue();
+        return FluidStorageBlockEntity.STORED.getValue();
     }
 
     @Override

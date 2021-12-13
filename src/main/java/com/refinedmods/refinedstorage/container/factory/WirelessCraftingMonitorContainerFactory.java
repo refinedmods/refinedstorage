@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.container.factory;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;

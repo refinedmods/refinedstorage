@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterNetworkNode;
-import com.refinedmods.refinedstorage.tile.CrafterTile;
+import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -24,11 +24,11 @@ public class CrafterLootFunction extends LootItemConditionalFunction {
 
     @Override
     public ItemStack run(ItemStack stack, LootContext lootContext) {
-        BlockEntity tile = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
-        CrafterNetworkNode removedNode = ((CrafterTile) tile).getRemovedNode();
+        CrafterNetworkNode removedNode = ((CrafterBlockEntity) blockEntity).getRemovedNode();
         if (removedNode == null) {
-            removedNode = ((CrafterTile) tile).getNode();
+            removedNode = ((CrafterBlockEntity) blockEntity).getNode();
         }
 
         if (removedNode.getDisplayName() != null) {

@@ -35,14 +35,14 @@ public interface IGridFactory {
     IGrid createFromBlock(Player player, BlockPos pos);
 
     /**
-     * Returns a possible tile for this grid if {@link #getType()} is BLOCK.
+     * Returns a possible block entity for this grid if {@link #getType()} is BLOCK.
      *
      * @param level the level
      * @param pos   the position
-     * @return the tile, or null if no tile is required
+     * @return the block entity, or null if no block entity is required
      */
     @Nullable
-    BlockEntity getRelevantTile(Level level, BlockPos pos);
+    BlockEntity getRelevantBlockEntity(Level level, BlockPos pos);
 
     /**
      * @return the type

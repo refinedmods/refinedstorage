@@ -17,9 +17,9 @@ import com.refinedmods.refinedstorage.container.slot.legacy.LegacyBaseSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
 import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
-import com.refinedmods.refinedstorage.tile.BaseTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.BaseBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -44,8 +44,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     private List<Slot> fluidPatternSlots = new ArrayList<>();
     private int patternScrollOffset;
 
-    public GridContainer(IGrid grid, @Nullable BaseTile gridTile, Player player, int windowId) {
-        super(RSContainers.GRID, gridTile, player, windowId);
+    public GridContainer(IGrid grid, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
+        super(RSContainers.GRID, blockEntity, player, windowId);
 
         this.grid = grid;
 

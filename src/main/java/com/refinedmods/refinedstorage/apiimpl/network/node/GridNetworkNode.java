@@ -24,9 +24,9 @@ import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.grid.GridTile;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -204,11 +204,11 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private void updateAllowedTags() {
         markDirty();
 
-        BlockEntity tile = level.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
 
-        if (tile instanceof GridTile) {
-            ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_ITEM_TAGS);
-            ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_FLUID_TAGS);
+        if (blockEntity instanceof GridBlockEntity) {
+            ((GridBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(GridBlockEntity.ALLOWED_ITEM_TAGS);
+            ((GridBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(GridBlockEntity.ALLOWED_FLUID_TAGS);
         }
     }
 
@@ -237,7 +237,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     public boolean isProcessingPattern() {
-        return level.isClientSide ? GridTile.PROCESSING_PATTERN.getValue() : processingPattern;
+        return level.isClientSide ? GridBlockEntity.PROCESSING_PATTERN.getValue() : processingPattern;
     }
 
     public void setProcessingPattern(boolean processingPattern) {
@@ -527,7 +527,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getViewType() {
-        return level.isClientSide ? GridTile.VIEW_TYPE.getValue() : viewType;
+        return level.isClientSide ? GridBlockEntity.VIEW_TYPE.getValue() : viewType;
     }
 
     public void setViewType(int viewType) {
@@ -536,7 +536,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSortingDirection() {
-        return level.isClientSide ? GridTile.SORTING_DIRECTION.getValue() : sortingDirection;
+        return level.isClientSide ? GridBlockEntity.SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     public void setSortingDirection(int sortingDirection) {
@@ -545,7 +545,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSortingType() {
-        return level.isClientSide ? GridTile.SORTING_TYPE.getValue() : sortingType;
+        return level.isClientSide ? GridBlockEntity.SORTING_TYPE.getValue() : sortingType;
     }
 
     public void setSortingType(int sortingType) {
@@ -554,7 +554,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSearchBoxMode() {
-        return level.isClientSide ? GridTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return level.isClientSide ? GridBlockEntity.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {
@@ -563,7 +563,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getSize() {
-        return level.isClientSide ? GridTile.SIZE.getValue() : size;
+        return level.isClientSide ? GridBlockEntity.SIZE.getValue() : size;
     }
 
     public void setSize(int size) {
@@ -572,7 +572,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getTabSelected() {
-        return level.isClientSide ? GridTile.TAB_SELECTED.getValue() : tabSelected;
+        return level.isClientSide ? GridBlockEntity.TAB_SELECTED.getValue() : tabSelected;
     }
 
     public void setTabSelected(int tabSelected) {
@@ -581,7 +581,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public int getTabPage() {
-        return level.isClientSide ? GridTile.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
+        return level.isClientSide ? GridBlockEntity.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
     }
 
     public void setTabPage(int page) {
@@ -595,44 +595,44 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public void onViewTypeChanged(int type) {
-        TileDataManager.setParameter(GridTile.VIEW_TYPE, type);
+        BlockEntitySynchronizationManager.setParameter(GridBlockEntity.VIEW_TYPE, type);
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        TileDataManager.setParameter(GridTile.SORTING_TYPE, type);
+        BlockEntitySynchronizationManager.setParameter(GridBlockEntity.SORTING_TYPE, type);
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        TileDataManager.setParameter(GridTile.SORTING_DIRECTION, direction);
+        BlockEntitySynchronizationManager.setParameter(GridBlockEntity.SORTING_DIRECTION, direction);
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        TileDataManager.setParameter(GridTile.SEARCH_BOX_MODE, searchBoxMode);
+        BlockEntitySynchronizationManager.setParameter(GridBlockEntity.SEARCH_BOX_MODE, searchBoxMode);
     }
 
     @Override
     public void onSizeChanged(int size) {
-        TileDataManager.setParameter(GridTile.SIZE, size);
+        BlockEntitySynchronizationManager.setParameter(GridBlockEntity.SIZE, size);
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
-        TileDataManager.setParameter(GridTile.TAB_SELECTED, tab);
+        BlockEntitySynchronizationManager.setParameter(GridBlockEntity.TAB_SELECTED, tab);
     }
 
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0 && page <= getTotalTabPages()) {
-            TileDataManager.setParameter(GridTile.TAB_PAGE, page);
+            BlockEntitySynchronizationManager.setParameter(GridBlockEntity.TAB_PAGE, page);
         }
     }
 
     @Override
     public int getType() {
-        return level.isClientSide ? GridTile.PROCESSING_TYPE.getValue() : processingType;
+        return level.isClientSide ? GridBlockEntity.PROCESSING_TYPE.getValue() : processingType;
     }
 
     @Override

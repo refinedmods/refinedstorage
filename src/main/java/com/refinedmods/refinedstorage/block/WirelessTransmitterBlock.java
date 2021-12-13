@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.container.WirelessTransmitterContainer;
-import com.refinedmods.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.refinedmods.refinedstorage.tile.WirelessTransmitterTile;
+import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
+import com.refinedmods.refinedstorage.blockentity.WirelessTransmitterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new WirelessTransmitterTile(pos, state);
+        return new WirelessTransmitterBlockEntity(pos, state);
     }
 
     @Override
@@ -81,9 +81,9 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new PositionalTileContainerProvider<WirelessTransmitterTile>(
+                new BlockEntityMenuProvider<WirelessTransmitterBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.wireless_transmitter"),
-                    (tile, windowId, inventory, p) -> new WirelessTransmitterContainer(tile, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new WirelessTransmitterContainer(blockEntity, player, windowId),
                     pos
                 ),
                 pos

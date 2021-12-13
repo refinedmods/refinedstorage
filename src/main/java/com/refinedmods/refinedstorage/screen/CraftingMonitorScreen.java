@@ -18,7 +18,7 @@ import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorCan
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;

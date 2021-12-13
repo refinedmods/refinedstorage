@@ -4,8 +4,8 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridFactoryType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.IGridFactory;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import com.refinedmods.refinedstorage.tile.grid.GridTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +27,10 @@ public class GridBlockGridFactory implements IGridFactory {
     @Override
     @Nullable
     public IGrid createFromBlock(Player player, BlockPos pos) {
-        BlockEntity tile = getRelevantTile(player.getCommandSenderWorld(), pos);
+        BlockEntity blockEntity = getRelevantBlockEntity(player.getCommandSenderWorld(), pos);
 
-        if (tile instanceof GridTile) {
-            return ((GridTile) tile).getNode();
+        if (blockEntity instanceof GridBlockEntity) {
+            return ((GridBlockEntity) blockEntity).getNode();
         }
 
         return null;
@@ -38,7 +38,7 @@ public class GridBlockGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public BlockEntity getRelevantTile(Level level, BlockPos pos) {
+    public BlockEntity getRelevantBlockEntity(Level level, BlockPos pos) {
         return level.getBlockEntity(pos);
     }
 

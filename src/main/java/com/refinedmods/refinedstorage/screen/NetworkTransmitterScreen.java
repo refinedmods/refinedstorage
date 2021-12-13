@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkTransmitterBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterConta
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
     }
 
     @Override
@@ -41,8 +41,8 @@ public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterConta
 
         String text;
 
-        Optional<ResourceLocation> receiverDim = NetworkTransmitterTile.RECEIVER_DIMENSION.getValue();
-        int distance = NetworkTransmitterTile.DISTANCE.getValue();
+        Optional<ResourceLocation> receiverDim = NetworkTransmitterBlockEntity.RECEIVER_DIMENSION.getValue();
+        int distance = NetworkTransmitterBlockEntity.DISTANCE.getValue();
 
         if (!receiverDim.isPresent()) {
             text = I18n.get("gui.refinedstorage.network_transmitter.missing_card");

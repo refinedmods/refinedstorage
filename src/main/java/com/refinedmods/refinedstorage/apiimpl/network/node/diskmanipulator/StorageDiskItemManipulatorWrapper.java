@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskContainerCont
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
-import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
+import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.container.DiskDriveContainer;
-import com.refinedmods.refinedstorage.tile.DiskDriveTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,16 +15,16 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainer> {
             inventory,
             title,
             "gui/disk_drive.png",
-            new StorageScreenTileDataParameters(
-                DiskDriveTile.TYPE,
-                NetworkNodeTile.REDSTONE_MODE,
-                DiskDriveTile.COMPARE,
-                DiskDriveTile.WHITELIST_BLACKLIST,
-                DiskDriveTile.PRIORITY,
-                DiskDriveTile.ACCESS_TYPE
+            new StorageScreenSynchronizationParameters(
+                DiskDriveBlockEntity.TYPE,
+                NetworkNodeBlockEntity.REDSTONE_MODE,
+                DiskDriveBlockEntity.COMPARE,
+                DiskDriveBlockEntity.WHITELIST_BLACKLIST,
+                DiskDriveBlockEntity.PRIORITY,
+                DiskDriveBlockEntity.ACCESS_TYPE
             ),
-            DiskDriveTile.STORED::getValue,
-            DiskDriveTile.CAPACITY::getValue
+            DiskDriveBlockEntity.STORED::getValue,
+            DiskDriveBlockEntity.CAPACITY::getValue
         );
     }
 

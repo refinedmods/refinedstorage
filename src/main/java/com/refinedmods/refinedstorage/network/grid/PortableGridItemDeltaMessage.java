@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;

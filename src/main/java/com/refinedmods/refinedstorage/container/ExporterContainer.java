@@ -4,16 +4,16 @@ import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.tile.ExporterTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.ExporterBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ExporterContainer extends BaseContainer {
-    private final ExporterTile exporter;
+    private final ExporterBlockEntity exporter;
     private boolean hasRegulatorMode;
 
-    public ExporterContainer(ExporterTile exporter, Player player, int windowId) {
+    public ExporterContainer(ExporterBlockEntity exporter, Player player, int windowId) {
         super(RSContainers.EXPORTER, exporter, player, windowId);
 
         this.exporter = exporter;

@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.refinedmods.refinedstorage.container.StorageContainer;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import com.refinedmods.refinedstorage.tile.StorageTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.StorageBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -13,16 +13,16 @@ public class StorageBlockScreen extends StorageScreen<StorageContainer> {
             inventory,
             title,
             "gui/storage.png",
-            new StorageScreenTileDataParameters(
+            new StorageScreenSynchronizationParameters(
                 null,
-                NetworkNodeTile.REDSTONE_MODE,
-                StorageTile.COMPARE,
-                StorageTile.WHITELIST_BLACKLIST,
-                StorageTile.PRIORITY,
-                StorageTile.ACCESS_TYPE
+                NetworkNodeBlockEntity.REDSTONE_MODE,
+                StorageBlockEntity.COMPARE,
+                StorageBlockEntity.WHITELIST_BLACKLIST,
+                StorageBlockEntity.PRIORITY,
+                StorageBlockEntity.ACCESS_TYPE
             ),
-            StorageTile.STORED::getValue,
-            () -> (long) ((StorageTile) container.getTile()).getItemStorageType().getCapacity()
+            StorageBlockEntity.STORED::getValue,
+            () -> (long) ((StorageBlockEntity) container.getBlockEntity()).getItemStorageType().getCapacity()
         );
     }
 }

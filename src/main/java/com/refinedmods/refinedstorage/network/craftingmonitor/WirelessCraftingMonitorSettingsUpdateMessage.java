@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
-import com.refinedmods.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;

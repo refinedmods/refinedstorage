@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainers;
-import com.refinedmods.refinedstorage.tile.NetworkTransmitterTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkTransmitterBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class NetworkTransmitterContainer extends BaseContainer {
-    public NetworkTransmitterContainer(NetworkTransmitterTile networkTransmitter, Player player, int windowId) {
+    public NetworkTransmitterContainer(NetworkTransmitterBlockEntity networkTransmitter, Player player, int windowId) {
         super(RSContainers.NETWORK_TRANSMITTER, networkTransmitter, player, windowId);
 
         addSlot(new SlotItemHandler(networkTransmitter.getNode().getNetworkCard(), 0, 8, 20));

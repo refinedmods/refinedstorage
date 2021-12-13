@@ -104,7 +104,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(nodeWorld.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(nodeWorld.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
         if (network == null) {
             onError.accept(notFound);
             return;
@@ -131,7 +131,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     public InteractionResult useOn(UseOnContext ctx) {
         ItemStack stack = ctx.getPlayer().getItemInHand(ctx.getHand());
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(ctx.getLevel().getBlockEntity(ctx.getClickedPos())));
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(ctx.getLevel().getBlockEntity(ctx.getClickedPos())));
         if (network != null) {
             CompoundTag tag = stack.getTag();
 

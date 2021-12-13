@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.storage.externalstorage;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
-import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
+import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,20 +13,20 @@ import javax.annotation.Nonnull;
 
 public class FluidExternalStorageProvider implements IExternalStorageProvider<FluidStack> {
     @Override
-    public boolean canProvide(BlockEntity tile, Direction direction) {
-        return WorldUtils.getFluidHandler(tile, direction.getOpposite()) != null;
+    public boolean canProvide(BlockEntity blockEntity, Direction direction) {
+        return WorldUtils.getFluidHandler(blockEntity, direction.getOpposite()) != null;
     }
 
     @Nonnull
     @Override
-    public IExternalStorage<FluidStack> provide(IExternalStorageContext context, BlockEntity tile, Direction direction) {
+    public IExternalStorage<FluidStack> provide(IExternalStorageContext context, BlockEntity blockEntity, Direction direction) {
         return new FluidExternalStorage(context, () -> {
-            if (!tile.getLevel().isLoaded(tile.getBlockPos())) {
+            if (!blockEntity.getLevel().isLoaded(blockEntity.getBlockPos())) {
                 return null;
             }
 
-            return WorldUtils.getFluidHandler(tile, direction.getOpposite());
-        }, tile instanceof FluidInterfaceTile);
+            return WorldUtils.getFluidHandler(blockEntity, direction.getOpposite());
+        }, blockEntity instanceof FluidInterfaceBlockEntity);
     }
 
     @Override

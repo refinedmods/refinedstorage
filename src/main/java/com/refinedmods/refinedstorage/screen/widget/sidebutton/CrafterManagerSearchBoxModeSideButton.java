@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.refinedmods.refinedstorage.screen.CrafterManagerScreen;
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
+import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 
 public class CrafterManagerSearchBoxModeSideButton extends SearchBoxModeSideButton {
     public CrafterManagerSearchBoxModeSideButton(CrafterManagerScreen screen) {
@@ -16,6 +16,6 @@ public class CrafterManagerSearchBoxModeSideButton extends SearchBoxModeSideButt
 
     @Override
     protected void setSearchBoxMode(int mode) {
-        TileDataManager.setParameter(CrafterManagerTile.SEARCH_BOX_MODE, mode);
+        BlockEntitySynchronizationManager.setParameter(CrafterManagerBlockEntity.SEARCH_BOX_MODE, mode);
     }
 }

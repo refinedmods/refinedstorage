@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
-import com.refinedmods.refinedstorage.tile.StorageMonitorTile;
+import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,8 +17,8 @@ public class StorageMonitorScreen extends BaseScreen<StorageMonitorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new TypeSideButton(this, StorageMonitorTile.TYPE));
-        addSideButton(new ExactModeSideButton(this, StorageMonitorTile.COMPARE));
+        addSideButton(new TypeSideButton(this, StorageMonitorBlockEntity.TYPE));
+        addSideButton(new ExactModeSideButton(this, StorageMonitorBlockEntity.COMPARE));
     }
 
     @Override

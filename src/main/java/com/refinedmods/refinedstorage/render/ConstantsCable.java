@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.render.collision.CollisionGroup;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,8 +77,8 @@ public class ConstantsCable {
     public static VoxelShape addCoverVoxelShapes(VoxelShape shape, BlockGetter world, BlockPos pos) {
         if (world != null) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof NetworkNodeTile && ((NetworkNodeTile<?>) entity).getNode() instanceof ICoverable) {
-                CoverManager coverManager = ((ICoverable) ((NetworkNodeTile<?>) entity).getNode()).getCoverManager();
+            if (entity instanceof NetworkNodeBlockEntity && ((NetworkNodeBlockEntity<?>) entity).getNode() instanceof ICoverable) {
+                CoverManager coverManager = ((ICoverable) ((NetworkNodeBlockEntity<?>) entity).getNode()).getCoverManager();
                 for (Direction value : Direction.values()) {
                     Cover cover = coverManager.getCover(value);
                     if (cover != null) {

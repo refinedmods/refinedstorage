@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
-import com.refinedmods.refinedstorage.tile.BaseTile;
+import com.refinedmods.refinedstorage.blockentity.BaseBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +34,6 @@ public class GridContainerFactory implements IContainerFactory<GridContainer> {
 
         Pair<IGrid, BlockEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos, slot);
 
-        return new GridContainer(grid.getLeft(), grid.getRight() instanceof BaseTile ? (BaseTile) grid.getRight() : null, inv.player, windowId);
+        return new GridContainer(grid.getLeft(), grid.getRight() instanceof BaseBlockEntity ? (BaseBlockEntity) grid.getRight() : null, inv.player, windowId);
     }
 }

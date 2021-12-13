@@ -3,12 +3,12 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainers;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 
 public class ExternalStorageContainer extends BaseContainer {
-    public ExternalStorageContainer(ExternalStorageTile externalStorage, Player player, int windowId) {
+    public ExternalStorageContainer(ExternalStorageBlockEntity externalStorage, Player player, int windowId) {
         super(RSContainers.EXTERNAL_STORAGE, externalStorage, player, windowId);
 
         for (int i = 0; i < 9; ++i) {

@@ -3,16 +3,16 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class AccessTypeSideButton extends SideButton {
-    private final TileDataParameter<AccessType, ?> parameter;
+    private final BlockEntitySynchronizationParameter<AccessType, ?> parameter;
 
-    public AccessTypeSideButton(BaseScreen<?> screen, TileDataParameter<AccessType, ?> parameter) {
+    public AccessTypeSideButton(BaseScreen<?> screen, BlockEntitySynchronizationParameter<AccessType, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;
@@ -30,6 +30,6 @@ public class AccessTypeSideButton extends SideButton {
 
     @Override
     public void onPress() {
-        TileDataManager.setParameter(parameter, AccessTypeUtils.getAccessType(parameter.getValue().getId() + 1));
+        BlockEntitySynchronizationManager.setParameter(parameter, AccessTypeUtils.getAccessType(parameter.getValue().getId() + 1));
     }
 }

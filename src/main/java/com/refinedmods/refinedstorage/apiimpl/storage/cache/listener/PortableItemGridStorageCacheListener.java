@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.network.grid.PortableGridItemDeltaMessage;
 import com.refinedmods.refinedstorage.network.grid.PortableGridItemUpdateMessage;
-import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 

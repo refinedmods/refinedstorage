@@ -21,7 +21,7 @@ public class StorageScreen<T extends AbstractContainerMenu> extends BaseScreen<T
     private static final int BAR_HEIGHT = 70;
 
     private final String texture;
-    private final StorageScreenTileDataParameters dataParameters;
+    private final StorageScreenSynchronizationParameters parameters;
     private final Supplier<Long> storedSupplier;
     private final Supplier<Long> capacitySupplier;
 
@@ -29,37 +29,37 @@ public class StorageScreen<T extends AbstractContainerMenu> extends BaseScreen<T
                          Inventory inventory,
                          Component title,
                          String texture,
-                         StorageScreenTileDataParameters dataParameters,
+                         StorageScreenSynchronizationParameters parameters,
                          Supplier<Long> storedSupplier,
                          Supplier<Long> capacitySupplier) {
         super(container, 176, 223, inventory, title);
 
         this.texture = texture;
-        this.dataParameters = dataParameters;
+        this.parameters = parameters;
         this.storedSupplier = storedSupplier;
         this.capacitySupplier = capacitySupplier;
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        if (dataParameters.getRedstoneModeParameter() != null) {
-            addSideButton(new RedstoneModeSideButton(this, dataParameters.getRedstoneModeParameter()));
+        if (parameters.getRedstoneModeParameter() != null) {
+            addSideButton(new RedstoneModeSideButton(this, parameters.getRedstoneModeParameter()));
         }
 
-        if (dataParameters.getTypeParameter() != null) {
-            addSideButton(new TypeSideButton(this, dataParameters.getTypeParameter()));
+        if (parameters.getTypeParameter() != null) {
+            addSideButton(new TypeSideButton(this, parameters.getTypeParameter()));
         }
 
-        if (dataParameters.getWhitelistBlacklistParameter() != null) {
-            addSideButton(new WhitelistBlacklistSideButton(this, dataParameters.getWhitelistBlacklistParameter()));
+        if (parameters.getWhitelistBlacklistParameter() != null) {
+            addSideButton(new WhitelistBlacklistSideButton(this, parameters.getWhitelistBlacklistParameter()));
         }
 
-        if (dataParameters.getExactModeParameter() != null) {
-            addSideButton(new ExactModeSideButton(this, dataParameters.getExactModeParameter()));
+        if (parameters.getExactModeParameter() != null) {
+            addSideButton(new ExactModeSideButton(this, parameters.getExactModeParameter()));
         }
 
-        if (dataParameters.getAccessTypeParameter() != null) {
-            addSideButton(new AccessTypeSideButton(this, dataParameters.getAccessTypeParameter()));
+        if (parameters.getAccessTypeParameter() != null) {
+            addSideButton(new AccessTypeSideButton(this, parameters.getAccessTypeParameter()));
         }
 
         int buttonWidth = 10 + font.width(I18n.get("misc.refinedstorage.priority"));
@@ -71,7 +71,7 @@ public class StorageScreen<T extends AbstractContainerMenu> extends BaseScreen<T
             new TranslatableComponent("misc.refinedstorage.priority"),
             true,
             true,
-            btn -> minecraft.setScreen(new PriorityScreen(this, dataParameters.getPriorityParameter(), inventory))
+            btn -> minecraft.setScreen(new PriorityScreen(this, parameters.getPriorityParameter(), inventory))
         );
     }
 

@@ -11,7 +11,7 @@ import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import com.refinedmods.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
-import com.refinedmods.refinedstorage.tile.CrafterManagerTile;
+import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -34,7 +34,7 @@ public class CrafterManagerContainer extends BaseContainer {
     private Map<String, Integer> containerData;
     private int rows;
 
-    public CrafterManagerContainer(CrafterManagerTile crafterManager, Player player, int windowId) {
+    public CrafterManagerContainer(CrafterManagerBlockEntity crafterManager, Player player, int windowId) {
         super(RSContainers.CRAFTER_MANAGER, crafterManager, player, windowId);
 
         this.crafterManager = crafterManager.getNode();

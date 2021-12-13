@@ -15,13 +15,13 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
+import com.refinedmods.refinedstorage.blockentity.StorageBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IAccessType;
+import com.refinedmods.refinedstorage.blockentity.config.IComparable;
+import com.refinedmods.refinedstorage.blockentity.config.IPrioritizable;
+import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
-import com.refinedmods.refinedstorage.tile.StorageTile;
-import com.refinedmods.refinedstorage.tile.config.IAccessType;
-import com.refinedmods.refinedstorage.tile.config.IComparable;
-import com.refinedmods.refinedstorage.tile.config.IPrioritizable;
-import com.refinedmods.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
@@ -251,7 +251,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
     @Override
     public long getStored() {
-        return StorageTile.STORED.getValue();
+        return StorageBlockEntity.STORED.getValue();
     }
 
     @Override

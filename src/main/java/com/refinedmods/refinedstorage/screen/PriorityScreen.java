@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,9 +10,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu> {
-    private final TileDataParameter<Integer, ?> priority;
+    private final BlockEntitySynchronizationParameter<Integer, ?> priority;
 
-    public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, Inventory inventory) {
+    public PriorityScreen(BaseScreen parent, BlockEntitySynchronizationParameter<Integer, ?> priority, Inventory inventory) {
         super(parent, new AbstractContainerMenu(null, 0) {
             @Override
             public boolean stillValid(Player player) {
@@ -71,7 +71,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu
         try {
             int amount = Integer.parseInt(amountField.getValue());
 
-            TileDataManager.setParameter(priority, amount);
+            BlockEntitySynchronizationManager.setParameter(priority, amount);
 
             close();
         } catch (NumberFormatException e) {

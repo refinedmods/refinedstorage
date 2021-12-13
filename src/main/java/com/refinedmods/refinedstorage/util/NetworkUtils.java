@@ -22,9 +22,9 @@ public final class NetworkUtils {
     }
 
     @Nullable
-    public static INetworkNode getNodeFromTile(@Nullable BlockEntity tile) {
-        if (tile != null) {
-            INetworkNodeProxy<?> proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
+    public static INetworkNode getNodeFromBlockEntity(@Nullable BlockEntity blockEntity) {
+        if (blockEntity != null) {
+            INetworkNodeProxy<?> proxy = blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
             if (proxy != null) {
                 return proxy.getNode();
             }
@@ -51,7 +51,7 @@ public final class NetworkUtils {
             return InteractionResult.SUCCESS;
         }
 
-        INetwork network = getNetworkFromNode(getNodeFromTile(level.getBlockEntity(pos)));
+        INetwork network = getNetworkFromNode(getNodeFromBlockEntity(level.getBlockEntity(pos)));
 
         if (network != null) {
             for (Permission permission : permissionsRequired) {

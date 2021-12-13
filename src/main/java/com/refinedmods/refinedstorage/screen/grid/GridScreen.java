@@ -24,12 +24,12 @@ import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
-import com.refinedmods.refinedstorage.tile.data.TileDataManager;
-import com.refinedmods.refinedstorage.tile.grid.GridTile;
-import com.refinedmods.refinedstorage.tile.grid.portable.IPortableGrid;
-import com.refinedmods.refinedstorage.tile.grid.portable.PortableGridTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.TimeUtils;
 import net.minecraft.ChatFormatting;
@@ -123,8 +123,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
-        if (grid instanceof GridNetworkNode || grid instanceof PortableGridTile) {
-            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? NetworkNodeTile.REDSTONE_MODE : PortableGridTile.REDSTONE_MODE));
+        if (grid instanceof GridNetworkNode || grid instanceof PortableGridBlockEntity) {
+            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? NetworkNodeBlockEntity.REDSTONE_MODE : PortableGridBlockEntity.REDSTONE_MODE));
         }
 
         int sx = x + 80 + 1;
@@ -169,14 +169,14 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 menu.updatePatternSlotPositions(newOffset);
             });
 
-            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
+            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.processing"), GridBlockEntity.PROCESSING_PATTERN.getValue(), btn -> {
                 // Rebuild the inventory slots before the slot change packet arrives.
-                GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.selected());
+                GridBlockEntity.PROCESSING_PATTERN.setValue(false, processingPattern.selected());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
                 this.menu.initSlots();
 
                 patternScrollOffset = 0; // reset offset when switching between crafting and processing
-                TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.selected());
+                BlockEntitySynchronizationManager.setParameter(GridBlockEntity.PROCESSING_PATTERN, processingPattern.selected());
             });
 
             if (!processingPattern.selected()) {
@@ -184,15 +184,15 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                     processingPattern.x + processingPattern.getWidth() + 5,
                     y + getTopHeight() + (getVisibleRows() * 18) + 60,
                     new TranslatableComponent("misc.refinedstorage.exact"),
-                    GridTile.EXACT_PATTERN.getValue(),
-                    btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.selected())
+                    GridBlockEntity.EXACT_PATTERN.getValue(),
+                    btn -> BlockEntitySynchronizationManager.setParameter(GridBlockEntity.EXACT_PATTERN, exactPattern.selected())
                 );
                 patternScrollbar.setEnabled(false);
             } else {
                 patternScrollbar.setEnabled(true);
 
                 fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
-                    TileDataManager.setParameter(GridTile.PROCESSING_TYPE, GridTile.PROCESSING_TYPE.getValue() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
+                    BlockEntitySynchronizationManager.setParameter(GridBlockEntity.PROCESSING_TYPE, GridBlockEntity.PROCESSING_TYPE.getValue() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
                 });
             }
         }

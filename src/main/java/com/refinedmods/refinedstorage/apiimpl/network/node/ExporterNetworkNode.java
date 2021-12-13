@@ -6,15 +6,15 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.refinedmods.refinedstorage.blockentity.ExporterBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IComparable;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.tile.ExporterTile;
-import com.refinedmods.refinedstorage.tile.config.IComparable;
-import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
@@ -87,7 +87,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
         if (canUpdate() && ticks % upgrades.getSpeed() == 0 && level.isLoaded(pos)) {
             if (type == IType.ITEMS) {
-                IItemHandler handler = WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+                IItemHandler handler = WorldUtils.getItemHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
                 if (handler != null) {
                     while (filterSlot + 1 < itemFilters.getSlots() && itemFilters.getStackInSlot(filterSlot).isEmpty()) {
@@ -167,7 +167,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                     filterSlot = 0;
                 }
 
-                IFluidHandler handler = WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
+                IFluidHandler handler = WorldUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
                 if (handler != null) {
                     FluidStack stack = fluids[filterSlot];
@@ -306,7 +306,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return level.isClientSide ? ExporterTile.TYPE.getValue() : type;
+        return level.isClientSide ? ExporterBlockEntity.TYPE.getValue() : type;
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.CableBlock;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -115,7 +115,7 @@ public class CoverItem extends Item {
 
         ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
 
-        BlockEntity tile = level.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
 
         // Support placing on the bottom side without too much hassle.
         if (!canPlaceOn(level, pos, facing)) {
@@ -123,16 +123,16 @@ public class CoverItem extends Item {
 
             facing = Direction.DOWN;
 
-            tile = level.getBlockEntity(pos);
+            blockEntity = level.getBlockEntity(pos);
         }
 
         if (canPlaceOn(level, pos, facing)) {
             if (level.isClientSide) {
-                ModelDataManager.requestModelDataRefresh(tile);
+                ModelDataManager.requestModelDataRefresh(blockEntity);
                 return InteractionResult.SUCCESS;
             }
 
-            INetworkNode node = ((NetworkNodeTile<?>) tile).getNode();
+            INetworkNode node = ((NetworkNodeBlockEntity<?>) blockEntity).getNode();
 
             if (node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, context.getPlayer())) {
                 WorldUtils.sendNoPermissionMessage(context.getPlayer());
@@ -156,8 +156,8 @@ public class CoverItem extends Item {
 
 
     private boolean canPlaceOn(Level level, BlockPos pos, Direction facing) {
-        return level.getBlockEntity(pos) instanceof NetworkNodeTile
-            && ((NetworkNodeTile<?>) level.getBlockEntity(pos)).getNode() instanceof ICoverable
+        return level.getBlockEntity(pos) instanceof NetworkNodeBlockEntity
+            && ((NetworkNodeBlockEntity<?>) level.getBlockEntity(pos)).getNode() instanceof ICoverable
             && !CableBlock.hasVisualConnectionOnSide(level.getBlockState(pos), facing);
     }
 

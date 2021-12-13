@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.FluidInterfaceNetwork
 import com.refinedmods.refinedstorage.container.FluidInterfaceContainer;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
-import com.refinedmods.refinedstorage.tile.NetworkNodeTile;
+import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -24,7 +24,7 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, NetworkNodeTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, NetworkNodeBlockEntity.REDSTONE_MODE));
     }
 
     @Override
@@ -38,12 +38,12 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        if (!FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
-            TANK_RENDERER.render(matrixStack, x + 46, y + 56, FluidInterfaceTile.TANK_IN.getValue());
+        if (!FluidInterfaceBlockEntity.TANK_IN.getValue().isEmpty()) {
+            TANK_RENDERER.render(matrixStack, x + 46, y + 56, FluidInterfaceBlockEntity.TANK_IN.getValue());
         }
 
-        if (!FluidInterfaceTile.TANK_OUT.getValue().isEmpty()) {
-            TANK_RENDERER.render(matrixStack, x + 118, y + 56, FluidInterfaceTile.TANK_OUT.getValue());
+        if (!FluidInterfaceBlockEntity.TANK_OUT.getValue().isEmpty()) {
+            TANK_RENDERER.render(matrixStack, x + 118, y + 56, FluidInterfaceBlockEntity.TANK_OUT.getValue());
         }
     }
 
@@ -54,12 +54,12 @@ public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
         renderString(matrixStack, 115 + 1, 20, I18n.get("gui.refinedstorage.fluid_interface.out"));
         renderString(matrixStack, 7, 111, I18n.get("container.inventory"));
 
-        if (RenderUtils.inBounds(46, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceTile.TANK_IN.getValue().isEmpty()) {
-            renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceTile.TANK_IN.getValue().getDisplayName().getString() + "\n" + ChatFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_IN.getValue().getAmount()) + ChatFormatting.RESET);
+        if (RenderUtils.inBounds(46, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceBlockEntity.TANK_IN.getValue().isEmpty()) {
+            renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceBlockEntity.TANK_IN.getValue().getDisplayName().getString() + "\n" + ChatFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceBlockEntity.TANK_IN.getValue().getAmount()) + ChatFormatting.RESET);
         }
 
-        if (RenderUtils.inBounds(118, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceTile.TANK_OUT.getValue().isEmpty()) {
-            renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceTile.TANK_OUT.getValue().getDisplayName().getString() + "\n" + ChatFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceTile.TANK_OUT.getValue().getAmount()) + ChatFormatting.RESET);
+        if (RenderUtils.inBounds(118, 56, 12, 47, mouseX, mouseY) && !FluidInterfaceBlockEntity.TANK_OUT.getValue().isEmpty()) {
+            renderTooltip(matrixStack, mouseX, mouseY, FluidInterfaceBlockEntity.TANK_OUT.getValue().getDisplayName().getString() + "\n" + ChatFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(FluidInterfaceBlockEntity.TANK_OUT.getValue().getAmount()) + ChatFormatting.RESET);
         }
     }
 }

@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.container.ControllerContainer;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.tile.ClientNode;
-import com.refinedmods.refinedstorage.tile.ControllerTile;
+import com.refinedmods.refinedstorage.blockentity.ClientNode;
+import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, ControllerTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, ControllerBlockEntity.REDSTONE_MODE));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
         blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        int energyBarHeightNew = Network.getEnergyScaled(ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
+        int energyBarHeightNew = Network.getEnergyScaled(ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
 
         blit(matrixStack, x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
 
@@ -90,7 +90,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
         Lighting.setupFor3DItems();
 
-        List<ClientNode> nodes = ControllerTile.NODES.getValue();
+        List<ClientNode> nodes = ControllerBlockEntity.NODES.getValue();
 
         ClientNode hoveringNode = null;
 
@@ -135,12 +135,12 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
         }
 
         if (RenderUtils.inBounds(ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT, mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerTile.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue()));
+            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerBlockEntity.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue()));
         }
     }
 
     private int getRows() {
-        return Math.max(0, (int) Math.ceil((float) ControllerTile.NODES.getValue().size() / 2F));
+        return Math.max(0, (int) Math.ceil((float) ControllerBlockEntity.NODES.getValue().size() / 2F));
     }
 
     private String trimNameIfNeeded(boolean scaled, String name) {

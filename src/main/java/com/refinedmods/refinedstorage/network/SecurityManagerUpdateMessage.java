@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.tile.SecurityManagerTile;
+import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -50,10 +50,10 @@ public class SecurityManagerUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                BlockEntity tile = player.getCommandSenderWorld().getBlockEntity(message.pos);
+                BlockEntity blockEntity = player.getCommandSenderWorld().getBlockEntity(message.pos);
 
-                if (tile instanceof SecurityManagerTile) {
-                    ((SecurityManagerTile) tile).getNode().updatePermission(message.permission, message.state);
+                if (blockEntity instanceof SecurityManagerBlockEntity) {
+                    ((SecurityManagerBlockEntity) blockEntity).getNode().updatePermission(message.permission, message.state);
                 }
             });
         }

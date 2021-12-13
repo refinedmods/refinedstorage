@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.screen.FilterScreen;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 

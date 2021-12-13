@@ -42,26 +42,26 @@ public final class WorldUtils {
         }
     }
 
-    public static IItemHandler getItemHandler(@Nullable BlockEntity tile, Direction side) {
-        if (tile == null) {
+    public static IItemHandler getItemHandler(@Nullable BlockEntity blockEntity, Direction side) {
+        if (blockEntity == null) {
             return null;
         }
 
-        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
+        IItemHandler handler = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
         if (handler == null) {
-            if (side != null && tile instanceof WorldlyContainer) {
-                handler = new SidedInvWrapper((WorldlyContainer) tile, side);
-            } else if (tile instanceof Container) {
-                handler = new InvWrapper((Container) tile);
+            if (side != null && blockEntity instanceof WorldlyContainer) {
+                handler = new SidedInvWrapper((WorldlyContainer) blockEntity, side);
+            } else if (blockEntity instanceof Container) {
+                handler = new InvWrapper((Container) blockEntity);
             }
         }
 
         return handler;
     }
 
-    public static IFluidHandler getFluidHandler(@Nullable BlockEntity tile, Direction side) {
-        if (tile != null) {
-            return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
+    public static IFluidHandler getFluidHandler(@Nullable BlockEntity blockEntity, Direction side) {
+        if (blockEntity != null) {
+            return blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
         }
 
         return null;

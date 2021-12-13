@@ -13,8 +13,8 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.tile.FluidInterfaceTile;
-import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,7 +46,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
             super.onContentsChanged();
 
             if (!level.isClientSide) {
-                ((FluidInterfaceTile) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_IN);
+                ((FluidInterfaceBlockEntity) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_IN);
             }
 
             markDirty();
@@ -251,7 +251,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
 
     private void onTankOutChanged() {
         if (!level.isClientSide && level.isLoaded(pos)) {
-            ((FluidInterfaceTile) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
+            ((FluidInterfaceBlockEntity) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_OUT);
         }
 
         markDirty();
