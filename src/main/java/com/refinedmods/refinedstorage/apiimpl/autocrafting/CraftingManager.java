@@ -15,7 +15,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +54,7 @@ public class CraftingManager implements ICraftingManager {
 
     private static class FluidStackKey {
         private final Fluid fluid;
-        private final CompoundNBT tag;
+        private final CompoundTag tag;
 
         public FluidStackKey(FluidStack fluidStack) {
             this.fluid = fluidStack.getFluid();
@@ -75,7 +77,7 @@ public class CraftingManager implements ICraftingManager {
 
     private static class ItemStackKey {
         private final Item item;
-        private final CompoundNBT tag;
+        private final CompoundTag tag;
 
         public ItemStackKey(ItemStack itemStack) {
             this.item = itemStack.getItem();
