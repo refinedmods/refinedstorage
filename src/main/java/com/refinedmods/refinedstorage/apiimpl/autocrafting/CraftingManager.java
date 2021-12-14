@@ -40,6 +40,8 @@ public class CraftingManager implements ICraftingManager {
     private final Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private final List<ICraftingPattern> patterns = new ArrayList<>();
+    private final Map<FluidStackKey, ICraftingPattern> fluidPatternsByOutput = new HashMap<>();
+    private final Map<ItemStackKey, ICraftingPattern> itemPatternsByOutput = new HashMap<>();
 
     private final Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private final List<ICraftingTask> tasksToAdd = new ArrayList<>();
@@ -47,6 +49,52 @@ public class CraftingManager implements ICraftingManager {
     private final Map<Object, Long> throttledRequesters = new HashMap<>();
     private final Set<ICraftingMonitorListener> listeners = new HashSet<>();
     private ListTag tasksToRead;
+
+    private static class FluidStackKey {
+        private final Fluid fluid;
+        private final CompoundNBT tag;
+
+        public FluidStackKey(FluidStack fluidStack) {
+            this.fluid = fluidStack.getFluid();
+            this.tag = fluidStack.getTag();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FluidStackKey that = (FluidStackKey) o;
+            return fluid.equals(that.fluid) && Objects.equals(tag, that.tag);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(fluid, tag);
+        }
+    }
+
+    private static class ItemStackKey {
+        private final Item item;
+        private final CompoundNBT tag;
+
+        public ItemStackKey(ItemStack itemStack) {
+            this.item = itemStack.getItem();
+            this.tag = itemStack.getTag();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemStackKey that = (ItemStackKey) o;
+            return item.equals(that.item) && Objects.equals(tag, that.tag);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(item, tag);
+        }
+    }
 
     public CraftingManager(INetwork network) {
         this.network = network;
@@ -357,6 +405,8 @@ public class CraftingManager implements ICraftingManager {
         this.network.getFluidStorageCache().getCraftablesList().clear();
 
         this.patterns.clear();
+        this.fluidPatternsByOutput.clear();
+        this.itemPatternsByOutput.clear();
         this.containerInventories.clear();
         this.patternToContainer.clear();
 
@@ -368,10 +418,12 @@ public class CraftingManager implements ICraftingManager {
 
                 for (ItemStack output : pattern.getOutputs()) {
                     network.getItemStorageCache().getCraftablesList().add(output);
+                    this.itemPatternsByOutput.put(new ItemStackKey(output), pattern);
                 }
 
                 for (FluidStack output : pattern.getFluidOutputs()) {
                     network.getFluidStorageCache().getCraftablesList().add(output);
+                    this.fluidPatternsByOutput.put(new FluidStackKey(output), pattern);
                 }
 
                 Set<ICraftingPatternContainer> containersForPattern = this.patternToContainer.computeIfAbsent(pattern, key -> new LinkedHashSet<>());
@@ -410,28 +462,12 @@ public class CraftingManager implements ICraftingManager {
     @Nullable
     @Override
     public ICraftingPattern getPattern(ItemStack pattern) {
-        for (ICraftingPattern patternInList : patterns) {
-            for (ItemStack output : patternInList.getOutputs()) {
-                if (API.instance().getComparer().isEqualNoQuantity(output, pattern)) {
-                    return patternInList;
-                }
-            }
-        }
-
-        return null;
+        return itemPatternsByOutput.get(new ItemStackKey(pattern));
     }
 
     @Nullable
     @Override
     public ICraftingPattern getPattern(FluidStack pattern) {
-        for (ICraftingPattern patternInList : patterns) {
-            for (FluidStack output : patternInList.getFluidOutputs()) {
-                if (API.instance().getComparer().isEqual(output, pattern, IComparer.COMPARE_NBT)) {
-                    return patternInList;
-                }
-            }
-        }
-
-        return null;
+        return fluidPatternsByOutput.get(new FluidStackKey(pattern));
     }
 }
