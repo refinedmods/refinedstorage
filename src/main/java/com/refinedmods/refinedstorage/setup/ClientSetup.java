@@ -44,7 +44,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 
-public class ClientSetup {
+public final class ClientSetup {
     private static final ResourceLocation DISK_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk");
     private static final ResourceLocation DISK_NEAR_CAPACITY_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity");
     private static final ResourceLocation DISK_FULL_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_full");
@@ -67,6 +67,9 @@ public class ClientSetup {
             String prefix = color == ColorMap.DEFAULT_COLOR ? "" : color + "_";
             consumer.accept(new ResourceLocation(RS.ID, prefix + name), color);
         }
+    }
+
+    private ClientSetup() {
     }
 
     @SubscribeEvent
