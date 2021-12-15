@@ -59,7 +59,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CommonSetup {
     @SubscribeEvent
-    public void onCommonSetup(FMLCommonSetupEvent e) {
+    public static void onCommonSetup(FMLCommonSetupEvent e) {
         RS.NETWORK_HANDLER.register();
 
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
@@ -135,26 +135,26 @@ public class CommonSetup {
         }
     }
 
-    private INetworkNode readAndReturn(CompoundTag tag, NetworkNode node) {
+    private static INetworkNode readAndReturn(CompoundTag tag, NetworkNode node) {
         node.read(tag);
 
         return node;
     }
 
     @SubscribeEvent
-    public void onRegisterCapabilities(RegisterCapabilitiesEvent e) {
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent e) {
         e.register(INetworkNodeProxy.class);
     }
 
     @SubscribeEvent
-    public void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e) {
+    public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e) {
         e.getRegistry().register(new UpgradeWithEnchantedBookRecipeSerializer().setRegistryName(RS.ID, "upgrade_with_enchanted_book"));
         e.getRegistry().register(CoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "cover_recipe")));
         e.getRegistry().register(HollowCoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "hollow_cover_recipe")));
     }
 
     @SubscribeEvent
-    public void onRegisterBlockEntities(RegistryEvent.Register<BlockEntityType<?>> e) {
+    public static void onRegisterBlockEntities(RegistryEvent.Register<BlockEntityType<?>> e) {
         e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.NORMAL, pos, state), RSBlocks.CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "controller")));
         e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.CREATIVE, pos, state), RSBlocks.CREATIVE_CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "creative_controller")));
         e.getRegistry().register(BlockEntityType.Builder.of(CableBlockEntity::new, RSBlocks.CABLE.get()).build(null).setRegistryName(RS.ID, "cable"));
@@ -199,7 +199,7 @@ public class CommonSetup {
         e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridBlockEntity(PortableGridBlockItem.Type.NORMAL, pos, state), RSBlocks.PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "portable_grid")));
     }
 
-    private <T extends BlockEntity> BlockEntityType<T> registerSynchronizationParameters(BlockEntityType<T> t) {
+    private static <T extends BlockEntity> BlockEntityType<T> registerSynchronizationParameters(BlockEntityType<T> t) {
         BaseBlockEntity blockEntity = (BaseBlockEntity) t.create(BlockPos.ZERO, null);
 
         blockEntity.getDataManager().getParameters().forEach(BlockEntitySynchronizationManager::registerParameter);
@@ -208,7 +208,7 @@ public class CommonSetup {
     }
 
     @SubscribeEvent
-    public void onRegisterMenus(RegistryEvent.Register<MenuType<?>> e) {
+    public static void onRegisterMenus(RegistryEvent.Register<MenuType<?>> e) {
         e.getRegistry().register(IForgeMenuType.create((windowId, inv, data) -> new FilterContainerMenu(inv.player, inv.getSelected(), windowId)).setRegistryName(RS.ID, "filter"));
         e.getRegistry().register(IForgeMenuType.create(((windowId, inv, data) -> new ControllerContainerMenu(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
         e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DiskDriveContainerMenu, DiskDriveBlockEntity>((windowId, inv, blockEntity) -> new DiskDriveContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));

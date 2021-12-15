@@ -33,23 +33,28 @@ public final class RS {
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
     public RS() {
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::new);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onClientSetup);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelBake);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelRegistry);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onTextureStitch);
+            MinecraftForge.EVENT_BUS.addListener(ClientSetup::addReloadListener);
+        });
 
         MinecraftForge.EVENT_BUS.register(new ServerSetup());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 
-        CommonSetup commonSetup = new CommonSetup();
         RSBlocks.register();
         RSItems.register();
         RSLootFunctions.register();
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onCommonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, commonSetup::onRegisterBlockEntities);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(RecipeSerializer.class, commonSetup::onRegisterRecipeSerializers);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, commonSetup::onRegisterMenus);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onRegisterCapabilities);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onCommonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, CommonSetup::onRegisterBlockEntities);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(RecipeSerializer.class, CommonSetup::onRegisterRecipeSerializers);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, CommonSetup::onRegisterMenus);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onRegisterCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().register(new DataGenerators());
         FMLJavaModLoadingContext.get().getModEventBus().register(new CuriosIntegration());
 
