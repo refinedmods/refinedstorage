@@ -13,7 +13,7 @@ import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.render.CraftingMonitorElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
-import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
+import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorCancelMessage;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
@@ -36,22 +36,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> {
+public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMenu> {
     private static final int ROWS = 5;
     private static final int ITEM_WIDTH = 73;
     private static final int ITEM_HEIGHT = 29;
     private final ScrollbarWidget scrollbar;
     private final ICraftingMonitor craftingMonitor;
-    private final TabListWidget<CraftingMonitorContainer> tabs;
+    private final TabListWidget<CraftingMonitorContainerMenu> tabs;
     private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, ITEM_WIDTH, ITEM_HEIGHT);
     private Button cancelButton;
     private Button cancelAllButton;
     private List<IGridTab> tasks = Collections.emptyList();
 
-    public CraftingMonitorScreen(CraftingMonitorContainer container, Inventory inventory, Component title) {
-        super(container, 254, 201, inventory, title);
+    public CraftingMonitorScreen(CraftingMonitorContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 254, 201, inventory, title);
 
-        this.craftingMonitor = container.getCraftingMonitor();
+        this.craftingMonitor = containerMenu.getCraftingMonitor();
 
         this.tabs = new TabListWidget<>(this, new ElementDrawers<>(this), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();

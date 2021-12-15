@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
 import net.minecraft.network.FriendlyByteBuf;
@@ -61,8 +61,8 @@ public class SetFilterSlotMessage {
             };
 
             // Prevent the grid crafting matrix inventory listener from resetting the list.
-            if (container instanceof GridContainer) {
-                IGrid grid = ((GridContainer) container).getGrid();
+            if (container instanceof GridContainerMenu) {
+                IGrid grid = ((GridContainerMenu) container).getGrid();
                 //exclude output slots
                 if (grid instanceof GridNetworkNode && slot.getSlotIndex() < ((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().size()) {
                     Set<ResourceLocation> list = new HashSet<>(((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().get(slot.getSlotIndex()));

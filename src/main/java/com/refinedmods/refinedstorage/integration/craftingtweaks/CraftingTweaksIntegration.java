@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.integration.craftingtweaks;
 
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.grid.CraftingGridSlot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fml.InterModComms;
@@ -27,7 +27,7 @@ public final class CraftingTweaksIntegration {
     public static void register() {
         CompoundTag tag = new CompoundTag();
 
-        tag.putString("ContainerClass", GridContainer.class.getName());
+        tag.putString("ContainerClass", GridContainerMenu.class.getName());
         tag.putString("ValidContainerPredicate", ValidContainerPredicate.class.getName());
         tag.putString("GetGridStartFunction", GetGridStartFunction.class.getName());
         tag.putString("AlignToGrid", "left");
@@ -35,16 +35,16 @@ public final class CraftingTweaksIntegration {
         InterModComms.sendTo(ID, "RegisterProvider", () -> tag);
     }
 
-    public static class ValidContainerPredicate implements Predicate<GridContainer> {
+    public static class ValidContainerPredicate implements Predicate<GridContainerMenu> {
         @Override
-        public boolean test(GridContainer containerGrid) {
+        public boolean test(GridContainerMenu containerGrid) {
             return containerGrid.getGrid().getGridType() == GridType.CRAFTING;
         }
     }
 
-    public static class GetGridStartFunction implements Function<GridContainer, Integer> {
+    public static class GetGridStartFunction implements Function<GridContainerMenu, Integer> {
         @Override
-        public Integer apply(GridContainer containerGrid) {
+        public Integer apply(GridContainerMenu containerGrid) {
             for (int i = 0; i < containerGrid.slots.size(); i++) {
                 if (containerGrid.slots.get(i) instanceof CraftingGridSlot) {
                     return i;

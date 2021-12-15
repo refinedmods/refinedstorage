@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container.factory;
 
-import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
+import com.refinedmods.refinedstorage.container.CrafterManagerContainerMenu;
 import com.refinedmods.refinedstorage.screen.EmptyScreenInfoProvider;
 import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -11,9 +11,9 @@ import net.minecraftforge.network.IContainerFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CrafterManagerContainerFactory implements IContainerFactory<CrafterManagerContainer> {
+public class CrafterManagerContainerFactory implements IContainerFactory<CrafterManagerContainerMenu> {
     @Override
-    public CrafterManagerContainer create(int windowId, Inventory inv, FriendlyByteBuf buf) {
+    public CrafterManagerContainerMenu create(int windowId, Inventory inv, FriendlyByteBuf buf) {
         Map<String, Integer> data = new LinkedHashMap<>();
 
         BlockPos pos = buf.readBlockPos();
@@ -24,7 +24,7 @@ public class CrafterManagerContainerFactory implements IContainerFactory<Crafter
             data.put(buf.readComponent().getString(), buf.readInt());
         }
 
-        CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerBlockEntity) inv.player.level.getBlockEntity(pos), inv.player, windowId);
+        CrafterManagerContainerMenu container = new CrafterManagerContainerMenu((CrafterManagerBlockEntity) inv.player.level.getBlockEntity(pos), inv.player, windowId);
 
         container.setScreenInfoProvider(new EmptyScreenInfoProvider());
         container.initSlots(data);

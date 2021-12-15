@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.container.DestructorContainer;
+import com.refinedmods.refinedstorage.container.DestructorContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class DestructorPickupSideButton extends SideButton {
-    public DestructorPickupSideButton(BaseScreen<DestructorContainer> screen) {
+    public DestructorPickupSideButton(BaseScreen<DestructorContainerMenu> screen) {
         super(screen);
     }
 

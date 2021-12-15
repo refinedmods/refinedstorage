@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.block;
 
-import com.refinedmods.refinedstorage.container.DiskDriveContainer;
+import com.refinedmods.refinedstorage.container.DiskDriveContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -40,7 +40,7 @@ public class DiskDriveBlock extends NetworkNodeBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<DiskDriveBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.disk_drive"),
-                    (blockEntity, windowId, inventory, p) -> new DiskDriveContainer(blockEntity, p, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DiskDriveContainerMenu(blockEntity, p, windowId),
                     pos
                 ),
                 pos

@@ -48,7 +48,7 @@ public final class RS {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, commonSetup::onRegisterBlockEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(RecipeSerializer.class, commonSetup::onRegisterRecipeSerializers);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, commonSetup::onRegisterContainers);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, commonSetup::onRegisterMenus);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onRegisterCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().register(new DataGenerators());
         FMLJavaModLoadingContext.get().getModEventBus().register(new CuriosIntegration());

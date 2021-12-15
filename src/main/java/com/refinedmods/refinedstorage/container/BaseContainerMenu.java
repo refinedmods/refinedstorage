@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseContainer extends AbstractContainerMenu {
+public abstract class BaseContainerMenu extends AbstractContainerMenu {
     protected final TransferManager transferManager = new TransferManager(this);
     @Nullable
     private final BaseBlockEntity blockEntity;
@@ -34,7 +34,7 @@ public abstract class BaseContainer extends AbstractContainerMenu {
     @Nullable
     private BlockEntitySynchronizationWatcher listener;
 
-    protected BaseContainer(@Nullable MenuType<?> type, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
+    protected BaseContainerMenu(@Nullable MenuType<?> type, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
         super(type, windowId);
 
         this.blockEntity = blockEntity;

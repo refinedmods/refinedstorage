@@ -1,15 +1,15 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class FluidInterfaceContainer extends BaseContainer {
-    public FluidInterfaceContainer(FluidInterfaceBlockEntity fluidInterface, Player player, int windowId) {
-        super(RSContainers.FLUID_INTERFACE, fluidInterface, player, windowId);
+public class FluidInterfaceContainerMenu extends BaseContainerMenu {
+    public FluidInterfaceContainerMenu(FluidInterfaceBlockEntity fluidInterface, Player player, int windowId) {
+        super(RSContainerMenus.FLUID_INTERFACE, fluidInterface, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
             addSlot(new SlotItemHandler(fluidInterface.getNode().getUpgrades(), i, 187, 6 + (i * 18)));

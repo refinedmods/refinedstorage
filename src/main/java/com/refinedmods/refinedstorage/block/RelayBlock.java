@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.container.RelayContainer;
+import com.refinedmods.refinedstorage.container.RelayContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.RelayBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -41,7 +41,7 @@ public class RelayBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<RelayBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.relay"),
-                    (blockEntity, windowId, inventory, p) -> new RelayContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new RelayContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

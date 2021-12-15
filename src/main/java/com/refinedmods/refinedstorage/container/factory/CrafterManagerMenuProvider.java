@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container.factory;
 
-import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
+import com.refinedmods.refinedstorage.container.CrafterManagerContainerMenu;
 import com.refinedmods.refinedstorage.screen.EmptyScreenInfoProvider;
 import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -52,7 +52,7 @@ public class CrafterManagerMenuProvider implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-        CrafterManagerContainer container = new CrafterManagerContainer(blockEntity, playerEntity, windowId);
+        CrafterManagerContainerMenu container = new CrafterManagerContainerMenu(blockEntity, playerEntity, windowId);
 
         container.setScreenInfoProvider(new EmptyScreenInfoProvider());
         container.initSlotsServer();

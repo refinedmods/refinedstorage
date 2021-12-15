@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.container.CrafterContainer;
+import com.refinedmods.refinedstorage.container.CrafterContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class CrafterModeSideButton extends SideButton {
-    public CrafterModeSideButton(BaseScreen<CrafterContainer> screen) {
+    public CrafterModeSideButton(BaseScreen<CrafterContainerMenu> screen) {
         super(screen);
     }
 

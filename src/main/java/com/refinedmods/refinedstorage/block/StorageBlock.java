@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
-import com.refinedmods.refinedstorage.container.StorageContainer;
+import com.refinedmods.refinedstorage.container.StorageContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.StorageBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -62,7 +62,7 @@ public class StorageBlock extends NetworkNodeBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new BlockEntityMenuProvider<StorageBlockEntity>(
                 ((StorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
-                (blockEntity, windowId, inventory, p) -> new StorageContainer(blockEntity, player, windowId),
+                (blockEntity, windowId, inventory, p) -> new StorageContainerMenu(blockEntity, player, windowId),
                 pos
             ), pos));
         }

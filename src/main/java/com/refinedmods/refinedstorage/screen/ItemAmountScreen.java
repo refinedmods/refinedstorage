@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.AmountContainer;
+import com.refinedmods.refinedstorage.container.AmountContainerMenu;
 import com.refinedmods.refinedstorage.network.SetFilterSlotMessage;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.function.UnaryOperator;
 
-public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
+public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainerMenu> {
     private final int containerSlot;
     private final ItemStack stack;
     private final int maxAmount;
@@ -22,7 +22,7 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
     private final UnaryOperator<Screen> alternativesScreenFactory;
 
     public ItemAmountScreen(BaseScreen parent, Player player, int containerSlot, ItemStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
-        super(parent, new AmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), new TranslatableComponent("gui.refinedstorage.item_amount"));
+        super(parent, new AmountContainerMenu(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), new TranslatableComponent("gui.refinedstorage.item_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;

@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
-import com.refinedmods.refinedstorage.container.FluidStorageContainer;
+import com.refinedmods.refinedstorage.container.FluidStorageContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.FluidStorageBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -60,7 +60,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
         if (!level.isClientSide) {
             return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new BlockEntityMenuProvider<FluidStorageBlockEntity>(
                 ((FluidStorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
-                (blockEntity, windowId, inventory, p) -> new FluidStorageContainer(blockEntity, player, windowId),
+                (blockEntity, windowId, inventory, p) -> new FluidStorageContainerMenu(blockEntity, player, windowId),
                 pos
             ), pos));
         }

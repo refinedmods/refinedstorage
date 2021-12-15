@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.network.grid;
 
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -31,8 +31,8 @@ public class GridItemInventoryScrollMessage {
     public static void handle(GridItemInventoryScrollMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player != null && player.containerMenu instanceof GridContainer && ((GridContainer) player.containerMenu).getGrid().getItemHandler() != null) {
-                ((GridContainer) player.containerMenu).getGrid().getItemHandler().onInventoryScroll(player, message.slot, message.shift, message.up);
+            if (player != null && player.containerMenu instanceof GridContainerMenu && ((GridContainerMenu) player.containerMenu).getGrid().getItemHandler() != null) {
+                ((GridContainerMenu) player.containerMenu).getGrid().getItemHandler().onInventoryScroll(player, message.slot, message.shift, message.up);
             }
         });
         ctx.get().setPacketHandled(true);

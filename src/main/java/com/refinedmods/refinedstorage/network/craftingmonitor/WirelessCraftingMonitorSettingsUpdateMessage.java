@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
-import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
+import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,8 +44,8 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof CraftingMonitorContainer) {
-                    ((WirelessCraftingMonitor) ((CraftingMonitorContainer) player.containerMenu).getCraftingMonitor()).setSettings(message.tabSelected, message.tabPage);
+                if (player.containerMenu instanceof CraftingMonitorContainerMenu) {
+                    ((WirelessCraftingMonitor) ((CraftingMonitorContainerMenu) player.containerMenu).getCraftingMonitor()).setSettings(message.tabSelected, message.tabPage);
                 }
             });
         }

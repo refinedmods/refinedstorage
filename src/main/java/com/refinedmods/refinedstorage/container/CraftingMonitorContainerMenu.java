@@ -14,11 +14,11 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class CraftingMonitorContainer extends BaseContainer implements ICraftingMonitorListener {
+public class CraftingMonitorContainerMenu extends BaseContainerMenu implements ICraftingMonitorListener {
     private final ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
-    public CraftingMonitorContainer(MenuType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorBlockEntity blockEntity, Player player, int windowId) {
+    public CraftingMonitorContainerMenu(MenuType<CraftingMonitorContainerMenu> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorBlockEntity blockEntity, Player player, int windowId) {
         super(type, blockEntity, player, windowId);
 
         this.craftingMonitor = craftingMonitor;

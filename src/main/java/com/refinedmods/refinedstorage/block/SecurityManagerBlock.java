@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.SecurityManagerContainer;
+import com.refinedmods.refinedstorage.container.SecurityManagerContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -42,7 +42,7 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<SecurityManagerBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.security_manager"),
-                    (blockEntity, windowId, inventory, p) -> new SecurityManagerContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new SecurityManagerContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

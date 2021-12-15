@@ -2,16 +2,16 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.RelayContainer;
+import com.refinedmods.refinedstorage.container.RelayContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class RelayScreen extends BaseScreen<RelayContainer> {
-    public RelayScreen(RelayContainer container, Inventory inventory, Component title) {
-        super(container, 176, 131, inventory, title);
+public class RelayScreen extends BaseScreen<RelayContainerMenu> {
+    public RelayScreen(RelayContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 176, 131, inventory, title);
     }
 
     @Override

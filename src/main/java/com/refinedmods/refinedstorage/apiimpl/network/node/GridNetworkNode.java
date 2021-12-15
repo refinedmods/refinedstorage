@@ -87,7 +87,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             if (!reading && slot < PROCESSING_MATRIX_SIZE) {
                 allowedTagList.clearItemTags(slot);
             }
-        });    private final AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
+        });
+    private final AbstractContainerMenu craftingContainer = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
         @Override
         public boolean stillValid(Player player) {
             return false;
@@ -108,14 +109,16 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             }
         });
     private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
-    private final List<IFilter> filters = new ArrayList<>();    private final CraftingContainer matrix = new CraftingContainer(craftingContainer, 3, 3);
+    private final List<IFilter> filters = new ArrayList<>();
+    private final CraftingContainer matrix = new CraftingContainer(craftingContainer, 3, 3);
     private final List<IGridTab> tabs = new ArrayList<>();
     private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
     private final GridType type;
     private CraftingRecipe currentRecipe;
     private boolean readingInventory;
     private int viewType = VIEW_TYPE_NORMAL;
-    private int sortingDirection = SORTING_DIRECTION_DESCENDING;    private final BaseItemHandler patterns = new BaseItemHandler(2) {
+    private int sortingDirection = SORTING_DIRECTION_DESCENDING;
+    private final BaseItemHandler patterns = new BaseItemHandler(2) {
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);

@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.screen.grid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.AlternativesContainer;
+import com.refinedmods.refinedstorage.container.AlternativesContainerMenu;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
+public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     private static final int VISIBLE_ROWS = 5;
 
     private final Screen parent;
@@ -47,7 +47,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     private FluidStack fluid;
 
     private AlternativesScreen(Screen parent, Player player, Component title) {
-        super(new AlternativesContainer(player), 175, 143, null, title);
+        super(new AlternativesContainerMenu(player), 175, 143, null, title);
 
         this.parent = parent;
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);

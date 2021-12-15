@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.network;
 
-import com.refinedmods.refinedstorage.container.FilterContainer;
+import com.refinedmods.refinedstorage.container.FilterContainerMenu;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -45,13 +45,13 @@ public class FilterUpdateMessage {
     public static void handle(FilterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         Player player = ctx.get().getSender();
 
-        if (player != null && player.containerMenu instanceof FilterContainer) {
+        if (player != null && player.containerMenu instanceof FilterContainerMenu) {
             ctx.get().enqueueWork(() -> {
-                FilterItem.setCompare(((FilterContainer) player.containerMenu).getFilterItem(), message.compare);
-                FilterItem.setMode(((FilterContainer) player.containerMenu).getFilterItem(), message.mode);
-                FilterItem.setModFilter(((FilterContainer) player.containerMenu).getFilterItem(), message.modFilter);
-                FilterItem.setName(((FilterContainer) player.containerMenu).getFilterItem(), message.name);
-                FilterItem.setType(((FilterContainer) player.containerMenu).getFilterItem(), message.type);
+                FilterItem.setCompare(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.compare);
+                FilterItem.setMode(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.mode);
+                FilterItem.setModFilter(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.modFilter);
+                FilterItem.setName(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.name);
+                FilterItem.setType(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.type);
             });
         }
 

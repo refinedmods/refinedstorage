@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
-import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
+import com.refinedmods.refinedstorage.container.StorageMonitorContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -47,7 +47,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
                     (ServerPlayer) player,
                     new BlockEntityMenuProvider<StorageMonitorBlockEntity>(
                         new TranslatableComponent("gui.refinedstorage.storage_monitor"),
-                        (blockEntity, windowId, inventory, p) -> new StorageMonitorContainer(blockEntity, player, windowId),
+                        (blockEntity, windowId, inventory, p) -> new StorageMonitorContainerMenu(blockEntity, player, windowId),
                         pos
                     ),
                     pos

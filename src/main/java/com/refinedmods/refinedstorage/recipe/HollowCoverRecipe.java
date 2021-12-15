@@ -15,11 +15,10 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class HollowCoverRecipe extends CustomRecipe {
-
     public static RecipeSerializer<HollowCoverRecipe> SERIALIZER = new SimpleRecipeSerializer<>(HollowCoverRecipe::new);
 
-    public HollowCoverRecipe(ResourceLocation idIn) {
-        super(idIn);
+    public HollowCoverRecipe(ResourceLocation id) {
+        super(id);
     }
 
     public static boolean stackMatches(ItemStack first) {
@@ -46,10 +45,10 @@ public class HollowCoverRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level level) {
+    public boolean matches(CraftingContainer craftingContainer, Level level) {
         List<ItemStack> list = Lists.newArrayList();
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
-            ItemStack itemstack = inv.getItem(i);
+        for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {
+            ItemStack itemstack = craftingContainer.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
                 if (!stackMatches(itemstack)) {

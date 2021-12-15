@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
-import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
+import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -34,8 +34,8 @@ public class CraftingMonitorCancelMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof CraftingMonitorContainer) {
-                    ((CraftingMonitorContainer) player.containerMenu).getCraftingMonitor().onCancelled(player, message.taskId);
+                if (player.containerMenu instanceof CraftingMonitorContainerMenu) {
+                    ((CraftingMonitorContainerMenu) player.containerMenu).getCraftingMonitor().onCancelled(player, message.taskId);
                 }
             });
         }

@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.InterfaceContainer;
+import com.refinedmods.refinedstorage.container.InterfaceContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
@@ -11,9 +11,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class InterfaceScreen extends BaseScreen<InterfaceContainer> {
-    public InterfaceScreen(InterfaceContainer container, Inventory inventory, Component title) {
-        super(container, 211, 217, inventory, title);
+public class InterfaceScreen extends BaseScreen<InterfaceContainerMenu> {
+    public InterfaceScreen(InterfaceContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 211, 217, inventory, title);
     }
 
     @Override

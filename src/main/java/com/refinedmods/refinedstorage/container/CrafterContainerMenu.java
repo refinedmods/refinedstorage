@@ -1,13 +1,13 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class CrafterContainer extends BaseContainer {
-    public CrafterContainer(CrafterBlockEntity crafter, Player player, int windowId) {
-        super(RSContainers.CRAFTER, crafter, player, windowId);
+public class CrafterContainerMenu extends BaseContainerMenu {
+    public CrafterContainerMenu(CrafterBlockEntity crafter, Player player, int windowId) {
+        super(RSContainerMenus.CRAFTER, crafter, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
             addSlot(new SlotItemHandler(crafter.getNode().getPatternInventory(), i, 8 + (18 * i), 20));

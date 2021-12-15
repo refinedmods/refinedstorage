@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -60,8 +60,8 @@ public class SetFluidFilterSlotMessage {
             };
 
             // Prevent the grid crafting matrix inventory listener from resetting the list.
-            if (container instanceof GridContainer) {
-                IGrid grid = ((GridContainer) container).getGrid();
+            if (container instanceof GridContainerMenu) {
+                IGrid grid = ((GridContainerMenu) container).getGrid();
                 if (grid instanceof GridNetworkNode && slot.getSlotIndex() < ((GridNetworkNode) grid).getAllowedTagList().getAllowedFluidTags().size()) {
                     Set<ResourceLocation> list = new HashSet<>(((GridNetworkNode) grid).getAllowedTagList().getAllowedFluidTags().get(slot.getSlotIndex()));
 

@@ -58,11 +58,11 @@ public class CoverRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level level) {
+    public boolean matches(CraftingContainer craftingContainer, Level level) {
         List<ItemStack> list = Lists.newArrayList();
         int ingots = 0;
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
-            ItemStack itemstack = inv.getItem(i);
+        for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {
+            ItemStack itemstack = craftingContainer.getItem(i);
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
                 if (itemstack.is(Tags.Items.NUGGETS_IRON)) {

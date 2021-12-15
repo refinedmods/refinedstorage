@@ -6,8 +6,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class AmountContainer extends BaseContainer {
-    public AmountContainer(Player player, ItemStack stack) {
+public class AmountContainerMenu extends BaseContainerMenu {
+    public AmountContainerMenu(Player player, ItemStack stack) {
         super(null, null, player, 0);
 
         ItemStackHandler inventory = new ItemStackHandler(1);

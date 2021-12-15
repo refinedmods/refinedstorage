@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container.factory;
 
-import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
+import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import net.minecraft.network.chat.Component;
@@ -16,9 +16,9 @@ public class CraftingMonitorMenuProvider implements MenuProvider {
     private final ICraftingMonitor craftingMonitor;
     @Nullable
     private final CraftingMonitorBlockEntity blockEntity;
-    private final MenuType<CraftingMonitorContainer> containerType;
+    private final MenuType<CraftingMonitorContainerMenu> containerType;
 
-    public CraftingMonitorMenuProvider(MenuType<CraftingMonitorContainer> containerType, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorBlockEntity blockEntity) {
+    public CraftingMonitorMenuProvider(MenuType<CraftingMonitorContainerMenu> containerType, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorBlockEntity blockEntity) {
         this.containerType = containerType;
         this.craftingMonitor = craftingMonitor;
         this.blockEntity = blockEntity;
@@ -32,6 +32,6 @@ public class CraftingMonitorMenuProvider implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-        return new CraftingMonitorContainer(containerType, craftingMonitor, blockEntity, playerEntity, windowId);
+        return new CraftingMonitorContainerMenu(containerType, craftingMonitor, blockEntity, playerEntity, windowId);
     }
 }

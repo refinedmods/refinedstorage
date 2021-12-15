@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.ConstructorContainer;
+import com.refinedmods.refinedstorage.container.ConstructorContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ConstructorDropSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
@@ -13,9 +13,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ConstructorScreen extends BaseScreen<ConstructorContainer> {
-    public ConstructorScreen(ConstructorContainer container, Inventory inventory, Component title) {
-        super(container, 211, 137, inventory, title);
+public class ConstructorScreen extends BaseScreen<ConstructorContainerMenu> {
+    public ConstructorScreen(ConstructorContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 211, 137, inventory, title);
     }
 
     @Override

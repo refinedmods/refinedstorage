@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.FluidInterfaceContainer;
+import com.refinedmods.refinedstorage.container.FluidInterfaceContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -36,7 +36,7 @@ public class FluidInterfaceBlock extends NetworkNodeBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<FluidInterfaceBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.fluid_interface"),
-                    (blockEntity, windowId, inventory, p) -> new FluidInterfaceContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new FluidInterfaceContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

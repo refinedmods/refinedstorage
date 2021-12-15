@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
+import com.refinedmods.refinedstorage.container.NetworkTransmitterContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.NetworkTransmitterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -41,7 +41,7 @@ public class NetworkTransmitterBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<NetworkTransmitterBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.network_transmitter"),
-                    (blockEntity, windowId, inventory, p) -> new NetworkTransmitterContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new NetworkTransmitterContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

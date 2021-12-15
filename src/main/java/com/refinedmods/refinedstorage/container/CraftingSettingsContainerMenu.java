@@ -10,8 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class CraftingSettingsContainer extends BaseContainer {
-    public CraftingSettingsContainer(Player player, IGridStack stack) {
+public class CraftingSettingsContainerMenu extends BaseContainerMenu {
+    public CraftingSettingsContainerMenu(Player player, IGridStack stack) {
         super(null, null, player, 0);
 
         if (stack instanceof FluidGridStack) {

@@ -1,15 +1,15 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.refinedmods.refinedstorage.container.ExternalStorageContainer;
+import com.refinedmods.refinedstorage.container.ExternalStorageContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ExternalStorageScreen extends StorageScreen<ExternalStorageContainer> {
-    public ExternalStorageScreen(ExternalStorageContainer container, Inventory inventory, Component title) {
+public class ExternalStorageScreen extends StorageScreen<ExternalStorageContainerMenu> {
+    public ExternalStorageScreen(ExternalStorageContainerMenu containerMenu, Inventory inventory, Component title) {
         super(
-            container,
+            containerMenu,
             inventory,
             title,
             "gui/storage.png",

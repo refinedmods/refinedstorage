@@ -1,15 +1,15 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.refinedmods.refinedstorage.container.FluidStorageContainer;
+import com.refinedmods.refinedstorage.container.FluidStorageContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.FluidStorageBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FluidStorageBlockScreen extends StorageScreen<FluidStorageContainer> {
-    public FluidStorageBlockScreen(FluidStorageContainer container, Inventory inventory, Component title) {
+public class FluidStorageBlockScreen extends StorageScreen<FluidStorageContainerMenu> {
+    public FluidStorageBlockScreen(FluidStorageContainerMenu containerMenu, Inventory inventory, Component title) {
         super(
-            container,
+            containerMenu,
             inventory,
             title,
             "gui/storage.png",
@@ -22,7 +22,7 @@ public class FluidStorageBlockScreen extends StorageScreen<FluidStorageContainer
                 FluidStorageBlockEntity.ACCESS_TYPE
             ),
             FluidStorageBlockEntity.STORED::getValue,
-            () -> (long) ((FluidStorageBlockEntity) container.getBlockEntity()).getFluidStorageType().getCapacity()
+            () -> (long) ((FluidStorageBlockEntity) containerMenu.getBlockEntity()).getFluidStorageType().getCapacity()
         );
     }
 }

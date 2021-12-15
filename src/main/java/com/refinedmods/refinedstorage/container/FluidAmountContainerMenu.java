@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FluidAmountContainer extends BaseContainer {
-    public FluidAmountContainer(Player player, FluidStack stack) {
+public class FluidAmountContainerMenu extends BaseContainerMenu {
+    public FluidAmountContainerMenu(Player player, FluidStack stack) {
         super(null, null, player, 0);
 
         FluidInventory inventory = new FluidInventory(1);

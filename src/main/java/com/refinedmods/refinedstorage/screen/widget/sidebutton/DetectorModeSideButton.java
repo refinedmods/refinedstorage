@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
-import com.refinedmods.refinedstorage.container.DetectorContainer;
+import com.refinedmods.refinedstorage.container.DetectorContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.DetectorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class DetectorModeSideButton extends SideButton {
-    public DetectorModeSideButton(BaseScreen<DetectorContainer> screen) {
+    public DetectorModeSideButton(BaseScreen<DetectorContainerMenu> screen) {
         super(screen);
     }
 

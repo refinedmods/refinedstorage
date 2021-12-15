@@ -2,15 +2,15 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.CrafterContainer;
+import com.refinedmods.refinedstorage.container.CrafterContainerMenu;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class CrafterScreen extends BaseScreen<CrafterContainer> {
-    public CrafterScreen(CrafterContainer container, Inventory inventory, Component title) {
-        super(container, 211, 137, inventory, title);
+public class CrafterScreen extends BaseScreen<CrafterContainerMenu> {
+    public CrafterScreen(CrafterContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 211, 137, inventory, title);
     }
 
     @Override

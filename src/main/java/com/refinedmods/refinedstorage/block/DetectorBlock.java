@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.container.DetectorContainer;
+import com.refinedmods.refinedstorage.container.DetectorContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.DetectorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -82,7 +82,7 @@ public class DetectorBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<DetectorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.detector"),
-                    (blockEntity, windowId, inventory, p) -> new DetectorContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DetectorContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

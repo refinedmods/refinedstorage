@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.integration.inventorytweaks.InventoryTweaksIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.ChatFormatting;
@@ -12,7 +12,7 @@ import net.minecraft.client.resources.language.I18n;
 public class GridSortingTypeSideButton extends SideButton {
     private final IGrid grid;
 
-    public GridSortingTypeSideButton(BaseScreen<GridContainer> screen, IGrid grid) {
+    public GridSortingTypeSideButton(BaseScreen<GridContainerMenu> screen, IGrid grid) {
         super(screen);
 
         this.grid = grid;

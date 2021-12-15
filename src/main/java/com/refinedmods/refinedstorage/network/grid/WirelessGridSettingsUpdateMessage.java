@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.network.grid;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.grid.WirelessGrid;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -58,8 +58,8 @@ public class WirelessGridSettingsUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof GridContainer) {
-                    IGrid grid = ((GridContainer) player.containerMenu).getGrid();
+                if (player.containerMenu instanceof GridContainerMenu) {
+                    IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
 
                     if (grid instanceof WirelessGrid) {
                         ItemStack stack = ((WirelessGrid) grid).getStack();

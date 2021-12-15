@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.SecurityManagerContainer;
+import com.refinedmods.refinedstorage.container.SecurityManagerContainerMenu;
 import com.refinedmods.refinedstorage.item.SecurityCardItem;
 import com.refinedmods.refinedstorage.network.SecurityManagerUpdateMessage;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
@@ -17,14 +17,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> {
+public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainerMenu> {
     private final SecurityManagerBlockEntity securityManager;
     private final CheckboxWidget[] permissions = new CheckboxWidget[Permission.values().length];
 
-    public SecurityManagerScreen(SecurityManagerContainer container, Inventory inventory, Component title) {
-        super(container, 176, 234, inventory, title);
+    public SecurityManagerScreen(SecurityManagerContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 176, 234, inventory, title);
 
-        this.securityManager = (SecurityManagerBlockEntity) container.getBlockEntity();
+        this.securityManager = (SecurityManagerBlockEntity) containerMenu.getBlockEntity();
     }
 
     @Override

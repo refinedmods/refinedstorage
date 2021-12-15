@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
@@ -8,9 +8,9 @@ import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class DestructorContainer extends BaseContainer {
-    public DestructorContainer(DestructorBlockEntity destructor, Player player, int windowId) {
-        super(RSContainers.DESTRUCTOR, destructor, player, windowId);
+public class DestructorContainerMenu extends BaseContainerMenu {
+    public DestructorContainerMenu(DestructorBlockEntity destructor, Player player, int windowId) {
+        super(RSContainerMenus.DESTRUCTOR, destructor, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
             addSlot(new SlotItemHandler(destructor.getNode().getUpgrades(), i, 187, 6 + (i * 18)));

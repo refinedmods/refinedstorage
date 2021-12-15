@@ -25,14 +25,14 @@ public class StorageScreen<T extends AbstractContainerMenu> extends BaseScreen<T
     private final Supplier<Long> storedSupplier;
     private final Supplier<Long> capacitySupplier;
 
-    public StorageScreen(T container,
+    public StorageScreen(T containerMenu,
                          Inventory inventory,
                          Component title,
                          String texture,
                          StorageScreenSynchronizationParameters parameters,
                          Supplier<Long> storedSupplier,
                          Supplier<Long> capacitySupplier) {
-        super(container, 176, 223, inventory, title);
+        super(containerMenu, 176, 223, inventory, title);
 
         this.texture = texture;
         this.parameters = parameters;

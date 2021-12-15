@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
-import com.refinedmods.refinedstorage.container.ControllerContainer;
+import com.refinedmods.refinedstorage.container.ControllerContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.blockentity.ClientNode;
@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.List;
 
-public class ControllerScreen extends BaseScreen<ControllerContainer> {
+public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
     private static final int VISIBLE_ROWS = 2;
 
     private static final int ENERGY_BAR_X = 8;
@@ -26,8 +26,8 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
     private final ScrollbarWidget scrollbar;
 
-    public ControllerScreen(ControllerContainer container, Inventory inventory, Component title) {
-        super(container, 176, 181, inventory, title);
+    public ControllerScreen(ControllerContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 176, 181, inventory, title);
 
         this.scrollbar = new ScrollbarWidget(this, 157, 20, 12, 59);
     }

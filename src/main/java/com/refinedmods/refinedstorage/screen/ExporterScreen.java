@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.ExporterContainer;
+import com.refinedmods.refinedstorage.container.ExporterContainerMenu;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
@@ -13,11 +13,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ExporterScreen extends BaseScreen<ExporterContainer> {
+public class ExporterScreen extends BaseScreen<ExporterContainerMenu> {
     private boolean hasRegulatorMode;
 
-    public ExporterScreen(ExporterContainer container, Inventory playerInventory, Component title) {
-        super(container, 211, 137, playerInventory, title);
+    public ExporterScreen(ExporterContainerMenu containerMenu, Inventory playerInventory, Component title) {
+        super(containerMenu, 211, 137, playerInventory, title);
 
         this.hasRegulatorMode = hasRegulatorMode();
     }

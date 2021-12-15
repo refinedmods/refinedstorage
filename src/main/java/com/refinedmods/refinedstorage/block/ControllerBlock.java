@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
-import com.refinedmods.refinedstorage.container.ControllerContainer;
+import com.refinedmods.refinedstorage.container.ControllerContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
@@ -116,7 +116,7 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
 
                     @Override
                     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player player) {
-                        return new ControllerContainer((ControllerBlockEntity) level.getBlockEntity(pos), player, i);
+                        return new ControllerContainerMenu((ControllerBlockEntity) level.getBlockEntity(pos), player, i);
                     }
                 },
                 pos

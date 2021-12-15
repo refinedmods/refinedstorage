@@ -3,15 +3,15 @@ package com.refinedmods.refinedstorage.apiimpl.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
-import com.refinedmods.refinedstorage.container.CraftingMonitorContainer;
+import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.GuiComponent;
 
-public class CraftingMonitorElementDrawers extends ElementDrawers<CraftingMonitorContainer> {
+public class CraftingMonitorElementDrawers extends ElementDrawers<CraftingMonitorContainerMenu> {
     private final IElementDrawer<Integer> overlayDrawer;
     private final IElementDrawer<Void> errorDrawer;
 
-    public CraftingMonitorElementDrawers(BaseScreen<CraftingMonitorContainer> screen, int itemWidth, int itemHeight) {
+    public CraftingMonitorElementDrawers(BaseScreen<CraftingMonitorContainerMenu> screen, int itemWidth, int itemHeight) {
         super(screen);
 
         this.overlayDrawer = (matrixStack, x, y, color) -> {

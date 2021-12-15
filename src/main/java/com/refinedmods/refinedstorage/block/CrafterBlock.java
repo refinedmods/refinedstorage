@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.CrafterContainer;
+import com.refinedmods.refinedstorage.container.CrafterContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -59,7 +59,7 @@ public class CrafterBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<CrafterBlockEntity>(
                     ((CrafterBlockEntity) level.getBlockEntity(pos)).getNode().getName(),
-                    (blockEntity, windowId, inventory, p) -> new CrafterContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new CrafterContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

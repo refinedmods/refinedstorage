@@ -89,13 +89,13 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingContainer inv = new DummyCraftingInventory();
+        CraftingContainer craftingContainer = new DummyCraftingContainer();
 
         for (int i = 0; i < took.size(); ++i) {
-            inv.setItem(i, took.get(i));
+            craftingContainer.setItem(i, took.get(i));
         }
 
-        ItemStack result = recipe.assemble(inv);
+        ItemStack result = recipe.assemble(craftingContainer);
         if (result.isEmpty()) {
             throw new IllegalStateException("Cannot have empty result");
         }
@@ -122,13 +122,13 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.getInputs().size() + ")");
         }
 
-        CraftingContainer inv = new DummyCraftingInventory();
+        CraftingContainer craftingContainer = new DummyCraftingContainer();
 
         for (int i = 0; i < took.size(); ++i) {
-            inv.setItem(i, took.get(i));
+            craftingContainer.setItem(i, took.get(i));
         }
 
-        NonNullList<ItemStack> remainingItems = recipe.getRemainingItems(inv);
+        NonNullList<ItemStack> remainingItems = recipe.getRemainingItems(craftingContainer);
         NonNullList<ItemStack> sanitized = NonNullList.create();
 
         for (ItemStack item : remainingItems) {
@@ -265,8 +265,8 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    public static class DummyCraftingInventory extends CraftingContainer {
-        public DummyCraftingInventory() {
+    public static class DummyCraftingContainer extends CraftingContainer {
+        public DummyCraftingContainer() {
             super(new AbstractContainerMenu(null, 0) {
                 @Override
                 public boolean stillValid(Player player) {

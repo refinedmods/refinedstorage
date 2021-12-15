@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.FluidInterfaceNetworkNode;
-import com.refinedmods.refinedstorage.container.FluidInterfaceContainer;
+import com.refinedmods.refinedstorage.container.FluidInterfaceContainerMenu;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
@@ -15,11 +15,11 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
+public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainerMenu> {
     private static final FluidRenderer TANK_RENDERER = new FluidRenderer(FluidInterfaceNetworkNode.TANK_CAPACITY, 12, 47, 1);
 
-    public FluidInterfaceScreen(FluidInterfaceContainer container, Inventory inventory, Component title) {
-        super(container, 211, 204, inventory, title);
+    public FluidInterfaceScreen(FluidInterfaceContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 211, 204, inventory, title);
     }
 
     @Override

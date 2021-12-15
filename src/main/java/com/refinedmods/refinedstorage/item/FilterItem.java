@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import com.refinedmods.refinedstorage.container.FilterContainer;
+import com.refinedmods.refinedstorage.container.FilterContainerMenu;
 import com.refinedmods.refinedstorage.inventory.fluid.ConfiguredFluidsInFilterItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.ConfiguredItemsInFilterItemHandler;
 import com.refinedmods.refinedstorage.render.Styles;
@@ -151,7 +151,7 @@ public class FilterItem extends Item {
 
                 @Override
                 public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-                    return new FilterContainer(player, inventory.getSelected(), windowId);
+                    return new FilterContainerMenu(player, inventory.getSelected(), windowId);
                 }
             });
         }

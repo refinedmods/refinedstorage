@@ -52,8 +52,8 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     private final Logger logger = LogManager.getLogger(getClass());
     private int sideButtonY;
 
-    protected BaseScreen(T container, int xSize, int ySize, Inventory inventory, Component title) {
-        super(container, inventory, title);
+    protected BaseScreen(T containerMenu, int xSize, int ySize, Inventory inventory, Component title) {
+        super(containerMenu, inventory, title);
 
         this.imageWidth = xSize;
         this.imageHeight = ySize;

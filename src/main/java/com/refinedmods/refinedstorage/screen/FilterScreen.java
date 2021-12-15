@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import com.refinedmods.refinedstorage.container.FilterContainer;
+import com.refinedmods.refinedstorage.container.FilterContainerMenu;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.network.FilterUpdateMessage;
 import com.refinedmods.refinedstorage.render.RenderSettings;
@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
-public class FilterScreen extends BaseScreen<FilterContainer> {
+public class FilterScreen extends BaseScreen<FilterContainerMenu> {
     private final ItemStack stack;
     private final String name;
     private int compare;
@@ -32,16 +32,16 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     private Button modeButton;
     private EditBox nameField;
 
-    public FilterScreen(FilterContainer container, Inventory inventory, Component title) {
-        super(container, 176, 231, inventory, title);
+    public FilterScreen(FilterContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 176, 231, inventory, title);
 
-        this.stack = container.getFilterItem();
+        this.stack = containerMenu.getFilterItem();
 
-        this.compare = FilterItem.getCompare(container.getFilterItem());
-        this.mode = FilterItem.getMode(container.getFilterItem());
-        this.modFilter = FilterItem.isModFilter(container.getFilterItem());
-        this.name = FilterItem.getFilterName(container.getFilterItem());
-        this.type = FilterItem.getType(container.getFilterItem());
+        this.compare = FilterItem.getCompare(containerMenu.getFilterItem());
+        this.mode = FilterItem.getMode(containerMenu.getFilterItem());
+        this.modFilter = FilterItem.isModFilter(containerMenu.getFilterItem());
+        this.name = FilterItem.getFilterName(containerMenu.getFilterItem());
+        this.type = FilterItem.getType(containerMenu.getFilterItem());
     }
 
     @Override

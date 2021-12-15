@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.inventory.fluid.ConfiguredFluidsInFilterItemHandler;
@@ -13,11 +13,11 @@ import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class FilterContainer extends BaseContainer {
+public class FilterContainerMenu extends BaseContainerMenu {
     private final ItemStack filterItem;
 
-    public FilterContainer(Player player, ItemStack filterItem, int windowId) {
-        super(RSContainers.FILTER, null, player, windowId);
+    public FilterContainerMenu(Player player, ItemStack filterItem, int windowId) {
+        super(RSContainerMenus.FILTER, null, player, windowId);
 
         this.filterItem = filterItem;
 

@@ -1,15 +1,15 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.container.slot.OutputSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class InterfaceContainer extends BaseContainer {
-    public InterfaceContainer(InterfaceBlockEntity blockEntity, Player player, int windowId) {
-        super(RSContainers.INTERFACE, blockEntity, player, windowId);
+public class InterfaceContainerMenu extends BaseContainerMenu {
+    public InterfaceContainerMenu(InterfaceBlockEntity blockEntity, Player player, int windowId) {
+        super(RSContainerMenus.INTERFACE, blockEntity, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
             addSlot(new SlotItemHandler(blockEntity.getNode().getImportItems(), i, 8 + (18 * i), 20));

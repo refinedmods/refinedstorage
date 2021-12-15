@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.apiimpl.network.item;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItem;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemManager;
@@ -61,7 +61,7 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
 
         NetworkHooks.openGui(
             (ServerPlayer) player,
-            new CraftingMonitorMenuProvider(RSContainers.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null), slot::writePlayerSlot);
+            new CraftingMonitorMenuProvider(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null), slot::writePlayerSlot);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessCraftingMonitor().getOpenUsage());
 

@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.setup;
 import com.refinedmods.refinedstorage.*;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
-import com.refinedmods.refinedstorage.container.CrafterContainer;
-import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
+import com.refinedmods.refinedstorage.container.CrafterContainerMenu;
+import com.refinedmods.refinedstorage.container.CrafterManagerContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
 import com.refinedmods.refinedstorage.item.property.ControllerItemPropertyGetter;
 import com.refinedmods.refinedstorage.item.property.NetworkItemPropertyGetter;
@@ -161,7 +161,7 @@ public class ClientSetup {
         API.instance().addPatternRenderHandler(pattern -> {
             AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 
-            if (container instanceof CrafterManagerContainer) {
+            if (container instanceof CrafterManagerContainerMenu) {
                 for (Slot slot : container.slots) {
                     if (slot instanceof CrafterManagerSlot && slot.getItem() == pattern) {
                         return true;
@@ -175,7 +175,7 @@ public class ClientSetup {
         API.instance().addPatternRenderHandler(pattern -> {
             AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 
-            if (container instanceof CrafterContainer) {
+            if (container instanceof CrafterContainerMenu) {
                 for (int i = 0; i < 9; ++i) {
                     if (container.getSlot(i).getItem() == pattern) {
                         return true;
@@ -206,30 +206,30 @@ public class ClientSetup {
     public void onClientSetup(FMLClientSetupEvent e) {
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
 
-        MenuScreens.register(RSContainers.FILTER, FilterScreen::new);
-        MenuScreens.register(RSContainers.CONTROLLER, ControllerScreen::new);
-        MenuScreens.register(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
-        MenuScreens.register(RSContainers.GRID, new GridScreenFactory());
-        MenuScreens.register(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
-        MenuScreens.register(RSContainers.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
-        MenuScreens.register(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
-        MenuScreens.register(RSContainers.IMPORTER, ImporterScreen::new);
-        MenuScreens.register(RSContainers.EXPORTER, ExporterScreen::new);
-        MenuScreens.register(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
-        MenuScreens.register(RSContainers.RELAY, RelayScreen::new);
-        MenuScreens.register(RSContainers.DETECTOR, DetectorScreen::new);
-        MenuScreens.register(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
-        MenuScreens.register(RSContainers.INTERFACE, InterfaceScreen::new);
-        MenuScreens.register(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
-        MenuScreens.register(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
-        MenuScreens.register(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
-        MenuScreens.register(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
-        MenuScreens.register(RSContainers.DESTRUCTOR, DestructorScreen::new);
-        MenuScreens.register(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
-        MenuScreens.register(RSContainers.CRAFTER, CrafterScreen::new);
-        MenuScreens.register(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
-        MenuScreens.register(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
-        MenuScreens.register(RSContainers.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        MenuScreens.register(RSContainerMenus.FILTER, FilterScreen::new);
+        MenuScreens.register(RSContainerMenus.CONTROLLER, ControllerScreen::new);
+        MenuScreens.register(RSContainerMenus.DISK_DRIVE, DiskDriveScreen::new);
+        MenuScreens.register(RSContainerMenus.GRID, new GridScreenFactory());
+        MenuScreens.register(RSContainerMenus.STORAGE_BLOCK, StorageBlockScreen::new);
+        MenuScreens.register(RSContainerMenus.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
+        MenuScreens.register(RSContainerMenus.EXTERNAL_STORAGE, ExternalStorageScreen::new);
+        MenuScreens.register(RSContainerMenus.IMPORTER, ImporterScreen::new);
+        MenuScreens.register(RSContainerMenus.EXPORTER, ExporterScreen::new);
+        MenuScreens.register(RSContainerMenus.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
+        MenuScreens.register(RSContainerMenus.RELAY, RelayScreen::new);
+        MenuScreens.register(RSContainerMenus.DETECTOR, DetectorScreen::new);
+        MenuScreens.register(RSContainerMenus.SECURITY_MANAGER, SecurityManagerScreen::new);
+        MenuScreens.register(RSContainerMenus.INTERFACE, InterfaceScreen::new);
+        MenuScreens.register(RSContainerMenus.FLUID_INTERFACE, FluidInterfaceScreen::new);
+        MenuScreens.register(RSContainerMenus.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
+        MenuScreens.register(RSContainerMenus.STORAGE_MONITOR, StorageMonitorScreen::new);
+        MenuScreens.register(RSContainerMenus.CONSTRUCTOR, ConstructorScreen::new);
+        MenuScreens.register(RSContainerMenus.DESTRUCTOR, DestructorScreen::new);
+        MenuScreens.register(RSContainerMenus.DISK_MANIPULATOR, DiskManipulatorScreen::new);
+        MenuScreens.register(RSContainerMenus.CRAFTER, CrafterScreen::new);
+        MenuScreens.register(RSContainerMenus.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
+        MenuScreens.register(RSContainerMenus.CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

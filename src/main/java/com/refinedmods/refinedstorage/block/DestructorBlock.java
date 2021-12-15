@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
-import com.refinedmods.refinedstorage.container.DestructorContainer;
+import com.refinedmods.refinedstorage.container.DestructorContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
@@ -96,7 +96,7 @@ public class DestructorBlock extends CableBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<DestructorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.destructor"),
-                    (blockEntity, windowId, inventory, p) -> new DestructorContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DestructorContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

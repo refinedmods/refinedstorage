@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.container.InterfaceContainer;
+import com.refinedmods.refinedstorage.container.InterfaceContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -36,7 +36,7 @@ public class InterfaceBlock extends NetworkNodeBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<InterfaceBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.interface"),
-                    (blockEntity, windowId, inventory, p) -> new InterfaceContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new InterfaceContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

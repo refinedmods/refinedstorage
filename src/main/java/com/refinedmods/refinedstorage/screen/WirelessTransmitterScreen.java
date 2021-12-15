@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.WirelessTransmitterContainer;
+import com.refinedmods.refinedstorage.container.WirelessTransmitterContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.WirelessTransmitterBlockEntity;
@@ -10,9 +10,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class WirelessTransmitterScreen extends BaseScreen<WirelessTransmitterContainer> {
-    public WirelessTransmitterScreen(WirelessTransmitterContainer container, Inventory inventory, Component title) {
-        super(container, 211, 137, inventory, title);
+public class WirelessTransmitterScreen extends BaseScreen<WirelessTransmitterContainerMenu> {
+    public WirelessTransmitterScreen(WirelessTransmitterContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 211, 137, inventory, title);
     }
 
     @Override

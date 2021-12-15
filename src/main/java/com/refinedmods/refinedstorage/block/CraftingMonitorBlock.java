@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.container.factory.CraftingMonitorMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
@@ -46,7 +46,7 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
 
             return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
                 (ServerPlayer) player,
-                new CraftingMonitorMenuProvider(RSContainers.CRAFTING_MONITOR, blockEntity.getNode(), blockEntity),
+                new CraftingMonitorMenuProvider(RSContainerMenus.CRAFTING_MONITOR, blockEntity.getNode(), blockEntity),
                 pos
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }

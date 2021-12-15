@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.CraftingSettingsContainer;
+import com.refinedmods.refinedstorage.container.CraftingSettingsContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMessage;
 import com.refinedmods.refinedstorage.screen.AmountSpecifyingScreen;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -12,11 +12,11 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidAttributes;
 
-public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainer> {
+public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainerMenu> {
     private final IGridStack stack;
 
     public CraftingSettingsScreen(BaseScreen parent, Player player, IGridStack stack) {
-        super(parent, new CraftingSettingsContainer(player, stack), 172, 99, player.getInventory(), new TranslatableComponent("container.crafting"));
+        super(parent, new CraftingSettingsContainerMenu(player, stack), 172, 99, player.getInventory(), new TranslatableComponent("container.crafting"));
 
         this.stack = stack;
     }

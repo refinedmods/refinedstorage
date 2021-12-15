@@ -13,7 +13,7 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     public static void onInventoryScroll(IItemGridHandler gridHandler, ServerPlayer player, int slot, boolean shift, boolean up, @Nullable INetwork network) {
-        if (player == null || !(player.containerMenu instanceof GridContainer)) {
+        if (player == null || !(player.containerMenu instanceof GridContainerMenu)) {
             return;
         }
 
@@ -75,7 +75,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     public static void onGridScroll(IItemGridHandler gridHandler, ServerPlayer player, @Nullable UUID id, boolean shift, boolean up, @Nullable INetwork network) {
-        if (player == null || !(player.containerMenu instanceof GridContainer)) {
+        if (player == null || !(player.containerMenu instanceof GridContainerMenu)) {
             return;
         }
 
@@ -83,7 +83,7 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        IGrid grid = ((GridContainer) player.containerMenu).getGrid();
+        IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
 
         int flags = EXTRACT_SINGLE;
 

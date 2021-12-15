@@ -49,19 +49,19 @@ public class CraftingPatternFactory {
                     throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
-                CraftingContainer inv = new CraftingPattern.DummyCraftingInventory();
+                CraftingContainer craftingContainer = new CraftingPattern.DummyCraftingContainer();
 
                 for (int i = 0; i < 9; ++i) {
-                    fillCraftingInputs(inv, stack, inputs, i);
+                    fillCraftingInputs(craftingContainer, stack, inputs, i);
                 }
 
-                Optional<CraftingRecipe> foundRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inv, level);
+                Optional<CraftingRecipe> foundRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level);
                 if (foundRecipe.isPresent()) {
                     recipe = foundRecipe.get();
 
-                    byproducts = recipe.getRemainingItems(inv);
+                    byproducts = recipe.getRemainingItems(craftingContainer);
 
-                    ItemStack output = recipe.assemble(inv);
+                    ItemStack output = recipe.assemble(craftingContainer);
 
                     if (!output.isEmpty()) {
                         outputs.add(output);

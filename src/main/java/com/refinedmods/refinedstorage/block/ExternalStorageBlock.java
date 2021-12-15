@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
-import com.refinedmods.refinedstorage.container.ExternalStorageContainer;
+import com.refinedmods.refinedstorage.container.ExternalStorageContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
@@ -100,7 +100,7 @@ public class ExternalStorageBlock extends CableBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<ExternalStorageBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.external_storage"),
-                    (blockEntity, windowId, inventory, p) -> new ExternalStorageContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new ExternalStorageContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

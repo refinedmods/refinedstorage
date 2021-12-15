@@ -1,17 +1,17 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.container.DiskDriveContainer;
+import com.refinedmods.refinedstorage.container.DiskDriveContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class DiskDriveScreen extends StorageScreen<DiskDriveContainer> {
-    public DiskDriveScreen(DiskDriveContainer container, Inventory inventory, Component title) {
+public class DiskDriveScreen extends StorageScreen<DiskDriveContainerMenu> {
+    public DiskDriveScreen(DiskDriveContainerMenu containerMenu, Inventory inventory, Component title) {
         super(
-            container,
+            containerMenu,
             inventory,
             title,
             "gui/disk_drive.png",

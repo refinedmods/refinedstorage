@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.DestructorContainer;
+import com.refinedmods.refinedstorage.container.DestructorContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
 import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
@@ -10,9 +10,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class DestructorScreen extends BaseScreen<DestructorContainer> {
-    public DestructorScreen(DestructorContainer container, Inventory playerInventory, Component title) {
-        super(container, 211, 137, playerInventory, title);
+public class DestructorScreen extends BaseScreen<DestructorContainerMenu> {
+    public DestructorScreen(DestructorContainerMenu containerMenu, Inventory playerInventory, Component title) {
+        super(containerMenu, 211, 137, playerInventory, title);
     }
 
     @Override

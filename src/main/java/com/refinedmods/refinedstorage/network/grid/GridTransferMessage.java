@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.network.grid;
 
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.network.FriendlyByteBuf;
@@ -76,8 +76,8 @@ public class GridTransferMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof GridContainer) {
-                    IGrid grid = ((GridContainer) player.containerMenu).getGrid();
+                if (player.containerMenu instanceof GridContainerMenu) {
+                    IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
 
                     if (grid.getGridType() == GridType.CRAFTING || grid.getGridType() == GridType.PATTERN) {
                         grid.onRecipeTransfer(player, message.recipe);

@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.DetectorContainer;
+import com.refinedmods.refinedstorage.container.DetectorContainerMenu;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.DetectorModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
@@ -16,11 +16,11 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
 
-public class DetectorScreen extends BaseScreen<DetectorContainer> {
+public class DetectorScreen extends BaseScreen<DetectorContainerMenu> {
     private EditBox amountField;
 
-    public DetectorScreen(DetectorContainer container, Inventory inventory, Component title) {
-        super(container, 176, 137, inventory, title);
+    public DetectorScreen(DetectorContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 176, 137, inventory, title);
     }
 
     @Override

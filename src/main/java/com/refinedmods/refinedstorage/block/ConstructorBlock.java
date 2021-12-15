@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
-import com.refinedmods.refinedstorage.container.ConstructorContainer;
+import com.refinedmods.refinedstorage.container.ConstructorContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.blockentity.ConstructorBlockEntity;
@@ -96,7 +96,7 @@ public class ConstructorBlock extends CableBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<ConstructorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.constructor"),
-                    (blockEntity, windowId, inventory, p) -> new ConstructorContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new ConstructorContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

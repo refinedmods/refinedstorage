@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.StorageMonitorContainer;
+import com.refinedmods.refinedstorage.container.StorageMonitorContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
@@ -10,9 +10,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class StorageMonitorScreen extends BaseScreen<StorageMonitorContainer> {
-    public StorageMonitorScreen(StorageMonitorContainer container, Inventory inventory, Component title) {
-        super(container, 211, 137, inventory, title);
+public class StorageMonitorScreen extends BaseScreen<StorageMonitorContainerMenu> {
+    public StorageMonitorScreen(StorageMonitorContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 211, 137, inventory, title);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterManagerNetworkNode;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class CrafterManagerContainer extends BaseContainer {
+public class CrafterManagerContainerMenu extends BaseContainerMenu {
     private final CrafterManagerNetworkNode crafterManager;
     private final Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
     private final Map<String, Integer> headings = new HashMap<>();
@@ -34,8 +34,8 @@ public class CrafterManagerContainer extends BaseContainer {
     private Map<String, Integer> containerData;
     private int rows;
 
-    public CrafterManagerContainer(CrafterManagerBlockEntity crafterManager, Player player, int windowId) {
-        super(RSContainers.CRAFTER_MANAGER, crafterManager, player, windowId);
+    public CrafterManagerContainerMenu(CrafterManagerBlockEntity crafterManager, Player player, int windowId) {
+        super(RSContainerMenus.CRAFTER_MANAGER, crafterManager, player, windowId);
 
         this.crafterManager = crafterManager.getNode();
     }

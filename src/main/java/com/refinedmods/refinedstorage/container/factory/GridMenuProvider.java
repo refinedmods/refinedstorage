@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.container.factory;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.screen.EmptyScreenInfoProvider;
 import com.refinedmods.refinedstorage.blockentity.BaseBlockEntity;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class GridMenuProvider implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player) {
-        GridContainer c = new GridContainer(grid, blockEntity instanceof BaseBlockEntity ? (BaseBlockEntity) blockEntity : null, player, windowId);
+        GridContainerMenu c = new GridContainerMenu(grid, blockEntity instanceof BaseBlockEntity ? (BaseBlockEntity) blockEntity : null, player, windowId);
 
         c.setScreenInfoProvider(new EmptyScreenInfoProvider());
         c.initSlots();

@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
-import com.refinedmods.refinedstorage.container.BaseContainer;
+import com.refinedmods.refinedstorage.container.BaseContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
@@ -49,8 +49,8 @@ public class GuiContainerHandler implements IGuiContainerHandler<AbstractContain
             }
         }
 
-        if (screen.getMenu() instanceof BaseContainer) {
-            for (FluidFilterSlot slot : ((BaseContainer) screen.getMenu()).getFluidSlots()) {
+        if (screen.getMenu() instanceof BaseContainerMenu) {
+            for (FluidFilterSlot slot : ((BaseContainerMenu) screen.getMenu()).getFluidSlots()) {
                 FluidStack fluidInSlot = slot.getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!fluidInSlot.isEmpty() && RenderUtils.inBounds(slot.x, slot.y, 18, 18, mouseX, mouseY)) {

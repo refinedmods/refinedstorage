@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.container;
 
-import com.refinedmods.refinedstorage.RSContainers;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridListener;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridContainer extends BaseContainer implements ICraftingGridListener {
+public class GridContainerMenu extends BaseContainerMenu implements ICraftingGridListener {
     private final IGrid grid;
     private IStorageCache storageCache;
     private IStorageCacheListener storageCacheListener;
@@ -44,8 +44,8 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     private List<Slot> fluidPatternSlots = new ArrayList<>();
     private int patternScrollOffset;
 
-    public GridContainer(IGrid grid, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
-        super(RSContainers.GRID, blockEntity, player, windowId);
+    public GridContainerMenu(IGrid grid, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
+        super(RSContainerMenus.GRID, blockEntity, player, windowId);
 
         this.grid = grid;
 

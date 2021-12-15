@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
+import com.refinedmods.refinedstorage.container.DiskManipulatorContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -41,7 +41,7 @@ public class DiskManipulatorBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<DiskManipulatorBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.disk_manipulator"),
-                    (blockEntity, windowId, inventory, p) -> new DiskManipulatorContainer(blockEntity, p, windowId),
+                    (blockEntity, windowId, inventory, p) -> new DiskManipulatorContainerMenu(blockEntity, p, windowId),
                     pos
                 ),
                 pos

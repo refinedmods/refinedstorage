@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.network.grid;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -31,8 +31,8 @@ public class GridItemInsertHeldMessage {
             ctx.get().enqueueWork(() -> {
                 AbstractContainerMenu container = player.containerMenu;
 
-                if (container instanceof GridContainer) {
-                    IGrid grid = ((GridContainer) container).getGrid();
+                if (container instanceof GridContainerMenu) {
+                    IGrid grid = ((GridContainerMenu) container).getGrid();
 
                     if (grid.getItemHandler() != null) {
                         grid.getItemHandler().onInsertHeldItem(player, message.single);

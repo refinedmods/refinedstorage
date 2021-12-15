@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMessage;
 import com.refinedmods.refinedstorage.network.grid.GridProcessingTransferMessage;
 import com.refinedmods.refinedstorage.network.grid.GridTransferMessage;
@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainer, Object> {
+public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridContainerMenu, Object> {
     public static final GridRecipeTransferHandler INSTANCE = new GridRecipeTransferHandler();
 
     private static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
@@ -37,8 +37,8 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     @Override
-    public Class<GridContainer> getContainerClass() {
-        return GridContainer.class;
+    public Class<GridContainerMenu> getContainerClass() {
+        return GridContainerMenu.class;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     @Override
-    public IRecipeTransferError transferRecipe(@Nonnull GridContainer container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull Player player, boolean maxTransfer, boolean doTransfer) {
+    public IRecipeTransferError transferRecipe(@Nonnull GridContainerMenu container, Object recipe, @Nonnull IRecipeLayout recipeLayout, @Nonnull Player player, boolean maxTransfer, boolean doTransfer) {
         if (!(container.getScreenInfoProvider() instanceof GridScreen)) {
             return null;
         }
@@ -63,7 +63,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private RecipeTransferCraftingGridError transferRecipeForCraftingGrid(GridContainer container, Object recipe, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
+    private RecipeTransferCraftingGridError transferRecipeForCraftingGrid(GridContainerMenu container, Object recipe, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
         IngredientTracker tracker = createTracker(container, recipeLayout, player, doTransfer);
 
         if (doTransfer) {
@@ -88,7 +88,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private IRecipeTransferError transferRecipeForPatternGrid(GridContainer container, Object recipe, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
+    private IRecipeTransferError transferRecipeForPatternGrid(GridContainerMenu container, Object recipe, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
         IngredientTracker tracker = createTracker(container, recipeLayout, player, doTransfer);
 
         if (doTransfer) {
@@ -102,7 +102,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return null;
     }
 
-    private IngredientTracker createTracker(GridContainer container, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
+    private IngredientTracker createTracker(GridContainerMenu container, IRecipeLayout recipeLayout, Player player, boolean doTransfer) {
         IngredientTracker tracker = new IngredientTracker(recipeLayout, doTransfer);
 
         // Using IGridView#getStacks will return a *filtered* list of items in the view,
@@ -145,7 +145,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         return System.currentTimeMillis() - lastTransferTimeMs <= TRANSFER_SCROLLBAR_DELAY_MS;
     }
 
-    private void moveItems(GridContainer gridContainer, Object recipe, IRecipeLayout recipeLayout, IngredientTracker tracker) {
+    private void moveItems(GridContainerMenu gridContainer, Object recipe, IRecipeLayout recipeLayout, IngredientTracker tracker) {
         this.lastTransferTimeMs = System.currentTimeMillis();
 
         if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !(recipe instanceof CraftingRecipe)) {
@@ -155,7 +155,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         }
     }
 
-    private void move(GridContainer gridContainer, IRecipeLayout recipeLayout) {
+    private void move(GridContainerMenu gridContainer, IRecipeLayout recipeLayout) {
         RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
             recipeLayout.getItemStacks().getGuiIngredients(),
             gridContainer.slots.stream().filter(s -> s.container instanceof CraftingContainer).collect(Collectors.toList())

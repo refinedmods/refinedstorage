@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CrafterManagerNetworkNode;
-import com.refinedmods.refinedstorage.container.CrafterManagerContainer;
+import com.refinedmods.refinedstorage.container.CrafterManagerContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.CrafterManagerSlot;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
@@ -25,16 +25,16 @@ import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 import java.util.Map;
 
 @MouseTweaksDisableWheelTweak
-public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
+public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu> implements IScreenInfoProvider {
     private final CrafterManagerNetworkNode crafterManager;
 
     private ScrollbarWidget scrollbar;
     private SearchWidget searchField;
 
-    public CrafterManagerScreen(CrafterManagerContainer container, Inventory inventory, Component title) {
-        super(container, 193, 0, inventory, title);
+    public CrafterManagerScreen(CrafterManagerContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 193, 0, inventory, title);
 
-        this.crafterManager = ((CrafterManagerBlockEntity) container.getBlockEntity()).getNode();
+        this.crafterManager = ((CrafterManagerBlockEntity) containerMenu.getBlockEntity()).getNode();
     }
 
     @Override

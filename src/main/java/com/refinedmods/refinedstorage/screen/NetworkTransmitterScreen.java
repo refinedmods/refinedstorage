@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.NetworkTransmitterContainer;
+import com.refinedmods.refinedstorage.container.NetworkTransmitterContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkTransmitterBlockEntity;
@@ -13,9 +13,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.Optional;
 
-public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterContainer> {
-    public NetworkTransmitterScreen(NetworkTransmitterContainer container, Inventory inventory, Component title) {
-        super(container, 176, 137, inventory, title);
+public class NetworkTransmitterScreen extends BaseScreen<NetworkTransmitterContainerMenu> {
+    public NetworkTransmitterScreen(NetworkTransmitterContainerMenu containerMenu, Inventory inventory, Component title) {
+        super(containerMenu, 176, 137, inventory, title);
     }
 
     @Override

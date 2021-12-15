@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
-import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
+import com.refinedmods.refinedstorage.container.DiskManipulatorContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 
 public class IoModeSideButton extends SideButton {
-    public IoModeSideButton(BaseScreen<DiskManipulatorContainer> screen) {
+    public IoModeSideButton(BaseScreen<DiskManipulatorContainerMenu> screen) {
         super(screen);
     }
 

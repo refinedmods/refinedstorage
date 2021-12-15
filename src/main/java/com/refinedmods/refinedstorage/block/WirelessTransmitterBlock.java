@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.container.WirelessTransmitterContainer;
+import com.refinedmods.refinedstorage.container.WirelessTransmitterContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.WirelessTransmitterBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
@@ -83,7 +83,7 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<WirelessTransmitterBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.wireless_transmitter"),
-                    (blockEntity, windowId, inventory, p) -> new WirelessTransmitterContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new WirelessTransmitterContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

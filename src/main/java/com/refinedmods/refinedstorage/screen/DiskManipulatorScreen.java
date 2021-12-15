@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.DiskManipulatorContainer;
+import com.refinedmods.refinedstorage.container.DiskManipulatorContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
 import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
@@ -10,9 +10,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainer> {
-    public DiskManipulatorScreen(DiskManipulatorContainer container, Inventory playerInventory, Component title) {
-        super(container, 211, 211, playerInventory, title);
+public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainerMenu> {
+    public DiskManipulatorScreen(DiskManipulatorContainerMenu containerMenu, Inventory playerInventory, Component title) {
+        super(containerMenu, 211, 211, playerInventory, title);
     }
 
     @Override

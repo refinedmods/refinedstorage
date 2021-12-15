@@ -47,9 +47,9 @@ public class UpgradeWithEnchantedBookRecipe extends ShapedRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level level) {
-        if (super.matches(inv, level)) {
-            ListTag enchantments = EnchantedBookItem.getEnchantments(inv.getItem(1));
+    public boolean matches(CraftingContainer craftingContainer, Level level) {
+        if (super.matches(craftingContainer, level)) {
+            ListTag enchantments = EnchantedBookItem.getEnchantments(craftingContainer.getItem(1));
 
             for (int i = 0; i < enchantments.size(); ++i) {
                 CompoundTag enchantmentNbt = enchantments.getCompound(i);

@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.network.grid;
 
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
@@ -15,8 +15,8 @@ public class GridClearMessage {
             ctx.get().enqueueWork(() -> {
                 AbstractContainerMenu container = player.containerMenu;
 
-                if (container instanceof GridContainer) {
-                    ((GridContainer) container).getGrid().onClear(player);
+                if (container instanceof GridContainerMenu) {
+                    ((GridContainerMenu) container).getGrid().onClear(player);
                 }
             });
         }

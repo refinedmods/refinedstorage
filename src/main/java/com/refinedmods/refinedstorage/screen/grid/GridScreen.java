@@ -10,7 +10,7 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
-import com.refinedmods.refinedstorage.container.GridContainer;
+import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.*;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
@@ -48,10 +48,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 @MouseTweaksDisableWheelTweak
-public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
+public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreenInfoProvider {
     private static String searchQuery = "";
     private final IGrid grid;
-    private final TabListWidget<GridContainer> tabs;
+    private final TabListWidget<GridContainerMenu> tabs;
     private final int patternScrollOffsetAbsoluteMax = GridNetworkNode.PROCESSING_MATRIX_SIZE / 3 - 3;
     private IGridView view;
     private SearchWidget searchField;
@@ -67,8 +67,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     private int patternScrollOffsetMax;
     private boolean updatePatternOffset;
 
-    public GridScreen(GridContainer container, IGrid grid, Inventory inventory, Component title) {
-        super(container, 227, 0, inventory, title);
+    public GridScreen(GridContainerMenu containerMenu, IGrid grid, Inventory inventory, Component title) {
+        super(containerMenu, 227, 0, inventory, title);
 
         this.grid = grid;
         this.view = new GridViewImpl(this, getDefaultSorter(), getSorters());

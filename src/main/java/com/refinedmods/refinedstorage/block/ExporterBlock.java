@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
-import com.refinedmods.refinedstorage.container.ExporterContainer;
+import com.refinedmods.refinedstorage.container.ExporterContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.blockentity.ExporterBlockEntity;
@@ -120,7 +120,7 @@ public class ExporterBlock extends CableBlock {
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<ExporterBlockEntity>(
                     new TranslatableComponent("gui.refinedstorage.exporter"),
-                    (blockEntity, windowId, inventory, p) -> new ExporterContainer(blockEntity, player, windowId),
+                    (blockEntity, windowId, inventory, p) -> new ExporterContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
                 pos

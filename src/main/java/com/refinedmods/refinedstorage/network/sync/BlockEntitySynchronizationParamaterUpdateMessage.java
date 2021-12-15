@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.network.sync;
 
-import com.refinedmods.refinedstorage.container.BaseContainer;
+import com.refinedmods.refinedstorage.container.BaseContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.network.FriendlyByteBuf;
@@ -46,11 +46,11 @@ public class BlockEntitySynchronizationParamaterUpdateMessage {
         ctx.get().enqueueWork(() -> {
             AbstractContainerMenu c = ctx.get().getSender().containerMenu;
 
-            if (c instanceof BaseContainer) {
+            if (c instanceof BaseContainerMenu) {
                 BiConsumer consumer = message.parameter.getValueConsumer();
 
                 if (consumer != null) {
-                    consumer.accept(((BaseContainer) c).getBlockEntity(), message.value);
+                    consumer.accept(((BaseContainerMenu) c).getBlockEntity(), message.value);
                 }
             }
         });

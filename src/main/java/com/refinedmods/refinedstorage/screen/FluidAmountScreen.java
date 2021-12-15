@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.screen;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.container.FluidAmountContainer;
+import com.refinedmods.refinedstorage.container.FluidAmountContainerMenu;
 import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.client.gui.screens.Screen;
@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.function.UnaryOperator;
 
-public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContainer> {
+public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContainerMenu> {
     private final int containerSlot;
     private final FluidStack stack;
     private final int maxAmount;
@@ -22,7 +22,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
     private final UnaryOperator<Screen> alternativesScreenFactory;
 
     public FluidAmountScreen(BaseScreen parent, Player player, int containerSlot, FluidStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
-        super(parent, new FluidAmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), new TranslatableComponent("gui.refinedstorage.fluid_amount"));
+        super(parent, new FluidAmountContainerMenu(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), new TranslatableComponent("gui.refinedstorage.fluid_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
