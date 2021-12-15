@@ -25,7 +25,7 @@ public class GridSizeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
         int size = this.sizeSupplier.get();
 
         int tx = 0;
@@ -40,7 +40,7 @@ public class GridSizeSideButton extends SideButton {
             tx = 32;
         }
 
-        screen.blit(matrixStack, x, y, 64 + tx, 64, 16, 16);
+        screen.blit(poseStack, x, y, 64 + tx, 64, 16, 16);
     }
 
     @Override

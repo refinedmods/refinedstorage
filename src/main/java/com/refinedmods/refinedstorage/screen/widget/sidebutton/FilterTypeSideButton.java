@@ -21,8 +21,8 @@ public class FilterTypeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
-        filterScreen.blit(matrixStack, x, y, 16 * filterScreen.getType(), 128, 16, 16);
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+        filterScreen.blit(poseStack, x, y, 16 * filterScreen.getType(), 128, 16, 16);
     }
 
     @Override

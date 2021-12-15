@@ -152,17 +152,17 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/alternatives.png");
 
-        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        scrollbar.render(matrixStack);
+        scrollbar.render(poseStack);
     }
 
     @Override
-    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, title.getString());
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        renderString(poseStack, 7, 7, title.getString());
 
         int x = 8;
         int y = 20;
@@ -172,7 +172,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
             if (visible) {
                 lines.get(i).layoutDependantControls(true, leftPos + x + 3, topPos + y + 3);
-                lines.get(i).render(matrixStack, x, y);
+                lines.get(i).render(poseStack, x, y);
 
                 y += 18;
             } else {
@@ -187,7 +187,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
-                lines.get(i).renderTooltip(matrixStack, x, y, mouseX, mouseY);
+                lines.get(i).renderTooltip(poseStack, x, y, mouseX, mouseY);
 
                 y += 18;
             }
@@ -262,10 +262,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     }
 
     private interface Line {
-        default void render(PoseStack matrixStack, int x, int y) {
+        default void render(PoseStack poseStack, int x, int y) {
         }
 
-        default void renderTooltip(PoseStack matrixStack, int x, int y, int mx, int my) {
+        default void renderTooltip(PoseStack poseStack, int x, int y, int mx, int my) {
         }
 
         default void layoutDependantControls(boolean visible, int x, int y) {
@@ -280,10 +280,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack matrixStack, int x, int y) {
+        public void render(PoseStack poseStack, int x, int y) {
             RenderSystem.setShaderColor(1, 1, 1, 1);
-            renderItem(matrixStack, x + 3, y + 2, item);
-            renderString(matrixStack, x + 4 + 19, y + 7, item.getHoverName().getString());
+            renderItem(poseStack, x + 3, y + 2, item);
+            renderString(poseStack, x + 4 + 19, y + 7, item.getHoverName().getString());
         }
     }
 
@@ -295,9 +295,9 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack matrixStack, int x, int y) {
-            FluidRenderer.INSTANCE.render(matrixStack, x + 3, y + 2, fluid);
-            renderString(matrixStack, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
+        public void render(PoseStack poseStack, int x, int y) {
+            FluidRenderer.INSTANCE.render(poseStack, x + 3, y + 2, fluid);
+            renderString(poseStack, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
         }
     }
 
@@ -331,19 +331,19 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack matrixStack, int x, int y) {
+        public void render(PoseStack poseStack, int x, int y) {
             for (ItemStack itemInList : items) {
-                renderItem(matrixStack, x + 3, y, itemInList);
+                renderItem(poseStack, x + 3, y, itemInList);
 
                 x += 17;
             }
         }
 
         @Override
-        public void renderTooltip(PoseStack matrixStack, int x, int y, int mx, int my) {
+        public void renderTooltip(PoseStack poseStack, int x, int y, int mx, int my) {
             for (ItemStack itemInList : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(matrixStack, itemInList, mx, my, RenderUtils.getTooltipFromItem(itemInList));
+                    AlternativesScreen.this.renderTooltip(poseStack, itemInList, mx, my, RenderUtils.getTooltipFromItem(itemInList));
                 }
 
                 x += 17;
@@ -359,19 +359,19 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack matrixStack, int x, int y) {
+        public void render(PoseStack poseStack, int x, int y) {
             for (FluidStack fluidInList : fluids) {
-                FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluidInList);
+                FluidRenderer.INSTANCE.render(poseStack, x + 3, y, fluidInList);
 
                 x += 17;
             }
         }
 
         @Override
-        public void renderTooltip(PoseStack matrixStack, int x, int y, int mx, int my) {
+        public void renderTooltip(PoseStack poseStack, int x, int y, int mx, int my) {
             for (FluidStack fluidInList : fluids) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(matrixStack, mx, my, fluidInList.getDisplayName().getString());
+                    AlternativesScreen.this.renderTooltip(poseStack, mx, my, fluidInList.getDisplayName().getString());
                 }
 
                 x += 17;

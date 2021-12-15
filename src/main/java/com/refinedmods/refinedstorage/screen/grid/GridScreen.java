@@ -334,8 +334,8 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
-        tabs.drawBackground(matrixStack, x, y - tabs.getHeight());
+    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
+        tabs.drawBackground(poseStack, x, y - tabs.getHeight());
 
         if (grid instanceof IPortableGrid) {
             bindTexture(RS.ID, "gui/portable_grid.png");
@@ -349,10 +349,10 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
 
         int yy = y;
 
-        blit(matrixStack, x, yy, 0, 0, imageWidth - 34, getTopHeight());
+        blit(poseStack, x, yy, 0, 0, imageWidth - 34, getTopHeight());
 
         // Filters and/or portable grid disk
-        blit(matrixStack, x + imageWidth - 34 + 4, y, 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
+        blit(poseStack, x + imageWidth - 34 + 4, y, 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
 
         int rows = getVisibleRows();
 
@@ -368,12 +368,12 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 }
             }
 
-            blit(matrixStack, x, yy, 0, yTextureStart, imageWidth - 34, 18);
+            blit(poseStack, x, yy, 0, yTextureStart, imageWidth - 34, 18);
         }
 
         yy += 18;
 
-        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth - 34, getBottomHeight());
+        blit(poseStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth - 34, getBottomHeight());
 
         if (grid.getGridType() == GridType.PATTERN) {
             int ty = 0;
@@ -386,35 +386,35 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 ty = 2;
             }
 
-            blit(matrixStack, x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
+            blit(poseStack, x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
             if (processingPattern.selected()) {
                 updatePatternScrollbar();
-                patternScrollbar.render(matrixStack);
+                patternScrollbar.render(poseStack);
             }
         }
 
-        tabs.drawForeground(matrixStack, x, y - tabs.getHeight(), mouseX, mouseY, true);
+        tabs.drawForeground(poseStack, x, y - tabs.getHeight(), mouseX, mouseY, true);
 
-        searchField.render(matrixStack, 0, 0, 0);
+        searchField.render(poseStack, 0, 0, 0);
 
-        scrollbar.render(matrixStack);
+        scrollbar.render(poseStack);
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(poseStack, mouseX, mouseY, partialTicks);
 
         // Drawn in here for bug #1844 (https://github.com/refinedmods/refinedstorage/issues/1844)
         // Item tooltips can't be rendered in the foreground layer due to the X offset translation.
         if (isOverSlotWithStack()) {
-            drawGridTooltip(matrixStack, view.getStacks().get(slotNumber), mouseX, mouseY);
+            drawGridTooltip(poseStack, view.getStacks().get(slotNumber), mouseX, mouseY);
         }
     }
 
     @Override
-    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        renderString(poseStack, 7, 7, title.getString());
+        renderString(poseStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
         int x = 8;
         int y = 19;
@@ -431,18 +431,18 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             }
 
             if (slot < view.getStacks().size()) {
-                view.getStacks().get(slot).draw(matrixStack, this, x, y);
+                view.getStacks().get(slot).draw(poseStack, this, x, y);
             }
 
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
-                matrixStack.pushPose();
+                poseStack.pushPose();
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
-                fillGradient(matrixStack, x, y, x + 16, y + 16, color, color);
+                fillGradient(poseStack, x, y, x + 16, y + 16, color, color);
                 RenderSystem.colorMask(true, true, true, true);
-                matrixStack.popPose();
+                poseStack.popPose();
             }
 
             slot++;
@@ -456,17 +456,17 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         }
 
         if (isOverClear(mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.clear"));
+            renderTooltip(poseStack, mouseX, mouseY, I18n.get("misc.refinedstorage.clear"));
         }
 
         if (isOverCreatePattern(mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("gui.refinedstorage.grid.pattern_create"));
+            renderTooltip(poseStack, mouseX, mouseY, I18n.get("gui.refinedstorage.grid.pattern_create"));
         }
 
-        tabs.drawTooltip(matrixStack, font, mouseX, mouseY);
+        tabs.drawTooltip(poseStack, font, mouseX, mouseY);
     }
 
-    private void drawGridTooltip(PoseStack matrixStack, IGridStack gridStack, int mouseX, int mouseY) {
+    private void drawGridTooltip(PoseStack poseStack, IGridStack gridStack, int mouseX, int mouseY) {
         List<Component> textLines = gridStack.getTooltip(true);
 
         ItemStack stackContext = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
@@ -485,7 +485,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             }
         }
 
-        renderTooltip(matrixStack, stackContext, mouseX, mouseY, textLines);
+        renderTooltip(poseStack, stackContext, mouseX, mouseY, textLines);
     }
 
     @Override

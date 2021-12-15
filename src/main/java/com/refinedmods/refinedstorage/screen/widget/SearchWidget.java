@@ -173,10 +173,10 @@ public class SearchWidget extends EditBox {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
             setTextFromJEI();
         }
-        super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+        super.renderButton(poseStack, mouseX, mouseY, partialTicks);
     }
 }

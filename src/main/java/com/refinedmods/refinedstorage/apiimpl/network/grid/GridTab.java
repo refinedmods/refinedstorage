@@ -36,20 +36,20 @@ public class GridTab implements IGridTab {
     }
 
     @Override
-    public void drawTooltip(PoseStack matrixStack, int x, int y, Screen screen) {
+    public void drawTooltip(PoseStack poseStack, int x, int y, Screen screen) {
         if (name != null) {
-            screen.renderTooltip(matrixStack, name, x, y);
+            screen.renderTooltip(poseStack, name, x, y);
         }
     }
 
     @Override
-    public void drawIcon(PoseStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+    public void drawIcon(PoseStack poseStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
         if (!icon.isEmpty()) {
             Lighting.setupFor3DItems();
 
-            itemDrawer.draw(matrixStack, x, y, icon);
+            itemDrawer.draw(poseStack, x, y, icon);
         } else {
-            fluidDrawer.draw(matrixStack, x, y, fluidIcon);
+            fluidDrawer.draw(poseStack, x, y, fluidIcon);
         }
     }
 }

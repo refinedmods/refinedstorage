@@ -72,17 +72,17 @@ public class FluidRenderer {
         tessellator.end();
     }
 
-    public void render(PoseStack matrixStack, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    public void render(PoseStack poseStack, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
         RenderSystem.enableBlend();
 
-        drawFluid(matrixStack, xPosition, yPosition, fluidStack);
+        drawFluid(poseStack, xPosition, yPosition, fluidStack);
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         RenderSystem.disableBlend();
     }
 
-    private void drawFluid(PoseStack matrixStack, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    private void drawFluid(PoseStack poseStack, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
         if (fluidStack == null) {
             return;
         }
@@ -105,12 +105,12 @@ public class FluidRenderer {
             scaledAmount = height;
         }
 
-        drawTiledSprite(matrixStack, xPosition, yPosition, width, height, fluidColor, scaledAmount, fluidStillSprite);
+        drawTiledSprite(poseStack, xPosition, yPosition, width, height, fluidColor, scaledAmount, fluidStillSprite);
     }
 
-    private void drawTiledSprite(PoseStack matrixStack, final int xPosition, final int yPosition, final int tiledWidth, final int tiledHeight, int color, int scaledAmount, TextureAtlasSprite sprite) {
+    private void drawTiledSprite(PoseStack poseStack, final int xPosition, final int yPosition, final int tiledWidth, final int tiledHeight, int color, int scaledAmount, TextureAtlasSprite sprite) {
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        Matrix4f matrix = matrixStack.last().pose();
+        Matrix4f matrix = poseStack.last().pose();
         setGLColorFromInt(color);
 
         final int xTileCount = tiledWidth / TEX_WIDTH;

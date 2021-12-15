@@ -65,7 +65,7 @@ public class DelegateBakedModel implements BakedModel {
 
     @Override
     @SuppressWarnings("deprecation")
-    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack matrixStack) {
-        return base.handlePerspective(cameraTransformType, matrixStack);
+    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
+        return base.handlePerspective(cameraTransformType, poseStack);
     }
 }

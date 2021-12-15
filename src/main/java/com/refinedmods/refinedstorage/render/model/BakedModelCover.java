@@ -67,9 +67,9 @@ public class BakedModelCover extends BakedModelCableCover {
     }
 
     @Override
-    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack matrixStack) {
+    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
         Transformation transform = RenderUtils.getDefaultBlockTransforms().get(cameraTransformType);
-        if (transform != null) transform.push(matrixStack);
+        if (transform != null) transform.push(poseStack);
         return this;
     }
 

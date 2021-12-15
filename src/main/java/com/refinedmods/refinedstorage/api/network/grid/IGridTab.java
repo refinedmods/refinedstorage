@@ -24,19 +24,19 @@ public interface IGridTab {
     /**
      * Draws the tooltip of this tab at the given position.
      *
-     * @param matrixStack the matrix stack
-     * @param x           the x position
-     * @param y           the y position
-     * @param screen      the screen
+     * @param poseStack the pose stack
+     * @param x         the x position
+     * @param y         the y position
+     * @param screen    the screen
      */
-    void drawTooltip(PoseStack matrixStack, int x, int y, Screen screen);
+    void drawTooltip(PoseStack poseStack, int x, int y, Screen screen);
 
     /**
      * Draws the icon.
      *
-     * @param matrixStack the matrix stack
-     * @param x           the x position
-     * @param y           the y position
+     * @param poseStack the pose stack
+     * @param x         the x position
+     * @param y         the y position
      */
-    void drawIcon(PoseStack matrixStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
+    void drawIcon(PoseStack poseStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
 }

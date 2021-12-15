@@ -35,10 +35,10 @@ public abstract class SearchBoxModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
         int mode = getSearchBoxMode();
 
-        screen.blit(matrixStack, x, y, IGrid.isSearchBoxModeWithAutoselection(mode) ? 16 : 0, 96, 16, 16);
+        screen.blit(poseStack, x, y, IGrid.isSearchBoxModeWithAutoselection(mode) ? 16 : 0, 96, 16, 16);
     }
 
     @Override

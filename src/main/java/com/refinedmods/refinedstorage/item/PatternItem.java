@@ -13,7 +13,6 @@ import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.render.blockentity.PatternItemBlockEntityRenderer;
 import com.refinedmods.refinedstorage.util.ItemStackKey;
 import com.refinedmods.refinedstorage.util.RenderUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -54,11 +52,6 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
     private static final String NBT_ALLOWED_TAGS = "AllowedTags";
 
     private static final int VERSION = 1;
-
-    private final NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(() -> new PatternItemBlockEntityRenderer(
-        Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-        Minecraft.getInstance().getEntityModels()
-    ));
 
     public PatternItem() {
         super(new Item.Properties().tab(RS.MAIN_GROUP));
@@ -217,7 +210,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
         consumer.accept(new IItemRenderProperties() {
             @Override
             public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return renderer.get();
+                return PatternItemBlockEntityRenderer.getInstance();
             }
         });
     }

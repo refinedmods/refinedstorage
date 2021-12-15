@@ -33,7 +33,7 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     }
 
     @Override
-    public void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers) {
+    public void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers) {
         // NO OP
     }
 

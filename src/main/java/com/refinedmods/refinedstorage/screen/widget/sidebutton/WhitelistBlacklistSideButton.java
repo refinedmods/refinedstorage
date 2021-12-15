@@ -23,8 +23,8 @@ public class WhitelistBlacklistSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
-        screen.blit(matrixStack, x, y, parameter.getValue() == IWhitelistBlacklist.WHITELIST ? 0 : 16, 64, 16, 16);
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+        screen.blit(poseStack, x, y, parameter.getValue() == IWhitelistBlacklist.WHITELIST ? 0 : 16, 64, 16, 16);
     }
 
     @Override

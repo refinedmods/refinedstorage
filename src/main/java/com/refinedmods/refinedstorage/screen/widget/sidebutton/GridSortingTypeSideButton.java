@@ -24,11 +24,11 @@ public class GridSortingTypeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
         if (grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED) {
-            screen.blit(matrixStack, x, y, 48, 48, 16, 16);
+            screen.blit(poseStack, x, y, 48, 48, 16, 16);
         } else {
-            screen.blit(matrixStack, x, y, grid.getSortingType() * 16, 32, 16, 16);
+            screen.blit(poseStack, x, y, grid.getSortingType() * 16, 32, 16, 16);
         }
     }
 

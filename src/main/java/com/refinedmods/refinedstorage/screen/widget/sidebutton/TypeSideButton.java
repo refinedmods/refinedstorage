@@ -23,8 +23,8 @@ public class TypeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
-        screen.blit(matrixStack, x, y, 16 * type.getValue(), 128, 16, 16);
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+        screen.blit(poseStack, x, y, 16 * type.getValue(), 128, 16, 16);
     }
 
     @Override

@@ -154,17 +154,17 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, getTexture());
 
-        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        amountField.renderButton(matrixStack, 0, 0, 0);
+        amountField.renderButton(poseStack, 0, 0, 0);
     }
 
     @Override
-    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, title.getString());
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        renderString(poseStack, 7, 7, title.getString());
     }
 
     protected void onOkButtonPressed(boolean shiftDown) {

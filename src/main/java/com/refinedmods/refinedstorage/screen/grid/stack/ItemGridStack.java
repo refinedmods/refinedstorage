@@ -191,7 +191,7 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(PoseStack matrixStack, BaseScreen<?> screen, int x, int y) {
+    public void draw(PoseStack poseStack, BaseScreen<?> screen, int x, int y) {
         String text = null;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
 
@@ -204,7 +204,7 @@ public class ItemGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        screen.renderItem(matrixStack, x, y, stack, true, text, color);
+        screen.renderItem(poseStack, x, y, stack, true, text, color);
     }
 
     @Override

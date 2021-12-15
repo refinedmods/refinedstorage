@@ -24,31 +24,31 @@ public abstract class SideButton extends Button {
         this.screen = screen;
     }
 
-    public void renderTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
+    public void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         boolean isFocused = isFocused();
         if (isHovered || isFocused) {
             int x = isHovered ? mouseX : (this.x - screen.getGuiLeft()) + width;
             int y = isHovered ? mouseY : (this.y - screen.getGuiTop()) + (height / 2);
-            screen.renderTooltip(matrixStack, x, y, getTooltip());
+            screen.renderTooltip(poseStack, x, y, getTooltip());
         }
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         isHovered = RenderUtils.inBounds(x, y, width, height, mouseX, mouseY);
 
         screen.bindTexture(RS.ID, "icons.png");
-        screen.blit(matrixStack, x, y, 238, isHovered ? 35 : 16, WIDTH, HEIGHT);
+        screen.blit(poseStack, x, y, 238, isHovered ? 35 : 16, WIDTH, HEIGHT);
 
-        renderButtonIcon(matrixStack, x + 1, y + 1);
+        renderButtonIcon(poseStack, x + 1, y + 1);
 
         if (isHoveredOrFocused()) {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.5f);
-            screen.blit(matrixStack, x, y, 238, 54, WIDTH, HEIGHT);
+            screen.blit(poseStack, x, y, 238, 54, WIDTH, HEIGHT);
             RenderSystem.disableBlend();
         }
     }
@@ -57,7 +57,7 @@ public abstract class SideButton extends Button {
         return height;
     }
 
-    protected abstract void renderButtonIcon(PoseStack matrixStack, int x, int y);
+    protected abstract void renderButtonIcon(PoseStack poseStack, int x, int y);
 
     protected abstract String getTooltip();
 }

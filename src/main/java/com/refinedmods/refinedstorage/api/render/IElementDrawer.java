@@ -11,10 +11,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 @FunctionalInterface
 public interface IElementDrawer<T> {
     /**
-     * @param matrixStack the matrix stack
-     * @param x           the x axis
-     * @param y           the y axis
-     * @param element     the element type
+     * @param poseStack the poses stack
+     * @param x         the x axis
+     * @param y         the y axis
+     * @param element   the element type
      */
-    void draw(PoseStack matrixStack, int x, int y, T element);
+    void draw(PoseStack poseStack, int x, int y, T element);
 }

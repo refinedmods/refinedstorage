@@ -79,10 +79,10 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/crafter_manager.png");
 
-        blit(matrixStack, x, y, 0, 0, imageWidth, getTopHeight());
+        blit(poseStack, x, y, 0, 0, imageWidth, getTopHeight());
 
         int rows = getVisibleRows();
 
@@ -100,30 +100,30 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
                 }
             }
 
-            blit(matrixStack, x, yy, 0, yTextureStart, imageWidth, 18);
+            blit(poseStack, x, yy, 0, yTextureStart, imageWidth, 18);
         }
 
         yy += 18;
 
-        blit(matrixStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth, getBottomHeight());
+        blit(poseStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth, getBottomHeight());
 
         if (crafterManager.isActiveOnClient()) {
             for (Slot slot : menu.slots) {
                 if (slot instanceof CrafterManagerSlot && slot.isActive()) {
-                    blit(matrixStack, x + slot.x - 1, y + slot.y - 1, 0, 193, 18, 18);
+                    blit(poseStack, x + slot.x - 1, y + slot.y - 1, 0, 193, 18, 18);
                 }
             }
         }
 
-        searchField.render(matrixStack, 0, 0, 0);
+        searchField.render(poseStack, 0, 0, 0);
 
-        scrollbar.render(matrixStack);
+        scrollbar.render(poseStack);
     }
 
     @Override
-    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        renderString(poseStack, 7, 7, title.getString());
+        renderString(poseStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
         if (menu != null && crafterManager.isActiveOnClient()) {
             for (Map.Entry<String, Integer> heading : menu.getHeadings().entrySet()) {
@@ -134,9 +134,9 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
 
                     bindTexture(RS.ID, "gui/crafter_manager.png");
 
-                    blit(matrixStack, 7, y, 0, 174, 18 * 9, 18);
+                    blit(poseStack, 7, y, 0, 174, 18 * 9, 18);
 
-                    renderString(matrixStack, 7 + 4, y + 6, RenderUtils.shorten(I18n.get(heading.getKey()), 25));
+                    renderString(poseStack, 7 + 4, y + 6, RenderUtils.shorten(I18n.get(heading.getKey()), 25));
                 }
             }
         }

@@ -22,8 +22,8 @@ public class RedstoneModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
-        screen.blit(matrixStack, x, y, parameter.getValue() * 16, 0, 16, 16);
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+        screen.blit(poseStack, x, y, parameter.getValue() * 16, 0, 16, 16);
     }
 
     @Override

@@ -177,8 +177,8 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(PoseStack matrixStack, BaseScreen<?> screen, int x, int y) {
-        FluidRenderer.INSTANCE.render(matrixStack, x, y, stack);
+    public void draw(PoseStack poseStack, BaseScreen<?> screen, int x, int y) {
+        FluidRenderer.INSTANCE.render(poseStack, x, y, stack);
 
         String text;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
@@ -192,7 +192,7 @@ public class FluidGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }
 
-        screen.renderQuantity(matrixStack, x, y, text, color);
+        screen.renderQuantity(poseStack, x, y, text, color);
     }
 
     @Override

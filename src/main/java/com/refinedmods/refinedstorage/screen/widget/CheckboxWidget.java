@@ -47,7 +47,7 @@ public class CheckboxWidget extends Checkbox {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.enableDepthTest();
@@ -63,9 +63,9 @@ public class CheckboxWidget extends Checkbox {
         int width = 10;
         int height = 10;
 
-        blit(matrixStack, this.x, this.y, textureX, textureY, width, height, 32, 32);
+        blit(poseStack, this.x, this.y, textureX, textureY, width, height, 32, 32);
 
-        this.renderBg(matrixStack, minecraft, mouseX, mouseY);
+        this.renderBg(poseStack, minecraft, mouseX, mouseY);
 
         int color = 14737632;
 
@@ -76,9 +76,9 @@ public class CheckboxWidget extends Checkbox {
         }
 
         if (shadow) {
-            drawString(matrixStack, fontRenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
+            drawString(poseStack, fontRenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
         } else {
-            fontRenderer.draw(matrixStack, this.getMessage().getString(), (float) this.x + 13, this.y + (this.height - 8) / 2F, color);
+            fontRenderer.draw(poseStack, this.getMessage().getString(), (float) this.x + 13, this.y + (this.height - 8) / 2F, color);
         }
     }
 }

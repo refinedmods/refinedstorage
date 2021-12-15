@@ -46,7 +46,7 @@ public interface IElementDrawers {
      * @return a drawer that does nothing
      */
     default <T> IElementDrawer<T> getNullDrawer() {
-        return (matrixStack, x, y, element) -> {
+        return (poseStack, x, y, element) -> {
             // NO OP
         };
     }

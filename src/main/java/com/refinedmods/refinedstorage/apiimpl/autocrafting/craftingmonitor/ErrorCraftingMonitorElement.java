@@ -38,10 +38,10 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers) {
-        base.draw(matrixStack, x, y, drawers);
+    public void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers) {
+        base.draw(poseStack, x, y, drawers);
 
-        drawers.getErrorDrawer().draw(matrixStack, x, y, null);
+        drawers.getErrorDrawer().draw(poseStack, x, y, null);
     }
 
     @Nullable

@@ -20,8 +20,8 @@ public class DetectorModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack matrixStack, int x, int y) {
-        screen.blit(matrixStack, x, y, DetectorBlockEntity.MODE.getValue() * 16, 176, 16, 16);
+    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+        screen.blit(poseStack, x, y, DetectorBlockEntity.MODE.getValue() * 16, 176, 16, 16);
     }
 
     @Override

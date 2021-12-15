@@ -34,7 +34,7 @@ public interface IGridStack {
 
     String getFormattedFullQuantity();
 
-    void draw(PoseStack matrixStack, BaseScreen<?> screen, int x, int y);
+    void draw(PoseStack poseStack, BaseScreen<?> screen, int x, int y);
 
     Object getIngredient();
 

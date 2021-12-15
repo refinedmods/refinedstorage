@@ -44,16 +44,16 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/controller.png");
 
-        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
 
         int energyBarHeightNew = Network.getEnergyScaled(ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
 
-        blit(matrixStack, x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
+        blit(poseStack, x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
 
-        scrollbar.render(matrixStack);
+        scrollbar.render(poseStack);
     }
 
     @Override
@@ -79,9 +79,9 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
     }
 
     @Override
-    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 87, I18n.get("container.inventory"));
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        renderString(poseStack, 7, 7, title.getString());
+        renderString(poseStack, 7, 87, I18n.get("container.inventory"));
 
         int x = 33;
         int y = 26;
@@ -98,22 +98,22 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
             if (slot < nodes.size()) {
                 ClientNode node = nodes.get(slot);
 
-                renderItem(matrixStack, x, y + 5, node.getStack());
+                renderItem(poseStack, x, y + 5, node.getStack());
 
                 float scale = minecraft.isEnforceUnicode() ? 1F : 0.5F;
 
-                matrixStack.pushPose();
-                matrixStack.scale(scale, scale, 1);
+                poseStack.pushPose();
+                poseStack.scale(scale, scale, 1);
 
                 renderString(
-                    matrixStack,
+                    poseStack,
                     RenderUtils.getOffsetOnScale(x + 1, scale),
                     RenderUtils.getOffsetOnScale(y - 2, scale),
                     trimNameIfNeeded(!minecraft.isEnforceUnicode(), node.getStack().getHoverName().getString())
                 );
-                renderString(matrixStack, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
+                renderString(poseStack, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
-                matrixStack.popPose();
+                poseStack.popPose();
 
                 if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY)) {
                     hoveringNode = node;
@@ -131,11 +131,11 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
         }
 
         if (hoveringNode != null) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
+            renderTooltip(poseStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
         }
 
         if (RenderUtils.inBounds(ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT, mouseX, mouseY)) {
-            renderTooltip(matrixStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerBlockEntity.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue()));
+            renderTooltip(poseStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerBlockEntity.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue()));
         }
     }
 

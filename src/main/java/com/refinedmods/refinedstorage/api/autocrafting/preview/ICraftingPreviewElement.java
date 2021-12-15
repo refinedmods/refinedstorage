@@ -12,13 +12,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public interface ICraftingPreviewElement {
     /**
-     * @param matrixStack the matrix stack
-     * @param x           position on the x axis to render
-     * @param y           position on the y axis to render
-     * @param drawers     the drawers this element can use
+     * @param poseStack the pose stack
+     * @param x         position on the x axis to render
+     * @param y         position on the y axis to render
+     * @param drawers   the drawers this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers);
+    void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers);
 
     /**
      * @return true when this crafting preview elements signifies an error that disables starting a task

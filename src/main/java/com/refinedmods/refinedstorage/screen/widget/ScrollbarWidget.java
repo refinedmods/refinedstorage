@@ -60,14 +60,14 @@ public class ScrollbarWidget implements GuiEventListener {
         this.enabled = enabled;
     }
 
-    public void render(PoseStack matrixStack) {
+    public void render(PoseStack poseStack) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         screen.bindTexture(RS.ID, "icons.png");
         if (small) {
-            screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, SCROLLER_HEIGHT);
+            screen.blit(poseStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, SCROLLER_HEIGHT);
         } else {
-            screen.blit(matrixStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
+            screen.blit(poseStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
         }
     }
 

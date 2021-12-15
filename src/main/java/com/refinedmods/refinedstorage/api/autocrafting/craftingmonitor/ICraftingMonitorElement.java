@@ -17,13 +17,13 @@ import java.util.List;
  */
 public interface ICraftingMonitorElement {
     /**
-     * @param matrixStack the matrix stack
-     * @param x           position on the x axis to render
-     * @param y           position on the y axis to render
-     * @param drawers     the drawers that this element can use
+     * @param poseStack the pose stack
+     * @param x         position on the x axis to render
+     * @param y         position on the y axis to render
+     * @param drawers   the drawers that this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(PoseStack matrixStack, int x, int y, IElementDrawers drawers);
+    void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers);
 
     /**
      * Returns the id for the base of this element, used for sorting in the {@link CraftingMonitorElementList}

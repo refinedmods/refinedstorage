@@ -30,17 +30,17 @@ public class DiskManipulatorScreen extends BaseScreen<DiskManipulatorContainerMe
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
         bindTexture(RS.ID, "gui/disk_manipulator.png");
 
-        blit(matrixStack, x, y, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY) {
-        renderString(matrixStack, 7, 7, title.getString());
-        renderString(matrixStack, 7, 117, I18n.get("container.inventory"));
-        renderString(matrixStack, 43, 45, I18n.get("gui.refinedstorage.disk_manipulator.in"));
-        renderString(matrixStack, 115, 45, I18n.get("gui.refinedstorage.disk_manipulator.out"));
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        renderString(poseStack, 7, 7, title.getString());
+        renderString(poseStack, 7, 117, I18n.get("container.inventory"));
+        renderString(poseStack, 43, 45, I18n.get("gui.refinedstorage.disk_manipulator.in"));
+        renderString(poseStack, 115, 45, I18n.get("gui.refinedstorage.disk_manipulator.out"));
     }
 }
