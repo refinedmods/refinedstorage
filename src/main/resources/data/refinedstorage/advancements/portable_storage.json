@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:portable_grid"
+            "items": [
+              "refinedstorage:portable_grid"
+            ]
           }
         ]
       }

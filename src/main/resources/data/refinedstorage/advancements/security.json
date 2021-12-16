@@ -17,10 +17,14 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:security_manager"
+            "items": [
+              "refinedstorage:security_manager"
+            ]
           },
           {
-            "item": "refinedstorage:security_card"
+            "items": [
+              "refinedstorage:security_card"
+            ]
           }
         ]
       }

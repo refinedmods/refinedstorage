@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed all Refined Storage advancements being granted when joining a world.
+
 ## [v1.10.0-beta.1] - 2021-12-15
 
 ### Fixed

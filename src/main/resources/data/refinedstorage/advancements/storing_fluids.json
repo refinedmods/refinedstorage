@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:64k_fluid_storage_disk"
+            "items": [
+              "refinedstorage:64k_fluid_storage_disk"
+            ]
           }
         ]
       }

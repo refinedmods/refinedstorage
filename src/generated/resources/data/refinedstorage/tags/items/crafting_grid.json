@@ -1,21 +1,21 @@
 {
   "replace": false,
   "values": [
-    "refinedstorage:pink_crafting_grid",
-    "refinedstorage:gray_crafting_grid",
+    "refinedstorage:white_crafting_grid",
     "refinedstorage:orange_crafting_grid",
-    "refinedstorage:cyan_crafting_grid",
     "refinedstorage:magenta_crafting_grid",
     "refinedstorage:crafting_grid",
-    "refinedstorage:light_gray_crafting_grid",
-    "refinedstorage:brown_crafting_grid",
-    "refinedstorage:black_crafting_grid",
-    "refinedstorage:white_crafting_grid",
+    "refinedstorage:yellow_crafting_grid",
     "refinedstorage:lime_crafting_grid",
+    "refinedstorage:pink_crafting_grid",
+    "refinedstorage:gray_crafting_grid",
+    "refinedstorage:light_gray_crafting_grid",
+    "refinedstorage:cyan_crafting_grid",
     "refinedstorage:purple_crafting_grid",
-    "refinedstorage:red_crafting_grid",
-    "refinedstorage:green_crafting_grid",
     "refinedstorage:blue_crafting_grid",
-    "refinedstorage:yellow_crafting_grid"
+    "refinedstorage:brown_crafting_grid",
+    "refinedstorage:green_crafting_grid",
+    "refinedstorage:red_crafting_grid",
+    "refinedstorage:black_crafting_grid"
   ]
 }

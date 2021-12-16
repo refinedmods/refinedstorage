@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:crafting_upgrade"
+            "items": [
+              "refinedstorage:crafting_upgrade"
+            ]
           }
         ]
       }

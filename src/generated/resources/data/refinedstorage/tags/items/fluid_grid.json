@@ -1,21 +1,21 @@
 {
   "replace": false,
   "values": [
-    "refinedstorage:pink_fluid_grid",
-    "refinedstorage:gray_fluid_grid",
+    "refinedstorage:white_fluid_grid",
     "refinedstorage:orange_fluid_grid",
-    "refinedstorage:cyan_fluid_grid",
     "refinedstorage:magenta_fluid_grid",
     "refinedstorage:fluid_grid",
-    "refinedstorage:light_gray_fluid_grid",
-    "refinedstorage:brown_fluid_grid",
-    "refinedstorage:black_fluid_grid",
-    "refinedstorage:white_fluid_grid",
+    "refinedstorage:yellow_fluid_grid",
     "refinedstorage:lime_fluid_grid",
+    "refinedstorage:pink_fluid_grid",
+    "refinedstorage:gray_fluid_grid",
+    "refinedstorage:light_gray_fluid_grid",
+    "refinedstorage:cyan_fluid_grid",
     "refinedstorage:purple_fluid_grid",
-    "refinedstorage:red_fluid_grid",
-    "refinedstorage:green_fluid_grid",
     "refinedstorage:blue_fluid_grid",
-    "refinedstorage:yellow_fluid_grid"
+    "refinedstorage:brown_fluid_grid",
+    "refinedstorage:green_fluid_grid",
+    "refinedstorage:red_fluid_grid",
+    "refinedstorage:black_fluid_grid"
   ]
 }

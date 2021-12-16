@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:disk_manipulator"
+            "items": [
+              "refinedstorage:disk_manipulator"
+            ]
           }
         ]
       }
