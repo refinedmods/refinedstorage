@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.10.0-beta.2] - 2021-12-16
+
 ### Fixed
 
 - Fixed all Refined Storage advancements being granted when joining a world.
@@ -27,3 +29,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Combined fluid and item view in the Pattern Grid.
 - Ported to Minecraft 1.18.1.
 - Focused side buttons now display their tooltip properly.
+- Improved performance of retrieving patterns by [@metalshark](https://github.com/metalshark).
