@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:interface"
+            "items": [
+              "refinedstorage:interface"
+            ]
           }
         ]
       }

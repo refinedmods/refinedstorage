@@ -17,10 +17,14 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:pattern"
+            "items": [
+              "refinedstorage:pattern"
+            ]
           },
           {
-            "item": "refinedstorage:pattern_grid"
+            "items": [
+              "refinedstorage:pattern_grid"
+            ]
           }
         ]
       }

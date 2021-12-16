@@ -22,7 +22,7 @@ public class PatternItemBlockEntityRenderer extends BlockEntityWithoutLevelRende
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay) {
-        ICraftingPattern pattern = PatternItem.fromCache(null, stack);
+        ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().level, stack);
 
         ItemStack outputStack = pattern.getOutputs().get(0);
 

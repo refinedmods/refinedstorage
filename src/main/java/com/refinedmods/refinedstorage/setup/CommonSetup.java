@@ -57,7 +57,10 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-public class CommonSetup {
+public final class CommonSetup {
+    private CommonSetup() {
+    }
+
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent e) {
         RS.NETWORK_HANDLER.register();

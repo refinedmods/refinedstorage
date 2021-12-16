@@ -1,21 +1,21 @@
 {
   "replace": false,
   "values": [
-    "refinedstorage:pink_controller",
-    "refinedstorage:gray_controller",
+    "refinedstorage:white_controller",
     "refinedstorage:orange_controller",
-    "refinedstorage:cyan_controller",
     "refinedstorage:magenta_controller",
     "refinedstorage:controller",
-    "refinedstorage:light_gray_controller",
-    "refinedstorage:brown_controller",
-    "refinedstorage:black_controller",
-    "refinedstorage:white_controller",
+    "refinedstorage:yellow_controller",
     "refinedstorage:lime_controller",
+    "refinedstorage:pink_controller",
+    "refinedstorage:gray_controller",
+    "refinedstorage:light_gray_controller",
+    "refinedstorage:cyan_controller",
     "refinedstorage:purple_controller",
-    "refinedstorage:red_controller",
-    "refinedstorage:green_controller",
     "refinedstorage:blue_controller",
-    "refinedstorage:yellow_controller"
+    "refinedstorage:brown_controller",
+    "refinedstorage:green_controller",
+    "refinedstorage:red_controller",
+    "refinedstorage:black_controller"
   ]
 }

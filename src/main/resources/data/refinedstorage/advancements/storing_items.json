@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:1k_storage_disk"
+            "items": [
+              "refinedstorage:1k_storage_disk"
+            ]
           }
         ]
       }

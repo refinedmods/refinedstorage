@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:storage_monitor"
+            "items": [
+              "refinedstorage:storage_monitor"
+            ]
           }
         ]
       }

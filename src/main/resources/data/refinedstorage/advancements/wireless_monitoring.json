@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:wireless_crafting_monitor"
+            "items": [
+              "refinedstorage:wireless_crafting_monitor"
+            ]
           }
         ]
       }

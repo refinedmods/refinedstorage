@@ -17,13 +17,19 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:network_transmitter"
+            "items": [
+              "refinedstorage:network_transmitter"
+            ]
           },
           {
-            "item": "refinedstorage:network_receiver"
+            "items": [
+              "refinedstorage:network_receiver"
+            ]
           },
           {
-            "item": "refinedstorage:network_card"
+            "items": [
+              "refinedstorage:network_card"
+            ]
           }
         ]
       }

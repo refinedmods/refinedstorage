@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:wireless_fluid_grid"
+            "items": [
+              "refinedstorage:wireless_fluid_grid"
+            ]
           }
         ]
       }

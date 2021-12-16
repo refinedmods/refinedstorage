@@ -7,7 +7,23 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed all Refined Storage advancements being granted when joining a world.
+- Fixed potential Pattern crash when loading Minecraft.
+
+## [v1.10.0-beta.1] - 2021-12-15
+
+### Fixed
+
+- Fixed Relay not working.
+- Fixed Wireless Transmitter only working upright.
+- Fixed Portable Grid not opening when pointing at a block.
+- Fixed being able to circumvent locked slots by scrolling.
+
 ### Changed
 
+- Added more slots to the Pattern Grid.
+- Combined fluid and item view in the Pattern Grid.
 - Ported to Minecraft 1.18.1.
 - Focused side buttons now display their tooltip properly.

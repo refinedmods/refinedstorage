@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:grid"
+            "items": [
+              "refinedstorage:grid"
+            ]
           }
         ]
       }
