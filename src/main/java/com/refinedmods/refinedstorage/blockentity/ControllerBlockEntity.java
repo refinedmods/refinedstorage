@@ -9,11 +9,11 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode;
-import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
+import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -116,8 +116,8 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
+    public void onRemovedNotDueToChunkUnload() {
+        super.onRemovedNotDueToChunkUnload();
 
         if (!level.isClientSide) {
             INetworkManager manager = API.instance().getNetworkManager((ServerLevel) level);
