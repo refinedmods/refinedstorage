@@ -30,18 +30,18 @@ import com.refinedmods.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.refinedmods.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
 import com.refinedmods.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
-import com.refinedmods.refinedstorage.energy.BaseEnergyStorage;
 import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
+import com.refinedmods.refinedstorage.energy.BaseEnergyStorage;
 import com.refinedmods.refinedstorage.util.StackUtils;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
@@ -99,10 +99,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.type = type;
         this.root = new RootNetworkNode(this, level, pos);
         this.nodeGraph.addListener(() -> {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-
-            if (blockEntity instanceof ControllerBlockEntity) {
-                ((ControllerBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(ControllerBlockEntity.NODES);
+            if (WorldUtils.getLoadedBlockEntity(level, pos) instanceof ControllerBlockEntity controllerBlockEntity) {
+                controllerBlockEntity.getDataManager().sendParameterToWatchers(ControllerBlockEntity.NODES);
             }
         });
     }

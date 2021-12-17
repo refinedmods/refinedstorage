@@ -61,12 +61,15 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
     private final CoverManager coverManager;
-    private int compare = IComparer.COMPARE_NBT;    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
+    private int compare = IComparer.COMPARE_NBT;
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> tool = createTool());
     private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
+    private ItemStack tool = createTool();
+
     public DestructorNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
         this.coverManager = new CoverManager(this);
@@ -86,13 +89,19 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                 if (pickupItem) {
                     pickupItems();
                 } else {
-                    breakBlock();
+                    BlockPos breakingPos = pos.relative(getDirection());
+                    if (level.isLoaded(breakingPos)) {
+                        breakBlock(breakingPos);
+                    }
                 }
             } else if (type == IType.FLUIDS) {
-                breakFluid();
+                BlockPos breakingPos = pos.relative(getDirection());
+                if (level.isLoaded(breakingPos)) {
+                    breakFluid(breakingPos);
+                }
             }
         }
-    }    private ItemStack tool = createTool();
+    }
 
     private void pickupItems() {
         BlockPos front = pos.relative(getDirection());
@@ -100,7 +109,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         List<ItemEntity> droppedItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(front));
 
         for (ItemEntity entity : droppedItems) {
-            ItemStack droppedItem = ((ItemEntity) entity).getItem();
+            ItemStack droppedItem = entity.getItem();
 
             if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) &&
                 network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE).isEmpty()) {
@@ -113,26 +122,25 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         }
     }
 
-    private void breakBlock() {
-        BlockPos front = pos.relative(getDirection());
-        BlockState frontBlockState = level.getBlockState(front);
-        Block frontBlock = frontBlockState.getBlock();
-        ItemStack frontStack = frontBlock.getCloneItemStack(
-            frontBlockState,
-            new BlockHitResult(Vec3.ZERO, getDirection().getOpposite(), front, false),
+    private void breakBlock(BlockPos breakingPos) {
+        BlockState blockState = level.getBlockState(breakingPos);
+        Block block = blockState.getBlock();
+        ItemStack frontStack = block.getCloneItemStack(
+            blockState,
+            new BlockHitResult(Vec3.ZERO, getDirection().getOpposite(), breakingPos, false),
             level,
-            front,
+            breakingPos,
             WorldUtils.getFakePlayer((ServerLevel) level, getOwner())
         );
 
         if (!frontStack.isEmpty() &&
             IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, frontStack) &&
-            frontBlockState.getDestroySpeed(level, front) != -1.0) {
+            blockState.getDestroySpeed(level, breakingPos) != -1.0) {
             List<ItemStack> drops = Block.getDrops(
-                frontBlockState,
+                blockState,
                 (ServerLevel) level,
-                front,
-                level.getBlockEntity(front),
+                breakingPos,
+                level.getBlockEntity(breakingPos),
                 WorldUtils.getFakePlayer((ServerLevel) level, getOwner()),
                 tool
             );
@@ -143,18 +151,18 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                 }
             }
 
-            BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(level, front, frontBlockState, WorldUtils.getFakePlayer((ServerLevel) level, getOwner()));
+            BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(level, breakingPos, blockState, WorldUtils.getFakePlayer((ServerLevel) level, getOwner()));
 
             if (!MinecraftForge.EVENT_BUS.post(e)) {
-                frontBlock.playerWillDestroy(level, front, frontBlockState, WorldUtils.getFakePlayer((ServerLevel) level, getOwner()));
+                block.playerWillDestroy(level, breakingPos, blockState, WorldUtils.getFakePlayer((ServerLevel) level, getOwner()));
 
-                level.removeBlock(front, false);
+                level.removeBlock(breakingPos, false);
 
                 for (ItemStack drop : drops) {
                     // We check if the controller isn't null here because when a destructor faces a node and removes it
                     // it will essentially remove this block itself from the network without knowing
                     if (network == null) {
-                        Containers.dropItemStack(level, front.getX(), front.getY(), front.getZ(), drop);
+                        Containers.dropItemStack(level, breakingPos.getX(), breakingPos.getY(), breakingPos.getZ(), drop);
                     } else {
                         network.insertItemTracked(drop, drop.getCount());
                     }
@@ -163,15 +171,14 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         }
     }
 
-    private void breakFluid() {
-        BlockPos front = pos.relative(getDirection());
-        BlockState frontBlockState = level.getBlockState(front);
-        Block frontBlock = frontBlockState.getBlock();
+    private void breakFluid(BlockPos breakingPos) {
+        BlockState blockState = level.getBlockState(breakingPos);
+        Block block = blockState.getBlock();
 
-        if (frontBlock instanceof LiquidBlock) {
+        if (block instanceof LiquidBlock) {
             // @Volatile: Logic from FlowingFluidBlock#pickupFluid
-            if (frontBlockState.getValue(LiquidBlock.LEVEL) == 0) {
-                Fluid fluid = ((LiquidBlock) frontBlock).getFluid();
+            if (blockState.getValue(LiquidBlock.LEVEL) == 0) {
+                Fluid fluid = ((LiquidBlock) block).getFluid();
 
                 FluidStack stack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
 
@@ -179,18 +186,18 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                     network.insertFluid(stack, stack.getAmount(), Action.SIMULATE).isEmpty()) {
                     network.insertFluidTracked(stack, stack.getAmount());
 
-                    level.setBlock(front, Blocks.AIR.defaultBlockState(), 11);
+                    level.setBlock(breakingPos, Blocks.AIR.defaultBlockState(), 11);
                 }
             }
-        } else if (frontBlock instanceof IFluidBlock) {
-            IFluidBlock fluidBlock = (IFluidBlock) frontBlock;
+        } else if (block instanceof IFluidBlock) {
+            IFluidBlock fluidBlock = (IFluidBlock) block;
 
-            if (fluidBlock.canDrain(level, front)) {
-                FluidStack simulatedDrain = fluidBlock.drain(level, front, IFluidHandler.FluidAction.SIMULATE);
+            if (fluidBlock.canDrain(level, breakingPos)) {
+                FluidStack simulatedDrain = fluidBlock.drain(level, breakingPos, IFluidHandler.FluidAction.SIMULATE);
 
                 if (IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, simulatedDrain) &&
                     network.insertFluid(simulatedDrain, simulatedDrain.getAmount(), Action.SIMULATE).isEmpty()) {
-                    FluidStack drained = fluidBlock.drain(level, front, IFluidHandler.FluidAction.EXECUTE);
+                    FluidStack drained = fluidBlock.drain(level, breakingPos, IFluidHandler.FluidAction.EXECUTE);
 
                     network.insertFluidTracked(drained, drained.getAmount());
                 }
@@ -351,10 +358,6 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     public CoverManager getCoverManager() {
         return coverManager;
     }
-
-
-
-
 
 
 }

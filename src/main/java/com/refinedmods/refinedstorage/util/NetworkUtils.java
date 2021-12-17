@@ -23,10 +23,7 @@ public final class NetworkUtils {
 
     @Nullable
     public static INetworkNode getNodeAtPosition(Level level, BlockPos pos) {
-        if (!level.isLoaded(pos)) {
-            return null;
-        }
-        return getNodeFromBlockEntity(level.getBlockEntity(pos));
+        return getNodeFromBlockEntity(WorldUtils.getLoadedBlockEntity(level, pos));
     }
 
     @Nullable

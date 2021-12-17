@@ -4,12 +4,13 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor;
 import com.refinedmods.refinedstorage.api.util.Action;
+import com.refinedmods.refinedstorage.blockentity.NetworkReceiverBlockEntity;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.NetworkCardItem;
-import com.refinedmods.refinedstorage.blockentity.NetworkReceiverBlockEntity;
 import com.refinedmods.refinedstorage.util.StackUtils;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -112,18 +113,27 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
     public void visit(INetworkNodeVisitor.Operator operator) {
         super.visit(operator);
 
-        if (canTransmit()) {
-            if (!isSameDimension()) {
-                Level dimensionWorld = level.getServer().getLevel(receiverDimension);
+        if (!canTransmit()) {
+            return;
+        }
 
-                if (dimensionWorld != null && dimensionWorld.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
-                    operator.apply(dimensionWorld, receiver, null);
-                }
-            } else {
-                if (level.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
-                    operator.apply(level, receiver, null);
-                }
-            }
+        if (!isSameDimension()) {
+            tryVisitReceiverInOtherDimension(operator);
+        } else if (WorldUtils.getLoadedBlockEntity(level, receiver) instanceof NetworkReceiverBlockEntity) {
+            tryVisitReceiver(level, operator);
+        }
+    }
+
+    private void tryVisitReceiverInOtherDimension(Operator operator) {
+        Level dimensionLevel = level.getServer().getLevel(receiverDimension);
+        if (dimensionLevel != null) {
+            tryVisitReceiver(dimensionLevel, operator);
+        }
+    }
+
+    private void tryVisitReceiver(Level level, Operator operator) {
+        if (WorldUtils.getLoadedBlockEntity(level, receiver) instanceof NetworkReceiverBlockEntity) {
+            operator.apply(level, receiver, null);
         }
     }
 }

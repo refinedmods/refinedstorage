@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -50,10 +50,8 @@ public class SecurityManagerUpdateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                BlockEntity blockEntity = player.getCommandSenderWorld().getBlockEntity(message.pos);
-
-                if (blockEntity instanceof SecurityManagerBlockEntity) {
-                    ((SecurityManagerBlockEntity) blockEntity).getNode().updatePermission(message.permission, message.state);
+                if (WorldUtils.getLoadedBlockEntity(player.getCommandSenderWorld(), message.pos) instanceof SecurityManagerBlockEntity securityManagerBlockEntity) {
+                    securityManagerBlockEntity.getNode().updatePermission(message.permission, message.state);
                 }
             });
         }

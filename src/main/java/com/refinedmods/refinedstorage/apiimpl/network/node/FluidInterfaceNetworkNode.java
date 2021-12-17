@@ -6,6 +6,8 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorage;
+import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.fluid.ProxyFluidHandler;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
@@ -13,9 +15,8 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -45,8 +46,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (!level.isClientSide) {
-                ((FluidInterfaceBlockEntity) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_IN);
+            if (!level.isClientSide && WorldUtils.getLoadedBlockEntity(level, pos) instanceof FluidInterfaceBlockEntity fluidInterfaceBlockEntity) {
+                fluidInterfaceBlockEntity.getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_IN);
             }
 
             markDirty();
@@ -250,8 +251,9 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
     }
 
     private void onTankOutChanged() {
-        if (!level.isClientSide && level.isLoaded(pos)) {
-            ((FluidInterfaceBlockEntity) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_OUT);
+        if (!level.isClientSide &&
+            WorldUtils.getLoadedBlockEntity(level, pos) instanceof FluidInterfaceBlockEntity fluidInterfaceBlockEntity) {
+            fluidInterfaceBlockEntity.getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_OUT);
         }
 
         markDirty();

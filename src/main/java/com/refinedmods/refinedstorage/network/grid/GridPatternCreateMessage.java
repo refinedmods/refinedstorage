@@ -2,10 +2,10 @@ package com.refinedmods.refinedstorage.network.grid;
 
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -30,10 +30,9 @@ public class GridPatternCreateMessage {
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
-                BlockEntity blockEntity = player.getCommandSenderWorld().getBlockEntity(message.pos);
-
-                if (blockEntity instanceof GridBlockEntity && ((GridBlockEntity) blockEntity).getNode().getGridType() == GridType.PATTERN) {
-                    ((GridBlockEntity) blockEntity).getNode().onCreatePattern();
+                if (WorldUtils.getLoadedBlockEntity(player.getCommandSenderWorld(), message.pos) instanceof GridBlockEntity gridBlockEntity
+                    && gridBlockEntity.getNode().getGridType() == GridType.PATTERN) {
+                    gridBlockEntity.getNode().onCreatePattern();
                 }
             });
         }

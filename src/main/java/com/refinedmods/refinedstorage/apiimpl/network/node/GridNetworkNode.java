@@ -17,6 +17,9 @@ import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridSt
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.block.GridBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
@@ -24,10 +27,8 @@ import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import com.refinedmods.refinedstorage.blockentity.config.IType;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.util.StackUtils;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -44,7 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -179,6 +179,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private boolean exactPattern = true;
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
+
     public GridNetworkNode(Level level, BlockPos pos, GridType type) {
         super(level, pos);
 
@@ -207,11 +208,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private void updateAllowedTags() {
         markDirty();
 
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-
-        if (blockEntity instanceof GridBlockEntity) {
-            ((GridBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(GridBlockEntity.ALLOWED_ITEM_TAGS);
-            ((GridBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(GridBlockEntity.ALLOWED_FLUID_TAGS);
+        if (WorldUtils.getLoadedBlockEntity(level, pos) instanceof GridBlockEntity gridBlockEntity) {
+            gridBlockEntity.getDataManager().sendParameterToWatchers(GridBlockEntity.ALLOWED_ITEM_TAGS);
+            gridBlockEntity.getDataManager().sendParameterToWatchers(GridBlockEntity.ALLOWED_FLUID_TAGS);
         }
     }
 
@@ -773,12 +772,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 return new CombinedInvWrapper(filter);
         }
     }
-
-
-
-
-
-
 
 
 }

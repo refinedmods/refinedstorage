@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
+import com.refinedmods.refinedstorage.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -245,13 +246,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Nullable
     public BlockEntity getFacingBlockEntity() {
-        // TODO check usages of #getBlockEntity and make safe
-        BlockPos facingPos = pos.relative(getDirection());
-        if (!level.isLoaded(facingPos)) {
-            return null;
-        }
-
-        return level.getBlockEntity(facingPos);
+        return WorldUtils.getLoadedBlockEntity(level, pos.relative(getDirection()));
     }
 
     public Direction getDirection() {

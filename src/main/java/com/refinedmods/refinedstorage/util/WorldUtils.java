@@ -42,6 +42,14 @@ public final class WorldUtils {
         }
     }
 
+    @Nullable
+    public static BlockEntity getLoadedBlockEntity(Level level, BlockPos pos) {
+        if (!level.isLoaded(pos)) {
+            return null;
+        }
+        return level.getBlockEntity(pos);
+    }
+
     public static IItemHandler getItemHandler(@Nullable BlockEntity blockEntity, Direction side) {
         if (blockEntity == null) {
             return null;
