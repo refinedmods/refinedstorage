@@ -82,8 +82,8 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
+    public void onRemovedNotDueToChunkUnload() {
+        super.onRemovedNotDueToChunkUnload();
 
         if (!level.isClientSide) {
             INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerLevel) level);

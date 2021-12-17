@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class BaseBlockEntity extends BlockEntity {
     protected final BlockEntitySynchronizationManager dataManager = new BlockEntitySynchronizationManager(this);
 
+    private boolean unloaded;
+
     public BaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -46,6 +48,28 @@ public abstract class BaseBlockEntity extends BlockEntity {
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
         readUpdate(tag);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
+        // Since we don't want to remove network node data in that case, we need to know if it was removed due to unloading.
+        // We can use "unloaded" for that, it's set in #onChunkUnloaded.
+        // Since MC first calls #onChunkUnloaded and then #setRemoved, this check keeps working.
+        if (!unloaded) {
+            onRemovedNotDueToChunkUnload();
+        }
+    }
+
+    protected void onRemovedNotDueToChunkUnload() {
+        // NO OP
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        unloaded = true;
     }
 
     // @Volatile: Copied with some changes from the super method (avoid sending neighbor updates, it's not needed)
