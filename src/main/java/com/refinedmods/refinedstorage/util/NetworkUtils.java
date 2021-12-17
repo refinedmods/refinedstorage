@@ -22,14 +22,21 @@ public final class NetworkUtils {
     }
 
     @Nullable
-    public static INetworkNode getNodeFromBlockEntity(@Nullable BlockEntity blockEntity) {
+    public static INetworkNode getNodeAtPosition(Level level, BlockPos pos) {
+        if (!level.isLoaded(pos)) {
+            return null;
+        }
+        return getNodeFromBlockEntity(level.getBlockEntity(pos));
+    }
+
+    @Nullable
+    private static INetworkNode getNodeFromBlockEntity(@Nullable BlockEntity blockEntity) {
         if (blockEntity != null) {
             INetworkNodeProxy<?> proxy = blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
             if (proxy != null) {
                 return proxy.getNode();
             }
         }
-
         return null;
     }
 
@@ -51,7 +58,12 @@ public final class NetworkUtils {
             return InteractionResult.SUCCESS;
         }
 
-        INetwork network = getNetworkFromNode(getNodeFromBlockEntity(level.getBlockEntity(pos)));
+        INetworkNode node = getNodeAtPosition(level, pos);
+        if (node == null) {
+            return InteractionResult.SUCCESS;
+        }
+
+        INetwork network = getNetworkFromNode(node);
 
         if (network != null) {
             for (Permission permission : permissionsRequired) {

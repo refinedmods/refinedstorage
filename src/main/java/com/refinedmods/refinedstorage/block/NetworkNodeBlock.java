@@ -34,8 +34,8 @@ public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock 
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, level, pos, blockIn, fromPos, isMoving);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
         if (!level.isClientSide) {
             INetworkNode node = API.instance().getNetworkNodeManager((ServerLevel) level).getNode(pos);

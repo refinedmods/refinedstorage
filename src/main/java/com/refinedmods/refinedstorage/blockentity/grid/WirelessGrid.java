@@ -96,7 +96,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     public INetwork getNetwork() {
         Level level = server.getLevel(nodeDimension);
         if (level != null) {
-            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(nodePos)));
+            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeAtPosition(level, nodePos));
         }
         return null;
     }

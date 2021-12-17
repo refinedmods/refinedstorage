@@ -53,16 +53,14 @@ public abstract class BaseBlockEntity extends BlockEntity {
     @Override
     public void setRemoved() {
         super.setRemoved();
-        // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
-        // Since we don't want to remove network node data in that case, we need to know if it was removed due to unloading.
-        // We can use "unloaded" for that, it's set in #onChunkUnloaded.
-        // Since MC first calls #onChunkUnloaded and then #setRemoved, this check keeps working.
-        if (!unloaded) {
-            onRemovedNotDueToChunkUnload();
+        if (unloaded) {
+            onRemoved(RemovalReason.CHUNK_UNLOAD);
+        } else {
+            onRemoved(RemovalReason.REMOVED);
         }
     }
 
-    protected void onRemovedNotDueToChunkUnload() {
+    protected void onRemoved(RemovalReason reason) {
         // NO OP
     }
 

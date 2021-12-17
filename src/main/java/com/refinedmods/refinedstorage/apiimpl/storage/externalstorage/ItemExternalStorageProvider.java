@@ -17,12 +17,10 @@ import javax.annotation.Nonnull;
 public class ItemExternalStorageProvider implements IExternalStorageProvider<ItemStack> {
     @Override
     public boolean canProvide(BlockEntity blockEntity, Direction direction) {
-        INetworkNode node = NetworkUtils.getNodeFromBlockEntity(blockEntity);
-
+        INetworkNode node = NetworkUtils.getNodeAtPosition(blockEntity.getLevel(), blockEntity.getBlockPos());
         if (node instanceof IStorageProvider) {
             return false;
         }
-
         return WorldUtils.getItemHandler(blockEntity, direction.getOpposite()) != null;
     }
 

@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.item;
 
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.item.INetworkItemProvider;
+import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -98,13 +99,13 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        Level nodeWorld = server.getLevel(dimension);
-        if (nodeWorld == null) {
+        Level nodeLevel = server.getLevel(dimension);
+        if (nodeLevel == null) {
             onError.accept(notFound);
             return;
         }
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(nodeWorld.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeAtPosition(nodeLevel, new BlockPos(getX(stack), getY(stack), getZ(stack))));
         if (network == null) {
             onError.accept(notFound);
             return;
@@ -131,7 +132,12 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     public InteractionResult useOn(UseOnContext ctx) {
         ItemStack stack = ctx.getPlayer().getItemInHand(ctx.getHand());
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(ctx.getLevel().getBlockEntity(ctx.getClickedPos())));
+        INetworkNode node = NetworkUtils.getNodeAtPosition(ctx.getLevel(), ctx.getClickedPos());
+        if (node == null) {
+            return InteractionResult.FAIL;
+        }
+
+        INetwork network = NetworkUtils.getNetworkFromNode(node);
         if (network != null) {
             CompoundTag tag = stack.getTag();
 

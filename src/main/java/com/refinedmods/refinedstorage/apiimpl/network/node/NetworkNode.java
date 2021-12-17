@@ -232,18 +232,20 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            INetworkNode oppositeNode = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(pos.relative(facing)));
-            if (oppositeNode == null) {
+            BlockPos facingPos = pos.relative(facing);
+            INetworkNode facingNode = NetworkUtils.getNodeAtPosition(level, facingPos);
+            if (facingNode == null) {
                 continue;
             }
-            if (canConduct(facing) && oppositeNode.canReceive(facing.getOpposite())) {
-                operator.apply(level, pos.relative(facing), facing.getOpposite());
+            if (canConduct(facing) && facingNode.canReceive(facing.getOpposite())) {
+                operator.apply(level, facingPos, facing.getOpposite());
             }
         }
     }
 
     @Nullable
     public BlockEntity getFacingBlockEntity() {
+        // TODO check usages of #getBlockEntity and make safe
         BlockPos facingPos = pos.relative(getDirection());
         if (!level.isLoaded(facingPos)) {
             return null;

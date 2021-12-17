@@ -116,10 +116,10 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
     }
 
     @Override
-    public void onRemovedNotDueToChunkUnload() {
-        super.onRemovedNotDueToChunkUnload();
+    public void onRemoved(RemovalReason reason) {
+        super.onRemoved(reason);
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide && reason == RemovalReason.REMOVED) {
             INetworkManager manager = API.instance().getNetworkManager((ServerLevel) level);
 
             INetwork network = manager.getNetwork(worldPosition);

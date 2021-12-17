@@ -27,11 +27,14 @@ public class WrenchItem extends Item {
             return InteractionResult.CONSUME;
         }
 
-        INetworkNode node = NetworkUtils.getNodeFromBlockEntity(ctx.getLevel().getBlockEntity(ctx.getClickedPos()));
+        INetworkNode node = NetworkUtils.getNodeAtPosition(ctx.getLevel(), ctx.getClickedPos());
+        if (node == null) {
+            return InteractionResult.FAIL;
+        }
+
         INetwork network = NetworkUtils.getNetworkFromNode(node);
         if (network != null && !network.getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
             WorldUtils.sendNoPermissionMessage(ctx.getPlayer());
-
             return InteractionResult.FAIL;
         }
         BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());

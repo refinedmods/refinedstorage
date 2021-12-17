@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -32,12 +31,12 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         Operator operator = new Operator(action);
 
-        INetworkNode originNode = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(origin));
-        if (originNode instanceof INetworkNodeVisitor) {
-            ((INetworkNodeVisitor) originNode).visit(operator);
+        INetworkNode originNode = NetworkUtils.getNodeAtPosition(level, origin);
+        if (originNode instanceof INetworkNodeVisitor originVisitor) {
+            originVisitor.visit(operator);
         }
 
-        Visitor currentVisitor;
+        INetworkNodeVisitor currentVisitor;
         while ((currentVisitor = operator.toCheck.poll()) != null) {
             currentVisitor.visit(operator);
         }
@@ -95,46 +94,13 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         return network.getLevel();
     }
 
-    private static class Visitor implements INetworkNodeVisitor {
-        private final INetworkNode node;
-        private final Level level;
-        private final BlockPos pos;
-        private final Direction side;
-        private final BlockEntity blockEntity;
-
-        Visitor(INetworkNode node, Level level, BlockPos pos, Direction side, BlockEntity blockEntity) {
-            this.node = node;
-            this.level = level;
-            this.pos = pos;
-            this.side = side;
-            this.blockEntity = blockEntity;
-        }
-
-        @Override
-        public void visit(Operator operator) {
-            if (node instanceof INetworkNodeVisitor) {
-                ((INetworkNodeVisitor) node).visit(operator);
-            } else {
-                for (Direction checkSide : Direction.values()) {
-                    if (checkSide != side) { // Avoid going backward
-                        INetworkNode nodeOnSide = NetworkUtils.getNodeFromBlockEntity(blockEntity);
-
-                        if (nodeOnSide == node) {
-                            operator.apply(level, pos.relative(checkSide), checkSide.getOpposite());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private class Operator implements INetworkNodeVisitor.Operator {
         private final Set<INetworkNodeGraphEntry> foundNodes = Sets.newConcurrentHashSet(); // All scanned entries
 
         private final Set<INetworkNodeGraphEntry> newEntries = Sets.newConcurrentHashSet(); // All scanned new entries, that didn't appear in the list before
         private final Set<INetworkNodeGraphEntry> previousEntries = Sets.newConcurrentHashSet(entries); // All unscanned entries (entries that were in the previous list, but not in the new list)
 
-        private final Queue<Visitor> toCheck = new ArrayDeque<>();
+        private final Queue<INetworkNodeVisitor> toCheck = new ArrayDeque<>();
 
         private final Action action;
 
@@ -144,32 +110,35 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         @Override
         public void apply(Level level, BlockPos pos, @Nullable Direction side) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
+            INetworkNode otherNode = NetworkUtils.getNodeAtPosition(level, pos);
+            if (otherNode == null) {
+                return;
+            }
 
-            INetworkNode otherNode = NetworkUtils.getNodeFromBlockEntity(blockEntity);
-            if (otherNode != null) {
-                NetworkNodeGraphEntry otherNodeItem = new NetworkNodeGraphEntry(otherNode);
+            NetworkNodeGraphEntry otherNodeItem = new NetworkNodeGraphEntry(otherNode);
 
-                if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
-                    if (action == Action.PERFORM) {
-                        dropConflictingBlock(level, pos);
-                    }
-
-                    return;
+            if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
+                if (action == Action.PERFORM) {
+                    dropConflictingBlock(level, pos);
                 }
+                return;
+            }
 
-                if (foundNodes.add(otherNodeItem)) {
-                    if (!entries.contains(otherNodeItem)) {
-                        // We can't let the node connect immediately
-                        // We can only let the node connect AFTER the nodes list has changed in the graph
-                        // This is so that storage nodes can refresh the item/fluid cache, and the item/fluid cache will notice it then (otherwise not)
-                        newEntries.add(otherNodeItem);
-                    }
-
-                    previousEntries.remove(otherNodeItem);
-
-                    toCheck.add(new Visitor(otherNode, level, pos, side, blockEntity));
+            if (foundNodes.add(otherNodeItem)) {
+                if (!entries.contains(otherNodeItem)) {
+                    // We can't let the node connect immediately
+                    // We can only let the node connect AFTER the nodes list has changed in the graph
+                    // This is so that storage nodes can refresh the item/fluid cache, and the item/fluid cache will notice it then (otherwise not)
+                    newEntries.add(otherNodeItem);
                 }
+                previousEntries.remove(otherNodeItem);
+                tryContinueChain(otherNode);
+            }
+        }
+
+        private void tryContinueChain(INetworkNode otherNode) {
+            if (otherNode instanceof INetworkNodeVisitor visitor) {
+                toCheck.add(visitor);
             }
         }
 

@@ -4,10 +4,10 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
+import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
 import com.refinedmods.refinedstorage.container.ExternalStorageContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.CollisionUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
@@ -116,8 +116,8 @@ public class ExternalStorageBlock extends CableBlock {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
         if (!level.isClientSide) {
-            INetworkNode node = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(pos));
-
+            INetworkNode node = NetworkUtils.getNodeAtPosition(level, pos);
+            
             if (node instanceof ExternalStorageNetworkNode &&
                 node.getNetwork() != null &&
                 fromPos.equals(pos.relative(((ExternalStorageNetworkNode) node).getDirection()))) {

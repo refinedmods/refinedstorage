@@ -157,8 +157,8 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, level, pos, blockIn, fromPos, isMoving);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
         level.setBlockAndUpdate(pos, getState(level.getBlockState(pos), level, pos));
     }
 
