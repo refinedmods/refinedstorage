@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.10.0-beta.3] - 2021-12-17
+
 ### Fixed
 - Fixed networks and network devices being removed when a chunk unloads.
 
