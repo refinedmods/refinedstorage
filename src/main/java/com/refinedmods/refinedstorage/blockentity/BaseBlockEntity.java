@@ -53,6 +53,7 @@ public abstract class BaseBlockEntity extends BlockEntity {
     @Override
     public void setRemoved() {
         super.setRemoved();
+        // TODO: remove when https://github.com/MinecraftForge/MinecraftForge/pull/8303/files is merged
         // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
         // Since we don't want to remove network node data in that case, we need to know if it was removed due to unloading.
         // We can use "unloaded" for that, it's set in #onChunkUnloaded.
