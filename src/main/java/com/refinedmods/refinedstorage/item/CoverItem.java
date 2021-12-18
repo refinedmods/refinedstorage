@@ -40,7 +40,7 @@ public class CoverItem extends Item {
 
 
     public CoverItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_TAB));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {

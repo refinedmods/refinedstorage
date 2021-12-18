@@ -95,7 +95,7 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
             block.getId().getPath(),
             () -> new ColoredBlockItem(
                 block.get(),
-                new Item.Properties().tab(RS.CREATIVE_TAB),
+                new Item.Properties().tab(RS.CREATIVE_MODE_TAB),
                 color,
                 BlockUtils.getBlockTranslation(translationBlock.get())
             )

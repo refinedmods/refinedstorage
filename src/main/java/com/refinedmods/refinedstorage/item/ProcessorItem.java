@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 
 public class ProcessorItem extends Item {
     public ProcessorItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_TAB));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
     }
 
     public enum Type {

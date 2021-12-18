@@ -20,7 +20,7 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
     private final Type type;
 
     public WirelessCraftingMonitorItem(Type type) {
-        super(new Item.Properties().tab(RS.CREATIVE_TAB).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessCraftingMonitor().getCapacity());
 
         this.type = type;
     }

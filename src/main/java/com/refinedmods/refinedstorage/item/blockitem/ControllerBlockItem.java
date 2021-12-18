@@ -14,7 +14,7 @@ public class ControllerBlockItem extends EnergyBlockItem {
     private final Component displayName;
 
     public ControllerBlockItem(ControllerBlock block, DyeColor color, Component displayName) {
-        super(block, new Item.Properties().tab(RS.CREATIVE_TAB).stacksTo(1), block.getType() == NetworkType.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
+        super(block, new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1), block.getType() == NetworkType.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
 
         if (color != ColorMap.DEFAULT_COLOR) {
             this.displayName = new TranslatableComponent("color.minecraft." + color.getName())

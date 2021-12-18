@@ -6,8 +6,8 @@ import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-public class MainCreativeTab extends CreativeModeTab {
-    public MainCreativeTab() {
+public class MainCreativeModeTab extends CreativeModeTab {
+    public MainCreativeModeTab() {
         super(RS.ID);
     }
 

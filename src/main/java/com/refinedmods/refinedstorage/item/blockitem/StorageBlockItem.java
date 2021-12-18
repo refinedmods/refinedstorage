@@ -32,7 +32,7 @@ public class StorageBlockItem extends BaseBlockItem {
     private final ItemStorageType type;
 
     public StorageBlockItem(StorageBlock block) {
-        super(block, new Item.Properties().tab(RS.CREATIVE_TAB));
+        super(block, new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
 
         this.type = block.getType();
     }

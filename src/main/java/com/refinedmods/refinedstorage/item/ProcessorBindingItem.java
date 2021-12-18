@@ -5,6 +5,6 @@ import net.minecraft.world.item.Item;
 
 public class ProcessorBindingItem extends Item {
     public ProcessorBindingItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_TAB));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
     }
 }
