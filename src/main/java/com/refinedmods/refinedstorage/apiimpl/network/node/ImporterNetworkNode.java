@@ -17,7 +17,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +68,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
         if (type == IType.ITEMS) {
             BlockEntity facing = getFacingBlockEntity();
-            IItemHandler handler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
+            IItemHandler handler = LevelUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (facing instanceof DiskDriveBlockEntity || handler == null) {
                 return;
@@ -100,7 +100,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
                 }
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = WorldUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
+            IFluidHandler handler = LevelUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
             if (handler != null) {
                 FluidStack stack = handler.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);

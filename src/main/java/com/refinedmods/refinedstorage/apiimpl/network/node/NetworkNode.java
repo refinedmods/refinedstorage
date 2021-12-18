@@ -36,8 +36,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     // However, due to the memory footprint of worlds and modded minecraft having the tendency to have lots of worlds,
     // Forge is planning to unload (aka remove) worlds so their instances will change.
     // This is problematic as this attribute will target the wrong world in that case.
-    // Idea: possibly change to a getter based on RegistryKey<World>?
-    // Another note: this attribute isn't the *real* problem. Because network nodes are in WorldSavedData in a tick handler,
+    // Idea: possibly change to a getter based on RegistryKey<Level>?
+    // Another note: this attribute isn't the *real* problem. Because network nodes are in SavedData in a tick handler,
     // new instances of network nodes will be created when the world refreshes (causing this field to be different too).
     // However, network nodes in the network graph *AREN'T* recreated when the world refreshes, causing the graph to have the incorrect instance, and even worse,
     // having multiple different instances of the same network node.

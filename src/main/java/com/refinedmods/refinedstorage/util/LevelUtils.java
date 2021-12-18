@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public final class WorldUtils {
-    private WorldUtils() {
+public final class LevelUtils {
+    private LevelUtils() {
     }
 
     public static void updateBlock(@Nullable Level level, BlockPos pos) {

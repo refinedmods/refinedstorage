@@ -16,7 +16,7 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInvento
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -122,7 +122,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
             new BlockHitResult(Vec3.ZERO, getDirection().getOpposite(), front, false),
             level,
             front,
-            WorldUtils.getFakePlayer((ServerLevel) level, getOwner())
+            LevelUtils.getFakePlayer((ServerLevel) level, getOwner())
         );
 
         if (!frontStack.isEmpty() &&
@@ -133,7 +133,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                 (ServerLevel) level,
                 front,
                 level.getBlockEntity(front),
-                WorldUtils.getFakePlayer((ServerLevel) level, getOwner()),
+                LevelUtils.getFakePlayer((ServerLevel) level, getOwner()),
                 tool
             );
 
@@ -143,10 +143,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                 }
             }
 
-            BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(level, front, frontBlockState, WorldUtils.getFakePlayer((ServerLevel) level, getOwner()));
+            BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(level, front, frontBlockState, LevelUtils.getFakePlayer((ServerLevel) level, getOwner()));
 
             if (!MinecraftForge.EVENT_BUS.post(e)) {
-                frontBlock.playerWillDestroy(level, front, frontBlockState, WorldUtils.getFakePlayer((ServerLevel) level, getOwner()));
+                frontBlock.playerWillDestroy(level, front, frontBlockState, LevelUtils.getFakePlayer((ServerLevel) level, getOwner()));
 
                 level.removeBlock(front, false);
 

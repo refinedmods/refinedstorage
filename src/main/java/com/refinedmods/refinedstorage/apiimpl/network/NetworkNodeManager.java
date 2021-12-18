@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
+import com.refinedmods.refinedstorage.apiimpl.util.RSSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkNodeManager extends RSWorldSavedData implements INetworkNodeManager {
+public class NetworkNodeManager extends RSSavedData implements INetworkNodeManager {
     public static final String NAME = "refinedstorage_nodes";
 
     private static final String NBT_NODES = "Nodes";

@@ -91,7 +91,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         listeners.forEach(INetworkNodeGraphListener::onChanged);
     }
 
-    protected Level getWorld() {
+    protected Level getLevel() {
         return network.getLevel();
     }
 

@@ -56,7 +56,7 @@ public final class NetworkUtils {
         if (network != null) {
             for (Permission permission : permissionsRequired) {
                 if (!network.getSecurityManager().hasPermission(permission, player)) {
-                    WorldUtils.sendNoPermissionMessage(player);
+                    LevelUtils.sendNoPermissionMessage(player);
 
                     return InteractionResult.SUCCESS;
                 }

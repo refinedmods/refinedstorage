@@ -9,7 +9,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.WirelessFluidGridGridFactory;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessFluidGridItem;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -49,7 +49,7 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
         }
 
         if (!network.getSecurityManager().hasPermission(Permission.MODIFY, player)) {
-            WorldUtils.sendNoPermissionMessage(player);
+            LevelUtils.sendNoPermissionMessage(player);
 
             return false;
         }

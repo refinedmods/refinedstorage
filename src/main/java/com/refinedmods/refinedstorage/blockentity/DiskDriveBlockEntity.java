@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNe
 import com.refinedmods.refinedstorage.blockentity.config.*;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -127,7 +127,7 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(level, worldPosition);
+        LevelUtils.updateBlock(level, worldPosition);
     }
 
     @Nonnull

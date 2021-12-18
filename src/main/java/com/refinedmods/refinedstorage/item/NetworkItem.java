@@ -98,13 +98,13 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        Level nodeWorld = server.getLevel(dimension);
-        if (nodeWorld == null) {
+        Level nodeLevel = server.getLevel(dimension);
+        if (nodeLevel == null) {
             onError.accept(notFound);
             return;
         }
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(nodeWorld.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(nodeLevel.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
         if (network == null) {
             onError.accept(notFound);
             return;

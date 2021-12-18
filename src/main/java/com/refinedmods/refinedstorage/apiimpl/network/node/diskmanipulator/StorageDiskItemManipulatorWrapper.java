@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +33,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    WorldUtils.updateBlock(diskManipulator.getLevel(), diskManipulator.getPos());
+                    LevelUtils.updateBlock(diskManipulator.getLevel(), diskManipulator.getPos());
                 }
             },
             diskManipulator

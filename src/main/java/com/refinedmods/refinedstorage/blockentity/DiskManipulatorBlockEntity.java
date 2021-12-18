@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -84,7 +84,7 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(level, worldPosition);
+        LevelUtils.updateBlock(level, worldPosition);
     }
 
     @Nonnull

@@ -23,7 +23,7 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInvento
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -75,7 +75,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                 }
 
                 if (!reading) {
-                    WorldUtils.updateBlock(level, pos);
+                    LevelUtils.updateBlock(level, pos);
                 }
             }
         });
@@ -125,7 +125,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
             ++ticksSinceBlockUpdateRequested;
 
             if (ticksSinceBlockUpdateRequested > DISK_STATE_UPDATE_THROTTLE) {
-                WorldUtils.updateBlock(level, pos);
+                LevelUtils.updateBlock(level, pos);
 
                 this.blockUpdateRequested = false;
                 this.ticksSinceBlockUpdateRequested = 0;
@@ -148,7 +148,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
         network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE_ACTION.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
 
-        WorldUtils.updateBlock(level, pos);
+        LevelUtils.updateBlock(level, pos);
     }
 
     @Override

@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.IOException;
 
 
-public abstract class RSWorldSavedData extends SavedData {
-    private final Logger LOGGER = LogManager.getLogger(RSWorldSavedData.class);
+public abstract class RSSavedData extends SavedData {
+    private final Logger LOGGER = LogManager.getLogger(RSSavedData.class);
 
     public abstract void load(CompoundTag nbt);
 

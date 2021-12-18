@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
+import com.refinedmods.refinedstorage.apiimpl.util.RSSavedData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class StorageDiskManager extends RSWorldSavedData implements IStorageDiskManager {
+public class StorageDiskManager extends RSSavedData implements IStorageDiskManager {
     public static final String NAME = "refinedstorage_disks";
 
     private static final String NBT_DISKS = "Disks";

@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NetworkListener {
     @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent e) {
+    public void onLevelTick(TickEvent.WorldTickEvent e) {
         if (!e.world.isClientSide() && e.phase == TickEvent.Phase.END) {
             e.world.getProfiler().push("network ticking");
 
