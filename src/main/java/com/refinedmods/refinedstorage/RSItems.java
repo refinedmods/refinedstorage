@@ -207,7 +207,7 @@ public final class RSItems {
     }
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().tab(RS.MAIN_GROUP)));
+        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().tab(RS.CREATIVE_TAB)));
     }
 
     public static void register() {

@@ -54,7 +54,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider, IItem
     private static final int VERSION = 1;
 
     public PatternItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.CREATIVE_TAB));
     }
 
     public static ICraftingPattern fromCache(Level level, ItemStack stack) {

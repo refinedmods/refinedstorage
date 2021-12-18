@@ -35,7 +35,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
     private final ItemStorageType type;
 
     public StorageDiskItem(ItemStorageType type) {
-        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
+        super(new Item.Properties().tab(RS.CREATIVE_TAB).stacksTo(1));
 
         this.type = type;
     }

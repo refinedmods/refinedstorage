@@ -29,7 +29,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     public PortableGridBlockItem(Type type) {
         super(
             type == Type.CREATIVE ? RSBlocks.CREATIVE_PORTABLE_GRID.get() : RSBlocks.PORTABLE_GRID.get(),
-            new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1),
+            new Item.Properties().tab(RS.CREATIVE_TAB).stacksTo(1),
             type == Type.CREATIVE,
             () -> RS.SERVER_CONFIG.getPortableGrid().getCapacity()
         );

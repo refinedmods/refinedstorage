@@ -28,7 +28,7 @@ public class NetworkCardItem extends Item {
     private static final String NBT_DIMENSION = "Dimension";
 
     public NetworkCardItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
+        super(new Item.Properties().tab(RS.CREATIVE_TAB).stacksTo(1));
     }
 
     @Nullable
