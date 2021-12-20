@@ -19,6 +19,11 @@ public class DataGenerators {
                 RS.ID,
                 event.getExistingFileHelper())
             );
+            event.getGenerator().addProvider(new BlockTagGenerator(
+                    event.getGenerator(),
+                    RS.ID,
+                    event.getExistingFileHelper())
+            );
             event.getGenerator().addProvider(new LootTableGenerator(event.getGenerator()));
         }
     }
