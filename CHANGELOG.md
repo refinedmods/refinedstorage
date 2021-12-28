@@ -7,9 +7,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed client crash when hovering over a fluid in the Fluid Grid by [@jackodsteel](https://github.com/jackodsteel).
+- Fixed random client crashes when starting the game.
+
+### Changed
+
+- Update Korean translation by [@mindy15963](https://github.com/mindy15963).
+
 ## [v1.10.0-beta.3] - 2021-12-17
 
 ### Fixed
+
 - Fixed networks and network devices being removed when a chunk unloads.
 
 ## [v1.10.0-beta.2] - 2021-12-16
