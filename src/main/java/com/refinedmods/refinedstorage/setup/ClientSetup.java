@@ -79,30 +79,33 @@ public final class ClientSetup {
         registerBakedModelOverrides();
         registerPatternRenderHandlers();
 
-        MenuScreens.register(RSContainerMenus.FILTER, FilterScreen::new);
-        MenuScreens.register(RSContainerMenus.CONTROLLER, ControllerScreen::new);
-        MenuScreens.register(RSContainerMenus.DISK_DRIVE, DiskDriveScreen::new);
-        MenuScreens.register(RSContainerMenus.GRID, new GridScreenFactory());
-        MenuScreens.register(RSContainerMenus.STORAGE_BLOCK, StorageBlockScreen::new);
-        MenuScreens.register(RSContainerMenus.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
-        MenuScreens.register(RSContainerMenus.EXTERNAL_STORAGE, ExternalStorageScreen::new);
-        MenuScreens.register(RSContainerMenus.IMPORTER, ImporterScreen::new);
-        MenuScreens.register(RSContainerMenus.EXPORTER, ExporterScreen::new);
-        MenuScreens.register(RSContainerMenus.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
-        MenuScreens.register(RSContainerMenus.RELAY, RelayScreen::new);
-        MenuScreens.register(RSContainerMenus.DETECTOR, DetectorScreen::new);
-        MenuScreens.register(RSContainerMenus.SECURITY_MANAGER, SecurityManagerScreen::new);
-        MenuScreens.register(RSContainerMenus.INTERFACE, InterfaceScreen::new);
-        MenuScreens.register(RSContainerMenus.FLUID_INTERFACE, FluidInterfaceScreen::new);
-        MenuScreens.register(RSContainerMenus.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
-        MenuScreens.register(RSContainerMenus.STORAGE_MONITOR, StorageMonitorScreen::new);
-        MenuScreens.register(RSContainerMenus.CONSTRUCTOR, ConstructorScreen::new);
-        MenuScreens.register(RSContainerMenus.DESTRUCTOR, DestructorScreen::new);
-        MenuScreens.register(RSContainerMenus.DISK_MANIPULATOR, DiskManipulatorScreen::new);
-        MenuScreens.register(RSContainerMenus.CRAFTER, CrafterScreen::new);
-        MenuScreens.register(RSContainerMenus.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
-        MenuScreens.register(RSContainerMenus.CRAFTING_MONITOR, CraftingMonitorScreen::new);
-        MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        // MenuScreens isn't thread safe
+        e.enqueueWork(() -> {
+            MenuScreens.register(RSContainerMenus.FILTER, FilterScreen::new);
+            MenuScreens.register(RSContainerMenus.CONTROLLER, ControllerScreen::new);
+            MenuScreens.register(RSContainerMenus.DISK_DRIVE, DiskDriveScreen::new);
+            MenuScreens.register(RSContainerMenus.GRID, new GridScreenFactory());
+            MenuScreens.register(RSContainerMenus.STORAGE_BLOCK, StorageBlockScreen::new);
+            MenuScreens.register(RSContainerMenus.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
+            MenuScreens.register(RSContainerMenus.EXTERNAL_STORAGE, ExternalStorageScreen::new);
+            MenuScreens.register(RSContainerMenus.IMPORTER, ImporterScreen::new);
+            MenuScreens.register(RSContainerMenus.EXPORTER, ExporterScreen::new);
+            MenuScreens.register(RSContainerMenus.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
+            MenuScreens.register(RSContainerMenus.RELAY, RelayScreen::new);
+            MenuScreens.register(RSContainerMenus.DETECTOR, DetectorScreen::new);
+            MenuScreens.register(RSContainerMenus.SECURITY_MANAGER, SecurityManagerScreen::new);
+            MenuScreens.register(RSContainerMenus.INTERFACE, InterfaceScreen::new);
+            MenuScreens.register(RSContainerMenus.FLUID_INTERFACE, FluidInterfaceScreen::new);
+            MenuScreens.register(RSContainerMenus.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
+            MenuScreens.register(RSContainerMenus.STORAGE_MONITOR, StorageMonitorScreen::new);
+            MenuScreens.register(RSContainerMenus.CONSTRUCTOR, ConstructorScreen::new);
+            MenuScreens.register(RSContainerMenus.DESTRUCTOR, DestructorScreen::new);
+            MenuScreens.register(RSContainerMenus.DISK_MANIPULATOR, DiskManipulatorScreen::new);
+            MenuScreens.register(RSContainerMenus.CRAFTER, CrafterScreen::new);
+            MenuScreens.register(RSContainerMenus.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
+            MenuScreens.register(RSContainerMenus.CRAFTING_MONITOR, CraftingMonitorScreen::new);
+            MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        });
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
@@ -111,46 +114,52 @@ public final class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
-        RSBlocks.CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTER_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTING_MONITOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.DETECTOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.DISK_MANIPULATOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.CRAFTING_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.PATTERN_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.FLUID_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.NETWORK_RECEIVER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.RELAY.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.SECURITY_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-        ItemBlockRenderTypes.setRenderLayer(RSBlocks.CABLE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
+        // RenderLayer isn't thread safe
+        e.enqueueWork(() -> {
+            RSBlocks.CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.CRAFTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.CRAFTER_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.CRAFTING_MONITOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.DETECTOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.DISK_MANIPULATOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.CRAFTING_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.PATTERN_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.FLUID_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.NETWORK_RECEIVER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.RELAY.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.SECURITY_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
+            ItemBlockRenderTypes.setRenderLayer(RSBlocks.CABLE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
+        });
 
         BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR, ctx -> new StorageMonitorBlockEntityRenderer());
 
-        Minecraft.getInstance().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
+        // ItemProperties isn't thread safe
+        e.enqueueWork(() -> {
+            Minecraft.getInstance().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
 
-        ItemProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+            ItemProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
 
-        RSItems.CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
-        RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+            RSItems.CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+            RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
 
-        ItemProperties.register(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemProperties.register(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+            ItemProperties.register(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
+            ItemProperties.register(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemProperties.register(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemProperties.register(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+            ItemProperties.register(RSItems.WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+            ItemProperties.register(RSItems.CREATIVE_WIRELESS_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
 
-        ItemProperties.register(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
-        ItemProperties.register(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+            ItemProperties.register(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+            ItemProperties.register(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
+        });
     }
 
     private static void registerPatternRenderHandlers() {
