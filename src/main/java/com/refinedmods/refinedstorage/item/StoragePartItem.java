@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 
 public class StoragePartItem extends Item {
     public StoragePartItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
     }
 
     public static StoragePartItem getByType(ItemStorageType type) {

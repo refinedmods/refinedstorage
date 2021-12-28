@@ -48,7 +48,7 @@ import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -189,7 +189,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
                 if (!reading) {
                     updateState();
 
-                    WorldUtils.updateBlock(level, worldPosition); // Re-send grid type
+                    LevelUtils.updateBlock(level, worldPosition); // Re-send grid type
                 }
             }
         });

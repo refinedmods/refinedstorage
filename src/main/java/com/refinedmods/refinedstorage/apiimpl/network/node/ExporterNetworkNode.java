@@ -16,7 +16,7 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInvento
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -87,7 +87,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
         if (canUpdate() && ticks % upgrades.getSpeed() == 0 && level.isLoaded(pos)) {
             if (type == IType.ITEMS) {
-                IItemHandler handler = WorldUtils.getItemHandler(getFacingBlockEntity(), getDirection().getOpposite());
+                IItemHandler handler = LevelUtils.getItemHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
                 if (handler != null) {
                     while (filterSlot + 1 < itemFilters.getSlots() && itemFilters.getStackInSlot(filterSlot).isEmpty()) {
@@ -167,7 +167,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                     filterSlot = 0;
                 }
 
-                IFluidHandler handler = WorldUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
+                IFluidHandler handler = LevelUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
                 if (handler != null) {
                     FluidStack stack = fluids[filterSlot];

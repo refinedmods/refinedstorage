@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,7 +23,7 @@ public class ItemExternalStorageProvider implements IExternalStorageProvider<Ite
             return false;
         }
 
-        return WorldUtils.getItemHandler(blockEntity, direction.getOpposite()) != null;
+        return LevelUtils.getItemHandler(blockEntity, direction.getOpposite()) != null;
     }
 
     @Nonnull
@@ -34,7 +34,7 @@ public class ItemExternalStorageProvider implements IExternalStorageProvider<Ite
                 return null;
             }
 
-            return WorldUtils.getItemHandler(blockEntity, direction.getOpposite());
+            return LevelUtils.getItemHandler(blockEntity, direction.getOpposite());
         }, blockEntity instanceof InterfaceBlockEntity);
     }
 

@@ -35,7 +35,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     private final FluidStorageType type;
 
     public FluidStorageBlockItem(FluidStorageBlock block) {
-        super(block, new Item.Properties().tab(RS.MAIN_GROUP));
+        super(block, new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
 
         this.type = block.getType();
     }

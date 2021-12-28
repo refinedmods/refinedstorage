@@ -10,7 +10,7 @@ import com.refinedmods.refinedstorage.blockentity.craftingmonitor.WirelessCrafti
 import com.refinedmods.refinedstorage.container.factory.CraftingMonitorMenuProvider;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessCraftingMonitorItem;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -52,7 +52,7 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
 
         if (!network.getSecurityManager().hasPermission(Permission.MODIFY, player) ||
             !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
-            WorldUtils.sendNoPermissionMessage(player);
+            LevelUtils.sendNoPermissionMessage(player);
 
             return false;
         }

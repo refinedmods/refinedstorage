@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.PlayerUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +27,7 @@ public class NetworkNodeListener {
                     INetworkNode node = NetworkUtils.getNodeFromBlockEntity(e.getWorld().getBlockEntity(e.getBlockSnapshot().getPos().relative(facing)));
 
                     if (node != null && node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, player)) {
-                        WorldUtils.sendNoPermissionMessage(player);
+                        LevelUtils.sendNoPermissionMessage(player);
 
                         e.setCanceled(true);
 
@@ -63,7 +63,7 @@ public class NetworkNodeListener {
             INetworkNode node = NetworkUtils.getNodeFromBlockEntity(e.getWorld().getBlockEntity(e.getPos()));
 
             if (node != null && node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, e.getPlayer())) {
-                WorldUtils.sendNoPermissionMessage(e.getPlayer());
+                LevelUtils.sendNoPermissionMessage(e.getPlayer());
 
                 e.setCanceled(true);
             }

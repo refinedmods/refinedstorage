@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class WrenchItem extends Item {
     public WrenchItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class WrenchItem extends Item {
         INetworkNode node = NetworkUtils.getNodeFromBlockEntity(ctx.getLevel().getBlockEntity(ctx.getClickedPos()));
         INetwork network = NetworkUtils.getNetworkFromNode(node);
         if (network != null && !network.getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
-            WorldUtils.sendNoPermissionMessage(ctx.getPlayer());
+            LevelUtils.sendNoPermissionMessage(ctx.getPlayer());
 
             return InteractionResult.FAIL;
         }

@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.network;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
-import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
+import com.refinedmods.refinedstorage.apiimpl.util.RSSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkManager extends RSWorldSavedData implements INetworkManager {
+public class NetworkManager extends RSSavedData implements INetworkManager {
     public static final String NAME = "refinedstorage_networks";
 
     private static final String NBT_NETWORKS = "Networks";

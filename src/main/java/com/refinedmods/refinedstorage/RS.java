@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.config.ClientConfig;
 import com.refinedmods.refinedstorage.config.ServerConfig;
 import com.refinedmods.refinedstorage.datageneration.DataGenerators;
 import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
-import com.refinedmods.refinedstorage.item.group.MainItemGroup;
+import com.refinedmods.refinedstorage.item.group.MainCreativeModeTab;
 import com.refinedmods.refinedstorage.network.NetworkHandler;
 import com.refinedmods.refinedstorage.setup.ClientSetup;
 import com.refinedmods.refinedstorage.setup.CommonSetup;
@@ -28,7 +28,7 @@ public final class RS {
     public static final String NAME = "Refined Storage";
 
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
-    public static final CreativeModeTab MAIN_GROUP = new MainItemGroup();
+    public static final CreativeModeTab CREATIVE_MODE_TAB = new MainCreativeModeTab();
     public static final ServerConfig SERVER_CONFIG = new ServerConfig();
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 

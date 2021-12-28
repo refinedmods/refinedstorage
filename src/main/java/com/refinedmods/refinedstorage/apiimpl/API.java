@@ -245,7 +245,7 @@ public class API implements IRSAPI {
     @Nonnull
     public IStorageDisk<ItemStack> createDefaultItemDisk(ServerLevel level, int capacity, @Nullable Player owner) {
         if (level == null) {
-            throw new IllegalArgumentException("World cannot be null");
+            throw new IllegalArgumentException("Level cannot be null");
         }
 
         return new ItemStorageDisk(level, capacity, owner == null ? null : owner.getGameProfile().getId());
@@ -255,7 +255,7 @@ public class API implements IRSAPI {
     @Nonnull
     public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerLevel level, int capacity, @Nullable Player owner) {
         if (level == null) {
-            throw new IllegalArgumentException("World cannot be null");
+            throw new IllegalArgumentException("Level cannot be null");
         }
 
         return new FluidStorageDisk(level, capacity, owner == null ? null : owner.getGameProfile().getId());

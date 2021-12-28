@@ -25,7 +25,7 @@ public class SecurityCardItem extends Item {
     private static final String NBT_PERMISSION = "Permission_%d";
 
     public SecurityCardItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
     }
 
     @Nullable

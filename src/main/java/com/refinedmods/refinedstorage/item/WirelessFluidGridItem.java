@@ -17,7 +17,7 @@ public class WirelessFluidGridItem extends NetworkItem {
     private final Type type;
 
     public WirelessFluidGridItem(Type type) {
-        super(new Item.Properties().tab(RS.MAIN_GROUP).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessFluidGrid().getCapacity());
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1), type == Type.CREATIVE, () -> RS.SERVER_CONFIG.getWirelessFluidGrid().getCapacity());
 
         this.type = type;
     }

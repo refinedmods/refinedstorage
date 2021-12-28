@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -53,6 +53,6 @@ public class CableBlockEntity extends NetworkNodeBlockEntity<CableNetworkNode> {
 
         requestModelDataUpdate();
 
-        WorldUtils.updateBlock(level, worldPosition);
+        LevelUtils.updateBlock(level, worldPosition);
     }
 }

@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
 import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,7 +72,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
         super.attack(state, level, pos, player);
 
         if (!level.isClientSide) {
-            HitResult result = WorldUtils.rayTracePlayer(level, player);
+            HitResult result = LevelUtils.rayTracePlayer(level, player);
 
             if (!(result instanceof BlockHitResult)) {
                 return;

@@ -22,7 +22,7 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInvento
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +68,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 );
 
                 if (!reading) {
-                    WorldUtils.updateBlock(level, pos);
+                    LevelUtils.updateBlock(level, pos);
                 }
             }
         });
@@ -88,7 +88,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 );
 
                 if (!reading) {
-                    WorldUtils.updateBlock(level, pos);
+                    LevelUtils.updateBlock(level, pos);
                 }
             }
         }));

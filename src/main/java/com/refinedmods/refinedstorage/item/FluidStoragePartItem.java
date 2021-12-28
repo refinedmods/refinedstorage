@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 
 public class FluidStoragePartItem extends Item {
     public FluidStoragePartItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
     }
 
     public static FluidStoragePartItem getByType(FluidStorageType type) {

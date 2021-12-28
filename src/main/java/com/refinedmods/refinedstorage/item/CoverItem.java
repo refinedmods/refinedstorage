@@ -10,7 +10,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.CableBlock;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +40,7 @@ public class CoverItem extends Item {
 
 
     public CoverItem() {
-        super(new Item.Properties().tab(RS.MAIN_GROUP));
+        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {
@@ -135,7 +135,7 @@ public class CoverItem extends Item {
             INetworkNode node = ((NetworkNodeBlockEntity<?>) blockEntity).getNode();
 
             if (node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, context.getPlayer())) {
-                WorldUtils.sendNoPermissionMessage(context.getPlayer());
+                LevelUtils.sendNoPermissionMessage(context.getPlayer());
 
                 return InteractionResult.FAIL;
             }
@@ -143,7 +143,7 @@ public class CoverItem extends Item {
             if (((ICoverable) node).getCoverManager().setCover(facing, createCover(getItem(stack)))) {
                 context.getPlayer().getItemInHand(context.getHand()).shrink(1);
 
-                WorldUtils.updateBlock(level, pos);
+                LevelUtils.updateBlock(level, pos);
                 API.instance().getNetworkNodeManager((ServerLevel) level).markForSaving();
                 return InteractionResult.SUCCESS;
             }

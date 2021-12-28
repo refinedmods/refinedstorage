@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -135,11 +136,10 @@ public class FluidGridStack implements IGridStack {
         if (bypassCache || cachedTooltip == null) {
             List<Component> tooltip;
             try {
-                tooltip = Arrays.asList(stack.getDisplayName());
+                tooltip = Lists.newArrayList(stack.getDisplayName());
             } catch (Throwable t) {
                 logger.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
-
-                tooltip = Arrays.asList(new TextComponent(ERROR_PLACEHOLDER));
+                tooltip = Lists.newArrayList(new TextComponent(ERROR_PLACEHOLDER));
             }
 
             if (bypassCache) {

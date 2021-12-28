@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.storage.tracker;
 import com.refinedmods.refinedstorage.api.storage.StorageType;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTrackerManager;
-import com.refinedmods.refinedstorage.apiimpl.util.RSWorldSavedData;
+import com.refinedmods.refinedstorage.apiimpl.util.RSSavedData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class StorageTrackerManager extends RSWorldSavedData implements IStorageTrackerManager {
+public class StorageTrackerManager extends RSSavedData implements IStorageTrackerManager {
     public static final String NAME = "refinedstorage_tracker";
 
     private static final String NBT_TRACKERS = "Tracker";

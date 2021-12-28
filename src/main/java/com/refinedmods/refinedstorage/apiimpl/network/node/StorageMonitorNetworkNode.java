@@ -14,7 +14,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.WorldUtils;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -46,14 +46,14 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading) {
-                WorldUtils.updateBlock(level, pos);
+                LevelUtils.updateBlock(level, pos);
             }
         });
 
     private final FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
         .addListener((handler, slot, reading) -> {
             if (!reading) {
-                WorldUtils.updateBlock(level, pos);
+                LevelUtils.updateBlock(level, pos);
             }
         });
     private final Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
@@ -82,7 +82,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         } else if (oldAmount != newAmount) {
             oldAmount = newAmount;
 
-            WorldUtils.updateBlock(level, pos);
+            LevelUtils.updateBlock(level, pos);
         }
     }
 
@@ -249,7 +249,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     public void setCompare(int compare) {
         this.compare = compare;
 
-        WorldUtils.updateBlock(level, pos);
+        LevelUtils.updateBlock(level, pos);
 
         markDirty();
     }
@@ -325,7 +325,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     public void setType(int type) {
         this.type = type;
 
-        WorldUtils.updateBlock(level, pos);
+        LevelUtils.updateBlock(level, pos);
         markDirty();
     }
 
