@@ -151,15 +151,16 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !(recipe instanceof CraftingRecipe)) {
             moveForProcessing(recipeLayout, tracker);
         } else {
-            move(gridContainer, recipeLayout);
+            move(gridContainer, recipeLayout, recipe);
         }
     }
 
-    private void move(GridContainerMenu gridContainer, IRecipeLayout recipeLayout) {
+    private void move(GridContainerMenu gridContainer, IRecipeLayout recipeLayout, Object recipe) {
         RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
             recipeLayout.getItemStacks().getGuiIngredients(),
-            gridContainer.slots.stream().filter(s -> s.container instanceof CraftingContainer).collect(Collectors.toList())
-        ));
+            gridContainer.slots.stream().filter(s -> s.container instanceof CraftingContainer).collect(Collectors.toList()),
+            recipe instanceof CraftingRecipe)
+        );
     }
 
     private void moveForProcessing(IRecipeLayout recipeLayout, IngredientTracker tracker) {

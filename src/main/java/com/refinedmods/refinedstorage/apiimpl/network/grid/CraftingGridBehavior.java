@@ -210,7 +210,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     // If we are connected, first try to get the possibilities from the network
                     if (network != null && grid.isGridActive()) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT, Action.PERFORM);
+                            ItemStack took = network.extractItem(possibility, possibility.getCount(), IComparer.COMPARE_NBT, Action.PERFORM);
 
                             if (!took.isEmpty()) {
                                 grid.getCraftingMatrix().setItem(i, took);
