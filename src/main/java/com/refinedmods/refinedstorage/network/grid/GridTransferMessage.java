@@ -19,15 +19,17 @@ import java.util.function.Supplier;
 public class GridTransferMessage {
     private Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs;
     private List<Slot> slots;
+    boolean isCraftingRecipe;
 
     private final ItemStack[][] recipe = new ItemStack[9][];
 
     public GridTransferMessage() {
     }
 
-    public GridTransferMessage(Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs, List<Slot> slots) {
+    public GridTransferMessage(Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs, List<Slot> slots, boolean isCraftingRecipe) {
         this.inputs = inputs;
         this.slots = slots;
+        this.isCraftingRecipe = isCraftingRecipe;
     }
 
     public static GridTransferMessage decode(PacketBuffer buf) {
@@ -52,7 +54,7 @@ public class GridTransferMessage {
         buf.writeInt(message.slots.size());
 
         for (Slot slot : message.slots) {
-            IGuiIngredient<ItemStack> ingredient = message.inputs.get(slot.getSlotIndex() + 1);
+            IGuiIngredient<ItemStack> ingredient = message.inputs.get(slot.getSlotIndex() + (message.isCraftingRecipe ? 1 : 0));
 
             List<ItemStack> ingredients = new ArrayList<>();
 
