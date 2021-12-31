@@ -11,12 +11,17 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
+import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
+import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.List;
+
 public class ProcessingNode extends Node {
+
     private static final String NBT_ITEMS_RECEIVED = "ItemsReceived";
     private static final String NBT_FLUIDS_RECEIVED = "FluidsReceived";
     private static final String NBT_SINGLE_ITEM_SET_TO_REQUIRE = "SingleItemSetToRequire";
@@ -45,13 +50,13 @@ public class ProcessingNode extends Node {
     public ProcessingNode(INetwork network, CompoundTag tag) throws CraftingTaskReadException {
         super(network, tag);
 
-        this.itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Tag.TAG_COMPOUND));
-        this.fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Tag.TAG_COMPOUND));
+        itemsReceived = SerializationUtil.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Tag.TAG_COMPOUND));
+        fluidsReceived = SerializationUtil.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Tag.TAG_COMPOUND));
 
-        this.singleItemSetToRequire = SerializationUtil.readItemStackList(tag.getList(NBT_SINGLE_ITEM_SET_TO_REQUIRE, Tag.TAG_COMPOUND));
-        this.singleFluidSetToRequire = SerializationUtil.readFluidStackList(tag.getList(NBT_SINGLE_FLUID_SET_TO_REQUIRE, Tag.TAG_COMPOUND));
+        singleItemSetToRequire = SerializationUtil.readItemStackList(tag.getList(NBT_SINGLE_ITEM_SET_TO_REQUIRE, Tag.TAG_COMPOUND));
+        singleFluidSetToRequire = SerializationUtil.readFluidStackList(tag.getList(NBT_SINGLE_FLUID_SET_TO_REQUIRE, Tag.TAG_COMPOUND));
 
-        this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
+        state = ProcessingState.values()[tag.getInt(NBT_STATE)];
 
         initSetsToReceive();
     }
@@ -96,7 +101,7 @@ public class ProcessingNode extends Node {
 
                     if (container.isLocked()) {
                         if (allLocked) {
-                            this.state = ProcessingState.LOCKED;
+                            state = ProcessingState.LOCKED;
                         }
 
                         break;
@@ -107,7 +112,7 @@ public class ProcessingNode extends Node {
                     if ((!singleItemSetToRequire.isEmpty() && !container.hasConnectedInventory()) ||
                         (!singleFluidSetToRequire.isEmpty() && !container.hasConnectedFluidInventory())) {
                         if (allMissingMachine) {
-                            this.state = ProcessingState.MACHINE_NONE;
+                            state = ProcessingState.MACHINE_NONE;
                         }
 
                         break;
@@ -117,8 +122,8 @@ public class ProcessingNode extends Node {
 
                     boolean hasAllRequirements = false;
 
-                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE);
-                    IStackList<FluidStack> extractedFluids = null;
+                    List<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE);
+                    List<FluidStack> extractedFluids = null;
                     if (extractedItems != null) {
                         extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(true), internalFluidStorage, Action.SIMULATE);
                         if (extractedFluids != null) {
@@ -128,9 +133,9 @@ public class ProcessingNode extends Node {
 
                     boolean canInsertFullAmount = false;
                     if (hasAllRequirements) {
-                        canInsertFullAmount = container.insertItemsIntoInventory(extractedItems.getStacks(), Action.SIMULATE);
+                        canInsertFullAmount = container.insertItemsIntoInventory(extractedItems, Action.SIMULATE);
                         if (canInsertFullAmount) {
-                            canInsertFullAmount = container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.SIMULATE);
+                            canInsertFullAmount = container.insertFluidsIntoInventory(extractedFluids, Action.SIMULATE);
                         }
                     } else {
                         break;
@@ -138,7 +143,7 @@ public class ProcessingNode extends Node {
 
                     if (!canInsertFullAmount) {
                         if (allRejected) {
-                            this.state = ProcessingState.MACHINE_DOES_NOT_ACCEPT;
+                            state = ProcessingState.MACHINE_DOES_NOT_ACCEPT;
                         }
 
                         break;
@@ -146,13 +151,13 @@ public class ProcessingNode extends Node {
                         allRejected = false;
                     }
 
-                    this.state = ProcessingState.READY;
+                    state = ProcessingState.READY;
 
                     extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
                     extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
 
-                    container.insertItemsIntoInventory(extractedItems.getStacks(), Action.PERFORM);
-                    container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.PERFORM);
+                    container.insertItemsIntoInventory(extractedItems, Action.PERFORM);
+                    container.insertFluidsIntoInventory(extractedFluids, Action.PERFORM);
 
                     next();
 
@@ -238,10 +243,10 @@ public class ProcessingNode extends Node {
             }
         }
 
-        this.quantityFinished = tempQuantityFinished;
+        quantityFinished = tempQuantityFinished;
 
-        if (this.quantityFinished == this.totalQuantity) {
-            this.state = ProcessingState.PROCESSED;
+        if (quantityFinished == totalQuantity) {
+            state = ProcessingState.PROCESSED;
         }
     }
 
@@ -249,8 +254,8 @@ public class ProcessingNode extends Node {
     public void onCalculationFinished() {
         super.onCalculationFinished();
 
-        this.singleItemSetToRequire = requirements.getSingleItemRequirementSet(true);
-        this.singleFluidSetToRequire = requirements.getSingleFluidRequirementSet(true);
+        singleItemSetToRequire = new ItemStackList(requirements.getSingleItemRequirementSet(true));
+        singleFluidSetToRequire = new FluidStackList(requirements.getSingleFluidRequirementSet(true));
     }
 
     @Override

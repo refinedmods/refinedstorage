@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.api.autocrafting;
 
 import com.refinedmods.refinedstorage.api.util.Action;
-import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -14,7 +13,10 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,12 +24,15 @@ import java.util.stream.IntStream;
  * Represents a network node that contains crafting patterns.
  */
 public interface ICraftingPatternContainer {
+
     /**
      * Returns the interval of when a crafting step with a pattern in this container can update.
      * Minimum value is 0 (each tick).
      * <p>
-     * Note: rather than maxing out the update interval, implementors might want to balance around {@link #getMaximumSuccessfulCraftingUpdates()}.
-     * This method merely speeds up the update rate, it might be more interesting to increase the output rate in {@link #getMaximumSuccessfulCraftingUpdates()}.
+     * Note: rather than maxing out the update interval, implementors might want to balance around
+     * {@link #getMaximumSuccessfulCraftingUpdates()}.
+     * This method merely speeds up the update rate, it might be more interesting to increase the output rate in
+     * {@link #getMaximumSuccessfulCraftingUpdates()}.
      *
      * @return the update interval
      */
@@ -152,7 +157,7 @@ public interface ICraftingPatternContainer {
      * @param action   action to perform
      * @return whether insertion was successful
      */
-    default boolean insertItemsIntoInventory(Collection<StackListEntry<ItemStack>> toInsert, Action action) {
+    default boolean insertItemsIntoInventory(List<ItemStack> toInsert, Action action) {
         IItemHandler dest = getConnectedInventory();
 
 
@@ -164,11 +169,9 @@ public interface ICraftingPatternContainer {
             return false;
         }
 
-        Deque<StackListEntry<ItemStack>> stacks = new ArrayDeque<>(toInsert);
+        Deque<ItemStack> stacks = new ArrayDeque<>(toInsert);
 
-        StackListEntry<ItemStack> currentEntry = stacks.poll();
-
-        ItemStack current = currentEntry != null ? currentEntry.getStack() : null;
+        ItemStack current = stacks.poll();
 
         List<Integer> availableSlots = IntStream.range(0, dest.getSlots()).boxed().collect(Collectors.toList());
 
@@ -189,9 +192,7 @@ public interface ICraftingPatternContainer {
             }
 
             if (remainder.isEmpty()) { // If we inserted successfully, get a next stack.
-                currentEntry = stacks.poll();
-
-                current = currentEntry != null ? currentEntry.getStack() : null;
+                current = stacks.poll();
             } else if (current.getCount() == remainder.getCount()) { // If we didn't insert anything over ALL these slots, stop here.
                 break;
             } else { // If we didn't insert all, continue with other slots and use our remainder.
@@ -202,7 +203,8 @@ public interface ICraftingPatternContainer {
         boolean success = current == null && stacks.isEmpty();
 
         if (!success && action == Action.PERFORM) {
-            LogManager.getLogger().warn("Inventory unexpectedly didn't accept {}, the remainder has been voided!", current != null ? current.getDescriptionId() : null);
+            LogManager.getLogger().warn("Inventory unexpectedly didn't accept {}, the remainder has been voided!",
+                current != null ? current.getDescriptionId() : null);
         }
 
         return success;
@@ -215,7 +217,7 @@ public interface ICraftingPatternContainer {
      * @param action   action to perform
      * @return whether insertion was successful
      */
-    default boolean insertFluidsIntoInventory(Collection<StackListEntry<FluidStack>> toInsert, Action action) {
+    default boolean insertFluidsIntoInventory(List<FluidStack> toInsert, Action action) {
         IFluidHandler dest = getConnectedFluidInventory();
 
         if (toInsert.isEmpty()) {
@@ -226,12 +228,13 @@ public interface ICraftingPatternContainer {
             return false;
         }
 
-        for (StackListEntry<FluidStack> entry : toInsert) {
-            int filled = dest.fill(entry.getStack(), action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+        for (FluidStack stack : toInsert) {
+            int filled = dest.fill(stack,
+                action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
 
-            if (filled != entry.getStack().getAmount()) {
+            if (filled != stack.getAmount()) {
                 if (action == Action.PERFORM) {
-                    LogManager.getLogger().warn("Inventory unexpectedly didn't accept all of {}, the remainder has been voided!", entry.getStack().getTranslationKey());
+                    LogManager.getLogger().warn("Inventory unexpectedly didn't accept all of {}, the remainder has been voided!", stack.getTranslationKey());
                 }
 
                 return false;
