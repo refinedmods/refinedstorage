@@ -6,7 +6,6 @@ import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListEntry;
-import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -19,15 +18,15 @@ public final class IoUtil {
     private IoUtil() {
     }
 
-    public static IStackList<ItemStack> extractFromInternalItemStorage(IStackList<ItemStack> list, IStorageDisk<ItemStack> storage, Action action) {
-        IStackList<ItemStack> extracted = API.instance().createItemStackList();
+    public static List<ItemStack> extractFromInternalItemStorage(List<ItemStack> list, IStorageDisk<ItemStack> storage, Action action) {
+        List<ItemStack> extracted = new ArrayList<>();
 
-        for (StackListEntry<ItemStack> entry : list.getStacks()) {
-            ItemStack result = storage.extract(entry.getStack(), entry.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, action);
+        for (ItemStack stack : list) {
+            ItemStack result = storage.extract(stack, stack.getCount(), DEFAULT_EXTRACT_FLAGS, action);
 
-            if (result.isEmpty() || result.getCount() != entry.getStack().getCount()) {
+            if (result.isEmpty() || result.getCount() != stack.getCount()) {
                 if (action == Action.PERFORM) {
-                    throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
+                    throw new IllegalStateException("The internal crafting inventory reported that " + stack + " was available but we got " + result);
                 }
 
                 return null;
@@ -39,15 +38,15 @@ public final class IoUtil {
         return extracted;
     }
 
-    public static IStackList<FluidStack> extractFromInternalFluidStorage(IStackList<FluidStack> list, IStorageDisk<FluidStack> storage, Action action) {
-        IStackList<FluidStack> extracted = API.instance().createFluidStackList();
+    public static List<FluidStack> extractFromInternalFluidStorage(List<FluidStack> list, IStorageDisk<FluidStack> storage, Action action) {
+        List<FluidStack> extracted = new ArrayList<>();
 
-        for (StackListEntry<FluidStack> entry : list.getStacks()) {
-            FluidStack result = storage.extract(entry.getStack(), entry.getStack().getAmount(), DEFAULT_EXTRACT_FLAGS, action);
+        for (FluidStack stack : list) {
+            FluidStack result = storage.extract(stack, stack.getAmount(), DEFAULT_EXTRACT_FLAGS, action);
 
-            if (result.isEmpty() || result.getAmount() != entry.getStack().getAmount()) {
+            if (result.isEmpty() || result.getAmount() != stack.getAmount()) {
                 if (action == Action.PERFORM) {
-                    throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
+                    throw new IllegalStateException("The internal crafting inventory reported that " + stack + " was available but we got " + result);
                 }
 
                 return null;

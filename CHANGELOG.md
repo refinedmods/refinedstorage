@@ -10,6 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed multiple bugs related to transferring recipes into the Crafting Grid.
+- Processing patterns now use the order of items/fluids specified in the pattern
+  by [@necauqua](https://github.com/necauqua) and [@Darkere](https://github.com/Darkere).
 
 ## [v1.10.0-beta.4] - 2021-12-28
 

@@ -19,6 +19,15 @@ public class FluidStackList implements IStackList<FluidStack> {
     private final ArrayListMultimap<Fluid, StackListEntry<FluidStack>> stacks = ArrayListMultimap.create();
     private final Map<UUID, FluidStack> index = new HashMap<>();
 
+    public FluidStackList() {
+    }
+
+    public FluidStackList(Iterable<FluidStack> stacks) {
+        for (FluidStack stack : stacks) {
+            add(stack);
+        }
+    }
+
     @Override
     public StackListResult<FluidStack> add(@Nonnull FluidStack stack, int size) {
         if (stack.isEmpty() || size <= 0) {

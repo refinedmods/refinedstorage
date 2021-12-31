@@ -20,6 +20,15 @@ public class ItemStackList implements IStackList<ItemStack> {
     private final ArrayListMultimap<Item, StackListEntry<ItemStack>> stacks = ArrayListMultimap.create();
     private final Map<UUID, ItemStack> index = new HashMap<>();
 
+    public ItemStackList() {
+    }
+
+    public ItemStackList(Iterable<ItemStack> stacks) {
+        for (ItemStack stack : stacks) {
+            add(stack);
+        }
+    }
+
     @Override
     public StackListResult<ItemStack> add(@Nonnull ItemStack stack, int size) {
         if (stack.isEmpty() || size <= 0) {
