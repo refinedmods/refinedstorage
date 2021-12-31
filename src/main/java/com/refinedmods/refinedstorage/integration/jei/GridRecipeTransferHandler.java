@@ -153,7 +153,8 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private void move(GridContainer gridContainer, IRecipeLayout recipeLayout) {
         RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
             recipeLayout.getItemStacks().getGuiIngredients(),
-            gridContainer.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList())
+            gridContainer.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList()),
+                recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)
         ));
     }
 
