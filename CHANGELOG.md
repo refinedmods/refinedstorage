@@ -7,6 +7,8 @@
 - Fixed Wireless Transmitter only working upright (Darkere)
 - Fixed Portable Grid not opening when pointing at a block (Darkere)
 - Fixed being able to circumvent locked slots by scrolling (Darkere)
+- Processing patterns now use the order of items/fluids specified in the pattern (Darkere, necauqua)
+- Fixed multiple bugs related to transferring recipes into the crafting grid (Darkere)
 
 ### 1.9.16
 
