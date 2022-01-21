@@ -64,7 +64,7 @@ public class KeyInputListener {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
-        if (e.getAction() == 1 && Minecraft.getInstance().player != null) (
+        if (e.getAction() == 1 && Minecraft.getInstance().player != null) {
             if (e.getKey() == RSKeyBindings.OPEN_WIRELESS_GRID.getKey()) {
                 findAndOpen(RSItems.WIRELESS_GRID.get(), RSItems.CREATIVE_WIRELESS_GRID.get());
             } else if (e.getKey() == RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.getKey()) {
@@ -73,7 +73,7 @@ public class KeyInputListener {
                 findAndOpen(RSItems.PORTABLE_GRID.get(), RSItems.CREATIVE_PORTABLE_GRID.get());
             } else if (e.getKey() == RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.getKey()) {
                 findAndOpen(RSItems.WIRELESS_CRAFTING_MONITOR.get(), RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get());
-            )
+            }
         }
     }
 }
