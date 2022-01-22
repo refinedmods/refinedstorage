@@ -205,7 +205,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
                         minecraft.player,
                         slot.index,
                         slot.getItem(),
-                        slot.getMaxStackSize(),
+                        Math.min(slot.getMaxStackSize(), slot.getItem().getMaxStackSize()),
                         ((FilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             parent,
                             minecraft.player,
