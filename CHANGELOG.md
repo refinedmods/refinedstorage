@@ -13,6 +13,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Processing patterns now use the order of items/fluids specified in the pattern
   by [@necauqua](https://github.com/necauqua) and [@Darkere](https://github.com/Darkere).
 - Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements.
+- Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern.
 
 ## [v1.10.0-beta.4] - 2021-12-28
 
