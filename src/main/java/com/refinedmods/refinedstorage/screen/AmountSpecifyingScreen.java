@@ -67,13 +67,13 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         amountField.setResponder(text -> {
             int amount = 0;
             try {
-                amount = Integer.parseInt(amountField.getText());
+                amount = Integer.parseInt(amountField.getValue());
             } catch (NumberFormatException e) {
                 // NO OP
             }
 
             if (amount > getMaxAmount()) {
-                amountField.setText(String.valueOf(getMaxAmount()));
+                amountField.setValue(String.valueOf(getMaxAmount()));
             }
         });
 
