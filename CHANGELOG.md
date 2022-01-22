@@ -9,6 +9,9 @@
 - Fixed being able to circumvent locked slots by scrolling (Darkere)
 - Processing patterns now use the order of items/fluids specified in the pattern (Darkere, necauqua)
 - Fixed multiple bugs related to transferring recipes into the crafting grid (Darkere)
+- Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements (Darkere)
+- Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern (Darkere)
+- Amount specifying screen is now limited to valid values (Darkere)
 
 ### 1.9.16
 
