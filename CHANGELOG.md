@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+- Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements (Darkere)
+- Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern (Darkere)
+- Amount specifying screen is now limited to valid values (Darkere)
+- Fixed clear button offset in pattern grid (Darkere)
+
 ## [v1.10.0-beta.4] - 2021-12-28
 
 ### Fixed
