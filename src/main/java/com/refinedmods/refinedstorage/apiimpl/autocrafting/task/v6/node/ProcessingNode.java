@@ -73,7 +73,7 @@ public class ProcessingNode extends Node {
     @Override
     public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, NodeListener listener) {
         if (getQuantity() <= 0) {
-            if (state == ProcessingState.PROCESSED) {
+            if (totalQuantity == quantityFinished) {
                 listener.onAllDone(this);
             }
             return;
@@ -243,10 +243,6 @@ public class ProcessingNode extends Node {
         }
 
         this.quantityFinished = tempQuantityFinished;
-
-        if (this.quantityFinished == this.totalQuantity) {
-            this.state = ProcessingState.PROCESSED;
-        }
     }
 
     @Override
