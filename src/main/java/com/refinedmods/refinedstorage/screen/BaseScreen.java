@@ -202,7 +202,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         minecraft.player,
                         slot.slotNumber,
                         slot.getStack(),
-                        slot.getSlotStackLimit(),
+                        Math.min(slot.getSlotStackLimit(), slot.getStack().getMaxStackSize()),
                         ((FilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             parent,
                             minecraft.player,

@@ -64,6 +64,18 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setCanLoseFocus(false);
         amountField.changeFocus(true);
+        amountField.setResponder(text -> {
+            int amount = 0;
+            try {
+                amount = Integer.parseInt(amountField.getText());
+            } catch (NumberFormatException e) {
+                // NO OP
+            }
+
+            if (amount > getMaxAmount()) {
+                amountField.setText(String.valueOf(getMaxAmount()));
+            }
+        });
 
         addButton(amountField);
 
