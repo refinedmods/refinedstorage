@@ -320,7 +320,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 return RenderUtils.inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
                 if (((GridNetworkNode) grid).isProcessingPattern()) {
-                    return RenderUtils.inBounds(154, y, 7, 7, mouseX, mouseY);
+                    return RenderUtils.inBounds(149, y, 7, 7, mouseX, mouseY);
                 }
 
                 return RenderUtils.inBounds(82, y, 7, 7, mouseX, mouseY);
