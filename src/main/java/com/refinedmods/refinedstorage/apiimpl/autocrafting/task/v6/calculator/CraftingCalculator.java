@@ -257,7 +257,7 @@ public class CraftingCalculator {
             FluidStack fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
             FluidStack fromNetwork = fluidStorageSource.get(possibleInput, IComparer.COMPARE_NBT);
 
-            int remaining = possibleInput.getAmount() * qty;
+            int remaining = ingredient.getCount() * qty;
 
             if (remaining < 0) { // int overflow
                 throw new CraftingCalculatorException(CalculationResultType.TOO_COMPLEX);

@@ -64,6 +64,18 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setCanLoseFocus(false);
         amountField.changeFocus(true);
+        amountField.setResponder(text -> {
+            int amount = 0;
+            try {
+                amount = Integer.parseInt(amountField.getValue());
+            } catch (NumberFormatException e) {
+                // NO OP
+            }
+
+            if (amount > getMaxAmount()) {
+                amountField.setValue(String.valueOf(getMaxAmount()));
+            }
+        });
 
         addRenderableWidget(amountField);
 

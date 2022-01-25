@@ -9,6 +9,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fixed multiple bugs related to transferring recipes into the Crafting Grid.
+- Processing patterns now use the order of items/fluids specified in the pattern
+  by [@necauqua](https://github.com/necauqua) and [@Darkere](https://github.com/Darkere).
+- Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements.
+- Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern.
+- Amount specifying screen is now limited to valid values.
+- Fixed crash on servers when starting with latest Forge.
+
+## [v1.10.0-beta.4] - 2021-12-28
+
+### Fixed
+
 - Fixed client crash when hovering over a fluid in the Fluid Grid by [@jackodsteel](https://github.com/jackodsteel).
 - Fixed random client crashes when starting the game.
 

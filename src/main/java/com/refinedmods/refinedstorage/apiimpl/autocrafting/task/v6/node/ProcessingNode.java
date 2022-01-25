@@ -11,10 +11,14 @@ import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.IoUtil;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.SerializationUtil;
+import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
+import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.List;
 
 public class ProcessingNode extends Node {
     private static final String NBT_ITEMS_RECEIVED = "ItemsReceived";
@@ -69,7 +73,7 @@ public class ProcessingNode extends Node {
     @Override
     public void update(INetwork network, int ticks, NodeList nodes, IStorageDisk<ItemStack> internalStorage, IStorageDisk<FluidStack> internalFluidStorage, NodeListener listener) {
         if (getQuantity() <= 0) {
-            if (state == ProcessingState.PROCESSED) {
+            if (totalQuantity == quantityFinished) {
                 listener.onAllDone(this);
             }
             return;
@@ -117,8 +121,8 @@ public class ProcessingNode extends Node {
 
                     boolean hasAllRequirements = false;
 
-                    IStackList<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE);
-                    IStackList<FluidStack> extractedFluids = null;
+                    List<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE);
+                    List<FluidStack> extractedFluids = null;
                     if (extractedItems != null) {
                         extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(true), internalFluidStorage, Action.SIMULATE);
                         if (extractedFluids != null) {
@@ -128,9 +132,9 @@ public class ProcessingNode extends Node {
 
                     boolean canInsertFullAmount = false;
                     if (hasAllRequirements) {
-                        canInsertFullAmount = container.insertItemsIntoInventory(extractedItems.getStacks(), Action.SIMULATE);
+                        canInsertFullAmount = container.insertItemsIntoInventory(extractedItems, Action.SIMULATE);
                         if (canInsertFullAmount) {
-                            canInsertFullAmount = container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.SIMULATE);
+                            canInsertFullAmount = container.insertFluidsIntoInventory(extractedFluids, Action.SIMULATE);
                         }
                     } else {
                         break;
@@ -151,8 +155,8 @@ public class ProcessingNode extends Node {
                     extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
                     extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
 
-                    container.insertItemsIntoInventory(extractedItems.getStacks(), Action.PERFORM);
-                    container.insertFluidsIntoInventory(extractedFluids.getStacks(), Action.PERFORM);
+                    container.insertItemsIntoInventory(extractedItems, Action.PERFORM);
+                    container.insertFluidsIntoInventory(extractedFluids, Action.PERFORM);
 
                     next();
 
@@ -239,18 +243,14 @@ public class ProcessingNode extends Node {
         }
 
         this.quantityFinished = tempQuantityFinished;
-
-        if (this.quantityFinished == this.totalQuantity) {
-            this.state = ProcessingState.PROCESSED;
-        }
     }
 
     @Override
     public void onCalculationFinished() {
         super.onCalculationFinished();
 
-        this.singleItemSetToRequire = requirements.getSingleItemRequirementSet(true);
-        this.singleFluidSetToRequire = requirements.getSingleFluidRequirementSet(true);
+        this.singleItemSetToRequire = new ItemStackList(requirements.getSingleItemRequirementSet(true));
+        this.singleFluidSetToRequire = new FluidStackList(requirements.getSingleFluidRequirementSet(true));
     }
 
     @Override
