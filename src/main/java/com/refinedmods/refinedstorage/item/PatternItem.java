@@ -39,7 +39,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class PatternItem extends Item implements ICraftingPatternProvider, IItemRenderProperties {
+public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final Map<ItemStackKey, ICraftingPattern> CACHE = new HashMap<>();
 
     private static final String NBT_VERSION = "Version";

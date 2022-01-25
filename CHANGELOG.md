@@ -15,6 +15,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements.
 - Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern.
 - Amount specifying screen is now limited to valid values.
+- Fixed crash on servers when starting with latest Forge.
 
 ## [v1.10.0-beta.4] - 2021-12-28
 
