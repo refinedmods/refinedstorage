@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.10.0] - 2022-01-25
+
 ### Fixed
 
 - Fixed multiple bugs related to transferring recipes into the Crafting Grid.
