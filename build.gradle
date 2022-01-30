@@ -36,7 +36,7 @@ pitest {
     junit5PluginVersion = "0.12"
 }
 
-version = '1.9.17'
+version = '1.9.18'
 def env = System.getenv()
 if (env.BUILD_NUMBER) {
     version = version + "+" + "${env.BUILD_NUMBER}"
