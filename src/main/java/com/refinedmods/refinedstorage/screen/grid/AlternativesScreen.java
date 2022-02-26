@@ -3,14 +3,14 @@ package com.refinedmods.refinedstorage.screen.grid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.container.AlternativesContainerMenu;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
-import com.refinedmods.refinedstorage.blockentity.config.IType;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -47,7 +47,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     private FluidStack fluid;
 
     private AlternativesScreen(Screen parent, Player player, Component title) {
-        super(new AlternativesContainerMenu(player), 175, 143, null, title);
+        super(new AlternativesContainerMenu(player), 175, 143, player.getInventory(), title);
 
         this.parent = parent;
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
