@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+- Fixed crash when opening alternatives screen
+
 ## [v1.10.0] - 2022-01-25
 
 ### Fixed
