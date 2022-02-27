@@ -7,14 +7,13 @@ import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.INetworkAwareGrid;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
-import com.refinedmods.refinedstorage.api.util.Action;
-import com.refinedmods.refinedstorage.api.util.IComparer;
-import com.refinedmods.refinedstorage.api.util.IStackList;
+import com.refinedmods.refinedstorage.api.util.*;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
@@ -23,9 +22,13 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
@@ -90,10 +93,20 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     public void onCraftedShift(INetworkAwareGrid grid, Player player) {
         CraftingContainer matrix = grid.getCraftingMatrix();
         INetwork network = grid.getNetwork();
-        List<ItemStack> craftedItemsList = new ArrayList<>();
         ItemStack crafted = grid.getCraftingResult().getItem(0);
 
-        int maxCrafted = crafted.getMaxStackSize();
+        //remember the recipe in case of extraction failure
+        Map<Integer, ItemStack> recipe = new HashMap<>();
+        for (int i = 0; i < matrix.getContainerSize(); i++) {
+            ItemStack stack = matrix.getItem(i).copy();
+            if (!stack.isEmpty()) {
+                stack.setCount(1);
+            }
+
+            recipe.put(i, stack);
+        }
+
+        int maxCrafted = getToCraftAmount(crafted, player.getInventory());
 
         int amountCrafted = 0;
         boolean useNetwork = network != null && grid.isGridActive();
@@ -113,26 +126,37 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         do {
             grid.onCrafted(player, availableItems, usedItems);
 
-            craftedItemsList.add(crafted.copy());
-
             amountCrafted += crafted.getCount();
         } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getItem(0)) && amountCrafted < maxCrafted && amountCrafted + crafted.getCount() <= maxCrafted);
 
         if (useNetwork) {
-            usedItems.getStacks().forEach(stack -> network.extractItem(stack.getStack(), stack.getStack().getCount(), Action.PERFORM));
+            boolean success = true;
+            IStackList<ItemStack> extractedItems = API.instance().createItemStackList();
+            for (StackListEntry<ItemStack> stack : usedItems.getStacks()) {
+                ItemStack extractedStack = network.extractItem(stack.getStack(), stack.getStack().getCount(), Action.PERFORM);
+                if (!API.instance().getComparer().isEqual(extractedStack, stack.getStack())) {
+                    success = false;
+                }
+
+                extractedItems.add(extractedStack);
+            }
+            if (!success) {
+                amountCrafted = handleFailedCraft(player, network, recipe, amountCrafted, usedItems, extractedItems, matrix);
+            }
         }
 
-        for (ItemStack craftedItem : craftedItemsList) {
-            if (!player.getInventory().add(craftedItem.copy())) {
-                ItemStack remainder = craftedItem;
+        ItemStack craftedItems = crafted.copy();
+        craftedItems.setCount(amountCrafted);
 
-                if (useNetwork) {
-                    remainder = network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
-                }
+        ItemStack remaining = ItemHandlerHelper.insertItemStacked(new PlayerMainInvWrapper(player.getInventory()), craftedItems, false);
 
-                if (!remainder.isEmpty()) {
-                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainder);
-                }
+        if (!remaining.isEmpty()) {
+            if (useNetwork) {
+                remaining = network.insertItem(remaining, remaining.getCount(), Action.PERFORM);
+            }
+
+            if (!remaining.isEmpty()) {
+                Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remaining);
             }
         }
 
@@ -142,6 +166,82 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         crafted.onCraftedBy(player.level, player, amountCrafted);
         ForgeEventFactory.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
         ForgeHooks.setCraftingPlayer(null);
+    }
+
+    private int handleFailedCraft(Player player, INetwork network, Map<Integer, ItemStack> recipe, int amountCrafted, IStackList<ItemStack> usedItems, IStackList<ItemStack> extractedItems, CraftingContainer matrix) {
+
+        // combine items for easier tracking
+        IStackList<ItemStack> matrixItems = API.instance().createItemStackList();
+        recipe.forEach((slot, stack) -> {
+            if (!stack.isEmpty()) {
+                matrixItems.add(stack);
+            }
+        });
+
+        // figure out which items failed extraction
+        IStackList<ItemStack> failedExtractions = API.instance().createItemStackList();
+        for (StackListEntry<ItemStack> stack : usedItems.getStacks()) {
+            StackListResult<ItemStack> actuallyExtracted = extractedItems.remove(stack.getStack());
+            if (actuallyExtracted == null) {
+                failedExtractions.add(stack.getStack());
+                continue;
+            }
+            if (!API.instance().getComparer().isEqual(actuallyExtracted.getStack(), stack.getStack())) {
+                ItemStack notExtracted = stack.getStack();
+                notExtracted.shrink(actuallyExtracted.getStack().getCount());
+                failedExtractions.add(notExtracted);
+            }
+        }
+
+        int failed = 0;
+        for (StackListEntry<ItemStack> stack : matrixItems.getStacks()) {
+            ItemStack failedStack = failedExtractions.get(stack.getStack());
+            int notCrafted = 0;
+            if (failedStack != null) {
+                notCrafted = ((failedStack.getCount() - 1) / stack.getStack().getCount()) + 1;
+            }
+
+            if (notCrafted > failed) {
+                failed = notCrafted;
+            }
+        }
+
+        //reinsert items part of the failed recipe back into the network
+        for (int i = 0; i < failed; i++) {
+            recipe.forEach((slot, stack) -> {
+                StackListResult<ItemStack> failedStack = failedExtractions.remove(stack);
+
+                //If this was not a failed item return it to the network
+                if (failedStack == null) {
+                    ItemStack remainder = network.insertItem(stack, 1, Action.PERFORM);
+                    if (!remainder.isEmpty()) {
+                        Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainder);
+                    }
+                }
+            });
+        }
+
+        //Try filling matrix back up
+        recipe.forEach((slot, stack) -> {
+            if (matrix.getItem(slot).isEmpty()) {
+                ItemStack extracted = network.extractItem(stack, 1, Action.PERFORM);
+                if (!extracted.isEmpty()) {
+                    matrix.setItem(slot, extracted);
+                }
+            }
+        });
+
+        return amountCrafted - failed;
+    }
+
+    private int getToCraftAmount(ItemStack crafted, Inventory inventory) {
+        for (ItemStack stack : inventory.items) {
+            if (API.instance().getComparer().isEqual(stack, crafted, IComparer.COMPARE_NBT) && stack.getCount() < stack.getMaxStackSize()) {
+                return stack.getMaxStackSize() - stack.getCount();
+            }
+        }
+
+        return crafted.getMaxStackSize();
     }
 
     private void filterDuplicateStacks(INetwork network, CraftingContainer matrix, IStackList<ItemStack> availableItems) {
