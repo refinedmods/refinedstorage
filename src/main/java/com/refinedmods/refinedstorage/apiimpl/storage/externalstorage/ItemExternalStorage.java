@@ -113,7 +113,8 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
 
-            if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
+            //Default extract from Forge only allows extracting a maximum of 64 items at a time
+            while (!slot.isEmpty() && remaining > 0 && API.instance().getComparer().isEqual(slot, stack, flags)) {
                 ItemStack got = handler.extractItem(i, remaining, action == Action.SIMULATE);
 
                 if (!got.isEmpty()) {
@@ -124,11 +125,13 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
                     }
 
                     remaining -= got.getCount();
-
-                    if (remaining == 0) {
-                        break;
-                    }
+                } else {
+                    break;
                 }
+            }
+
+            if (remaining == 0) {
+                break;
             }
         }
 
