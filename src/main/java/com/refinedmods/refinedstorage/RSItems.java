@@ -10,9 +10,9 @@ import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -58,7 +58,7 @@ public final class RSItems {
 
     public static final Map<UpgradeItem.Type, RegistryObject<UpgradeItem>> UPGRADE_ITEMS = new EnumMap<>(UpgradeItem.Type.class);
 
-    public static final Map<Tags.IOptionalNamedTag<Item>, ColorMap<BlockItem>> COLORED_ITEM_TAGS = new HashMap<>();
+    public static final Map<TagKey<Item>, ColorMap<BlockItem>> COLORED_ITEM_TAGS = new HashMap<>();
 
     private static final List<Runnable> LATE_REGISTRATION = new ArrayList<>();
 
@@ -162,7 +162,7 @@ public final class RSItems {
             )
         ));
 
-        COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
+        COLORED_ITEM_TAGS.put(ItemTags.create(new ResourceLocation(RS.ID, CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath())), CONTROLLER);
 
         LATE_REGISTRATION.add(() -> {
             RSBlocks.CONTROLLER.forEach((color, block) -> {

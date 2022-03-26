@@ -11,13 +11,18 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.IReverseTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class FluidGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
@@ -121,11 +126,14 @@ public class FluidGridStack implements IGridStack {
     @Override
     public Set<String> getTags() {
         if (cachedTags == null) {
-            cachedTags = new HashSet<>();
-
-            for (ResourceLocation owningTag : FluidTags.getAllTags().getMatchingTags(stack.getFluid())) {
-                cachedTags.add(owningTag.getPath());
-            }
+            cachedTags = ForgeRegistries.FLUIDS
+                .tags()
+                .getReverseTag(stack.getFluid())
+                .stream()
+                .flatMap(IReverseTag::getTagKeys)
+                .map(TagKey::location)
+                .map(ResourceLocation::getPath)
+                .collect(Collectors.toSet());
         }
 
         return cachedTags;
