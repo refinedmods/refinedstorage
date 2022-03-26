@@ -172,3 +172,7 @@ publishing {
         }
     }
 }
+
+javadoc {
+    failOnError = false
+}
