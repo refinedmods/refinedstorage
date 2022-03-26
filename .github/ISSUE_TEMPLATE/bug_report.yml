@@ -31,10 +31,14 @@ body:
     - type: dropdown
       id: minecraft
       attributes:
-          label: What Minecraft version is this happening on?
-          options:
-              - Minecraft 1.18.1
-              - Minecraft 1.16.5
+        label: What Minecraft version is this happening on?
+        description: |
+          If your Minecraft version isn't listed here, it means that it's no longer supported. In that case, don't create an issue.
+        options:
+          - Minecraft 1.18.1
+          - Minecraft 1.16.5
+      validations:
+        required: true
     - type: input
       id: forge
       attributes:
