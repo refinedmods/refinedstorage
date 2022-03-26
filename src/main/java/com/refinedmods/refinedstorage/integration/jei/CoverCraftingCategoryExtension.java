@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Size2i;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -47,7 +48,8 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
                 }
             }
         }
-        ingredients.setInputLists(VanillaTypes.ITEM, Arrays.asList(Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()), input));
+        ITag<Item> nuggets = ForgeRegistries.ITEMS.tags().getTag(Tags.Items.NUGGETS_IRON);
+        ingredients.setInputLists(VanillaTypes.ITEM, Arrays.asList(nuggets.stream().map(ItemStack::new).collect(Collectors.toList()), input));
         ingredients.setOutputs(VanillaTypes.ITEM, output);
     }
 
@@ -65,13 +67,14 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, IIngredients ingredients) {
+        ITag<Item> nuggets = ForgeRegistries.ITEMS.tags().getTag(Tags.Items.NUGGETS_IRON);
         ItemStack stack = recipeLayout.getFocus(VanillaTypes.ITEM).getValue();
         if (stack.getItem() instanceof CoverItem) {
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()));
+            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, nuggets.stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, CoverItem.getItem(stack));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);
         } else {
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, Tags.Items.NUGGETS_IRON.getValues().stream().map(ItemStack::new).collect(Collectors.toList()));
+            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, nuggets.stream().map(ItemStack::new).collect(Collectors.toList()));
             recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, stack);
             ItemStack output = new ItemStack(RSItems.COVER.get());
             CoverItem.setItem(output, stack);
