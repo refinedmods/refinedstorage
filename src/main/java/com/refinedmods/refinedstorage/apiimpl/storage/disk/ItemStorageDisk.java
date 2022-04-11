@@ -102,14 +102,15 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
 
                     return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
+                    int maxConsumable = Math.min(size, Integer.MAX_VALUE - otherStack.getCount());
                     if (action == Action.PERFORM) {
-                        otherStack.grow(size);
-                        itemCount += size;
+                        otherStack.grow(maxConsumable);
+                        itemCount += maxConsumable;
 
                         onChanged();
                     }
 
-                    return ItemStack.EMPTY;
+                    return ItemHandlerHelper.copyStackWithSize(otherStack, size - maxConsumable);
                 }
             }
         }

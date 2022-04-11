@@ -95,13 +95,14 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
 
                     return StackUtils.copy(otherStack, size - remainingSpace);
                 } else {
+                    int maxConsumable = Math.min(size, Integer.MAX_VALUE - otherStack.getAmount());
                     if (action == Action.PERFORM) {
-                        otherStack.grow(size);
+                        otherStack.grow(maxConsumable);
 
                         onChanged();
                     }
 
-                    return FluidStack.EMPTY;
+                    return StackUtils.copy(otherStack, size - maxConsumable);
                 }
             }
         }
