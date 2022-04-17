@@ -17,11 +17,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class FluidGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
-    private final Logger logger = LogManager.getLogger(getClass());
+    private static final Logger logger = LogManager.getLogger(FluidGridStack.class);
 
     private final UUID id;
     private final FluidStack stack;
