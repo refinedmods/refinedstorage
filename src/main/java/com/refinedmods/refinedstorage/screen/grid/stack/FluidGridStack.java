@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class FluidGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
-    private final Logger logger = LogManager.getLogger(getClass());
+    private static final Logger logger = LogManager.getLogger(FluidGridStack.class);
 
     private final UUID id;
     private final FluidStack stack;
