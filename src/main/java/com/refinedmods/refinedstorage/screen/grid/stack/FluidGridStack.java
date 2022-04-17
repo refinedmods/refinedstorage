@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class FluidGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
-    private static final Logger logger = LogManager.getLogger(FluidGridStack.class);
+    private static final Logger LOGGER = LogManager.getLogger(FluidGridStack.class);
 
     private final UUID id;
     private final FluidStack stack;
@@ -86,7 +86,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
-                logger.warn("Could not retrieve fluid name of {}", stack.getFluid().getRegistryName());
+                LOGGER.warn("Could not retrieve fluid name of {}", stack.getFluid().getRegistryName());
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -146,7 +146,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 tooltip = Lists.newArrayList(stack.getDisplayName());
             } catch (Throwable t) {
-                logger.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
+                LOGGER.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
                 tooltip = Lists.newArrayList(new TextComponent(ERROR_PLACEHOLDER));
             }
 
