@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ItemGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
 
-    private final Logger logger = LogManager.getLogger(getClass());
+    private static final Logger logger = LogManager.getLogger(ItemGridStack.class);
     private final ItemStack stack;
     private UUID id;
     @Nullable
