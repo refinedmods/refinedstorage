@@ -88,6 +88,7 @@
   "gui.refinedstorage.alternatives.apply": "Applica",
   "gui.refinedstorage.jei.transfer.autocrafting_available": "Fabbricazione automatica disponibile",
   "gui.refinedstorage.jei.transfer.request_autocrafting": "CTRL + CLICK per richiedere la fabbricazione automatica",
+  "gui.refinedstorage.jei.transfer.request_autocrafting_mac": "CMD + CLICK per richiedere la fabbricazione automatica",
   "misc.refinedstorage.energy_stored": "%d / %d FE",
   "misc.refinedstorage.energy_usage": "Utilizzo: %d FE/t",
   "misc.refinedstorage.energy_usage_minimal": "%d FE/t",

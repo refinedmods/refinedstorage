@@ -88,7 +88,9 @@
   "gui.refinedstorage.crafter_manager": "クラフターマネージャー",
   "gui.refinedstorage.alternatives": "代替案",
   "gui.refinedstorage.alternatives.apply": "適用",
-
+  "gui.refinedstorage.jei.transfer.autocrafting_available": "自動クラフトを出来る",
+  "gui.refinedstorage.jei.transfer.request_autocrafting": "CTRLキーを押しながらクリックするために自動クラフトする",
+  "gui.refinedstorage.jei.transfer.request_autocrafting_mac": "",
   "misc.refinedstorage.energy_stored": "%d / %d FE",
   "misc.refinedstorage.energy_usage": "消費電力: %d FE/t",
   "misc.refinedstorage.energy_usage_minimal": "%d FE/t",
