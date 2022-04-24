@@ -13,7 +13,6 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Containers;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
@@ -106,7 +105,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             recipe.put(i, stack);
         }
 
-        int maxCrafted = getToCraftAmount(crafted, player.getInventory());
+        int maxCrafted = crafted.getMaxStackSize();
 
         int amountCrafted = 0;
         boolean useNetwork = network != null && grid.isGridActive();
@@ -232,16 +231,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         });
 
         return amountCrafted - failed;
-    }
-
-    private int getToCraftAmount(ItemStack crafted, Inventory inventory) {
-        for (ItemStack stack : inventory.items) {
-            if (API.instance().getComparer().isEqual(stack, crafted, IComparer.COMPARE_NBT) && stack.getCount() < stack.getMaxStackSize()) {
-                return stack.getMaxStackSize() - stack.getCount();
-            }
-        }
-
-        return crafted.getMaxStackSize();
     }
 
     private void filterDuplicateStacks(INetwork network, CraftingContainer matrix, IStackList<ItemStack> availableItems) {
