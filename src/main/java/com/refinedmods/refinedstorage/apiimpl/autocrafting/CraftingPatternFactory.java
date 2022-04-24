@@ -7,8 +7,7 @@ import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,9 +16,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.IReverseTag;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CraftingPatternFactory {
     public static final CraftingPatternFactory INSTANCE = new CraftingPatternFactory();
@@ -102,7 +104,13 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfItem = ItemTags.getAllTags().getMatchingTags(input.getItem());
+                Collection<ResourceLocation> tagsOfItem = ForgeRegistries.ITEMS
+                    .tags()
+                    .getReverseTag(input.getItem())
+                    .stream()
+                    .flatMap(IReverseTag::getTagKeys)
+                    .map(TagKey::location)
+                    .collect(Collectors.toSet());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedItemTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -115,7 +123,8 @@ public class CraftingPatternFactory {
                             )
                         );
                     } else {
-                        for (Item element : ItemTags.getAllTags().getTag(declaredAllowedTag).getValues()) {
+                        TagKey<Item> tagKey = TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), declaredAllowedTag);
+                        for (Item element : ForgeRegistries.ITEMS.tags().getTag(tagKey)) {
                             possibilities.add(new ItemStack(element, input.getCount()));
                         }
                     }
@@ -141,7 +150,13 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfFluid = FluidTags.getAllTags().getMatchingTags(input.getFluid());
+                Collection<ResourceLocation> tagsOfFluid = ForgeRegistries.FLUIDS
+                    .tags()
+                    .getReverseTag(input.getFluid())
+                    .stream()
+                    .flatMap(IReverseTag::getTagKeys)
+                    .map(TagKey::location)
+                    .collect(Collectors.toSet());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedFluidTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -154,7 +169,8 @@ public class CraftingPatternFactory {
                             )
                         );
                     } else {
-                        for (Fluid element : FluidTags.getAllTags().getTag(declaredAllowedTag).getValues()) {
+                        TagKey<Fluid> tagKey = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), declaredAllowedTag);
+                        for (Fluid element : ForgeRegistries.FLUIDS.tags().getTag(tagKey)) {
                             possibilities.add(new FluidStack(element, input.getAmount()));
                         }
                     }

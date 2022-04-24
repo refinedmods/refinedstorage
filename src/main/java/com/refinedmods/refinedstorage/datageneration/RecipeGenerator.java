@@ -37,7 +37,7 @@ public class RecipeGenerator extends RecipeProvider {
         RSItems.CRAFTING_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
-            .requires(ItemTags.bind("refinedstorage:crafting_tables"))
+            .requires(ItemTags.create(new ResourceLocation(RS.ID, "crafting_tables")))
             .unlockedBy(GRID_ID, InventoryChangeTrigger.TriggerInstance.hasItems(RSItems.GRID.get(ColorMap.DEFAULT_COLOR).get()))
             .save(recipeAcceptor, new ResourceLocation(RS.ID, "crafting_grid/" + item.getId().getPath()))
         );

@@ -10,20 +10,23 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.IReverseTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
 
-    private final Logger logger = LogManager.getLogger(getClass());
+    private static final Logger LOGGER = LogManager.getLogger(ItemGridStack.class);
     private final ItemStack stack;
     private UUID id;
     @Nullable
@@ -93,7 +96,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 cachedName = stack.getHoverName().getString();
             } catch (Throwable t) {
-                logger.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
+                LOGGER.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -133,11 +136,14 @@ public class ItemGridStack implements IGridStack {
     @Override
     public Set<String> getTags() {
         if (cachedTags == null) {
-            cachedTags = new HashSet<>();
-
-            for (ResourceLocation owningTag : ItemTags.getAllTags().getMatchingTags(stack.getItem())) {
-                cachedTags.add(owningTag.getPath());
-            }
+            cachedTags = ForgeRegistries.ITEMS
+                .tags()
+                .getReverseTag(stack.getItem())
+                .stream()
+                .flatMap(IReverseTag::getTagKeys)
+                .map(TagKey::location)
+                .map(ResourceLocation::getPath)
+                .collect(Collectors.toSet());
         }
 
         return cachedTags;
@@ -150,7 +156,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
-                logger.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
+                LOGGER.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
 
                 tooltip = new ArrayList<>();
                 tooltip.add(new TextComponent(ERROR_PLACEHOLDER));

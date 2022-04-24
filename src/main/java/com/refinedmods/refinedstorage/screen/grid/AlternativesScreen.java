@@ -3,14 +3,14 @@ package com.refinedmods.refinedstorage.screen.grid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.container.AlternativesContainerMenu;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
-import com.refinedmods.refinedstorage.blockentity.config.IType;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,20 +18,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.IReverseTag;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     private static final int VISIBLE_ROWS = 5;
@@ -47,7 +46,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     private FluidStack fluid;
 
     private AlternativesScreen(Screen parent, Player player, Component title) {
-        super(new AlternativesContainerMenu(player), 175, 143, null, title);
+        super(new AlternativesContainerMenu(player), 175, 143, player.getInventory(), title);
 
         this.parent = parent;
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
@@ -78,14 +77,21 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         if (item != null) {
             lines.add(new ItemLine(item));
 
-            for (ResourceLocation owningTag : ItemTags.getAllTags().getMatchingTags(item.getItem())) {
-                lines.add(new TagLine(owningTag, GridBlockEntity.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag)));
+            Collection<TagKey<Item>> tagsOfItem = ForgeRegistries.ITEMS
+                .tags()
+                .getReverseTag(item.getItem())
+                .stream()
+                .flatMap(IReverseTag::getTagKeys)
+                .collect(Collectors.toSet());
+
+            for (TagKey<Item> owningTag : tagsOfItem) {
+                lines.add(new TagLine(owningTag.location(), GridBlockEntity.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag.location())));
 
                 int itemCount = 0;
 
                 ItemListLine line = new ItemListLine();
 
-                for (Item itemInTag : ItemTags.getAllTags().getTag(owningTag).getValues()) {
+                for (Item itemInTag : ForgeRegistries.ITEMS.tags().getTag(owningTag)) {
                     if (itemCount > 0 && itemCount % 8 == 0) {
                         lines.add(line);
                         line = new ItemListLine();
@@ -101,14 +107,21 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         } else if (fluid != null) {
             lines.add(new FluidLine(fluid));
 
-            for (ResourceLocation owningTag : FluidTags.getAllTags().getMatchingTags(fluid.getFluid())) {
-                lines.add(new TagLine(owningTag, GridBlockEntity.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
+            Collection<TagKey<Fluid>> tagsOfFluid = ForgeRegistries.FLUIDS
+                .tags()
+                .getReverseTag(fluid.getFluid())
+                .stream()
+                .flatMap(IReverseTag::getTagKeys)
+                .collect(Collectors.toSet());
+
+            for (TagKey<Fluid> owningTag : tagsOfFluid) {
+                lines.add(new TagLine(owningTag.location(), GridBlockEntity.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag.location())));
 
                 int fluidCount = 0;
 
                 FluidListLine line = new FluidListLine();
 
-                for (Fluid fluidInTag : FluidTags.getAllTags().getTag(owningTag).getValues()) {
+                for (Fluid fluidInTag : ForgeRegistries.FLUIDS.tags().getTag(owningTag)) {
                     if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();

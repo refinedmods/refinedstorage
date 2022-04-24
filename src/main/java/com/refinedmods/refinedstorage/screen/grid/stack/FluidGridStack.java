@@ -11,17 +11,22 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.IReverseTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class FluidGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
-    private final Logger logger = LogManager.getLogger(getClass());
+    private static final Logger LOGGER = LogManager.getLogger(FluidGridStack.class);
 
     private final UUID id;
     private final FluidStack stack;
@@ -81,7 +86,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
-                logger.warn("Could not retrieve fluid name of {}", stack.getFluid().getRegistryName());
+                LOGGER.warn("Could not retrieve fluid name of {}", stack.getFluid().getRegistryName());
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -121,11 +126,14 @@ public class FluidGridStack implements IGridStack {
     @Override
     public Set<String> getTags() {
         if (cachedTags == null) {
-            cachedTags = new HashSet<>();
-
-            for (ResourceLocation owningTag : FluidTags.getAllTags().getMatchingTags(stack.getFluid())) {
-                cachedTags.add(owningTag.getPath());
-            }
+            cachedTags = ForgeRegistries.FLUIDS
+                .tags()
+                .getReverseTag(stack.getFluid())
+                .stream()
+                .flatMap(IReverseTag::getTagKeys)
+                .map(TagKey::location)
+                .map(ResourceLocation::getPath)
+                .collect(Collectors.toSet());
         }
 
         return cachedTags;
@@ -138,7 +146,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 tooltip = Lists.newArrayList(stack.getDisplayName());
             } catch (Throwable t) {
-                logger.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
+                LOGGER.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
                 tooltip = Lists.newArrayList(new TextComponent(ERROR_PLACEHOLDER));
             }
 

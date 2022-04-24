@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
+import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
@@ -30,6 +31,11 @@ import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDi
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorageProvider;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.ItemExternalStorageProvider;
 import com.refinedmods.refinedstorage.block.BlockListener;
+import com.refinedmods.refinedstorage.blockentity.*;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import com.refinedmods.refinedstorage.container.*;
 import com.refinedmods.refinedstorage.container.factory.*;
 import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
@@ -38,11 +44,6 @@ import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.recipe.CoverRecipe;
 import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
-import com.refinedmods.refinedstorage.blockentity.*;
-import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -158,6 +159,9 @@ public final class CommonSetup {
 
     @SubscribeEvent
     public static void onRegisterBlockEntities(RegistryEvent.Register<BlockEntityType<?>> e) {
+        // Register here, there seems to be no specific register event for loot function types.
+        RSLootFunctions.register();
+
         e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.NORMAL, pos, state), RSBlocks.CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "controller")));
         e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.CREATIVE, pos, state), RSBlocks.CREATIVE_CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "creative_controller")));
         e.getRegistry().register(BlockEntityType.Builder.of(CableBlockEntity::new, RSBlocks.CABLE.get()).build(null).setRegistryName(RS.ID, "cable"));

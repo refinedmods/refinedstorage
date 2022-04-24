@@ -39,7 +39,7 @@ The build pipeline triggers when a commit is pushed to a branch or pull request.
 
 The release pipeline triggers when a tag is pushed. This will run all the steps that our build pipeline does.
 
-After that succeeds, it will publish to GitHub packages.
+After that succeeds, it will publish to GitHub packages and CreeperHost Maven repository.
 
 The "Unreleased" section in `CHANGELOG.md` is parsed and a GitHub release is created with the changelog body and
 relevant artifacts.

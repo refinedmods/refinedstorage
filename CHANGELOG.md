@@ -7,6 +7,22 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Improved Performance for grid updates
+
+## [v1.10.2] - 2022-03-26
+
+### Changed
+
+- Ported to Minecraft 1.18.2.
+
+## [v1.10.1] - 2022-03-26
+
+### Fixed
+
+- Fixed crash when opening alternatives screen.
+
 ## [v1.10.0] - 2022-01-25
 
 ### Fixed

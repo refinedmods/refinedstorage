@@ -87,7 +87,7 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
                 map.put(color, registerBlockItemFor(block, color, originalBlock));
             }
         }));
-        RSItems.COLORED_ITEM_TAGS.put(ItemTags.createOptional(new ResourceLocation(RS.ID, blockMap.get(DEFAULT_COLOR).getId().getPath())), (ColorMap<BlockItem>) this);
+        RSItems.COLORED_ITEM_TAGS.put(ItemTags.create(new ResourceLocation(RS.ID, blockMap.get(DEFAULT_COLOR).getId().getPath())), (ColorMap<BlockItem>) this);
     }
 
     private <S extends BaseBlock> RegistryObject<T> registerBlockItemFor(RegistryObject<S> block, DyeColor color, RegistryObject<S> translationBlock) {
