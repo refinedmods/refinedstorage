@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
@@ -78,26 +79,22 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
                 currentSlot = 0;
             }
 
-            if (handler.getSlots() > 0) {
-                while (currentSlot + 1 < handler.getSlots() && handler.getStackInSlot(currentSlot).isEmpty()) {
-                    currentSlot++;
+            if (ticks % upgrades.getSpeed() == 0 && handler.getSlots() > 0) {
+                for (int i = 0; i < handler.getSlots() && handler.getStackInSlot(currentSlot).isEmpty(); i++) {
+                    currentSlot = (currentSlot + 1) % handler.getSlots();
                 }
 
                 ItemStack stack = handler.getStackInSlot(currentSlot);
 
-                if (!IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack)) {
-                    currentSlot++;
-                } else if (ticks % upgrades.getSpeed() == 0) {
-                    ItemStack result = handler.extractItem(currentSlot, upgrades.getStackInteractCount(), true);
+                if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack)) {
+                    int maxExtractedItems = Math.min(upgrades.getStackInteractCount(), stack.getMaxStackSize());
+                    ItemStack result = accumulateItemStack(handler, maxExtractedItems, currentSlot);
 
                     if (!result.isEmpty() && network.insertItem(result, result.getCount(), Action.SIMULATE).isEmpty()) {
-                        result = handler.extractItem(currentSlot, upgrades.getStackInteractCount(), false);
-
                         network.insertItemTracked(result, result.getCount());
-                    } else {
-                        currentSlot++;
                     }
                 }
+                currentSlot++;
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
             IFluidHandler handler = LevelUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
@@ -247,4 +244,32 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
     public CoverManager getCoverManager() {
         return coverManager;
     }
+
+
+    private static ItemStack accumulateItemStack(IItemHandler handler, int maxExtractedItems, int currentSlot) {
+        ItemStack stackWithTargetItem = handler.getStackInSlot(currentSlot).copy();
+        ItemStack resultStack = null;
+
+        for (int i = 0; i < handler.getSlots(); i++) {
+            int index = (i + currentSlot) % handler.getSlots();
+            ItemStack currentStack = handler.getStackInSlot(index);
+
+            if (API.instance().getComparer().isEqual(currentStack, stackWithTargetItem, IComparer.COMPARE_NBT)) {
+
+                if (resultStack == null) {
+                    resultStack = handler.extractItem(index, maxExtractedItems, false);
+                } else {
+                    ItemStack currentExtractedStack = handler.extractItem(index, maxExtractedItems - resultStack.getCount(), false);
+                    resultStack.setCount(resultStack.getCount() + currentExtractedStack.getCount());
+
+                    if (resultStack.getCount() == maxExtractedItems) {
+                        return resultStack;
+                    }
+                }
+            }
+        }
+
+        return resultStack;
+    }
+
 }
