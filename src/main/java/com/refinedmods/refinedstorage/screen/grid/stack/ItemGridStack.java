@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ItemGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
 
-    private final Logger logger = LogManager.getLogger(getClass());
+    private static final Logger LOGGER = LogManager.getLogger(ItemGridStack.class);
     private final ItemStack stack;
     private UUID id;
     @Nullable
@@ -96,7 +96,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 cachedName = stack.getHoverName().getString();
             } catch (Throwable t) {
-                logger.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
+                LOGGER.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -156,7 +156,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
-                logger.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
+                LOGGER.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
 
                 tooltip = new ArrayList<>();
                 tooltip.add(new TextComponent(ERROR_PLACEHOLDER));

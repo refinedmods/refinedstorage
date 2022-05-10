@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Improved Performance for grid updates
+
 ## [v1.10.2] - 2022-03-26
 
 ### Changed
