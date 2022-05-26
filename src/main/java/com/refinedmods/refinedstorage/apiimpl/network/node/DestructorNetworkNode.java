@@ -15,8 +15,8 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -100,7 +100,12 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
         List<ItemEntity> droppedItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(front));
 
         for (ItemEntity entity : droppedItems) {
-            ItemStack droppedItem = ((ItemEntity) entity).getItem();
+
+            if (entity.isRemoved()) {
+                continue;
+            }
+
+            ItemStack droppedItem = entity.getItem();
 
             if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) &&
                 network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE).isEmpty()) {
