@@ -169,43 +169,28 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
 
     private int handleFailedCraft(Player player, INetwork network, Map<Integer, ItemStack> recipe, int amountCrafted, IStackList<ItemStack> usedItems, IStackList<ItemStack> extractedItems, CraftingContainer matrix) {
 
-        // combine items for easier tracking
-        IStackList<ItemStack> matrixItems = API.instance().createItemStackList();
+        // figure out which items failed to be extracted
+        IStackList<ItemStack> failedExtractions = findMissingItems(usedItems, extractedItems);
+
+        int failed = getNumberOfFailedCrafts(recipe, failedExtractions);
+
+        //reinsert items part of the failed recipe back into the network
+        recoverSuccessfullyExtractedItems(player, network, recipe, failedExtractions, failed);
+
+        //Try filling matrix back up
         recipe.forEach((slot, stack) -> {
-            if (!stack.isEmpty()) {
-                matrixItems.add(stack);
+            if (matrix.getItem(slot).isEmpty()) {
+                ItemStack extracted = network.extractItem(stack, 1, Action.PERFORM);
+                if (!extracted.isEmpty()) {
+                    matrix.setItem(slot, extracted);
+                }
             }
         });
 
-        // figure out which items failed extraction
-        IStackList<ItemStack> failedExtractions = API.instance().createItemStackList();
-        for (StackListEntry<ItemStack> stack : usedItems.getStacks()) {
-            StackListResult<ItemStack> actuallyExtracted = extractedItems.remove(stack.getStack());
-            if (actuallyExtracted == null) {
-                failedExtractions.add(stack.getStack());
-                continue;
-            }
-            if (!API.instance().getComparer().isEqual(actuallyExtracted.getStack(), stack.getStack())) {
-                ItemStack notExtracted = stack.getStack();
-                notExtracted.shrink(actuallyExtracted.getStack().getCount());
-                failedExtractions.add(notExtracted);
-            }
-        }
+        return amountCrafted - failed;
+    }
 
-        int failed = 0;
-        for (StackListEntry<ItemStack> stack : matrixItems.getStacks()) {
-            ItemStack failedStack = failedExtractions.get(stack.getStack());
-            int notCrafted = 0;
-            if (failedStack != null) {
-                notCrafted = ((failedStack.getCount() - 1) / stack.getStack().getCount()) + 1;
-            }
-
-            if (notCrafted > failed) {
-                failed = notCrafted;
-            }
-        }
-
-        //reinsert items part of the failed recipe back into the network
+    private void recoverSuccessfullyExtractedItems(Player player, INetwork network, Map<Integer, ItemStack> recipe, IStackList<ItemStack> failedExtractions, int failed) {
         for (int i = 0; i < failed; i++) {
             recipe.forEach((slot, stack) -> {
                 StackListResult<ItemStack> failedStack = failedExtractions.remove(stack);
@@ -219,18 +204,53 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 }
             });
         }
+    }
 
-        //Try filling matrix back up
+    private int getNumberOfFailedCrafts(Map<Integer, ItemStack> recipe, IStackList<ItemStack> failedExtractions) {
+
+        // combine recipe items for easier tracking
+        IStackList<ItemStack> matrixItems = API.instance().createItemStackList();
         recipe.forEach((slot, stack) -> {
-            if (matrix.getItem(slot).isEmpty()) {
-                ItemStack extracted = network.extractItem(stack, 1, Action.PERFORM);
-                if (!extracted.isEmpty()) {
-                    matrix.setItem(slot, extracted);
-                }
+            if (!stack.isEmpty()) {
+                matrixItems.add(stack);
             }
         });
 
-        return amountCrafted - failed;
+        // for each ingredient figure out how many crafts failed because of it missing
+        int failed = 0;
+        for (StackListEntry<ItemStack> stack : matrixItems.getStacks()) {
+            ItemStack failedStack = failedExtractions.get(stack.getStack());
+            int notCrafted = 0;
+            if (failedStack != null) {
+                notCrafted = ((failedStack.getCount() - 1) / stack.getStack().getCount()) + 1;
+            }
+
+            if (notCrafted > failed) {
+                failed = notCrafted;
+            }
+        }
+
+        return failed;
+    }
+
+    private IStackList<ItemStack> findMissingItems(IStackList<ItemStack> usedItems, IStackList<ItemStack> extractedItems) {
+
+        IStackList<ItemStack> failedExtractions = API.instance().createItemStackList();
+
+        for (StackListEntry<ItemStack> stack : usedItems.getStacks()) {
+            StackListResult<ItemStack> actuallyExtracted = extractedItems.remove(stack.getStack());
+            if (actuallyExtracted == null) {
+                failedExtractions.add(stack.getStack());
+                continue;
+            }
+
+            if (!API.instance().getComparer().isEqual(actuallyExtracted.getStack(), stack.getStack())) {
+                ItemStack notExtracted = stack.getStack();
+                notExtracted.shrink(actuallyExtracted.getStack().getCount());
+                failedExtractions.add(notExtracted);
+            }
+        }
+        return failedExtractions;
     }
 
     private void filterDuplicateStacks(INetwork network, CraftingContainer matrix, IStackList<ItemStack> availableItems) {
