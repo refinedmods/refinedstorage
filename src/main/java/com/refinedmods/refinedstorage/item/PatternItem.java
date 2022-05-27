@@ -73,7 +73,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        if (!stack.hasTag()) {
+        if (!stack.hasTag() || world == null) {
             return;
         }
 
