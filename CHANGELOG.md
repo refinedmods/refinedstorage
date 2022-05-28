@@ -1,6 +1,11 @@
 # Refined Storage Changelog
 
+### 1.9.18
+
+- Fixed potential Pattern crash when loading Minecraft.
+
 ### 1.9.17
+
 - Added more slots to the Pattern Grid (Darkere)
 - Combined Fluid and Item View in the Pattern Grid (Darkere)
 - Fixed Relay not working (Darkere)
