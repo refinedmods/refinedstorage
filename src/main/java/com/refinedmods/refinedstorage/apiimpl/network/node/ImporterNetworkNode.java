@@ -87,10 +87,12 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
                 ItemStack stack = handler.getStackInSlot(currentSlot);
 
                 if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack)) {
+                    ItemStack probeResult = network.insertItem(stack, stack.getMaxStackSize(), Action.SIMULATE);
                     int maxExtractedItems = Math.min(upgrades.getStackInteractCount(), stack.getMaxStackSize());
+                    maxExtractedItems = Math.min(maxExtractedItems, stack.getMaxStackSize() - probeResult.getCount());
                     ItemStack result = accumulateItemStack(handler, maxExtractedItems, currentSlot);
 
-                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), Action.SIMULATE).isEmpty()) {
+                    if (!result.isEmpty()) {
                         network.insertItemTracked(result, result.getCount());
                     }
                 }
