@@ -10,6 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed Destructor dupe bug
+- Fixed being unable to insert items into the Storage Monitor
+- Fixed Storage Monitor not showing all matching items in non-exact mode
 
 ### Changed
 
