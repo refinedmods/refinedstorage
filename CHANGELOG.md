@@ -7,9 +7,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed Destructor dupe bug
+
 ### Changed
 
 - Improved Performance for grid updates
+- Improved waterlogging to behave more like vanilla
 
 ## [v1.10.2] - 2022-03-26
 
