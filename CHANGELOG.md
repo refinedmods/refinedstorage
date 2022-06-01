@@ -10,6 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Improved Performance for grid updates
+- Fixed incorrect autocrafting keybind prompt on macOS
+- Added Japanese translations for certain autocrafting actions
 
 ## [v1.10.2] - 2022-03-26
 
