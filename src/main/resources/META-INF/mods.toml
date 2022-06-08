@@ -12,3 +12,9 @@ authors = "Refined Mods"
 description = '''
 An elegant solution to your hoarding problem
 '''
+[[dependencies.refinedstorage]]
+modId="forge"
+mandatory=true
+versionRange="[40.1,)"
+ordering="NONE"
+side="BOTH"
