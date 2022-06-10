@@ -13,7 +13,10 @@ public class DataGenerators {
         }
         if (event.includeServer()) {
             event.getGenerator().addProvider(new RecipeGenerator(event.getGenerator()));
-            BlockTagGenerator blockTagGenerator = new BlockTagGenerator(event.getGenerator(), RS.ID, event.getExistingFileHelper());
+            BlockTagGenerator blockTagGenerator = new BlockTagGenerator(
+                    event.getGenerator(),
+                    RS.ID,
+                    event.getExistingFileHelper());
             event.getGenerator().addProvider(blockTagGenerator);
             event.getGenerator().addProvider(new ItemTagGenerator(
                 event.getGenerator(),
@@ -21,6 +24,11 @@ public class DataGenerators {
                 RS.ID,
                 event.getExistingFileHelper())
             );
+            event.getGenerator().addProvider(new BlockEntityTagGenerator(
+                    event.getGenerator(),
+                    RS.ID,
+                    event.getExistingFileHelper()
+            ));
             event.getGenerator().addProvider(new LootTableGenerator(event.getGenerator()));
         }
     }
