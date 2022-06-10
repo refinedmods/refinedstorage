@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_crafter",
+    "refinedstorage:orange_crafter",
+    "refinedstorage:magenta_crafter",
+    "refinedstorage:crafter",
+    "refinedstorage:yellow_crafter",
+    "refinedstorage:lime_crafter",
+    "refinedstorage:pink_crafter",
+    "refinedstorage:gray_crafter",
+    "refinedstorage:light_gray_crafter",
+    "refinedstorage:cyan_crafter",
+    "refinedstorage:purple_crafter",
+    "refinedstorage:blue_crafter",
+    "refinedstorage:brown_crafter",
+    "refinedstorage:green_crafter",
+    "refinedstorage:red_crafter",
+    "refinedstorage:black_crafter"
+  ]
+}

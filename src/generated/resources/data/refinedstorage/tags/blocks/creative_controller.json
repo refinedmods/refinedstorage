@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_creative_controller",
+    "refinedstorage:orange_creative_controller",
+    "refinedstorage:magenta_creative_controller",
+    "refinedstorage:creative_controller",
+    "refinedstorage:yellow_creative_controller",
+    "refinedstorage:lime_creative_controller",
+    "refinedstorage:pink_creative_controller",
+    "refinedstorage:gray_creative_controller",
+    "refinedstorage:light_gray_creative_controller",
+    "refinedstorage:cyan_creative_controller",
+    "refinedstorage:purple_creative_controller",
+    "refinedstorage:blue_creative_controller",
+    "refinedstorage:brown_creative_controller",
+    "refinedstorage:green_creative_controller",
+    "refinedstorage:red_creative_controller",
+    "refinedstorage:black_creative_controller"
+  ]
+}
