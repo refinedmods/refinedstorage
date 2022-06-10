@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_network_receiver",
+    "refinedstorage:orange_network_receiver",
+    "refinedstorage:magenta_network_receiver",
+    "refinedstorage:network_receiver",
+    "refinedstorage:yellow_network_receiver",
+    "refinedstorage:lime_network_receiver",
+    "refinedstorage:pink_network_receiver",
+    "refinedstorage:gray_network_receiver",
+    "refinedstorage:light_gray_network_receiver",
+    "refinedstorage:cyan_network_receiver",
+    "refinedstorage:purple_network_receiver",
+    "refinedstorage:blue_network_receiver",
+    "refinedstorage:brown_network_receiver",
+    "refinedstorage:green_network_receiver",
+    "refinedstorage:red_network_receiver",
+    "refinedstorage:black_network_receiver"
+  ]
+}

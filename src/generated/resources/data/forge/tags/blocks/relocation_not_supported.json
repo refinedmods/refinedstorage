@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "#refinedstorage:detector",
+    "#refinedstorage:disk_manipulator",
+    "#refinedstorage:security_manager",
+    "#refinedstorage:pattern_grid",
+    "#refinedstorage:creative_controller",
+    "#refinedstorage:wireless_transmitter",
+    "#refinedstorage:crafter_manager",
+    "#refinedstorage:network_transmitter",
+    "#refinedstorage:grid",
+    "#refinedstorage:relay",
+    "#refinedstorage:network_receiver",
+    "#refinedstorage:crafting_grid",
+    "#refinedstorage:controller",
+    "#refinedstorage:crafting_monitor",
+    "#refinedstorage:crafter",
+    "#refinedstorage:fluid_grid"
+  ]
+}
