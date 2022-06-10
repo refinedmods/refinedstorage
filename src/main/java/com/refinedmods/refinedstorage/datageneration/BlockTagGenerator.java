@@ -25,6 +25,18 @@ public class BlockTagGenerator extends BlockTagsProvider {
         RSBlocks.STORAGE_BLOCKS.forEach((tag, block) -> noRelocationTag.add(block.get()));
         RSBlocks.FLUID_STORAGE_BLOCKS.forEach((tag, block) -> noRelocationTag.add(block.get()));
 
-        noRelocationTag.add(RSBlocks.IMPORTER.get(), RSBlocks.EXPORTER.get(), RSBlocks.EXTERNAL_STORAGE.get(), RSBlocks.DISK_DRIVE.get(), RSBlocks.INTERFACE.get(), RSBlocks.FLUID_INTERFACE.get(), RSBlocks.STORAGE_MONITOR.get(), RSBlocks.CONSTRUCTOR.get(), RSBlocks.DESTRUCTOR.get(), RSBlocks.PORTABLE_GRID.get(), RSBlocks.CREATIVE_PORTABLE_GRID.get());
+        noRelocationTag.add(
+                RSBlocks.IMPORTER.get(),
+                RSBlocks.EXPORTER.get(),
+                RSBlocks.EXTERNAL_STORAGE.get(),
+                RSBlocks.DISK_DRIVE.get(),
+                RSBlocks.INTERFACE.get(),
+                RSBlocks.FLUID_INTERFACE.get(),
+                RSBlocks.STORAGE_MONITOR.get(),
+                RSBlocks.CONSTRUCTOR.get(),
+                RSBlocks.DESTRUCTOR.get(),
+                RSBlocks.PORTABLE_GRID.get(),
+                RSBlocks.CREATIVE_PORTABLE_GRID.get()
+        );
     }
 }
