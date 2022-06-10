@@ -13,9 +13,11 @@ public class DataGenerators {
         }
         if (event.includeServer()) {
             event.getGenerator().addProvider(new RecipeGenerator(event.getGenerator()));
-            event.getGenerator().addProvider(new TagGenerator(
+            BlockTagGenerator blockTagGenerator = new BlockTagGenerator(event.getGenerator(), RS.ID, event.getExistingFileHelper());
+            event.getGenerator().addProvider(blockTagGenerator);
+            event.getGenerator().addProvider(new ItemTagGenerator(
                 event.getGenerator(),
-                new BlockTagsProvider(event.getGenerator(), RS.ID, event.getExistingFileHelper()),
+                blockTagGenerator,
                 RS.ID,
                 event.getExistingFileHelper())
             );
