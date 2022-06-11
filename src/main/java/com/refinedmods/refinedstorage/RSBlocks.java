@@ -8,15 +8,17 @@ import com.refinedmods.refinedstorage.block.*;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class RSBlocks {
     public static final RegistryObject<ImporterBlock> IMPORTER;
