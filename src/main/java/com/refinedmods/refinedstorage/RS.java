@@ -48,6 +48,7 @@ public final class RS {
 
         RSBlocks.register();
         RSItems.register();
+        RSLootFunctions.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, CommonSetup::onRegisterBlockEntities);
