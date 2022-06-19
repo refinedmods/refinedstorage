@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Improved Performance for grid updates
 - Improved waterlogging to behave more like vanilla
+- Added Forge relocation and Packing Tape blacklist tag entries to prevent block movement
 
 ## [v1.10.2] - 2022-03-26
 
