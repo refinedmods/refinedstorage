@@ -6,9 +6,9 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
+import com.refinedmods.refinedstorage.blockentity.CableBlockEntity;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
-import com.refinedmods.refinedstorage.blockentity.CableBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -165,7 +165,8 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return getState(defaultBlockState(), ctx.getLevel(), ctx.getClickedPos());
+        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        return getState(defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER), ctx.getLevel(), ctx.getClickedPos());
     }
 
     @Override

@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_crafting_monitor",
+    "refinedstorage:orange_crafting_monitor",
+    "refinedstorage:magenta_crafting_monitor",
+    "refinedstorage:crafting_monitor",
+    "refinedstorage:yellow_crafting_monitor",
+    "refinedstorage:lime_crafting_monitor",
+    "refinedstorage:pink_crafting_monitor",
+    "refinedstorage:gray_crafting_monitor",
+    "refinedstorage:light_gray_crafting_monitor",
+    "refinedstorage:cyan_crafting_monitor",
+    "refinedstorage:purple_crafting_monitor",
+    "refinedstorage:blue_crafting_monitor",
+    "refinedstorage:brown_crafting_monitor",
+    "refinedstorage:green_crafting_monitor",
+    "refinedstorage:red_crafting_monitor",
+    "refinedstorage:black_crafting_monitor"
+  ]
+}
