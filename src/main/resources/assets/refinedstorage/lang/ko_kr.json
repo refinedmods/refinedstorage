@@ -90,6 +90,7 @@
   "gui.refinedstorage.alternatives.apply": "적용",
   "gui.refinedstorage.jei.transfer.autocrafting_available": "자동 제작 사용 가능",
   "gui.refinedstorage.jei.transfer.request_autocrafting": "CTRL + 클릭하여 자동 제작 요청",
+  "gui.refinedstorage.jei.transfer.request_autocrafting_mac": "CMD + 클릭하여 자동 제작 요청",
   "misc.refinedstorage.energy_stored": "%d / %d FE",
   "misc.refinedstorage.energy_usage": "사용: %d FE/t",
   "misc.refinedstorage.energy_usage_minimal": "%d FE/t",

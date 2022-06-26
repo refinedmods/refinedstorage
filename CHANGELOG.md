@@ -16,6 +16,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Improved Performance for grid updates
+- Fixed incorrect autocrafting keybind prompt on macOS
+- Added Japanese translations for certain autocrafting actions
 - Improved waterlogging to behave more like vanilla
 - Added Forge relocation and Packing Tape blacklist tag entries to prevent block movement
 

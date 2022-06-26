@@ -90,6 +90,7 @@
     "gui.refinedstorage.alternatives.apply": "Zastosuj",
     "gui.refinedstorage.jei.transfer.autocrafting_available": "Auto-wytwarzanie dostępne",
     "gui.refinedstorage.jei.transfer.request_autocrafting": "CTRL + KLIKNIJ aby zażądać wytworzenia",
+    "gui.refinedstorage.jei.transfer.request_autocrafting_mac": "CMD + KLIKNIJ aby zażądać wytworzenia",
     "misc.refinedstorage.energy_stored": "%d / %d FE",
     "misc.refinedstorage.energy_usage": "Zużycie: %d FE/t",
     "misc.refinedstorage.energy_usage_minimal": "%d FE/t",

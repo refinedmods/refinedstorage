@@ -16,6 +16,7 @@ import java.util.List;
 public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     protected static final Color AUTOCRAFTING_HIGHLIGHT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);
     private static final Color MISSING_HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+    private static final boolean HOST_OS_IS_MACOS = System.getProperty("os.name").equals("Mac OS X");
     protected final IngredientTracker tracker;
 
     public RecipeTransferCraftingGridError(IngredientTracker tracker) {
@@ -59,7 +60,11 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         }
 
         if (craftMessage) {
-            message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(ChatFormatting.BLUE));
+            if (HOST_OS_IS_MACOS) {
+                message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting_mac").withStyle(ChatFormatting.BLUE));
+            } else {
+                message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(ChatFormatting.BLUE));
+            }
         }
 
         return message;
