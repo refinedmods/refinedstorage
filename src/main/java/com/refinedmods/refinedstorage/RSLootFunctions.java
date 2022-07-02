@@ -5,38 +5,30 @@ import com.refinedmods.refinedstorage.loottable.CrafterLootFunction;
 import com.refinedmods.refinedstorage.loottable.PortableGridBlockLootFunction;
 import com.refinedmods.refinedstorage.loottable.StorageBlockLootFunction;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class RSLootFunctions {
-    private static LootItemFunctionType storageBlock;
-    private static LootItemFunctionType portableGrid;
-    private static LootItemFunctionType crafter;
-    private static LootItemFunctionType controller;
+    public static final RegistryObject<LootItemFunctionType> STORAGE_BLOCK;
+    public static final RegistryObject<LootItemFunctionType> PORTABLE_GRID;
+    public static final RegistryObject<LootItemFunctionType> CRAFTER;
+    public static final RegistryObject<LootItemFunctionType> CONTROLLER;
+
+    private static final DeferredRegister<LootItemFunctionType> LOOT_ITEM_FUNCTIONS = DeferredRegister.create(Registry.LOOT_FUNCTION_REGISTRY, RS.ID);
+
+    static {
+        STORAGE_BLOCK = LOOT_ITEM_FUNCTIONS.register("storage_block", () -> new LootItemFunctionType(new StorageBlockLootFunction.Serializer()));
+        PORTABLE_GRID = LOOT_ITEM_FUNCTIONS.register("portable_grid", () -> new LootItemFunctionType(new PortableGridBlockLootFunction.Serializer()));
+        CRAFTER = LOOT_ITEM_FUNCTIONS.register("crafter", () -> new LootItemFunctionType(new CrafterLootFunction.Serializer()));
+        CONTROLLER = LOOT_ITEM_FUNCTIONS.register("controller", () -> new LootItemFunctionType(new ControllerLootFunction.Serializer()));
+    }
 
     private RSLootFunctions() {
     }
 
     public static void register() {
-        storageBlock = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "storage_block"), new LootItemFunctionType(new StorageBlockLootFunction.Serializer()));
-        portableGrid = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "portable_grid"), new LootItemFunctionType(new PortableGridBlockLootFunction.Serializer()));
-        crafter = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "crafter"), new LootItemFunctionType(new CrafterLootFunction.Serializer()));
-        controller = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "controller"), new LootItemFunctionType(new ControllerLootFunction.Serializer()));
-    }
-
-    public static LootItemFunctionType getStorageBlock() {
-        return storageBlock;
-    }
-
-    public static LootItemFunctionType getPortableGrid() {
-        return portableGrid;
-    }
-
-    public static LootItemFunctionType getCrafter() {
-        return crafter;
-    }
-
-    public static LootItemFunctionType getController() {
-        return controller;
+        LOOT_ITEM_FUNCTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 }

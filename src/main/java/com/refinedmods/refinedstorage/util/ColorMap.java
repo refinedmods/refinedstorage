@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.item.blockitem.ColoredBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -77,6 +78,7 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
             map.put(color, (RegistryObject<T>) block);
             RSBlocks.COLORED_BLOCKS.add(block);
         }
+        RSBlocks.COLORED_BLOCK_TAGS.put(BlockTags.create(new ResourceLocation(RS.ID, get(DEFAULT_COLOR).getId().getPath())), (ColorMap<S>) this);
     }
 
     public <S extends BaseBlock> void registerItemsFromBlocks(ColorMap<S> blockMap) {

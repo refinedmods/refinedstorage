@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.*;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.util.ColorMap;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -15,6 +16,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ public final class RSBlocks {
     public static final RegistryObject<ExternalStorageBlock> EXTERNAL_STORAGE;
     public static final Map<ItemStorageType, RegistryObject<StorageBlock>> STORAGE_BLOCKS = new EnumMap<>(ItemStorageType.class);
     public static final Map<FluidStorageType, RegistryObject<FluidStorageBlock>> FLUID_STORAGE_BLOCKS = new EnumMap<>(FluidStorageType.class);
+    public static final Map<TagKey<Block>, ColorMap<? extends Block>> COLORED_BLOCK_TAGS = new HashMap<>();
     public static final RegistryObject<InterfaceBlock> INTERFACE;
     public static final RegistryObject<FluidInterfaceBlock> FLUID_INTERFACE;
     public static final RegistryObject<StorageMonitorBlock> STORAGE_MONITOR;

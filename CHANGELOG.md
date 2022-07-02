@@ -10,11 +10,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed Destructor dupe bug
+- Fixed being unable to insert items into the Storage Monitor
+- Fixed Storage Monitor not showing all matching items in non-exact mode
 
 ### Changed
 
 - Improved Performance for grid updates
+- Fixed incorrect autocrafting keybind prompt on macOS
+- Added Japanese translations for certain autocrafting actions
 - Improved waterlogging to behave more like vanilla
+- Added Forge relocation and Packing Tape blacklist tag entries to prevent block movement
 
 ## [v1.10.2] - 2022-03-26
 
