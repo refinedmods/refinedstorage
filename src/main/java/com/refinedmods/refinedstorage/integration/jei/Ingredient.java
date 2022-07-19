@@ -1,19 +1,18 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
-import mezz.jei.api.gui.ingredient.IGuiIngredient;
-import net.minecraft.world.item.ItemStack;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 
 import java.util.UUID;
 
 class Ingredient {
-    private final IGuiIngredient<ItemStack> guiIngredient;
+    private final IRecipeSlotView slotView;
     private final int required;
     private UUID craftStackId;
     private int fulfilled;
 
-    public Ingredient(IGuiIngredient<ItemStack> guiIngredient) {
-        this.guiIngredient = guiIngredient;
-        this.required = guiIngredient.getAllIngredients().get(0).getCount();
+    public Ingredient(IRecipeSlotView view, int count) {
+        this.slotView = view;
+        this.required = count;
     }
 
     public boolean isAvailable() {
@@ -28,8 +27,8 @@ class Ingredient {
         return craftStackId != null;
     }
 
-    public IGuiIngredient<ItemStack> getGuiIngredient() {
-        return guiIngredient;
+    public IRecipeSlotView getSlotView() {
+        return slotView;
     }
 
     public UUID getCraftStackId() {

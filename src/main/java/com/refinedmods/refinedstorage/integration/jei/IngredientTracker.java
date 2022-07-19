@@ -6,8 +6,10 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiIngredient;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -20,12 +22,13 @@ public class IngredientTracker {
     private final Map<ResourceLocation, Integer> storedItems = new HashMap<>();
     private boolean doTransfer;
 
-    public IngredientTracker(IRecipeLayout recipeLayout, boolean doTransfer) {
-        for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
-            if (guiIngredient.isInput() && !guiIngredient.getAllIngredients().isEmpty()) {
-                ingredients.add(new Ingredient(guiIngredient));
-            }
+    public IngredientTracker(IRecipeSlotsView recipeLayout, boolean doTransfer) {
+        for (IRecipeSlotView slotView : recipeLayout.getSlotViews(RecipeIngredientRole.INPUT)) {
+            Optional<ItemStack> optionalItemStack = slotView.getIngredients(VanillaTypes.ITEM_STACK).findAny();
+
+            optionalItemStack.ifPresent(stack -> ingredients.add(new Ingredient(slotView, stack.getCount())));
         }
+
         this.doTransfer = doTransfer;
     }
 
@@ -55,9 +58,8 @@ public class IngredientTracker {
             }
 
             Optional<ItemStack> match = ingredient
-                .getGuiIngredient()
-                .getAllIngredients()
-                .stream()
+                .getSlotView()
+                .getIngredients(VanillaTypes.ITEM_STACK)
                 .filter(s -> API.instance().getComparer().isEqual(stack, s, IComparer.COMPARE_NBT))
                 .findFirst();
 
