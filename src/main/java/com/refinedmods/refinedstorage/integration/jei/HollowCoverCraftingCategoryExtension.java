@@ -1,30 +1,58 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.RSItems;
+import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.item.CoverItem;
 import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICustomCraftingCategoryExtension;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
+import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.Size2i;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class HollowCoverCraftingCategoryExtension implements ICustomCraftingCategoryExtension {
+public class HollowCoverCraftingCategoryExtension implements ICraftingCategoryExtension {
 
     @Override
-    public void setIngredients(IIngredients ingredients) {
-        ingredients.setInput(VanillaTypes.ITEM, new ItemStack(RSItems.COVER.get()));
-        ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(RSItems.HOLLOW_COVER.get()));
-    }
+    public void setRecipe(IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
 
-    @Nullable
-    @Override
-    public Size2i getSize() {
-        return new Size2i(2, 1);
+        List<List<ItemStack>> stacks = new ArrayList<>(Collections.nCopies(9, new ArrayList<>()));
+        List<ItemStack> input = new ArrayList<>();
+        List<ItemStack> output = new ArrayList<>();
+        for (Block block : ForgeRegistries.BLOCKS.getValues()) {
+            Item item = Item.BY_BLOCK.get(block);
+            if (item == null || item == Items.AIR) {
+                continue;
+            }
+            NonNullList<ItemStack> subBlocks = NonNullList.create();
+            block.fillItemCategory(CreativeModeTab.TAB_SEARCH, subBlocks);
+            for (ItemStack subBlock : subBlocks) {
+                if (CoverManager.isValidCover(subBlock)) {
+                    ItemStack fullCover = new ItemStack(RSItems.COVER.get());
+                    CoverItem.setItem(fullCover, subBlock);
+                    input.add(fullCover);
+                    ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER.get());
+                    CoverItem.setItem(hollowCover, subBlock);
+                    output.add(hollowCover);
+                }
+            }
+        }
+
+        stacks.set(4, input);
+        craftingGridHelper.setInputs(builder, VanillaTypes.ITEM_STACK, stacks, 0, 0);
+        craftingGridHelper.setOutputs(builder, VanillaTypes.ITEM_STACK, output);
     }
 
     @Nullable
@@ -34,18 +62,12 @@ public class HollowCoverCraftingCategoryExtension implements ICustomCraftingCate
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IIngredients ingredients) {
-        ItemStack stack = recipeLayout.getFocus(VanillaTypes.ITEM).getValue();
-        if (stack.getItem() == RSItems.COVER.get()) {
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, stack);
-            ItemStack output = new ItemStack(RSItems.HOLLOW_COVER.get());
-            CoverItem.setItem(output, CoverItem.getItem(stack));
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, output);
-        } else {
-            ItemStack input = new ItemStack(RSItems.COVER.get());
-            CoverItem.setItem(input, CoverItem.getItem(stack));
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, input);
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);
-        }
+    public int getWidth() {
+        return 0;
+    }
+
+    @Override
+    public int getHeight() {
+        return 0;
     }
 }

@@ -104,8 +104,9 @@ processResources {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.48'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.4.171:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.4.171")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2-common-api:10.1.0.208")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2-forge-api:10.1.0.208")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2-forge:10.1.0.208")
 
     compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3578801')
 
