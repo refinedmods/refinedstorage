@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.item.CoverItem;
 import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
@@ -51,8 +52,9 @@ public class HollowCoverCraftingCategoryExtension implements ICraftingCategoryEx
         }
 
         stacks.set(4, input);
-        craftingGridHelper.setInputs(builder, VanillaTypes.ITEM_STACK, stacks, 0, 0);
-        craftingGridHelper.setOutputs(builder, VanillaTypes.ITEM_STACK, output);
+        List<IRecipeSlotBuilder> inputSlots = craftingGridHelper.createAndSetInputs(builder, VanillaTypes.ITEM_STACK, stacks, 0, 0);
+        IRecipeSlotBuilder outputSlot = craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, output);
+        builder.createFocusLink(inputSlots.get(4), outputSlot);
     }
 
     @Nullable

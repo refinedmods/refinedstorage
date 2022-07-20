@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.item.CoverItem;
 import com.refinedmods.refinedstorage.recipe.CoverRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
@@ -52,12 +53,12 @@ public class CoverCraftingCategoryExtension implements ICraftingCategoryExtensio
         ITag<Item> nuggetTag = ForgeRegistries.ITEMS.tags().getTag(Tags.Items.NUGGETS_IRON);
         List<ItemStack> nuggets = nuggetTag.stream().map(ItemStack::new).toList();
         List<List<ItemStack>> inputs = new ArrayList<>(Collections.nCopies(9, new ArrayList<>()));
-        inputs.set(4, nuggets);
-        inputs.set(5, input);
-        craftingGridHelper.setInputs(builder, VanillaTypes.ITEM_STACK, inputs, 3, 3);
-        craftingGridHelper.setOutputs(builder, VanillaTypes.ITEM_STACK, output);
+        inputs.set(3, nuggets);
+        inputs.set(4, input);
+        List<IRecipeSlotBuilder> inputSlots = craftingGridHelper.createAndSetInputs(builder, VanillaTypes.ITEM_STACK, inputs, 3, 3);
+        IRecipeSlotBuilder outputSlot = craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, output);
 
-        //builder.createFocusLink(in, out); //waiting on API update
+        builder.createFocusLink(inputSlots.get(4), outputSlot);
     }
 
     @Override
