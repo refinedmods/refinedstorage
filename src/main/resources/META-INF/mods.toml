@@ -4,10 +4,10 @@ issueTrackerURL = "https://github.com/refinedmods/refinedstorage"
 license="MIT"
 [[mods]]
 modId = "refinedstorage"
-version = "123"
+version = "${version}"
 displayName = "Refined Storage"
-displayURL="https://refinedmods.com/refined-storage"
-logoFile="logo.png"
+displayURL = "https://refinedmods.com/refined-storage"
+logoFile = "logo.png"
 authors = "Refined Mods"
 description = '''
 An elegant solution to your hoarding problem
@@ -20,7 +20,7 @@ ordering = "NONE"
 side = "BOTH"
 [[dependencies.refinedstorage]]
 modId = "jei"
-mandatory = true
+mandatory = false
 versionRange = "[9.7.1,)"
-ordering = "NONE"
+ordering = "BEFORE"
 side = "BOTH"
