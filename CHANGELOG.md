@@ -12,7 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Destructor dupe bug
 - Fixed being unable to insert items into the Storage Monitor
 - Fixed Storage Monitor not showing all matching items in non-exact mode
-- Fixed integer overflow resulting in item lose
+- Fixed items getting lost on Creative Disk when more than 2,147,483,647 of one type is stored
 
 ### Changed
 
