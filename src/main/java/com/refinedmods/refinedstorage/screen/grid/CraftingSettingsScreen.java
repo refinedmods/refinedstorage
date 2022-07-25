@@ -62,7 +62,7 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
     }
 
     @Override
-    protected void onValidAmountSave(boolean shiftDown, int amount) {
+    protected void onValidAmountSaved(boolean shiftDown, int amount) {
         RS.NETWORK_HANDLER.sendToServer(new GridCraftingPreviewRequestMessage(stack.getId(), amount, shiftDown, stack instanceof FluidGridStack));
 
         okButton.active = false;

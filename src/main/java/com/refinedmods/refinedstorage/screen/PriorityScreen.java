@@ -67,7 +67,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu
     }
 
     @Override
-    protected void onValidAmountSave(boolean shiftDown, int amount) {
+    protected void onValidAmountSaved(boolean shiftDown, int amount) {
         BlockEntitySynchronizationManager.setParameter(priority, amount);
     }
 }
