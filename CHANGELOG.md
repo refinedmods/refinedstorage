@@ -21,6 +21,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added Japanese translations for certain autocrafting actions
 - Improved waterlogging to behave more like vanilla
 - Added Forge relocation and Packing Tape blacklist tag entries to prevent block movement
+- Requires JEI version 9.7.1 or higher
+- Crafting requests can now take math equation inputs
 
 ## [v1.10.2] - 2022-03-26
 

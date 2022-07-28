@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -29,11 +29,11 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     }
 
     @Override
-    public void showError(PoseStack stack, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
-        List<Component> message = drawIngredientHighlights(stack, recipeX, recipeY);
+    public void showError(PoseStack poseStack, int mouseX, int mouseY, IRecipeSlotsView recipeSlotsView, int recipeX, int recipeY) {
+        List<Component> message = drawIngredientHighlights(poseStack, recipeX, recipeY);
 
         Screen currentScreen = Minecraft.getInstance().screen;
-        currentScreen.renderComponentTooltip(stack, message, mouseX, mouseY);
+        currentScreen.renderComponentTooltip(poseStack, message, mouseX, mouseY);
     }
 
     protected List<Component> drawIngredientHighlights(PoseStack stack, int recipeX, int recipeY) {
@@ -46,10 +46,10 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         for (Ingredient ingredient : tracker.getIngredients()) {
             if (!ingredient.isAvailable()) {
                 if (ingredient.isCraftable()) {
-                    ingredient.getGuiIngredient().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
+                    ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
                     craftMessage = true;
                 } else {
-                    ingredient.getGuiIngredient().drawHighlight(stack, MISSING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
+                    ingredient.getSlotView().drawHighlight(stack, MISSING_HIGHLIGHT_COLOR.getRGB());
                     missingMessage = true;
                 }
             }
