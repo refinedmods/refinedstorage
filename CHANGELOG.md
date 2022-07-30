@@ -13,16 +13,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed being unable to insert items into the Storage Monitor
 - Fixed Storage Monitor not showing all matching items in non-exact mode
 - Fixed items getting lost on Creative Disk when more than 2,147,483,647 of one type is stored
+- Fixed incorrect autocrafting keybind prompt on macOS
 
 ### Changed
 
-- Improved Performance for grid updates
-- Fixed incorrect autocrafting keybind prompt on macOS
-- Added Japanese translations for certain autocrafting actions
+- Improved performance for grid updates
 - Improved waterlogging to behave more like vanilla
-- Added Forge relocation and Packing Tape blacklist tag entries to prevent block movement
-- Requires JEI version 9.7.1 or higher
+- JEI version 9.7.1 or higher is now required
+
+### Added
+
 - Crafting requests can now take math equation inputs
+- Forge relocation and Packing Tape blacklist tag entries to prevent block movement
+- Japanese translations for certain autocrafting actions
 
 ## [v1.10.2] - 2022-03-26
 
