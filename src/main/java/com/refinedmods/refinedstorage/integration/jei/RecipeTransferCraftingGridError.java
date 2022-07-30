@@ -30,6 +30,7 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
 
     @Override
     public void showError(PoseStack poseStack, int mouseX, int mouseY, IRecipeSlotsView recipeSlotsView, int recipeX, int recipeY) {
+        poseStack.translate(recipeX, recipeY, 0);
         List<Component> message = drawIngredientHighlights(poseStack, recipeX, recipeY);
 
         Screen currentScreen = Minecraft.getInstance().screen;
