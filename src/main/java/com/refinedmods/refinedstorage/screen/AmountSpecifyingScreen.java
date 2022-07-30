@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
-import com.refinedmods.refinedstorage.util.EquationEvaluator;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -20,7 +19,6 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     protected EditBox amountField;
     protected Button okButton;
     protected Button cancelButton;
-    protected Button evaluateButton;
 
     protected AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, Inventory playerInventory, Component title) {
         super(container, width, height, playerInventory, title);
@@ -40,56 +38,24 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
 
     protected abstract int getMaxAmount();
 
-    protected int getMinAmount() {
-        if (canAmountGoNegative()) {
-            return -getMaxAmount();
-        }
-        return 1;
-    }
-
-    protected int parseAmount() {
-        return (int) Math.ceil(EquationEvaluator.evaluate(amountField.getValue()));
-    }
-
-    protected int clampAmount(int amount) {
-        return Math.max(getMinAmount(), Math.min(getMaxAmount(), amount));
-    }
-
-    protected boolean isAmountInBounds(int amount) {
-        return getMinAmount() <= amount && amount <= getMaxAmount();
-    }
-
     protected Pair<Integer, Integer> getAmountPos() {
         return Pair.of(7 + 2, 50 + 1);
     }
 
     protected Pair<Integer, Integer> getOkCancelPos() {
-        return Pair.of(114, 20);
+        return Pair.of(114, 33);
     }
 
     protected int getOkCancelButtonWidth() {
         return 50;
     }
 
-    protected int getOkCancelButtonHeight() {
-        return 20;
-    }
-
-    public Button addActionButton(Pair<Integer, Integer> absolutePos, int xOffset, int yOffset, Component text,
-            Button.OnPress onPress) {
-        return addButton(absolutePos.getLeft() + xOffset, absolutePos.getRight() + yOffset, getOkCancelButtonWidth(),
-                getOkCancelButtonHeight(), text, true, true, onPress);
-    }
-
     @Override
     public void onPostInit(int x, int y) {
         Pair<Integer, Integer> pos = getOkCancelPos();
-        Pair<Integer, Integer> absolutePos = Pair.of(x + pos.getLeft(), y + pos.getRight());
 
-        okButton = addActionButton(absolutePos, 0, 0, getOkButtonText(), btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addActionButton(absolutePos, 0, 24, new TranslatableComponent("gui.cancel"), btn -> close());
-        evaluateButton = addActionButton(absolutePos, 0, 48, new TranslatableComponent("misc.refinedstorage.evaluate"),
-                btn -> onEvaluateButtonPressed(hasShiftDown()));
+        okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
+        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
 
         amountField = new EditBox(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new TextComponent(""));
         amountField.setBordered(false);
@@ -171,39 +137,27 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     private void onIncrementButtonClicked(int increment) {
+        int oldAmount = 0;
+
         try {
-            int oldAmount = parseAmount();
-            int newAmount = oldAmount + increment;
-            if (!canAmountGoNegative() && oldAmount == 1) {
-                newAmount--;
-            }
-            amountField.setValue(String.valueOf(clampAmount(newAmount)));
-        } catch (IllegalArgumentException e) {
+            oldAmount = Integer.parseInt(amountField.getValue());
+        } catch (NumberFormatException e) {
             // NO OP
         }
-    }
 
-    private void onOkButtonPressed(boolean shiftDown) {
-        try {
-            int amount = parseAmount();
-            if (isAmountInBounds(amount)) {
-                onValidAmountSaved(shiftDown, amount);
-                close();
-            }
-        } catch (IllegalArgumentException e) {
-            // NO OP
+        int newAmount = increment;
+
+        if (!canAmountGoNegative()) {
+            newAmount = Math.max(1, ((oldAmount == 1 && newAmount != 1) ? 0 : oldAmount) + newAmount);
+        } else {
+            newAmount = oldAmount + newAmount;
         }
-    }
 
-    private void onEvaluateButtonPressed(boolean shiftDown) {
-        try {
-            amountField.setValue(String.valueOf(clampAmount(parseAmount())));
-        } catch (IllegalArgumentException e) {
-            // NO OP
+        if (newAmount > getMaxAmount()) {
+            newAmount = getMaxAmount();
         }
-    }  
 
-    protected void onValidAmountSaved(boolean shiftDown, int amount) {
+        amountField.setValue(String.valueOf(newAmount));
     }
 
     @Override
@@ -223,6 +177,10 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     @Override
     public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
         renderString(poseStack, 7, 7, title.getString());
+    }
+
+    protected void onOkButtonPressed(boolean shiftDown) {
+        // NO OP
     }
 
     @Override

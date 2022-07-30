@@ -87,7 +87,15 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainerMenu
     }
 
     @Override
-    protected void onValidAmountSaved(boolean shiftDown, int amount) {
-        RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(containerSlot, ItemHandlerHelper.copyStackWithSize(stack, amount)));
+    protected void onOkButtonPressed(boolean shiftDown) {
+        try {
+            int amount = Integer.parseInt(amountField.getValue());
+
+            RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(containerSlot, ItemHandlerHelper.copyStackWithSize(stack, amount)));
+
+            close();
+        } catch (NumberFormatException e) {
+            // NO OP
+        }
     }
 }

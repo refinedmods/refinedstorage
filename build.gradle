@@ -113,16 +113,6 @@ dependencies {
 
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
-
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-}
-
-test {
-    useJUnitPlatform()
-
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
 }
 
 jar {

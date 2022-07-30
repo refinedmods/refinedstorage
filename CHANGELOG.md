@@ -23,7 +23,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Crafting requests can now take math equation inputs
 - Forge relocation and Packing Tape blacklist tag entries to prevent block movement
 - Japanese translations for certain autocrafting actions
 
