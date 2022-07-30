@@ -48,7 +48,7 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     protected int parseAmount() {
-        return (int) Math.ceil(EquationEvaluator.evaluate(amountField.getValue()));
+        return (int) Math.ceil(EquationEvaluator.evaluate(amountField.getText()));
     }
 
     protected int clampAmount(int amount) {
@@ -75,8 +75,8 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         return 20;
     }
 
-    public Button addActionButton(Pair<Integer, Integer> absolutePos, int xOffset, int yOffset, Component text,
-            Button.OnPress onPress) {
+    public Button addActionButton(Pair<Integer, Integer> absolutePos, int xOffset, int yOffset, ITextComponent text,
+            IPressable onPress) {
         return addButton(absolutePos.getLeft() + xOffset, absolutePos.getRight() + yOffset, getOkCancelButtonWidth(),
                 getOkCancelButtonHeight(), text, true, true, onPress);
     }
@@ -87,12 +87,13 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         Pair<Integer, Integer> absolutePos = Pair.of(x + pos.getLeft(), y + pos.getRight());
 
         okButton = addActionButton(absolutePos, 0, 0, getOkButtonText(), btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addActionButton(absolutePos, 0, 24, new TranslatableComponent("gui.cancel"), btn -> close());
-        evaluateButton = addActionButton(absolutePos, 0, 48, new TranslatableComponent("misc.refinedstorage.evaluate"),
+        cancelButton = addActionButton(absolutePos, 0, 24, new TranslationTextComponent("gui.cancel"), btn -> close());
+        evaluateButton = addActionButton(absolutePos, 0, 48, new TranslationTextComponent("misc.refinedstorage.evaluate"),
                 btn -> onEvaluateButtonPressed(hasShiftDown()));
 
-        amountField = new EditBox(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new TextComponent(""));
-        amountField.setBordered(false);
+        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6,
+                font.FONT_HEIGHT, new StringTextComponent(""));
+        amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setValue(String.valueOf(getDefaultAmount()));
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
@@ -177,7 +178,7 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
             if (!canAmountGoNegative() && oldAmount == 1) {
                 newAmount--;
             }
-            amountField.setValue(String.valueOf(clampAmount(newAmount)));
+            amountField.setText(String.valueOf(clampAmount(newAmount)));
         } catch (IllegalArgumentException e) {
             // NO OP
         }
@@ -197,7 +198,7 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
 
     private void onEvaluateButtonPressed(boolean shiftDown) {
         try {
-            amountField.setValue(String.valueOf(clampAmount(parseAmount())));
+            amountField.setText(String.valueOf(clampAmount(parseAmount())));
         } catch (IllegalArgumentException e) {
             // NO OP
         }
