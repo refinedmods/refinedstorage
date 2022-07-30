@@ -61,17 +61,4 @@ class EquationEvaluatorTest {
         assertFuzzyEquals(1, EquationEvaluator.evaluate("1 - 2 + 3 * 4 / 6"));
         assertFuzzyEquals(4.0 / 3, EquationEvaluator.evaluate("(((1 - 2) + 3) * 4) / 6"));
     }
-
-    @Test
-    void testDivideByZero() {
-        assertFuzzyEquals(Double.POSITIVE_INFINITY, EquationEvaluator.evaluate("1 / 0"));
-        assertFuzzyEquals(Double.POSITIVE_INFINITY, EquationEvaluator.evaluate("1 / (1 - 1)"));
-    }
-
-    @Test
-    void testImplicitMultiply() {
-        assertFuzzyEquals(-2, EquationEvaluator.evaluate("2(3 + 6) - 5(6 - 2)"));
-        assertFuzzyEquals(1, EquationEvaluator.evaluate("6 / (2(4 - 1))"));
-        assertFuzzyEquals(6 * 5 * 4 * 3 * 2, EquationEvaluator.evaluate("6(5(4(3(2(1)))))"));
-    }
 }
