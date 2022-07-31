@@ -19,11 +19,36 @@ public class BlockTagGenerator extends BlockTagsProvider {
     protected void addTags() {
         TagAppender<Block> noRelocationTag = tag(BlockTags.create(new ResourceLocation("forge:relocation_not_supported")));
         RSBlocks.COLORED_BLOCK_TAGS.forEach((tag, map) -> {
-            map.values().forEach(block -> tag(tag).add(block.get()));
+            map.values().forEach(block -> {
+                tag(tag).add(block.get());
+                tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.get());
+            });
             noRelocationTag.addTags(tag);
         });
-        RSBlocks.STORAGE_BLOCKS.forEach((tag, block) -> noRelocationTag.add(block.get()));
-        RSBlocks.FLUID_STORAGE_BLOCKS.forEach((tag, block) -> noRelocationTag.add(block.get()));
+        RSBlocks.STORAGE_BLOCKS.forEach((tag, block) -> {
+            noRelocationTag.add(block.get());
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.get());
+        });
+        RSBlocks.FLUID_STORAGE_BLOCKS.forEach((tag, block) ->
+        {
+            noRelocationTag.add(block.get());
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.get());
+        });
+
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
+                RSBlocks.IMPORTER.get(),
+                RSBlocks.EXPORTER.get(),
+                RSBlocks.EXTERNAL_STORAGE.get(),
+                RSBlocks.DISK_DRIVE.get(),
+                RSBlocks.INTERFACE.get(),
+                RSBlocks.FLUID_INTERFACE.get(),
+                RSBlocks.STORAGE_MONITOR.get(),
+                RSBlocks.CONSTRUCTOR.get(),
+                RSBlocks.DESTRUCTOR.get(),
+                RSBlocks.PORTABLE_GRID.get(),
+                RSBlocks.CREATIVE_PORTABLE_GRID.get(),
+                RSBlocks.CABLE.get()
+        );
 
         noRelocationTag.add(
                 RSBlocks.IMPORTER.get(),
