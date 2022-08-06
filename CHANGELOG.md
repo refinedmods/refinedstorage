@@ -14,6 +14,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Storage Monitor not showing all matching items in non-exact mode
 - Fixed items getting lost on Creative Disk when more than 2,147,483,647 of one type is stored
 - Fixed incorrect autocrafting keybind prompt on macOS
+- Fixed crashing the game when a network block was removed in a bad way
 
 ### Changed
 

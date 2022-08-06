@@ -6,10 +6,10 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +29,8 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
     private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
     private N clientNode;
     private N removedNode;
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -61,7 +65,10 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
         INetworkNode node = manager.getNode(worldPosition);
 
         if (node == null) {
-            throw new IllegalStateException("No network node present at " + worldPosition.toString() + ", consider removing the block at this position");
+            LOGGER.warn("Expected a node @ {} but couldn't find it, creating a new one...", worldPosition);
+            node = createNode(level, worldPosition);
+            manager.setNode(worldPosition, node);
+            manager.markForSaving();
         }
 
         return (N) node;
