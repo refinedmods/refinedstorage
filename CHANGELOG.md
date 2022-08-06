@@ -16,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed incorrect autocrafting keybind prompt on macOS
 - Fixed crashing the game when a network block was removed in a bad way
 - Fixed duplication bug with Constructors and Shulker Boxes
+- Fixed breaking blocks with pickaxe taking too much time
 
 ### Changed
 
