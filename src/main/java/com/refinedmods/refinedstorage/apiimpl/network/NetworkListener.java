@@ -9,23 +9,23 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NetworkListener {
     @SubscribeEvent
-    public void onLevelTick(TickEvent.WorldTickEvent e) {
-        if (!e.world.isClientSide() && e.phase == TickEvent.Phase.END) {
-            e.world.getProfiler().push("network ticking");
+    public void onLevelTick(TickEvent.LevelTickEvent e) {
+        if (!e.level.isClientSide() && e.phase == TickEvent.Phase.END) {
+            e.level.getProfiler().push("network ticking");
 
-            for (INetwork network : API.instance().getNetworkManager((ServerLevel) e.world).all()) {
+            for (INetwork network : API.instance().getNetworkManager((ServerLevel) e.level).all()) {
                 network.update();
             }
 
-            e.world.getProfiler().pop();
+            e.level.getProfiler().pop();
 
-            e.world.getProfiler().push("network node ticking");
+            e.level.getProfiler().push("network node ticking");
 
-            for (INetworkNode node : API.instance().getNetworkNodeManager((ServerLevel) e.world).all()) {
+            for (INetworkNode node : API.instance().getNetworkNodeManager((ServerLevel) e.level).all()) {
                 node.update();
             }
 
-            e.world.getProfiler().pop();
+            e.level.getProfiler().pop();
         }
     }
 }

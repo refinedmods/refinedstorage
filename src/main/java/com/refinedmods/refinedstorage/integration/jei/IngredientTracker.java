@@ -12,7 +12,9 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -43,12 +45,12 @@ public class IngredientTracker {
                 ICraftingPattern pattern = PatternItem.fromCache(Minecraft.getInstance().level, stack);
                 if (pattern.isValid()) {
                     for (ItemStack outputStack : pattern.getOutputs()) {
-                        storedItems.merge(outputStack.getItem().getRegistryName(), outputStack.getCount(), Integer::sum);
+                        storedItems.merge(registryName(outputStack.getItem()), outputStack.getCount(), Integer::sum);
                     }
                 }
 
             } else {
-                storedItems.merge(stack.getItem().getRegistryName(), available, Integer::sum);
+                storedItems.merge(registryName(stack.getItem()), available, Integer::sum);
             }
         }
 
@@ -107,7 +109,7 @@ public class IngredientTracker {
         int count = 0;
 
         for (ItemStack itemStack : list) {
-            Integer stored = storedItems.get(itemStack.getItem().getRegistryName());
+            Integer stored = storedItems.get(registryName(itemStack.getItem()));
             if (stored != null && stored > count) {
                 stack = itemStack;
                 count = stored;
@@ -115,5 +117,9 @@ public class IngredientTracker {
         }
 
         return stack;
+    }
+
+    private ResourceLocation registryName(final Item item) {
+        return ForgeRegistries.ITEMS.getKey(item);
     }
 }

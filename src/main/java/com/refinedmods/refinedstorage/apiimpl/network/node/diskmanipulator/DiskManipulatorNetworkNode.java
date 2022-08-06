@@ -29,7 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -104,7 +104,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
             int count = super.getStackInteractCount();
 
             if (type == IType.FLUIDS) {
-                count *= FluidAttributes.BUCKET_VOLUME;
+                count *= FluidType.BUCKET_VOLUME;
             }
 
             return count;

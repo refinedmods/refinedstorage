@@ -9,7 +9,8 @@ import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -78,10 +79,10 @@ public class DetectorBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<DetectorBlockEntity>(
-                    new TranslatableComponent("gui.refinedstorage.detector"),
+                    Component.translatable("gui.refinedstorage.detector"),
                     (blockEntity, windowId, inventory, p) -> new DetectorContainerMenu(blockEntity, player, windowId),
                     pos
                 ),

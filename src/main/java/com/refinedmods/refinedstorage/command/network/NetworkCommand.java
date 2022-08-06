@@ -9,7 +9,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 
 public abstract class NetworkCommand implements Command<CommandSourceStack> {
@@ -21,7 +22,7 @@ public abstract class NetworkCommand implements Command<CommandSourceStack> {
         INetwork network = API.instance().getNetworkManager(level).getNetwork(pos);
 
         if (network == null) {
-            context.getSource().sendFailure(new TranslatableComponent("commands.refinedstorage.network.get.error.not_found"));
+            context.getSource().sendFailure(Component.translatable("commands.refinedstorage.network.get.error.not_found"));
             return 0;
         } else {
             return run(context, network);

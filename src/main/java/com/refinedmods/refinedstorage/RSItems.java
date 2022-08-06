@@ -7,7 +7,8 @@ import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.item.blockitem.*;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -167,13 +168,13 @@ public final class RSItems {
         LATE_REGISTRATION.add(() -> {
             RSBlocks.CONTROLLER.forEach((color, block) -> {
                 if (color != ColorMap.DEFAULT_COLOR) {
-                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, new TranslatableComponent(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getDescriptionId()))));
+                    CONTROLLER.put(color, ITEMS.register(RSBlocks.CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CONTROLLER.get(color).get(), color, Component.translatable(RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getDescriptionId()))));
                 }
             });
 
             RSBlocks.CREATIVE_CONTROLLER.forEach((color, block) -> {
                 if (color != ColorMap.DEFAULT_COLOR) {
-                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, new TranslatableComponent(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getDescriptionId()))));
+                    CREATIVE_CONTROLLER.put(color, ITEMS.register(RSBlocks.CREATIVE_CONTROLLER.get(color).getId().getPath(), () -> new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER.get(color).get(), color, Component.translatable(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get().getDescriptionId()))));
                 }
             });
         });

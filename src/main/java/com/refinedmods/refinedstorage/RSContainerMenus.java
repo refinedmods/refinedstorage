@@ -4,55 +4,54 @@ import com.refinedmods.refinedstorage.container.*;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(RS.ID)
 public final class RSContainerMenus {
-    @ObjectHolder("controller")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:controller")
     public static final MenuType<ControllerContainerMenu> CONTROLLER = null;
-    @ObjectHolder("grid")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:grid")
     public static final MenuType<GridContainerMenu> GRID = null;
-    @ObjectHolder("detector")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:detector")
     public static final MenuType<DetectorContainerMenu> DETECTOR = null;
-    @ObjectHolder("exporter")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:exporter")
     public static final MenuType<ExporterContainerMenu> EXPORTER = null;
-    @ObjectHolder("external_storage")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:external_storage")
     public static final MenuType<ExternalStorageContainerMenu> EXTERNAL_STORAGE = null;
-    @ObjectHolder("filter")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:filter")
     public static final MenuType<FilterContainerMenu> FILTER = null;
-    @ObjectHolder("importer")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:importer")
     public static final MenuType<ImporterContainerMenu> IMPORTER = null;
-    @ObjectHolder("network_transmitter")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:network_transmitter")
     public static final MenuType<NetworkTransmitterContainerMenu> NETWORK_TRANSMITTER = null;
-    @ObjectHolder("relay")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:relay")
     public static final MenuType<RelayContainerMenu> RELAY = null;
-    @ObjectHolder("disk_drive")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:disk_drive")
     public static final MenuType<DiskDriveContainerMenu> DISK_DRIVE = null;
-    @ObjectHolder("storage_block")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:storage_block")
     public static final MenuType<StorageContainerMenu> STORAGE_BLOCK = null;
-    @ObjectHolder("fluid_storage_block")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:fluid_storage_block")
     public static final MenuType<FluidStorageContainerMenu> FLUID_STORAGE_BLOCK = null;
-    @ObjectHolder("security_manager")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:security_manager")
     public static final MenuType<SecurityManagerContainerMenu> SECURITY_MANAGER = null;
-    @ObjectHolder("interface")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:interface")
     public static final MenuType<InterfaceContainerMenu> INTERFACE = null;
-    @ObjectHolder("fluid_interface")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:fluid_interface")
     public static final MenuType<FluidInterfaceContainerMenu> FLUID_INTERFACE = null;
-    @ObjectHolder("wireless_transmitter")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:wireless_transmitter")
     public static final MenuType<WirelessTransmitterContainerMenu> WIRELESS_TRANSMITTER = null;
-    @ObjectHolder("storage_monitor")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:storage_monitor")
     public static final MenuType<StorageMonitorContainerMenu> STORAGE_MONITOR = null;
-    @ObjectHolder("constructor")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:constructor")
     public static final MenuType<ConstructorContainerMenu> CONSTRUCTOR = null;
-    @ObjectHolder("destructor")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:destructor")
     public static final MenuType<DestructorContainerMenu> DESTRUCTOR = null;
-    @ObjectHolder("disk_manipulator")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:disk_manipulator")
     public static final MenuType<DiskManipulatorContainerMenu> DISK_MANIPULATOR = null;
-    @ObjectHolder("crafter")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:crafter")
     public static final MenuType<CrafterContainerMenu> CRAFTER = null;
-    @ObjectHolder("crafter_manager")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:crafter_manager")
     public static final MenuType<CrafterManagerContainerMenu> CRAFTER_MANAGER = null;
-    @ObjectHolder("crafting_monitor")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:crafting_monitor")
     public static final MenuType<CraftingMonitorContainerMenu> CRAFTING_MONITOR = null;
-    @ObjectHolder("wireless_crafting_monitor")
+    @ObjectHolder(registryName = "minecraft:menu", value = "refinedstorage:wireless_crafting_monitor")
     public static final MenuType<CraftingMonitorContainerMenu> WIRELESS_CRAFTING_MONITOR = null;
 
     private RSContainerMenus() {

@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ public class ListDiskForPlayerCommand implements Command<CommandSourceStack> {
             .stream()
             .filter(entry -> player.getGameProfile().getId().equals(entry.getValue().getOwner()))
             .map(Map.Entry::getKey)
-            .forEach(id -> context.getSource().sendSuccess(new TextComponent(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(Component.literal(id.toString()), false));
 
         return 0;
     }

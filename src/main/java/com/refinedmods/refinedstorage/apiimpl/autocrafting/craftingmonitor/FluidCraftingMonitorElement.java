@@ -118,7 +118,7 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
     @Nullable
     @Override
     public List<Component> getTooltip() {
-        return Collections.singletonList(stack.getFluid().getAttributes().getDisplayName(stack));
+        return Collections.singletonList(stack.getDisplayName());
     }
 
     @Override

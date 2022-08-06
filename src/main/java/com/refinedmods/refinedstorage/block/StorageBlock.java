@@ -60,7 +60,7 @@ public class StorageBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new BlockEntityMenuProvider<StorageBlockEntity>(
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen((ServerPlayer) player, new BlockEntityMenuProvider<StorageBlockEntity>(
                 ((StorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
                 (blockEntity, windowId, inventory, p) -> new StorageContainerMenu(blockEntity, player, windowId),
                 pos

@@ -16,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -67,13 +66,13 @@ public class CoverItem extends Item {
         ItemStack item = getItem(stack);
 
         if (!item.isEmpty()) {
-            tooltip.add(((BaseComponent) item.getItem().getName(item)).withStyle(ChatFormatting.GRAY));
+            tooltip.add(item.getItem().getName(item).copy().withStyle(ChatFormatting.GRAY));
         }
     }
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowdedIn(group)) { //Changed from 1.12: to use 1.16 configs
+        if (this.allowedIn(group)) {
             if (!RS.CLIENT_CONFIG.getCover().showAllRecipesInJEI()) {
                 ItemStack stack = new ItemStack(this);
 

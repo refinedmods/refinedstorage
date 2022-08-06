@@ -15,15 +15,13 @@ import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.IReverseTag;
@@ -129,7 +127,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
                     fluidCount++;
 
-                    line.addFluid(new FluidStack(fluidInTag, FluidAttributes.BUCKET_VOLUME));
+                    line.addFluid(new FluidStack(fluidInTag, FluidType.BUCKET_VOLUME));
                 }
 
                 lines.add(line);
@@ -150,8 +148,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
             }
         }
 
-        Button apply = addButton(x + 7, y + 114, 50, 20, new TranslatableComponent("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
-        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
+        Button apply = addButton(x + 7, y + 114, 50, 20, Component.translatable("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
+        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, Component.translatable("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -320,7 +318,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
         public TagLine(ResourceLocation tagName, boolean checked) {
             this.tagName = tagName;
-            this.widget = addCheckBox(-100, -100, new TextComponent(RenderUtils.shorten(tagName.toString(), 22)), checked, btn -> {
+            this.widget = addCheckBox(-100, -100, Component.literal(RenderUtils.shorten(tagName.toString(), 22)), checked, btn -> {
                 // NO OP
             });
 

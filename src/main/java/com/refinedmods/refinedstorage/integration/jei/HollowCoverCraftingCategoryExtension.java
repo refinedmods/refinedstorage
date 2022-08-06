@@ -60,7 +60,7 @@ public class HollowCoverCraftingCategoryExtension implements ICraftingCategoryEx
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
-        return HollowCoverRecipe.SERIALIZER.getRegistryName();
+        return ForgeRegistries.RECIPE_SERIALIZERS.getKey(HollowCoverRecipe.SERIALIZER);
     }
 
     @Override

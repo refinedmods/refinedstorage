@@ -23,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Collection;
@@ -33,7 +32,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
+public class ColorMap<T> {
     public static final DyeColor DEFAULT_COLOR = DyeColor.LIGHT_BLUE;
 
     private final Map<DyeColor, RegistryObject<T>> map = new EnumMap<>(DyeColor.class);

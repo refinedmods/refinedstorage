@@ -16,7 +16,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
@@ -68,7 +67,7 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new TextComponent(amount + "x ").append(data);
+                    data = Component.literal(amount + "x ").append(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -96,7 +95,7 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new TextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
+                    data = Component.literal(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));

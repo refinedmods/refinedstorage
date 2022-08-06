@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.command.network.NetworkCommand;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+
 
 public class CancelAllAutocraftingCommand extends NetworkCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
@@ -23,7 +23,7 @@ public class CancelAllAutocraftingCommand extends NetworkCommand {
             translationKey = "commands.refinedstorage.network.autocrafting.cancel.single";
         }
 
-        context.getSource().sendSuccess(new TranslatableComponent(translationKey, new TextComponent("" + count).setStyle(Styles.YELLOW)), false);
+        context.getSource().sendSuccess(Component.translatable(translationKey, Component.literal("" + count).setStyle(Styles.YELLOW)), false);
     }
 
     @Override

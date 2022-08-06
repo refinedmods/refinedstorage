@@ -74,6 +74,6 @@ public class CoverCraftingCategoryExtension implements ICraftingCategoryExtensio
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
-        return CoverRecipe.SERIALIZER.getRegistryName();
+        return ForgeRegistries.RECIPE_SERIALIZERS.getKey(CoverRecipe.SERIALIZER);
     }
 }

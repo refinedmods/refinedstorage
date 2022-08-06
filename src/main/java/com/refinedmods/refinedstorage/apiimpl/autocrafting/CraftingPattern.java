@@ -269,6 +269,11 @@ public class CraftingPattern implements ICraftingPattern {
         public DummyCraftingContainer() {
             super(new AbstractContainerMenu(null, 0) {
                 @Override
+                public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+                    return ItemStack.EMPTY;
+                }
+
+                @Override
                 public boolean stillValid(Player player) {
                     return true;
                 }

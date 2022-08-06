@@ -55,7 +55,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -354,7 +354,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.refinedstorage.portable_grid");
+        return Component.translatable("gui.refinedstorage.portable_grid");
     }
 
     @Override

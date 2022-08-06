@@ -12,7 +12,7 @@ import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
                     @Override
                     public void accept(I ingredient) {
-                        RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.index, StackUtils.copy((FluidStack) ingredient, FluidAttributes.BUCKET_VOLUME)));
+                        RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(slot.index, StackUtils.copy((FluidStack) ingredient, FluidType.BUCKET_VOLUME)));
                     }
                 });
             }

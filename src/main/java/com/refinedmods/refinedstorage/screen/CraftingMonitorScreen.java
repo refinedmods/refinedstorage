@@ -24,8 +24,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -105,8 +103,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
             addSideButton(new RedstoneModeSideButton(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
-        Component cancel = new TranslatableComponent("gui.cancel");
-        Component cancelAll = new TranslatableComponent("misc.refinedstorage.cancel_all");
+        Component cancel = Component.translatable("gui.cancel");
+        Component cancelAll = Component.translatable("misc.refinedstorage.cancel_all");
 
         int cancelButtonWidth = 14 + font.width(cancel.getString());
         int cancelAllButtonWidth = 14 + font.width(cancelAll.getString());
@@ -289,18 +287,18 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
-            lines.add(new TranslatableComponent(
+            lines.add(Component.translatable(
                 "gui.refinedstorage.crafting_monitor.tooltip.requested",
                 requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)
             ).withStyle(ChatFormatting.GRAY));
 
             if (hours > 0) {
-                lines.add(new TextComponent(String.format("%02d:%02d:%02d", hours, minutes, seconds)).withStyle(ChatFormatting.GRAY));
+                lines.add(Component.literal(String.format("%02d:%02d:%02d", hours, minutes, seconds)).withStyle(ChatFormatting.GRAY));
             } else {
-                lines.add(new TextComponent(String.format("%02d:%02d", minutes, seconds)).withStyle(ChatFormatting.GRAY));
+                lines.add(Component.literal(String.format("%02d:%02d", minutes, seconds)).withStyle(ChatFormatting.GRAY));
             }
 
-            lines.add(new TextComponent(String.format("%d%%", completionPercentage)).withStyle(ChatFormatting.GRAY));
+            lines.add(Component.literal(String.format("%d%%", completionPercentage)).withStyle(ChatFormatting.GRAY));
 
             screen.renderComponentTooltip(poseStack, lines, x, y);
         }

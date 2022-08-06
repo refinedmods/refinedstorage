@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +46,7 @@ public class CrafterManagerMenuProvider implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("gui.refinedstorage.crafter_manager");
+        return Component.translatable("gui.refinedstorage.crafter_manager");
     }
 
     @Nullable

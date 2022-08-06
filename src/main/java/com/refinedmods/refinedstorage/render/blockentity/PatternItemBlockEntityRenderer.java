@@ -26,7 +26,8 @@ public class PatternItemBlockEntityRenderer extends BlockEntityWithoutLevelRende
 
         ItemStack outputStack = pattern.getOutputs().get(0);
 
-        RenderProperties.get(outputStack.getItem()).getItemStackRenderer().renderByItem(outputStack, transformType, poseStack, renderTypeBuffer, combinedLight, combinedOverlay);
+        RenderProperties.get(outputStack.getItem()).getItemStackRenderer()
+            .renderByItem(outputStack, transformType, poseStack, renderTypeBuffer, combinedLight, combinedOverlay);
     }
 
     public static PatternItemBlockEntityRenderer getInstance() {

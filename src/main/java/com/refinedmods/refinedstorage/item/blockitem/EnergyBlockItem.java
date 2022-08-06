@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.item.capabilityprovider.EnergyCapabilityPr
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -64,7 +64,7 @@ public abstract class EnergyBlockItem extends BaseBlockItem {
         super.appendHoverText(stack, level, tooltip, flag);
 
         if (!creative) {
-            stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(energy -> tooltip.add(new TranslatableComponent("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()).setStyle(Styles.GRAY)));
+            stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(energy -> tooltip.add(Component.translatable("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()).setStyle(Styles.GRAY)));
         }
     }
 }

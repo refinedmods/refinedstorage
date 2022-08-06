@@ -8,7 +8,6 @@ import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -48,7 +47,7 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     @Override
     public List<Component> getTooltip() {
         List<Component> items = new ArrayList<>(base.getTooltip());
-        items.add(new TranslatableComponent(message).setStyle(Styles.RED));
+        items.add(Component.translatable(message).setStyle(Styles.RED));
         return items;
     }
 

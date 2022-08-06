@@ -42,7 +42,7 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -254,7 +254,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.refinedstorage.portable_grid");
+        return Component.translatable("gui.refinedstorage.portable_grid");
     }
 
     @Override

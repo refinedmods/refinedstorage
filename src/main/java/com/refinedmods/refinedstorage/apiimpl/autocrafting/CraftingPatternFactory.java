@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -48,7 +48,7 @@ public class CraftingPatternFactory {
                 }
 
                 if (outputs.isEmpty() && fluidOutputs.isEmpty()) {
-                    throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
+                    throw new CraftingPatternFactoryException(Component.translatable("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
                 CraftingContainer craftingContainer = new CraftingPattern.DummyCraftingContainer();
@@ -72,10 +72,10 @@ public class CraftingPatternFactory {
                             modifyCraftingInputsToUseAlternatives(recipe, inputs);
                         }
                     } else {
-                        throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.no_output"));
+                        throw new CraftingPatternFactoryException(Component.translatable("misc.refinedstorage.pattern.error.no_output"));
                     }
                 } else {
-                    throw new CraftingPatternFactoryException(new TranslatableComponent("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
+                    throw new CraftingPatternFactoryException(Component.translatable("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
                 }
             }
         } catch (CraftingPatternFactoryException e) {
@@ -116,7 +116,7 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfItem.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                            new TranslatableComponent(
+                            Component.translatable(
                                 "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
                                 declaredAllowedTag.toString(),
                                 input.getHoverName()
@@ -162,7 +162,7 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfFluid.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                            new TranslatableComponent(
+                            Component.translatable(
                                 "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
                                 declaredAllowedTag.toString(),
                                 input.getDisplayName()

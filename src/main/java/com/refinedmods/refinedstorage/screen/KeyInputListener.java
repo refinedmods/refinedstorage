@@ -6,9 +6,9 @@ import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.network.OpenNetworkItemMessage;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ public class KeyInputListener {
 
             if (validItems.contains(slot.getItem())) {
                 if (slotFound != -1) {
-                    sendError(new TranslatableComponent("misc.refinedstorage.network_item.shortcut_duplicate", new TranslatableComponent(items[0].getDescriptionId())));
+                    sendError(Component.translatable("misc.refinedstorage.network_item.shortcut_duplicate", Component.translatable(items[0].getDescriptionId())));
                     return;
                 }
 
@@ -52,18 +52,18 @@ public class KeyInputListener {
         }
 
         if (slotFound == -1) {
-            sendError(new TranslatableComponent("misc.refinedstorage.network_item.shortcut_not_found", new TranslatableComponent(items[0].getDescriptionId())));
+            sendError(Component.translatable("misc.refinedstorage.network_item.shortcut_not_found", Component.translatable(items[0].getDescriptionId())));
         } else {
             RS.NETWORK_HANDLER.sendToServer(new OpenNetworkItemMessage(new PlayerSlot(slotFound)));
         }
     }
 
-    public static void sendError(TranslatableComponent error) {
-        Minecraft.getInstance().player.sendMessage(error, Util.NIL_UUID);
+    public static void sendError(MutableComponent error) {
+        Minecraft.getInstance().player.sendSystemMessage(error);
     }
 
     @SubscribeEvent
-    public void onKeyInput(InputEvent.KeyInputEvent e) {
+    public void onKeyInput(InputEvent.Key e) {
         if (Minecraft.getInstance().player != null) {
             if (RSKeyBindings.OPEN_WIRELESS_GRID.isDown()) {
                 findAndOpen(RSItems.WIRELESS_GRID.get(), RSItems.CREATIVE_WIRELESS_GRID.get());
