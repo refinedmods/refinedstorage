@@ -3,12 +3,24 @@ loaderVersion = "[40,)"
 issueTrackerURL = "https://github.com/refinedmods/refinedstorage"
 license="MIT"
 [[mods]]
-modId="refinedstorage"
-version="${version}"
-displayName="Refined Storage"
-displayURL="https://refinedmods.com/refined-storage"
-logoFile="logo.png"
+modId = "refinedstorage"
+version = "${version}"
+displayName = "Refined Storage"
+displayURL = "https://refinedmods.com/refined-storage"
+logoFile = "logo.png"
 authors = "Refined Mods"
 description = '''
 An elegant solution to your hoarding problem
 '''
+[[dependencies.refinedstorage]]
+modId = "forge"
+mandatory = true
+versionRange = "[40.1,)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.refinedstorage]]
+modId = "jei"
+mandatory = false
+versionRange = "[9.7.1,)"
+ordering = "BEFORE"
+side = "BOTH"

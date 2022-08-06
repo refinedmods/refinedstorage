@@ -7,6 +7,30 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed Destructor dupe bug
+- Fixed being unable to insert items into the Storage Monitor
+- Fixed Storage Monitor not showing all matching items in non-exact mode
+- Fixed items getting lost on Creative Disk when more than 2,147,483,647 of one type is stored
+- Fixed incorrect autocrafting keybind prompt on macOS
+- Fixed crashing the game when a network block was removed in a bad way
+- Fixed duplication bug with Constructors and Shulker Boxes
+- Fixed breaking blocks with pickaxe taking too much time
+
+### Changed
+
+- Improved performance for grid updates
+- Improved waterlogging to behave more like vanilla
+- JEI version 9.7.1 or higher is now required
+
+### Added
+
+- Forge relocation and Packing Tape blacklist tag entries to prevent block movement
+- Japanese translations for certain autocrafting actions
+
+## [v1.10.2] - 2022-03-26
+
 ### Changed
 
 - Ported to Minecraft 1.18.2.

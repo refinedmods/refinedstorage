@@ -5,16 +5,16 @@ import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
-import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
-import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
+import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
+import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
+import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
+import com.refinedmods.refinedstorage.util.LevelUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
-import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -299,9 +299,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
                 return 0;
             }
 
-            ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
+            if (compare == IComparer.COMPARE_NBT) {
+                ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
+                return stored != null ? stored.getCount() : 0;
+            } else {
+                return network.getItemStorageCache().getList().getStacks(toCheck).stream().mapToInt(entry -> entry.getStack().getCount()).sum();
+            }
 
-            return stored != null ? stored.getCount() : 0;
         } else if (getType() == IType.FLUIDS) {
             FluidStack toCheck = fluidFilter.getFluid(0);
 

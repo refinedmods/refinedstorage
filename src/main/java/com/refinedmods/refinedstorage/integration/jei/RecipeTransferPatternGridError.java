@@ -22,7 +22,7 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
 
         for (Ingredient ingredient : tracker.getIngredients()) {
             if (ingredient.isCraftable()) {
-                ingredient.getGuiIngredient().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
+                ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
                 craftMessage = true;
             }
         }

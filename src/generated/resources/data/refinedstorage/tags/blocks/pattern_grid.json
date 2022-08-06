@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_pattern_grid",
+    "refinedstorage:orange_pattern_grid",
+    "refinedstorage:magenta_pattern_grid",
+    "refinedstorage:pattern_grid",
+    "refinedstorage:yellow_pattern_grid",
+    "refinedstorage:lime_pattern_grid",
+    "refinedstorage:pink_pattern_grid",
+    "refinedstorage:gray_pattern_grid",
+    "refinedstorage:light_gray_pattern_grid",
+    "refinedstorage:cyan_pattern_grid",
+    "refinedstorage:purple_pattern_grid",
+    "refinedstorage:blue_pattern_grid",
+    "refinedstorage:brown_pattern_grid",
+    "refinedstorage:green_pattern_grid",
+    "refinedstorage:red_pattern_grid",
+    "refinedstorage:black_pattern_grid"
+  ]
+}

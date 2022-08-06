@@ -5,9 +5,11 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.item.CoverItem;
 import com.refinedmods.refinedstorage.recipe.CoverRecipe;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICustomCraftingCategoryExtension;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -16,25 +18,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.Size2i;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryExtension {
+public class CoverCraftingCategoryExtension implements ICraftingCategoryExtension {
+
 
     @Override
-    public void setIngredients(IIngredients ingredients) {
+    public void setRecipe(IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
         List<ItemStack> input = new ArrayList<>();
         List<ItemStack> output = new ArrayList<>();
         for (Block block : ForgeRegistries.BLOCKS.getValues()) {
-            Item item = Item.byBlock(block);
-            if (item == Items.AIR) {
+            Item item = Item.BY_BLOCK.get(block);
+            if (item == null || item == Items.AIR) {
                 continue;
             }
             NonNullList<ItemStack> subBlocks = NonNullList.create();
@@ -48,37 +49,31 @@ public class CoverCraftingCategoryExtension implements ICustomCraftingCategoryEx
                 }
             }
         }
-        ITag<Item> nuggets = ForgeRegistries.ITEMS.tags().getTag(Tags.Items.NUGGETS_IRON);
-        ingredients.setInputLists(VanillaTypes.ITEM, Arrays.asList(nuggets.stream().map(ItemStack::new).collect(Collectors.toList()), input));
-        ingredients.setOutputs(VanillaTypes.ITEM, output);
+
+        ITag<Item> nuggetTag = ForgeRegistries.ITEMS.tags().getTag(Tags.Items.NUGGETS_IRON);
+        List<ItemStack> nuggets = nuggetTag.stream().map(ItemStack::new).toList();
+        List<List<ItemStack>> inputs = new ArrayList<>(Collections.nCopies(9, new ArrayList<>()));
+        inputs.set(3, nuggets);
+        inputs.set(4, input);
+        List<IRecipeSlotBuilder> inputSlots = craftingGridHelper.createAndSetInputs(builder, VanillaTypes.ITEM_STACK, inputs, 3, 3);
+        IRecipeSlotBuilder outputSlot = craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, output);
+
+        builder.createFocusLink(inputSlots.get(4), outputSlot);
     }
 
-    @Nullable
     @Override
-    public Size2i getSize() {
-        return new Size2i(2, 1);
+    public int getWidth() {
+        return 3;
+    }
+
+    @Override
+    public int getHeight() {
+        return 3;
     }
 
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
         return CoverRecipe.SERIALIZER.getRegistryName();
-    }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IIngredients ingredients) {
-        ITag<Item> nuggets = ForgeRegistries.ITEMS.tags().getTag(Tags.Items.NUGGETS_IRON);
-        ItemStack stack = recipeLayout.getFocus(VanillaTypes.ITEM).getValue();
-        if (stack.getItem() instanceof CoverItem) {
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, nuggets.stream().map(ItemStack::new).collect(Collectors.toList()));
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, CoverItem.getItem(stack));
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, stack);
-        } else {
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(4, nuggets.stream().map(ItemStack::new).collect(Collectors.toList()));
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(5, stack);
-            ItemStack output = new ItemStack(RSItems.COVER.get());
-            CoverItem.setItem(output, stack);
-            recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, output);
-        }
     }
 }

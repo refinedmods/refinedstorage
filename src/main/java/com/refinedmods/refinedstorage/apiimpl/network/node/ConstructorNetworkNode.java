@@ -14,8 +14,8 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.PositionImpl;
@@ -112,6 +112,8 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     private void extractAndPlaceBlock(ItemStack stack) {
         ItemStack took = network.extractItem(stack, 1, compare, Action.SIMULATE);
         if (!took.isEmpty()) {
+            // We have to copy took as the forge hook clears the item.
+            final ItemStack tookCopy = took.copy();
             BlockPlaceContext ctx = new ConstructorBlockItemUseContext(
                 level,
                 LevelUtils.getFakePlayer((ServerLevel) level, getOwner()),
@@ -122,7 +124,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
             InteractionResult result = ForgeHooks.onPlaceItemIntoWorld(ctx);
             if (result.consumesAction()) {
-                network.extractItem(stack, 1, Action.PERFORM);
+                network.extractItem(tookCopy, 1, Action.PERFORM);
             }
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);

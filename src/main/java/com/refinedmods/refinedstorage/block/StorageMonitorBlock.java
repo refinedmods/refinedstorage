@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.block;
 
 import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
+import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.container.StorageMonitorContainerMenu;
 import com.refinedmods.refinedstorage.container.factory.BlockEntityMenuProvider;
-import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
-import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +40,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            ItemStack held = player.containerMenu.getCarried();
+            ItemStack held = player.getItemInHand(handIn);
 
             if (player.isCrouching()) {
                 return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(

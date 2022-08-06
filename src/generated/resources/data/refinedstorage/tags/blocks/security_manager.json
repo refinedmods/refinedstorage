@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_security_manager",
+    "refinedstorage:orange_security_manager",
+    "refinedstorage:magenta_security_manager",
+    "refinedstorage:security_manager",
+    "refinedstorage:yellow_security_manager",
+    "refinedstorage:lime_security_manager",
+    "refinedstorage:pink_security_manager",
+    "refinedstorage:gray_security_manager",
+    "refinedstorage:light_gray_security_manager",
+    "refinedstorage:cyan_security_manager",
+    "refinedstorage:purple_security_manager",
+    "refinedstorage:blue_security_manager",
+    "refinedstorage:brown_security_manager",
+    "refinedstorage:green_security_manager",
+    "refinedstorage:red_security_manager",
+    "refinedstorage:black_security_manager"
+  ]
+}

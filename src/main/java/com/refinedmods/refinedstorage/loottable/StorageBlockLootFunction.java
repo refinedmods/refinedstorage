@@ -51,7 +51,7 @@ public class StorageBlockLootFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return RSLootFunctions.getStorageBlock();
+        return RSLootFunctions.STORAGE_BLOCK.get();
     }
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<StorageBlockLootFunction> {

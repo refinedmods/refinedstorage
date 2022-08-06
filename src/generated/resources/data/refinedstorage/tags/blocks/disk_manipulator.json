@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "refinedstorage:white_disk_manipulator",
+    "refinedstorage:orange_disk_manipulator",
+    "refinedstorage:magenta_disk_manipulator",
+    "refinedstorage:disk_manipulator",
+    "refinedstorage:yellow_disk_manipulator",
+    "refinedstorage:lime_disk_manipulator",
+    "refinedstorage:pink_disk_manipulator",
+    "refinedstorage:gray_disk_manipulator",
+    "refinedstorage:light_gray_disk_manipulator",
+    "refinedstorage:cyan_disk_manipulator",
+    "refinedstorage:purple_disk_manipulator",
+    "refinedstorage:blue_disk_manipulator",
+    "refinedstorage:brown_disk_manipulator",
+    "refinedstorage:green_disk_manipulator",
+    "refinedstorage:red_disk_manipulator",
+    "refinedstorage:black_disk_manipulator"
+  ]
+}

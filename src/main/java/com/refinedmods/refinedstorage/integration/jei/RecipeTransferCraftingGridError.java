@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -16,6 +16,7 @@ import java.util.List;
 public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     protected static final Color AUTOCRAFTING_HIGHLIGHT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);
     private static final Color MISSING_HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+    private static final boolean HOST_OS_IS_MACOS = System.getProperty("os.name").equals("Mac OS X");
     protected final IngredientTracker tracker;
 
     public RecipeTransferCraftingGridError(IngredientTracker tracker) {
@@ -28,11 +29,12 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     }
 
     @Override
-    public void showError(PoseStack stack, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
-        List<Component> message = drawIngredientHighlights(stack, recipeX, recipeY);
+    public void showError(PoseStack poseStack, int mouseX, int mouseY, IRecipeSlotsView recipeSlotsView, int recipeX, int recipeY) {
+        poseStack.translate(recipeX, recipeY, 0);
+        List<Component> message = drawIngredientHighlights(poseStack, recipeX, recipeY);
 
         Screen currentScreen = Minecraft.getInstance().screen;
-        currentScreen.renderComponentTooltip(stack, message, mouseX, mouseY);
+        currentScreen.renderComponentTooltip(poseStack, message, mouseX, mouseY);
     }
 
     protected List<Component> drawIngredientHighlights(PoseStack stack, int recipeX, int recipeY) {
@@ -45,10 +47,10 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         for (Ingredient ingredient : tracker.getIngredients()) {
             if (!ingredient.isAvailable()) {
                 if (ingredient.isCraftable()) {
-                    ingredient.getGuiIngredient().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
+                    ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
                     craftMessage = true;
                 } else {
-                    ingredient.getGuiIngredient().drawHighlight(stack, MISSING_HIGHLIGHT_COLOR.getRGB(), recipeX, recipeY);
+                    ingredient.getSlotView().drawHighlight(stack, MISSING_HIGHLIGHT_COLOR.getRGB());
                     missingMessage = true;
                 }
             }
@@ -59,7 +61,11 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         }
 
         if (craftMessage) {
-            message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(ChatFormatting.BLUE));
+            if (HOST_OS_IS_MACOS) {
+                message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting_mac").withStyle(ChatFormatting.BLUE));
+            } else {
+                message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(ChatFormatting.BLUE));
+            }
         }
 
         return message;
