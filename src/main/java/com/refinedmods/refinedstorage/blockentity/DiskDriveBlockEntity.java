@@ -6,8 +6,8 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.*;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,8 +17,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -132,8 +131,8 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(DISK_STATE_PROPERTY, diskState).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(DISK_STATE_PROPERTY, diskState).build();
     }
 
     @Nonnull

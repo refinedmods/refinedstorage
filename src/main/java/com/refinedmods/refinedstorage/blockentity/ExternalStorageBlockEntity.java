@@ -6,8 +6,8 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.config.*;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -15,8 +15,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -78,8 +77,8 @@ public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalS
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
     }
 
     @Override

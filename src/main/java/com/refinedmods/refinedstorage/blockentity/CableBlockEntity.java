@@ -10,8 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 
@@ -32,8 +31,8 @@ public class CableBlockEntity extends NetworkNodeBlockEntity<CableNetworkNode> {
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
     }
 
     @Override

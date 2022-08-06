@@ -17,8 +17,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -89,8 +88,8 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(DISK_STATE_PROPERTY, diskState).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(DISK_STATE_PROPERTY, diskState).build();
     }
 
     @Nonnull

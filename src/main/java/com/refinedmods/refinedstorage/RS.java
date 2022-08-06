@@ -38,6 +38,7 @@ public final class RS {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelBake);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelRegistry);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onTextureStitch);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterModelGeometry);
             MinecraftForge.EVENT_BUS.addListener(ClientSetup::addReloadListener);
         });
 

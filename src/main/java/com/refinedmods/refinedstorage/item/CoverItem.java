@@ -25,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -33,10 +32,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CoverItem extends Item {
-
     public static final ItemStack HIDDEN_COVER_ALTERNATIVE = new ItemStack(Blocks.STONE_BRICKS);
-    private static final String NBT_ITEM = "Item";
 
+    private static final String NBT_ITEM = "Item";
 
     public CoverItem() {
         super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
@@ -127,7 +125,7 @@ public class CoverItem extends Item {
 
         if (canPlaceOn(level, pos, facing)) {
             if (level.isClientSide) {
-                ModelDataManager.requestModelDataRefresh(blockEntity);
+                level.getModelDataManager().requestRefresh(blockEntity); // TODO: does this still work ?!
                 return InteractionResult.SUCCESS;
             }
 

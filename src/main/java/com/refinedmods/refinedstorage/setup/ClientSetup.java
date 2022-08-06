@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
 import com.refinedmods.refinedstorage.render.blockentity.StorageMonitorBlockEntityRenderer;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
+import com.refinedmods.refinedstorage.render.model.baked.DiskDriveBakedModel;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
@@ -33,6 +34,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
@@ -331,5 +333,10 @@ public final class ClientSetup {
         if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) {
             event.addSprite(new ResourceLocation(RS.ID, "block/cable_part_border"));
         }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterModelGeometry(final ModelEvent.RegisterGeometryLoaders e) {
+        e.register("disk_drive", new DiskDriveGeometryLoader());
     }
 }
