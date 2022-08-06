@@ -14,6 +14,8 @@ import com.refinedmods.refinedstorage.render.blockentity.StorageMonitorBlockEnti
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
 import com.refinedmods.refinedstorage.render.model.*;
 import com.refinedmods.refinedstorage.render.model.baked.DiskDriveBakedModel;
+import com.refinedmods.refinedstorage.render.model.baked.PatternBakedModel;
+import com.refinedmods.refinedstorage.render.model.baked.PortableGridBakedModel;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
@@ -338,5 +340,6 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRegisterModelGeometry(final ModelEvent.RegisterGeometryLoaders e) {
         e.register("disk_drive", new DiskDriveGeometryLoader());
+        e.register("portable_grid", new PortableGridGeometryLoader());
     }
 }

@@ -42,7 +42,7 @@ public class DiskDriveBakedModel extends BakedModelWrapper<BakedModel> {
             int y = 0;
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
-                    BakedModel diskModel = getDiskModel(key.diskState[i]).apply(facing, getDiskTranslation(facing, x, y));
+                    BakedModel diskModel = getDiskModelBakery(key.diskState[i]).apply(facing, getDiskTranslation(facing, x, y));
                     quads.addAll(diskModel.getQuads(key.state, key.side, key.random));
                 }
 
@@ -56,7 +56,7 @@ public class DiskDriveBakedModel extends BakedModelWrapper<BakedModel> {
             return quads;
         }
 
-        private BiFunction<Direction, Vector3f, BakedModel> getDiskModel(DiskState diskState) {
+        private BiFunction<Direction, Vector3f, BakedModel> getDiskModelBakery(DiskState diskState) {
             return switch (diskState) {
                 case DISCONNECTED -> diskDisconnectedModelBakery;
                 case NEAR_CAPACITY -> diskNearCapacityModelBakery;

@@ -1,5 +1,5 @@
 {
-  "parent": "refinedstorage:block/portable_grid",
+  "parent": "refinedstorage:block/portable_grid_base",
   "textures": {
     "texture1": "refinedstorage:block/portable_grid_2_disconnected"
   }

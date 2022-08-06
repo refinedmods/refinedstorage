@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.render.color;
 
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import com.refinedmods.refinedstorage.render.model.PatternBakedModel;
+import com.refinedmods.refinedstorage.render.model.baked.PatternBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.world.item.ItemStack;
