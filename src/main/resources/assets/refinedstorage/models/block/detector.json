@@ -89,7 +89,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         },
         "west": {
           "uv": [
@@ -98,7 +99,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         }
       }
     },
@@ -123,7 +125,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         },
         "south": {
           "uv": [
@@ -132,7 +135,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         }
       }
     },

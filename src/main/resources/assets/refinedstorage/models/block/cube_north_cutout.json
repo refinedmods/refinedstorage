@@ -53,7 +53,8 @@
       "faces": {
         "north": {
           "texture": "#cutout",
-          "cullface": "north"
+          "cullface": "north",
+          "emissivity": 15
         }
       }
     }

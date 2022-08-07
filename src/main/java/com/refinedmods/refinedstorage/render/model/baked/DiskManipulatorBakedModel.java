@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.render.model;
+package com.refinedmods.refinedstorage.render.model.baked;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -9,26 +9,31 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.util.ColorMap;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
-public class DiskManipulatorBakedModel extends DelegateBakedModel {
-    private final BakedModel baseConnected;
-    private final BakedModel baseDisconnected;
-    private final BakedModel disk;
-    private final BakedModel diskNearCapacity;
-    private final BakedModel diskFull;
-    private final BakedModel diskDisconnected;
+public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
+    private final Function<Direction, BakedModel> baseConnectedModelBakery;
+    private final Function<Direction, BakedModel> baseDisconnectedModelBakery;
+    private final BiFunction<Direction, Vector3f, BakedModel> diskModelBakery;
+    private final BiFunction<Direction, Vector3f, BakedModel> diskNearCapacityModelBakery;
+    private final BiFunction<Direction, Vector3f, BakedModel> diskFullModelBakery;
+    private final BiFunction<Direction, Vector3f, BakedModel> diskDisconnectedModelBakery;
+
     private final LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         @SuppressWarnings("deprecation")
@@ -36,29 +41,15 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
             Direction facing = key.state.getValue(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
             boolean connected = key.state.getValue(NetworkNodeBlock.CONNECTED);
 
-            List<BakedQuad> quads = new ArrayList<>(QuadTransformer.getTransformedQuads(
-                connected ? baseConnected : baseDisconnected,
-                facing,
-                null,
-                key.state,
-                key.random,
-                key.side
-            ));
+            List<BakedQuad> quads = new ArrayList<>((connected ? baseConnectedModelBakery : baseDisconnectedModelBakery)
+                .apply(facing).getQuads(key.state, key.side, key.random));
 
             int x = 0;
             int y = 0;
             for (int i = 0; i < 6; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
-                    BakedModel diskModel = getDiskModel(key.diskState[i]);
-
-                    quads.addAll(QuadTransformer.getTransformedQuads(
-                        diskModel,
-                        facing,
-                        getDiskTranslation(facing, x, y),
-                        key.state,
-                        key.random,
-                        key.side
-                    ));
+                    BakedModel diskModel = getDiskModelBakery(key.diskState[i]).apply(facing, getDiskTranslation(facing, x, y));
+                    quads.addAll(diskModel.getQuads(key.state, key.side, key.random));
                 }
 
                 y++;
@@ -71,17 +62,13 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
             return quads;
         }
 
-        private BakedModel getDiskModel(DiskState diskState) {
-            switch (diskState) {
-                case DISCONNECTED:
-                    return diskDisconnected;
-                case NEAR_CAPACITY:
-                    return diskNearCapacity;
-                case FULL:
-                    return diskFull;
-                default:
-                    return disk;
-            }
+        private BiFunction<Direction, Vector3f, BakedModel> getDiskModelBakery(DiskState diskState) {
+            return switch (diskState) {
+                case DISCONNECTED -> diskDisconnectedModelBakery;
+                case NEAR_CAPACITY -> diskNearCapacityModelBakery;
+                case FULL -> diskFullModelBakery;
+                default -> diskModelBakery;
+            };
         }
 
         private Vector3f getDiskTranslation(Direction facing, int x, int y) {
@@ -99,24 +86,27 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     });
 
-    public DiskManipulatorBakedModel(BakedModel baseConnected, BakedModel baseDisconnected, BakedModel disk, BakedModel diskNearCapacity, BakedModel diskFull, BakedModel diskDisconnected) {
-        super(baseConnected);
-
-        this.baseConnected = baseConnected;
-        this.baseDisconnected = baseDisconnected;
-        this.disk = disk;
-        this.diskNearCapacity = diskNearCapacity;
-        this.diskFull = diskFull;
-        this.diskDisconnected = diskDisconnected;
+    public DiskManipulatorBakedModel(BakedModel originalModel, Function<Direction, BakedModel> baseConnectedModelBakery, Function<Direction, BakedModel> baseDisconnectedModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskNearCapacityModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskFullModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskDisconnectedModelBakery) {
+        super(originalModel);
+        this.baseConnectedModelBakery = baseConnectedModelBakery;
+        this.baseDisconnectedModelBakery = baseDisconnectedModelBakery;
+        this.diskModelBakery = diskModelBakery;
+        this.diskNearCapacityModelBakery = diskNearCapacityModelBakery;
+        this.diskFullModelBakery = diskFullModelBakery;
+        this.diskDisconnectedModelBakery = diskDisconnectedModelBakery;
     }
 
     @Override
     @Nonnull
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
-        DiskState[] diskState = data.getData(DiskManipulatorBlockEntity.DISK_STATE_PROPERTY);
+    public List<BakedQuad> getQuads(@Nullable final BlockState state,
+                                    @Nullable final Direction side,
+                                    @Nonnull final RandomSource rand,
+                                    @Nonnull final ModelData extraData,
+                                    @Nullable final RenderType renderType) {
+        DiskState[] diskState = extraData.get(DiskManipulatorBlockEntity.DISK_STATE_PROPERTY);
 
         if (diskState == null) {
-            return base.getQuads(state, side, rand, data);
+            return super.getQuads(state, side, rand, extraData, renderType);
         }
 
         CacheKey key = new CacheKey(state, side, diskState, rand);
@@ -128,9 +118,9 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         private final BlockState state;
         private final Direction side;
         private final DiskState[] diskState;
-        private final Random random;
+        private final RandomSource random;
 
-        CacheKey(BlockState state, @Nullable Direction side, DiskState[] diskState, Random random) {
+        CacheKey(BlockState state, @Nullable Direction side, DiskState[] diskState, RandomSource random) {
             this.state = state;
             this.side = side;
             this.diskState = diskState;
