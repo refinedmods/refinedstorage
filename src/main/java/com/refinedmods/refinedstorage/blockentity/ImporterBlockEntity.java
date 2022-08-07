@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -24,13 +25,16 @@ public class ImporterBlockEntity extends NetworkNodeBlockEntity<ImporterNetworkN
     public static final BlockEntitySynchronizationParameter<CompoundTag, ImporterBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
     });
 
-    public ImporterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.IMPORTER.get(), pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public ImporterBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.IMPORTER.get(), pos, state, SPEC);
     }
 
     @Override

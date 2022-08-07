@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,9 +19,13 @@ public class CableBlockEntity extends NetworkNodeBlockEntity<CableNetworkNode> {
     public static final BlockEntitySynchronizationParameter<CompoundTag, CableBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
     });
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
+
     public CableBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CABLE.get(), pos, state);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+        super(RSBlockEntities.CABLE.get(), pos, state, SPEC);
     }
 
     @Override

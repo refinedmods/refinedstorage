@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,14 +33,17 @@ public class DestructorBlockEntity extends NetworkNodeBlockEntity<DestructorNetw
         (initial, p) -> {
         });
 
-    public DestructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DESTRUCTOR.get(), pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(PICKUP)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(PICKUP);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public DestructorBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.DESTRUCTOR.get(), pos, state, SPEC);
     }
 
     @Override

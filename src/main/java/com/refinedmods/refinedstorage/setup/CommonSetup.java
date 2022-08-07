@@ -1,8 +1,6 @@
 package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
@@ -30,26 +28,11 @@ import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDi
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorageProvider;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.ItemExternalStorageProvider;
 import com.refinedmods.refinedstorage.block.BlockListener;
-import com.refinedmods.refinedstorage.blockentity.*;
-import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.refinedmods.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
-import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import com.refinedmods.refinedstorage.recipe.CoverRecipe;
-import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
-import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -143,12 +126,5 @@ public final class CommonSetup {
     @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent e) {
         e.register(INetworkNodeProxy.class);
-    }
-
-    @SubscribeEvent
-    public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e) {
-        e.getRegistry().register(new UpgradeWithEnchantedBookRecipeSerializer().setRegistryName(RS.ID, "upgrade_with_enchanted_book"));
-        e.getRegistry().register(CoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "cover_recipe")));
-        e.getRegistry().register(HollowCoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "hollow_cover_recipe")));
     }
 }

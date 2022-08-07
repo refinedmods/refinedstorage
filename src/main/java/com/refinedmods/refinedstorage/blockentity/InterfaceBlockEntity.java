@@ -4,6 +4,7 @@ import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.InterfaceNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -19,12 +20,15 @@ import javax.annotation.Nullable;
 public class InterfaceBlockEntity extends NetworkNodeBlockEntity<InterfaceNetworkNode> {
     public static final BlockEntitySynchronizationParameter<Integer, InterfaceBlockEntity> COMPARE = IComparable.createParameter();
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .build();
+
     private final LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
 
     public InterfaceBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.INTERFACE.get(), pos, state);
-
-        dataManager.addWatchedParameter(COMPARE);
+        super(RSBlockEntities.INTERFACE.get(), pos, state, SPEC);
     }
 
     @Nonnull

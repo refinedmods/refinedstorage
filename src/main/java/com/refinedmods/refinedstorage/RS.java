@@ -52,13 +52,13 @@ public final class RS {
         RSLootFunctions.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onCommonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(RecipeSerializer.class, CommonSetup::onRegisterRecipeSerializers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onRegisterCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().register(new DataGenerators());
         FMLJavaModLoadingContext.get().getModEventBus().register(new CuriosIntegration());
 
         RSContainerMenus.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
         RSBlockEntities.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RSRecipeSerializers.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         API.deliver();
     }

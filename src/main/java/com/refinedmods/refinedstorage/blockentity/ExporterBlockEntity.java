@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -27,12 +28,15 @@ public class ExporterBlockEntity extends NetworkNodeBlockEntity<ExporterNetworkN
     public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> COMPARE = IComparable.createParameter();
     public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> TYPE = IType.createParameter();
 
-    public ExporterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.EXPORTER.get(), pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public ExporterBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.EXPORTER.get(), pos, state, SPEC);
     }
 
     @Override

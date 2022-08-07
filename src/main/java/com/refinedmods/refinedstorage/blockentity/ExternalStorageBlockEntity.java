@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetwor
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.config.*;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
@@ -56,17 +57,20 @@ public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalS
     public static final BlockEntitySynchronizationParameter<CompoundTag, ExternalStorageBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
     });
 
-    public ExternalStorageBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.EXTERNAL_STORAGE.get(), pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(PRIORITY)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(STORED)
+        .addWatchedParameter(CAPACITY)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(ACCESS_TYPE)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(PRIORITY);
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(STORED);
-        dataManager.addWatchedParameter(CAPACITY);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(ACCESS_TYPE);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public ExternalStorageBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.EXTERNAL_STORAGE.get(), pos, state, SPEC);
     }
 
     @Override

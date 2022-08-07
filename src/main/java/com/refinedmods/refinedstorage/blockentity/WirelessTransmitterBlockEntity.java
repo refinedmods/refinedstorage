@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.blockentity;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.WirelessTransmitterNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
@@ -13,10 +14,13 @@ import javax.annotation.Nonnull;
 public class WirelessTransmitterBlockEntity extends NetworkNodeBlockEntity<WirelessTransmitterNetworkNode> {
     public static final BlockEntitySynchronizationParameter<Integer, WirelessTransmitterBlockEntity> RANGE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getRange());
 
-    public WirelessTransmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.WIRELESS_TRANSMITTER.get(), pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(RANGE)
+        .build();
 
-        dataManager.addWatchedParameter(RANGE);
+    public WirelessTransmitterBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.WIRELESS_TRANSMITTER.get(), pos, state, SPEC);
     }
 
     @Override

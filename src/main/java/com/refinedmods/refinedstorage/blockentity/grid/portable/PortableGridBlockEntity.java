@@ -38,6 +38,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
@@ -47,15 +48,14 @@ import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
-import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -128,6 +128,16 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
         }
     });
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(SORTING_DIRECTION)
+        .addWatchedParameter(SORTING_TYPE)
+        .addWatchedParameter(SEARCH_BOX_MODE)
+        .addWatchedParameter(SIZE)
+        .addWatchedParameter(TAB_SELECTED)
+        .addWatchedParameter(TAB_PAGE)
+        .build();
+
     private final PortableGridBlockItem.Type type;
     private final List<IFilter> filters = new ArrayList<>();
     private final List<IGridTab> tabs = new ArrayList<>();
@@ -158,17 +168,8 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
     private boolean loadNextTick;
 
     public PortableGridBlockEntity(PortableGridBlockItem.Type type, BlockPos pos, BlockState state) {
-        super(type == PortableGridBlockItem.Type.CREATIVE ? RSBlockEntities.CREATIVE_PORTABLE_GRID.get() : RSBlockEntities.PORTABLE_GRID.get(), pos, state);
-
+        super(type == PortableGridBlockItem.Type.CREATIVE ? RSBlockEntities.CREATIVE_PORTABLE_GRID.get() : RSBlockEntities.PORTABLE_GRID.get(), pos, state, SPEC);
         this.type = type;
-
-        dataManager.addWatchedParameter(REDSTONE_MODE);
-        dataManager.addWatchedParameter(SORTING_DIRECTION);
-        dataManager.addWatchedParameter(SORTING_TYPE);
-        dataManager.addWatchedParameter(SEARCH_BOX_MODE);
-        dataManager.addWatchedParameter(SIZE);
-        dataManager.addWatchedParameter(TAB_SELECTED);
-        dataManager.addWatchedParameter(TAB_PAGE);
     }
 
     public static void serverTick(PortableGridBlockEntity blockEntity) {

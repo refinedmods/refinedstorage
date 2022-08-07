@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
@@ -48,79 +49,12 @@ public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    private final GridType type;
-    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
     public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SORTING_TYPE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-
-    public GridBlockEntity(GridType type, BlockPos pos, BlockState state) {
-        super(getType(type), pos, state);
-
-        this.type = type;
-
-        dataManager.addWatchedParameter(VIEW_TYPE);
-        dataManager.addWatchedParameter(SORTING_DIRECTION);
-        dataManager.addWatchedParameter(SORTING_TYPE);
-        dataManager.addWatchedParameter(SEARCH_BOX_MODE);
-        dataManager.addWatchedParameter(SIZE);
-        dataManager.addWatchedParameter(TAB_SELECTED);
-        dataManager.addWatchedParameter(TAB_PAGE);
-        dataManager.addWatchedParameter(EXACT_PATTERN);
-        dataManager.addWatchedParameter(PROCESSING_PATTERN);
-        dataManager.addWatchedParameter(PROCESSING_TYPE);
-        dataManager.addParameter(ALLOWED_ITEM_TAGS);
-        dataManager.addParameter(ALLOWED_FLUID_TAGS);
-    }
-
-    public static void trySortGrid(boolean initial) {
-        if (!initial) {
-            BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
-        }
-    }
-
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SEARCH_BOX_MODE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
-        if (IGrid.isValidSearchBoxMode(v)) {
-            t.getNode().setSearchBoxMode(v);
-            t.getNode().markDirty();
-        }
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
-
-    public static BlockEntityType<GridBlockEntity> getType(GridType type) {
-        return switch (type) {
-            case NORMAL -> RSBlockEntities.GRID.get();
-            case CRAFTING -> RSBlockEntities.CRAFTING_GRID.get();
-            case PATTERN -> RSBlockEntities.PATTERN_GRID.get();
-            case FLUID -> RSBlockEntities.FLUID_GRID.get();
-        };
-    }
-
-    @Override
-    @Nonnull
-    public GridNetworkNode createNode(Level level, BlockPos pos) {
-        return new GridNetworkNode(level, pos, type);
-    }
-
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SIZE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
-        if (IGrid.isValidSize(v)) {
-            t.getNode().setSize(v);
-            t.getNode().markDirty();
-        }
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && type == GridType.PATTERN) {
-            return diskCapability.cast();
-        }
-
-        return super.getCapability(cap, direction);
-    }
-
     public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> TAB_SELECTED = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
@@ -136,6 +70,71 @@ public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
         t.getNode().clearMatrix();
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SIZE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
+        if (IGrid.isValidSize(v)) {
+            t.getNode().setSize(v);
+            t.getNode().markDirty();
+        }
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SEARCH_BOX_MODE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
+        if (IGrid.isValidSearchBoxMode(v)) {
+            t.getNode().setSearchBoxMode(v);
+            t.getNode().markDirty();
+        }
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(VIEW_TYPE)
+        .addWatchedParameter(SORTING_DIRECTION)
+        .addWatchedParameter(SORTING_TYPE)
+        .addWatchedParameter(SEARCH_BOX_MODE)
+        .addWatchedParameter(SIZE)
+        .addWatchedParameter(TAB_SELECTED)
+        .addWatchedParameter(TAB_PAGE)
+        .addWatchedParameter(EXACT_PATTERN)
+        .addWatchedParameter(PROCESSING_PATTERN)
+        .addWatchedParameter(PROCESSING_TYPE)
+        .addParameter(ALLOWED_ITEM_TAGS)
+        .addParameter(ALLOWED_FLUID_TAGS)
+        .build();
 
+    public static BlockEntityType<GridBlockEntity> getType(GridType type) {
+        return switch (type) {
+            case NORMAL -> RSBlockEntities.GRID.get();
+            case CRAFTING -> RSBlockEntities.CRAFTING_GRID.get();
+            case PATTERN -> RSBlockEntities.PATTERN_GRID.get();
+            case FLUID -> RSBlockEntities.FLUID_GRID.get();
+        };
+    }
+
+    public static void trySortGrid(boolean initial) {
+        if (!initial) {
+            BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
+        }
+    }
+
+    private final GridType type;
+    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
+
+    public GridBlockEntity(GridType type, BlockPos pos, BlockState state) {
+        super(getType(type), pos, state, SPEC);
+        this.type = type;
+    }
+
+    @Override
+    @Nonnull
+    public GridNetworkNode createNode(Level level, BlockPos pos) {
+        return new GridNetworkNode(level, pos, type);
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && type == GridType.PATTERN) {
+            return diskCapability.cast();
+        }
+
+        return super.getCapability(cap, direction);
+    }
 }

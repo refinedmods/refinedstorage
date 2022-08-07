@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -30,13 +31,16 @@ public class ConstructorBlockEntity extends NetworkNodeBlockEntity<ConstructorNe
         (initial, p) -> {
         });
 
-    public ConstructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CONSTRUCTOR.get(), pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(DROP)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(DROP);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public ConstructorBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.CONSTRUCTOR.get(), pos, state, SPEC);
     }
 
     @Override
