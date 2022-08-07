@@ -36,9 +36,11 @@ public final class RS {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onClientSetup);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelBake);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelRegistry);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterAdditionalModels);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onTextureStitch);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterModelGeometry);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterKeymappings);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterColorBindings);
             MinecraftForge.EVENT_BUS.addListener(ClientSetup::addReloadListener);
         });
 

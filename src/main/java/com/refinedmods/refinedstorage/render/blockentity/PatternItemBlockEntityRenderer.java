@@ -10,8 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.RenderProperties;
-import net.minecraftforge.common.util.NonNullLazy;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class PatternItemBlockEntityRenderer extends BlockEntityWithoutLevelRenderer {
     private static PatternItemBlockEntityRenderer instance;
@@ -26,7 +25,7 @@ public class PatternItemBlockEntityRenderer extends BlockEntityWithoutLevelRende
 
         ItemStack outputStack = pattern.getOutputs().get(0);
 
-        RenderProperties.get(outputStack.getItem()).getItemStackRenderer()
+        IClientItemExtensions.of(outputStack.getItem()).getCustomRenderer()
             .renderByItem(outputStack, transformType, poseStack, renderTypeBuffer, combinedLight, combinedOverlay);
     }
 

@@ -1,4 +1,5 @@
 {
+  "render_type": "cutout",
   "textures": {
     "border": "refinedstorage:block/cable_part_border"
   },

@@ -12,11 +12,11 @@ import com.refinedmods.refinedstorage.item.property.SecurityCardItemPropertyGett
 import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
 import com.refinedmods.refinedstorage.render.blockentity.StorageMonitorBlockEntityRenderer;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
-import com.refinedmods.refinedstorage.render.model.*;
-import com.refinedmods.refinedstorage.render.model.baked.DiskDriveBakedModel;
-import com.refinedmods.refinedstorage.render.model.baked.DiskManipulatorBakedModel;
+import com.refinedmods.refinedstorage.render.model.baked.CableCoverItemBakedModel;
+import com.refinedmods.refinedstorage.render.model.DiskDriveGeometryLoader;
+import com.refinedmods.refinedstorage.render.model.PortableGridGeometryLoader;
+import com.refinedmods.refinedstorage.render.model.baked.CableCoverBakedModel;
 import com.refinedmods.refinedstorage.render.model.baked.PatternBakedModel;
-import com.refinedmods.refinedstorage.render.model.baked.PortableGridBakedModel;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
 import com.refinedmods.refinedstorage.screen.*;
 import com.refinedmods.refinedstorage.screen.factory.CrafterManagerScreenFactory;
@@ -25,8 +25,6 @@ import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -35,12 +33,10 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -112,45 +108,10 @@ public final class ClientSetup {
             MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
         });
 
-        ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
-        ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
-        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
-        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);
-        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
-        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
-
-        // RenderLayer isn't thread safe
-        e.enqueueWork(() -> {
-            RSBlocks.CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.CRAFTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.CRAFTER_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.CRAFTING_MONITOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.DETECTOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.DISK_MANIPULATOR.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.CRAFTING_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.PATTERN_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.FLUID_GRID.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.NETWORK_RECEIVER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.NETWORK_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.RELAY.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.SECURITY_MANAGER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            RSBlocks.WIRELESS_TRANSMITTER.values().forEach(block -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.cutout()));
-            ItemBlockRenderTypes.setRenderLayer(RSBlocks.CABLE.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(RSBlocks.IMPORTER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXPORTER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(RSBlocks.EXTERNAL_STORAGE.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(RSBlocks.CONSTRUCTOR.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(RSBlocks.DESTRUCTOR.get(), RenderType.cutout());
-        });
-
         BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR, ctx -> new StorageMonitorBlockEntityRenderer());
 
         // ItemProperties isn't thread safe
         e.enqueueWork(() -> {
-            Minecraft.getInstance().getItemColors().register(new PatternItemColor(), RSItems.PATTERN.get());
-
             ItemProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
 
             RSItems.CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
@@ -200,14 +161,28 @@ public final class ClientSetup {
     // TODO: we have probably too much emissivity (when disconnected)
 
     private static void registerBakedModelOverrides() {
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cable"), (base, registry) -> new BakedModelCableCover(base));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "exporter"), (base, registry) -> new BakedModelCableCover(base));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "importer"), (base, registry) -> new BakedModelCableCover(base));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "external_storage"), (base, registry) -> new BakedModelCableCover(base));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cover"), (base, registry) -> new BakedModelCover(ItemStack.EMPTY, CoverType.NORMAL));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "hollow_cover"), (base, registry) -> new BakedModelCover(ItemStack.EMPTY, CoverType.HOLLOW));
-
+        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cable"), (base, registry) -> new CableCoverBakedModel(base));
+        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "exporter"), (base, registry) -> new CableCoverBakedModel(base));
+        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "importer"), (base, registry) -> new CableCoverBakedModel(base));
+        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "external_storage"), (base, registry) -> new CableCoverBakedModel(base));
+        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cover"), (base, registry) -> new CableCoverItemBakedModel(ItemStack.EMPTY, CoverType.NORMAL));
+        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "hollow_cover"), (base, registry) -> new CableCoverItemBakedModel(ItemStack.EMPTY, CoverType.HOLLOW));
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterColorBindings(RegisterColorHandlersEvent.Item e) {
+        e.register(new PatternItemColor(), RSItems.PATTERN.get());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterKeymappings(RegisterKeyMappingsEvent e) {
+        e.register(RSKeyBindings.FOCUS_SEARCH_BAR);
+        e.register(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
+        e.register(RSKeyBindings.OPEN_WIRELESS_GRID);
+        e.register(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);
+        e.register(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
+        e.register(RSKeyBindings.OPEN_PORTABLE_GRID);
     }
 
     @SubscribeEvent
@@ -216,35 +191,33 @@ public final class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void onModelRegistry(ModelRegistryEvent e) {
-        ForgeModelBakery.addSpecialModel(DISK_RESOURCE);
-        ForgeModelBakery.addSpecialModel(DISK_NEAR_CAPACITY_RESOURCE);
-        ForgeModelBakery.addSpecialModel(DISK_FULL_RESOURCE);
-        ForgeModelBakery.addSpecialModel(DISK_DISCONNECTED_RESOURCE);
+    public static void onRegisterAdditionalModels(ModelEvent.RegisterAdditional e) {
+        e.register(DISK_RESOURCE);
+        e.register(DISK_NEAR_CAPACITY_RESOURCE);
+        e.register(DISK_FULL_RESOURCE);
+        e.register(DISK_DISCONNECTED_RESOURCE);
 
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
+        e.register(new ResourceLocation(RS.ID + ":block/disk_manipulator/disconnected"));
 
         for (DyeColor color : DyeColor.values()) {
-            ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
+            e.register(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
         }
 
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
-        ForgeModelBakery.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
+        e.register(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
+        e.register(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
+        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
+        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
+        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
+        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
     }
 
     @SubscribeEvent
-    public static void onModelBake(ModelBakeEvent e) {
-        FullbrightBakedModel.invalidateCache();
-
-        for (ResourceLocation id : e.getModelRegistry().keySet()) {
+    public static void onModelBake(ModelEvent.BakingCompleted e) {
+        for (ResourceLocation id : e.getModels().keySet()) {
             BakedModelOverrideRegistry.BakedModelOverrideFactory factory = BAKED_MODEL_OVERRIDE_REGISTRY.get(new ResourceLocation(id.getNamespace(), id.getPath()));
 
             if (factory != null) {
-                e.getModelRegistry().put(id, factory.create(e.getModelRegistry().get(id), e.getModelRegistry()));
+                e.getModels().put(id, factory.create(e.getModels().get(id), e.getModels()));
             }
         }
     }
