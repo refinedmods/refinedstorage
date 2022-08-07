@@ -27,7 +27,7 @@ public class FluidInterfaceBlockEntity extends NetworkNodeBlockEntity<FluidInter
     private final LazyOptional<IItemHandler> inCapability = LazyOptional.of(() -> getNode().getIn());
 
     public FluidInterfaceBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.FLUID_INTERFACE, pos, state);
+        super(RSBlockEntities.FLUID_INTERFACE.get(), pos, state);
 
         dataManager.addParameter(TANK_IN);
         dataManager.addParameter(TANK_OUT);

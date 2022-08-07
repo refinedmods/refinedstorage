@@ -158,7 +158,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
     private boolean loadNextTick;
 
     public PortableGridBlockEntity(PortableGridBlockItem.Type type, BlockPos pos, BlockState state) {
-        super(type == PortableGridBlockItem.Type.CREATIVE ? RSBlockEntities.CREATIVE_PORTABLE_GRID : RSBlockEntities.PORTABLE_GRID, pos, state);
+        super(type == PortableGridBlockItem.Type.CREATIVE ? RSBlockEntities.CREATIVE_PORTABLE_GRID.get() : RSBlockEntities.PORTABLE_GRID.get(), pos, state);
 
         this.type = type;
 

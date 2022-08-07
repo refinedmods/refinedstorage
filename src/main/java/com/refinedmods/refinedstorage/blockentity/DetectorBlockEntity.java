@@ -32,7 +32,7 @@ public class DetectorBlockEntity extends NetworkNodeBlockEntity<DetectorNetworkN
     private static final String NBT_POWERED = "Powered";
 
     public DetectorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DETECTOR, pos, state);
+        super(RSBlockEntities.DETECTOR.get(), pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);

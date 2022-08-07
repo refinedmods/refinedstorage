@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 public class RelayBlockEntity extends NetworkNodeBlockEntity<RelayNetworkNode> {
     public RelayBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.RELAY, pos, state);
+        super(RSBlockEntities.RELAY.get(), pos, state);
     }
 
     @Override

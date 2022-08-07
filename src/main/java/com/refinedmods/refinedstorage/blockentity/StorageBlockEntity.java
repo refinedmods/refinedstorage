@@ -8,8 +8,8 @@ import com.refinedmods.refinedstorage.blockentity.config.IAccessType;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IPrioritizable;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,20 +39,13 @@ public class StorageBlockEntity extends NetworkNodeBlockEntity<StorageNetworkNod
     }
 
     public static BlockEntityType<StorageBlockEntity> getType(ItemStorageType type) {
-        switch (type) {
-            case ONE_K:
-                return RSBlockEntities.ONE_K_STORAGE_BLOCK;
-            case FOUR_K:
-                return RSBlockEntities.FOUR_K_STORAGE_BLOCK;
-            case SIXTEEN_K:
-                return RSBlockEntities.SIXTEEN_K_STORAGE_BLOCK;
-            case SIXTY_FOUR_K:
-                return RSBlockEntities.SIXTY_FOUR_K_STORAGE_BLOCK;
-            case CREATIVE:
-                return RSBlockEntities.CREATIVE_STORAGE_BLOCK;
-            default:
-                throw new IllegalArgumentException("Unknown storage type " + type);
-        }
+        return switch (type) {
+            case ONE_K -> RSBlockEntities.ONE_K_STORAGE_BLOCK.get();
+            case FOUR_K -> RSBlockEntities.FOUR_K_STORAGE_BLOCK.get();
+            case SIXTEEN_K -> RSBlockEntities.SIXTEEN_K_STORAGE_BLOCK.get();
+            case SIXTY_FOUR_K -> RSBlockEntities.SIXTY_FOUR_K_STORAGE_BLOCK.get();
+            case CREATIVE -> RSBlockEntities.CREATIVE_STORAGE_BLOCK.get();
+        };
     }
 
     public ItemStorageType getItemStorageType() {

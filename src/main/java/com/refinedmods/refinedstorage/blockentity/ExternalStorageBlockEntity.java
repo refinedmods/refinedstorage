@@ -57,7 +57,7 @@ public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalS
     });
 
     public ExternalStorageBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.EXTERNAL_STORAGE, pos, state);
+        super(RSBlockEntities.EXTERNAL_STORAGE.get(), pos, state);
 
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);

@@ -31,7 +31,7 @@ public class StorageMonitorBlockEntity extends NetworkNodeBlockEntity<StorageMon
     private FluidStack fluidStack = FluidStack.EMPTY;
 
     public StorageMonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.STORAGE_MONITOR, pos, state);
+        super(RSBlockEntities.STORAGE_MONITOR.get(), pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);

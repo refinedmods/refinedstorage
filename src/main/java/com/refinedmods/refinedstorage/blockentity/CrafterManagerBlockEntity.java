@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CrafterManagerBlockEntity extends NetworkNodeBlockEntity<CrafterManagerNetworkNode> {
     public CrafterManagerBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CRAFTER_MANAGER, pos, state);
+        super(RSBlockEntities.CRAFTER_MANAGER.get(), pos, state);
 
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);

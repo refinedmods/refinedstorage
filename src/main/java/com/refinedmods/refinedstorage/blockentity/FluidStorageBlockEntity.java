@@ -8,8 +8,8 @@ import com.refinedmods.refinedstorage.blockentity.config.IAccessType;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IPrioritizable;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,20 +39,13 @@ public class FluidStorageBlockEntity extends NetworkNodeBlockEntity<FluidStorage
     }
 
     public static BlockEntityType<FluidStorageBlockEntity> getType(FluidStorageType type) {
-        switch (type) {
-            case SIXTY_FOUR_K:
-                return RSBlockEntities.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK;
-            case TWO_HUNDRED_FIFTY_SIX_K:
-                return RSBlockEntities.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK;
-            case THOUSAND_TWENTY_FOUR_K:
-                return RSBlockEntities.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK;
-            case FOUR_THOUSAND_NINETY_SIX_K:
-                return RSBlockEntities.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK;
-            case CREATIVE:
-                return RSBlockEntities.CREATIVE_FLUID_STORAGE_BLOCK;
-            default:
-                throw new IllegalArgumentException("Unknown storage type " + type);
-        }
+        return switch (type) {
+            case SIXTY_FOUR_K -> RSBlockEntities.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK.get();
+            case TWO_HUNDRED_FIFTY_SIX_K -> RSBlockEntities.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK.get();
+            case THOUSAND_TWENTY_FOUR_K -> RSBlockEntities.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK.get();
+            case FOUR_THOUSAND_NINETY_SIX_K -> RSBlockEntities.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK.get();
+            case CREATIVE -> RSBlockEntities.CREATIVE_FLUID_STORAGE_BLOCK.get();
+        };
     }
 
     public FluidStorageType getFluidStorageType() {

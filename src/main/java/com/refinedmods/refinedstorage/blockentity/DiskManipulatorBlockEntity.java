@@ -46,7 +46,7 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
     private final DiskState[] diskState = new DiskState[6];
 
     public DiskManipulatorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DISK_MANIPULATOR, pos, state);
+        super(RSBlockEntities.DISK_MANIPULATOR.get(), pos, state);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);

@@ -32,7 +32,7 @@ public class NetworkTransmitterBlockEntity extends NetworkNodeBlockEntity<Networ
     private final LazyOptional<IItemHandler> networkCardCapability = LazyOptional.of(() -> getNode().getNetworkCard());
 
     public NetworkTransmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.NETWORK_TRANSMITTER, pos, state);
+        super(RSBlockEntities.NETWORK_TRANSMITTER.get(), pos, state);
 
         dataManager.addWatchedParameter(DISTANCE);
         dataManager.addWatchedParameter(RECEIVER_DIMENSION);

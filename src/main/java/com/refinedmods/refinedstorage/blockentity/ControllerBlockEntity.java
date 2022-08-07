@@ -44,7 +44,7 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
     private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> getNetwork().getEnergyStorage());
 
     public ControllerBlockEntity(NetworkType type, BlockPos pos, BlockState state) {
-        super(type == NetworkType.CREATIVE ? RSBlockEntities.CREATIVE_CONTROLLER : RSBlockEntities.CONTROLLER, pos, state);
+        super(type == NetworkType.CREATIVE ? RSBlockEntities.CREATIVE_CONTROLLER.get() : RSBlockEntities.CONTROLLER.get(), pos, state);
 
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_USAGE);

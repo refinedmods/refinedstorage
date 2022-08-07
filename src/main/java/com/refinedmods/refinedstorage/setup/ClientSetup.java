@@ -108,7 +108,7 @@ public final class ClientSetup {
             MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
         });
 
-        BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR, ctx -> new StorageMonitorBlockEntityRenderer());
+        BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR.get(), ctx -> new StorageMonitorBlockEntityRenderer());
 
         // ItemProperties isn't thread safe
         e.enqueueWork(() -> {
