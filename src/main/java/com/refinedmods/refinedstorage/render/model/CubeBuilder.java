@@ -1,13 +1,10 @@
 package com.refinedmods.refinedstorage.render.model;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
+import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +13,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class CubeBuilder {
-
     private Vector3f from;
     private Vector3f to;
-    private VertexFormat format = DefaultVertexFormat.BLOCK; //Changed from Item
-    private Map<Direction, Face> faces = new HashMap<>();
+    private final Map<Direction, Face> faces = new HashMap<>();
     private int color = 0xFFFFFFFF;
 
     public CubeBuilder from(float x, float y, float z) {
@@ -66,11 +61,12 @@ public class CubeBuilder {
     }
 
     private BakedQuad bakeFace(Direction facing, Face cubeFace) {
-        BakedQuadBuilder builder = new BakedQuadBuilder(cubeFace.sprite);
+        List<BakedQuad> quad = new ArrayList<>();
+        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(quad::add);
 
-        builder.setQuadOrientation(facing);
-        builder.setQuadTint(-1);
-        builder.setApplyDiffuseLighting(true);
+        builder.setDirection(facing);
+        builder.setTintIndex(-1);
+        builder.setShade(true);
 
         Uv uv = getDefaultUv(facing, cubeFace.sprite, from.x(), from.y(), from.z(), to.x(), to.y(), to.z());
 
@@ -113,7 +109,7 @@ public class CubeBuilder {
                 break;
         }
 
-        return builder.build();
+        return quad.get(0);
     }
 
     private Uv getDefaultUv(Direction face, TextureAtlasSprite texture, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
@@ -161,7 +157,7 @@ public class CubeBuilder {
         return uv;
     }
 
-    private void addVertexTopLeft(BakedQuadBuilder builder, Face face, float x, float y, float z, Uv uv) {
+    private void addVertexTopLeft(QuadBakingVertexConsumer builder, Face face, float x, float y, float z, Uv uv) {
         float u;
         float v;
 
@@ -188,7 +184,7 @@ public class CubeBuilder {
         addVertex(builder, face, x, y, z, u, v);
     }
 
-    private void addVertexTopRight(BakedQuadBuilder builder, Face face, float x, float y, float z, Uv uv) {
+    private void addVertexTopRight(QuadBakingVertexConsumer builder, Face face, float x, float y, float z, Uv uv) {
         float u;
         float v;
 
@@ -215,7 +211,7 @@ public class CubeBuilder {
         addVertex(builder, face, x, y, z, u, v);
     }
 
-    private void addVertexBottomRight(BakedQuadBuilder builder, Face face, float x, float y, float z, Uv uv) {
+    private void addVertexBottomRight(QuadBakingVertexConsumer builder, Face face, float x, float y, float z, Uv uv) {
         float u;
         float v;
 
@@ -242,7 +238,7 @@ public class CubeBuilder {
         addVertex(builder, face, x, y, z, u, v);
     }
 
-    private void addVertexBottomLeft(BakedQuadBuilder builder, Face face, float x, float y, float z, Uv uv) {
+    private void addVertexBottomLeft(QuadBakingVertexConsumer builder, Face face, float x, float y, float z, Uv uv) {
         float u;
         float v;
 
@@ -269,40 +265,15 @@ public class CubeBuilder {
         addVertex(builder, face, x, y, z, u, v);
     }
 
-    private void addVertex(BakedQuadBuilder builder, Face face, float x, float y, float z, float u, float v) {
-        VertexFormat format = builder.getVertexFormat();
-
-        for (int i = 0; i < format.getElements().size(); i++) {
-            VertexFormatElement e = format.getElements().get(i);
-
-            switch (e.getUsage()) {
-                case POSITION:
-                    builder.put(i, x, y, z);
-                    break;
-                case NORMAL:
-                    builder.put(i, face.face.getStepX(), face.face.getStepY(), face.face.getStepZ());
-                    break;
-                case COLOR:
-                    float r = (color >> 16 & 0xFF) / 255F;
-                    float g = (color >> 8 & 0xFF) / 255F;
-                    float b = (color & 0xFF) / 255F;
-                    float a = (color >> 24 & 0xFF) / 255F;
-
-                    builder.put(i, r, g, b, a);
-                    break;
-                case UV:
-                    if (e.getIndex() == 0) {
-                        builder.put(i, u, v);
-                    } else {
-                        builder.put(i, (float) (face.light * 0x20) / 0xFFFF, (float) (face.light * 0x20) / 0xFFFF);
-                    }
-
-                    break;
-                default:
-                    builder.put(i);
-                    break;
-            }
-        }
+    private void addVertex(QuadBakingVertexConsumer builder, Face face, float x, float y, float z, float u, float v) {
+        builder.vertex(x, y, z);
+        builder.normal(face.face.getStepX(), face.face.getStepY(), face.face.getStepZ());
+        float r = (color >> 16 & 0xFF) / 255F;
+        float g = (color >> 8 & 0xFF) / 255F;
+        float b = (color & 0xFF) / 255F;
+        float a = (color >> 24 & 0xFF) / 255F;
+        builder.color(r, g, b, a);
+        builder.endVertex();
     }
 
     public enum UvRotation {
@@ -320,27 +291,13 @@ public class CubeBuilder {
     }
 
     public static class Face {
-        private Direction face;
-        private TextureAtlasSprite sprite;
-        private int light;
-        private UvRotation uvRotation = UvRotation.CLOCKWISE_0;
+        private final Direction face;
+        private final TextureAtlasSprite sprite;
+        private final UvRotation uvRotation = UvRotation.CLOCKWISE_0;
 
         public Face(Direction face, TextureAtlasSprite sprite) {
             this.face = face;
             this.sprite = sprite;
         }
-
-        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation) {
-            this(face, sprite);
-
-            this.uvRotation = uvRotation;
-        }
-
-        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation, int light) {
-            this(face, sprite, uvRotation);
-
-            this.light = light;
-        }
     }
-
 }
