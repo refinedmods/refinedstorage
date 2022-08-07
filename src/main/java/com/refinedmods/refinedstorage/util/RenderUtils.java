@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
+import com.mojang.math.Quaternion;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
@@ -24,6 +25,17 @@ import java.util.Set;
 
 public final class RenderUtils {
     private RenderUtils() {
+    }
+
+    public static Quaternion getQuaternion(Direction direction) {
+        return switch (direction) {
+            case NORTH -> new Quaternion(0, 0, 0, true);
+            case EAST -> new Quaternion(0, -90, 0, true);
+            case SOUTH -> new Quaternion(0, 180, 0, true);
+            case WEST -> new Quaternion(0, 90, 0, true);
+            case UP -> new Quaternion(90, 0, 180, true);
+            case DOWN -> new Quaternion(-90, 0, 0, true);
+        };
     }
 
     public static String shorten(String text, int length) {

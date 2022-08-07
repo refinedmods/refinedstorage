@@ -42,7 +42,7 @@ public class DiskDriveBakedModel extends BakedModelWrapper<BakedModel> {
             int y = 0;
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
-                    BakedModel diskModel = getDiskModelBakery(key.diskState[i]).apply(facing, getDiskTranslation(facing, x, y));
+                    BakedModel diskModel = getDiskModelBakery(key.diskState[i]).apply(facing, getDiskTranslation(x, y));
                     quads.addAll(diskModel.getQuads(key.state, key.side, key.random));
                 }
 
@@ -65,17 +65,10 @@ public class DiskDriveBakedModel extends BakedModelWrapper<BakedModel> {
             };
         }
 
-        private Vector3f getDiskTranslation(Direction facing, int x, int y) {
+        private Vector3f getDiskTranslation(int x, int y) {
             Vector3f translation = new Vector3f();
-
-            if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-                translation.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
-            } else if (facing == Direction.EAST || facing == Direction.WEST) {
-                translation.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
-            }
-
+            translation.add(((2F / 16F) + ((float) x * 7F) / 16F) * -1, 0, 0); // Add to X
             translation.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
-
             return translation;
         }
     });

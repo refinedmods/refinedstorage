@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.refinedmods.refinedstorage.util.RenderUtils.getQuaternion;
+
 public class DiskDriveUnbakedGeometry extends AbstractUnbakedGeometry<DiskDriveUnbakedGeometry> {
     private static final ResourceLocation BASE_MODEL = new ResourceLocation(RS.ID, "block/disk_drive_base");
     private static final ResourceLocation DISK_MODEL = new ResourceLocation(RS.ID, "block/disks/disk");
@@ -59,7 +61,7 @@ public class DiskDriveUnbakedGeometry extends AbstractUnbakedGeometry<DiskDriveU
                                                                final ModelBakery bakery,
                                                                final Function<Material, TextureAtlasSprite> sg) {
         return direction -> {
-            final Transformation rotation = new Transformation(null, direction.getRotation(), null, null);
+            final Transformation rotation = new Transformation(null, getQuaternion(direction), null, null);
             final ModelState wrappedState = new SimpleModelState(rotation, state.isUvLocked());
             return bakery.bake(BASE_MODEL, wrappedState, sg);
         };
@@ -72,7 +74,7 @@ public class DiskDriveUnbakedGeometry extends AbstractUnbakedGeometry<DiskDriveU
                                                                                <Material, TextureAtlasSprite> sg) {
         return (direction, trans) -> {
             final Transformation translation = new Transformation(trans, null, null, null);
-            final Transformation rotation = new Transformation(null, direction.getRotation(), null, null);
+            final Transformation rotation = new Transformation(null, getQuaternion(direction), null, null);
             final ModelState wrappedState = new SimpleModelState(rotation.compose(translation), state.isUvLocked());
             return bakery.bake(id, wrappedState, sg);
         };
