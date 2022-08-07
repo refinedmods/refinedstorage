@@ -61,7 +61,7 @@ public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
 
         NetworkHooks.openScreen(
             (ServerPlayer) player,
-            new CraftingMonitorMenuProvider(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null),
+            new CraftingMonitorMenuProvider(RSContainerMenus.WIRELESS_CRAFTING_MONITOR.get(), wirelessCraftingMonitor, null),
             slot::writePlayerSlot
         );
 

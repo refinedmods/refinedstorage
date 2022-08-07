@@ -9,7 +9,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class FluidInterfaceContainerMenu extends BaseContainerMenu {
     public FluidInterfaceContainerMenu(FluidInterfaceBlockEntity fluidInterface, Player player, int windowId) {
-        super(RSContainerMenus.FLUID_INTERFACE, fluidInterface, player, windowId);
+        super(RSContainerMenus.FLUID_INTERFACE.get(), fluidInterface, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
             addSlot(new SlotItemHandler(fluidInterface.getNode().getUpgrades(), i, 187, 6 + (i * 18)));

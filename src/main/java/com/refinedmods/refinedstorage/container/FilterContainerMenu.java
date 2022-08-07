@@ -17,7 +17,7 @@ public class FilterContainerMenu extends BaseContainerMenu {
     private final ItemStack filterItem;
 
     public FilterContainerMenu(Player player, ItemStack filterItem, int windowId) {
-        super(RSContainerMenus.FILTER, null, player, windowId);
+        super(RSContainerMenus.FILTER.get(), null, player, windowId);
 
         this.filterItem = filterItem;
 

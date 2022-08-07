@@ -14,7 +14,7 @@ public class ExporterContainerMenu extends BaseContainerMenu {
     private boolean hasRegulatorMode;
 
     public ExporterContainerMenu(ExporterBlockEntity exporter, Player player, int windowId) {
-        super(RSContainerMenus.EXPORTER, exporter, player, windowId);
+        super(RSContainerMenus.EXPORTER.get(), exporter, player, windowId);
 
         this.exporter = exporter;
         this.hasRegulatorMode = hasRegulatorMode();

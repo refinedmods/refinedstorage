@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class StorageContainerMenu extends BaseContainerMenu {
     public StorageContainerMenu(StorageBlockEntity storage, Player player, int windowId) {
-        super(RSContainerMenus.STORAGE_BLOCK, storage, player, windowId);
+        super(RSContainerMenus.STORAGE_BLOCK.get(), storage, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
             addSlot(new FilterSlot(storage.getNode().getFilters(), i, 8 + (18 * i), 20));

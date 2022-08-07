@@ -15,6 +15,6 @@ public class CraftingMonitorContainerFactory implements IContainerFactory<Crafti
 
         CraftingMonitorBlockEntity blockEntity = (CraftingMonitorBlockEntity) inv.player.level.getBlockEntity(pos);
 
-        return new CraftingMonitorContainerMenu(RSContainerMenus.CRAFTING_MONITOR, blockEntity.getNode(), blockEntity, inv.player, windowId);
+        return new CraftingMonitorContainerMenu(RSContainerMenus.CRAFTING_MONITOR.get(), blockEntity.getNode(), blockEntity, inv.player, windowId);
     }
 }

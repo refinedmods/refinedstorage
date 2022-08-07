@@ -47,7 +47,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     @Override
     public Optional<MenuType<GridContainerMenu>> getMenuType() {
-        return Optional.of(RSContainerMenus.GRID);
+        return Optional.of(RSContainerMenus.GRID.get());
     }
 
     @Override

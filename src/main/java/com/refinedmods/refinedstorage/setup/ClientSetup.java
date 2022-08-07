@@ -82,30 +82,30 @@ public final class ClientSetup {
 
         // MenuScreens isn't thread safe
         e.enqueueWork(() -> {
-            MenuScreens.register(RSContainerMenus.FILTER, FilterScreen::new);
-            MenuScreens.register(RSContainerMenus.CONTROLLER, ControllerScreen::new);
-            MenuScreens.register(RSContainerMenus.DISK_DRIVE, DiskDriveScreen::new);
-            MenuScreens.register(RSContainerMenus.GRID, new GridScreenFactory());
-            MenuScreens.register(RSContainerMenus.STORAGE_BLOCK, StorageBlockScreen::new);
-            MenuScreens.register(RSContainerMenus.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
-            MenuScreens.register(RSContainerMenus.EXTERNAL_STORAGE, ExternalStorageScreen::new);
-            MenuScreens.register(RSContainerMenus.IMPORTER, ImporterScreen::new);
-            MenuScreens.register(RSContainerMenus.EXPORTER, ExporterScreen::new);
-            MenuScreens.register(RSContainerMenus.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
-            MenuScreens.register(RSContainerMenus.RELAY, RelayScreen::new);
-            MenuScreens.register(RSContainerMenus.DETECTOR, DetectorScreen::new);
-            MenuScreens.register(RSContainerMenus.SECURITY_MANAGER, SecurityManagerScreen::new);
-            MenuScreens.register(RSContainerMenus.INTERFACE, InterfaceScreen::new);
-            MenuScreens.register(RSContainerMenus.FLUID_INTERFACE, FluidInterfaceScreen::new);
-            MenuScreens.register(RSContainerMenus.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
-            MenuScreens.register(RSContainerMenus.STORAGE_MONITOR, StorageMonitorScreen::new);
-            MenuScreens.register(RSContainerMenus.CONSTRUCTOR, ConstructorScreen::new);
-            MenuScreens.register(RSContainerMenus.DESTRUCTOR, DestructorScreen::new);
-            MenuScreens.register(RSContainerMenus.DISK_MANIPULATOR, DiskManipulatorScreen::new);
-            MenuScreens.register(RSContainerMenus.CRAFTER, CrafterScreen::new);
-            MenuScreens.register(RSContainerMenus.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
-            MenuScreens.register(RSContainerMenus.CRAFTING_MONITOR, CraftingMonitorScreen::new);
-            MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
+            MenuScreens.register(RSContainerMenus.FILTER.get(), FilterScreen::new);
+            MenuScreens.register(RSContainerMenus.CONTROLLER.get(), ControllerScreen::new);
+            MenuScreens.register(RSContainerMenus.DISK_DRIVE.get(), DiskDriveScreen::new);
+            MenuScreens.register(RSContainerMenus.GRID.get(), new GridScreenFactory());
+            MenuScreens.register(RSContainerMenus.STORAGE_BLOCK.get(), StorageBlockScreen::new);
+            MenuScreens.register(RSContainerMenus.FLUID_STORAGE_BLOCK.get(), FluidStorageBlockScreen::new);
+            MenuScreens.register(RSContainerMenus.EXTERNAL_STORAGE.get(), ExternalStorageScreen::new);
+            MenuScreens.register(RSContainerMenus.IMPORTER.get(), ImporterScreen::new);
+            MenuScreens.register(RSContainerMenus.EXPORTER.get(), ExporterScreen::new);
+            MenuScreens.register(RSContainerMenus.NETWORK_TRANSMITTER.get(), NetworkTransmitterScreen::new);
+            MenuScreens.register(RSContainerMenus.RELAY.get(), RelayScreen::new);
+            MenuScreens.register(RSContainerMenus.DETECTOR.get(), DetectorScreen::new);
+            MenuScreens.register(RSContainerMenus.SECURITY_MANAGER.get(), SecurityManagerScreen::new);
+            MenuScreens.register(RSContainerMenus.INTERFACE.get(), InterfaceScreen::new);
+            MenuScreens.register(RSContainerMenus.FLUID_INTERFACE.get(), FluidInterfaceScreen::new);
+            MenuScreens.register(RSContainerMenus.WIRELESS_TRANSMITTER.get(), WirelessTransmitterScreen::new);
+            MenuScreens.register(RSContainerMenus.STORAGE_MONITOR.get(), StorageMonitorScreen::new);
+            MenuScreens.register(RSContainerMenus.CONSTRUCTOR.get(), ConstructorScreen::new);
+            MenuScreens.register(RSContainerMenus.DESTRUCTOR.get(), DestructorScreen::new);
+            MenuScreens.register(RSContainerMenus.DISK_MANIPULATOR.get(), DiskManipulatorScreen::new);
+            MenuScreens.register(RSContainerMenus.CRAFTER.get(), CrafterScreen::new);
+            MenuScreens.register(RSContainerMenus.CRAFTER_MANAGER.get(), new CrafterManagerScreenFactory());
+            MenuScreens.register(RSContainerMenus.CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
+            MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
         });
 
         BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR, ctx -> new StorageMonitorBlockEntityRenderer());
