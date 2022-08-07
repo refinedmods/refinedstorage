@@ -25,8 +25,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class CableCoverItemBakedModel extends CableCoverBakedModel {
+import static com.refinedmods.refinedstorage.render.model.baked.CableCoverBakedModel.addCover;
 
+public class CableCoverItemBakedModel implements BakedModel {
     private static final LoadingCache<CacheKey, List<BakedQuad>> CACHE = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         public List<BakedQuad> load(CacheKey key) {
@@ -39,8 +40,6 @@ public class CableCoverItemBakedModel extends CableCoverBakedModel {
     private final CoverType type;
 
     public CableCoverItemBakedModel(ItemStack stack, CoverType type) {
-        super(null);
-
         this.stack = stack;
         this.type = type;
     }

@@ -165,8 +165,8 @@ public final class ClientSetup {
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "exporter"), (base, registry) -> new CableCoverBakedModel(base));
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "importer"), (base, registry) -> new CableCoverBakedModel(base));
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "external_storage"), (base, registry) -> new CableCoverBakedModel(base));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cover"), (base, registry) -> new CableCoverItemBakedModel(ItemStack.EMPTY, CoverType.NORMAL));
-        BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "hollow_cover"), (base, registry) -> new CableCoverItemBakedModel(ItemStack.EMPTY, CoverType.HOLLOW));
+       // BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cover"), (base, registry) -> new CableCoverItemBakedModel(ItemStack.EMPTY, CoverType.NORMAL));
+       // BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "hollow_cover"), (base, registry) -> new CableCoverItemBakedModel(ItemStack.EMPTY, CoverType.HOLLOW));
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
     }
 
