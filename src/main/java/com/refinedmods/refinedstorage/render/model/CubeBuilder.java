@@ -64,6 +64,7 @@ public class CubeBuilder {
         List<BakedQuad> quad = new ArrayList<>();
         QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(quad::add);
 
+        builder.setSprite(cubeFace.sprite);
         builder.setDirection(facing);
         builder.setTintIndex(-1);
         builder.setShade(true);
@@ -272,6 +273,7 @@ public class CubeBuilder {
         float g = (color >> 8 & 0xFF) / 255F;
         float b = (color & 0xFF) / 255F;
         float a = (color >> 24 & 0xFF) / 255F;
+        builder.uv(u, v);
         builder.color(r, g, b, a);
         builder.endVertex();
     }

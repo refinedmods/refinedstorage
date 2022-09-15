@@ -3,10 +3,10 @@ package com.refinedmods.refinedstorage.render.model.baked;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.item.CoverItem;
+import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -69,15 +69,6 @@ public class CableCoverItemBakedModel implements BakedModel {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public BakedModel applyTransform(final ItemTransforms.TransformType cameraTransformType,
-                                     final PoseStack poseStack,
-                                     final boolean applyLeftHandTransform) {
-        // TODO baseModel.getTransforms().getTransform(cameraTransformType).apply(applyLeftHandTransform, poseStack);
-        return this;
-    }
-
-    @Override
     public boolean useAmbientOcclusion() {
         return true;
     }
@@ -105,7 +96,7 @@ public class CableCoverItemBakedModel implements BakedModel {
     @Override
     @SuppressWarnings("deprecation")
     public ItemTransforms getTransforms() {
-        return ItemTransforms.NO_TRANSFORMS;
+        return RenderUtils.getDefaultBlockTransforms();
     }
 
     @Override

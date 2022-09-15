@@ -1,12 +1,17 @@
 package com.refinedmods.refinedstorage.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.math.Quaternion;
+import com.mojang.math.Transformation;
+import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -26,6 +31,8 @@ import java.util.Set;
 public final class RenderUtils {
     private RenderUtils() {
     }
+
+    private static ImmutableMap<ItemTransforms.TransformType, Transformation> DEFAULT_BLOCK_TRANSFORM;
 
     public static Quaternion getQuaternion(Direction direction) {
         return switch (direction) {
@@ -155,5 +162,27 @@ public final class RenderUtils {
         }
 
         return sprite;
+    }
+
+    public static ItemTransforms getDefaultBlockTransforms() {
+        var thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
+        return new ItemTransforms(
+            thirdperson,
+            thirdperson,
+            getTransform(0, 0, 0, 0, 225, 0, 0.4f),
+            getTransform(0, 0, 0, 0, 45, 0, 0.4f),
+            ItemTransform.NO_TRANSFORM,
+            getTransform(-3, 1, 0, 30, 225, 0, 0.625f),
+            getTransform(0, 3, 0, 0, 0, 0, 0.25f),
+            getTransform(0, 0, 0, 0, 0, 0, 0.5f),
+            ImmutableMap.of());
+    }
+
+    private static ItemTransform getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
+        return new ItemTransform(
+            new Vector3f(ax, ay, az),
+            new Vector3f(tx / 16, ty / 16, tz / 16),
+            new Vector3f(s, s, s)
+        );
     }
 }
