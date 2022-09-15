@@ -18,6 +18,7 @@ import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -36,7 +37,11 @@ public class DiskDriveBakedModel extends BakedModelWrapper<BakedModel> {
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.getValue(RSBlocks.DISK_DRIVE.get().getDirection().getProperty());
 
-            List<BakedQuad> quads = baseModelBakery.apply(facing).getQuads(key.state, key.side, key.random);
+            List<BakedQuad> quads = new ArrayList<>();
+            if (key.side != null) {
+                quads = baseModelBakery.apply(facing).getQuads(key.state, key.side, key.random);
+                return quads;
+            }
 
             int x = 0;
             int y = 0;
