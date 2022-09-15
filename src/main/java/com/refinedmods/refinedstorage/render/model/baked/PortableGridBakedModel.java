@@ -97,7 +97,6 @@ public class PortableGridBakedModel extends BakedModelWrapper<BakedModel> {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
         if (state != null) {
-            cache.refresh(new CacheKey(state, side, rand));
             return cache.getUnchecked(new CacheKey(state, side, rand));
         }
         return super.getQuads(state, side, rand, extraData, renderType);
