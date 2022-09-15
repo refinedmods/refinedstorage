@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGrid;
 import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridDiskState;
 import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.resources.model.BakedModel;
@@ -17,7 +18,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +37,8 @@ public class PortableGridBakedModel extends BakedModelWrapper<BakedModel> {
     private final Function<Direction, BakedModel> diskNearCapacityModelBakery;
     private final Function<Direction, BakedModel> diskFullModelBakery;
     private final Function<Direction, BakedModel> diskDisconnectedModelBakery;
+
+    private final RenderTypeGroup renderTypes;
 
     private final CustomItemOverrideList itemOverrideList = new CustomItemOverrideList();
 
@@ -56,7 +62,7 @@ public class PortableGridBakedModel extends BakedModelWrapper<BakedModel> {
         }
     });
 
-    public PortableGridBakedModel(BakedModel baseModel, Function<Direction, BakedModel> baseConnectedModelBakery, Function<Direction, BakedModel> baseDisconnectedModelBakery, Function<Direction, BakedModel> diskModelBakery, Function<Direction, BakedModel> diskNearCapacityModelBakery, Function<Direction, BakedModel> diskFullModelBakery, Function<Direction, BakedModel> diskDisconnectedModelBakery) {
+    public PortableGridBakedModel(BakedModel baseModel, Function<Direction, BakedModel> baseConnectedModelBakery, Function<Direction, BakedModel> baseDisconnectedModelBakery, Function<Direction, BakedModel> diskModelBakery, Function<Direction, BakedModel> diskNearCapacityModelBakery, Function<Direction, BakedModel> diskFullModelBakery, Function<Direction, BakedModel> diskDisconnectedModelBakery, RenderTypeGroup renderTypes) {
         super(baseModel);
         this.baseConnectedModelBakery = baseConnectedModelBakery;
         this.baseDisconnectedModelBakery = baseDisconnectedModelBakery;
@@ -64,6 +70,7 @@ public class PortableGridBakedModel extends BakedModelWrapper<BakedModel> {
         this.diskNearCapacityModelBakery = diskNearCapacityModelBakery;
         this.diskFullModelBakery = diskFullModelBakery;
         this.diskDisconnectedModelBakery = diskDisconnectedModelBakery;
+        this.renderTypes = renderTypes;
     }
 
     @Nullable
@@ -78,16 +85,22 @@ public class PortableGridBakedModel extends BakedModelWrapper<BakedModel> {
     }
 
     @Override
+    public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data) {
+        return ChunkRenderTypeSet.of(renderTypes.block());
+    }
+
+    @Override
     public ItemOverrides getOverrides() {
         return itemOverrideList;
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
         if (state != null) {
+            cache.refresh(new CacheKey(state, side, rand));
             return cache.getUnchecked(new CacheKey(state, side, rand));
         }
-        return super.getQuads(state, side, rand);
+        return super.getQuads(state, side, rand, extraData, renderType);
     }
 
     private static class CacheKey {

@@ -11,6 +11,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 
@@ -45,6 +46,10 @@ public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<Portabl
                            final ModelState modelState,
                            final ItemOverrides overrides,
                            final ResourceLocation modelLocation) {
+
+        var renderTypeHint = context.getRenderTypeHint();
+        var renderTypes = renderTypeHint != null ? context.getRenderType(renderTypeHint) : RenderTypeGroup.EMPTY;
+
         return new PortableGridBakedModel(
             Objects.requireNonNull(bakery.bake(BASE_CONNECTED_MODEL, modelState, spriteGetter)),
             getModelBakery(BASE_CONNECTED_MODEL, modelState, bakery, spriteGetter),
@@ -52,7 +57,8 @@ public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<Portabl
             getModelBakery(DISK_MODEL, modelState, bakery, spriteGetter),
             getModelBakery(DISK_NEAR_CAPACITY_MODEL, modelState, bakery, spriteGetter),
             getModelBakery(DISK_FULL_MODEL, modelState, bakery, spriteGetter),
-            getModelBakery(DISK_DISCONNECTED_MODEL, modelState, bakery, spriteGetter)
+            getModelBakery(DISK_DISCONNECTED_MODEL, modelState, bakery, spriteGetter),
+            renderTypes
         );
     }
 
@@ -61,7 +67,7 @@ public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<Portabl
                                                            final ModelBakery bakery,
                                                            final Function<Material, TextureAtlasSprite> sg) {
         return direction -> {
-            final Transformation rotation = new Transformation(null, direction.getRotation(), null, null);
+            final Transformation rotation = new Transformation(null, null, null, null);
             final ModelState wrappedState = new SimpleModelState(rotation, state.isUvLocked());
             return bakery.bake(id, wrappedState, sg);
         };

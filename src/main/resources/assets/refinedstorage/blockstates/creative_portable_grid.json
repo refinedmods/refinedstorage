@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "refinedstorage:block/portable_grid_disconnected"
+      "model": "refinedstorage:block/portable_grid"
     }
   }
 }

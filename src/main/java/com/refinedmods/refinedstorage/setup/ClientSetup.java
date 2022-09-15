@@ -203,12 +203,6 @@ public final class ClientSetup {
             e.register(new ResourceLocation(RS.ID + ":block/disk_manipulator/" + color));
         }
 
-        e.register(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
-        e.register(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
-        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
-        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
-        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
-        e.register(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
     }
 
     @SubscribeEvent
