@@ -12,10 +12,11 @@ import com.refinedmods.refinedstorage.item.property.SecurityCardItemPropertyGett
 import com.refinedmods.refinedstorage.render.BakedModelOverrideRegistry;
 import com.refinedmods.refinedstorage.render.blockentity.StorageMonitorBlockEntityRenderer;
 import com.refinedmods.refinedstorage.render.color.PatternItemColor;
-import com.refinedmods.refinedstorage.render.model.baked.CableCoverItemBakedModel;
 import com.refinedmods.refinedstorage.render.model.DiskDriveGeometryLoader;
+import com.refinedmods.refinedstorage.render.model.DiskManipulatorGeometryLoader;
 import com.refinedmods.refinedstorage.render.model.PortableGridGeometryLoader;
 import com.refinedmods.refinedstorage.render.model.baked.CableCoverBakedModel;
+import com.refinedmods.refinedstorage.render.model.baked.CableCoverItemBakedModel;
 import com.refinedmods.refinedstorage.render.model.baked.PatternBakedModel;
 import com.refinedmods.refinedstorage.render.resourcepack.ResourcePackListener;
 import com.refinedmods.refinedstorage.screen.*;
@@ -226,6 +227,7 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRegisterModelGeometry(final ModelEvent.RegisterGeometryLoaders e) {
         e.register("disk_drive", new DiskDriveGeometryLoader());
+        e.register("disk_manipulator", new DiskManipulatorGeometryLoader());
         e.register("portable_grid", new PortableGridGeometryLoader());
     }
 }

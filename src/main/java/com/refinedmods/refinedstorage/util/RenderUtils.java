@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.math.Quaternion;
-import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -31,8 +30,6 @@ import java.util.Set;
 public final class RenderUtils {
     private RenderUtils() {
     }
-
-    private static ImmutableMap<ItemTransforms.TransformType, Transformation> DEFAULT_BLOCK_TRANSFORM;
 
     public static Quaternion getQuaternion(Direction direction) {
         return switch (direction) {

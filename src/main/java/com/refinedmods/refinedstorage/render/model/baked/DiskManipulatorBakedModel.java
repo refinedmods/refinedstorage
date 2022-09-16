@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
+import com.refinedmods.refinedstorage.block.DiskManipulatorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.blockentity.DiskManipulatorBlockEntity;
 import com.refinedmods.refinedstorage.util.ColorMap;
@@ -14,7 +15,10 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.ModelData;
 
@@ -27,12 +31,14 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
-    private final Function<Direction, BakedModel> baseConnectedModelBakery;
+    private final BiFunction<Direction, DyeColor, BakedModel> baseConnectedModelBakery;
     private final Function<Direction, BakedModel> baseDisconnectedModelBakery;
     private final BiFunction<Direction, Vector3f, BakedModel> diskModelBakery;
     private final BiFunction<Direction, Vector3f, BakedModel> diskNearCapacityModelBakery;
     private final BiFunction<Direction, Vector3f, BakedModel> diskFullModelBakery;
     private final BiFunction<Direction, Vector3f, BakedModel> diskDisconnectedModelBakery;
+
+    private final RenderTypeGroup renderType;
 
     private final LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
@@ -40,9 +46,12 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.getValue(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
             boolean connected = key.state.getValue(NetworkNodeBlock.CONNECTED);
-
-            List<BakedQuad> quads = new ArrayList<>((connected ? baseConnectedModelBakery : baseDisconnectedModelBakery)
-                .apply(facing).getQuads(key.state, key.side, key.random));
+            List<BakedQuad> quads = new ArrayList<>();
+            if (connected) {
+                quads = new ArrayList<>(baseConnectedModelBakery.apply(facing, key.color).getQuads(key.state, key.side, key.random));
+            } else {
+                quads = new ArrayList<>(baseDisconnectedModelBakery.apply(facing).getQuads(key.state, key.side, key.random));
+            }
 
             int x = 0;
             int y = 0;
@@ -74,19 +83,14 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
         private Vector3f getDiskTranslation(Direction facing, int x, int y) {
             Vector3f translation = new Vector3f();
 
-            if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-                translation.add((2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
-            } else if (facing == Direction.EAST || facing == Direction.WEST) {
-                translation.add(0, 0, (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
-            }
-
+            translation.add((2F / 16F + ((float) x * 7F) / 16F) * -1, 0, 0); // Add to X
             translation.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
 
             return translation;
         }
     });
 
-    public DiskManipulatorBakedModel(BakedModel originalModel, Function<Direction, BakedModel> baseConnectedModelBakery, Function<Direction, BakedModel> baseDisconnectedModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskNearCapacityModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskFullModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskDisconnectedModelBakery) {
+    public DiskManipulatorBakedModel(BakedModel originalModel, BiFunction<Direction, DyeColor, BakedModel> baseConnectedModelBakery, Function<Direction, BakedModel> baseDisconnectedModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskNearCapacityModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskFullModelBakery, BiFunction<Direction, Vector3f, BakedModel> diskDisconnectedModelBakery, RenderTypeGroup renderTypes) {
         super(originalModel);
         this.baseConnectedModelBakery = baseConnectedModelBakery;
         this.baseDisconnectedModelBakery = baseDisconnectedModelBakery;
@@ -94,6 +98,12 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
         this.diskNearCapacityModelBakery = diskNearCapacityModelBakery;
         this.diskFullModelBakery = diskFullModelBakery;
         this.diskDisconnectedModelBakery = diskDisconnectedModelBakery;
+        this.renderType = renderTypes;
+    }
+
+    @Override
+    public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data) {
+        return ChunkRenderTypeSet.of(renderType.block());
     }
 
     @Override
@@ -105,12 +115,12 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
                                     @Nullable final RenderType renderType) {
         DiskState[] diskState = extraData.get(DiskManipulatorBlockEntity.DISK_STATE_PROPERTY);
 
+        var color = RSBlocks.DISK_MANIPULATOR.getColorFromObject((DiskManipulatorBlock) state.getBlock());
+
         if (diskState == null) {
             return super.getQuads(state, side, rand, extraData, renderType);
         }
-
-        CacheKey key = new CacheKey(state, side, diskState, rand);
-
+        CacheKey key = new CacheKey(state, side, diskState, rand, color);
         return cache.getUnchecked(key);
     }
 
@@ -119,12 +129,14 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
         private final Direction side;
         private final DiskState[] diskState;
         private final RandomSource random;
+        private final DyeColor color;
 
-        CacheKey(BlockState state, @Nullable Direction side, DiskState[] diskState, RandomSource random) {
+        CacheKey(BlockState state, @Nullable Direction side, DiskState[] diskState, RandomSource random, DyeColor color) {
             this.state = state;
             this.side = side;
             this.diskState = diskState;
             this.random = random;
+            this.color = color;
         }
 
         @Override
@@ -144,6 +156,10 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
             }
 
             if (side != cacheKey.side) {
+                return false;
+            }
+
+            if (color != cacheKey.color) {
                 return false;
             }
 

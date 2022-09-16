@@ -8,7 +8,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.function.Function;
 
@@ -73,6 +75,15 @@ public class BlockModels {
             );
     }
 
+    public void customLoaderRSBlock(Block block, ResourceLocation path, ModelFile connectedModel, ModelFile disconnectedModel) {
+        var model = generator.models().getBuilder(path.toString())
+            .renderType("cutout").customLoader((builder, filehelper) ->
+                new CustomLoaderBuilderBasic(new ResourceLocation(RS.ID, "disk_manipulator"), builder, filehelper)).end();
+
+        generator.getVariantBuilder(block).setModels(generator.getVariantBuilder(block).partialState(),
+            ConfiguredModel.builder().modelFile(model).buildLast());
+    }
+
     public BlockModelBuilder createDetectorModel(String name, ResourceLocation torch) {
         return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "detector"))
             .texture("torch", torch);
@@ -125,5 +136,11 @@ public class BlockModels {
             .texture("down", down)
             .texture("north", north)
             .texture("cutout", cutout);
+    }
+
+    class CustomLoaderBuilderBasic extends CustomLoaderBuilder<BlockModelBuilder> {
+        protected CustomLoaderBuilderBasic(ResourceLocation loaderId, BlockModelBuilder parent, ExistingFileHelper existingFileHelper) {
+            super(loaderId, parent, existingFileHelper);
+        }
     }
 }
