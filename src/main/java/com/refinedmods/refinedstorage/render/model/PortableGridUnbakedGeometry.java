@@ -1,10 +1,9 @@
 package com.refinedmods.refinedstorage.render.model;
 
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.model.baked.PortableGridBakedModel;
+import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -69,10 +68,7 @@ public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<Portabl
                                                            final ModelBakery bakery,
                                                            final Function<Material, TextureAtlasSprite> sg) {
         return direction -> {
-            var dir = direction.getRotation();
-            dir.mul(Quaternion.fromXYZDegrees(new Vector3f(-90, 180, 0)));
-
-            final Transformation rotation = new Transformation(null, dir, null, null);
+            final Transformation rotation = new Transformation(null, RenderUtils.getQuaternion(direction), null, null);
             final ModelState wrappedState = new SimpleModelState(rotation, state.isUvLocked());
             return bakery.bake(id, wrappedState, sg);
         };
