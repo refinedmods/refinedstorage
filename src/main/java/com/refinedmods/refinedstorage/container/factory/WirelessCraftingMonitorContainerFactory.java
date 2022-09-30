@@ -19,6 +19,6 @@ public class WirelessCraftingMonitorContainerFactory implements IContainerFactor
 
         WirelessCraftingMonitor wirelessCraftingMonitor = new WirelessCraftingMonitor(stack, null, slot);
 
-        return new CraftingMonitorContainerMenu(RSContainerMenus.WIRELESS_CRAFTING_MONITOR, wirelessCraftingMonitor, null, inv.player, windowId);
+        return new CraftingMonitorContainerMenu(RSContainerMenus.WIRELESS_CRAFTING_MONITOR.get(), wirelessCraftingMonitor, null, inv.player, windowId);
     }
 }

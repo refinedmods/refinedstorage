@@ -8,7 +8,8 @@ import com.refinedmods.refinedstorage.command.network.NetworkCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.UuidArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+
 
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class GetAutocraftingCommand extends NetworkCommand {
 
         ICraftingTask task = network.getCraftingManager().getTask(id);
         if (task == null) {
-            context.getSource().sendFailure(new TranslatableComponent("commands.refinedstorage.network.autocrafting.get.error.not_found"));
+            context.getSource().sendFailure(Component.translatable("commands.refinedstorage.network.autocrafting.get.error.not_found"));
         } else {
             ListAutocraftingCommand.addInfo(context, task);
         }

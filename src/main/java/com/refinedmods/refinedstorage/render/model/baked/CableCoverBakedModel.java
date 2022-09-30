@@ -1,4 +1,4 @@
-package com.refinedmods.refinedstorage.render.model;
+package com.refinedmods.refinedstorage.render.model.baked;
 
 import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RS;
@@ -7,29 +7,34 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
+import com.refinedmods.refinedstorage.render.model.CubeBuilder;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.data.ModelData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class BakedModelCableCover extends DelegateBakedModel {
+public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
 
     private static TextureAtlasSprite BORDER_SPRITE;
 
-    public BakedModelCableCover(BakedModel base) {
+    public CableCoverBakedModel(BakedModel base) {
         super(base);
     }
 
@@ -56,7 +61,7 @@ public class BakedModelCableCover extends DelegateBakedModel {
         return 6;
     }
 
-    protected static void addCover(List<BakedQuad> quads, @Nullable Cover cover, Direction coverSide, Direction side, Random rand, @Nullable CoverManager manager, BlockState state, boolean handle) {
+    protected static void addCover(List<BakedQuad> quads, @Nullable Cover cover, Direction coverSide, Direction side, RandomSource rand, @Nullable CoverManager manager, BlockState state, boolean handle) {
         if (cover == null) {
             return;
         }
@@ -77,16 +82,13 @@ public class BakedModelCableCover extends DelegateBakedModel {
         }
 
         switch (cover.getType()) {
-            case NORMAL:
-                addNormalCover(quads, coverState, coverSide, hasUp, hasDown, hasEast, hasWest, handle, rand);
-                break;
-            case HOLLOW:
+            case NORMAL -> addNormalCover(quads, coverState, coverSide, hasUp, hasDown, hasEast, hasWest, handle, rand);
+            case HOLLOW ->
                 addHollowCover(quads, coverState, coverSide, hasUp, hasDown, hasEast, hasWest, getHollowCoverSize(state, coverSide), rand);
-                break;
         }
     }
 
-    private static void addNormalCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle, Random random) {
+    private static void addNormalCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle, RandomSource random) {
         AABB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
@@ -137,7 +139,7 @@ public class BakedModelCableCover extends DelegateBakedModel {
         }
     }
 
-    private static void addHollowCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size, Random random) {
+    private static void addHollowCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size, RandomSource random) {
         AABB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
@@ -345,10 +347,14 @@ public class BakedModelCableCover extends DelegateBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
-        List<BakedQuad> quads = new ArrayList<>(base.getQuads(state, side, rand, data));
-        if (data != null && data.hasProperty(CoverManager.PROPERTY)) {
-            CoverManager manager = data.getData(CoverManager.PROPERTY);
+    public List<BakedQuad> getQuads(@Nullable final BlockState state,
+                                    @Nullable final Direction side,
+                                    @Nonnull final RandomSource rand,
+                                    @Nonnull final ModelData extraData,
+                                    @Nullable final RenderType renderType) {
+        List<BakedQuad> quads = new ArrayList<>(super.getQuads(state, side, rand, extraData, renderType));
+        if (extraData.has(CoverManager.PROPERTY)) {
+            CoverManager manager = extraData.get(CoverManager.PROPERTY);
             addCover(quads, manager.getCover(Direction.NORTH), Direction.NORTH, side, rand, manager, state, true);
             addCover(quads, manager.getCover(Direction.SOUTH), Direction.SOUTH, side, rand, manager, state, true);
             addCover(quads, manager.getCover(Direction.EAST), Direction.EAST, side, rand, manager, state, true);

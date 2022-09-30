@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMessage;
@@ -14,11 +15,13 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.fluids.FluidStack;
@@ -43,8 +46,14 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     @Override
-    public Class<Object> getRecipeClass() {
-        return Object.class;
+    public Optional<MenuType<GridContainerMenu>> getMenuType() {
+        return Optional.of(RSContainerMenus.GRID.get());
+    }
+
+    @Override
+    public RecipeType<Object> getRecipeType() {
+        // This is not actually used, as we register with JEI as a universal handler
+        return null;
     }
 
     @Override

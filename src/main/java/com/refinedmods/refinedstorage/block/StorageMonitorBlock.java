@@ -8,7 +8,8 @@ import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -43,10 +44,10 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
             ItemStack held = player.getItemInHand(handIn);
 
             if (player.isCrouching()) {
-                return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
+                return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
                     (ServerPlayer) player,
                     new BlockEntityMenuProvider<StorageMonitorBlockEntity>(
-                        new TranslatableComponent("gui.refinedstorage.storage_monitor"),
+                        Component.translatable("gui.refinedstorage.storage_monitor"),
                         (blockEntity, windowId, inventory, p) -> new StorageMonitorContainerMenu(blockEntity, player, windowId),
                         pos
                     ),

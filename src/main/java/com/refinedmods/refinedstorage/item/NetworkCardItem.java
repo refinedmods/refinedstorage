@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -89,7 +89,7 @@ public class NetworkCardItem extends Item {
         ResourceKey<Level> type = getDimension(stack);
 
         if (pos != null && type != null) {
-            tooltip.add(new TranslatableComponent(
+            tooltip.add(Component.translatable(
                 "misc.refinedstorage.network_card.tooltip",
                 pos.getX(),
                 pos.getY(),

@@ -8,22 +8,22 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 
 public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainerMenu> {
     private final IGridStack stack;
 
     public CraftingSettingsScreen(BaseScreen parent, Player player, IGridStack stack) {
-        super(parent, new CraftingSettingsContainerMenu(player, stack), 172, 99, player.getInventory(), new TranslatableComponent("container.crafting"));
+        super(parent, new CraftingSettingsContainerMenu(player, stack), 172, 99, player.getInventory(), Component.translatable("container.crafting"));
 
         this.stack = stack;
     }
 
     @Override
     protected Component getOkButtonText() {
-        return new TranslatableComponent("misc.refinedstorage.start");
+        return Component.translatable("misc.refinedstorage.start");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
 
     @Override
     protected int getDefaultAmount() {
-        return stack instanceof FluidGridStack ? FluidAttributes.BUCKET_VOLUME : 1;
+        return stack instanceof FluidGridStack ? FluidType.BUCKET_VOLUME : 1;
     }
 
     @Override

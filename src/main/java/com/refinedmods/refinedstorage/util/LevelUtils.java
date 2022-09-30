@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.Container;
@@ -82,7 +82,7 @@ public final class LevelUtils {
     }
 
     public static void sendNoPermissionMessage(Player player) {
-        player.sendMessage(new TranslatableComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED), player.getUUID());
+        player.sendSystemMessage(Component.translatable("misc.refinedstorage.security.no_permission").setStyle(Styles.RED));
     }
 
     public static HitResult rayTracePlayer(Level level, Player player) {

@@ -5,14 +5,13 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
-import com.refinedmods.refinedstorage.container.ControllerContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
+import com.refinedmods.refinedstorage.container.ControllerContainerMenu;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
@@ -106,12 +105,12 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return new TranslatableComponent("gui.refinedstorage." + (ControllerBlock.this.getType() == NetworkType.CREATIVE ? "creative_" : "") + "controller");
+                        return Component.translatable("gui.refinedstorage." + (ControllerBlock.this.getType() == NetworkType.CREATIVE ? "creative_" : "") + "controller");
                     }
 
                     @Override

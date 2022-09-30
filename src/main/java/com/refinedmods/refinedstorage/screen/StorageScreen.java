@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
@@ -68,7 +68,7 @@ public class StorageScreen<T extends AbstractContainerMenu> extends BaseScreen<T
             x + 169 - buttonWidth,
             y + 41, buttonWidth,
             20,
-            new TranslatableComponent("misc.refinedstorage.priority"),
+            Component.translatable("misc.refinedstorage.priority"),
             true,
             true,
             btn -> minecraft.setScreen(new PriorityScreen(this, parameters.getPriorityParameter(), inventory))

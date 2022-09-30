@@ -1,9 +1,6 @@
 package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.RSLootFunctions;
-import com.refinedmods.refinedstorage.api.network.NetworkType;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
@@ -31,30 +28,11 @@ import com.refinedmods.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDi
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorageProvider;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.ItemExternalStorageProvider;
 import com.refinedmods.refinedstorage.block.BlockListener;
-import com.refinedmods.refinedstorage.blockentity.*;
-import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
-import com.refinedmods.refinedstorage.container.*;
-import com.refinedmods.refinedstorage.container.factory.*;
 import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.refinedmods.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
-import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import com.refinedmods.refinedstorage.recipe.CoverRecipe;
-import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
-import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -148,94 +126,5 @@ public final class CommonSetup {
     @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent e) {
         e.register(INetworkNodeProxy.class);
-    }
-
-    @SubscribeEvent
-    public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> e) {
-        e.getRegistry().register(new UpgradeWithEnchantedBookRecipeSerializer().setRegistryName(RS.ID, "upgrade_with_enchanted_book"));
-        e.getRegistry().register(CoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "cover_recipe")));
-        e.getRegistry().register(HollowCoverRecipe.SERIALIZER.setRegistryName(new ResourceLocation(RS.ID, "hollow_cover_recipe")));
-    }
-
-    @SubscribeEvent
-    public static void onRegisterBlockEntities(RegistryEvent.Register<BlockEntityType<?>> e) {
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.NORMAL, pos, state), RSBlocks.CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "controller")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new ControllerBlockEntity(NetworkType.CREATIVE, pos, state), RSBlocks.CREATIVE_CONTROLLER.getBlocks()).build(null).setRegistryName(RS.ID, "creative_controller")));
-        e.getRegistry().register(BlockEntityType.Builder.of(CableBlockEntity::new, RSBlocks.CABLE.get()).build(null).setRegistryName(RS.ID, "cable"));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DiskDriveBlockEntity::new, RSBlocks.DISK_DRIVE.get()).build(null).setRegistryName(RS.ID, "disk_drive")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.NORMAL, pos, state), RSBlocks.GRID.getBlocks()).build(null).setRegistryName(RS.ID, "grid")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.CRAFTING, pos, state), RSBlocks.CRAFTING_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "crafting_grid")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.PATTERN, pos, state), RSBlocks.PATTERN_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "pattern_grid")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new GridBlockEntity(GridType.FLUID, pos, state), RSBlocks.FLUID_GRID.getBlocks()).build(null).setRegistryName(RS.ID, "fluid_grid")));
-
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.ONE_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.ONE_K).get()).build(null).setRegistryName(RS.ID, "1k_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.FOUR_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.FOUR_K).get()).build(null).setRegistryName(RS.ID, "4k_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.SIXTEEN_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.SIXTEEN_K).get()).build(null).setRegistryName(RS.ID, "16k_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.SIXTY_FOUR_K, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.SIXTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "64k_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new StorageBlockEntity(ItemStorageType.CREATIVE, pos, state), RSBlocks.STORAGE_BLOCKS.get(ItemStorageType.CREATIVE).get()).build(null).setRegistryName(RS.ID, "creative_storage_block")));
-
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.SIXTY_FOUR_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.SIXTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "64k_fluid_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.TWO_HUNDRED_FIFTY_SIX_K).get()).build(null).setRegistryName(RS.ID, "256k_fluid_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.THOUSAND_TWENTY_FOUR_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.THOUSAND_TWENTY_FOUR_K).get()).build(null).setRegistryName(RS.ID, "1024k_fluid_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K).get()).build(null).setRegistryName(RS.ID, "4096k_fluid_storage_block")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new FluidStorageBlockEntity(FluidStorageType.CREATIVE, pos, state), RSBlocks.FLUID_STORAGE_BLOCKS.get(FluidStorageType.CREATIVE).get()).build(null).setRegistryName(RS.ID, "creative_fluid_storage_block")));
-
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ExternalStorageBlockEntity::new, RSBlocks.EXTERNAL_STORAGE.get()).build(null).setRegistryName(RS.ID, "external_storage")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ImporterBlockEntity::new, RSBlocks.IMPORTER.get()).build(null).setRegistryName(RS.ID, "importer")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ExporterBlockEntity::new, RSBlocks.EXPORTER.get()).build(null).setRegistryName(RS.ID, "exporter")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(NetworkReceiverBlockEntity::new, RSBlocks.NETWORK_RECEIVER.getBlocks()).build(null).setRegistryName(RS.ID, "network_receiver")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(NetworkTransmitterBlockEntity::new, RSBlocks.NETWORK_TRANSMITTER.getBlocks()).build(null).setRegistryName(RS.ID, "network_transmitter")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(RelayBlockEntity::new, RSBlocks.RELAY.getBlocks()).build(null).setRegistryName(RS.ID, "relay")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DetectorBlockEntity::new, RSBlocks.DETECTOR.getBlocks()).build(null).setRegistryName(RS.ID, "detector")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(SecurityManagerBlockEntity::new, RSBlocks.SECURITY_MANAGER.getBlocks()).build(null).setRegistryName(RS.ID, "security_manager")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(InterfaceBlockEntity::new, RSBlocks.INTERFACE.get()).build(null).setRegistryName(RS.ID, "interface")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(FluidInterfaceBlockEntity::new, RSBlocks.FLUID_INTERFACE.get()).build(null).setRegistryName(RS.ID, "fluid_interface")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(WirelessTransmitterBlockEntity::new, RSBlocks.WIRELESS_TRANSMITTER.getBlocks()).build(null).setRegistryName(RS.ID, "wireless_transmitter")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(StorageMonitorBlockEntity::new, RSBlocks.STORAGE_MONITOR.get()).build(null).setRegistryName(RS.ID, "storage_monitor")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(ConstructorBlockEntity::new, RSBlocks.CONSTRUCTOR.get()).build(null).setRegistryName(RS.ID, "constructor")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DestructorBlockEntity::new, RSBlocks.DESTRUCTOR.get()).build(null).setRegistryName(RS.ID, "destructor")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(DiskManipulatorBlockEntity::new, RSBlocks.DISK_MANIPULATOR.getBlocks()).build(null).setRegistryName(RS.ID, "disk_manipulator")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(CrafterBlockEntity::new, RSBlocks.CRAFTER.getBlocks()).build(null).setRegistryName(RS.ID, "crafter")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(CrafterManagerBlockEntity::new, RSBlocks.CRAFTER_MANAGER.getBlocks()).build(null).setRegistryName(RS.ID, "crafter_manager")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of(CraftingMonitorBlockEntity::new, RSBlocks.CRAFTING_MONITOR.getBlocks()).build(null).setRegistryName(RS.ID, "crafting_monitor")));
-
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridBlockEntity(PortableGridBlockItem.Type.CREATIVE, pos, state), RSBlocks.CREATIVE_PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "creative_portable_grid")));
-        e.getRegistry().register(registerSynchronizationParameters(BlockEntityType.Builder.of((pos, state) -> new PortableGridBlockEntity(PortableGridBlockItem.Type.NORMAL, pos, state), RSBlocks.PORTABLE_GRID.get()).build(null).setRegistryName(RS.ID, "portable_grid")));
-    }
-
-    private static <T extends BlockEntity> BlockEntityType<T> registerSynchronizationParameters(BlockEntityType<T> t) {
-        BaseBlockEntity blockEntity = (BaseBlockEntity) t.create(BlockPos.ZERO, null);
-
-        blockEntity.getDataManager().getParameters().forEach(BlockEntitySynchronizationManager::registerParameter);
-
-        return t;
-    }
-
-    @SubscribeEvent
-    public static void onRegisterMenus(RegistryEvent.Register<MenuType<?>> e) {
-        e.getRegistry().register(IForgeMenuType.create((windowId, inv, data) -> new FilterContainerMenu(inv.player, inv.getSelected(), windowId)).setRegistryName(RS.ID, "filter"));
-        e.getRegistry().register(IForgeMenuType.create(((windowId, inv, data) -> new ControllerContainerMenu(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DiskDriveContainerMenu, DiskDriveBlockEntity>((windowId, inv, blockEntity) -> new DiskDriveContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));
-        e.getRegistry().register(IForgeMenuType.create(new GridContainerFactory()).setRegistryName(RS.ID, "grid"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<StorageContainerMenu, StorageBlockEntity>((windowId, inv, blockEntity) -> new StorageContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "storage_block"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<FluidStorageContainerMenu, FluidStorageBlockEntity>((windowId, inv, blockEntity) -> new FluidStorageContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "fluid_storage_block"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ExternalStorageContainerMenu, ExternalStorageBlockEntity>((windowId, inv, blockEntity) -> new ExternalStorageContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "external_storage"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ImporterContainerMenu, ImporterBlockEntity>((windowId, inv, blockEntity) -> new ImporterContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "importer"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ExporterContainerMenu, ExporterBlockEntity>((windowId, inv, blockEntity) -> new ExporterContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "exporter"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<NetworkTransmitterContainerMenu, NetworkTransmitterBlockEntity>((windowId, inv, blockEntity) -> new NetworkTransmitterContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "network_transmitter"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<RelayContainerMenu, RelayBlockEntity>((windowId, inv, blockEntity) -> new RelayContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "relay"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DetectorContainerMenu, DetectorBlockEntity>((windowId, inv, blockEntity) -> new DetectorContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "detector"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<SecurityManagerContainerMenu, SecurityManagerBlockEntity>((windowId, inv, blockEntity) -> new SecurityManagerContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "security_manager"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<InterfaceContainerMenu, InterfaceBlockEntity>((windowId, inv, blockEntity) -> new InterfaceContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "interface"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<FluidInterfaceContainerMenu, FluidInterfaceBlockEntity>((windowId, inv, blockEntity) -> new FluidInterfaceContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "fluid_interface"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<WirelessTransmitterContainerMenu, WirelessTransmitterBlockEntity>((windowId, inv, blockEntity) -> new WirelessTransmitterContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "wireless_transmitter"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<StorageMonitorContainerMenu, StorageMonitorBlockEntity>((windowId, inv, blockEntity) -> new StorageMonitorContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "storage_monitor"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<ConstructorContainerMenu, ConstructorBlockEntity>((windowId, inv, blockEntity) -> new ConstructorContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "constructor"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DestructorContainerMenu, DestructorBlockEntity>((windowId, inv, blockEntity) -> new DestructorContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "destructor"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<DiskManipulatorContainerMenu, DiskManipulatorBlockEntity>((windowId, inv, blockEntity) -> new DiskManipulatorContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "disk_manipulator"));
-        e.getRegistry().register(IForgeMenuType.create(new BlockEntityContainerFactory<CrafterContainerMenu, CrafterBlockEntity>((windowId, inv, blockEntity) -> new CrafterContainerMenu(blockEntity, inv.player, windowId))).setRegistryName(RS.ID, "crafter"));
-        e.getRegistry().register(IForgeMenuType.create(new CrafterManagerContainerFactory()).setRegistryName(RS.ID, "crafter_manager"));
-        e.getRegistry().register(IForgeMenuType.create(new CraftingMonitorContainerFactory()).setRegistryName(RS.ID, "crafting_monitor"));
-        e.getRegistry().register(IForgeMenuType.create(new WirelessCraftingMonitorContainerFactory()).setRegistryName(RS.ID, "wireless_crafting_monitor"));
     }
 }

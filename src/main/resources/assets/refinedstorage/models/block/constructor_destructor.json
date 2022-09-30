@@ -1,4 +1,5 @@
 {
+  "render_type": "cutout",
   "textures": {
     "border": "refinedstorage:block/cable_part_border"
   },
@@ -152,7 +153,8 @@
             0.0,
             16.0,
             16.0
-          ]
+          ],
+          "emissivity": 15
         }
       }
     }

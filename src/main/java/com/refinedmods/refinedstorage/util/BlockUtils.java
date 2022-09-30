@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.util;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -16,6 +16,6 @@ public final class BlockUtils {
 
     // Block#getTranslatedName is client only
     public static Component getBlockTranslation(Block block) {
-        return new TranslatableComponent(block.getDescriptionId());
+        return Component.translatable(block.getDescriptionId());
     }
 }

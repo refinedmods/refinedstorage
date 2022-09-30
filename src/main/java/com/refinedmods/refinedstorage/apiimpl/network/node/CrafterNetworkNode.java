@@ -12,13 +12,12 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.validator.PatternItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
@@ -40,7 +39,7 @@ import java.util.UUID;
 public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternContainer {
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafter");
-    private static final Component DEFAULT_NAME = new TranslatableComponent("gui.refinedstorage.crafter");
+    private static final Component DEFAULT_NAME = Component.translatable("gui.refinedstorage.crafter");
     private static final String NBT_DISPLAY_NAME = "DisplayName";
     private static final String NBT_UUID = "CrafterUuid";
     private static final String NBT_MODE = "Mode";
@@ -50,7 +49,8 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED)
         .addListener(new NetworkNodeInventoryListener(this));
     // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
-    private boolean visited = false;    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
+    private boolean visited = false;
+    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
         @Override
         public int getSlotLimit(int slot) {
             return 1;
@@ -86,6 +86,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     private Component displayName;
     @Nullable
     private UUID uuid = null;
+
     public CrafterNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
     }
@@ -309,7 +310,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         }
 
         if (facing != null) {
-            return new TranslatableComponent(level.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
+            return Component.translatable(level.getBlockState(facing.getBlockPos()).getBlock().getDescriptionId());
         }
 
         return DEFAULT_NAME;
@@ -446,8 +447,6 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             return IGNORE;
         }
     }
-
-
 
 
 }

@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.LinkedList;
@@ -40,8 +40,8 @@ public class TabListWidget<T extends AbstractContainerMenu> {
     }
 
     public void init(int width) {
-        this.left = screen.addButton(screen.getGuiLeft(), screen.getGuiTop() - 22, 20, 20, new TextComponent("<"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
-        this.right = screen.addButton(screen.getGuiLeft() + width - 22, screen.getGuiTop() - 22, 20, 20, new TextComponent(">"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
+        this.left = screen.addButton(screen.getGuiLeft(), screen.getGuiTop() - 22, 20, 20, Component.literal("<"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
+        this.right = screen.addButton(screen.getGuiLeft() + width - 22, screen.getGuiTop() - 22, 20, 20, Component.literal(">"), true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
     }
 
     public void addListener(ITabListListener listener) {

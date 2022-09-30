@@ -10,8 +10,8 @@ import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 
 import java.text.DecimalFormat;
@@ -29,31 +29,31 @@ public class ListNetworkCommand implements Command<CommandSourceStack> {
 
     public static void sendInfo(CommandContext<CommandSourceStack> context, NetworkInList listItem, boolean detailed) {
         context.getSource().sendSuccess(
-            new TranslatableComponent(
+            Component.translatable(
                 "commands.refinedstorage.network.list.pos",
                 listItem.network.getPosition().getX(),
                 listItem.network.getPosition().getY(),
                 listItem.network.getPosition().getZ()
             )
                 .append(" [")
-                .append(new TranslatableComponent(
+                .append(Component.translatable(
                     "commands.refinedstorage.network.list.tick_times",
-                    new TextComponent(TIME_FORMATTER.format(listItem.tickTime)).setStyle(Styles.YELLOW),
-                    new TextComponent(TIME_FORMATTER.format(listItem.tps)).setStyle(Styles.YELLOW)
+                    Component.literal(TIME_FORMATTER.format(listItem.tickTime)).setStyle(Styles.YELLOW),
+                    Component.literal(TIME_FORMATTER.format(listItem.tps)).setStyle(Styles.YELLOW)
                 ))
                 .append("]"), false);
 
         if (detailed) {
-            context.getSource().sendSuccess(new TranslatableComponent("commands.refinedstorage.network.list.autocrafting_tasks",
-                new TextComponent(listItem.network.getCraftingManager().getTasks().size() + "").setStyle(Styles.YELLOW)
+            context.getSource().sendSuccess(Component.translatable("commands.refinedstorage.network.list.autocrafting_tasks",
+                Component.literal(listItem.network.getCraftingManager().getTasks().size() + "").setStyle(Styles.YELLOW)
             ), false);
 
-            context.getSource().sendSuccess(new TranslatableComponent("commands.refinedstorage.network.list.nodes",
-                new TextComponent(listItem.network.getNodeGraph().all().size() + "").setStyle(Styles.YELLOW)
+            context.getSource().sendSuccess(Component.translatable("commands.refinedstorage.network.list.nodes",
+                Component.literal(listItem.network.getNodeGraph().all().size() + "").setStyle(Styles.YELLOW)
             ), false);
 
-            context.getSource().sendSuccess(new TranslatableComponent("commands.refinedstorage.network.list.energy_usage",
-                new TextComponent(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
+            context.getSource().sendSuccess(Component.translatable("commands.refinedstorage.network.list.energy_usage",
+                Component.literal(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
             ), false);
         }
     }

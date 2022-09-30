@@ -7,7 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
 
     protected List<Component> drawIngredientHighlights(PoseStack stack, int recipeX, int recipeY) {
         List<Component> message = new ArrayList<>();
-        message.add(new TranslatableComponent("jei.tooltip.transfer"));
+        message.add(Component.translatable("jei.tooltip.transfer"));
 
         boolean craftMessage = false;
         boolean missingMessage = false;
@@ -57,14 +57,14 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         }
 
         if (missingMessage) {
-            message.add(new TranslatableComponent("jei.tooltip.error.recipe.transfer.missing").withStyle(ChatFormatting.RED));
+            message.add(Component.translatable("jei.tooltip.error.recipe.transfer.missing").withStyle(ChatFormatting.RED));
         }
 
         if (craftMessage) {
             if (HOST_OS_IS_MACOS) {
-                message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting_mac").withStyle(ChatFormatting.BLUE));
+                message.add(Component.translatable("gui.refinedstorage.jei.transfer.request_autocrafting_mac").withStyle(ChatFormatting.BLUE));
             } else {
-                message.add(new TranslatableComponent("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(ChatFormatting.BLUE));
+                message.add(Component.translatable("gui.refinedstorage.jei.transfer.request_autocrafting").withStyle(ChatFormatting.BLUE));
             }
         }
 

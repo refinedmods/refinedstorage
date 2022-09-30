@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,8 +18,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,6 +40,14 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
 
     public static final ModelProperty<DiskState[]> DISK_STATE_PROPERTY = new ModelProperty<>();
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(IO_MODE)
+        .build();
+
     private static final String NBT_DISK_STATE = "DiskStates";
 
     private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getDisks());
@@ -47,13 +55,7 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
     private final DiskState[] diskState = new DiskState[6];
 
     public DiskManipulatorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DISK_MANIPULATOR, pos, state);
-
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(IO_MODE);
-
+        super(RSBlockEntities.DISK_MANIPULATOR.get(), pos, state, SPEC);
         Arrays.fill(diskState, DiskState.NONE);
     }
 
@@ -89,8 +91,8 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(DISK_STATE_PROPERTY, diskState).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(DISK_STATE_PROPERTY, diskState).build();
     }
 
     @Nonnull

@@ -15,15 +15,15 @@ import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -39,7 +39,8 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
     private final CoverManager coverManager;
-    private int compare = IComparer.COMPARE_NBT;    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
+    private int compare = IComparer.COMPARE_NBT;
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && !getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
@@ -57,8 +58,8 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 for (int i = 0; i < fluidFilters.getSlots(); ++i) {
                     FluidStack filteredFluid = fluidFilters.getFluid(i);
 
-                    if (!filteredFluid.isEmpty() && filteredFluid.getAmount() != FluidAttributes.BUCKET_VOLUME) {
-                        filteredFluid.setAmount(FluidAttributes.BUCKET_VOLUME);
+                    if (!filteredFluid.isEmpty() && filteredFluid.getAmount() != FluidType.BUCKET_VOLUME) {
+                        filteredFluid.setAmount(FluidType.BUCKET_VOLUME);
                         changed = true;
                     }
                 }
@@ -173,7 +174,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                     FluidStack stack = fluids[filterSlot];
 
                     if (stack != null) {
-                        int toExtract = FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount();
+                        int toExtract = FluidType.BUCKET_VOLUME * upgrades.getStackInteractCount();
 
                         FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
@@ -330,8 +331,6 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     public CoverManager getCoverManager() {
         return coverManager;
     }
-
-
 
 
 }

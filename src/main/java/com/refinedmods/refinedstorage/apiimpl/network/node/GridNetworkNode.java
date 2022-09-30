@@ -17,6 +17,9 @@ import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridSt
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.block.GridBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
@@ -24,14 +27,10 @@ import com.refinedmods.refinedstorage.inventory.item.validator.ItemValidator;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.PatternItem;
-import com.refinedmods.refinedstorage.blockentity.config.IType;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -46,8 +45,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -95,13 +94,18 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         }
 
         @Override
+        public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
         public void slotsChanged(Container inventory) {
             if (!level.isClientSide) {
                 onCraftingMatrixChanged();
             }
         }
     };
-    private final FluidInventory processingMatrixFluids = new FluidInventory(PROCESSING_MATRIX_SIZE * 2, FluidAttributes.BUCKET_VOLUME * 64)
+    private final FluidInventory processingMatrixFluids = new FluidInventory(PROCESSING_MATRIX_SIZE * 2, FluidType.BUCKET_VOLUME * 64)
         .addListener(new NetworkNodeFluidInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < PROCESSING_MATRIX_SIZE) {
@@ -179,6 +183,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private boolean exactPattern = true;
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
+
     public GridNetworkNode(Level level, BlockPos pos, GridType type) {
         super(level, pos);
 
@@ -293,13 +298,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     public Component getTitle() {
         switch (type) {
             case CRAFTING:
-                return new TranslatableComponent("gui.refinedstorage.crafting_grid");
+                return Component.translatable("gui.refinedstorage.crafting_grid");
             case PATTERN:
-                return new TranslatableComponent("gui.refinedstorage.pattern_grid");
+                return Component.translatable("gui.refinedstorage.pattern_grid");
             case FLUID:
-                return new TranslatableComponent("gui.refinedstorage.fluid_grid");
+                return Component.translatable("gui.refinedstorage.fluid_grid");
             default:
-                return new TranslatableComponent("gui.refinedstorage.grid");
+                return Component.translatable("gui.refinedstorage.grid");
         }
     }
 
@@ -773,12 +778,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 return new CombinedInvWrapper(filter);
         }
     }
-
-
-
-
-
-
 
 
 }

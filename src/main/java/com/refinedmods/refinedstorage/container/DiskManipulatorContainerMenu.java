@@ -10,7 +10,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskManipulatorContainerMenu extends BaseContainerMenu {
     public DiskManipulatorContainerMenu(DiskManipulatorBlockEntity diskManipulator, Player player, int windowId) {
-        super(RSContainerMenus.DISK_MANIPULATOR, diskManipulator, player, windowId);
+        super(RSContainerMenus.DISK_MANIPULATOR.get(), diskManipulator, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
             addSlot(new SlotItemHandler(diskManipulator.getNode().getUpgrades(), i, 187, 6 + (i * 18)));

@@ -12,8 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.UuidArgument;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -40,7 +39,7 @@ public class CreateDiskCommand implements Command<CommandSourceStack> {
 
         IStorageDisk<?> disk = API.instance().getStorageDiskManager(context.getSource().getLevel()).get(id);
         if (disk == null) {
-            context.getSource().sendFailure(new TranslatableComponent("commands.refinedstorage.disk.create.error.disk_not_found", id));
+            context.getSource().sendFailure(Component.translatable("commands.refinedstorage.disk.create.error.disk_not_found", id));
         } else {
             IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(disk.getFactoryId());
 
@@ -67,9 +66,9 @@ public class CreateDiskCommand implements Command<CommandSourceStack> {
                     }
                 }
 
-                context.getSource().sendSuccess(new TranslatableComponent(
+                context.getSource().sendSuccess(Component.translatable(
                     "commands.refinedstorage.disk.create.success",
-                    new TextComponent(id.toString()).setStyle(Styles.YELLOW),
+                    Component.literal(id.toString()).setStyle(Styles.YELLOW),
                     context.getSource().getDisplayName().copy().setStyle(Styles.YELLOW)
                 ), false);
             }

@@ -10,7 +10,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskDriveContainerMenu extends BaseContainerMenu {
     public DiskDriveContainerMenu(DiskDriveBlockEntity diskDrive, Player player, int windowId) {
-        super(RSContainerMenus.DISK_DRIVE, diskDrive, player, windowId);
+        super(RSContainerMenus.DISK_DRIVE.get(), diskDrive, player, windowId);
 
         int x = 80;
         int y = 54;

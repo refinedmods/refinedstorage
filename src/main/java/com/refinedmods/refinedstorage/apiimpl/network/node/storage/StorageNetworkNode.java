@@ -27,7 +27,7 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -246,7 +246,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("block.refinedstorage." + type.getName() + "_storage_block");
+        return Component.translatable("block.refinedstorage." + type.getName() + "_storage_block");
     }
 
     @Override

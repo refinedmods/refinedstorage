@@ -12,7 +12,7 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,7 +57,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.refinedstorage.wireless_crafting_monitor");
+        return Component.translatable("gui.refinedstorage.wireless_crafting_monitor");
     }
 
     @Override

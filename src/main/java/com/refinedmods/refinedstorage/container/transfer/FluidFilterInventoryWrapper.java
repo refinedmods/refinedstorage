@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 
 class FluidFilterInventoryWrapper implements IInventoryWrapper {
@@ -33,7 +33,7 @@ class FluidFilterInventoryWrapper implements IInventoryWrapper {
 
         for (int i = 0; i < filterInv.getSlots(); ++i) {
             if (filterInv.getFluid(i).isEmpty()) {
-                filterInv.setFluid(i, StackUtils.copy(fluidInContainer, FluidAttributes.BUCKET_VOLUME));
+                filterInv.setFluid(i, StackUtils.copy(fluidInContainer, FluidType.BUCKET_VOLUME));
 
                 return stop;
             }

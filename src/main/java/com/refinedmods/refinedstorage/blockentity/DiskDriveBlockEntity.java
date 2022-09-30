@@ -6,8 +6,9 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.*;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,8 +18,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -77,8 +77,18 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
 
         return capacity;
     });
-
     public static final ModelProperty<DiskState[]> DISK_STATE_PROPERTY = new ModelProperty<>();
+
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(PRIORITY)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(ACCESS_TYPE)
+        .addWatchedParameter(STORED)
+        .addWatchedParameter(CAPACITY)
+        .build();
 
     private static final String NBT_DISK_STATE = "DiskStates";
 
@@ -87,16 +97,7 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
     private final DiskState[] diskState = new DiskState[8];
 
     public DiskDriveBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DISK_DRIVE, pos, state);
-
-        dataManager.addWatchedParameter(PRIORITY);
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(ACCESS_TYPE);
-        dataManager.addWatchedParameter(STORED);
-        dataManager.addWatchedParameter(CAPACITY);
-
+        super(RSBlockEntities.DISK_DRIVE.get(), pos, state, SPEC);
         Arrays.fill(diskState, DiskState.NONE);
     }
 
@@ -132,8 +133,8 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(DISK_STATE_PROPERTY, diskState).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(DISK_STATE_PROPERTY, diskState).build();
     }
 
     @Nonnull

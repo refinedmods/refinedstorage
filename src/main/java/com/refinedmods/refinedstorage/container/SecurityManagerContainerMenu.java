@@ -7,7 +7,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class SecurityManagerContainerMenu extends BaseContainerMenu {
     public SecurityManagerContainerMenu(SecurityManagerBlockEntity securityManager, Player player, int windowId) {
-        super(RSContainerMenus.SECURITY_MANAGER, securityManager, player, windowId);
+        super(RSContainerMenus.SECURITY_MANAGER.get(), securityManager, player, windowId);
 
         int x = 8;
         int y = 20;

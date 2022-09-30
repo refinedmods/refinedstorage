@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.StorageMonitorNetwork
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +24,12 @@ public class StorageMonitorBlockEntity extends NetworkNodeBlockEntity<StorageMon
     private static final String NBT_STACK = "Stack";
     private static final String NBT_AMOUNT = "Amount";
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(TYPE)
+        .build();
+
     private int type;
     private int amount;
     @Nullable
@@ -31,10 +38,7 @@ public class StorageMonitorBlockEntity extends NetworkNodeBlockEntity<StorageMon
     private FluidStack fluidStack = FluidStack.EMPTY;
 
     public StorageMonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.STORAGE_MONITOR, pos, state);
-
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(TYPE);
+        super(RSBlockEntities.STORAGE_MONITOR.get(), pos, state, SPEC);
     }
 
     @Override

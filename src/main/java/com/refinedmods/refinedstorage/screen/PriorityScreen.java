@@ -3,10 +3,11 @@ package com.refinedmods.refinedstorage.screen;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu> {
@@ -15,10 +16,15 @@ public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu
     public PriorityScreen(BaseScreen parent, BlockEntitySynchronizationParameter<Integer, ?> priority, Inventory inventory) {
         super(parent, new AbstractContainerMenu(null, 0) {
             @Override
+            public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+                return ItemStack.EMPTY;
+            }
+
+            @Override
             public boolean stillValid(Player player) {
                 return false;
             }
-        }, 164, 92, inventory, new TranslatableComponent("misc.refinedstorage.priority"));
+        }, 164, 92, inventory, Component.translatable("misc.refinedstorage.priority"));
 
         this.priority = priority;
     }
@@ -30,7 +36,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu
 
     @Override
     protected Component getOkButtonText() {
-        return new TranslatableComponent("misc.refinedstorage.set");
+        return Component.translatable("misc.refinedstorage.set");
     }
 
     @Override

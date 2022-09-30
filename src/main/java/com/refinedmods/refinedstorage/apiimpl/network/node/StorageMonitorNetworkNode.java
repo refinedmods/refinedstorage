@@ -24,7 +24,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -50,7 +50,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             }
         });
 
-    private final FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
+    private final FluidInventory fluidFilter = new FluidInventory(1, FluidType.BUCKET_VOLUME)
         .addListener((handler, slot, reading) -> {
             if (!reading) {
                 LevelUtils.updateBlock(level, pos);
@@ -212,7 +212,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         }
 
         FluidStack stack = network.getFluidStorageCache().getList().get(filter);
-        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME) {
+        if (stack == null || stack.getAmount() < FluidType.BUCKET_VOLUME) {
             return;
         }
 
@@ -221,7 +221,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
                 network.getFluidStorageTracker().changed(player, stack.copy());
 
-                fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.fill(network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
                 if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
                     Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());

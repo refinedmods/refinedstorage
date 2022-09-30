@@ -13,7 +13,6 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -51,7 +50,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.refinedstorage.crafting_monitor");
+        return Component.translatable("gui.refinedstorage.crafting_monitor");
     }
 
     @Override

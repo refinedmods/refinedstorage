@@ -7,7 +7,8 @@ import com.refinedmods.refinedstorage.blockentity.RelayBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,10 +38,10 @@ public class RelayBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<RelayBlockEntity>(
-                    new TranslatableComponent("gui.refinedstorage.relay"),
+                    Component.translatable("gui.refinedstorage.relay"),
                     (blockEntity, windowId, inventory, p) -> new RelayContainerMenu(blockEntity, player, windowId),
                     pos
                 ),
