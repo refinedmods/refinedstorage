@@ -1,4 +1,5 @@
 {
+  "render_type": "cutout",
   "parent": "block/cube",
   "elements": [
     {
@@ -53,27 +54,33 @@
       "faces": {
         "up": {
           "texture": "#cutout_up",
-          "cullface": "up"
+          "cullface": "up",
+          "emissivity": 15
         },
         "down": {
           "texture": "#cutout_down",
-          "cullface": "down"
+          "cullface": "down",
+          "emissivity": 15
         },
         "north": {
           "texture": "#cutout_north",
-          "cullface": "north"
+          "cullface": "north",
+          "emissivity": 15
         },
         "south": {
           "texture": "#cutout_south",
-          "cullface": "south"
+          "cullface": "south",
+          "emissivity": 15
         },
         "west": {
           "texture": "#cutout_west",
-          "cullface": "west"
+          "cullface": "west",
+          "emissivity": 15
         },
         "east": {
           "texture": "#cutout_east",
-          "cullface": "east"
+          "cullface": "east",
+          "emissivity": 15
         }
       }
     }

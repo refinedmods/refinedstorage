@@ -43,7 +43,7 @@ public class GridManager implements IGridManager {
             return;
         }
 
-        NetworkHooks.openGui(player, new GridMenuProvider(grid.getLeft(), grid.getRight()), buf -> {
+        NetworkHooks.openScreen(player, new GridMenuProvider(grid.getLeft(), grid.getRight()), buf -> {
             buf.writeResourceLocation(id);
 
             buf.writeBoolean(pos != null);

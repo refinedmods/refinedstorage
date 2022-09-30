@@ -9,7 +9,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -18,7 +19,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://github.com/mezz/JustEnoughItems/blob/1.15/src/main/java/mezz/jei/plugins/vanilla/ingredients/fluid/FluidStackRenderer.java">JEI implementation</a>
  */
 public class FluidRenderer {
-    public static final FluidRenderer INSTANCE = new FluidRenderer(FluidAttributes.BUCKET_VOLUME, 16, 16, 16);
+    public static final FluidRenderer INSTANCE = new FluidRenderer(FluidType.BUCKET_VOLUME, 16, 16, 16);
 
     private static final int TEX_WIDTH = 16;
     private static final int TEX_HEIGHT = 16;
@@ -38,7 +39,7 @@ public class FluidRenderer {
     private static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
         Minecraft minecraft = Minecraft.getInstance();
         Fluid fluid = fluidStack.getFluid();
-        FluidAttributes attributes = fluid.getAttributes();
+        IClientFluidTypeExtensions attributes = IClientFluidTypeExtensions.of(fluid);
         ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
         return minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
     }
@@ -93,8 +94,8 @@ public class FluidRenderer {
 
         TextureAtlasSprite fluidStillSprite = getStillFluidSprite(fluidStack);
 
-        FluidAttributes attributes = fluid.getAttributes();
-        int fluidColor = attributes.getColor(fluidStack);
+        IClientFluidTypeExtensions attributes = IClientFluidTypeExtensions.of(fluid);
+        int fluidColor = attributes.getTintColor(fluidStack);
 
         int amount = fluidStack.getAmount();
         int scaledAmount = (amount * height) / capacityMb;

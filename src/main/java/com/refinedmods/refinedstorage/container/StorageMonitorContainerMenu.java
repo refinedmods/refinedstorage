@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class StorageMonitorContainerMenu extends BaseContainerMenu {
     public StorageMonitorContainerMenu(StorageMonitorBlockEntity storageMonitor, Player player, int windowId) {
-        super(RSContainerMenus.STORAGE_MONITOR, storageMonitor, player, windowId);
+        super(RSContainerMenus.STORAGE_MONITOR.get(), storageMonitor, player, windowId);
 
         addSlot(new FilterSlot(storageMonitor.getNode().getItemFilters(), 0, 80, 20).setEnableHandler(() -> storageMonitor.getNode().getType() == IType.ITEMS));
         addSlot(new FluidFilterSlot(storageMonitor.getNode().getFluidFilters(), 0, 80, 20).setEnableHandler(() -> storageMonitor.getNode().getType() == IType.FLUIDS));

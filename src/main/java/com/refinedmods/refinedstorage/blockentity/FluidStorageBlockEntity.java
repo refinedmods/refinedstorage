@@ -8,8 +8,9 @@ import com.refinedmods.refinedstorage.blockentity.config.IAccessType;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IPrioritizable;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
-import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
+import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -24,35 +25,30 @@ public class FluidStorageBlockEntity extends NetworkNodeBlockEntity<FluidStorage
     public static final BlockEntitySynchronizationParameter<AccessType, FluidStorageBlockEntity> ACCESS_TYPE = IAccessType.createParameter();
     public static final BlockEntitySynchronizationParameter<Long, FluidStorageBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> t.getNode().getStorage() != null ? (long) t.getNode().getStorage().getStored() : 0);
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(PRIORITY)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(STORED)
+        .addWatchedParameter(ACCESS_TYPE)
+        .build();
+
     private final FluidStorageType type;
 
     public FluidStorageBlockEntity(FluidStorageType type, BlockPos pos, BlockState state) {
-        super(getType(type), pos, state);
-
+        super(getType(type), pos, state, SPEC);
         this.type = type;
-
-        dataManager.addWatchedParameter(PRIORITY);
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(STORED);
-        dataManager.addWatchedParameter(ACCESS_TYPE);
     }
 
     public static BlockEntityType<FluidStorageBlockEntity> getType(FluidStorageType type) {
-        switch (type) {
-            case SIXTY_FOUR_K:
-                return RSBlockEntities.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK;
-            case TWO_HUNDRED_FIFTY_SIX_K:
-                return RSBlockEntities.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK;
-            case THOUSAND_TWENTY_FOUR_K:
-                return RSBlockEntities.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK;
-            case FOUR_THOUSAND_NINETY_SIX_K:
-                return RSBlockEntities.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK;
-            case CREATIVE:
-                return RSBlockEntities.CREATIVE_FLUID_STORAGE_BLOCK;
-            default:
-                throw new IllegalArgumentException("Unknown storage type " + type);
-        }
+        return switch (type) {
+            case SIXTY_FOUR_K -> RSBlockEntities.SIXTY_FOUR_K_FLUID_STORAGE_BLOCK.get();
+            case TWO_HUNDRED_FIFTY_SIX_K -> RSBlockEntities.TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK.get();
+            case THOUSAND_TWENTY_FOUR_K -> RSBlockEntities.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK.get();
+            case FOUR_THOUSAND_NINETY_SIX_K -> RSBlockEntities.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK.get();
+            case CREATIVE -> RSBlockEntities.CREATIVE_FLUID_STORAGE_BLOCK.get();
+        };
     }
 
     public FluidStorageType getFluidStorageType() {

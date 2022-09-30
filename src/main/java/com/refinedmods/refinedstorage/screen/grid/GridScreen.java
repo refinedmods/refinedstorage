@@ -37,7 +37,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -169,7 +169,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 menu.updatePatternSlotPositions(newOffset);
             });
 
-            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.processing"), GridBlockEntity.PROCESSING_PATTERN.getValue(), btn -> {
+            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, Component.translatable("misc.refinedstorage.processing"), GridBlockEntity.PROCESSING_PATTERN.getValue(), btn -> {
                 // Rebuild the inventory slots before the slot change packet arrives.
                 GridBlockEntity.PROCESSING_PATTERN.setValue(false, processingPattern.selected());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
@@ -183,7 +183,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 exactPattern = addCheckBox(
                     processingPattern.x + processingPattern.getWidth() + 5,
                     y + getTopHeight() + (getVisibleRows() * 18) + 60,
-                    new TranslatableComponent("misc.refinedstorage.exact"),
+                    Component.translatable("misc.refinedstorage.exact"),
                     GridBlockEntity.EXACT_PATTERN.getValue(),
                     btn -> BlockEntitySynchronizationManager.setParameter(GridBlockEntity.EXACT_PATTERN, exactPattern.selected())
                 );
@@ -191,7 +191,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             } else {
                 patternScrollbar.setEnabled(true);
 
-                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, new TranslatableComponent("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
+                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, Component.translatable("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
                     BlockEntitySynchronizationManager.setParameter(GridBlockEntity.PROCESSING_TYPE, GridBlockEntity.PROCESSING_TYPE.getValue() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
                 });
             }
@@ -475,12 +475,12 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             Style detailedTextStyle = Style.EMPTY.applyFormat(ChatFormatting.GRAY).withItalic(true);
 
             if (!gridStack.isCraftable()) {
-                textLines.add(new TranslatableComponent("misc.refinedstorage.total", gridStack.getFormattedFullQuantity())
+                textLines.add(Component.translatable("misc.refinedstorage.total", gridStack.getFormattedFullQuantity())
                     .withStyle(detailedTextStyle));
             }
 
             if (gridStack.getTrackerEntry() != null) {
-                textLines.add(new TranslatableComponent(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()))
+                textLines.add(Component.translatable(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()))
                     .withStyle(detailedTextStyle));
             }
         }

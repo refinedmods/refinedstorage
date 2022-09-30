@@ -12,7 +12,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -146,7 +146,7 @@ public class FilterItem extends Item {
             player.openMenu(new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return new TranslatableComponent("gui.refinedstorage.filter");
+                    return Component.translatable("gui.refinedstorage.filter");
                 }
 
                 @Override
@@ -163,10 +163,10 @@ public class FilterItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
 
-        tooltip.add(new TranslatableComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
+        tooltip.add(Component.translatable("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
 
         if (isModFilter(stack)) {
-            tooltip.add(new TranslatableComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
+            tooltip.add(Component.translatable("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
         }
 
         RenderUtils.addCombinedItemsToTooltip(tooltip, false, new ConfiguredItemsInFilterItemHandler(stack).getConfiguredItems());

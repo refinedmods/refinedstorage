@@ -35,7 +35,7 @@ public class CrafterManagerContainerMenu extends BaseContainerMenu {
     private int rows;
 
     public CrafterManagerContainerMenu(CrafterManagerBlockEntity crafterManager, Player player, int windowId) {
-        super(RSContainerMenus.CRAFTER_MANAGER, crafterManager, player, windowId);
+        super(RSContainerMenus.CRAFTER_MANAGER.get(), crafterManager, player, windowId);
 
         this.crafterManager = crafterManager.getNode();
     }

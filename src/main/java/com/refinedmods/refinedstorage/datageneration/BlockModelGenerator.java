@@ -25,13 +25,13 @@ public class BlockModelGenerator extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        genNorthCutoutModels(RSBlocks.GRID);
-        genNorthCutoutModels(RSBlocks.CRAFTING_GRID);
-        genNorthCutoutModels(RSBlocks.PATTERN_GRID);
-        genNorthCutoutModels(RSBlocks.FLUID_GRID);
-        genNorthCutoutModels(RSBlocks.CRAFTING_MONITOR);
-        genNorthCutoutModels(RSBlocks.CRAFTER_MANAGER);
-        genNorthCutoutModels(RSBlocks.DISK_MANIPULATOR);
+        genNorthCutoutModels(RSBlocks.GRID, false);
+        genNorthCutoutModels(RSBlocks.CRAFTING_GRID, false);
+        genNorthCutoutModels(RSBlocks.PATTERN_GRID, false);
+        genNorthCutoutModels(RSBlocks.FLUID_GRID, false);
+        genNorthCutoutModels(RSBlocks.CRAFTING_MONITOR, false);
+        genNorthCutoutModels(RSBlocks.CRAFTER_MANAGER, false);
+        genNorthCutoutModels(RSBlocks.DISK_MANIPULATOR, true);
         genControllerModels(RSBlocks.CONTROLLER);
         genControllerModels(RSBlocks.CREATIVE_CONTROLLER);
         genCrafterModels();
@@ -255,41 +255,48 @@ public class BlockModelGenerator extends BlockStateProvider {
         });
     }
 
-    private <T extends Block> void genNorthCutoutModels(ColorMap<T> blockMap) {
+    private <T extends Block> void genNorthCutoutModels(ColorMap<T> blockMap, boolean useLoader) {
         blockMap.forEach((color, registryObject) -> {
             Block block = registryObject.get();
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
-            models.horizontalRSBlock(block, state -> {
-                if (Boolean.FALSE.equals(state.getValue(NetworkNodeBlock.CONNECTED))) {
-                    return models.createCubeNorthCutoutModel(
-                        "block/" + folderName + "/disconnected",
-                        BOTTOM,
-                        resourceLocation(folderName, "top"),
-                        resourceLocation(folderName, "front"),
-                        resourceLocation(folderName, "back"),
-                        resourceLocation(folderName, "right"),
-                        resourceLocation(folderName, "left"),
-                        resourceLocation(folderName, "right"),
-                        resourceLocation(folderName, "cutouts/disconnected")
-                    );
-                } else {
-                    ModelFile model = models.createCubeNorthCutoutModel(
-                        "block/" + folderName + "/" + color,
-                        BOTTOM,
-                        resourceLocation(folderName, "top"),
-                        resourceLocation(folderName, "front"),
-                        resourceLocation(folderName, "back"),
-                        resourceLocation(folderName, "right"),
-                        resourceLocation(folderName, "left"),
-                        resourceLocation(folderName, "right"),
-                        resourceLocation(folderName, "cutouts/" + color)
-                    );
+            ModelFile disconnected = models.createCubeNorthCutoutModel(
+                "block/" + folderName + "/disconnected",
+                BOTTOM,
+                resourceLocation(folderName, "top"),
+                resourceLocation(folderName, "front"),
+                resourceLocation(folderName, "back"),
+                resourceLocation(folderName, "right"),
+                resourceLocation(folderName, "left"),
+                resourceLocation(folderName, "right"),
+                resourceLocation(folderName, "cutouts/disconnected")
+            );
+            ModelFile connected = models.createCubeNorthCutoutModel(
+                "block/" + folderName + "/" + color,
+                BOTTOM,
+                resourceLocation(folderName, "top"),
+                resourceLocation(folderName, "front"),
+                resourceLocation(folderName, "back"),
+                resourceLocation(folderName, "right"),
+                resourceLocation(folderName, "left"),
+                resourceLocation(folderName, "right"),
+                resourceLocation(folderName, "cutouts/" + color)
+            );
 
-                    simpleBlockItem(block, model);
-                    return model;
-                }
-            }, 180);
+            //generate Item Model
+            simpleBlockItem(block, connected);
+
+            if (useLoader) {
+                models.customLoaderRSBlock(block, resourceLocation(folderName, "loader"), connected, disconnected);
+            } else {
+                models.horizontalRSBlock(block, state -> {
+                    if (Boolean.FALSE.equals(state.getValue(NetworkNodeBlock.CONNECTED))) {
+                        return disconnected;
+                    } else {
+                        return connected;
+                    }
+                }, 180);
+            }
         });
     }
 

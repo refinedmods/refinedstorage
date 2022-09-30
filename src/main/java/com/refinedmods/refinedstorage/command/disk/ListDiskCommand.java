@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ListDiskCommand implements Command<CommandSourceStack> {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
@@ -21,7 +21,7 @@ public class ListDiskCommand implements Command<CommandSourceStack> {
         API.instance().getStorageDiskManager(context.getSource().getLevel())
             .getAll()
             .keySet()
-            .forEach(id -> context.getSource().sendSuccess(new TextComponent(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(Component.literal(id.toString()), false));
 
         return 0;
     }

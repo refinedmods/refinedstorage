@@ -5,8 +5,6 @@ import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -78,12 +76,12 @@ public class SecurityCardItem extends Item {
         super.appendHoverText(stack, level, tooltip, flag);
 
         if (stack.hasTag() && stack.getTag().contains(NBT_OWNER_NAME)) {
-            tooltip.add(new TranslatableComponent("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).setStyle(Styles.GRAY));
+            tooltip.add(Component.translatable("item.refinedstorage.security_card.owner", stack.getTag().getString(NBT_OWNER_NAME)).setStyle(Styles.GRAY));
         }
 
         for (Permission permission : Permission.values()) {
             if (hasPermission(stack, permission)) {
-                tooltip.add(new TextComponent("- ").append(new TranslatableComponent("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
+                tooltip.add(Component.literal("- ").append(Component.translatable("gui.refinedstorage.security_manager.permission." + permission.getId())).setStyle(Styles.GRAY));
             }
         }
     }

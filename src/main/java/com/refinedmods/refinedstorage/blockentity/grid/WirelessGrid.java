@@ -22,7 +22,7 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -140,7 +140,7 @@ public class WirelessGrid implements INetworkAwareGrid {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.refinedstorage.grid");
+        return Component.translatable("gui.refinedstorage.grid");
     }
 
     @Override

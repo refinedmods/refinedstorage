@@ -20,8 +20,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -29,6 +27,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
@@ -46,7 +45,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
-    private static final Component ALTERNATIVES_TEXT = new TranslatableComponent("gui.refinedstorage.alternatives");
+    private static final Component ALTERNATIVES_TEXT = Component.translatable("gui.refinedstorage.alternatives");
     protected final Inventory inventory;
     private final List<SideButton> sideButtons = new ArrayList<>();
     private final Logger logger = LogManager.getLogger(getClass());
@@ -311,7 +310,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
                 renderQuantity(poseStack, x, y, text, textColor);
             }
         } catch (Throwable t) {
-            logger.warn("Couldn't render stack: {}", stack.getItem().getRegistryName());
+            logger.warn("Couldn't render stack: {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
         }
     }
 
@@ -343,7 +342,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     }
 
     public void renderTooltip(PoseStack poseStack, @Nonnull ItemStack stack, int x, int y, String lines) {
-        renderTooltip(poseStack, stack, x, y, Arrays.stream(lines.split("\n")).map(TextComponent::new).collect(Collectors.toList()));
+        renderTooltip(poseStack, stack, x, y, Arrays.stream(lines.split("\n")).map(Component::literal).collect(Collectors.toList()));
     }
 
     public void renderTooltip(PoseStack poseStack, @Nonnull ItemStack stack, int x, int y, List<Component> lines) {

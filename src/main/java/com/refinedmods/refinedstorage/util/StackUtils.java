@@ -18,8 +18,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -297,7 +298,7 @@ public final class StackUtils {
 
         IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).orElse(null);
         if (handler != null) {
-            FluidStack result = handler.drain(FluidAttributes.BUCKET_VOLUME, simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+            FluidStack result = handler.drain(FluidType.BUCKET_VOLUME, simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
 
             return Pair.of(handler.getContainer(), result);
         }
@@ -310,7 +311,8 @@ public final class StackUtils {
 
         CompoundTag itemTag = new CompoundTag();
 
-        itemTag.putString(NBT_ITEM_ID, stack.getItem().getRegistryName().toString());
+        ResourceLocation key = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem()), "Item is not registered");
+        itemTag.putString(NBT_ITEM_ID, key.toString());
         itemTag.putInt(NBT_ITEM_QUANTITY, stack.getCount());
 
         if (stack.hasTag()) {

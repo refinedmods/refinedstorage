@@ -9,7 +9,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class InterfaceContainerMenu extends BaseContainerMenu {
     public InterfaceContainerMenu(InterfaceBlockEntity blockEntity, Player player, int windowId) {
-        super(RSContainerMenus.INTERFACE, blockEntity, player, windowId);
+        super(RSContainerMenus.INTERFACE.get(), blockEntity, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
             addSlot(new SlotItemHandler(blockEntity.getNode().getImportItems(), i, 8 + (18 * i), 20));

@@ -6,7 +6,8 @@ import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class GridTab implements IGridTab {
     private final List<IFilter> filters;
     @Nullable
-    private final TextComponent name;
+    private final MutableComponent name;
     @Nonnull
     private final ItemStack icon;
     @Nullable
@@ -25,7 +26,7 @@ public class GridTab implements IGridTab {
 
     public GridTab(List<IFilter> filters, String name, @Nonnull ItemStack icon, @Nullable FluidStack fluidIcon) {
         this.filters = filters;
-        this.name = name.trim().isEmpty() ? null : new TextComponent(name);
+        this.name = name.trim().isEmpty() ? null : Component.literal(name);
         this.icon = icon;
         this.fluidIcon = fluidIcon;
     }

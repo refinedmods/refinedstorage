@@ -1,4 +1,5 @@
 {
+  "render_type": "cutout",
   "textures": {
     "cable": "refinedstorage:block/cable",
     "particle": "refinedstorage:block/cable"

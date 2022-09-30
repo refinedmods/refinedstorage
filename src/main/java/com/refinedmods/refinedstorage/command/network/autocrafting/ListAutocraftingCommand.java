@@ -10,7 +10,6 @@ import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class ListAutocraftingCommand extends NetworkCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
@@ -19,12 +18,12 @@ public class ListAutocraftingCommand extends NetworkCommand {
 
     public static void addInfo(CommandContext<CommandSourceStack> context, ICraftingTask task) {
         context.getSource().sendSuccess(
-            new TextComponent(getAmount(task.getRequested()) + "x ")
+            Component.literal(getAmount(task.getRequested()) + "x ")
                 .append(getName(task.getRequested()).copy().setStyle(Styles.YELLOW))
                 .append(" ")
                 .append("(" + task.getCompletionPercentage() + "%)")
                 .append(" ")
-                .append(new TextComponent("[" + task.getId().toString() + "]").setStyle(Styles.GRAY)),
+                .append(Component.literal("[" + task.getId().toString() + "]").setStyle(Styles.GRAY)),
             false
         );
     }
@@ -50,7 +49,7 @@ public class ListAutocraftingCommand extends NetworkCommand {
             return info.getFluid().getDisplayName();
         }
 
-        return TextComponent.EMPTY;
+        return Component.empty();
     }
 
     @Override

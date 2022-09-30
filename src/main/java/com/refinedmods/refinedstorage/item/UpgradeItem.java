@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.item;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -27,9 +26,9 @@ public class UpgradeItem extends Item {
 
         if (type.getFortuneLevel() > 0) {
             tooltip.add(
-                new TranslatableComponent("enchantment.minecraft.fortune")
+                Component.translatable("enchantment.minecraft.fortune")
                     .append(" ")
-                    .append(new TranslatableComponent("enchantment.level." + type.getFortuneLevel()))
+                    .append(Component.translatable("enchantment.level." + type.getFortuneLevel()))
                     .setStyle(Styles.GRAY)
             );
         }

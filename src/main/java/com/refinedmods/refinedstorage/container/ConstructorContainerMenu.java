@@ -10,7 +10,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ConstructorContainerMenu extends BaseContainerMenu {
     public ConstructorContainerMenu(ConstructorBlockEntity constructor, Player player, int windowId) {
-        super(RSContainerMenus.CONSTRUCTOR, constructor, player, windowId);
+        super(RSContainerMenus.CONSTRUCTOR.get(), constructor, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
             addSlot(new SlotItemHandler(constructor.getNode().getUpgrades(), i, 187, 6 + (i * 18)));

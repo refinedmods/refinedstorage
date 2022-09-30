@@ -8,7 +8,6 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -96,7 +95,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 cachedName = stack.getHoverName().getString();
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve item name of {}", stack.getItem().getRegistryName());
+                LOGGER.warn("Could not retrieve item name of {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -156,10 +155,10 @@ public class ItemGridStack implements IGridStack {
             try {
                 tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve item tooltip of {}", stack.getItem().getRegistryName());
+                LOGGER.warn("Could not retrieve item tooltip of {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
 
                 tooltip = new ArrayList<>();
-                tooltip.add(new TextComponent(ERROR_PLACEHOLDER));
+                tooltip.add(Component.literal(ERROR_PLACEHOLDER));
             }
 
             if (bypassCache) {

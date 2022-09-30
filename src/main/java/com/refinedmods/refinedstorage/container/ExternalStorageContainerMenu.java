@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class ExternalStorageContainerMenu extends BaseContainerMenu {
     public ExternalStorageContainerMenu(ExternalStorageBlockEntity externalStorage, Player player, int windowId) {
-        super(RSContainerMenus.EXTERNAL_STORAGE, externalStorage, player, windowId);
+        super(RSContainerMenus.EXTERNAL_STORAGE.get(), externalStorage, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
             addSlot(new FilterSlot(externalStorage.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> externalStorage.getNode().getType() == IType.ITEMS));

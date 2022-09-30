@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.opengl.GL11;
 
 public abstract class SideButton extends Button {
@@ -19,7 +19,7 @@ public abstract class SideButton extends Button {
     protected final BaseScreen<?> screen;
 
     protected SideButton(BaseScreen<?> screen) {
-        super(-1, -1, WIDTH, HEIGHT, TextComponent.EMPTY, NO_ACTION);
+        super(-1, -1, WIDTH, HEIGHT, Component.empty(), NO_ACTION);
 
         this.screen = screen;
     }

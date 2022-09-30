@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[43,)"
 issueTrackerURL = "https://github.com/refinedmods/refinedstorage"
 license="MIT"
 [[mods]]
@@ -12,15 +12,3 @@ authors = "Refined Mods"
 description = '''
 An elegant solution to your hoarding problem
 '''
-[[dependencies.refinedstorage]]
-modId = "forge"
-mandatory = true
-versionRange = "[40.1,)"
-ordering = "NONE"
-side = "BOTH"
-[[dependencies.refinedstorage]]
-modId = "jei"
-mandatory = false
-versionRange = "[9.7.1,)"
-ordering = "BEFORE"
-side = "BOTH"

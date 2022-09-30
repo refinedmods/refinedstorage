@@ -10,7 +10,8 @@ import com.refinedmods.refinedstorage.util.CollisionUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -92,10 +93,10 @@ public class DestructorBlock extends CableBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<DestructorBlockEntity>(
-                    new TranslatableComponent("gui.refinedstorage.destructor"),
+                    Component.translatable("gui.refinedstorage.destructor"),
                     (blockEntity, windowId, inventory, p) -> new DestructorContainerMenu(blockEntity, player, windowId),
                     pos
                 ),

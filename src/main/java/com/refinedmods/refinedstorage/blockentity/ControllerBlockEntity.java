@@ -12,6 +12,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.RootNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,14 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
     public static final BlockEntitySynchronizationParameter<Integer, ControllerBlockEntity> ENERGY_CAPACITY = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getMaxEnergyStored());
     public static final BlockEntitySynchronizationParameter<List<ClientNode>, ControllerBlockEntity> NODES = new BlockEntitySynchronizationParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), ControllerBlockEntity::collectClientNodes);
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(ENERGY_USAGE)
+        .addWatchedParameter(ENERGY_STORED)
+        .addParameter(ENERGY_CAPACITY)
+        .addParameter(NODES)
+        .build();
+
     private final LazyOptional<INetworkNodeProxy<RootNetworkNode>> networkNodeProxyCap = LazyOptional.of(() -> this);
     private final NetworkType type;
     private INetwork removedNetwork;
@@ -44,14 +53,7 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
     private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> getNetwork().getEnergyStorage());
 
     public ControllerBlockEntity(NetworkType type, BlockPos pos, BlockState state) {
-        super(type == NetworkType.CREATIVE ? RSBlockEntities.CREATIVE_CONTROLLER : RSBlockEntities.CONTROLLER, pos, state);
-
-        dataManager.addWatchedParameter(REDSTONE_MODE);
-        dataManager.addWatchedParameter(ENERGY_USAGE);
-        dataManager.addWatchedParameter(ENERGY_STORED);
-        dataManager.addParameter(ENERGY_CAPACITY);
-        dataManager.addParameter(NODES);
-
+        super(type == NetworkType.CREATIVE ? RSBlockEntities.CREATIVE_CONTROLLER.get() : RSBlockEntities.CONTROLLER.get(), pos, state, SPEC);
         this.type = type;
     }
 

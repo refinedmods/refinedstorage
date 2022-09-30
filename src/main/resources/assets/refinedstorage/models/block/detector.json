@@ -1,4 +1,5 @@
 {
+  "render_type": "cutout",
   "parent": "block/cube",
   "textures": {
     "side": "refinedstorage:block/detector/side",
@@ -89,7 +90,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         },
         "west": {
           "uv": [
@@ -98,7 +100,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         }
       }
     },
@@ -123,7 +126,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         },
         "south": {
           "uv": [
@@ -132,7 +136,8 @@
             10,
             12
           ],
-          "texture": "#torch"
+          "texture": "#torch",
+          "emissivity": 15
         }
       }
     },

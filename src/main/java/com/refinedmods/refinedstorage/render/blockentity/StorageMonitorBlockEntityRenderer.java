@@ -25,8 +25,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.model.TransformationHelper;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.util.TransformationHelper;
 import net.minecraftforge.fluids.FluidStack;
 
 public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<StorageMonitorBlockEntity> {
@@ -144,10 +144,10 @@ public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<St
         poseStack.scale(0.5F, 0.5F, 0.5F);
 
         final Fluid fluid = fluidStack.getFluid();
-        final FluidAttributes attributes = fluid.getAttributes();
+        final IClientFluidTypeExtensions attributes = IClientFluidTypeExtensions.of(fluid);
         final ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
         final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
-        final int fluidColor = attributes.getColor(fluidStack);
+        final int fluidColor = attributes.getTintColor(fluidStack);
 
         final VertexConsumer buffer = renderTypeBuffer.getBuffer(RenderType.text(sprite.atlas().location()));
 

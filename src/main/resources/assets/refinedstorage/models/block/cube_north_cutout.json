@@ -1,4 +1,5 @@
 {
+  "render_type": "cutout",
   "parent": "block/cube",
   "elements": [
     {
@@ -53,7 +54,8 @@
       "faces": {
         "north": {
           "texture": "#cutout",
-          "cullface": "north"
+          "cullface": "north",
+          "emissivity": 15
         }
       }
     }

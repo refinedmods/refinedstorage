@@ -10,8 +10,8 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,7 +34,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
         FluidStack stack = portableGrid.getFluidCache().getList().get(id);
 
-        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME) {
+        if (stack == null || stack.getAmount() < FluidType.BUCKET_VOLUME) {
             return;
         }
 
@@ -56,7 +56,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
             bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
                 portableGrid.getFluidStorageTracker().changed(player, stack.copy());
 
-                fluidHandler.fill(portableGrid.getFluidStorage().extract(stack, FluidAttributes.BUCKET_VOLUME, IComparer.COMPARE_NBT, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.fill(portableGrid.getFluidStorage().extract(stack, FluidType.BUCKET_VOLUME, IComparer.COMPARE_NBT, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
                 if (shift) {
                     if (!player.getInventory().add(fluidHandler.getContainer().copy())) {

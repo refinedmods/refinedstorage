@@ -1,0 +1,4 @@
+{
+  "loader": "refinedstorage:disk_manipulator",
+  "render_type": "minecraft:cutout"
+}

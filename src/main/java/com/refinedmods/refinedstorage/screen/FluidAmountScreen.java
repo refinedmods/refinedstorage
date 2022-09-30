@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,7 +22,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
     private final UnaryOperator<Screen> alternativesScreenFactory;
 
     public FluidAmountScreen(BaseScreen parent, Player player, int containerSlot, FluidStack stack, int maxAmount, @Nullable UnaryOperator<Screen> alternativesScreenFactory) {
-        super(parent, new FluidAmountContainerMenu(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), new TranslatableComponent("gui.refinedstorage.fluid_amount"));
+        super(parent, new FluidAmountContainerMenu(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.getInventory(), Component.translatable("gui.refinedstorage.fluid_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -40,7 +40,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, new TranslatableComponent("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
+            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, Component.translatable("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -70,7 +70,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
 
     @Override
     protected Component getOkButtonText() {
-        return new TranslatableComponent("misc.refinedstorage.set");
+        return Component.translatable("misc.refinedstorage.set");
     }
 
     @Override

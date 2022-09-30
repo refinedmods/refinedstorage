@@ -7,7 +7,8 @@ import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,10 +33,10 @@ public class InterfaceBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<InterfaceBlockEntity>(
-                    new TranslatableComponent("gui.refinedstorage.interface"),
+                    Component.translatable("gui.refinedstorage.interface"),
                     (blockEntity, windowId, inventory, p) -> new InterfaceContainerMenu(blockEntity, player, windowId),
                     pos
                 ),

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class DetectorContainerMenu extends BaseContainerMenu {
     public DetectorContainerMenu(DetectorBlockEntity detector, Player player, int windowId) {
-        super(RSContainerMenus.DETECTOR, detector, player, windowId);
+        super(RSContainerMenus.DETECTOR.get(), detector, player, windowId);
 
         addSlot(new FilterSlot(detector.getNode().getItemFilters(), 0, 107, 20).setEnableHandler(() -> detector.getNode().getType() == IType.ITEMS));
         addSlot(new FluidFilterSlot(detector.getNode().getFluidFilters(), 0, 107, 20).setEnableHandler(() -> detector.getNode().getType() == IType.FLUIDS));

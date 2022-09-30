@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -85,7 +85,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
             }
 
             if (ticks % upgrades.getSpeed() == 0) {
-                FluidStack drained = tankIn.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.EXECUTE);
+                FluidStack drained = tankIn.drain(FluidType.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.EXECUTE);
 
                 // Drain in tank
                 if (!drained.isEmpty()) {

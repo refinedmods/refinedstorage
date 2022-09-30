@@ -7,7 +7,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class WirelessTransmitterContainerMenu extends BaseContainerMenu {
     public WirelessTransmitterContainerMenu(WirelessTransmitterBlockEntity wirelessTransmitter, Player player, int windowId) {
-        super(RSContainerMenus.WIRELESS_TRANSMITTER, wirelessTransmitter, player, windowId);
+        super(RSContainerMenus.WIRELESS_TRANSMITTER.get(), wirelessTransmitter, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
             addSlot(new SlotItemHandler(wirelessTransmitter.getNode().getUpgrades(), i, 187, 6 + (i * 18)));

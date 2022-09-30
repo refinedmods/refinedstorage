@@ -7,7 +7,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class NetworkTransmitterContainerMenu extends BaseContainerMenu {
     public NetworkTransmitterContainerMenu(NetworkTransmitterBlockEntity networkTransmitter, Player player, int windowId) {
-        super(RSContainerMenus.NETWORK_TRANSMITTER, networkTransmitter, player, windowId);
+        super(RSContainerMenus.NETWORK_TRANSMITTER.get(), networkTransmitter, player, windowId);
 
         addSlot(new SlotItemHandler(networkTransmitter.getNode().getNetworkCard(), 0, 8, 20));
 

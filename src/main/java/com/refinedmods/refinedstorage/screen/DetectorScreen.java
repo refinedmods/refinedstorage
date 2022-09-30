@@ -12,7 +12,6 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
 
@@ -31,7 +30,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainerMenu> {
 
         addSideButton(new ExactModeSideButton(this, DetectorBlockEntity.COMPARE));
 
-        amountField = new EditBox(font, x + 41 + 1, y + 23 + 1, 50, font.lineHeight, new TextComponent(""));
+        amountField = new EditBox(font, x + 41 + 1, y + 23 + 1, 50, font.lineHeight, Component.literal(""));
         amountField.setValue(String.valueOf(DetectorBlockEntity.AMOUNT.getValue()));
         amountField.setBordered(false);
         amountField.setVisible(true);

@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.item.blockitem;
 import com.refinedmods.refinedstorage.block.BaseBlock;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
@@ -14,7 +14,7 @@ public class ColoredBlockItem extends BaseBlockItem {
         super(block, builder);
 
         if (color != ColorMap.DEFAULT_COLOR) {
-            this.displayName = new TranslatableComponent("color.minecraft." + color.getName())
+            this.displayName = Component.translatable("color.minecraft." + color.getName())
                 .append(" ")
                 .append(displayName);
         } else {
