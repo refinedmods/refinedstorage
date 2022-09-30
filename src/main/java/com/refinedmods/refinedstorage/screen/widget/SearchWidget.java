@@ -9,7 +9,7 @@ import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class SearchWidget extends EditBox {
     private int historyIndex = -1;
 
     public SearchWidget(Font fontRenderer, int x, int y, int width) {
-        super(fontRenderer, x, y, width, fontRenderer.lineHeight, new TextComponent(""));
+        super(fontRenderer, x, y, width, fontRenderer.lineHeight, Component.literal(""));
 
         this.setBordered(false);
         this.setVisible(true);

@@ -8,7 +8,7 @@ import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -56,7 +56,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
 
-        tooltip.add(new TranslatableComponent("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
+        tooltip.add(Component.translatable("block.refinedstorage.portable_grid.tooltip").setStyle(Styles.GRAY));
     }
 
     @Override

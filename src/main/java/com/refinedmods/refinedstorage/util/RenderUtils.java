@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.math.Quaternion;
-import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
@@ -10,29 +9,37 @@ import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public final class RenderUtils {
-    private static ImmutableMap<ItemTransforms.TransformType, Transformation> DEFAULT_BLOCK_TRANSFORM;
-
     private RenderUtils() {
+    }
+
+    public static Quaternion getQuaternion(Direction direction) {
+        return switch (direction) {
+            case NORTH -> new Quaternion(0, 0, 0, true);
+            case EAST -> new Quaternion(0, -90, 0, true);
+            case SOUTH -> new Quaternion(0, 180, 0, true);
+            case WEST -> new Quaternion(0, 90, 0, true);
+            case UP -> new Quaternion(90, 0, 180, true);
+            case DOWN -> new Quaternion(-90, 0, 0, true);
+        };
     }
 
     public static String shorten(String text, int length) {
@@ -68,7 +75,7 @@ public final class RenderUtils {
                 }
 
                 if (displayAmount) {
-                    data = new TextComponent(amount + "x ").append(data);
+                    data = Component.literal(amount + "x ").append(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -96,7 +103,7 @@ public final class RenderUtils {
                 }
 
                 if (displayMb) {
-                    data = new TextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
+                    data = Component.literal(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").append(data);
                 }
 
                 tooltip.add(data.setStyle(Styles.GRAY));
@@ -114,16 +121,12 @@ public final class RenderUtils {
         return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
     }
 
-    public static TextureAtlasSprite getSprite(BakedModel coverModel, BlockState coverState, Direction facing, Random rand) {
+    public static TextureAtlasSprite getSprite(BakedModel coverModel, BlockState coverState, Direction facing, RandomSource rand) {
         TextureAtlasSprite sprite = null;
 
-        RenderType originalType = MinecraftForgeClient.getRenderType();
-
         try {
-            for (RenderType layer : RenderType.chunkBufferLayers()) {
-                ForgeHooksClient.setRenderType(layer);
-
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
+            for (RenderType layer : coverModel.getRenderTypes(coverState, rand, ModelData.EMPTY)) {
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand, ModelData.EMPTY, layer)) {
                     return bakedQuad.getSprite();
                 }
 
@@ -139,8 +142,6 @@ public final class RenderUtils {
             }
         } catch (Exception e) {
             // NO OP
-        } finally {
-            ForgeHooksClient.setRenderType(originalType);
         }
 
         if (sprite == null) {
@@ -160,34 +161,25 @@ public final class RenderUtils {
         return sprite;
     }
 
-    public static ImmutableMap<ItemTransforms.TransformType, Transformation> getDefaultBlockTransforms() {
-        if (DEFAULT_BLOCK_TRANSFORM != null) {
-            return DEFAULT_BLOCK_TRANSFORM;
-        }
-
-        Transformation thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
-
-        return DEFAULT_BLOCK_TRANSFORM = ImmutableMap.<ItemTransforms.TransformType, Transformation>builder()
-            .put(ItemTransforms.TransformType.GUI, getTransform(0, 0, 0, 30, 225, 0, 0.625f))
-            .put(ItemTransforms.TransformType.GROUND, getTransform(0, 3, 0, 0, 0, 0, 0.25f))
-            .put(ItemTransforms.TransformType.FIXED, getTransform(0, 0, 0, 0, 0, 0, 0.5f))
-            .put(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson)
-            .put(ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND, leftifyTransform(thirdperson))
-            .put(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(0, 0, 0, 0, 45, 0, 0.4f))
-            .put(ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(0, 0, 0, 0, 225, 0, 0.4f))
-            .build();
+    public static ItemTransforms getDefaultBlockTransforms() {
+        var thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
+        return new ItemTransforms(
+            thirdperson,
+            thirdperson,
+            getTransform(0, 0, 0, 0, 225, 0, 0.4f),
+            getTransform(0, 0, 0, 0, 45, 0, 0.4f),
+            ItemTransform.NO_TRANSFORM,
+            getTransform(-3, 1, 0, 30, 225, 0, 0.625f),
+            getTransform(0, 3, 0, 0, 0, 0, 0.25f),
+            getTransform(0, 0, 0, 0, 0, 0, 0.5f),
+            ImmutableMap.of());
     }
 
-    private static Transformation leftifyTransform(Transformation transform) {
-        return transform.blockCornerToCenter().blockCenterToCorner();
-    }
-
-    private static Transformation getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
-        return new Transformation(
+    private static ItemTransform getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
+        return new ItemTransform(
+            new Vector3f(ax, ay, az),
             new Vector3f(tx / 16, ty / 16, tz / 16),
-            new Quaternion(ax, ay, az, true),
-            new Vector3f(s, s, s),
-            null
+            new Vector3f(s, s, s)
         );
     }
 }

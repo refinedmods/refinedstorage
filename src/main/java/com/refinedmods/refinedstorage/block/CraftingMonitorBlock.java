@@ -44,9 +44,9 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             CraftingMonitorBlockEntity blockEntity = (CraftingMonitorBlockEntity) level.getBlockEntity(pos);
 
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
-                new CraftingMonitorMenuProvider(RSContainerMenus.CRAFTING_MONITOR, blockEntity.getNode(), blockEntity),
+                new CraftingMonitorMenuProvider(RSContainerMenus.CRAFTING_MONITOR.get(), blockEntity.getNode(), blockEntity),
                 pos
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }

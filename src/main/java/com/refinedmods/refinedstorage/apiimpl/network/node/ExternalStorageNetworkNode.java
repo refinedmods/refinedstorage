@@ -28,7 +28,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -248,7 +248,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("gui.refinedstorage:external_storage");
+        return Component.translatable("gui.refinedstorage:external_storage");
     }
 
     @Override

@@ -7,14 +7,14 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 
@@ -33,14 +33,17 @@ public class DestructorBlockEntity extends NetworkNodeBlockEntity<DestructorNetw
         (initial, p) -> {
         });
 
-    public DestructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DESTRUCTOR, pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(WHITELIST_BLACKLIST)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(PICKUP)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(PICKUP);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public DestructorBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.DESTRUCTOR.get(), pos, state, SPEC);
     }
 
     @Override
@@ -51,8 +54,8 @@ public class DestructorBlockEntity extends NetworkNodeBlockEntity<DestructorNetw
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
     }
 
     @Override

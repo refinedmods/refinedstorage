@@ -7,11 +7,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class UpgradeWithEnchantedBookRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<UpgradeWithEnchantedBookRecipe> {
+public class UpgradeWithEnchantedBookRecipeSerializer implements RecipeSerializer<UpgradeWithEnchantedBookRecipe> {
     @Override
     public UpgradeWithEnchantedBookRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
         JsonObject enchantmentInfo = json.getAsJsonObject("enchantment");
@@ -40,7 +39,7 @@ public class UpgradeWithEnchantedBookRecipeSerializer extends ForgeRegistryEntry
     @Override
     public void toNetwork(FriendlyByteBuf buffer, UpgradeWithEnchantedBookRecipe recipe) {
         buffer.writeItem(recipe.getResult());
-        buffer.writeResourceLocation(recipe.getEnchant().enchantment.getRegistryName());
+        buffer.writeResourceLocation(ForgeRegistries.ENCHANTMENTS.getKey(recipe.getEnchant().enchantment));
         buffer.writeInt(recipe.getEnchant().level);
     }
 }

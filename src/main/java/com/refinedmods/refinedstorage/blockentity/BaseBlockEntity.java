@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.blockentity;
 
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -10,12 +11,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class BaseBlockEntity extends BlockEntity {
-    protected final BlockEntitySynchronizationManager dataManager = new BlockEntitySynchronizationManager(this);
-
+    private final BlockEntitySynchronizationManager dataManager;
     private boolean unloaded;
 
-    public BaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    protected BaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, BlockEntitySynchronizationSpec syncSpec) {
         super(type, pos, state);
+        this.dataManager = new BlockEntitySynchronizationManager(this, syncSpec);
     }
 
     public BlockEntitySynchronizationManager getDataManager() {

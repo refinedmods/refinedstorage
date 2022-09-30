@@ -93,7 +93,8 @@
             0.0,
             3.0,
             1.0
-          ]
+          ],
+          "emissivity": 15
         },
         "east": {
           "texture": "#led",
@@ -102,7 +103,8 @@
             0.0,
             3.0,
             1.0
-          ]
+          ],
+          "emissivity": 15
         },
         "south": {
           "texture": "#led",
@@ -111,7 +113,8 @@
             0.0,
             3.0,
             1.0
-          ]
+          ],
+          "emissivity": 15
         },
         "west": {
           "texture": "#led",
@@ -120,7 +123,8 @@
             0.0,
             3.0,
             1.0
-          ]
+          ],
+          "emissivity": 15
         },
         "up": {
           "texture": "#led",
@@ -129,7 +133,8 @@
             0.0,
             3.0,
             1.0
-          ]
+          ],
+          "emissivity": 15
         },
         "down": {
           "texture": "#led",
@@ -138,7 +143,8 @@
             0.0,
             3.0,
             1.0
-          ]
+          ],
+          "emissivity": 15
         }
       }
     }

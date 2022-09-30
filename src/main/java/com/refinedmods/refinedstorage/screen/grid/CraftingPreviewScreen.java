@@ -21,7 +21,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -54,6 +53,11 @@ public class CraftingPreviewScreen extends BaseScreen<AbstractContainerMenu> {
     public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids, Component title, Inventory inventory) {
         super(new AbstractContainerMenu(null, 0) {
             @Override
+            public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+                return ItemStack.EMPTY;
+            }
+
+            @Override
             public boolean stillValid(@Nonnull Player player) {
                 return false;
             }
@@ -71,9 +75,9 @@ public class CraftingPreviewScreen extends BaseScreen<AbstractContainerMenu> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addButton(x + 55, y + 201 - 20 - 7, 50, 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
+        addButton(x + 55, y + 201 - 20 - 7, 50, 20, Component.translatable("gui.cancel"), true, true, btn -> close());
 
-        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, new TranslatableComponent("misc.refinedstorage.start"), true, true, btn -> startRequest());
+        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, Component.translatable("misc.refinedstorage.start"), true, true, btn -> startRequest());
         startButton.active = elements.stream().noneMatch(ICraftingPreviewElement::doesDisableTaskStarting);
     }
 

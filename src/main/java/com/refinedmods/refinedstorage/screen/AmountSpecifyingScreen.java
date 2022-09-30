@@ -6,8 +6,6 @@ import com.refinedmods.refinedstorage.render.RenderSettings;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.apache.commons.lang3.tuple.Pair;
@@ -55,9 +53,9 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         Pair<Integer, Integer> pos = getOkCancelPos();
 
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, new TranslatableComponent("gui.cancel"), true, true, btn -> close());
+        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, Component.translatable("gui.cancel"), true, true, btn -> close());
 
-        amountField = new EditBox(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, new TextComponent(""));
+        amountField = new EditBox(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.lineHeight, Component.literal(""));
         amountField.setBordered(false);
         amountField.setVisible(true);
         amountField.setValue(String.valueOf(getDefaultAmount()));
@@ -89,9 +87,9 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         for (int i = 0; i < 3; ++i) {
             int increment = increments[i];
 
-            Component text = new TextComponent("+" + increment);
+            Component text = Component.literal("+" + increment);
             if (text.getString().equals("+1000")) {
-                text = new TextComponent("+1B");
+                text = Component.literal("+1B");
             }
 
             addButton(x + xx, y + 20, width, 20, text, true, true, btn -> onIncrementButtonClicked(increment));
@@ -104,9 +102,9 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         for (int i = 0; i < 3; ++i) {
             int increment = increments[i];
 
-            Component text = new TextComponent("-" + increment);
+            Component text = Component.literal("-" + increment);
             if (text.getString().equals("-1000")) {
-                text = new TextComponent("-1B");
+                text = Component.literal("-1B");
             }
 
             addButton(x + xx, y + imageHeight - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));

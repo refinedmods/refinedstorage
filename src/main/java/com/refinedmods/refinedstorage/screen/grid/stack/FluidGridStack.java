@@ -9,7 +9,6 @@ import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraftforge.fluids.FluidStack;
@@ -86,7 +85,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve fluid name of {}", stack.getFluid().getRegistryName());
+                LOGGER.warn("Could not retrieve fluid name of {}", ForgeRegistries.FLUIDS.getKey(stack.getFluid()));
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -98,7 +97,7 @@ public class FluidGridStack implements IGridStack {
     @Override
     public String getModId() {
         if (cachedModId == null) {
-            ResourceLocation registryName = stack.getFluid().getRegistryName();
+            ResourceLocation registryName = ForgeRegistries.FLUIDS.getKey(stack.getFluid());
 
             if (registryName != null) {
                 cachedModId = registryName.getNamespace();
@@ -146,8 +145,8 @@ public class FluidGridStack implements IGridStack {
             try {
                 tooltip = Lists.newArrayList(stack.getDisplayName());
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve fluid tooltip of {}", stack.getFluid().getRegistryName());
-                tooltip = Lists.newArrayList(new TextComponent(ERROR_PLACEHOLDER));
+                LOGGER.warn("Could not retrieve fluid tooltip of {}", ForgeRegistries.FLUIDS.getKey(stack.getFluid()));
+                tooltip = Lists.newArrayList(Component.literal(ERROR_PLACEHOLDER));
             }
 
             if (bypassCache) {

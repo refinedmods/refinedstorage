@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -47,7 +48,7 @@ public class FilterGridFilter implements Predicate<IGridStack> {
                 FluidStack stackInFilter = (FluidStack) filter.getStack();
 
                 if (filter.isModFilter()) {
-                    ResourceLocation stackInFilterRegistryName = stackInFilter.getFluid().getRegistryName();
+                    ResourceLocation stackInFilterRegistryName = ForgeRegistries.FLUIDS.getKey(stackInFilter.getFluid());
 
                     if (stackInFilterRegistryName != null) {
                         String stackInFilterModId = stackInFilterRegistryName.getNamespace();

@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -78,14 +78,14 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide) {
-            applyNetwork(level.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getItemInHand(hand), PlayerSlot.getSlotForHand(player, hand)), err -> player.sendMessage(err, player.getUUID()));
+            applyNetwork(level.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getItemInHand(hand), PlayerSlot.getSlotForHand(player, hand)), player::sendSystemMessage);
         }
 
         return InteractionResultHolder.success(stack);
     }
 
     public void applyNetwork(MinecraftServer server, ItemStack stack, Consumer<INetwork> onNetwork, Consumer<Component> onError) {
-        TranslatableComponent notFound = new TranslatableComponent("misc.refinedstorage.network_item.not_found");
+        MutableComponent notFound = Component.translatable("misc.refinedstorage.network_item.not_found");
 
         if (!isValid(stack)) {
             onError.accept(notFound);
@@ -118,7 +118,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         super.appendHoverText(stack, level, tooltip, flag);
 
         if (isValid(stack)) {
-            tooltip.add(new TranslatableComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
+            tooltip.add(Component.translatable("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(Styles.GRAY));
         }
     }
 

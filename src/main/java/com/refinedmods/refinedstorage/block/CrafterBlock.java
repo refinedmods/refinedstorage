@@ -55,7 +55,7 @@ public class CrafterBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openGui(
+            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<CrafterBlockEntity>(
                     ((CrafterBlockEntity) level.getBlockEntity(pos)).getNode().getName(),

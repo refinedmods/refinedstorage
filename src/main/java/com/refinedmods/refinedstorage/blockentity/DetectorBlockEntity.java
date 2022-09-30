@@ -2,11 +2,12 @@ package com.refinedmods.refinedstorage.blockentity;
 
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
-import com.refinedmods.refinedstorage.screen.BaseScreen;
-import com.refinedmods.refinedstorage.screen.DetectorScreen;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
+import com.refinedmods.refinedstorage.screen.BaseScreen;
+import com.refinedmods.refinedstorage.screen.DetectorScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -29,15 +30,18 @@ public class DetectorBlockEntity extends NetworkNodeBlockEntity<DetectorNetworkN
         t.getNode().markDirty();
     }, (initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen -> detectorScreen.updateAmountField(value)));
 
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(MODE)
+        .addWatchedParameter(AMOUNT)
+        .build();
+
     private static final String NBT_POWERED = "Powered";
 
     public DetectorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DETECTOR, pos, state);
-
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(MODE);
-        dataManager.addWatchedParameter(AMOUNT);
+        super(RSBlockEntities.DETECTOR.get(), pos, state, SPEC);
     }
 
     @Override

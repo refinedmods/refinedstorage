@@ -1,2 +1,4 @@
 {
+  "parent": "refinedstorage:block/portable_grid"
 }
+

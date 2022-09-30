@@ -6,14 +6,14 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 
@@ -31,13 +31,16 @@ public class ConstructorBlockEntity extends NetworkNodeBlockEntity<ConstructorNe
         (initial, p) -> {
         });
 
-    public ConstructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CONSTRUCTOR, pos, state);
+    public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
+        .addWatchedParameter(REDSTONE_MODE)
+        .addWatchedParameter(COMPARE)
+        .addWatchedParameter(TYPE)
+        .addWatchedParameter(DROP)
+        .addWatchedParameter(COVER_MANAGER)
+        .build();
 
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(DROP);
-        dataManager.addWatchedParameter(COVER_MANAGER);
+    public ConstructorBlockEntity(BlockPos pos, BlockState state) {
+        super(RSBlockEntities.CONSTRUCTOR.get(), pos, state, SPEC);
     }
 
     @Override
@@ -48,8 +51,8 @@ public class ConstructorBlockEntity extends NetworkNodeBlockEntity<ConstructorNe
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(CoverManager.PROPERTY, this.getNode().getCoverManager()).build();
     }
 
     @Override

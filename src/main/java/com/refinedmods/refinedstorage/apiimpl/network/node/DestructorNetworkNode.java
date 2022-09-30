@@ -37,9 +37,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -61,12 +61,14 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
     private final CoverManager coverManager;
-    private int compare = IComparer.COMPARE_NBT;    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
+    private int compare = IComparer.COMPARE_NBT;
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> tool = createTool());
     private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
+
     public DestructorNetworkNode(Level level, BlockPos pos) {
         super(level, pos);
         this.coverManager = new CoverManager(this);
@@ -92,7 +94,9 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
                 breakFluid();
             }
         }
-    }    private ItemStack tool = createTool();
+    }
+
+    private ItemStack tool = createTool();
 
     private void pickupItems() {
         BlockPos front = pos.relative(getDirection());
@@ -178,7 +182,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
             if (frontBlockState.getValue(LiquidBlock.LEVEL) == 0) {
                 Fluid fluid = ((LiquidBlock) frontBlock).getFluid();
 
-                FluidStack stack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
+                FluidStack stack = new FluidStack(fluid, FluidType.BUCKET_VOLUME);
 
                 if (IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) &&
                     network.insertFluid(stack, stack.getAmount(), Action.SIMULATE).isEmpty()) {
@@ -356,10 +360,6 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
     public CoverManager getCoverManager() {
         return coverManager;
     }
-
-
-
-
 
 
 }

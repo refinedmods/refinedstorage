@@ -17,7 +17,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -204,12 +203,11 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     }
 
     @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
-
-        consumer.accept(new IItemRenderProperties() {
+        consumer.accept(new IClientItemExtensions() {
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return PatternItemBlockEntityRenderer.getInstance();
             }
         });
@@ -227,12 +225,12 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
         if (pattern.isValid()) {
             if (Screen.hasShiftDown() || isProcessing(stack)) {
-                tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
+                tooltip.add(Component.translatable("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
                 RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs().stream().map(i -> !i.isEmpty() ? i.get(0) : FluidStack.EMPTY).collect(Collectors.toList()));
 
-                tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.outputs").setStyle(Styles.YELLOW));
+                tooltip.add(Component.translatable("misc.refinedstorage.pattern.outputs").setStyle(Styles.YELLOW));
             }
 
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
@@ -243,14 +241,14 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             }
 
             if (isExact(stack)) {
-                tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.exact").setStyle(Styles.BLUE));
+                tooltip.add(Component.translatable("misc.refinedstorage.pattern.exact").setStyle(Styles.BLUE));
             }
 
             if (isProcessing(stack)) {
-                tooltip.add(new TranslatableComponent("misc.refinedstorage.processing").setStyle(Styles.BLUE));
+                tooltip.add(Component.translatable("misc.refinedstorage.processing").setStyle(Styles.BLUE));
             }
         } else {
-            tooltip.add(new TranslatableComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
+            tooltip.add(Component.translatable("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
             tooltip.add(pattern.getErrorMessage().plainCopy().setStyle(Styles.GRAY));
         }
     }
@@ -260,7 +258,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedItemTags().get(i);
 
             for (ResourceLocation tag : allowedTags) {
-                tooltip.add(new TranslatableComponent(
+                tooltip.add(Component.translatable(
                     "misc.refinedstorage.pattern.allowed_item_tag",
                     tag.toString(),
                     pattern.getInputs().get(i).get(0).getHoverName()
@@ -272,7 +270,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedFluidTags().get(i);
 
             for (ResourceLocation tag : allowedTags) {
-                tooltip.add(new TranslatableComponent(
+                tooltip.add(Component.translatable(
                     "misc.refinedstorage.pattern.allowed_fluid_tag",
                     tag.toString(),
                     pattern.getFluidInputs().get(i).get(0).getDisplayName()

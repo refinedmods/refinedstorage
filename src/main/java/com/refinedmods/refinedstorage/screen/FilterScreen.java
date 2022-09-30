@@ -14,8 +14,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -46,19 +44,19 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addCheckBox(x + 7, y + 77, new TranslatableComponent("gui.refinedstorage.filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT, btn -> {
+        addCheckBox(x + 7, y + 77, Component.translatable("gui.refinedstorage.filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT, btn -> {
             compare ^= IComparer.COMPARE_NBT;
 
             sendUpdate();
         });
 
-        modFilterCheckBox = addCheckBox(0, y + 71 + 25, new TranslatableComponent("gui.refinedstorage.filter.mod_filter"), modFilter, btn -> {
+        modFilterCheckBox = addCheckBox(0, y + 71 + 25, Component.translatable("gui.refinedstorage.filter.mod_filter"), modFilter, btn -> {
             modFilter = !modFilter;
 
             sendUpdate();
         });
 
-        modeButton = addButton(x + 7, y + 71 + 21, 0, 20, new TextComponent(""), true, true, btn -> {
+        modeButton = addButton(x + 7, y + 71 + 21, 0, 20, Component.literal(""), true, true, btn -> {
             mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
 
             updateModeButton(mode);
@@ -68,7 +66,7 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
 
         updateModeButton(mode);
 
-        nameField = new EditBox(font, x + 34, y + 121, 137 - 6, font.lineHeight, new TextComponent(""));
+        nameField = new EditBox(font, x + 34, y + 121, 137 - 6, font.lineHeight, Component.literal(""));
         nameField.setValue(name);
         nameField.setBordered(false);
         nameField.setVisible(true);
@@ -84,8 +82,8 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
 
     private void updateModeButton(int mode) {
         Component text = mode == IFilter.MODE_WHITELIST
-            ? new TranslatableComponent("sidebutton.refinedstorage.mode.whitelist")
-            : new TranslatableComponent("sidebutton.refinedstorage.mode.blacklist");
+            ? Component.translatable("sidebutton.refinedstorage.mode.whitelist")
+            : Component.translatable("sidebutton.refinedstorage.mode.blacklist");
 
         modeButton.setWidth(font.width(text.getString()) + 12);
         modeButton.setMessage(text);

@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.util;
 
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -60,12 +60,12 @@ public class QuantityFormatter implements IQuantityFormatter {
 
     @Override
     public String formatInBucketForm(int qty) {
-        return bucketFormatter.format((float) qty / (float) FluidAttributes.BUCKET_VOLUME) + " B";
+        return bucketFormatter.format((float) qty / (float) FluidType.BUCKET_VOLUME) + " B";
     }
 
     @Override
     public String formatInBucketFormWithOnlyTrailingDigitsIfZero(int qty) {
-        float amountRaw = ((float) qty / (float) FluidAttributes.BUCKET_VOLUME);
+        float amountRaw = ((float) qty / (float) FluidType.BUCKET_VOLUME);
         int amount = (int) amountRaw;
 
         if (amount >= 1) {

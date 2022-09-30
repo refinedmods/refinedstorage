@@ -58,7 +58,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openGui((ServerPlayer) player, new BlockEntityMenuProvider<FluidStorageBlockEntity>(
+            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen((ServerPlayer) player, new BlockEntityMenuProvider<FluidStorageBlockEntity>(
                 ((FluidStorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
                 (blockEntity, windowId, inventory, p) -> new FluidStorageContainerMenu(blockEntity, player, windowId),
                 pos

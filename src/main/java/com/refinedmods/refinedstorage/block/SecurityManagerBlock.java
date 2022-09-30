@@ -8,7 +8,8 @@ import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,10 +39,10 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            Runnable action = () -> NetworkHooks.openGui(
+            Runnable action = () -> NetworkHooks.openScreen(
                 (ServerPlayer) player,
                 new BlockEntityMenuProvider<SecurityManagerBlockEntity>(
-                    new TranslatableComponent("gui.refinedstorage.security_manager"),
+                    Component.translatable("gui.refinedstorage.security_manager"),
                     (blockEntity, windowId, inventory, p) -> new SecurityManagerContainerMenu(blockEntity, player, windowId),
                     pos
                 ),

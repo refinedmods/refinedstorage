@@ -52,7 +52,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         int itemSize = item.getCount();
         // We copy here because some mods change the NBT tag of an item after getting the stack limit
-        int maxItemSize = item.getItem().getItemStackLimit(item.copy());
+        int maxItemSize = item.getItem().getMaxStackSize(item.copy());
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 

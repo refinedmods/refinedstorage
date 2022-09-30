@@ -7,7 +7,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class CrafterContainerMenu extends BaseContainerMenu {
     public CrafterContainerMenu(CrafterBlockEntity crafter, Player player, int windowId) {
-        super(RSContainerMenus.CRAFTER, crafter, player, windowId);
+        super(RSContainerMenus.CRAFTER.get(), crafter, player, windowId);
 
         for (int i = 0; i < 9; ++i) {
             addSlot(new SlotItemHandler(crafter.getNode().getPatternInventory(), i, 8 + (18 * i), 20));

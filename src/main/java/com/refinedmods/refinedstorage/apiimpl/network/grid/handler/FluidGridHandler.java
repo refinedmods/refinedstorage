@@ -15,8 +15,8 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,14 +36,14 @@ public class FluidGridHandler implements IFluidGridHandler {
     public void onExtract(ServerPlayer player, UUID id, boolean shift) {
         FluidStack stack = network.getFluidStorageCache().getList().get(id);
 
-        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
+        if (stack == null || stack.getAmount() < FluidType.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player) || !network.canRun()) {
             return;
         }
 
         NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
             network.getFluidStorageTracker().changed(player, stack.copy());
 
-            FluidStack extracted = network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
+            FluidStack extracted = network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM);
 
             fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
 

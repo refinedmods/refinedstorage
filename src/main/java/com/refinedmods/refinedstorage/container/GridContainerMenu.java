@@ -45,7 +45,7 @@ public class GridContainerMenu extends BaseContainerMenu implements ICraftingGri
     private int patternScrollOffset;
 
     public GridContainerMenu(IGrid grid, @Nullable BaseBlockEntity blockEntity, Player player, int windowId) {
-        super(RSContainerMenus.GRID, blockEntity, player, windowId);
+        super(RSContainerMenus.GRID.get(), blockEntity, player, windowId);
 
         this.grid = grid;
 

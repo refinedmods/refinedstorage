@@ -33,7 +33,7 @@ apply plugin: 'maven-publish'
 
 group = 'com.refinedmods'
 archivesBaseName = 'refinedstorage'
-version = '1.10.4'
+version = '1.11.0'
 
 if (System.getenv('GITHUB_SHA') != null) {
     version += '+' + System.getenv('GITHUB_SHA').substring(0, 7)
@@ -50,7 +50,7 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'official', version: '1.19.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -102,17 +102,18 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.48'
+    minecraft 'net.minecraftforge:forge:1.19.2-43.0.0'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.1.232:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.1.232")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.1-common-api:11.2.0.243")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.1-forge-api:11.2.0.243")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.1-forge:11.2.0.243")
 
-    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3578801')
+    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3871353')
 
-    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3584842')
+    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3914007')
 
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.1-5.1.0.5")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.1-5.1.0.5:api")
 }
 
 jar {
@@ -137,7 +138,7 @@ if (System.getenv("CURSEFORGE_TOKEN") != null) {
             changelog = System.getenv("CHANGELOG")
             changelogType = 'markdown'
             releaseType = project.version.toString().contains('beta') ? 'beta' : (project.version.toString().contains('alpha') ? 'alpha' : 'release')
-            addGameVersion "1.18.2"
+            addGameVersion "1.19.2"
             mainArtifact(jar) {
                 displayName = "v$project.version"
             }

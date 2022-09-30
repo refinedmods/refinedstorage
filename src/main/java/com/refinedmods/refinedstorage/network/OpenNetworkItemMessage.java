@@ -39,7 +39,7 @@ public class OpenNetworkItemMessage {
                 }
 
                 if (stack.getItem() instanceof NetworkItem) {
-                    ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack, message.slot), err -> player.sendMessage(err, player.getUUID()));
+                    ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack, message.slot), player::sendSystemMessage);
                 } else if (stack.getItem() instanceof PortableGridBlockItem) {
                     API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, player, stack, message.slot);
                 }

@@ -23,20 +23,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
+public class ColorMap<T> {
     public static final DyeColor DEFAULT_COLOR = DyeColor.LIGHT_BLUE;
 
     private final Map<DyeColor, RegistryObject<T>> map = new EnumMap<>(DyeColor.class);
+
+    private final Map<T, DyeColor> colorByBlock = new HashMap<>();
 
     private DeferredRegister<Item> itemRegister;
     private DeferredRegister<Block> blockRegister;
@@ -53,6 +51,13 @@ public class ColorMap<T extends IForgeRegistryEntry<? super T>> {
 
     public RegistryObject<T> get(DyeColor color) {
         return map.get(color);
+    }
+
+    public DyeColor getColorFromObject(T object) {
+        if (colorByBlock.isEmpty()) {
+            map.forEach(((dyeColor, registryObject) -> colorByBlock.put(registryObject.get(), dyeColor)));
+        }
+        return colorByBlock.get(object);
     }
 
     public Collection<RegistryObject<T>> values() {

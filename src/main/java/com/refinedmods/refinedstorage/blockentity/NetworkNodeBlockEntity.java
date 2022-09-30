@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,16 +27,15 @@ import javax.annotation.Nullable;
 
 public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends BaseBlockEntity implements INetworkNodeProxy<N>, IRedstoneConfigurable {
     public static final BlockEntitySynchronizationParameter<Integer, NetworkNodeBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter();
+
     private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
     private N clientNode;
     private N removedNode;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-
-        dataManager.addWatchedParameter(REDSTONE_MODE);
+    protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, BlockEntitySynchronizationSpec syncSpec) {
+        super(type, pos, state, syncSpec);
     }
 
     @Override
