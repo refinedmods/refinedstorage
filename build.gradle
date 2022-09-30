@@ -102,18 +102,18 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.0.0'
+    minecraft 'net.minecraftforge:forge:1.19.2-43.1.32'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19.1-common-api:11.2.0.243")
-    compileOnly fg.deobf("mezz.jei:jei-1.19.1-forge-api:11.2.0.243")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.1-forge:11.2.0.243")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.3.0.262")
+    compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:11.3.0.262")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:11.3.0.262")
 
     compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3871353')
 
     compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3914007')
 
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.1-5.1.0.5")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.1-5.1.0.5:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0:api")
 }
 
 jar {
