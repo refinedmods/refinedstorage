@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.11.1] - 2022-10-30
+
 ### Fixed
 
 - Fixed not using Forge silicon tag for recipes.
