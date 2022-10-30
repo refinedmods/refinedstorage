@@ -7,6 +7,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed not using Forge silicon tag for recipes.
+- Small corrections to the Korean translation.
+
+## [v1.11.0] - 2022-09-30
+
 ### Changed
 
 - Ported to Minecraft 1.19.2.
