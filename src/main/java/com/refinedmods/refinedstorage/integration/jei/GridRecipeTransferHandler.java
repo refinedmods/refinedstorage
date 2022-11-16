@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.integration.jei;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
+import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMessage;
 import com.refinedmods.refinedstorage.network.grid.GridProcessingTransferMessage;
@@ -19,6 +20,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
@@ -36,6 +38,12 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
 
     private long lastTransferTimeMs;
+
+    private final Map<IRecipeSlotsView, IngredientTracker> trackerCache = new HashMap<>();
+
+    public final void cleanTrackerCache() {
+        trackerCache.clear();
+    }
 
     private GridRecipeTransferHandler() {
     }
@@ -112,40 +120,63 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     private IngredientTracker createTracker(GridContainerMenu container, IRecipeSlotsView recipeLayout, Player player, boolean doTransfer) {
-        IngredientTracker tracker = new IngredientTracker(recipeLayout, doTransfer);
+        {
+            IngredientTracker old = trackerCache.get(recipeLayout);
 
-        // Using IGridView#getStacks will return a *filtered* list of items in the view,
-        // which will cause problems - especially if the user uses JEI synchronised searching.
-        // Instead, we will use IGridView#getAllStacks which provides an unordered view of all GridStacks.
-        Collection<IGridStack> gridStacks = ((GridScreen) container.getScreenInfoProvider()).getView().getAllStacks();
+            if (old != null) {
+                return old;
+            }
+        }
+
+        IngredientTracker tracker = new IngredientTracker(recipeLayout, doTransfer);
 
         // Check grid
         if (container.getGrid().isGridActive()) {
+            // Using IGridView#getStacks will return a *filtered* list of items in the view,
+            // which will cause problems - especially if the user uses JEI synchronised searching.
+            // Instead, we will use IGridView#getAllStacks which provides an unordered view of all GridStacks.
+            Collection<IGridStack> gridStacks = ((GridScreen) container.getScreenInfoProvider()).getView().getAllStacks();
+
             for (IGridStack gridStack : gridStacks) {
-                if (gridStack instanceof ItemGridStack) {
-                    tracker.addAvailableStack(((ItemGridStack) gridStack).getStack(), gridStack);
+                if (gridStack instanceof ItemGridStack itemGridStack) {
+                    tracker.addAvailableStack(itemGridStack.getStack(), gridStack);
                 }
             }
         }
 
         // Check inventory
-        for (int inventorySlot = 0; inventorySlot < player.getInventory().getContainerSize(); inventorySlot++) {
-            if (!player.getInventory().getItem(inventorySlot).isEmpty()) {
-                tracker.addAvailableStack(player.getInventory().getItem(inventorySlot), null);
+        {
+            Inventory playerInventory = player.getInventory();
+
+            for (int inventorySlot = 0; inventorySlot < playerInventory.getContainerSize(); inventorySlot++) {
+                ItemStack itemStack = playerInventory.getItem(inventorySlot);
+
+                if (!itemStack.isEmpty()) {
+                    tracker.addAvailableStack(itemStack, null);
+                }
             }
         }
 
         // Check grid crafting slots
-        if (container.getGrid().getGridType().equals(GridType.CRAFTING)) {
-            CraftingContainer craftingMatrix = container.getGrid().getCraftingMatrix();
-            if (craftingMatrix != null) {
-                for (int matrixSlot = 0; matrixSlot < craftingMatrix.getContainerSize(); matrixSlot++) {
-                    if (!craftingMatrix.getItem(matrixSlot).isEmpty()) {
-                        tracker.addAvailableStack(craftingMatrix.getItem(matrixSlot), null);
+        {
+            IGrid grid = container.getGrid();
+
+            if (grid.getGridType().equals(GridType.CRAFTING)) {
+                CraftingContainer craftingMatrix = grid.getCraftingMatrix();
+
+                if (craftingMatrix != null) {
+                    for (int matrixSlot = 0; matrixSlot < craftingMatrix.getContainerSize(); matrixSlot++) {
+                        ItemStack itemStack = craftingMatrix.getItem(matrixSlot);
+
+                        if (!itemStack.isEmpty()) {
+                            tracker.addAvailableStack(itemStack, null);
+                        }
                     }
                 }
             }
         }
+
+        trackerCache.put(recipeLayout, tracker);
 
         return tracker;
     }

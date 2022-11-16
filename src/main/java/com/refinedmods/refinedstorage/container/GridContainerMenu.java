@@ -16,6 +16,7 @@ import com.refinedmods.refinedstorage.container.slot.grid.ResultCraftingGridSlot
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyBaseSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyDisabledSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
+import com.refinedmods.refinedstorage.integration.jei.GridRecipeTransferHandler;
 import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import com.refinedmods.refinedstorage.blockentity.BaseBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
@@ -321,6 +322,8 @@ public class GridContainerMenu extends BaseContainerMenu implements ICraftingGri
             if (storageCache != null && storageCacheListener != null) {
                 storageCache.removeListener(storageCacheListener);
             }
+
+            GridRecipeTransferHandler.INSTANCE.cleanTrackerCache();
         }
 
         grid.removeCraftingListener(this);

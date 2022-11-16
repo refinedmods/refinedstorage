@@ -18,24 +18,30 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class IngredientTracker {
-    private final List<Ingredient> ingredients = new ArrayList<>();
+    private final Map<Ingredient, List<ItemStack>> ingredients = new HashMap<>();
     private final Map<ResourceLocation, Integer> storedItems = new HashMap<>();
     private boolean doTransfer;
 
     public IngredientTracker(IRecipeSlotsView recipeLayout, boolean doTransfer) {
         for (IRecipeSlotView slotView : recipeLayout.getSlotViews(RecipeIngredientRole.INPUT)) {
-            Optional<ItemStack> optionalItemStack = slotView.getIngredients(VanillaTypes.ITEM_STACK).findAny();
+            List<ItemStack> itemStacks = slotView.getItemStacks().toList();
+            int required = itemStacks.stream().map(ItemStack::getCount).max(Integer::compare).orElse(0);
 
-            optionalItemStack.ifPresent(stack -> ingredients.add(new Ingredient(slotView, stack.getCount())));
+            // supposedly we should have a better way to do this,
+            // by for example extracting the `required` field from Ingredient, or simply removing it altogether
+            // but the code around this is too convoluted to fix in a single PR.
+
+            ingredients.put(new Ingredient(slotView, required), itemStacks);
         }
 
         this.doTransfer = doTransfer;
     }
 
     public Collection<Ingredient> getIngredients() {
-        return ingredients;
+        return ingredients.keySet();
     }
 
     public void addAvailableStack(ItemStack stack, @Nullable IGridStack gridStack) {
@@ -54,18 +60,18 @@ public class IngredientTracker {
             }
         }
 
-        for (Ingredient ingredient : ingredients) {
+        for (Map.Entry<Ingredient, List<ItemStack>> entry : ingredients.entrySet()) {
             if (available == 0) {
                 return;
             }
 
-            Optional<ItemStack> match = ingredient
-                .getSlotView()
-                .getIngredients(VanillaTypes.ITEM_STACK)
+            Optional<ItemStack> match = entry.getValue().stream()
                 .filter(s -> API.instance().getComparer().isEqual(stack, s, IComparer.COMPARE_NBT))
                 .findFirst();
 
             if (match.isPresent()) {
+                Ingredient ingredient = entry.getKey();
+
                 // Craftables and non-craftables are 2 different gridstacks
                 // As such we need to ignore craftable stacks as they are not actual items
                 if (gridStack != null && gridStack.isCraftable()) {
@@ -81,21 +87,21 @@ public class IngredientTracker {
     }
 
     public boolean hasMissing() {
-        return ingredients.stream().anyMatch(ingredient -> !ingredient.isAvailable());
+        return this.getIngredients().stream().anyMatch(ingredient -> !ingredient.isAvailable());
     }
 
     public boolean hasMissingButAutocraftingAvailable() {
-        return ingredients.stream().anyMatch(ingredient -> !ingredient.isAvailable() && ingredient.isCraftable());
+        return this.getIngredients().stream().anyMatch(ingredient -> !ingredient.isAvailable() && ingredient.isCraftable());
     }
 
     public boolean isAutocraftingAvailable() {
-        return ingredients.stream().anyMatch(Ingredient::isCraftable);
+        return this.getIngredients().stream().anyMatch(Ingredient::isCraftable);
     }
 
     public Map<UUID, Integer> createCraftingRequests() {
         Map<UUID, Integer> toRequest = new HashMap<>();
 
-        for (Ingredient ingredient : ingredients) {
+        for (Ingredient ingredient : this.getIngredients()) {
             if (!ingredient.isAvailable() && ingredient.isCraftable()) {
                 toRequest.merge(ingredient.getCraftStackId(), ingredient.getMissingAmount(), Integer::sum);
             }
