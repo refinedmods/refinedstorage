@@ -11,8 +11,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -43,7 +43,7 @@ public class CrafterBlockEntity extends NetworkNodeBlockEntity<CrafterNetworkNod
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && direction != null && !direction.equals(this.getNode().getDirection())) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER && direction != null && !direction.equals(this.getNode().getDirection())) {
             return patternsCapability.cast();
         }
 

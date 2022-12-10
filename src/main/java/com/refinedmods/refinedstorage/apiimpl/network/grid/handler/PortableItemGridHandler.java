@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -93,7 +94,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+                IItemHandler playerInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).orElse(null);
                 if (playerInventory != null) {
                     if (preferredSlot != -1) {
                         ItemStack remainder = playerInventory.insertItem(preferredSlot, took, true);

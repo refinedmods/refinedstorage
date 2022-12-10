@@ -15,6 +15,7 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -40,7 +41,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).ifPresent(fluidHandler -> {
             network.getFluidStorageTracker().changed(player, stack.copy());
 
             FluidStack extracted = network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM);

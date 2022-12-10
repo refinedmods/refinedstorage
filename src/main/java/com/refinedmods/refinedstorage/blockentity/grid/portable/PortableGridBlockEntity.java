@@ -65,8 +65,8 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
@@ -244,7 +244,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
         this.tabPage = WirelessGridItem.getTabPage(stack);
         this.size = WirelessGridItem.getSize(stack);
 
-        this.energyStorage = createEnergyStorage(stack.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0));
+        this.energyStorage = createEnergyStorage(stack.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0));
 
         if (stack.hasTag()) {
             for (int i = 0; i < 4; ++i) {
@@ -291,7 +291,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
             stack.getTag().put(NBT_ENCHANTMENTS, enchants);
         }
 
-        stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(itemEnergy -> itemEnergy.receiveEnergy(energyStorage.getEnergyStored(), false));
+        stack.getCapability(ForgeCapabilities.ENERGY, null).ifPresent(itemEnergy -> itemEnergy.receiveEnergy(energyStorage.getEnergyStored(), false));
 
         for (int i = 0; i < 4; ++i) {
             StackUtils.writeItems(filter, i, stack.getTag());
@@ -748,7 +748,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == CapabilityEnergy.ENERGY) {
+        if (cap == ForgeCapabilities.ENERGY) {
             return energyStorageCap.cast();
         }
 

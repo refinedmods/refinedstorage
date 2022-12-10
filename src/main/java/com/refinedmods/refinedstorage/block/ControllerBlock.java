@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -64,11 +64,11 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
         super.setPlacedBy(level, pos, state, entity, stack);
 
         if (!level.isClientSide) {
-            stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromStack -> {
+            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyFromStack -> {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
 
                 if (blockEntity != null) {
-                    blockEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromBlockEntity -> energyFromBlockEntity.receiveEnergy(energyFromStack.getEnergyStored(), false));
+                    blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyFromBlockEntity -> energyFromBlockEntity.receiveEnergy(energyFromStack.getEnergyStored(), false));
                 }
             });
         }

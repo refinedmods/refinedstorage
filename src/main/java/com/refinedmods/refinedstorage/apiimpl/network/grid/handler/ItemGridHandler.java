@@ -19,6 +19,7 @@ import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMess
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -174,7 +175,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                Optional<IItemHandler> playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve();
+                Optional<IItemHandler> playerInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).resolve();
                 if (playerInventory.isPresent()) {
                     if (preferredSlot != -1) {
                         ItemStack remainder = playerInventory.get().insertItem(preferredSlot, took, true);
