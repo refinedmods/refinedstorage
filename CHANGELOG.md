@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed chained crafters not taking over the name of the root crafter.
+
 ## [v1.11.1] - 2022-10-30
 
 ### Fixed
