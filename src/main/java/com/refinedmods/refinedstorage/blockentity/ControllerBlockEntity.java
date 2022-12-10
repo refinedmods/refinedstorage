@@ -25,6 +25,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNodeProxy<RootNetworkNode>, IRedstoneConfigurable {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static final BlockEntitySynchronizationParameter<Integer, ControllerBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final BlockEntitySynchronizationParameter<Integer, ControllerBlockEntity> ENERGY_USAGE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNetwork().getEnergyUsage());
     public static final BlockEntitySynchronizationParameter<Integer, ControllerBlockEntity> ENERGY_STORED = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNetwork().getEnergyStorage().getEnergyStored());
@@ -94,10 +98,14 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
             return dummyNetwork;
         }
 
-        INetwork network = API.instance().getNetworkManager((ServerLevel) level).getNetwork(worldPosition);
+        INetworkManager manager = API.instance().getNetworkManager((ServerLevel) level);
+        INetwork network = manager.getNetwork(worldPosition);
 
         if (network == null) {
-            throw new IllegalStateException("No network present at " + worldPosition);
+            LOGGER.warn("Expected a network @ {} but couldn't find it, creating a new one...", worldPosition);
+            network = new Network(level, worldPosition, type);
+            manager.setNetwork(worldPosition, network);
+            manager.markForSaving();
         }
 
         return network;
