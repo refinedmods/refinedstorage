@@ -86,10 +86,22 @@ public interface ICraftingPatternContainer {
 
     /**
      * The name of this container for categorizing in the Crafting Manager GUI.
+     * Will return the name of the root container if we're in a chained scenario.
      *
      * @return the name of this container
      */
     Component getName();
+
+    /**
+     * The custom name of this container, as set in an anvil for example.
+     * Can be null.
+     *
+     * @return the name of this container
+     */
+    @Nullable
+    default Component getCustomName() {
+        return null;
+    }
 
     /**
      * @return the position of this container

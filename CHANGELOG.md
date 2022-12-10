@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed external storage cache being de-synced from the network cache.
 - Fixed external storage using an out of date block entity for getting handler.
+- Fixed chained crafters not taking over the name of the root crafter.
 
 ### Changed
 
