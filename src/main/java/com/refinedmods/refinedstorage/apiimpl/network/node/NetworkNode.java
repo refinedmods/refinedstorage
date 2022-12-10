@@ -18,13 +18,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_VERSION = "Version";
     private static final int CURRENT_VERSION = 1;
@@ -256,8 +261,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         if (direction == null) {
             BlockState state = level.getBlockState(pos);
 
-            if (state.getBlock() instanceof BaseBlock) {
-                direction = state.getValue(((BaseBlock) state.getBlock()).getDirection().getProperty());
+            if (state.getBlock() instanceof BaseBlock baseBlock) {
+                DirectionProperty property = baseBlock.getDirection().getProperty();
+
+                if (state.hasProperty(property)) {
+                    direction = state.getValue(property);
+                } else {
+                    LOGGER.warn("Node @ {} has no direction! Consider recreating the block", pos);
+                    return Direction.NORTH;
+                }
             }
         }
 
