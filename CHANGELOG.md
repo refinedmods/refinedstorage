@@ -326,7 +326,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed JEI recipes/usages keys not working in Grids.
 
-## [v1.9.3] - 2020-08-24
+## [v1.9.3-beta] - 2020-08-24
 
 ### Added
 
@@ -342,13 +342,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed duplication bug with the Constructor.
 
-## [v1.9.2b] - 2020-09-11
+## [v1.9.2b-beta] - 2020-09-11
 
 ### Fixed
 
 - Fixed duplication bug with the Constructor.
 
-## [v1.9.2] - 2020-07-17
+## [v1.9.2-beta] - 2020-07-17
 
 ### Added
 
@@ -367,13 +367,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Network Transmitters being able to connect to any network device.
 - Fixed Crafting Tweaks buttons being in the wrong position after changing the size configuration of the Grid.
 
-## [v1.9.1] - 2020-07-14
+## [v1.9.1-beta] - 2020-07-14
 
 ### Fixed
 
 - Fixed server crash.
 
-## [v1.9.0] - 2020-07-14
+## [v1.9.0-beta] - 2020-07-14
 
 ### Added
 
