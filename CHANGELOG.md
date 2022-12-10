@@ -112,3 +112,31 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Ported to Minecraft 1.18.1.
 - Focused side buttons now display their tooltip properly.
 - Improved performance of retrieving patterns by [@metalshark](https://github.com/metalshark).
+
+## [v1.9.18] - 2022-05-18
+
+### Fixed
+
+- Fixed potential Pattern crash when loading Minecraft.
+
+## [v1.9.17] - 2022-01-30
+
+### Added
+
+- More slots for the Pattern Grid.
+
+### Changed
+
+- Combined fluid and item view in the Pattern Grid.
+- Processing patterns now use the order of items/fluids specified in the pattern.
+- Amount specifying screen is now limited to valid values.
+
+### Fixed
+
+- Fixed Relay not working.
+- Fixed Wireless Transmitter only working upright.
+- Fixed Portable Grid not opening when pointing at a block.
+- Fixed being able to circumvent locked slots by scrolling.
+- Fixed multiple bugs related to transferring recipes into the crafting grid.
+- Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements.
+- Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern.
