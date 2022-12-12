@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.screen.grid.view;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
+import com.refinedmods.refinedstorage.integration.jei.IngredientTracker;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.refinedmods.refinedstorage.screen.grid.sorting.IGridSorter;
@@ -9,6 +10,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,6 +23,8 @@ public class GridViewImpl implements IGridView {
     private boolean canCraft;
     private boolean active = false;
     private List<IGridStack> stacks = new ArrayList<>();
+
+    private List<Consumer<IGridStack>> deltaListeners = new ArrayList<>();
 
     public GridViewImpl(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.screen = screen;
@@ -71,6 +75,17 @@ public class GridViewImpl implements IGridView {
         }
 
         this.screen.updateScrollbar();
+    }
+
+    @Override
+    public void addDeltaListener(Consumer<IGridStack> listener) {
+        deltaListeners.add(listener);
+    }
+
+    @Override
+    public void removed() {
+        deltaListeners.clear();
+        IngredientTracker.invalidate();
     }
 
     private Comparator<IGridStack> getActiveSort() {
@@ -153,6 +168,9 @@ public class GridViewImpl implements IGridView {
             if (craftingStack != null && shouldSort && activeFilters.test(existing)) {
                 stacks.remove(craftingStack);
             }
+
+            deltaListeners.forEach(consumer -> consumer.accept(stack));
+
         } else {
             if (shouldSort) {
                 stacks.remove(existing);

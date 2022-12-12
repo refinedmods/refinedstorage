@@ -4,13 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridError {
-    public RecipeTransferPatternGridError(IngredientTracker tracker) {
-        super(tracker);
+    public RecipeTransferPatternGridError(Ingredient.IngredientList ingredients) {
+        super(ingredients);
     }
 
     @Override
@@ -20,7 +19,7 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
 
         boolean craftMessage = false;
 
-        for (Ingredient ingredient : tracker.getIngredients()) {
+        for (Ingredient ingredient : ingredientList.ingredients) {
             if (ingredient.isCraftable()) {
                 ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
                 craftMessage = true;

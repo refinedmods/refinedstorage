@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,26 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     protected static final Color AUTOCRAFTING_HIGHLIGHT_COLOR = new Color(0.0f, 0.0f, 1.0f, 0.4f);
     private static final Color MISSING_HIGHLIGHT_COLOR = new Color(1.0f, 0.0f, 0.0f, 0.4f);
     private static final boolean HOST_OS_IS_MACOS = System.getProperty("os.name").equals("Mac OS X");
-    protected final IngredientTracker tracker;
+    protected final Ingredient.IngredientList ingredientList;
 
-    public RecipeTransferCraftingGridError(IngredientTracker tracker) {
-        this.tracker = tracker;
+
+    public RecipeTransferCraftingGridError(Ingredient.IngredientList ingredientList) {
+        this.ingredientList = ingredientList;
     }
 
     @Override
     public Type getType() {
         return Type.COSMETIC;
+    }
+
+    @Override
+    public int getButtonHighlightColor() {
+        if (ingredientList.hasMissingButAutocraftingAvailable()) {
+            return AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB();
+        } else if (ingredientList.hasMissing()) {
+            return MISSING_HIGHLIGHT_COLOR.getRGB();
+        }
+        return IRecipeTransferError.super.getButtonHighlightColor();
     }
 
     @Override
@@ -44,7 +54,7 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         boolean craftMessage = false;
         boolean missingMessage = false;
 
-        for (Ingredient ingredient : tracker.getIngredients()) {
+        for (Ingredient ingredient : ingredientList.ingredients) {
             if (!ingredient.isAvailable()) {
                 if (ingredient.isCraftable()) {
                     ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
