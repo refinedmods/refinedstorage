@@ -10,6 +10,12 @@ import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
+import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.config.IType;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
+import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.*;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
@@ -24,12 +30,6 @@ import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
-import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.config.IType;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
-import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
-import com.refinedmods.refinedstorage.blockentity.grid.portable.PortableGridBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.TimeUtils;
 import net.minecraft.ChatFormatting;
@@ -37,7 +37,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -658,6 +657,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         if (!RS.CLIENT_CONFIG.getGrid().getRememberSearchQuery()) {
             searchQuery = "";
         }
+        getView().removed();
     }
 
     public SearchWidget getSearchField() {

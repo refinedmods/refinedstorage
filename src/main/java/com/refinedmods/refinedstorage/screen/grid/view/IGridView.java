@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public interface IGridView {
     List<IGridStack> getStacks();
@@ -24,4 +25,8 @@ public interface IGridView {
     boolean canCraft();
 
     void sort();
+
+    void addDeltaListener(Consumer<IGridStack> listener);
+
+    void removed();
 }

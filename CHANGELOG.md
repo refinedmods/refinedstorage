@@ -7,9 +7,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Available items indicator in JEI now updates while JEI is open
+
 ### Fixed
 
 - Fixed chained crafters not taking over the name of the root crafter.
+- Fixed lag when opening JEI in large system
 
 ## [v1.11.1] - 2022-10-30
 

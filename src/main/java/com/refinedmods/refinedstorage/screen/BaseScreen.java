@@ -73,7 +73,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
         executeLater(AbstractContainerScreen.class, callback);
     }
 
-    private void runActions() {
+    public void runActions() {
         runActions(getClass());
         runActions(AbstractContainerScreen.class);
     }
