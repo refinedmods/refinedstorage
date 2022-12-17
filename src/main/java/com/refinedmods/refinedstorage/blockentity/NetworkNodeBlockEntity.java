@@ -62,16 +62,26 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
 
         INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerLevel) level);
 
-        INetworkNode node = manager.getNode(worldPosition);
+        try {
+            INetworkNode node = manager.getNode(worldPosition);
 
-        if (node == null) {
-            LOGGER.warn("Expected a node @ {} but couldn't find it, creating a new one...", worldPosition);
-            node = createNode(level, worldPosition);
-            manager.setNode(worldPosition, node);
-            manager.markForSaving();
+            if (node == null) {
+                LOGGER.warn("Expected a node @ {} but couldn't find it, creating a new one...", worldPosition);
+                node = createAndSetNode(manager);
+            }
+
+            return (N) node;
+        } catch (ClassCastException e) {
+            LOGGER.warn("Node @ {} got desynced with it's block entity container, recreating", worldPosition, e);
+            return (N) createAndSetNode(manager);
         }
+    }
 
-        return (N) node;
+    private INetworkNode createAndSetNode(INetworkNodeManager manager) {
+        INetworkNode node = createNode(level, worldPosition);
+        manager.setNode(worldPosition, node);
+        manager.markForSaving();
+        return node;
     }
 
     @Override

@@ -42,14 +42,13 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -132,7 +131,9 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     public void onOpen() {
         drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getOpenUsage());
-    }    private final BaseItemHandler disk = new BaseItemHandler(1)
+    }
+
+    private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(((handler, slot, reading) -> {
             if (player != null && !player.level.isClientSide) {
@@ -189,7 +190,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Override
     public void drainEnergy(int energy) {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() && ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE) {
-            stack.getCapability(CapabilityEnergy.ENERGY, null)
+            stack.getCapability(ForgeCapabilities.ENERGY, null)
                 .ifPresent(energyStorage -> energyStorage.extractEnergy(energy, false));
         }
     }
@@ -197,7 +198,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Override
     public int getEnergy() {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() && ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE) {
-            return stack.getCapability(CapabilityEnergy.ENERGY, null)
+            return stack.getCapability(ForgeCapabilities.ENERGY, null)
                 .map(IEnergyStorage::getEnergyStored)
                 .orElse(RS.SERVER_CONFIG.getPortableGrid().getCapacity());
         }
@@ -449,7 +450,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     public boolean isGridActive() {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() &&
             ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE &&
-            stack.getCapability(CapabilityEnergy.ENERGY).orElse(null).getEnergyStored() <= RS.SERVER_CONFIG.getPortableGrid().getOpenUsage()) {
+            stack.getCapability(ForgeCapabilities.ENERGY).orElse(null).getEnergyStored() <= RS.SERVER_CONFIG.getPortableGrid().getOpenUsage()) {
             return false;
         }
 
@@ -508,8 +509,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }
-
-
 
 
 }

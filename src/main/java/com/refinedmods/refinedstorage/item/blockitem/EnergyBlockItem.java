@@ -5,14 +5,13 @@ import com.refinedmods.refinedstorage.item.capabilityprovider.EnergyCapabilityPr
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
@@ -42,7 +41,7 @@ public abstract class EnergyBlockItem extends BaseBlockItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY).orElse(null);
+        IEnergyStorage energy = stack.getCapability(ForgeCapabilities.ENERGY).orElse(null);
         if (energy == null) {
             return 0;
         }
@@ -52,7 +51,7 @@ public abstract class EnergyBlockItem extends BaseBlockItem {
 
     @Override
     public int getBarColor(ItemStack stack) {
-        IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
+        IEnergyStorage energy = stack.getCapability(ForgeCapabilities.ENERGY, null).orElse(null);
         if (energy == null) {
             return super.getBarColor(stack);
         }
@@ -64,7 +63,7 @@ public abstract class EnergyBlockItem extends BaseBlockItem {
         super.appendHoverText(stack, level, tooltip, flag);
 
         if (!creative) {
-            stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(energy -> tooltip.add(Component.translatable("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()).setStyle(Styles.GRAY)));
+            stack.getCapability(ForgeCapabilities.ENERGY, null).ifPresent(energy -> tooltip.add(Component.translatable("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()).setStyle(Styles.GRAY)));
         }
     }
 }

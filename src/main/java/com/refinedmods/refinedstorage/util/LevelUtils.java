@@ -17,11 +17,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
@@ -47,7 +46,7 @@ public final class LevelUtils {
             return null;
         }
 
-        IItemHandler handler = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
+        IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).orElse(null);
         if (handler == null) {
             if (side != null && blockEntity instanceof WorldlyContainer) {
                 handler = new SidedInvWrapper((WorldlyContainer) blockEntity, side);
@@ -61,7 +60,7 @@ public final class LevelUtils {
 
     public static IFluidHandler getFluidHandler(@Nullable BlockEntity blockEntity, Direction side) {
         if (blockEntity != null) {
-            return blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
+            return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).orElse(null);
         }
 
         return null;

@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -37,7 +38,7 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
 
     @Override
     public boolean onOpen(INetwork network) {
-        IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
+        IEnergyStorage energy = stack.getCapability(ForgeCapabilities.ENERGY, null).orElse(null);
 
         if (RS.SERVER_CONFIG.getWirelessFluidGrid().getUseEnergy() &&
             ((WirelessFluidGridItem) stack.getItem()).getType() != WirelessFluidGridItem.Type.CREATIVE &&
@@ -64,7 +65,7 @@ public class WirelessFluidGridNetworkItem implements INetworkItem {
     @Override
     public void drainEnergy(int energy) {
         if (RS.SERVER_CONFIG.getWirelessFluidGrid().getUseEnergy() && ((WirelessFluidGridItem) stack.getItem()).getType() != WirelessFluidGridItem.Type.CREATIVE) {
-            stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyStorage -> {
+            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
                 energyStorage.extractEnergy(energy, false);
 
                 if (energyStorage.getEnergyStored() <= 0) {

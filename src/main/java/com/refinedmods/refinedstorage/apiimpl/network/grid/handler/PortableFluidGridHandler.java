@@ -10,9 +10,9 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -53,7 +53,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
         }
 
         if (!bucket.isEmpty()) {
-            bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+            bucket.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).ifPresent(fluidHandler -> {
                 portableGrid.getFluidStorageTracker().changed(player, stack.copy());
 
                 fluidHandler.fill(portableGrid.getFluidStorage().extract(stack, FluidType.BUCKET_VOLUME, IComparer.COMPARE_NBT, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
