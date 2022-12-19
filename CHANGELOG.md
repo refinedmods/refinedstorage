@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed external storage cache being de-synced from the network cache.
+
 ### Changed
 
 - Increased packet size limit.
