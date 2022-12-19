@@ -6,10 +6,12 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.refinedmods.refinedstorage.blockentity.InterfaceBlockEntity;
-import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import com.refinedmods.refinedstorage.util.NetworkUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
@@ -30,11 +32,21 @@ public class ItemExternalStorageProvider implements IExternalStorageProvider<Ite
     @Override
     public IExternalStorage<ItemStack> provide(IExternalStorageContext context, BlockEntity blockEntity, Direction direction) {
         return new ItemExternalStorage(context, () -> {
-            if (!blockEntity.getLevel().isLoaded(blockEntity.getBlockPos())) {
+            Level level = blockEntity.getLevel();
+
+            if (level == null) {
                 return null;
             }
 
-            return LevelUtils.getItemHandler(blockEntity, direction.getOpposite());
+            BlockPos blockPos = blockEntity.getBlockPos();
+
+            if (!level.isLoaded(blockPos)) {
+                return null;
+            }
+
+            BlockEntity currentBlockEntity = level.getBlockEntity(blockPos);
+
+            return LevelUtils.getItemHandler(currentBlockEntity, direction.getOpposite());
         }, blockEntity instanceof InterfaceBlockEntity);
     }
 
