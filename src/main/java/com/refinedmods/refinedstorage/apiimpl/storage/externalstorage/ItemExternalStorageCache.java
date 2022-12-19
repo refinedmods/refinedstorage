@@ -17,23 +17,31 @@ public class ItemExternalStorageCache {
         return stored;
     }
 
+    public boolean initCache(IItemHandler handler) {
+        if (cache != null) {
+            return false;
+        }
+
+        cache = new ArrayList<>();
+
+        int stored = 0;
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            ItemStack stack = handler.getStackInSlot(i).copy();
+            cache.add(stack);
+            stored += stack.getCount();
+        }
+        this.stored = stored;
+
+        return true;
+    }
+
     public void update(INetwork network, @Nullable IItemHandler handler) {
         if (handler == null) {
             stored = 0;
             return;
         }
 
-        if (cache == null) {
-            cache = new ArrayList<>();
-
-            int stored = 0;
-            for (int i = 0; i < handler.getSlots(); ++i) {
-                ItemStack stack = handler.getStackInSlot(i).copy();
-                cache.add(stack);
-                stored += stack.getCount();
-            }
-            this.stored = stored;
-
+        if (initCache(handler)) {
             return;
         }
 
