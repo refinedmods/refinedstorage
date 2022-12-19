@@ -18,23 +18,31 @@ public class FluidExternalStorageCache {
         return stored;
     }
 
+    public boolean initCache(IFluidHandler handler) {
+        if (cache != null) {
+            return false;
+        }
+
+        cache = new ArrayList<>();
+
+        int stored = 0;
+        for (int i = 0; i < handler.getTanks(); ++i) {
+            FluidStack stack = handler.getFluidInTank(i).copy();
+            cache.add(stack);
+            stored += stack.getAmount();
+        }
+        this.stored = stored;
+
+        return true;
+    }
+
     public void update(INetwork network, @Nullable IFluidHandler handler) {
         if (handler == null) {
             stored = 0;
             return;
         }
 
-        if (cache == null) {
-            cache = new ArrayList<>();
-
-            int stored = 0;
-            for (int i = 0; i < handler.getTanks(); ++i) {
-                FluidStack stack = handler.getFluidInTank(i).copy();
-                cache.add(stack);
-                stored += stack.getAmount();
-            }
-            this.stored = stored;
-
+        if (initCache(handler)) {
             return;
         }
 

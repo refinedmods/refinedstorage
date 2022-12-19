@@ -68,6 +68,8 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
             return Collections.emptyList();
         }
 
+        cache.initCache(handler);
+
         List<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
