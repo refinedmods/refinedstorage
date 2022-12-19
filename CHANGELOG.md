@@ -17,7 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed chained crafters not taking over the name of the root crafter.
 - Fixed lag when opening JEI in large system.
-- Made Refined Storage more robust against crashes when moving network node blocks.
+- Made Refined Storage more robust against crashes when moving network blocks by unconventional means.
 
 ## [v1.11.1] - 2022-10-30
 
