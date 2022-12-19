@@ -562,7 +562,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   development builds and never used version 1.7.0 before, first switch to 1.7.0, open your world, modify a storage disk,
   and then upgrade to 1.7.1.
 
-## [v1.7.0-alpha] - 2020-11-02
+## [v1.7.0-alpha] - 2019-11-02
 
 ### Added
 
@@ -584,3 +584,117 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The Reader and Writer, this will return later in an addon mod.
 - Cross dimensional functionality on the Network Transmitter for the moment, this will return later.
 - Covers.
+
+## [v1.7.0+10] - 2019-10-29
+
+### Added
+
+- Re-added oredict mode as "exact mode" (for fluids too!).
+- Re-added the Crafter Manager.
+- Re-added the Crafting Monitor.
+- Re-added the Wireless Crafting Monitor.
+
+### Fixed
+
+- Fixed the ugly checkboxes
+- Misc bugfixes and crash fixes.
+
+## [v1.7.0+9] - 2019-10-28
+
+### Added
+
+- Re-add the Crafter and autocrafting.
+
+### Fixed
+
+- Misc bugfixes and crash fixes.
+
+## [v1.7.0+8] - 2019-10-27
+
+### Added
+
+- Re-added the Constructor.
+- Re-added the Destructor.
+- Re-added the Disk Manipulator.
+- Re-added the Portable Grid.
+
+## [v1.7.0+7] - 2019-10-22
+
+### Fixed
+
+- Fixed a crash that can happen when opening a world.
+
+## [v1.7.0+6] - 2019-10-22
+
+### Added
+
+- Re-added the Network Transmitter (not cross dimensional yet).
+- Re-added the Network Receiver.
+- Re-added the Relay.
+- Re-added the Detector.
+- Re-added the Security Manager.
+- Re-added the Interface.
+- Re-added the Fluid Interface.
+- Re-added the Wireless Transmitter.
+- Re-added the Storage Monitor.
+- Re-added the Wireless Grid.
+- Re-added the Wireless Fluid Grid.
+
+### Fixed
+
+- Misc bugfixes and crash fixes.
+
+## [v1.7.0+5] - 2019-10-17
+
+### Added
+
+- Re-added the External Storage.
+- Re-added the Importer.
+- Re-added the Exporter.
+
+### Removed
+
+- Cutting Tool (you may get a Forge warning about that one, it's safe to ignore).
+- The "compare nbt" side button, replaced it with "exact mode".
+
+## [v1.7.0+4] - 2019-10-15
+
+### Added
+
+- Re-added all the storage blocks.
+- Re-added JEI integration.
+
+### Fixed
+
+- Misc bugfixes and crash fixes.
+
+## [v1.7.0+3] - 2019-10-12
+
+### Added
+
+- Re-added the Crafting Grid.
+- Re-added the Pattern Grid.
+- Re-added the Fluid Grid.
+- Re-added Optifine compatibility.
+
+## [v1.7.0+2] - 2019-10-10
+
+### Added
+
+- More config values.
+
+### Fixed
+
+- Misc bugfixes and crash fixes.
+
+### Removed
+
+- Free dirt every 10 ticks.
+
+## [v1.7.0+1] - 2019-10-09
+
+### Added
+
+- Re-added the Controller.
+- Re-added the Disk Drive.
+- Re-added the Grid.
