@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.11.3] - 2022-12-20
+
 ### Fixed
 
 - Fixed external storage cache being de-synced from the network cache.
