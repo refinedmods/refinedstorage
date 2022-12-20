@@ -13,6 +13,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed external storage using an out of date block entity for getting handler.
 - Fixed chained crafters not taking over the name of the root crafter.
 - Made Refined Storage more robust against crashes when moving network blocks by unconventional means.
+- Fixed duplication bug in the Interface.
 
 ### Changed
 

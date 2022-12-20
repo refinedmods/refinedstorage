@@ -273,7 +273,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
-        ItemStack remainder = stack;
+        ItemStack remainder = ItemHandlerHelper.copyStackWithSize(stack, size);
 
         int inserted = 0;
         int insertedExternally = 0;
@@ -380,7 +380,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
             return StackUtils.copy(stack, size);
         }
 
-        FluidStack remainder = stack;
+        FluidStack remainder = StackUtils.copy(stack, size);
 
         int inserted = 0;
         int insertedExternally = 0;
