@@ -50,6 +50,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Ported to Minecraft 1.19.2.
 
+## [v1.10.4] - 2022-12-20
+
+### Fixed
+
+- Fixed external storage cache being de-synced from the network cache.
+- Fixed external storage using an out of date block entity for getting handler.
+- Fixed chained crafters not taking over the name of the root crafter.
+- Made Refined Storage more robust against crashes when moving network blocks by unconventional means.
+- Fixed duplication bug in the Interface.
+
+### Changed
+
+- Increased packet size limit.
+
 ## [v1.10.3] - 2022-08-06
 
 ### Fixed
