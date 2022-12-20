@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed duplication bug in the Interface.
+
 ## [v1.11.3] - 2022-12-20
 
 ### Fixed
