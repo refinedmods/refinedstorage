@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Increased packet size limit.
+
 ## [v1.10.3] - 2022-08-06
 
 ### Fixed
