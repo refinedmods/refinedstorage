@@ -9,6 +9,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fixed duplication bug in the Interface.
+
+## [v1.11.3] - 2022-12-20
+
+### Fixed
+
 - Fixed external storage cache being de-synced from the network cache.
 - Fixed external storage using an out of date block entity for getting handler.
 - Fixed inventory slots being reused incorrectly in rare cases in the JEI transfer handler.
