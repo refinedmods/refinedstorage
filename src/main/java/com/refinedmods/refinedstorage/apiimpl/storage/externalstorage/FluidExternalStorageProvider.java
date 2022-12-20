@@ -5,7 +5,9 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
 import com.refinedmods.refinedstorage.util.LevelUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -21,11 +23,21 @@ public class FluidExternalStorageProvider implements IExternalStorageProvider<Fl
     @Override
     public IExternalStorage<FluidStack> provide(IExternalStorageContext context, BlockEntity blockEntity, Direction direction) {
         return new FluidExternalStorage(context, () -> {
-            if (!blockEntity.getLevel().isLoaded(blockEntity.getBlockPos())) {
+            Level level = blockEntity.getLevel();
+
+            if (level == null) {
                 return null;
             }
 
-            return LevelUtils.getFluidHandler(blockEntity, direction.getOpposite());
+            BlockPos blockPos = blockEntity.getBlockPos();
+
+            if (!level.isLoaded(blockPos)) {
+                return null;
+            }
+
+            BlockEntity currentBlockEntity = level.getBlockEntity(blockPos);
+
+            return LevelUtils.getFluidHandler(currentBlockEntity, direction.getOpposite());
         }, blockEntity instanceof FluidInterfaceBlockEntity);
     }
 

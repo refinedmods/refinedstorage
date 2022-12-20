@@ -205,7 +205,7 @@ public class IngredientTracker {
             int amount = Math.min(ingredient.getMissingAmount(), used == null ? stackInSlot.getCount() : stackInSlot.getCount() - used);
             if (amount > 0) {
                 ingredient.fulfill(amount);
-                usedMatrixStacks.put(slot, amount);
+                usedMatrixStacks.put(slot, used == null ? amount : used + amount);
             }
             return ingredient.isAvailable();
         }

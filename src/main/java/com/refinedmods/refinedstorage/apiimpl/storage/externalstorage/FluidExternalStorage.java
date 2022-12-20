@@ -64,6 +64,8 @@ public class FluidExternalStorage implements IExternalStorage<FluidStack> {
         IFluidHandler fluidHandler = handlerSupplier.get();
 
         if (fluidHandler != null) {
+            cache.initCache(fluidHandler);
+
             List<FluidStack> fluids = new ArrayList<>();
 
             for (int i = 0; i < fluidHandler.getTanks(); ++i) {

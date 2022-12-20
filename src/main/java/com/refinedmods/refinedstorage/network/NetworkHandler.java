@@ -25,7 +25,7 @@ public class NetworkHandler {
         .serverAcceptedVersions(protocolVersion::equals)
         .networkProtocolVersion(() -> protocolVersion)
         .simpleChannel();
-    private final PacketSplitter splitter = new PacketSplitter(5, handler, channel);
+    private final PacketSplitter splitter = new PacketSplitter(10, handler, channel);
 
     public void register() {
         int id = 0;
