@@ -12,6 +12,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed external storage cache being de-synced from the network cache.
 - Fixed external storage using an out of date block entity for getting handler.
 
+### Changed
+
+- Increased packet size limit.
+
 ## [v1.11.2] - 2022-12-17
 
 ### Added
@@ -208,7 +212,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed wrong alignment for the JEI request autocrafting tooltip.
 - Fixed mobs getting stuck in Refined Storage cables.
 - Fixed dismantling storage blocks ignoring stack size.
-- Fixed Ice and Fire banners breaking with Refined Storage. necauqua)
+- Fixed Ice and Fire banners breaking with Refined Storage.
 - Fixed empty keybinding causing GL errors.
 - Fixed some parts of the Japanese translation.
 - Fixed rendering issue on blocks when using OptiFine.
@@ -538,8 +542,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   before closing the GUI immediately. Then on the next ESCAPE press, the GUI will be closed.
 
 ## [v1.7.1-alpha] - 2019-11-19
-
-### Added
 
 ### Fixed
 
