@@ -164,7 +164,9 @@ public class IngredientTracker {
         for (Ingredient ingredient : ingredientList.ingredients) {
             ingredient.getSlotView().getIngredients(VanillaTypes.ITEM_STACK).takeWhile(stack -> !ingredient.isAvailable()).forEach(stack -> {
 
-                ingredient.setCraftStackId(craftableItems.get(new ItemStackKey(stack)));
+                if(ingredient.getCraftStackId() == null) {
+                    ingredient.setCraftStackId(craftableItems.get(new ItemStackKey(stack)));
+                }
                 // Check grid crafting slots
                 if (gridContainer.getGrid().getGridType().equals(GridType.CRAFTING)) {
                     CraftingContainer craftingMatrix = gridContainer.getGrid().getCraftingMatrix();
