@@ -12,7 +12,6 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 import com.refinedmods.refinedstorage.screen.grid.view.IGridView;
 import com.refinedmods.refinedstorage.util.ItemStackKey;
-import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -162,7 +161,7 @@ public class IngredientTracker {
 
         //Gather available Stacks
         for (Ingredient ingredient : ingredientList.ingredients) {
-            ingredient.getSlotView().getIngredients(VanillaTypes.ITEM_STACK).takeWhile(stack -> !ingredient.isAvailable()).forEach(stack -> {
+            ingredient.getSlotView().getItemStacks().takeWhile(stack -> !ingredient.isAvailable()).forEach(stack -> {
 
                 if(ingredient.getCraftStackId() == null) {
                     ingredient.setCraftStackId(craftableItems.get(new ItemStackKey(stack)));
