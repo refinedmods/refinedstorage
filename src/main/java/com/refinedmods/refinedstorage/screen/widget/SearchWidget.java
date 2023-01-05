@@ -157,7 +157,8 @@ public class SearchWidget extends EditBox {
     public void setMode(int mode) {
         this.mode = mode;
 
-        this.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode));
+
+        this.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode) || this.mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED_ALT);
         this.setFocused(IGrid.isSearchBoxModeWithAutoselection(mode));
 
         if (canSyncFromJEINow()) {

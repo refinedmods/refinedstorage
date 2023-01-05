@@ -14,6 +14,7 @@ public abstract class SearchBoxModeSideButton extends SideButton {
     private static final List<Integer> MODE_ROTATION = Arrays.asList(
         IGrid.SEARCH_BOX_MODE_NORMAL,
         IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED,
+        IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED_ALT,
         IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED,
         IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED,
         IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY,

@@ -38,6 +38,7 @@ public interface IGrid {
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY = 4;
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED = 5;
+    int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED_ALT = 6;
 
     int VIEW_TYPE_NORMAL = 0;
     int VIEW_TYPE_NON_CRAFTABLES = 1;
@@ -60,13 +61,15 @@ public interface IGrid {
             mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
             mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
             mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED ||
+                mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED_ALT;
     }
 
     static boolean isSearchBoxModeWithAutoselection(int mode) {
         return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
             mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED;
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_2WAY_AUTOSELECTED ||
+                mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED_ALT;
     }
 
     static boolean doesSearchBoxModeUseJEI(int mode) {
