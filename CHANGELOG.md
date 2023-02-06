@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed some craftable items not showing as craftable in JEI
 - Fixed grid crashing on exit if JEI mod is not used
+- Fixed rare multithreading crash
 
 ## [v1.11.4] - 2022-12-20
 
