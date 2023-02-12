@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed rare multithreading crash
+- Fixed Constructor being able to drop more than the maximum stack size for an item
 
 ## [v1.10.4] - 2022-12-20
 
