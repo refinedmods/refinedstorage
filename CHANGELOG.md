@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.10.5] - 2023-02-12
+
 ### Fixed
 
 - Fixed rare multithreading crash
