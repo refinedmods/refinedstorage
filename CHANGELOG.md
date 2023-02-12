@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [v1.11.5] - 2023-02-12
+
 ### Fixed
 
 - Fixed some craftable items not showing as craftable in JEI
