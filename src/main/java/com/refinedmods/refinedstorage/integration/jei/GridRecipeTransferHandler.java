@@ -8,7 +8,6 @@ import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMes
 import com.refinedmods.refinedstorage.network.grid.GridProcessingTransferMessage;
 import com.refinedmods.refinedstorage.network.grid.GridTransferMessage;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -67,7 +66,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
         Ingredient.IngredientList ingredientList = new Ingredient.IngredientList();
         for (IRecipeSlotView slotView : recipeSlots.getSlotViews(RecipeIngredientRole.INPUT)) {
-            Optional<ItemStack> firstStack = slotView.getIngredients(VanillaTypes.ITEM_STACK).findAny();
+            Optional<ItemStack> firstStack = slotView.getItemStacks().findAny();
             ingredientList.add(new Ingredient(slotView, firstStack.map(ItemStack::getCount).orElse(0)));
         }
 
@@ -139,10 +138,10 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         List<List<ItemStack>> inputs = recipeSlotsView.getSlotViews(RecipeIngredientRole.INPUT).stream().map(view -> {
 
             //Creating a mutable list
-            List<ItemStack> stacks = view.getIngredients(VanillaTypes.ITEM_STACK).collect(Collectors.toCollection(ArrayList::new));
+            List<ItemStack> stacks = view.getItemStacks().collect(Collectors.toCollection(ArrayList::new));
 
             //moving the displayed stack to first
-            Optional<ItemStack> displayStack = view.getDisplayedIngredient(VanillaTypes.ITEM_STACK);
+            Optional<ItemStack> displayStack = view.getDisplayedItemStack();
             displayStack.ifPresent(stack -> {
                 int index = stacks.indexOf(stack);
                 if (index > -1) {
@@ -185,11 +184,11 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     }
 
     private void handleItemIngredient(List<ItemStack> list, IRecipeSlotView slotView, GridContainerMenu gridContainer, Player player) {
-        if (slotView != null && slotView.getIngredients(VanillaTypes.ITEM_STACK).findAny().isPresent()) {
-            ItemStack stack = IngredientTracker.getTracker(gridContainer).findBestMatch(gridContainer, player, slotView.getIngredients(VanillaTypes.ITEM_STACK).toList());
+        if (slotView != null && slotView.getItemStacks().findAny().isPresent()) {
+            ItemStack stack = IngredientTracker.getTracker(gridContainer).findBestMatch(gridContainer, player, slotView.getItemStacks().toList());
 
-            if (stack.isEmpty() && slotView.getDisplayedIngredient(VanillaTypes.ITEM_STACK).isPresent()) {
-                stack = slotView.getDisplayedIngredient(VanillaTypes.ITEM_STACK).get();
+            if (stack.isEmpty() && slotView.getDisplayedItemStack().isPresent()) {
+                stack = slotView.getDisplayedItemStack().get();
             }
             if (!stack.isEmpty()) {
                 list.add(stack);

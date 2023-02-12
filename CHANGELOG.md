@@ -9,6 +9,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fixed some craftable items not showing as craftable in JEI
+- Fixed Grid crashing on exit if JEI mod is not used
+- Fixed rare multithreading crash
+- Fixed Constructor being able to drop more than the maximum stack size for an item 
+
+## [v1.11.4] - 2022-12-20
+
+### Fixed
+
 - Fixed duplication bug in the Interface.
 
 ## [v1.11.3] - 2022-12-20
@@ -47,6 +56,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Ported to Minecraft 1.19.2.
+
+## [v1.10.4] - 2022-12-20
+
+### Fixed
+
+- Fixed external storage cache being de-synced from the network cache.
+- Fixed external storage using an out of date block entity for getting handler.
+- Fixed chained crafters not taking over the name of the root crafter.
+- Made Refined Storage more robust against crashes when moving network blocks by unconventional means.
+- Fixed duplication bug in the Interface.
+
+### Changed
+
+- Increased packet size limit.
 
 ## [v1.10.3] - 2022-08-06
 

@@ -62,6 +62,10 @@ public class ItemExternalStorageCache {
 
             ItemStack cached = cache.get(i);
 
+            //ItemStack.EMPTY can be accidentally modified by other mods on any thread. This makes sure we ignore that.
+            if (actual == ItemStack.EMPTY && actual == cached)
+                continue;
+
             if (!cached.isEmpty() && actual.isEmpty()) { // REMOVED
                 network.getItemStorageCache().remove(cached, cached.getCount(), true);
 
