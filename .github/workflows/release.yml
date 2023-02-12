@@ -71,3 +71,9 @@ jobs:
                   consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
                   access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
                   access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+            - name: Announce to Mastodon
+              uses: rzr/fediverse-action@master
+              with:
+                  access-token: ${{ secrets.MASTODON_TOKEN }}
+                  host: 'anvil.social'
+                  message: "Refined Storage ${{ env.GIT_TAG_NAME }} has been released! ${{ env.RELEASE_URL }}"
