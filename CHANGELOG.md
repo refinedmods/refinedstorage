@@ -59,6 +59,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Ported to Minecraft 1.19.2.
 
+## [v1.10.5] - 2023-02-12
+
+### Fixed
+
+- Fixed rare multithreading crash
+- Fixed Constructor being able to drop more than the maximum stack size for an item
+
 ## [v1.10.4] - 2022-12-20
 
 ### Fixed
