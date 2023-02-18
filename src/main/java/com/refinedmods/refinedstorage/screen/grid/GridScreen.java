@@ -146,6 +146,9 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         }
 
         addRenderableWidget(searchField);
+        if (searchField.isFocused()) {
+            setFocused(searchField);
+        }
 
         if (grid.getViewType() != -1) {
             addSideButton(new GridViewTypeSideButton(this, grid));
