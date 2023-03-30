@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed not being able to search with JEI when the Grid is open.
+
 ## [v1.11.5] - 2023-02-12
 
 ### Fixed
