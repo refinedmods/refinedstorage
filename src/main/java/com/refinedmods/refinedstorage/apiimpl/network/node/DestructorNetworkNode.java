@@ -100,6 +100,9 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     private void pickupItems() {
         BlockPos front = pos.relative(getDirection());
+        if (!level.isLoaded(front)) {
+            return;
+        }
 
         List<ItemEntity> droppedItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(front));
 
@@ -124,6 +127,9 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     private void breakBlock() {
         BlockPos front = pos.relative(getDirection());
+        if (!level.isLoaded(front)) {
+            return;
+        }
         BlockState frontBlockState = level.getBlockState(front);
         Block frontBlock = frontBlockState.getBlock();
         ItemStack frontStack = frontBlock.getCloneItemStack(
@@ -174,6 +180,10 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     private void breakFluid() {
         BlockPos front = pos.relative(getDirection());
+        if (!level.isLoaded(front)) {
+            return;
+        }
+
         BlockState frontBlockState = level.getBlockState(front);
         Block frontBlock = frontBlockState.getBlock();
 

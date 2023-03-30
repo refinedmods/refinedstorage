@@ -70,6 +70,9 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
         }
 
         addRenderableWidget(searchField);
+        if (searchField.isFocused()) {
+            setFocused(searchField);
+        }
     }
 
     @Override

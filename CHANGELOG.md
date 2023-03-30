@@ -9,6 +9,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fixed not being able to search with JEI when the Grid is open.
+- Fixed a bunch of issues where chunks would unintentionally be loaded by RS.
+- Reduced block updates when a controller is turning on and off constantly.
+
+## [v1.11.5] - 2023-02-12
+
+### Fixed
+
 - Fixed some craftable items not showing as craftable in JEI
 - Fixed Grid crashing on exit if JEI mod is not used
 - Fixed rare multithreading crash
@@ -56,6 +64,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Ported to Minecraft 1.19.2.
+
+## [v1.10.5] - 2023-02-12
+
+### Fixed
+
+- Fixed rare multithreading crash
+- Fixed Constructor being able to drop more than the maximum stack size for an item
 
 ## [v1.10.4] - 2022-12-20
 
