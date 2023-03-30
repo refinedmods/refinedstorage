@@ -104,7 +104,13 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(nodeLevel.getBlockEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
+        BlockPos pos = new BlockPos(getX(stack), getY(stack), getZ(stack));
+        if (!nodeLevel.isLoaded(pos)) {
+            onError.accept(notFound);
+            return;
+        }
+
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(nodeLevel.getBlockEntity(pos)));
         if (network == null) {
             onError.accept(notFound);
             return;

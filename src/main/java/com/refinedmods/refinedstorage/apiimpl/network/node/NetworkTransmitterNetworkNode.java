@@ -116,11 +116,11 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
             if (!isSameDimension()) {
                 Level dimensionLevel = level.getServer().getLevel(receiverDimension);
 
-                if (dimensionLevel != null && dimensionLevel.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
+                if (dimensionLevel != null && dimensionLevel.isLoaded(receiver) && dimensionLevel.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
                     operator.apply(dimensionLevel, receiver, null);
                 }
             } else {
-                if (level.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
+                if (level.isLoaded(receiver) && level.getBlockEntity(receiver) instanceof NetworkReceiverBlockEntity) {
                     operator.apply(level, receiver, null);
                 }
             }

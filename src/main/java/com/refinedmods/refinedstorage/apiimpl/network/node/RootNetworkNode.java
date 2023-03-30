@@ -107,7 +107,11 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            operator.apply(level, pos.relative(facing), facing.getOpposite());
+            BlockPos relativePos = pos.relative(facing);
+            if (!level.isLoaded(relativePos)) {
+                continue;
+            }
+            operator.apply(level, relativePos, facing.getOpposite());
         }
     }
 }

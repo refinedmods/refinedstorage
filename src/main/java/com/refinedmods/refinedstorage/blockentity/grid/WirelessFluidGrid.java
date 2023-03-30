@@ -93,10 +93,13 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     @Nullable
     public INetwork getNetwork() {
         Level level = server.getLevel(nodeDimension);
-        if (level != null) {
-            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(nodePos)));
+        if (level == null) {
+            return null;
         }
-        return null;
+        if (!level.isLoaded(nodePos)) {
+            return null;
+        }
+        return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(nodePos)));
     }
 
     @Override

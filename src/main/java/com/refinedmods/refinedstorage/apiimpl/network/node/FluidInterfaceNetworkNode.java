@@ -45,7 +45,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (!level.isClientSide) {
+            if (!level.isClientSide && level.isLoaded(pos)) {
                 ((FluidInterfaceBlockEntity) level.getBlockEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceBlockEntity.TANK_IN);
             }
 
