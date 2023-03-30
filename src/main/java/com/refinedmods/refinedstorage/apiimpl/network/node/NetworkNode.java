@@ -239,7 +239,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         for (Direction facing : Direction.values()) {
             BlockPos facingPos = pos.relative(facing);
             if (!level.isLoaded(facingPos)) {
-                return;
+                continue;
             }
             INetworkNode oppositeNode = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(facingPos));
             if (oppositeNode == null) {
