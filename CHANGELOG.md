@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed not being able to search with JEI when the Grid is open.
+- Fixed a bunch of issues where chunks would unintentionally be loaded by RS.
 - Reduced block updates when a controller is turning on and off constantly.
 
 ## [v1.11.5] - 2023-02-12

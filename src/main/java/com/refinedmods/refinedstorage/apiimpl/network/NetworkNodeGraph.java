@@ -118,9 +118,11 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 for (Direction checkSide : Direction.values()) {
                     if (checkSide != side) { // Avoid going backward
                         INetworkNode nodeOnSide = NetworkUtils.getNodeFromBlockEntity(blockEntity);
-
                         if (nodeOnSide == node) {
-                            operator.apply(level, pos.relative(checkSide), checkSide.getOpposite());
+                            BlockPos relativePos = pos.relative(checkSide);
+                            if (level.isLoaded(relativePos)) {
+                                operator.apply(level, relativePos, checkSide.getOpposite());
+                            }
                         }
                     }
                 }

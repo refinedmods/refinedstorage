@@ -101,8 +101,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.type = type;
         this.root = new RootNetworkNode(this, level, pos);
         this.nodeGraph.addListener(() -> {
+            if (!level.isLoaded(pos)) {
+                return;
+            }
             BlockEntity blockEntity = level.getBlockEntity(pos);
-
             if (blockEntity instanceof ControllerBlockEntity) {
                 ((ControllerBlockEntity) blockEntity).getDataManager().sendParameterToWatchers(ControllerBlockEntity.NODES);
             }

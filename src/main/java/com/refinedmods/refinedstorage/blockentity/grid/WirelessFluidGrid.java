@@ -22,7 +22,6 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -93,10 +92,13 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     @Nullable
     public INetwork getNetwork() {
         Level level = server.getLevel(nodeDimension);
-        if (level != null) {
-            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(nodePos)));
+        if (level == null) {
+            return null;
         }
-        return null;
+        if (!level.isLoaded(nodePos)) {
+            return null;
+        }
+        return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(nodePos)));
     }
 
     @Override
