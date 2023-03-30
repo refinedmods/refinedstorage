@@ -56,6 +56,7 @@ import java.util.function.Predicate;
 public class Network implements INetwork, IRedstoneConfigurable {
     private static final int THROTTLE_INACTIVE_TO_ACTIVE = 20;
     private static final int THROTTLE_ACTIVE_TO_INACTIVE = 4;
+    private static final int THROTTLE_ENERGY_TYPE_CHANGE = 20;
 
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_ITEM_STORAGE_TRACKER_ID = "ItemStorageTrackerId";
@@ -89,6 +90,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
+    private int ticksSinceEnergyTypeChanged;
     private int ticks;
     private long[] tickTimes = new long[100];
     private int tickCounter = 0;
@@ -213,12 +215,16 @@ public class Network implements INetwork, IRedstoneConfigurable {
             ControllerBlock.EnergyType energyType = getEnergyType();
 
             if (lastEnergyType != energyType) {
-                lastEnergyType = energyType;
-
-                BlockState state = level.getBlockState(pos);
-                if (state.getBlock() instanceof ControllerBlock) {
-                    level.setBlockAndUpdate(pos, state.setValue(ControllerBlock.ENERGY_TYPE, energyType));
+                ++ticksSinceEnergyTypeChanged;
+                if (ticksSinceEnergyTypeChanged > THROTTLE_ENERGY_TYPE_CHANGE) {
+                    lastEnergyType = energyType;
+                    BlockState state = level.getBlockState(pos);
+                    if (state.getBlock() instanceof ControllerBlock) {
+                        level.setBlockAndUpdate(pos, state.setValue(ControllerBlock.ENERGY_TYPE, energyType));
+                    }
                 }
+            } else {
+                ticksSinceEnergyTypeChanged = 0;
             }
 
             tickTimes[tickCounter % tickTimes.length] = Util.getNanos() - tickStart;
