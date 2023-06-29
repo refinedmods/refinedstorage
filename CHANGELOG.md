@@ -752,3 +752,334 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Re-added the Controller.
 - Re-added the Disk Drive.
 - Re-added the Grid.
+
+## [v1.6.16] - 2020-04-26
+
+### Fixed
+
+- Fixed erroring controller tile entity.
+- Fixed Inventory Tweaks sorting not respecting locked slots.
+- Fixed OpenComputers driver voiding excess fluids.
+- Fixed being able to move wireless items in inventory.
+
+### Changed
+
+- Updated Russian translation.
+
+## [v1.6.15] - 2019-07-21
+
+### Fixed
+
+- Fixed recipes with more than 1 bucket of fluid not transferring from JEI.
+- Fixed oredict crafting patterns redefining recipes.
+- Fixed Portable Grids not keeping their enchantments when placed.
+- Fixed JEI hotkeys not working on fluid filter slots.
+- Fixed crash when opening Crafter Manager with FTB Quests installed.
+- Fixed a bug where the container slots weren't synced when opening a Grid.
+
+### Changed
+
+- Shortened crafting text for the Russion translation to fix Grid overlays.
+- GregTech Community Edition Wires and Machines are now banned from rendering on Refined Storage patterns because they are causing crashes.
+
+## [v1.6.14] - 2019-03-23
+
+### Fixed
+
+- Fixed server crash
+
+## [v1.6.13] - 2019-03-23
+
+### Added
+
+- Added keybindings to open wireless items. The default one set to open a Wireless Crafting Grid from Refined Storage Addons is CTRL + G.
+- Added Grid quantity formatting for item counts over 1 billion.
+
+### Changed
+
+- Updated German translation.
+- Updated Chinese translation.
+- The Constructor and Destructor now interacts with the world using their owner's profile.
+
+### Fixed
+
+- Fixed Interface with Crafting Upgrade being stuck if an earlier item configuration has missing items or fluids.
+- Fixed wrong item count for oredict patterns.
+- Fixed autocrafting duplication bug.
+- Fixed Crafting Pattern not rendering tile entity items like a chest.
+
+## [v1.6.12] - 2018-11-28
+
+### Added
+
+- Added a completion percentage to the Crafting Monitor.
+
+### Changed
+
+- Updated Russian translation.
+- Increased the speed of autocrafting.
+
+### Fixed
+
+- Fixed External Storage sending storage updates when it is disabled.
+- Fixed slight performance issue with loading Crafters from disk.
+- Fixed storage GUIs overflowing on large numbers.
+
+## [v1.6.11] - 2018-11-24
+
+### Fixed
+
+- Fixed blocks neighboring a controller breaking when returning from a dimension in a unchunkloaded area.
+
+## [v1.6.10] - 2018-11-23
+
+### Added
+
+- Added fluid functions for the fluid autocrafting to the OpenComputers integration.
+
+### Changed
+
+- Updated Russian translation.
+- Slightly increased performance of the External Storage.
+
+### Fixed
+
+- Fixed client FPS stalling when using "@" mod search in the Grid.
+- Fixed client FPS stalling when using "#" tooltip search in the Grid.
+- Fixed fluid inputs/outputs in the Pattern Grid not being set when you re-insert a Pattern with fluid inputs/outputs.
+- Fixed bug where the Pattern Grid doesn't update it's output slot when manually configuring a crafting pattern.
+- Fixed network node scanning allowing multiple controllers in some cases.
+- Fixed OpenComputers integration not giving back a crafting task instance in the schedule task API.
+- Fixed OpenComputers integration causing log spam when getting processing patterns.
+- Fixed OpenComputers voiding items with extract item API when there is no inventory space.
+- Fixed CraftingTweaks buttons resetting sometimes in the Crafting Grid.
+- Fixed Refined Storage jars not being signed.
+- Fixed crafting task stalling when there's not enough space in the inventory.
+- Fixed another duplication bug with a disconnected Crafting Grid.
+- Fixed oredict mode in autocrafting not working at all.
+
+### Removed
+
+- Removed getMissingItem.
+- Removed the Interdimensional Upgrade, Network Transmitters are now cross dimensional by default.
+- Removed the per block FE cost of the Network Transmitter, it draws a fixed amount of FE/t now.
+
+## [v1.6.9] - 2018-10-27
+
+### Changed
+
+- You can now interact with the fluid container input slot in the Fluid Interface.
+
+### Fixed
+
+- Fixed OpenComputers "unknown error" when using extract item API.
+- Fixed client FPS stuttering when opening a Crafting Grid.
+- Fixed rare Grid crashing issue.
+
+## [v1.6.8] - 2018-10-20
+
+### Fixed
+
+- Fixed Ender IO incompatibility.
+
+## [v1.6.7] - 2018-10-19
+
+### Changed
+
+- The Processor Binding recipe now only gives 8 items instead of 16.
+
+### Fixed
+
+- Fixed the Raw Processor recipes not taking oredicted silicon.
+- Fixed the Processor Binding recipe not taking oredicted slimeballs.
+
+## [v1.6.6] - 2018-10-18
+
+### Added
+
+- Added new Crafter modes: ignore redstone signal, redstone signal unlocks autocrafting, redstone signal locks autocrafting and redstone pulse inserts next set.
+- Added a config option to configure the autocrafting calculation timeout in milliseconds.
+- Added throttling for network devices that can request autocrafting.
+
+### Changed
+
+- Renamed Cut Processors to Raw Processors and those are now made with Processor Binding instead of a Cutting Tool.
+- You can no longer start a crafting task if it has missing items or fluids.
+- The Security Manager now supports Security Cards that have no player assigned to them. It is the default security card for players that aren't configured.
+- If no default Security Card is configured in the Security Manager, an unconfigured player is allowed to do everything in the network. Create a default Security Card.
+
+### Fixed
+
+- Fixed an autocrafting bug where it crashed when external inventories couldn't be filled.
+- Fixed a duplication bug with a disconnected Crafting Grid.
+- Fixed oredict autocrafting sometimes reporting that a craftable item is missing.
+- Fixed fluid autocrafting without item inputs locking when there's not enough space for the fluids.
+- Fixed Grid "last changed" date not changing when using clear button or JEI transfer.
+- Fixed a duplication bug when pressing clear on a Wireless Crafting Grid from Refined Storage Addons.
+- Fixed a duplication bug with autocrafting and External Storages.
+- Fixed Crafting Manager displaying wrong name for chained crafters connected to some blocks.
+- Fixed crafting task losing internal buffer when network runs out of energy.
+
+### Removed
+
+- Removed handling of reusable items in autocrafting, to avoid problems.
+
+## [v1.6.5] - 2018-09-11
+
+### Changed
+
+- The Pattern Grid in fluid mode now supports up to 64 buckets in the input and output processing slots.
+
+### Fixed
+
+- Fixed Refined Storage silicon's oredict entry being registered too late.
+- Fixed duplication bug with filter slots.
+
+## [v1.6.4] - 2018-09-02
+
+### Changed
+
+- Rewrote autocrafting again, bringing performance up to par with other autocrafting mods.
+- Autocrafting now reserves items and fluids in an internal inventory to avoid having the storage network steal stacks required for autocrafting.
+- Reworked the Crafting Monitor to be more condensed and more clear.
+
+### Fixed
+
+- Fixed not being able to craft upgrades that require enchanted books.
+- Fixed quick jittering of the Grid and Crafting Monitor when opening them because the tabs appear.
+
+### Removed
+
+- Removed left / right click functionality on filter slots to increase / decrease the amount, replaced that functionality with a dialog.
+
+## [v1.6.3] - 2018-08-02
+
+### Added
+
+- Re-added a single mode Wrench that can rotate blocks and break Refined Storage covers.
+
+### Fixed
+
+- Fixed crash with Wireless Fluid Grid.
+- Fixed Reborn Storage crafting being slower than normal.
+
+## [v1.6.2] - 2018-07-30
+
+### Fixed
+
+- Fixed Grid searching not working.
+
+## [v1.6.1] - 2018-07-30
+
+### Added
+
+- Added fluid autocrafting.
+- Added Crafting Upgrade support for fluids on the Exporter, Constructor and Fluid Interface.
+- Added config option to hide covers in the creative mode tabs and JEI.
+
+### Changed
+
+- The Portable Grid now supports fluid disks.
+- Filters now support fluids and can be inserted in the Fluid Grid.
+- You can now keep fluids in stock by attaching a External Storage in fluid mode to a Fluid Interface with a Crafting Upgrade.
+- You can now specify the amount to export in the Fluid Interface.
+- Updated Russian translation.
+- Overhauled and updated German translation.
+- The Crafting Upgrade no longer schedules requests when there are items or fluids missing.
+- Made the Crafting Preview window bigger.
+
+### Fixed
+
+- Fixed crash log when opening Pattern Grid GUI.
+- Fixed being able to put non fluid containers in Fluid Interface input slot.
+- Fixed Grid filters not updating Grid.
+
+### Removed
+
+- Removed "emit signal when item is being autocrafted" option in the Detector.
+
+## [v1.6.0] - 2018-07-20
+
+### Added
+
+- Added the Cutting Tool.
+- Added covers.
+- Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID.
+- Added /createdisk command which creates a disk based on the disk ID. Turn on advanced tooltips to see the disk ID on a disk item.
+- Added config option to configure controller max receive rate.
+- Added config option to configure energy capacity of Refined Storage items.
+- Added config option to change Reader / Writer channel energy capacity.
+- Added a fully charged regular Controller to the creative menu.
+- Added a missing config option for Crafter Manager energy usage.
+- Added support for Disk Drive / Storage Block storage and capacity to OC integration.
+- Added "Search box mode" button to the Crafter Manager.
+
+### Changed
+
+- Renamed "Printed Processors" to "Cut Processors".
+- Rewrote autocrafting.
+- Rewrote network energy storage.
+- The Controller item now shows a durability bar for the energy.
+- You can no longer put a Filter in filter slots to gain additional filter slots.
+- You can now re-insert Processing Patterns in the Pattern Grid and have the inputs and outputs be completed.
+- If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues.
+- The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues.
+- The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large).
+- The Crafting Monitor now splits its tasks over tabs.
+- An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item).
+- The Importer now skips over empty slots.
+- The Exporter now round-robins over every configured item or fluid to export instead of exporting them all at once.
+- Updated Russian translation.
+- Autocrafting tasks that take longer than 5 seconds to CALCULATE (NOT execute) are automatically stopped to avoid server strain.
+- Changed fluid storage progression to be 64k - 256k - 1024k - 4096k.
+- Made all IO blocks have a blacklist instead of a whitelist by default.
+
+### Fixed
+
+- Fixed bug where pattern was recipe pattern was creatable when there was no recipe output.
+- Fixed a crash when breaking an Ender IO conduit with the Destructor.
+- Fixed bug where storage disks in Portable Grids could be moved into themselves.
+- Fixed the Crafter crashing when opening it while connected to a Primal Tech Grill or Kiln.
+- Fixed bug where Crafting Upgrade on Interface kept too many items in stock.
+- Fixed bug where External Storage could only handle 1 fluid inventory per block.
+- Fixed shift clicking a created pattern going into Grid inventory.
+- Fixed crash when moving a wireless item with the number keys.
+- Fixed bug where item storage tracker didn't save sometimes.
+- Fixed bug where External Storage doesn't detect new inventory when rotating.
+- Fixed JEI recipe transferring in Pattern Grid allowing non-processing recipes in processing mode and vice-versa.
+- Fixed using Interfaces for minimum stock levels failing when requester is also an Interface.
+- Fixed ItemZoom incompatibility in Grid and crafting preview window.
+- Fixed shift clicking upgrades into Interface making upgrades go to import slots.
+- Fixed duplication glitch with storages.
+- Prevent accidental Grid scrollbar click after clicking JEI recipe transfer button.
+
+### Removed
+
+- Removed Regulator mode in the Exporter.
+- Removed MCMultiPart integration.
+- Removed Project E integration.
+- Removed blocking mode in autocrafting.
+- Removed the Wrench.
+- Removed "void excess items or fluids" functionality on storages.
+- Removed the Solderer.
+- Removed "compare oredict" buttons on Exporter, Importer, etc..
+- Removed ConnectedTexturesMod integration for fullbright textures, RS now has fullbright textures natively.
+- Removed autocrafting with fluids (the bucket filling mechanic). This will be replaced in a later version with native fluid autocrafting, where Crafters can insert fluids to external inventories.
+
+## [v1.5.34] - 2018-05-22
+
+### Added
+
+- Added OR search operator to the Grid with "|".
+- Added new `getPattern(stack:table)` function for OpenComputers integration.
+
+### Changed
+
+- Empty patterns can no longer be inserted in the pattern result slot in the Pattern Grid with hoppers.
+- getPatterns() now only returns all the outputs, this to limit memory usage in OpenComputers (only affects OC integration).
+- Allow crafters to be daisy-chained.
+
+### Fixed
+
+- Fixed repeated key events not getting handled in some cases.
+
