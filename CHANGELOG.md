@@ -2399,3 +2399,218 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - First beta release for v1.2.0, featuring a new autocrafting system.
+
+## [v1.1.3] - 2016-10-07
+
+### Fixed
+
+- Fixed some clients not starting up due to too many Disk Drive model permutations.
+
+## [v1.1.2] - 2016-10-03
+
+### Added
+
+- Added recipe transfer handler for Solderer.
+
+### Changed
+
+- It is now possible to start a crafting task even if the crafting preview says you can't.
+
+### Fixed
+
+- Fixed crash with JEI when changing screens in autocrafting.
+- Fixed not being able to start autocrafting in other dimensions with Network Transmitter / Network Receivers.
+- Fixed JEI overlay disappearing now and again.
+- Fixed Detector hitbox.
+
+## [v1.1.1] - 2016-09-28
+
+### Fixed
+
+- Fixed crash on servers.
+
+## [v1.1.0] - 2016-09-28
+
+### Added
+
+- New art by CyanideX.
+- Added crafting preview screen.
+- Added max crafting task depth.
+- Added helpful tooltips to Solderer and Processing Pattern Encoder.
+
+### Changed
+
+- Every machine now compares on damage and NBT by default.
+- Updated JEI, fixes crashes.
+- Detector amount text field doesn't autoselect anymore.
+
+### Fixed
+
+- Fixed crash with Disk Manipulator.
+- Fixed autocrafting not giving back byproducts.
+
+## [v1.0.5] - 2016-09-21
+
+### Added
+
+- Importer now takes a Destruction Core, and Exporter a Construction Core.
+- Added Disk Manipulator.
+- Added ingame config.
+- Added the ability to see the output of a Pattern by holding shift.
+- Exporter in fluid mode and Fluid Interface no longer duplicates fluids that are less than 1 bucket.
+
+### Changed
+
+- Changed default Grid sorting type to quantity.
+- Updated Dutch translation.
+- Updated Chinese translation.
+- When a machine is in use by a crafting pattern, inserting of items from other patterns will be avoided.
+
+### Fixed
+
+- Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI.
+- Fixed shift clicking from Grid when player inventory is full throwing items in the world.
+
+## [v1.0.4] - 2016-09-17
+
+### Fixed
+
+- Fixed lag caused by Crafter.
+
+## [v1.0.3] - 2016-09-17
+
+### Added
+
+- Added integration for Forge energy.
+
+### Changed
+
+- Solderer now accepts items from any side, allowing easier automation.
+- Solderer is now intelligent about items in slots, and will only accept an item if it is part of a recipe.
+- Changed recipe for upgrades in the Solderer, they now just take 1 of the unique item instead of 2, using redstone instead.
+- Updated to Forge 2088.
+
+### Fixed
+
+- Fixed item loading issue.
+- Fixed fluid autocrafting scheduling too much crafting tasks for buckets.
+- Fixed blocks in hand facing wrong direction.
+
+## [v1.0.2] - 2016-09-14
+
+### Changed
+
+- +64 in crafting start GUI now gives 64 from the first time instead of 65.
+
+### Fixed
+
+- Fixed processing patterns not handling item insertion sometimes.
+
+### Removed
+
+- Removed crafting task limit in crafting start GUI.
+
+## [v1.0.1] - 2016-09-13
+
+### Added
+
+- Added "autocrafting mode" in Detector, to check if an item is being crafted. If no item is specified, it'll emit a signal if anything is crafting.
+- Added an option for the Crafter to trigger autocrafting with a redstone signal.
+
+### Changed
+
+- Updated to Forge 2084.
+
+### Fixed
+
+- Fixed advanced tooltips showing in Grid when not configured to do so.
+- Optimized crafting pattern loading.
+
+## [v1.0.0] - 2016-09-12
+
+### Added
+
+- Interface now supports Crafting Upgrade.
+- Implemented multithreaded autocrafting.
+
+### Changed
+
+- Processing patterns now hold their items back for pushing until all the required items are gathered from the system.
+- Reworked Crafting Monitor GUI.
+- When shift clicking a recipe in the Crafting Grid, the player inventory is now leveraged as well.
+- Updated to Forge 2077.
+- Due to the new crafting system, all Crafting Patterns made before 1.0 have to be re-made.
+
+### Fixed
+
+- Fixed item and fluid storage stored count having incorrect values at times.
+- Fixed problems relating to Crafting Upgrade (scheduling a task wrongly, blocking other tasks, etc).
+- Fixed machines breaking on long distances.
+- Fixed Controller rebuilding network graph on energy change.
+- Fixed fluids not caring about NBT tags.
+- Fixed fluids that have less than 1 bucket stored render only partly in Fluid Grid.
+- Fixed Fluid Interface voiding bucket when shift clicking to out slot.
+- Fixed wrong machine connection logic.
+
+## [v0.9.4-beta] - 2016-08-27
+
+### Changed
+
+- Reduced explosion radius when multiple controllers are connected to the same network.
+
+### Fixed
+
+- Fixed mod not working without JEI.
+- Little fixes in German translation.
+- Reverted network changes that caused buggy behavior.
+
+## [v0.9.3-beta] - 2016-08-26
+
+### Added
+
+- Added Chinese translation.
+- Added Crafting Tweaks integration.
+
+### Changed
+
+- Updated German translation for Fluid Storage.
+- Updated Dutch translation for Fluid Storage.
+- Reworked storage network code, should fix weird machine disconnection issues.
+
+### Fixed
+
+- Fixed that the Fluid Storage Disk recipe returns an invalid disk.
+
+## [v0.9.2-beta] - 2016-08-25
+
+### Fixed
+
+- Fixed not being able to take out items from Wireless Grid cross-dimensionally.
+
+## [v0.9.1-beta] - 2016-08-24
+
+### Fixed
+
+- Fixed server crash with Grid.
+
+## [v0.9.0-beta] - 2016-08-24
+
+### Added
+
+- Added fluid storage.
+- Added Russian translation.
+
+### Changed
+
+- Energy usage of Wireless Grid is now configurable.
+- Wireless Transmitters can now only be placed on Cable.
+- Priority field and detector amount field can now display 4 digits at a time.
+
+### Fixed
+
+- Fixed crash with Grid.
+- Fixed Grid Filter only updating the Grid when reopening the GUI.
+- Fixed Wireless Grid not working cross dimensionally.
+- Fixed Grid not displaying items after changing redstone mode.
+- Fixed Wireless Transmitter crashing when it is transmitting to a removed dimension.
+- Fixed disassembling stacked Storage Blocks only returns 1 set of items.
