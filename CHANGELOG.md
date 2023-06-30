@@ -1062,7 +1062,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed the Wrench.
 - Removed "void excess items or fluids" functionality on storages.
 - Removed the Solderer.
-- Removed "compare oredict" buttons on Exporter, Importer, etc..
+- Removed "compare oredict" buttons on Exporter, Importer, etc.
 - Removed ConnectedTexturesMod integration for fullbright textures, RS now has fullbright textures natively.
 - Removed autocrafting with fluids (the bucket filling mechanic). This will be replaced in a later version with native fluid autocrafting, where Crafters can insert fluids to external inventories.
 
@@ -1076,10 +1076,473 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Empty patterns can no longer be inserted in the pattern result slot in the Pattern Grid with hoppers.
-- getPatterns() now only returns all the outputs, this to limit memory usage in OpenComputers (only affects OC integration).
+- `getPatterns()` now only returns all the outputs, this to limit memory usage in OpenComputers (only affects OC integration).
 - Allow crafters to be daisy-chained.
 
 ### Fixed
 
 - Fixed repeated key events not getting handled in some cases.
 
+## [v1.5.33] - 2018-04-22
+
+### Added
+
+- Added Crafter Manager.
+
+### Changed
+
+- Patterns in the Crafter slots now automatically render the output without pressing shift.
+- Increased Grid performance.
+- Various internal refactors.
+
+### Fixed
+
+- Fixed Disk Manipulator not extracting items.
+- Fixed filter slots not caring about max stack size.
+- Fixed model warning about Portable Grid.
+- Fixed crash when autocompleting Ender IO recipes from JEI.
+- Fixed Grid not always using all combinations when using JEI autocompletion.
+
+## [v1.5.32] - 2018-03-08
+
+### Added
+
+- Added Spanish translation.
+
+### Changed
+
+- Changed stack quantity of craftable items from 1 to 0 to fix Quantity Sorting.
+- Changed fluid stack amount to not display "0" anymore.
+- Disk Manipulator in fluid mode will now extract a bucket at a time instead of 1 mB (or 64 buckets at a time with a Stack Upgrade instead of 64 mB).
+
+### Fixed
+
+- Fixed issue where the Pattern Grid can only overwrite patterns when blank ones are present.
+- Fixed not being able to extract half a stack of items with max stack size 1 in Grid when using right click.
+- Fixed 2 same stacks using capabilities without NBT tag not treated equal.
+- Fixed NBT/metadata check on exporting in an Interface.
+- Fixed Disk Manipulator being stuck on unemptiable, non-empty disks.
+- Fixed orientations of the Portable Grid.
+- Fixed crafting event in Crafting Grid being fired twice.
+- Fixed a crash when the Constructor tries to place a block when a multipart is attached to it.
+- Fixed an autocrafting crash.
+- Attempted to fix FPS drop on Grid sorting.
+
+## [v1.5.31] - 2017-12-31
+
+### Changed
+
+- Storage disk and block stored and capacity counts are formatted now in the tooltip.
+- Improved the "cannot craft! loop in processing..." error message.
+- Made the Disk Manipulator unsided (inserting goes to insert slots and extracting from output slots).
+
+### Fixed
+
+- Fixed error logs when toggling the Pattern Grid from and to processing mode.
+- Fixed pattern slots in Crafters not being accessible.
+- Fixed rare Grid crash.
+- Fixed OpenComputers cable showing up in Grid as air.
+
+## [v1.5.30] - 2017-12-24
+
+### Fixed
+
+- Fixed crashing bug when MCMultiPart is not installed.
+
+## [v1.5.29] - 2017-12-23
+
+### Changed
+
+- Update Forge to 2577 (minimum Forge version required is now 2555 for MC 1.12.2).
+
+### Fixed
+
+- Fixed bug where MCMP multiparts were blocking RS network connections.
+- Fixed Reader/Writers for energy extracting energy when not needed.
+
+## [v1.5.28] - 2017-12-13
+
+### Changed
+
+- Item Reader/Writers can now store 16 stacks.
+- Fluid Reader/Writers can now store 16 buckets.
+- Energy Reader/Writers can now store 16000 FE.
+
+### Fixed
+
+- Fixed Writers not pushing energy.
+
+## [v1.5.27-beta] - 2017-12-09
+
+### Fixed
+
+- Fixed non-oredict patterns not consuming resources.
+
+## [v1.5.26-beta] - 2017-12-09
+
+### Added
+
+- Added Funky Locomotion integration.
+
+### Fixed
+
+- Fixed Exporter in Regulator Mode not regulating properly when same item is specified multiple times.
+- Fixed air appearing in Grid.
+- Fixed config categories not correctly appearing in ingame config GUI.
+- Fixed craftable items showing "1 total" if not stored in system in Grid.
+- Minor fixes to autocrafting.
+
+### Removed
+
+- Removed "detailed" Grid view type variant, made detailed tooltips a config option instead.
+
+## [v1.5.25] - 2017-11-28
+
+### Fixed
+
+- Fixed not being able to autocraft different Storage Drawers' wood drawers.
+- Fixed not being able to autocraft certain Modular Routers items.
+- Fixed last modified date not being sent when extracting from an External Storage.
+
+## [v1.5.24] - 2017-11-26
+
+### Added
+
+- Added "Last modified" sorting option in the Grid.
+- Added a "detailed" variant for every Grid view type option, to disable the modified information on the tooltip.
+
+### Changed
+
+- The Grid now displays last modified information (player name and date) and size on tooltips of stacks.
+
+### Fixed
+
+- Fixed Exporter with Stack Upgrade not working correctly in Regulator Mode.
+- Fixed crash with the Constructor.
+- Fixed patterns being able to crash when no inputs are provided.
+- Fixed possible crash with network scanning.
+
+### Removed
+
+- Removed craft-only mode for the Exporter.
+
+## [v1.5.23] - 2017-11-13
+
+### Fixed
+
+- Fixed duplication bug with autocrafting.
+- Fixed Fluid Interface with Stack Upgrade not exporting fluids.
+- Fixed fluids in Fluid Grid not showing actual mB on tooltip when pressing CTRL + SHIFT.
+
+## [v1.5.22] - 2017-11-11
+
+### Added
+
+- Added oredict, blocking, processing, ore inputs access to OpenComputers API.
+- Added shortcut to clear Grid crafting matrix (CTRL+X).
+
+### Changed
+
+- The Crafter can now only store 1 stack size pattern per slot.
+- You can now re-insert a Pattern in the pattern output slot in the Pattern Grid to modify an existing pattern.
+- The Refined Storage jar is now signed.
+- Updated Chinese translation.
+
+### Fixed
+
+- Fixed not being able to use JEI R and U keys on Grid with tabs.
+- Fixed lag when opening a Grid with lots of items by offloading the grid sorting to another thread.
+- Performance improvement when adding patterns to the network.
+
+## [v1.5.21] - 2017-10-19
+
+### Changed
+
+- Updated Portuguese (Brazilian) translation.
+
+### Fixed
+
+- Fixed crash with External Storage.
+- Fixed stack-crafting in the crafting grid (crafting table) causing lag on a dedicated server.
+- Fixed cable blocks, Wireless Transmitter, Detector and Portable Grid acting as full blocks (being able to place torches on them etc).
+
+## [v1.5.20] - 2017-10-09
+
+### Fixed
+
+- Restore MC 1.12.0 compatibility.
+
+## [v1.5.19] - 2017-10-08
+
+### Changed
+
+- Updated Forge to 2493 (MC 1.12.2).
+
+### Fixed
+
+- Fixed Refined Storage blocks requiring a pickaxe to be broken.
+- Fixed Grid GUI crash.
+- Fixed device names overflowing Controller GUI.
+- Fixed high CPU load when Refined Storage GUIs are open.
+- Fixed not being able to extract Mekanism tanks and bins from the Grid.
+- Fixed not being able to craft Immersive Engineering Revolver.
+- Fixed rare bug when server crashes on startup due to network node not existing.
+
+## [v1.5.18] - 2017-09-08
+
+### Added
+
+- Added Project E integration for the External Storage on the Transmutation Table.
+- Added Project E integration for the energy values of Solderer items.
+- Added support for more than 4 grid tabs in the Grid by putting filters IN filters.
+- Added protection for other mods causing crashes when drawing an item or display name.
+
+### Changed
+
+- Reader and Writer blocks now face the block you're placing it on, not the player.
+- Pressing SHIFT over an item in the Grid will no longer display the full unformatted count, instead, use CTRL + SHIFT and it will be displayed in the tooltip.
+- The Fortune Upgrade doesn't use NBT anymore to store the fortune level.
+
+### Fixed
+
+- Fixed network not disconnecting when Controller is broken.
+- Fixed bug where when multiple Fortune Upgrades are inserted, it chooses the first Fortune Upgrade instead of the highest one.
+- Fixed some translations having too big "Craft" text.
+- Fixed crash with GUI when toggling the Grid size quickly.
+- Fixed scrollbar not scrolling correctly when clicked with mouse when grid tabs are visible.
+- Fixed Reader and Writers GUIs still displaying channels even if not connected.
+- Fixed Solderer resetting progress when the inventory changes.
+
+## [v1.5.17] - 2017-08-19
+
+### Added
+
+- Re-added support for OpenComputers.
+
+### Fixed
+
+- Fixed crash with Grid.
+
+## [v1.5.16] - 2017-08-09
+
+### Fixed
+
+- Fixed crash when placing a Controller.
+- Fixed crash when configuring an Exporter.
+- Fixed Refined Storage not running in MC 1.12 and only on MC 1.12.1.
+
+## [v1.5.15] - 2017-08-09
+
+### Added
+
+- Added InventoryTweaks Grid sorting.
+- Added InventoryTweaks inventory sort ability in Refined Storage GUIs.
+- Added CTM integration for Disk Manipulator.
+
+### Changed
+
+- Updated Forge to 2444 (MC 1.12.1).
+
+### Fixed
+
+- Fixed possible rare dupe bug with Importer.
+- Fixed Shulker Box dupe bug with Destructor.
+- Fixed Grid crash with search history.
+- Fixed Grid crash with search field.
+- Fixed External Storage not working without Storage Drawers.
+- Fixed External Storage not calculating max stack size in the calculation of it's capacity display in the GUI.
+- Fixed Refined Storage not drawing small text correctly with Unicode font.
+- Fixed dupe bug with External Storage connected to an item handler.
+
+## [v1.5.14] - 2017-08-03
+
+### Added
+
+- Added config option to modify the Solderer speed per Speed Upgrade, defaulting to 22.5% faster per upgrade, making it 90% faster on a fully upgraded Solderer.
+- Added CTM integration.
+
+### Changed
+
+- Updated Forge to 2426.
+- Updated French translation.
+
+### Fixed
+
+- Fixed more crashes relating to scrollbar in GUIs.
+- Fixed crash with Detector.
+- Fixed bug where pattern create button wasn't visible when grid tabs were selected.
+- Fixed performance issue with Controllers turning off and on and Interfaces.
+- Fixed Interfaces exposing network inventory don't hide storages that are disconnected.
+
+## [v1.5.13] - 2017-07-20
+
+### Fixed
+
+- Fixed Wireless Fluid Grid not using up energy.
+- Fixed Wireless Crafting Monitor remaining in network item list.
+
+## [v1.5.12] - 2017-07-17
+
+### Added
+
+- Added additional API for grids.
+
+### Changed
+
+- The Network Transmitter now uses 1 FE/t per block instead of 4 FE/t.
+
+## [v1.5.11] - 2017-07-16
+
+### Fixed
+
+- Fixed not being able to smelt quartz into silicon.
+- Fixed Grid extracting wrong enchanted books.
+
+## [v1.5.10] - 2017-07-15
+
+### Fixed
+
+- Fixed crash relating to MCMP.
+
+### Changed
+
+- Converted Solderer recipes to JSON.
+- Implemented controller update throttling, should fix lag issues with controllers that constantly turn off and on.
+
+## [v1.5.9] - 2017-07-10
+
+### Fixed
+
+- Fixed not being able to extract anything when connecting an External Storage to Storage Drawers.
+
+## [v1.5.8] - 2017-07-08
+
+### Changed
+
+- Updated Forge to 2400.
+- Updated Storage Drawers API.
+- Autocrafting can now fill water bottles with water from the fluid storage - regular bottles or pattern for regular bottles are required.
+
+### Fixed
+
+- Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk.
+- Fixed bug where items inserted in Storage Drawers through External Storage with a Drawer Controller wouldn't respect drawer priority rules.
+- Fixed crash on server when getting an advancement.
+
+### Removed
+
+- Removed migration support for worlds from MC 1.10.2. To migrate your world to MC 1.12 from MC 1.10.2, first open it in MC 1.11.2.
+
+## [v1.5.7] - 2017-07-04
+
+### Added
+
+- Added advancements.
+
+### Changed
+
+- Exposed pattern inventory for Pattern Grid.
+
+### Fixed
+
+- Fixed crashes relating to scrollbar in GUIs.
+
+## [v1.5.6] - 2017-06-29
+
+### Changed
+
+- Updated Forge to stable 2387.
+
+### Fixed
+
+- Fixed bug where players couldn't place regular blocks next to secured networks.
+
+### Removed
+
+- Removed Processing Pattern Encoder, that functionality is now available in the Pattern Grid.
+
+## [v1.5.5-beta] - 2017-06-25
+
+### Changed
+
+- Updated Forge to 2363.
+
+## [v1.5.4-beta] - 2017-06-24
+
+### Fixed
+
+- Fixed External Storage crashing.
+- Fixed crash when node data mismatches between world and dat file.
+
+## [v1.5.3-beta] - 2017-06-24
+
+### Added
+
+- The Portable Grid now exposes an inventory for interaction with other mods or vanilla.
+- The Interface now exposes the entire storage inventory (if no slots are set for exporting) for interaction with other mods or vanilla.
+
+### Changed
+
+- Updated Forge to 2359.
+- Updated MCMultiPart to 2.2.1.
+
+### Fixed
+
+- Fixed Solderer crashing.
+- Fixed Solderer being able to work with insufficient ingredients.
+- Fixed Interface extracting from itself when trying to keep items in stock.
+- Fixed Quartz Enriched Iron recipe only giving 1 instead of 4.
+- Fixed Debug Storage disks not working correctly.
+- Fixed Disk Drive giving incorrect capacity for creative and debug storage disks.
+
+### Removed
+
+- The Relay now reacts instantly to a redstone signal again, removed throttling for it.
+
+## [v1.5.2-beta] - 2017-06-20
+
+### Fixed
+
+- Fixed a bug where loading nodes would abort when a single node has an error while reading.
+- Fixed Filters not persisting correctly in Portable Grid.
+
+## [v1.5.1-beta] - 2017-06-20
+
+### Added
+
+- Re-added MCMultiPart support.
+- Added back crafting recipes.
+
+### Changed
+
+- Updated Forge to 2340.
+- Changed Grid recipe.
+- Changed Crafting Monitor recipe.
+
+### Fixed
+
+- Fixed Filters not persisting correctly in Wireless Grid and Wireless Crafting Monitor.
+- Fixed Disk Drive recipe not using ore dictionary for chest.
+- Fixed crash when getting tooltip for grid item.
+
+### Removed
+
+- Removed Tesla integration.
+- Removed RS energy units, the entire mod is powered with Forge Energy now.
+
+## [v1.5.0-alpha] - 2017-06-14
+
+### Added
+
+- Port to Minecraft 1.12.
+- The Portable Grid now doesn't despawn anymore when dropped in the world.
+
+### Fixed
+
+- Fixed bug where oredict autocrafting didn't work in some cases.
+
+### Removed
+
+- Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.12 is available).
+- Removed OpenComputers support (will be re-added as soon as OpenComputers for MC 1.12 is available).
+- Removed crafting recipes, until Forge adds the recipe system back.
