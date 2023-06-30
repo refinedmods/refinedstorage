@@ -1546,3 +1546,435 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.12 is available).
 - Removed OpenComputers support (will be re-added as soon as OpenComputers for MC 1.12 is available).
 - Removed crafting recipes, until Forge adds the recipe system back.
+
+## [v1.4.20] - 2017-07-15
+
+### Fixed
+
+- Fixed crash relating to MCMP.
+
+## [v1.4.19] - 2017-07-15
+
+### Added
+
+- Implemented controller update throttling, should fix lag issues with controllers that constantly turn off and on.
+
+### Fixed
+
+- Fixed bug where players couldn't place regular blocks next to secured networks.
+- Fixed crashes relating to scrollbar in GUIs.
+- Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk.
+
+## [v1.4.18] - 2017-06-24
+
+### Fixed
+
+- Fixed Solderer crashing.
+- Fixed Interface extracting from itself when trying to keep items in stock.
+- Fixed Solderer being able to work with insufficient ingredients.
+- Fixed Disk Drive giving incorrect capacity for creative and debug storage disks.
+- Fixed External Storage crashing.
+- Fixed crash when node data mismatches between world and dat file.
+
+### Removed
+
+- The Relay now reacts instantly to a redstone signal again, removed throttling for it.
+
+## [v1.4.17] - 2017-06-20
+
+### Fixed
+
+- Fixed Filters not persisting correctly in Wireless Grid, Wireless Crafting Monitor and Portable Grid.
+- Fixed Disk Drive recipe not using ore dictionary for chest.
+- Fixed a bug where loading nodes would abort when a single node has an error while reading.
+
+## [v1.4.16] - 2017-06-14
+
+### Added
+
+- The Portable Grid now doesn't despawn anymore when dropped in the world.
+
+### Fixed
+
+- Fixed bug where oredict autocrafting didn't work in some cases.
+
+## [v1.4.15] - 2017-06-14
+
+### Changed
+
+- Updated Storage Drawers API, fixes crashes.
+
+## [v1.4.14] - 2017-06-13
+
+### Fixed
+
+- Fixed Solderer not accepting books made in anvil.
+
+## [v1.4.13] - 2017-06-13
+
+### Added
+
+- The Portable Grid now has an indicator whether it's connected or disconnected and shows the disk.
+
+### Fixed
+
+- Fixed Portable Grid model.
+- Fixed ore dictionary causing problems with Solderer.
+- Fixed ore dictionary items not showing up in JEI for the Solderer.
+
+### Removed
+
+- Removed Quartz Enriched Iron ore dictionary entry.
+
+## [v1.4.12] - 2017-06-10
+
+### Added
+
+- Added Korean translation.
+- Implemented block update throttling when network turns on and off.
+
+### Changed
+
+- Updated Forge to 2315.
+- Updated JEI to 4.5.0.
+- You can now shift click items from the Grid crafting slots to the player inventory when the Grid is disconnected.
+
+### Fixed
+
+- Fixed error logs when watching a Controller when a network changes.
+
+### Removed
+
+- Removed Collosal Chests integration.
+
+## [v1.4.11] - 2017-06-05
+
+### Added
+
+- Added support for External Storage on Interfaces and other Refined Storage blocks, so you can keep items in stock easier.
+- You now have to sneak to place the Portable Grid in the world.
+
+### Changed
+
+- The Machine Casing now requires 1 piece of stone in the middle.
+- Changed recipe of Disk Drive to no longer require a Solderer.
+- Changed recipe of Interface to no longer require a Basic Processor, but a Machine Casing instead.
+
+### Fixed
+
+- Fixed bug where storages that are removed remain visible.
+- Fixed bug where the GUI didn't close when a block is broken, causing a dupe bug with the Portable Grid.
+
+### Removed
+
+- Removed debug log configuration option, as it's no longer needed.
+- Removed "autocraft on redstone signal" option in the Crafter, use an External Storage in combination with an Interface with the Crafting Upgrade instead.
+
+## [v1.4.10-beta] - 2017-05-25
+
+### Changed
+
+- Improved performance of network scanning.
+
+### Fixed
+
+- Fixed crash when attempting to get direction of a node.
+- Fixed bug where some network parts don't want to connect to the storage system.
+
+## [v1.4.9-beta] - 2017-05-24
+
+### Fixed
+
+- Fixed bug where inventory data was lost sometimes upon opening the world.
+
+## [v1.4.8-beta] - 2017-05-24
+
+### Fixed
+
+- Fixed missing config categories in ingame config.
+- Fixed Controller not working anymore after changing redstone setting.
+- Fixed crash when placing or destroying network blocks.
+
+## [v1.4.7-beta] - 2017-05-23
+
+### Added
+
+- Added config option "debugLog" that logs diagnostic info to help developers to fix the inventory loss bug, please enable it if you are experiencing this issue.
+
+### Fixed
+
+- Fixed bug where Portable Grid would dupe in inventory.
+- Worked around an autocrafting bug to prevent crashes.
+
+## [v1.4.6-beta] - 2017-05-17
+
+### Changed
+
+- Performance improvement to network scanning.
+
+### Fixed
+
+- Fixed Wrench opening GUIs while performing action.
+- Fixed client Grid GUI clearing and causing crashes after starting an autocrafting request.
+
+### Removed
+
+- Removed debug output from 1.4.5.
+
+## [v1.4.5-beta] - 2017-05-14
+
+### Added
+
+- Added Portable Grid.
+- Added OpenComputers integration.
+
+### Changed
+
+- Updated Forge to 2296.
+- Removed ticking tile entities, every tile entity in RS is non-ticking now.
+
+### Fixed
+
+- Fixed Crafting Tweaks buttons positioned wrongly.
+- Fixed Crafting Tweaks keybindings interfering with RS keybindings.
+- Fixed crash when updating storages.
+- Fixed no tooltips for fluid filter slots.
+- Fixed Disk Manipulator in fluid mode not showing fluids.
+- Fixed dupe bug in the Interface.
+
+## [v1.4.4-beta] - 2017-04-27
+
+### Changed
+
+- Updated Forge to 2284.
+
+### Fixed
+
+- Fixed Disk Manipulator crashing due to empty stack.
+- Fixed issue where empty stacks show up in the system.
+- Fixed Storage Monitor not respecting security settings.
+
+## [v1.4.3-beta] - 2017-04-22
+
+### Added
+
+- Display progress bar on JEI recipes for the Solderer.
+
+### Changed
+
+- Updated Forge to 2282.
+- Updated JEI version.
+- Updated MCMultiPart version.
+- You can now shift click Grid Filters into a Grid instead of manually inserting them.
+- You can now use up and down arrows to scroll through Grid search history.
+- Shift clicking patterns in the Pattern Grid now puts the patterns in the pattern slot.
+- Storage Monitors don't render any quantity text when no item is specified to monitor anymore.
+- The Solderer inventory isn't sided anymore.
+- Small performance improvement: only sort the storages when needed.
+
+### Fixed
+
+- Fixed bug where disks in Disk Drive didn't respect access type or void excess stacks option.
+- Fixed crash in Disk Manipulator.
+- Fixed oredict not working.
+- Fixed Grid crash.
+- Fixed Fluid Grid not formatting large quantities correctly.
+
+## [v1.4.2-beta] - 2017-04-01
+
+### Added
+
+- Implemented support for the Forge update JSON system.
+- Added integration for MCMultiPart, this is an optional dependency.
+- You can now specify more items to export, import, filter, etc. by inserting the Filter item.
+- Made the keybinding to focus on the Grid search bar configurable.
+
+### Changed
+
+- Updated Forge to 2261.
+- The Detector no longer outputs a strong redstone signal.
+- Fire event on completion of an autocrafting task.
+- Fire "player crafting" event when shift clicking in the grid.
+
+### Fixed
+
+- Fixed a crash with the Constructor.
+- Fixed Crafting Pattern model.
+- Fixed Quartz Enriched Iron and the block form of it not having an oredictionary entry.
+- Fixed crash in storage cache.
+- Fixed slow oredict comparisons causing TPS lag.
+- Fixed controller model warning during launch.
+- Fixed not rendering some tooltips correctly.
+- Fixed crash with External Storage.
+- Fixed Interface duping items on extract-only storages.
+- Fixed controls menu showing unlocalized text for Refined Storage keybindings.
+- Autocrafting bugfixes.
+- Improved memory usage of some models.
+- Performance improvements related to storage inserting and extracting.
+
+### Removed
+
+- Removed support for the Deep Storage Unit API.
+
+## [v1.4.1-beta] - 2017-02-19
+
+### Added
+
+- Added Storage Monitor.
+
+### Changed
+
+- Updated Forge to 2232.
+
+### Fixed
+
+- Fixed Processing Pattern Encoder and Security Manager recipes not supporting oredict workbench and chest.
+- Fixed network nodes not respecting redstone mode.
+- Fixed "Clear" and "Create Pattern" buttons not working correctly when using Grid Filter tabs.
+- Fixed Wrench in Dismantling Mode voiding Storage Block contents.
+- Fixed OPs not having global permissions on secured storage systems.
+- Fixed crash when Destructor tries to break secured network block.
+- Fixed Fluid Interface not dropping inventory contents.
+- Fixed Disk Manipulator crash.
+
+## [v1.4.0-beta] - 2017-02-06
+
+### Added
+
+- Added Security Manager.
+- Added Security Card.
+- Added Wireless Fluid Grid.
+- Added craft-only toggle to Exporter.
+- Added Reader.
+- Added Writer.
+- Added blocking mode to patterns in autocrafting.
+- Added Grid size toggle (stretched, small, medium, large).
+- Added dismantling mode to the Wrench.
+- Added Block of Quartz Enriched Iron.
+- Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance.
+- Added filtering slots for the Crafting Monitor.
+- Added way to hide tasks created in an automated way in the Crafting Monitor.
+- Added Grid sorting by ID.
+- Added Solderer particles.
+- Added ore dictionary Grid filter (use `$` as prefix like in JEI).
+
+### Changed
+
+- You can now bind multiple crafters with the same pattern to machines, to spread or balance out autocrafting.
+- Fluid Grid now first tries to get buckets from your inventory instead of the storage.
+- Updated Forge to 2226.
+- Updated Chinese translation.
+- Converting blocks instead of ingots to Printed Processors is now a little faster.
+- The Stack Upgrade in a Constructor in item dropping mode will drop stacks of items at a time.
+- Ignore damage for damageable items when transferring into crafting grid.
+- Ignore tags from given items when transferring into crafting grid.
+- Removed sidedness from fluid interface.
+- Using tab in a grid that isn't in autoselected mode will focus on the search box.
+- Exposed the Network Card inventory of the Network Transmitter so other tiles can interact with it.
+- Increased size of Detector textbox.
+- Handle breaking and placing blocks better for Constructor and Destructor.
+- Pressing shift while starting a crafting task will skip the crafting preview.
+
+### Fixed
+
+- Fixed Regulator mode not working.
+- Fixed Fluid Interface still being sided.
+- Fixed Constructor not working on Botania flowers.
+- Fixed Wireless Transmitter working even if it was disabled with redstone mode.
+- Fixed Solderer not accepting books created in an Anvil.
+- Fixed bug where network machines stopped working on chunk borders.
+- Fixed memes not working.
+- Fixed External Storage crashes.
+- Fixed Constructor in liquid mode being able to place fluids <1000 mB.
+- Fixed Solderer recipe conflicts, allowing for easier automation.
+- Fixed stack upgrades not working in exporter when stack size is 16.
+- Fixed crash when rotating External Storage.
+- Fixed disk textures not working on latest Forge.
+- Fixed crash when placing head with Constructor.
+- Autocrafting bugfixes.
+- Made sure External Storage always has the correct inventory in world.
+
+## [v1.3.5-alpha] - 2016-12-14
+
+### Added
+
+- Added regulator mode to Exporter.
+
+### Changed
+
+- Updated French translation.
+
+### Fixed
+
+- Fixed TPS lag on very large crafting tasks.
+- Fixed not being able to use autocrafting on some EnderIO items.
+- Fixed server crash with ore dictionary checks.
+- Fixed Controller not using energy.
+- Fixed dupe bug when inserting bucket in Fluid Grid.
+- Fixed not being able to start autocrafting for storage disks.
+- Fixed oredict button not having the correct position on a small resolution.
+- Fixed Constructor not using Crafting Upgrade when in item dropping mode.
+
+## [v1.3.4-alpha] - 2016-12-10
+
+### Added
+
+- Added option to check for oredict in the Grid Filter.
+- Added option to use a mod filter in the Grid Filter.
+- Added option to use a whitelist or blacklist in the Grid Filter.
+- Added Grid tabs using Grid Filters.
+- Added configuration option to enable large fonts in Grid.
+
+### Changed
+
+- The Grid now resizes based on screen size (max rows can be configured).
+- Made Solderer tooltip less big.
+- Made the Interface sideless, you can just insert or extract from any side.
+
+### Fixed
+
+- Fixed bug with opening a network item with food in offhand.
+- Fixed not respecting "Extract only" option for storages.
+- Fixed a few autocrafting bugs.
+- Fixed a crash with the Disk Manipulator.
+
+## [v1.3.3-alpha] - 2016-12-06
+
+### Changed
+
+- Updated Forge to 2188.
+
+### Fixed
+
+- Fixed not being able to start a crafting task.
+
+## [v1.3.2-alpha] - 2016-12-04
+
+### Fixed
+
+- Fixed being able to exceed max stack size while shift clicking.
+- Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool.
+- Fixed client crash when placing network blocks.
+
+## [v1.3.1-alpha] - 2016-12-04
+
+### Changed
+
+- Updated Forge to 2180.
+- Made Upgrades stackable.
+
+### Fixed
+
+- Fixed Disk Drive not noticing a Storage Disk being shift clicked out of the GUI.
+
+## [v1.3.0-alpha] - 2016-12-03
+
+### Added
+
+- Port to Minecraft 1.11.
+
+### Removed
+
+- Removed RF support, use Forge Energy instead.
+- Removed IC2 support.
+- Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available).
