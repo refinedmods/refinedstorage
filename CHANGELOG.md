@@ -2346,3 +2346,56 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed External Storage thinking that items are inserted in Extra Utilities Trash Cans.
 - Fixed Grid quantities being unreadable when using unicode font.
 - Fixed disconnecting when Storage Disk or Storage Block is too big.
+
+## [v1.2.0-beta.8] - 2016-11-03
+
+### Fixed
+
+- More autocrafting issues.
+
+## [v1.2.0-beta.7] - 2016-11-03
+
+### Fixed
+
+- More autocrafting issues.
+- External Storage crashes and TPS lag issues.
+- Mekanism recipes are autocraftable again.
+
+## [v1.2.0-beta.6] - 2016-11-02
+
+### Fixed
+
+- More autocrafting issues.
+- Oredict autocrafting has been improved.
+
+## [v1.2.0-beta.5] - 2016-10-30
+
+### Fixed
+
+- More autocrafting issues.
+- External Storage TPS lag issues.
+
+## [v1.2.0-beta.4] - 2016-10-27
+
+### Fixed
+
+- More autocrafting and TPS issues.
+
+## [v1.2.0-beta.3] - 2016-10-25
+
+### Fixed
+
+- More autocrafting issues.
+
+## [v1.2.0-beta.2] - 2016-10-24
+
+### Fixed
+
+- Extreme TPS issues while crafting.
+- Laggy disk drive rendering.
+
+## [v1.2.0-beta.1] - 2016-10-23
+
+### Changed
+
+- First beta release for v1.2.0, featuring a new autocrafting system.
