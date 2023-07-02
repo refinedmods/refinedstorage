@@ -102,7 +102,7 @@ public class ColorMap<T> {
             block.getId().getPath(),
             () -> new ColoredBlockItem(
                 block.get(),
-                new Item.Properties().tab(RS.CREATIVE_MODE_TAB),
+                new Item.Properties(),
                 color,
                 BlockUtils.getBlockTranslation(translationBlock.get())
             )

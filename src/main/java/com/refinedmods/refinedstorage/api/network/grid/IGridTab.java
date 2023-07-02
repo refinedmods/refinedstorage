@@ -1,9 +1,9 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,19 +24,19 @@ public interface IGridTab {
     /**
      * Draws the tooltip of this tab at the given position.
      *
-     * @param poseStack the pose stack
-     * @param x         the x position
-     * @param y         the y position
-     * @param screen    the screen
+     * @param font     the font
+     * @param graphics the graphics
+     * @param x        the x position
+     * @param y        the y position
      */
-    void drawTooltip(PoseStack poseStack, int x, int y, Screen screen);
+    void drawTooltip(Font font, GuiGraphics graphics, int x, int y);
 
     /**
      * Draws the icon.
      *
-     * @param poseStack the pose stack
-     * @param x         the x position
-     * @param y         the y position
+     * @param graphics the graphics
+     * @param x        the x position
+     * @param y        the y position
      */
-    void drawIcon(PoseStack poseStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
+    void drawIcon(GuiGraphics graphics, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
 }

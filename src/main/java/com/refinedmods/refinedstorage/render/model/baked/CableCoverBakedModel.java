@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.render.model.baked;
 
-import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
@@ -22,13 +21,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.ModelData;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
 
@@ -91,36 +90,44 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
     private static void addNormalCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle, RandomSource random) {
         AABB bounds = ConstantsCable.getCoverBounds(coverSide);
 
-        Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
-        Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
+        float fromX = (float) bounds.minX * 16;
+        float fromY = (float) bounds.minY * 16;
+        float fromZ = (float) bounds.minZ * 16;
+
+        float toX = (float) bounds.maxX * 16;
+        float toY = (float) bounds.maxY * 16;
+        float toZ = (float) bounds.maxZ * 16;
 
         if (coverSide == Direction.NORTH) {
             if (hasWest) {
-                from.setX(2);
+                fromX = 2;
             }
 
             if (hasEast) {
-                to.setX(14);
+                toX = 14;
             }
         } else if (coverSide == Direction.SOUTH) {
             if (hasWest) {
-                from.setX(2);
+                fromX = 2;
             }
 
             if (hasEast) {
-                to.setX(14);
+                toX = 14;
             }
         }
 
         if (coverSide.getAxis() != Direction.Axis.Y) {
             if (hasDown) {
-                from.setY(2);
+                fromY = 2;
             }
 
             if (hasUp) {
-                to.setY(14);
+                toY = 14;
             }
         }
+
+        Vector3f from = new Vector3f(fromX, fromY, fromZ);
+        Vector3f to = new Vector3f(toX, toY, toZ);
 
         HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>();  //Changed from 1.12: to improve sprite getting for each side
         quads.addAll(new CubeBuilder().from(from.x(), from.y(), from.z()).to(to.x(), to.y(), to.z()).addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random)))).bake());
@@ -142,50 +149,55 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
     private static void addHollowCover(List<BakedQuad> quads, BlockState state, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size, RandomSource random) {
         AABB bounds = ConstantsCable.getCoverBounds(coverSide);
 
-        Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
-        Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
+        float fromX = (float) bounds.minX * 16;
+        float fromY = (float) bounds.minY * 16;
+        float fromZ = (float) bounds.minZ * 16;
+
+        float toX = (float) bounds.maxX * 16;
+        float toY = (float) bounds.maxY * 16;
+        float toZ = (float) bounds.maxZ * 16;
 
         if (coverSide.getAxis() != Direction.Axis.Y) {
             if (hasDown) {
-                from.setY(2);
+                fromY = 2;
             }
 
             if (hasUp) {
-                to.setY(14);
+                toY = 14;
             }
         }
 
         // Right
         if (coverSide == Direction.NORTH) {
             if (hasWest) {
-                from.setX(2);
+                fromX = 2;
             } else {
-                from.setX(0);
+                fromX = 0;
             }
 
-            to.setX(size);
+            toX = size;
         } else if (coverSide == Direction.SOUTH) {
             if (hasEast) {
-                to.setX(14);
+                toX = 14;
             } else {
-                to.setX(16);
+                toX = 16;
             }
 
-            from.setX(16 - size);
+            fromX = 16 - size;
         } else if (coverSide == Direction.EAST) {
-            from.setZ(0);
-            to.setZ(size);
+            fromZ = 0;
+            toZ = size;
         } else if (coverSide == Direction.WEST) {
-            from.setZ(16 - size);
-            to.setZ(16);
+            fromZ = 16 - size;
+            toZ = 16;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
-            from.setZ(16 - size);
-            to.setZ(16);
+            fromZ = 16 - size;
+            toZ = 16;
         }
         HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>(); //Changed from 1.12: to improve sprite getting for each side
         quads.addAll(new CubeBuilder()
-            .from(from.x(), from.y(), from.z())
-            .to(to.x(), to.y(), to.z())
+            .from(fromX, fromY, fromZ)
+            .to(toX, toY, toZ)
             .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
             .bake()
         );
@@ -193,154 +205,154 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
         // Left
         if (coverSide == Direction.NORTH) {
             if (hasEast) {
-                to.setX(14);
+                toX = 14;
             } else {
-                to.setX(16);
+                toX = 16;
             }
 
-            from.setX(16 - size);
+            fromX = 16 - size;
         } else if (coverSide == Direction.SOUTH) {
             if (hasWest) {
-                from.setX(2);
+                fromX = 2;
             } else {
-                from.setX(0);
+                fromX = 0;
             }
 
-            to.setX(size);
+            toX = size;
         } else if (coverSide == Direction.EAST) {
-            from.setZ(16 - size);
-            to.setZ(16);
+            fromZ = 16 - size;
+            toZ = 16;
         } else if (coverSide == Direction.WEST) {
-            from.setZ(0);
-            to.setZ(size);
+            fromZ = 0;
+            toZ = size;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
-            from.setZ(0);
-            to.setZ(size);
+            fromZ = 0;
+            toZ = size;
         }
 
         quads.addAll(new CubeBuilder()
-            .from(from.x(), from.y(), from.z())
-            .to(to.x(), to.y(), to.z())
+            .from(fromX, fromY, fromZ)
+            .to(toX, toY, toZ)
             .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
             .bake()
         );
 
         // Bottom
         if (coverSide == Direction.NORTH) {
-            from.setX(size);
-            to.setX(16 - size);
+            fromX = size;
+            toX = 16 - size;
 
             if (hasDown) {
-                from.setY(2);
+                fromY = 2;
             } else {
-                from.setY(0);
+                fromY = 0;
             }
 
-            to.setY(size);
+            toY = size;
         } else if (coverSide == Direction.SOUTH) {
-            from.setX(size);
-            to.setX(16 - size);
+            fromX = size;
+            toX = 16 - size;
 
             if (hasDown) {
-                from.setY(2);
+                fromY = 2;
             } else {
-                from.setY(0);
+                fromY = 0;
             }
 
-            to.setY(size);
+            toY = size;
         } else if (coverSide == Direction.EAST) {
-            from.setZ(size);
-            to.setZ(16 - size);
+            fromZ = size;
+            toZ = 16 - size;
 
             if (hasDown) {
-                from.setY(2);
+                fromY = 2;
             } else {
-                from.setY(0);
+                fromY = 0;
             }
 
-            to.setY(size);
+            toY = size;
         } else if (coverSide == Direction.WEST) {
-            from.setZ(size);
-            to.setZ(16 - size);
+            fromZ = size;
+            toZ = 16 - size;
 
             if (hasDown) {
-                from.setY(2);
+                fromY = 2;
             } else {
-                from.setY(0);
+                fromY = 0;
             }
 
-            to.setY(size);
+            toY = size;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
-            from.setZ(size);
-            to.setZ(16 - size);
+            fromZ = size;
+            toZ = 16 - size;
 
-            from.setX(0);
-            to.setX(size);
+            fromX = 0;
+            toX = size;
         }
 
         quads.addAll(new CubeBuilder()
-            .from(from.x(), from.y(), from.z())
-            .to(to.x(), to.y(), to.z())
+            .from(fromX, fromY, fromZ)
+            .to(toX, toY, toZ)
             .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
             .bake()
         );
 
         // Up
         if (coverSide == Direction.NORTH) {
-            from.setX(size);
-            to.setX(16 - size);
+            fromX = size;
+            toX = 16 - size;
 
             if (hasUp) {
-                to.setY(14);
+                toY = 14;
             } else {
-                to.setY(16);
+                toY = 16;
             }
 
-            from.setY(16 - size);
+            fromY = 16 - size;
         } else if (coverSide == Direction.SOUTH) {
-            from.setX(size);
-            to.setX(16 - size);
+            fromX = size;
+            toX = 16 - size;
 
             if (hasUp) {
-                to.setY(14);
+                toY = 14;
             } else {
-                to.setY(16);
+                toY = 16;
             }
 
-            from.setY(16 - size);
+            fromY = 16 - size;
         } else if (coverSide == Direction.EAST) {
-            from.setZ(size);
-            to.setZ(16 - size);
+            fromZ = size;
+            toZ = 16 - size;
 
             if (hasUp) {
-                to.setY(14);
+                toY = 14;
             } else {
-                to.setY(16);
+                toY = 16;
             }
 
-            from.setY(16 - size);
+            fromY = 16 - size;
         } else if (coverSide == Direction.WEST) {
-            from.setZ(size);
-            to.setZ(16 - size);
+            fromZ = size;
+            toZ = 16 - size;
 
             if (hasUp) {
-                to.setY(14);
+                toY = 14;
             } else {
-                to.setY(16);
+                toY = 16;
             }
 
-            from.setY(16 - size);
+            fromY = 16 - size;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
-            from.setZ(size);
-            to.setZ(16 - size);
+            fromZ = size;
+            toZ = 16 - size;
 
-            from.setX(16 - size);
-            to.setX(16);
+            fromX = 16 - size;
+            toX = 16;
         }
 
         quads.addAll(new CubeBuilder()
-            .from(from.x(), from.y(), from.z())
-            .to(to.x(), to.y(), to.z())
+            .from(fromX, fromY, fromZ)
+            .to(toX, toY, toZ)
             .addFaces(face -> new CubeBuilder.Face(face, spriteCache.computeIfAbsent(face, direction -> RenderUtils.getSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(state), state, direction, random))))
             .bake()
         );

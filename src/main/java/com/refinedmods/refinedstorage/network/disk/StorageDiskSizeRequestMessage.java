@@ -26,7 +26,7 @@ public class StorageDiskSizeRequestMessage {
 
     public static void handle(StorageDiskSizeRequestMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            IStorageDisk disk = API.instance().getStorageDiskManager(ctx.get().getSender().getLevel()).get(message.id);
+            IStorageDisk disk = API.instance().getStorageDiskManager(ctx.get().getSender().serverLevel()).get(message.id);
 
             if (disk != null) {
                 RS.NETWORK_HANDLER.sendTo(ctx.get().getSender(), new StorageDiskSizeResponseMessage(message.id, disk.getStored(), disk.getCapacity()));

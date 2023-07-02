@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,13 +17,13 @@ import java.util.List;
  */
 public interface ICraftingMonitorElement {
     /**
-     * @param poseStack the pose stack
-     * @param x         position on the x axis to render
-     * @param y         position on the y axis to render
-     * @param drawers   the drawers that this element can use
+     * @param graphics the graphics
+     * @param x        position on the x axis to render
+     * @param y        position on the y axis to render
+     * @param drawers  the drawers that this element can use
      */
     @OnlyIn(Dist.CLIENT)
-    void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers);
+    void draw(GuiGraphics graphics, int x, int y, IElementDrawers drawers);
 
     /**
      * Returns the id for the base of this element, used for sorting in the {@link CraftingMonitorElementList}

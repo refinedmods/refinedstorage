@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.DestructorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class DestructorPickupSideButton extends SideButton {
@@ -14,12 +15,12 @@ public class DestructorPickupSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
-        screen.blit(poseStack, x, y, 64 + (Boolean.TRUE.equals(DestructorBlockEntity.PICKUP.getValue()) ? 0 : 16), 0, 16, 16);
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, 64 + (Boolean.TRUE.equals(DestructorBlockEntity.PICKUP.getValue()) ? 0 : 16), 0, 16, 16);
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.destructor.pickup") + "\n" + ChatFormatting.GRAY + I18n.get(Boolean.TRUE.equals(DestructorBlockEntity.PICKUP.getValue()) ? "gui.yes" : "gui.no");
     }
 

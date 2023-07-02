@@ -70,7 +70,7 @@ public class GridManager implements IGridManager {
         }
 
         IGrid grid = null;
-        BlockEntity blockEntity = factory.getRelevantBlockEntity(player.level, pos);
+        BlockEntity blockEntity = factory.getRelevantBlockEntity(player.level(), pos);
 
         if (factory.getType() == GridFactoryType.STACK) {
             grid = factory.createFromStack(player, stack, slot);

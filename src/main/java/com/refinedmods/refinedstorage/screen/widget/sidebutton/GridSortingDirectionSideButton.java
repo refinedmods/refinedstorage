@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class GridSortingDirectionSideButton extends SideButton {
@@ -17,13 +17,13 @@ public class GridSortingDirectionSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.sorting.direction") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.sorting.direction." + grid.getSortingDirection());
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
-        screen.blit(poseStack, x, y, grid.getSortingDirection() * 16, 16, 16, 16);
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, grid.getSortingDirection() * 16, 16, 16, 16);
     }
 
     @Override

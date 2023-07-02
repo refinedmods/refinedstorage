@@ -1,21 +1,24 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.blockentity.DetectorBlockEntity;
+import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.container.DetectorContainerMenu;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.DetectorModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
-import com.refinedmods.refinedstorage.blockentity.DetectorBlockEntity;
-import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.glfw.GLFW;
 
 public class DetectorScreen extends BaseScreen<DetectorContainerMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/detector.png");
+
     private EditBox amountField;
 
     public DetectorScreen(DetectorContainerMenu containerMenu, Inventory inventory, Component title) {
@@ -35,7 +38,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainerMenu> {
         amountField.setBordered(false);
         amountField.setVisible(true);
         amountField.setCanLoseFocus(true);
-        amountField.setFocus(false);
+        amountField.setFocused(false);
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setResponder(value -> {
             try {
@@ -60,16 +63,14 @@ public class DetectorScreen extends BaseScreen<DetectorContainerMenu> {
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, "gui/detector.png");
-
-        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
-        renderString(poseStack, 7, 43, I18n.get("container.inventory"));
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
+        renderString(graphics, 7, 43, I18n.get("container.inventory"));
     }
 
     @Override

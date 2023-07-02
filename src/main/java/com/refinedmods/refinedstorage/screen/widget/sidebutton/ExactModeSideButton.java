@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class ExactModeSideButton extends SideButton {
@@ -20,7 +21,7 @@ public class ExactModeSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         String tooltip = I18n.get("sidebutton.refinedstorage.exact_mode") + "\n" + ChatFormatting.GRAY;
 
         if ((parameter.getValue() & MASK) == MASK) {
@@ -33,11 +34,11 @@ public class ExactModeSideButton extends SideButton {
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
         int ty = 16 * 12;
         int tx = (parameter.getValue() & MASK) == MASK ? 0 : 16;
 
-        screen.blit(poseStack, x, y, tx, ty, 16, 16);
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, tx, ty, 16, 16);
     }
 
     @Override

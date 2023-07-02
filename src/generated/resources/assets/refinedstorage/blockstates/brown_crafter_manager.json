@@ -1,34 +1,34 @@
 {
   "variants": {
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/crafter_manager/disconnected",
+      "y": 90
+    },
     "connected=false,direction=north": {
       "model": "refinedstorage:block/crafter_manager/disconnected"
     },
-    "connected=true,direction=north": {
-      "model": "refinedstorage:block/crafter_manager/brown"
-    },
     "connected=false,direction=south": {
       "model": "refinedstorage:block/crafter_manager/disconnected",
-      "y": 180
-    },
-    "connected=true,direction=south": {
-      "model": "refinedstorage:block/crafter_manager/brown",
       "y": 180
     },
     "connected=false,direction=west": {
       "model": "refinedstorage:block/crafter_manager/disconnected",
       "y": 270
     },
-    "connected=true,direction=west": {
-      "model": "refinedstorage:block/crafter_manager/brown",
-      "y": 270
-    },
-    "connected=false,direction=east": {
-      "model": "refinedstorage:block/crafter_manager/disconnected",
-      "y": 90
-    },
     "connected=true,direction=east": {
       "model": "refinedstorage:block/crafter_manager/brown",
       "y": 90
+    },
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/crafter_manager/brown"
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/crafter_manager/brown",
+      "y": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/crafter_manager/brown",
+      "y": 270
     }
   }
 }

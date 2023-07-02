@@ -28,7 +28,7 @@ public class ListDiskForPlayerCommand implements Command<CommandSourceStack> {
             .stream()
             .filter(entry -> player.getGameProfile().getId().equals(entry.getValue().getOwner()))
             .map(Map.Entry::getKey)
-            .forEach(id -> context.getSource().sendSuccess(Component.literal(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(() -> Component.literal(id.toString()), false));
 
         return 0;
     }

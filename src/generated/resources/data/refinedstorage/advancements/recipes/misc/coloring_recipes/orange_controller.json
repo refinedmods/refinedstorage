@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "refinedstorage:coloring_recipes/orange_controller"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "refinedstorage:controller": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "refinedstorage:controller"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "refinedstorage:controller",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "refinedstorage:coloring_recipes/orange_controller"
+    ]
+  },
+  "sends_telemetry_event": false
+}

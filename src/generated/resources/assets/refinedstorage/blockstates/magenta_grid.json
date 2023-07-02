@@ -1,34 +1,34 @@
 {
   "variants": {
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/grid/disconnected",
+      "y": 90
+    },
     "connected=false,direction=north": {
       "model": "refinedstorage:block/grid/disconnected"
     },
-    "connected=true,direction=north": {
-      "model": "refinedstorage:block/grid/magenta"
-    },
     "connected=false,direction=south": {
       "model": "refinedstorage:block/grid/disconnected",
-      "y": 180
-    },
-    "connected=true,direction=south": {
-      "model": "refinedstorage:block/grid/magenta",
       "y": 180
     },
     "connected=false,direction=west": {
       "model": "refinedstorage:block/grid/disconnected",
       "y": 270
     },
-    "connected=true,direction=west": {
-      "model": "refinedstorage:block/grid/magenta",
-      "y": 270
-    },
-    "connected=false,direction=east": {
-      "model": "refinedstorage:block/grid/disconnected",
-      "y": 90
-    },
     "connected=true,direction=east": {
       "model": "refinedstorage:block/grid/magenta",
       "y": 90
+    },
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/grid/magenta"
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/grid/magenta",
+      "y": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/grid/magenta",
+      "y": 270
     }
   }
 }

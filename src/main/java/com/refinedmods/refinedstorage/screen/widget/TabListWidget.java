@@ -1,12 +1,11 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -48,14 +47,14 @@ public class TabListWidget<T extends AbstractContainerMenu> {
         listeners.add(listener);
     }
 
-    public void drawForeground(PoseStack poseStack, int x, int y, int mouseX, int mouseY, boolean visible) {
+    public void drawForeground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, boolean visible) {
         this.tabHovering = -1;
 
         if (visible) {
             int j = 0;
             for (int i = page.get() * tabsPerPage; i < (page.get() * tabsPerPage) + tabsPerPage; ++i) {
                 if (i < tabs.get().size()) {
-                    drawTab(poseStack, tabs.get().get(i), true, x, y, i, j);
+                    drawTab(graphics, tabs.get().get(i), true, x, y, i, j);
 
                     if (RenderUtils.inBounds(x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
                         this.tabHovering = i;
@@ -87,11 +86,11 @@ public class TabListWidget<T extends AbstractContainerMenu> {
         right.active = page.get() < pages.get();
     }
 
-    public void drawBackground(PoseStack poseStack, int x, int y) {
+    public void drawBackground(GuiGraphics graphics, int x, int y) {
         int j = 0;
         for (int i = page.get() * tabsPerPage; i < (page.get() * tabsPerPage) + tabsPerPage; ++i) {
             if (i < tabs.get().size()) {
-                drawTab(poseStack, tabs.get().get(i), false, x, y, i, j++);
+                drawTab(graphics, tabs.get().get(i), false, x, y, i, j++);
             }
         }
     }
@@ -108,7 +107,7 @@ public class TabListWidget<T extends AbstractContainerMenu> {
         return 0;
     }
 
-    private void drawTab(PoseStack poseStack, IGridTab tab, boolean foregroundLayer, int x, int y, int index, int num) {
+    private void drawTab(GuiGraphics graphics, IGridTab tab, boolean foregroundLayer, int x, int y, int index, int num) {
         boolean isSelected = index == selected.get();
 
         if ((foregroundLayer && !isSelected) || (!foregroundLayer && isSelected)) {
@@ -117,8 +116,6 @@ public class TabListWidget<T extends AbstractContainerMenu> {
 
         int tx = x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * num);
         int ty = y;
-
-        screen.bindTexture(RS.ID, "icons.png");
 
         if (!isSelected) {
             ty += 3;
@@ -142,14 +139,14 @@ public class TabListWidget<T extends AbstractContainerMenu> {
             uvx = 199;
         }
 
-        screen.blit(poseStack, tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
+        graphics.blit(BaseScreen.ICONS_TEXTURE, tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
 
-        tab.drawIcon(poseStack, otx + 6, ty + 9 - (!isSelected ? 3 : 0), drawers.getItemDrawer(), drawers.getFluidDrawer());
+        tab.drawIcon(graphics, otx + 6, ty + 9 - (!isSelected ? 3 : 0), drawers.getItemDrawer(), drawers.getFluidDrawer());
     }
 
-    public void drawTooltip(PoseStack poseStack, Font fontRenderer, int mouseX, int mouseY) {
+    public void drawTooltip(GuiGraphics graphics, Font font, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
-            tabs.get().get(tabHovering).drawTooltip(poseStack, mouseX, mouseY, screen);
+            tabs.get().get(tabHovering).drawTooltip(font, graphics, mouseX, mouseY);
         }
     }
 

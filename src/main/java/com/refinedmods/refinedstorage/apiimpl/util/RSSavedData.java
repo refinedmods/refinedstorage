@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.apiimpl.util;
 
-import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ public abstract class RSSavedData extends SavedData {
 
             CompoundTag tag = new CompoundTag();
             tag.put("data", this.save(new CompoundTag()));
-            tag.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+            NbtUtils.addCurrentDataVersion(tag);
 
             try {
                 NbtIo.writeCompressed(tag, tempFile);

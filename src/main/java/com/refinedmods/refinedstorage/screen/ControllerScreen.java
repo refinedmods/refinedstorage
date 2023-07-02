@@ -4,19 +4,23 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
+import com.refinedmods.refinedstorage.blockentity.ClientNode;
+import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
 import com.refinedmods.refinedstorage.container.ControllerContainerMenu;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.blockentity.ClientNode;
-import com.refinedmods.refinedstorage.blockentity.ControllerBlockEntity;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.List;
 
 public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/controller.png");
+
     private static final int VISIBLE_ROWS = 2;
 
     private static final int ENERGY_BAR_X = 8;
@@ -44,16 +48,14 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, "gui/controller.png");
-
-        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
         int energyBarHeightNew = Network.getEnergyScaled(ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
 
-        blit(poseStack, x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
+        graphics.blit(TEXTURE, x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
 
-        scrollbar.render(poseStack);
+        scrollbar.render(graphics);
     }
 
     @Override
@@ -79,9 +81,9 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
-        renderString(poseStack, 7, 87, I18n.get("container.inventory"));
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
+        renderString(graphics, 7, 87, I18n.get("container.inventory"));
 
         int x = 33;
         int y = 26;
@@ -98,20 +100,21 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
             if (slot < nodes.size()) {
                 ClientNode node = nodes.get(slot);
 
-                renderItem(poseStack, x, y + 5, node.getStack());
+                renderItem(graphics, x, y + 5, node.getStack());
 
                 float scale = minecraft.isEnforceUnicode() ? 1F : 0.5F;
 
+                final PoseStack poseStack = graphics.pose();
                 poseStack.pushPose();
                 poseStack.scale(scale, scale, 1);
 
                 renderString(
-                    poseStack,
+                    graphics,
                     RenderUtils.getOffsetOnScale(x + 1, scale),
                     RenderUtils.getOffsetOnScale(y - 2, scale),
                     trimNameIfNeeded(!minecraft.isEnforceUnicode(), node.getStack().getHoverName().getString())
                 );
-                renderString(poseStack, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
+                renderString(graphics, RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
                 poseStack.popPose();
 
@@ -131,11 +134,11 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
         }
 
         if (hoveringNode != null) {
-            renderTooltip(poseStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
+            renderTooltip(graphics, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage_minimal", hoveringNode.getEnergyUsage()));
         }
 
         if (RenderUtils.inBounds(ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT, mouseX, mouseY)) {
-            renderTooltip(poseStack, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerBlockEntity.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue()));
+            renderTooltip(graphics, mouseX, mouseY, I18n.get("misc.refinedstorage.energy_usage", ControllerBlockEntity.ENERGY_USAGE.getValue()) + "\n" + I18n.get("misc.refinedstorage.energy_stored", ControllerBlockEntity.ENERGY_STORED.getValue(), ControllerBlockEntity.ENERGY_CAPACITY.getValue()));
         }
     }
 
@@ -144,7 +147,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainerMenu> {
     }
 
     private String trimNameIfNeeded(boolean scaled, String name) {
-        int max = scaled ? 20 : 13;
+        int max = scaled ? 19 : 12;
         if (name.length() > max) {
             name = name.substring(0, max) + "...";
         }

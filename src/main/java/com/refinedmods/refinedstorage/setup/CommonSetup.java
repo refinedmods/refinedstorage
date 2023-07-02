@@ -1,6 +1,8 @@
 package com.refinedmods.refinedstorage.setup;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.RSCreativeModeTabItems;
+import com.refinedmods.refinedstorage.RSLootFunctions;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
@@ -30,14 +32,22 @@ import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.ItemExtern
 import com.refinedmods.refinedstorage.block.BlockListener;
 import com.refinedmods.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.refinedmods.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 public final class CommonSetup {
     private CommonSetup() {
+    }
+
+    @SubscribeEvent
+    public static void onRegister(final RegisterEvent e) {
+        e.register(Registries.LOOT_FUNCTION_TYPE, helper -> RSLootFunctions.register());
+        e.register(Registries.CREATIVE_MODE_TAB, RSCreativeModeTabItems::register);
     }
 
     @SubscribeEvent

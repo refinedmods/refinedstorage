@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -85,7 +84,7 @@ public final class LevelUtils {
     }
 
     public static HitResult rayTracePlayer(Level level, Player player) {
-        double reachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
+        double reachDistance = player.getBlockReach();
 
         Vec3 base = player.getEyePosition(1.0F);
         Vec3 look = player.getLookAngle();

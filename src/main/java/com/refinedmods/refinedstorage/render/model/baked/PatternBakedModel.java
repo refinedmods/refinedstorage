@@ -39,7 +39,7 @@ public class PatternBakedModel extends BakedModelWrapper<BakedModel> {
             @Override
             public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int p) {
                 if (entity != null) {
-                    ICraftingPattern pattern = PatternItem.fromCache(entity.level, stack);
+                    ICraftingPattern pattern = PatternItem.fromCache(entity.level(), stack);
 
                     if (canDisplayOutput(stack, pattern)) {
                         ItemStack outputToRender = pattern.getOutputs().get(0);

@@ -7,16 +7,23 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.runtime.IClickableIngredient;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class GuiContainerHandler implements IGuiContainerHandler<AbstractContainerScreen<?>> {
+    private final JeiHelper jeiHelper;
+
+    public GuiContainerHandler(JeiHelper jeiHelper) {
+        this.jeiHelper = jeiHelper;
+    }
+
     @Override
     public List<Rect2i> getGuiExtraAreas(AbstractContainerScreen<?> screen) {
         if (screen instanceof BaseScreen) {
@@ -24,7 +31,7 @@ public class GuiContainerHandler implements IGuiContainerHandler<AbstractContain
 
             List<Rect2i> rectangles = new ArrayList<>();
             for (SideButton sideButton : sideButtons) {
-                rectangles.add(new Rect2i(sideButton.x, sideButton.y, sideButton.getWidth(), sideButton.getHeight()));
+                rectangles.add(new Rect2i(sideButton.getX(), sideButton.getY(), sideButton.getWidth(), sideButton.getHeight()));
             }
 
             return rectangles;
@@ -33,9 +40,8 @@ public class GuiContainerHandler implements IGuiContainerHandler<AbstractContain
         return Collections.emptyList();
     }
 
-    @Nullable
     @Override
-    public Object getIngredientUnderMouse(AbstractContainerScreen screen, double mouseX, double mouseY) {
+    public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(AbstractContainerScreen screen, double mouseX, double mouseY) {
         mouseX -= screen.getGuiLeft();
         mouseY -= screen.getGuiTop();
 
@@ -44,8 +50,10 @@ public class GuiContainerHandler implements IGuiContainerHandler<AbstractContain
 
             if (!grid.getSearchField().isFocused() && grid.isOverSlotArea(mouseX, mouseY)) {
                 boolean inRange = grid.getSlotNumber() >= 0 && grid.getSlotNumber() < grid.getView().getStacks().size();
-
-                return inRange ? grid.getView().getStacks().get(grid.getSlotNumber()).getIngredient() : null;
+                Rect2i area = new Rect2i(grid.getSlotNumberX(), grid.getSlotNumberY(), 18, 18);
+                return inRange
+                    ? jeiHelper.makeClickableIngredient(grid.getView().getStacks().get(grid.getSlotNumber()).getIngredient(), area)
+                    : Optional.empty();
             }
         }
 
@@ -54,11 +62,12 @@ public class GuiContainerHandler implements IGuiContainerHandler<AbstractContain
                 FluidStack fluidInSlot = slot.getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!fluidInSlot.isEmpty() && RenderUtils.inBounds(slot.x, slot.y, 18, 18, mouseX, mouseY)) {
-                    return fluidInSlot;
+                    Rect2i area = new Rect2i(slot.x, slot.y, 18, 18);
+                    return jeiHelper.makeClickableIngredient(fluidInSlot, area);
                 }
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 }

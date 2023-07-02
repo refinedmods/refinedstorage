@@ -15,7 +15,7 @@ public class UpgradeItem extends Item {
     private final Type type;
 
     public UpgradeItem(Type type) {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
+        super(new Item.Properties());
 
         this.type = type;
     }

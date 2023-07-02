@@ -116,7 +116,7 @@ public class CraftingCalculator {
         calculateForItems(qty, storageSource, fluidStorageSource, results, fluidResults, itemsToExtract, inputs, node);
 
         if (node instanceof CraftingNode) {
-            ItemStack output = pattern.getOutput(inputs.getRecipe());
+            ItemStack output = pattern.getOutput(inputs.getRecipe(), network.getLevel().registryAccess());
             results.add(output, output.getCount() * qty);
 
             for (ItemStack byproduct : pattern.getByproducts(inputs.getRecipe())) {

@@ -9,18 +9,19 @@ import com.refinedmods.refinedstorage.network.SetFluidFilterSlotMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
+import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScreen> {
     @Override
-    public <I> List<Target<I>> getTargets(BaseScreen gui, I ingredient, boolean doStart) {
+    public <I> List<Target<I>> getTargetsTyped(BaseScreen gui, ITypedIngredient<I> ingredient, boolean doStart) {
         List<Target<I>> targets = new ArrayList<>();
 
         for (Slot slot : gui.getMenu().slots) {
@@ -30,7 +31,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
             Rect2i bounds = new Rect2i(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 17, 17);
 
-            if (ingredient instanceof ItemStack && (slot instanceof LegacyFilterSlot || slot instanceof FilterSlot)) {
+            if (ingredient.getIngredient() instanceof ItemStack && (slot instanceof LegacyFilterSlot || slot instanceof FilterSlot)) {
                 targets.add(new Target<I>() {
                     @Override
                     public Rect2i getArea() {
@@ -45,7 +46,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
                     }
                 });
             } else if (ingredient instanceof FluidStack && slot instanceof FluidFilterSlot) {
-                targets.add(new Target<I>() {
+                targets.add(new Target<>() {
                     @Override
                     public Rect2i getArea() {
                         return bounds;

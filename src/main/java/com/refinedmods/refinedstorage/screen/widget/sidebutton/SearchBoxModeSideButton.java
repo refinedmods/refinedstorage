@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 import java.util.Arrays;
@@ -30,15 +30,15 @@ public abstract class SearchBoxModeSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.search_box_mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.search_box_mode." + getSearchBoxMode());
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
         int mode = getSearchBoxMode();
 
-        screen.blit(poseStack, x, y, IGrid.isSearchBoxModeWithAutoselection(mode) ? 16 : 0, 96, 16, 16);
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, IGrid.isSearchBoxModeWithAutoselection(mode) ? 16 : 0, 96, 16, 16);
     }
 
     @Override

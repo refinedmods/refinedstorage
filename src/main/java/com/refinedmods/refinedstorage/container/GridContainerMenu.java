@@ -289,7 +289,7 @@ public class GridContainerMenu extends BaseContainerMenu implements ICraftingGri
 
     @Override
     public void broadcastChanges() {
-        if (!getPlayer().level.isClientSide) {
+        if (!getPlayer().level().isClientSide) {
             // The grid is offline.
             if (grid.getStorageCache() == null) {
                 // The grid just went offline, there is still a listener.

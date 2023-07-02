@@ -13,7 +13,7 @@ public class CraftingMonitorContainerFactory implements IContainerFactory<Crafti
     public CraftingMonitorContainerMenu create(int windowId, Inventory inv, FriendlyByteBuf data) {
         BlockPos pos = data.readBlockPos();
 
-        CraftingMonitorBlockEntity blockEntity = (CraftingMonitorBlockEntity) inv.player.level.getBlockEntity(pos);
+        CraftingMonitorBlockEntity blockEntity = (CraftingMonitorBlockEntity) inv.player.level().getBlockEntity(pos);
 
         return new CraftingMonitorContainerMenu(RSContainerMenus.CRAFTING_MONITOR.get(), blockEntity.getNode(), blockEntity, inv.player, windowId);
     }

@@ -4,22 +4,13 @@
       "model": "refinedstorage:block/crafter/disconnected",
       "x": 180
     },
-    "connected=true,direction=down": {
-      "model": "refinedstorage:block/crafter/lime",
-      "x": 180
-    },
-    "connected=false,direction=up": {
-      "model": "refinedstorage:block/crafter/disconnected"
-    },
-    "connected=true,direction=up": {
-      "model": "refinedstorage:block/crafter/lime"
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/crafter/disconnected",
+      "x": 90,
+      "y": 90
     },
     "connected=false,direction=north": {
       "model": "refinedstorage:block/crafter/disconnected",
-      "x": 90
-    },
-    "connected=true,direction=north": {
-      "model": "refinedstorage:block/crafter/lime",
       "x": 90
     },
     "connected=false,direction=south": {
@@ -27,30 +18,39 @@
       "x": 90,
       "y": 180
     },
-    "connected=true,direction=south": {
-      "model": "refinedstorage:block/crafter/lime",
-      "x": 90,
-      "y": 180
+    "connected=false,direction=up": {
+      "model": "refinedstorage:block/crafter/disconnected"
     },
     "connected=false,direction=west": {
       "model": "refinedstorage:block/crafter/disconnected",
       "x": 90,
       "y": 270
     },
-    "connected=true,direction=west": {
+    "connected=true,direction=down": {
       "model": "refinedstorage:block/crafter/lime",
-      "x": 90,
-      "y": 270
-    },
-    "connected=false,direction=east": {
-      "model": "refinedstorage:block/crafter/disconnected",
-      "x": 90,
-      "y": 90
+      "x": 180
     },
     "connected=true,direction=east": {
       "model": "refinedstorage:block/crafter/lime",
       "x": 90,
       "y": 90
+    },
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/crafter/lime",
+      "x": 90
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/crafter/lime",
+      "x": 90,
+      "y": 180
+    },
+    "connected=true,direction=up": {
+      "model": "refinedstorage:block/crafter/lime"
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/crafter/lime",
+      "x": 90,
+      "y": 270
     }
   }
 }

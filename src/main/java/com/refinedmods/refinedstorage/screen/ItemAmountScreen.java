@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.container.AmountContainerMenu;
 import com.refinedmods.refinedstorage.network.SetFilterSlotMessage;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -15,6 +15,9 @@ import javax.annotation.Nullable;
 import java.util.function.UnaryOperator;
 
 public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainerMenu> {
+    private static final ResourceLocation TEXTURE_WIDE = new ResourceLocation(RS.ID, "textures/gui/amount_specifying_wide.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/amount_specifying.png");
+
     private final int containerSlot;
     private final ItemStack stack;
     private final int maxAmount;
@@ -40,7 +43,7 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainerMenu
         super.onPostInit(x, y);
 
         if (alternativesScreenFactory != null) {
-            addButton(x + 114, cancelButton.y + 24, getOkCancelButtonWidth(), 20, Component.translatable("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
+            addButton(x + 114, cancelButton.getY() + 24, getOkCancelButtonWidth(), 20, Component.translatable("gui.refinedstorage.alternatives"), true, true, btn -> minecraft.setScreen(alternativesScreenFactory.apply(this)));
         }
     }
 
@@ -74,8 +77,8 @@ public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainerMenu
     }
 
     @Override
-    protected String getTexture() {
-        return alternativesScreenFactory != null ? "gui/amount_specifying_wide.png" : "gui/amount_specifying.png";
+    protected ResourceLocation getTexture() {
+        return alternativesScreenFactory != null ? TEXTURE_WIDE : TEXTURE;
     }
 
     @Override

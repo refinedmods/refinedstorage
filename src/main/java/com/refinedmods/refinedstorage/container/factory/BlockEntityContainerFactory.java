@@ -18,7 +18,7 @@ public class BlockEntityContainerFactory<C extends AbstractContainerMenu, T exte
     public C create(int windowId, Inventory inv, FriendlyByteBuf data) {
         BlockPos pos = data.readBlockPos();
 
-        T blockEntity = (T) inv.player.level.getBlockEntity(pos);
+        T blockEntity = (T) inv.player.level().getBlockEntity(pos);
 
         return factory.create(windowId, inv, blockEntity);
     }

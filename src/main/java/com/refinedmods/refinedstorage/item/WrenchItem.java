@@ -18,7 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class WrenchItem extends Item {
     public WrenchItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
+        super(new Item.Properties().stacksTo(1));
     }
 
     @Override

@@ -91,7 +91,10 @@
             12
           ],
           "texture": "#torch",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         },
         "west": {
           "uv": [
@@ -101,7 +104,10 @@
             12
           ],
           "texture": "#torch",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         }
       }
     },
@@ -127,7 +133,10 @@
             12
           ],
           "texture": "#torch",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         },
         "south": {
           "uv": [
@@ -137,7 +146,10 @@
             12
           ],
           "texture": "#torch",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         }
       }
     },

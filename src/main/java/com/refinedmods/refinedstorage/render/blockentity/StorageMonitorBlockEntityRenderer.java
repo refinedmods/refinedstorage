@@ -3,18 +3,16 @@ package com.refinedmods.refinedstorage.render.blockentity;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.block.StorageMonitorBlock;
 import com.refinedmods.refinedstorage.blockentity.StorageMonitorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,12 +20,14 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.util.TransformationHelper;
 import net.minecraftforge.fluids.FluidStack;
+import org.joml.Vector3f;
 
 public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<StorageMonitorBlockEntity> {
     @Override
@@ -87,7 +87,7 @@ public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<St
             false,
             poseStack.last().pose(),
             renderTypeBuffer,
-            false,
+            Font.DisplayMode.NORMAL,
             0,
             light
         );
@@ -95,7 +95,6 @@ public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<St
         poseStack.popPose();
     }
 
-    @SuppressWarnings("deprecation")
     private void renderItem(PoseStack poseStack, MultiBufferSource renderTypeBuffer, Direction direction, float rotation, int light, ItemStack itemStack) {
         poseStack.pushPose();
 
@@ -119,10 +118,9 @@ public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<St
             Lighting.setupForFlatItems();
         }
 
-        poseStack.last().normal().load(Matrix3f.createScaleMatrix(1, -1, 1));
         Minecraft.getInstance().getItemRenderer().render(
             itemStack,
-            ItemTransforms.TransformType.GUI,
+            ItemDisplayContext.GUI,
             false,
             poseStack,
             renderTypeBuffer,
@@ -149,7 +147,7 @@ public class StorageMonitorBlockEntityRenderer implements BlockEntityRenderer<St
         final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
         final int fluidColor = attributes.getTintColor(fluidStack);
 
-        final VertexConsumer buffer = renderTypeBuffer.getBuffer(RenderType.text(sprite.atlas().location()));
+        final VertexConsumer buffer = renderTypeBuffer.getBuffer(RenderType.text(sprite.atlasLocation()));
 
         final int colorRed = fluidColor >> 16 & 0xFF;
         final int colorGreen = fluidColor >> 8 & 0xFF;
