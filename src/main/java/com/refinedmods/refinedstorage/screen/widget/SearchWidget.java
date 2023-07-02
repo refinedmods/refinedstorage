@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
@@ -8,6 +7,7 @@ import com.refinedmods.refinedstorage.integration.jei.RSJeiPlugin;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -51,7 +51,7 @@ public class SearchWidget extends EditBox {
 
         boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        boolean clickedWidget = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
+        boolean clickedWidget = mouseX >= this.getX() && mouseX < this.getX() + this.width && mouseY >= this.getY() && mouseY < this.getY() + this.height;
 
         if (clickedWidget && mouseButton == 1) {
             setValue("");
@@ -173,10 +173,10 @@ public class SearchWidget extends EditBox {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if (canSyncFromJEINow() && RSJeiPlugin.getRuntime().getIngredientListOverlay().hasKeyboardFocus()) {
             setTextFromJEI();
         }
-        super.renderButton(poseStack, mouseX, mouseY, partialTicks);
+        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
     }
 }

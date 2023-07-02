@@ -1,12 +1,11 @@
 package com.refinedmods.refinedstorage.screen.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.integration.jei.GridRecipeTransferHandler;
 import com.refinedmods.refinedstorage.integration.jei.JeiIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
 import java.util.LinkedList;
@@ -26,6 +25,7 @@ public class ScrollbarWidget implements GuiEventListener {
     private int maxOffset;
     private boolean clicked = false;
     private boolean small = false;
+    private boolean focused = false;
 
     public ScrollbarWidget(BaseScreen<?> screen, int x, int y, int width, int height) {
         this.screen = screen;
@@ -60,14 +60,12 @@ public class ScrollbarWidget implements GuiEventListener {
         this.enabled = enabled;
     }
 
-    public void render(PoseStack poseStack) {
+    public void render(GuiGraphics graphics) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        screen.bindTexture(RS.ID, "icons.png");
         if (small) {
-            screen.blit(poseStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, SCROLLER_HEIGHT);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, SCROLLER_HEIGHT);
         } else {
-            screen.blit(poseStack, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
         }
     }
 
@@ -126,6 +124,16 @@ public class ScrollbarWidget implements GuiEventListener {
         }
 
         return false;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        this.focused = focused;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return focused;
     }
 
     public void setMaxOffset(int maxOffset) {

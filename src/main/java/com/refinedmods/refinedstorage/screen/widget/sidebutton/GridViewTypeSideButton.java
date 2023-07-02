@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class GridViewTypeSideButton extends SideButton {
@@ -17,13 +17,13 @@ public class GridViewTypeSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.view_type") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.view_type." + grid.getViewType());
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
-        screen.blit(poseStack, x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
     }
 
     @Override

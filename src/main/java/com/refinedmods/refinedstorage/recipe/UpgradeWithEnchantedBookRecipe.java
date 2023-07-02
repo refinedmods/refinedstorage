@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -22,7 +23,7 @@ public class UpgradeWithEnchantedBookRecipe extends ShapedRecipe {
     private final ItemStack result;
 
     public UpgradeWithEnchantedBookRecipe(ResourceLocation recipeId, Enchantment enchantment, int enchantmentLevel, ItemStack result) {
-        super(recipeId, "", 3, 3, NonNullList.of(Ingredient.EMPTY,
+        super(recipeId, "", CraftingBookCategory.MISC, 3, 3, NonNullList.of(Ingredient.EMPTY,
             Ingredient.of(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get())),
             Ingredient.of(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, enchantmentLevel))),
             Ingredient.of(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON.get())),

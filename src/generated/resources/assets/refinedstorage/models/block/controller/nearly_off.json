@@ -1,9 +1,9 @@
 {
   "parent": "refinedstorage:block/controller_nearly",
   "textures": {
-    "particle": "refinedstorage:block/controller/off",
     "all": "refinedstorage:block/controller/on",
+    "cutout": "refinedstorage:block/controller/cutouts/nearly_off_gray",
     "cutout_gray": "refinedstorage:block/controller/cutouts/nearly_off",
-    "cutout": "refinedstorage:block/controller/cutouts/nearly_off_gray"
+    "particle": "refinedstorage:block/controller/off"
   }
 }

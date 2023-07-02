@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
@@ -13,17 +12,19 @@ import com.refinedmods.refinedstorage.api.util.IFilter;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.render.CraftingMonitorElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorCancelMessage;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
-import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -35,6 +36,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/crafting_preview.png");
+
     private static final int ROWS = 5;
     private static final int ITEM_WIDTH = 73;
     private static final int ITEM_HEIGHT = 29;
@@ -176,23 +179,21 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
         if (craftingMonitor.isActiveOnClient()) {
-            tabs.drawBackground(poseStack, x, y - tabs.getHeight());
+            tabs.drawBackground(graphics, x, y - tabs.getHeight());
         }
 
-        bindTexture(RS.ID, "gui/crafting_preview.png");
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
-        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
+        scrollbar.render(graphics);
 
-        scrollbar.render(poseStack);
-
-        tabs.drawForeground(poseStack, x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActiveOnClient());
+        tabs.drawForeground(graphics, x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActiveOnClient());
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
@@ -207,7 +208,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
             if (item < getElements().size()) {
                 ICraftingMonitorElement element = getElements().get(item);
 
-                element.draw(poseStack, x, y, drawers);
+                element.draw(graphics, x, y, drawers);
 
                 if (RenderUtils.inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
                     tooltip = element.getTooltip();
@@ -225,10 +226,10 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
         }
 
         if (tooltip != null && !tooltip.isEmpty()) {
-            renderTooltip(poseStack, ItemStack.EMPTY, mouseX, mouseY, tooltip);
+            renderTooltip(graphics, ItemStack.EMPTY, mouseX, mouseY, tooltip);
         }
 
-        tabs.drawTooltip(poseStack, font, mouseX, mouseY);
+        tabs.drawTooltip(graphics, font, mouseX, mouseY);
     }
 
     @Override
@@ -279,7 +280,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
         }
 
         @Override
-        public void drawTooltip(PoseStack poseStack, int x, int y, Screen screen) {
+        public void drawTooltip(Font font, GuiGraphics graphics, int x, int y) {
             List<Component> lines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getHoverName() : requested.getFluid().getDisplayName());
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
@@ -300,7 +301,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
 
             lines.add(Component.literal(String.format("%d%%", completionPercentage)).withStyle(ChatFormatting.GRAY));
 
-            screen.renderComponentTooltip(poseStack, lines, x, y);
+            graphics.renderComponentTooltip(font, lines, x, y);
         }
 
         @Override
@@ -309,13 +310,12 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
         }
 
         @Override
-        public void drawIcon(PoseStack poseStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+        public void drawIcon(GuiGraphics graphics, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
             if (requested.getItem() != null) {
                 Lighting.setupFor3DItems();
-
-                itemDrawer.draw(poseStack, x, y, requested.getItem());
+                itemDrawer.draw(graphics, x, y, requested.getItem());
             } else {
-                fluidDrawer.draw(poseStack, x, y, requested.getFluid());
+                fluidDrawer.draw(graphics, x, y, requested.getFluid());
             }
         }
     }

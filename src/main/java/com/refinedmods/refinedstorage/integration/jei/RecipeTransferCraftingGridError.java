@@ -1,11 +1,10 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
@@ -39,15 +38,13 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
     }
 
     @Override
-    public void showError(PoseStack poseStack, int mouseX, int mouseY, IRecipeSlotsView recipeSlotsView, int recipeX, int recipeY) {
-        poseStack.translate(recipeX, recipeY, 0);
-        List<Component> message = drawIngredientHighlights(poseStack, recipeX, recipeY);
-
-        Screen currentScreen = Minecraft.getInstance().screen;
-        currentScreen.renderComponentTooltip(poseStack, message, mouseX, mouseY);
+    public void showError(GuiGraphics graphics, int mouseX, int mouseY, IRecipeSlotsView recipeSlotsView, int recipeX, int recipeY) {
+        graphics.pose().translate(recipeX, recipeY, 0);
+        List<Component> message = drawIngredientHighlights(graphics, recipeX, recipeY);
+        graphics.renderComponentTooltip(Minecraft.getInstance().font, message, mouseX, mouseY);
     }
 
-    protected List<Component> drawIngredientHighlights(PoseStack stack, int recipeX, int recipeY) {
+    protected List<Component> drawIngredientHighlights(GuiGraphics graphics, int recipeX, int recipeY) {
         List<Component> message = new ArrayList<>();
         message.add(Component.translatable("jei.tooltip.transfer"));
 
@@ -57,10 +54,10 @@ public class RecipeTransferCraftingGridError implements IRecipeTransferError {
         for (Ingredient ingredient : ingredientList.ingredients) {
             if (!ingredient.isAvailable()) {
                 if (ingredient.isCraftable()) {
-                    ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
+                    ingredient.getSlotView().drawHighlight(graphics, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
                     craftMessage = true;
                 } else {
-                    ingredient.getSlotView().drawHighlight(stack, MISSING_HIGHLIGHT_COLOR.getRGB());
+                    ingredient.getSlotView().drawHighlight(graphics, MISSING_HIGHLIGHT_COLOR.getRGB());
                     missingMessage = true;
                 }
             }

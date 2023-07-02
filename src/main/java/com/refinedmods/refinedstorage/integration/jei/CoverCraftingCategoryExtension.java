@@ -9,9 +9,7 @@ import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
-import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -37,15 +35,12 @@ public class CoverCraftingCategoryExtension implements ICraftingCategoryExtensio
             if (item == null || item == Items.AIR) {
                 continue;
             }
-            NonNullList<ItemStack> subBlocks = NonNullList.create();
-            block.fillItemCategory(CreativeModeTab.TAB_SEARCH, subBlocks);
-            for (ItemStack subBlock : subBlocks) {
-                if (CoverManager.isValidCover(subBlock)) {
-                    input.add(subBlock);
-                    ItemStack stack = new ItemStack(RSItems.COVER.get());
-                    CoverItem.setItem(stack, subBlock);
-                    output.add(stack);
-                }
+            ItemStack itemStack = new ItemStack(item);
+            if (CoverManager.isValidCover(itemStack)) {
+                input.add(itemStack);
+                ItemStack coverStack = new ItemStack(RSItems.COVER.get());
+                CoverItem.setItem(coverStack, itemStack);
+                output.add(coverStack);
             }
         }
 

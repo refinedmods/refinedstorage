@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.item;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
@@ -53,7 +52,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final int VERSION = 1;
 
     public PatternItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
+        super(new Item.Properties());
     }
 
     public static ICraftingPattern fromCache(Level level, ItemStack stack) {

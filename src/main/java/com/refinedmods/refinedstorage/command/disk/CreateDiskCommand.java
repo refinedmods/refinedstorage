@@ -56,17 +56,17 @@ public class CreateDiskCommand implements Command<CommandSourceStack> {
                         itemEntity.makeFakeItem();
                     }
 
-                    player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     player.containerMenu.broadcastChanges();
                 } else {
                     ItemEntity itemEntity = player.drop(stack, false);
                     if (itemEntity != null) {
                         itemEntity.setNoPickUpDelay();
-                        itemEntity.setOwner(player.getUUID());
+                        itemEntity.setThrower(player.getUUID());
                     }
                 }
 
-                context.getSource().sendSuccess(Component.translatable(
+                context.getSource().sendSuccess(() -> Component.translatable(
                     "commands.refinedstorage.disk.create.success",
                     Component.literal(id.toString()).setStyle(Styles.YELLOW),
                     context.getSource().getDisplayName().copy().setStyle(Styles.YELLOW)

@@ -5,13 +5,10 @@ import com.refinedmods.refinedstorage.config.ClientConfig;
 import com.refinedmods.refinedstorage.config.ServerConfig;
 import com.refinedmods.refinedstorage.datageneration.DataGenerators;
 import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
-import com.refinedmods.refinedstorage.item.group.MainCreativeModeTab;
 import com.refinedmods.refinedstorage.network.NetworkHandler;
 import com.refinedmods.refinedstorage.setup.ClientSetup;
 import com.refinedmods.refinedstorage.setup.CommonSetup;
 import com.refinedmods.refinedstorage.setup.ServerSetup;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
@@ -26,7 +23,6 @@ public final class RS {
     public static final String NAME = "Refined Storage";
 
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
-    public static final CreativeModeTab CREATIVE_MODE_TAB = new MainCreativeModeTab();
     public static final ServerConfig SERVER_CONFIG = new ServerConfig();
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
@@ -35,7 +31,6 @@ public final class RS {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onClientSetup);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onModelBake);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterAdditionalModels);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onTextureStitch);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterModelGeometry);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterKeymappings);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onRegisterColorBindings);
@@ -49,9 +44,9 @@ public final class RS {
 
         RSBlocks.register();
         RSItems.register();
-        RSLootFunctions.register();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onCommonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onRegister);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CommonSetup::onRegisterCapabilities);
         FMLJavaModLoadingContext.get().getModEventBus().register(new DataGenerators());
         FMLJavaModLoadingContext.get().getModEventBus().register(new CuriosIntegration());

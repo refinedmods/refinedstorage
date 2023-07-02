@@ -28,7 +28,7 @@ public class CraftingMonitorContainerMenu extends BaseContainerMenu implements I
     public void broadcastChanges() {
         super.broadcastChanges();
 
-        if (!getPlayer().level.isClientSide) {
+        if (!getPlayer().level().isClientSide) {
             ICraftingManager manager = craftingMonitor.getCraftingManager();
 
             if (manager != null && !addedListener) {

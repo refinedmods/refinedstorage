@@ -1,13 +1,13 @@
 {
   "variants": {
-    "energy_type=off": {
-      "model": "refinedstorage:block/controller/off"
-    },
     "energy_type=nearly_off": {
       "model": "refinedstorage:block/controller/nearly_off"
     },
     "energy_type=nearly_on": {
       "model": "refinedstorage:block/controller/nearly_on"
+    },
+    "energy_type=off": {
+      "model": "refinedstorage:block/controller/off"
     },
     "energy_type=on": {
       "model": "refinedstorage:block/controller/lime"

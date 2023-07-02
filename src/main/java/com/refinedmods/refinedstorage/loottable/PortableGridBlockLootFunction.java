@@ -30,7 +30,7 @@ public class PortableGridBlockLootFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return RSLootFunctions.PORTABLE_GRID.get();
+        return RSLootFunctions.PORTABLE_GRID;
     }
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<PortableGridBlockLootFunction> {

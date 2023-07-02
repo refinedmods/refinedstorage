@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.item.blockitem;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
@@ -33,7 +32,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     private final FluidStorageType type;
 
     public FluidStorageBlockItem(FluidStorageBlock block) {
-        super(block, new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
+        super(block, new Item.Properties());
 
         this.type = block.getType();
     }

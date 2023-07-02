@@ -1,18 +1,18 @@
 {
   "parent": "refinedstorage:block/cube_cutout",
   "textures": {
-    "particle": "refinedstorage:block/crafter/side",
-    "east": "refinedstorage:block/crafter/side",
-    "south": "refinedstorage:block/crafter/side",
-    "west": "refinedstorage:block/crafter/side",
-    "up": "refinedstorage:block/crafter/top",
-    "down": "refinedstorage:block/bottom",
-    "north": "refinedstorage:block/crafter/side",
     "cutout_down": "refinedstorage:block/bottom",
     "cutout_east": "refinedstorage:block/crafter/cutouts/side_pink",
-    "cutout_west": "refinedstorage:block/crafter/cutouts/side_pink",
-    "cutout_south": "refinedstorage:block/crafter/cutouts/side_pink",
     "cutout_north": "refinedstorage:block/crafter/cutouts/side_pink",
-    "cutout_up": "refinedstorage:block/crafter/cutouts/top_pink"
+    "cutout_south": "refinedstorage:block/crafter/cutouts/side_pink",
+    "cutout_up": "refinedstorage:block/crafter/cutouts/top_pink",
+    "cutout_west": "refinedstorage:block/crafter/cutouts/side_pink",
+    "down": "refinedstorage:block/bottom",
+    "east": "refinedstorage:block/crafter/side",
+    "north": "refinedstorage:block/crafter/side",
+    "particle": "refinedstorage:block/crafter/side",
+    "south": "refinedstorage:block/crafter/side",
+    "up": "refinedstorage:block/crafter/top",
+    "west": "refinedstorage:block/crafter/side"
   }
 }

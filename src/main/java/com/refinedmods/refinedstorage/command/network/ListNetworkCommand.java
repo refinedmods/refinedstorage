@@ -28,7 +28,7 @@ public class ListNetworkCommand implements Command<CommandSourceStack> {
     }
 
     public static void sendInfo(CommandContext<CommandSourceStack> context, NetworkInList listItem, boolean detailed) {
-        context.getSource().sendSuccess(
+        context.getSource().sendSuccess(() ->
             Component.translatable(
                 "commands.refinedstorage.network.list.pos",
                 listItem.network.getPosition().getX(),
@@ -44,15 +44,15 @@ public class ListNetworkCommand implements Command<CommandSourceStack> {
                 .append("]"), false);
 
         if (detailed) {
-            context.getSource().sendSuccess(Component.translatable("commands.refinedstorage.network.list.autocrafting_tasks",
+            context.getSource().sendSuccess(() -> Component.translatable("commands.refinedstorage.network.list.autocrafting_tasks",
                 Component.literal(listItem.network.getCraftingManager().getTasks().size() + "").setStyle(Styles.YELLOW)
             ), false);
 
-            context.getSource().sendSuccess(Component.translatable("commands.refinedstorage.network.list.nodes",
+            context.getSource().sendSuccess(() -> Component.translatable("commands.refinedstorage.network.list.nodes",
                 Component.literal(listItem.network.getNodeGraph().all().size() + "").setStyle(Styles.YELLOW)
             ), false);
 
-            context.getSource().sendSuccess(Component.translatable("commands.refinedstorage.network.list.energy_usage",
+            context.getSource().sendSuccess(() -> Component.translatable("commands.refinedstorage.network.list.energy_usage",
                 Component.literal(listItem.network.getEnergyUsage() + "").setStyle(Styles.YELLOW)
             ), false);
         }

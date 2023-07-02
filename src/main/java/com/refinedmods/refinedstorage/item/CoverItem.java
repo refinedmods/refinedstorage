@@ -1,12 +1,10 @@
 package com.refinedmods.refinedstorage.item;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.ICoverable;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
-import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.CableBlock;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
@@ -14,30 +12,26 @@ import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class CoverItem extends Item {
-    public static final ItemStack HIDDEN_COVER_ALTERNATIVE = new ItemStack(Blocks.STONE_BRICKS);
-
     private static final String NBT_ITEM = "Item";
 
     public CoverItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
+        super(new Item.Properties());
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {
@@ -65,42 +59,6 @@ public class CoverItem extends Item {
 
         if (!item.isEmpty()) {
             tooltip.add(item.getItem().getName(item).copy().withStyle(ChatFormatting.GRAY));
-        }
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowedIn(group)) {
-            if (!RS.CLIENT_CONFIG.getCover().showAllRecipesInJEI()) {
-                ItemStack stack = new ItemStack(this);
-
-                setItem(stack, HIDDEN_COVER_ALTERNATIVE);
-
-                items.add(stack);
-
-                return;
-            }
-            for (Block block : ForgeRegistries.BLOCKS.getValues()) {
-                Item item = Item.byBlock(block);
-
-                if (item == Items.AIR) {
-                    continue;
-                }
-
-                NonNullList<ItemStack> subBlocks = NonNullList.create();
-
-                block.fillItemCategory(CreativeModeTab.TAB_SEARCH, subBlocks);
-
-                for (ItemStack subBlock : subBlocks) {
-                    if (CoverManager.isValidCover(subBlock)) {
-                        ItemStack stack = new ItemStack(this);
-
-                        setItem(stack, subBlock);
-
-                        items.add(stack);
-                    }
-                }
-            }
         }
     }
 
@@ -151,7 +109,6 @@ public class CoverItem extends Item {
         return InteractionResult.PASS;
     }
 
-
     private boolean canPlaceOn(Level level, BlockPos pos, Direction facing) {
         return level.getBlockEntity(pos) instanceof NetworkNodeBlockEntity
             && ((NetworkNodeBlockEntity<?>) level.getBlockEntity(pos)).getNode() instanceof ICoverable
@@ -161,5 +118,4 @@ public class CoverItem extends Item {
     protected Cover createCover(ItemStack stack) {
         return new Cover(stack, CoverType.NORMAL);
     }
-
 }

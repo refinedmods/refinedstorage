@@ -1,20 +1,13 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-
 plugins {
+    id 'eclipse'
+    id 'maven-publish'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
 repositories {
     maven {
-        url = "https://dvs1.progwml6.com/files/maven/"
+        url = "https://maven.blamejared.com/"
     }
     maven {
         url "https://www.cursemaven.com"
@@ -27,13 +20,9 @@ repositories {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-
 group = 'com.refinedmods'
 archivesBaseName = 'refinedstorage'
-version = '1.11.7'
+version = '1.12.0'
 
 if (System.getenv('GITHUB_SHA') != null) {
     version += '+' + System.getenv('GITHUB_SHA').substring(0, 7)
@@ -50,7 +39,7 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.19.2'
+    mappings channel: 'official', version: '1.20.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -102,18 +91,18 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.32'
+    minecraft 'net.minecraftforge:forge:1.20.1-47.0.35'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.3.0.262")
-    compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:11.3.0.262")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:11.3.0.262")
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.2.0.22")
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:15.2.0.22")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.2.0.22")
 
-    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3871353')
+    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:4581240')
 
-    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3914007')
+    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:4596466')
 
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0:api")
+    //runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1:api")
 }
 
 jar {
@@ -138,7 +127,7 @@ if (System.getenv("CURSEFORGE_TOKEN") != null) {
             changelog = System.getenv("CHANGELOG")
             changelogType = 'markdown'
             releaseType = project.version.toString().contains('beta') ? 'beta' : (project.version.toString().contains('alpha') ? 'alpha' : 'release')
-            addGameVersion "1.19.2"
+            addGameVersion "1.20.1"
             mainArtifact(jar) {
                 displayName = "v$project.version"
             }

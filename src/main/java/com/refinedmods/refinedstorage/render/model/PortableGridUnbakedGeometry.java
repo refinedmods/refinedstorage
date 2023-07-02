@@ -6,21 +6,18 @@ import com.refinedmods.refinedstorage.render.model.baked.PortableGridBakedModel;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 
-public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<PortableGridUnbakedGeometry> {
+public class PortableGridUnbakedGeometry implements IUnbakedGeometry<PortableGridUnbakedGeometry> {
     private static final ResourceLocation BASE_CONNECTED_MODEL = new ResourceLocation(RS.ID, "block/portable_grid_connected");
     private static final ResourceLocation BASE_DISCONNECTED_MODEL = new ResourceLocation(RS.ID, "block/portable_grid_disconnected");
     private static final ResourceLocation DISK_MODEL = new ResourceLocation(RS.ID, "block/disks/portable_grid_disk");
@@ -29,20 +26,19 @@ public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<Portabl
     private static final ResourceLocation DISK_NEAR_CAPACITY_MODEL = new ResourceLocation(RS.ID, "block/disks/portable_grid_disk_near_capacity");
 
     @Override
-    protected Set<ResourceLocation> getModels() {
-        return Set.of(
-            BASE_CONNECTED_MODEL,
-            BASE_DISCONNECTED_MODEL,
-            DISK_MODEL,
-            DISK_DISCONNECTED_MODEL,
-            DISK_FULL_MODEL,
-            DISK_NEAR_CAPACITY_MODEL
-        );
+    public void resolveParents(final Function<ResourceLocation, UnbakedModel> modelGetter,
+                               final IGeometryBakingContext context) {
+        modelGetter.apply(BASE_CONNECTED_MODEL).resolveParents(modelGetter);
+        modelGetter.apply(BASE_DISCONNECTED_MODEL).resolveParents(modelGetter);
+        modelGetter.apply(DISK_MODEL).resolveParents(modelGetter);
+        modelGetter.apply(DISK_DISCONNECTED_MODEL).resolveParents(modelGetter);
+        modelGetter.apply(DISK_FULL_MODEL).resolveParents(modelGetter);
+        modelGetter.apply(DISK_NEAR_CAPACITY_MODEL).resolveParents(modelGetter);
     }
 
     @Override
     public BakedModel bake(final IGeometryBakingContext context,
-                           final ModelBakery bakery,
+                           final ModelBaker baker,
                            final Function<Material, TextureAtlasSprite> spriteGetter,
                            final ModelState modelState,
                            final ItemOverrides overrides,
@@ -52,25 +48,25 @@ public class PortableGridUnbakedGeometry extends AbstractUnbakedGeometry<Portabl
         var renderTypes = renderTypeHint != null ? context.getRenderType(renderTypeHint) : RenderTypeGroup.EMPTY;
 
         return new PortableGridBakedModel(
-            Objects.requireNonNull(bakery.bake(BASE_CONNECTED_MODEL, modelState, spriteGetter)),
-            getModelBakery(BASE_CONNECTED_MODEL, modelState, bakery, spriteGetter),
-            getModelBakery(BASE_DISCONNECTED_MODEL, modelState, bakery, spriteGetter),
-            getModelBakery(DISK_MODEL, modelState, bakery, spriteGetter),
-            getModelBakery(DISK_NEAR_CAPACITY_MODEL, modelState, bakery, spriteGetter),
-            getModelBakery(DISK_FULL_MODEL, modelState, bakery, spriteGetter),
-            getModelBakery(DISK_DISCONNECTED_MODEL, modelState, bakery, spriteGetter),
+            Objects.requireNonNull(baker.bake(BASE_CONNECTED_MODEL, modelState, spriteGetter)),
+            getModelBaker(BASE_CONNECTED_MODEL, modelState, baker, spriteGetter),
+            getModelBaker(BASE_DISCONNECTED_MODEL, modelState, baker, spriteGetter),
+            getModelBaker(DISK_MODEL, modelState, baker, spriteGetter),
+            getModelBaker(DISK_NEAR_CAPACITY_MODEL, modelState, baker, spriteGetter),
+            getModelBaker(DISK_FULL_MODEL, modelState, baker, spriteGetter),
+            getModelBaker(DISK_DISCONNECTED_MODEL, modelState, baker, spriteGetter),
             renderTypes
         );
     }
 
-    private Function<Direction, BakedModel> getModelBakery(final ResourceLocation id,
-                                                           final ModelState state,
-                                                           final ModelBakery bakery,
-                                                           final Function<Material, TextureAtlasSprite> sg) {
+    private Function<Direction, BakedModel> getModelBaker(final ResourceLocation id,
+                                                          final ModelState state,
+                                                          final ModelBaker baker,
+                                                          final Function<Material, TextureAtlasSprite> sg) {
         return direction -> {
             final Transformation rotation = new Transformation(null, RenderUtils.getQuaternion(direction), null, null);
             final ModelState wrappedState = new SimpleModelState(rotation, state.isUvLocked());
-            return bakery.bake(id, wrappedState, sg);
+            return baker.bake(id, wrappedState, sg);
         };
     }
 }

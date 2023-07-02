@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.api.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -51,10 +52,11 @@ public interface ICraftingPattern {
     NonNullList<ItemStack> getOutputs();
 
     /**
-     * @param took the items took per slot
+     * @param took           the items took per slot
+     * @param registryAccess the registry accessor
      * @return the output based on the items took
      */
-    ItemStack getOutput(NonNullList<ItemStack> took);
+    ItemStack getOutput(NonNullList<ItemStack> took, RegistryAccess registryAccess);
 
     /**
      * @return the byproducts

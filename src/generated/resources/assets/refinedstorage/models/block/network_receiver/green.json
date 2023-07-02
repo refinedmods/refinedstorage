@@ -1,8 +1,8 @@
 {
   "parent": "refinedstorage:block/cube_all_cutout",
   "textures": {
-    "particle": "refinedstorage:block/network_receiver/network_receiver",
     "all": "refinedstorage:block/network_receiver/network_receiver",
-    "cutout": "refinedstorage:block/network_receiver/cutouts/green"
+    "cutout": "refinedstorage:block/network_receiver/cutouts/green",
+    "particle": "refinedstorage:block/network_receiver/network_receiver"
   }
 }

@@ -1,17 +1,20 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.render.RenderSettings;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> extends BaseScreen<T> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/amount_specifying.png");
+
     private final BaseScreen<T> parent;
 
     protected EditBox amountField;
@@ -26,7 +29,9 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
 
     protected abstract Component getOkButtonText();
 
-    protected abstract String getTexture();
+    protected ResourceLocation getTexture() {
+        return TEXTURE;
+    }
 
     protected abstract int[] getIncrements();
 
@@ -61,7 +66,7 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
         amountField.setValue(String.valueOf(getDefaultAmount()));
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setCanLoseFocus(false);
-        amountField.changeFocus(true);
+        amountField.setFocused(true);
         amountField.setResponder(text -> {
             int amount = 0;
             try {
@@ -164,17 +169,14 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, getTexture());
-
-        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
-
-        amountField.renderButton(poseStack, 0, 0, 0);
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        graphics.blit(getTexture(), x, y, 0, 0, imageWidth, imageHeight);
+        amountField.render(graphics, 0, 0, 0);
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
     }
 
     protected void onOkButtonPressed(boolean shiftDown) {

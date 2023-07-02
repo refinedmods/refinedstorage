@@ -3,7 +3,6 @@ package com.refinedmods.refinedstorage.render.model.baked;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.block.DiskManipulatorBlock;
@@ -21,6 +20,7 @@ import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.ModelData;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public class DiskManipulatorBakedModel extends BakedModelWrapper<BakedModel> {
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.getValue(RSBlocks.DISK_MANIPULATOR.get(ColorMap.DEFAULT_COLOR).get().getDirection().getProperty());
             boolean connected = key.state.getValue(NetworkNodeBlock.CONNECTED);
-            List<BakedQuad> quads = new ArrayList<>();
+            List<BakedQuad> quads;
             if (connected) {
                 quads = new ArrayList<>(baseConnectedModelBakery.apply(facing, key.color).getQuads(key.state, key.side, key.random));
             } else {

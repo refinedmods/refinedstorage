@@ -1,7 +1,6 @@
 package com.refinedmods.refinedstorage.screen.grid;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
@@ -12,6 +11,7 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -21,8 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.IReverseTag;
 import org.lwjgl.glfw.GLFW;
@@ -31,6 +31,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/alternatives.png");
+
     private static final int VISIBLE_ROWS = 5;
 
     private final Screen parent;
@@ -163,17 +165,14 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, "gui/alternatives.png");
-
-        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
-
-        scrollbar.render(poseStack);
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
+        scrollbar.render(graphics);
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
 
         int x = 8;
         int y = 20;
@@ -183,7 +182,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
             if (visible) {
                 lines.get(i).layoutDependantControls(true, leftPos + x + 3, topPos + y + 3);
-                lines.get(i).render(poseStack, x, y);
+                lines.get(i).render(graphics, x, y);
 
                 y += 18;
             } else {
@@ -198,7 +197,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + VISIBLE_ROWS;
 
             if (visible) {
-                lines.get(i).renderTooltip(poseStack, x, y, mouseX, mouseY);
+                lines.get(i).renderTooltip(graphics, x, y, mouseX, mouseY);
 
                 y += 18;
             }
@@ -273,10 +272,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     }
 
     private interface Line {
-        default void render(PoseStack poseStack, int x, int y) {
+        default void render(GuiGraphics graphics, int x, int y) {
         }
 
-        default void renderTooltip(PoseStack poseStack, int x, int y, int mx, int my) {
+        default void renderTooltip(GuiGraphics graphics, int x, int y, int mx, int my) {
         }
 
         default void layoutDependantControls(boolean visible, int x, int y) {
@@ -291,10 +290,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack poseStack, int x, int y) {
+        public void render(GuiGraphics graphics, int x, int y) {
             RenderSystem.setShaderColor(1, 1, 1, 1);
-            renderItem(poseStack, x + 3, y + 2, item);
-            renderString(poseStack, x + 4 + 19, y + 7, item.getHoverName().getString());
+            renderItem(graphics, x + 3, y + 2, item);
+            renderString(graphics, x + 4 + 19, y + 7, item.getHoverName().getString());
         }
     }
 
@@ -306,9 +305,9 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack poseStack, int x, int y) {
-            FluidRenderer.INSTANCE.render(poseStack, x + 3, y + 2, fluid);
-            renderString(poseStack, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
+        public void render(GuiGraphics graphics, int x, int y) {
+            FluidRenderer.INSTANCE.render(graphics, x + 3, y + 2, fluid);
+            renderString(graphics, x + 4 + 19, y + 7, fluid.getDisplayName().getString());
         }
     }
 
@@ -329,8 +328,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         @Override
         public void layoutDependantControls(boolean visible, int x, int y) {
             widget.visible = visible;
-            widget.x = x;
-            widget.y = y;
+            widget.setX(x);
+            widget.setY(y);
         }
     }
 
@@ -342,19 +341,19 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack poseStack, int x, int y) {
+        public void render(GuiGraphics graphics, int x, int y) {
             for (ItemStack itemInList : items) {
-                renderItem(poseStack, x + 3, y, itemInList);
+                renderItem(graphics, x + 3, y, itemInList);
 
                 x += 17;
             }
         }
 
         @Override
-        public void renderTooltip(PoseStack poseStack, int x, int y, int mx, int my) {
+        public void renderTooltip(GuiGraphics graphics, int x, int y, int mx, int my) {
             for (ItemStack itemInList : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(poseStack, itemInList, mx, my, RenderUtils.getTooltipFromItem(itemInList));
+                    AlternativesScreen.this.renderTooltip(graphics, itemInList, mx, my, RenderUtils.getTooltipFromItem(itemInList));
                 }
 
                 x += 17;
@@ -370,19 +369,19 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         }
 
         @Override
-        public void render(PoseStack poseStack, int x, int y) {
+        public void render(GuiGraphics graphics, int x, int y) {
             for (FluidStack fluidInList : fluids) {
-                FluidRenderer.INSTANCE.render(poseStack, x + 3, y, fluidInList);
+                FluidRenderer.INSTANCE.render(graphics, x + 3, y, fluidInList);
 
                 x += 17;
             }
         }
 
         @Override
-        public void renderTooltip(PoseStack poseStack, int x, int y, int mx, int my) {
+        public void renderTooltip(GuiGraphics graphics, int x, int y, int mx, int my) {
             for (FluidStack fluidInList : fluids) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    AlternativesScreen.this.renderTooltip(poseStack, mx, my, fluidInList.getDisplayName().getString());
+                    AlternativesScreen.this.renderTooltip(graphics, mx, my, fluidInList.getDisplayName().getString());
                 }
 
                 x += 17;

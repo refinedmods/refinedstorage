@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.api.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 /**
  * This {@link FunctionalInterface} is used to define a draw/render function.
@@ -11,10 +11,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 @FunctionalInterface
 public interface IElementDrawer<T> {
     /**
-     * @param poseStack the poses stack
-     * @param x         the x axis
-     * @param y         the y axis
-     * @param element   the element type
+     * @param graphics the graphics
+     * @param x        the x axis
+     * @param y        the y axis
+     * @param element  the element type
      */
-    void draw(PoseStack poseStack, int x, int y, T element);
+    void draw(GuiGraphics graphics, int x, int y, T element);
 }

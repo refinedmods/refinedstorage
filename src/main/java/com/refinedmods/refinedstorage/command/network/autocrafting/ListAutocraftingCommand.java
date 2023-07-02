@@ -17,8 +17,8 @@ public class ListAutocraftingCommand extends NetworkCommand {
     }
 
     public static void addInfo(CommandContext<CommandSourceStack> context, ICraftingTask task) {
-        context.getSource().sendSuccess(
-            Component.literal(getAmount(task.getRequested()) + "x ")
+        context.getSource().sendSuccess(() ->
+                Component.literal(getAmount(task.getRequested()) + "x ")
                 .append(getName(task.getRequested()).copy().setStyle(Styles.YELLOW))
                 .append(" ")
                 .append("(" + task.getCompletionPercentage() + "%)")

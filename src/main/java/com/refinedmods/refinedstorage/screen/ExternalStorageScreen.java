@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.refinedmods.refinedstorage.container.ExternalStorageContainerMenu;
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.blockentity.ExternalStorageBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.container.ExternalStorageContainerMenu;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ExternalStorageScreen extends StorageScreen<ExternalStorageContainerMenu> {
@@ -12,7 +14,7 @@ public class ExternalStorageScreen extends StorageScreen<ExternalStorageContaine
             containerMenu,
             inventory,
             title,
-            "gui/storage.png",
+            new ResourceLocation(RS.ID, "textures/gui/storage.png"),
             new StorageScreenSynchronizationParameters(
                 ExternalStorageBlockEntity.TYPE,
                 NetworkNodeBlockEntity.REDSTONE_MODE,

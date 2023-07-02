@@ -1,8 +1,8 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public interface IGridStack {
 
     String getFormattedFullQuantity();
 
-    void draw(PoseStack poseStack, BaseScreen<?> screen, int x, int y);
+    void draw(GuiGraphics graphics, BaseScreen<?> screen, int x, int y);
 
     Object getIngredient();
 

@@ -63,7 +63,7 @@ public class CraftingPatternFactory {
 
                     byproducts = recipe.getRemainingItems(craftingContainer);
 
-                    ItemStack output = recipe.assemble(craftingContainer);
+                    ItemStack output = recipe.assemble(craftingContainer, level.registryAccess());
 
                     if (!output.isEmpty()) {
                         outputs.add(output);

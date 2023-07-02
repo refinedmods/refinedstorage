@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -18,8 +19,8 @@ public class BlockModelGenerator extends BlockStateProvider {
 
     private final BlockModels models;
 
-    public BlockModelGenerator(DataGenerator generator, String id, ExistingFileHelper existingFileHelper) {
-        super(generator, id, existingFileHelper);
+    public BlockModelGenerator(PackOutput output, String id, ExistingFileHelper existingFileHelper) {
+        super(output, id, existingFileHelper);
         models = new BlockModels(this);
     }
 

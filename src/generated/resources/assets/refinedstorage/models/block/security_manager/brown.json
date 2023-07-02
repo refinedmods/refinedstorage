@@ -1,18 +1,18 @@
 {
   "parent": "refinedstorage:block/cube_cutout",
   "textures": {
-    "particle": "refinedstorage:block/security_manager/front",
-    "east": "refinedstorage:block/security_manager/right",
-    "south": "refinedstorage:block/security_manager/back",
-    "west": "refinedstorage:block/security_manager/left",
-    "up": "refinedstorage:block/security_manager/top",
-    "down": "refinedstorage:block/bottom",
-    "north": "refinedstorage:block/security_manager/front",
     "cutout_down": "refinedstorage:block/bottom",
     "cutout_east": "refinedstorage:block/security_manager/cutouts/right_brown",
-    "cutout_west": "refinedstorage:block/security_manager/cutouts/left_brown",
-    "cutout_south": "refinedstorage:block/security_manager/cutouts/back_brown",
     "cutout_north": "refinedstorage:block/security_manager/cutouts/front_brown",
-    "cutout_up": "refinedstorage:block/security_manager/cutouts/top_brown"
+    "cutout_south": "refinedstorage:block/security_manager/cutouts/back_brown",
+    "cutout_up": "refinedstorage:block/security_manager/cutouts/top_brown",
+    "cutout_west": "refinedstorage:block/security_manager/cutouts/left_brown",
+    "down": "refinedstorage:block/bottom",
+    "east": "refinedstorage:block/security_manager/right",
+    "north": "refinedstorage:block/security_manager/front",
+    "particle": "refinedstorage:block/security_manager/front",
+    "south": "refinedstorage:block/security_manager/back",
+    "up": "refinedstorage:block/security_manager/top",
+    "west": "refinedstorage:block/security_manager/left"
   }
 }

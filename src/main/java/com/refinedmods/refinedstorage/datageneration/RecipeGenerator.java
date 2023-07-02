@@ -5,8 +5,9 @@ import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.item.ProcessorItem;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -18,14 +19,14 @@ import java.util.function.Consumer;
 public class RecipeGenerator extends RecipeProvider {
     private static final String GRID_ID = RS.ID + ":grid";
 
-    public RecipeGenerator(DataGenerator generator) {
-        super(generator);
+    public RecipeGenerator(PackOutput output) {
+        super(output);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeAcceptor) {
+    protected void buildRecipes(Consumer<FinishedRecipe> recipeAcceptor) {
         // Tag + Color -> Colored Block
-        RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> map.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+        RSItems.COLORED_ITEM_TAGS.forEach((tag, map) -> map.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item.get())
             .requires(tag)
             .requires(color.getTag())
             .group(RS.ID)
@@ -34,7 +35,7 @@ public class RecipeGenerator extends RecipeProvider {
         ));
 
         // Crafting Grid
-        RSItems.CRAFTING_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+        RSItems.CRAFTING_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item.get())
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
             .requires(ItemTags.create(new ResourceLocation(RS.ID, "crafting_tables")))
@@ -43,7 +44,7 @@ public class RecipeGenerator extends RecipeProvider {
         );
 
         // Fluid Grid
-        RSItems.FLUID_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+        RSItems.FLUID_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item.get())
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
             .requires(Items.BUCKET)
@@ -52,7 +53,7 @@ public class RecipeGenerator extends RecipeProvider {
         );
 
         // Pattern Grid
-        RSItems.PATTERN_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(item.get())
+        RSItems.PATTERN_GRID.forEach((color, item) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, item.get())
             .requires(RSItems.GRID.get(color).get())
             .requires(RSItems.PROCESSORS.get(ProcessorItem.Type.ADVANCED).get())
             .requires(RSItems.PATTERN.get())

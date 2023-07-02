@@ -41,7 +41,7 @@ public class FilterItem extends Item {
     private static final String NBT_TYPE = "Type";
 
     public FilterItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
+        super(new Item.Properties().stacksTo(1));
     }
 
     public static int getCompare(ItemStack stack) {

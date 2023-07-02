@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.screen.grid.sorting;
 
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,8 +23,8 @@ public class IdGridSorter implements IGridSorter {
             leftId = Item.getId(((ItemStack) left.getIngredient()).getItem());
             rightId = Item.getId(((ItemStack) right.getIngredient()).getItem());
         } else if (left.getIngredient() instanceof FluidStack && right.getIngredient() instanceof FluidStack) {
-            leftId = Registry.FLUID.getId(((FluidStack) left.getIngredient()).getFluid());
-            rightId = Registry.FLUID.getId(((FluidStack) right.getIngredient()).getFluid());
+            leftId = BuiltInRegistries.FLUID.getId(((FluidStack) left.getIngredient()).getFluid());
+            rightId = BuiltInRegistries.FLUID.getId(((FluidStack) right.getIngredient()).getFluid());
         }
 
         if (leftId != rightId) {

@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class RedstoneModeSideButton extends SideButton {
@@ -17,13 +18,13 @@ public class RedstoneModeSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.redstone_mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.redstone_mode." + parameter.getValue());
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
-        screen.blit(poseStack, x, y, parameter.getValue() * 16, 0, 16, 16);
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, parameter.getValue() * 16, 0, 16, 16);
     }
 
     @Override

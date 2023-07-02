@@ -136,14 +136,14 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(((handler, slot, reading) -> {
-            if (player != null && !player.level.isClientSide) {
+            if (player != null && !player.level().isClientSide) {
                 ItemStack diskStack = handler.getStackInSlot(slot);
 
                 if (diskStack.isEmpty()) {
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerLevel) player.level).getByStack(getDiskInventory().getStackInSlot(0));
+                    IStorageDisk diskInSlot = API.instance().getStorageDiskManager((ServerLevel) player.level()).getByStack(getDiskInventory().getStackInSlot(0));
 
                     if (diskInSlot != null) {
                         StorageType type = ((IStorageDiskProvider) getDiskInventory().getStackInSlot(0).getItem()).getType();
@@ -378,7 +378,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     this.itemStorageTrackerId = UUID.randomUUID();
                 }
 
-                this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) player.level).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
+                this.itemStorageTracker = (ItemStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) player.level()).getOrCreate(itemStorageTrackerId, StorageType.ITEM);
             }
         }
 
@@ -393,7 +393,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     this.fluidStorageTrackerId = UUID.randomUUID();
                 }
 
-                this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) player.level).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
+                this.fluidStorageTracker = (FluidStorageTracker) API.instance().getStorageTrackerManager((ServerLevel) player.level()).getOrCreate(fluidStorageTrackerId, StorageType.FLUID);
             }
         }
 

@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.item.blockitem;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
 import com.refinedmods.refinedstorage.api.storage.disk.StorageDiskSyncData;
@@ -30,7 +29,7 @@ public class StorageBlockItem extends BaseBlockItem {
     private final ItemStorageType type;
 
     public StorageBlockItem(StorageBlock block) {
-        super(block, new Item.Properties().tab(RS.CREATIVE_MODE_TAB));
+        super(block, new Item.Properties());
 
         this.type = block.getType();
     }

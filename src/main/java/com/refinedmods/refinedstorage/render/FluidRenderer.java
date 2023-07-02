@@ -2,16 +2,17 @@ package com.refinedmods.refinedstorage.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 
@@ -73,13 +74,10 @@ public class FluidRenderer {
         tessellator.end();
     }
 
-    public void render(PoseStack poseStack, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    public void render(GuiGraphics graphics, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
         RenderSystem.enableBlend();
-
-        drawFluid(poseStack, xPosition, yPosition, fluidStack);
-
+        drawFluid(graphics.pose(), xPosition, yPosition, fluidStack);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-
         RenderSystem.disableBlend();
     }
 

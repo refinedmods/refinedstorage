@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "refinedstorage:crafting_grid/pink_crafting_grid"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "refinedstorage:grid": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "refinedstorage:grid"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "refinedstorage:grid",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "refinedstorage:crafting_grid/pink_crafting_grid"
+    ]
+  },
+  "sends_telemetry_event": false
+}

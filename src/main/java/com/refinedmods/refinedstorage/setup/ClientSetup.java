@@ -30,14 +30,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,21 +53,6 @@ public final class ClientSetup {
     private static final ResourceLocation CONNECTED = new ResourceLocation("connected");
 
     private static final BakedModelOverrideRegistry BAKED_MODEL_OVERRIDE_REGISTRY = new BakedModelOverrideRegistry();
-
-    private static ResourceLocation[] getMultipleColoredModels(DyeColor color, String... paths) {
-        return Arrays.stream(paths).map(path -> getColoredModel(color, path)).toArray(ResourceLocation[]::new);
-    }
-
-    private static ResourceLocation getColoredModel(DyeColor color, String path) {
-        return new ResourceLocation(RS.ID, path + color);
-    }
-
-    private static void forEachColorApply(String name, BiConsumer<ResourceLocation, DyeColor> consumer) {
-        for (DyeColor color : DyeColor.values()) {
-            String prefix = color == ColorMap.DEFAULT_COLOR ? "" : color + "_";
-            consumer.accept(new ResourceLocation(RS.ID, prefix + name), color);
-        }
-    }
 
     private ClientSetup() {
     }
@@ -159,6 +142,8 @@ public final class ClientSetup {
         });
     }
 
+    // TODO: Emissivity is broken :(
+
     // TODO: we have probably too much emissivity (when disconnected)
 
     private static void registerBakedModelOverrides() {
@@ -207,20 +192,13 @@ public final class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void onModelBake(ModelEvent.BakingCompleted e) {
+    public static void onModelBake(ModelEvent.ModifyBakingResult e) {
         for (ResourceLocation id : e.getModels().keySet()) {
             BakedModelOverrideRegistry.BakedModelOverrideFactory factory = BAKED_MODEL_OVERRIDE_REGISTRY.get(new ResourceLocation(id.getNamespace(), id.getPath()));
 
             if (factory != null) {
                 e.getModels().put(id, factory.create(e.getModels().get(id), e.getModels()));
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) {
-            event.addSprite(new ResourceLocation(RS.ID, "block/cable_part_border"));
         }
     }
 

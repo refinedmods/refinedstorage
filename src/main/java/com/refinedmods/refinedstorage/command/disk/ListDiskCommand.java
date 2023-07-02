@@ -21,7 +21,7 @@ public class ListDiskCommand implements Command<CommandSourceStack> {
         API.instance().getStorageDiskManager(context.getSource().getLevel())
             .getAll()
             .keySet()
-            .forEach(id -> context.getSource().sendSuccess(Component.literal(id.toString()), false));
+            .forEach(id -> context.getSource().sendSuccess(() -> Component.literal(id.toString()), false));
 
         return 0;
     }

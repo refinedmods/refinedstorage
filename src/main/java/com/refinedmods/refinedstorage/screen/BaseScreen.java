@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
@@ -15,9 +14,10 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -39,11 +39,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class BaseScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
-    public static final int Z_LEVEL_ITEMS = 100;
-    public static final int Z_LEVEL_QTY = 300;
+    public static final ResourceLocation ICONS_TEXTURE = new ResourceLocation(RS.ID, "textures/icons.png");
 
-    private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
-    private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
+    private static final int Z_LEVEL_QTY = 300;
+    private static final Map<Class<?>, Queue<Consumer<?>>> ACTIONS = new HashMap<>();
 
     private static final Component ALTERNATIVES_TEXT = Component.translatable("gui.refinedstorage.alternatives");
     protected final Inventory inventory;
@@ -78,8 +77,8 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
         runActions(AbstractContainerScreen.class);
     }
 
-    private void runActions(Class clazz) {
-        Queue<Consumer> queue = ACTIONS.get(clazz);
+    private void runActions(Class<?> clazz) {
+        Queue<Consumer<?>> queue = ACTIONS.get(clazz);
 
         if (queue != null && !queue.isEmpty()) {
             Consumer callback;
@@ -91,8 +90,6 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
 
     @Override
     public void init() {
-        minecraft.keyboardHandler.setSendRepeatsToGui(true);
-
         onPreInit();
 
         super.init();
@@ -109,13 +106,6 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     }
 
     @Override
-    public void removed() {
-        super.removed();
-
-        minecraft.keyboardHandler.setSendRepeatsToGui(false);
-    }
-
-    @Override
     protected void containerTick() {
         super.containerTick();
         runActions();
@@ -123,19 +113,19 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(poseStack);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(graphics);
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float renderPartialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float renderPartialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        renderBackground(poseStack, leftPos, topPos, mouseX, mouseY);
+        renderBackground(graphics, leftPos, topPos, mouseX, mouseY);
 
         for (int i = 0; i < this.menu.slots.size(); ++i) {
             Slot slot = menu.slots.get(i);
@@ -144,10 +134,10 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
                 FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!stack.isEmpty()) {
-                    FluidRenderer.INSTANCE.render(poseStack, leftPos + slot.x, topPos + slot.y, stack);
+                    FluidRenderer.INSTANCE.render(graphics, leftPos + slot.x, topPos + slot.y, stack);
 
                     if (((FluidFilterSlot) slot).isSizeAllowed()) {
-                        renderQuantity(poseStack, leftPos + slot.x, topPos + slot.y, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderSettings.INSTANCE.getSecondaryColor());
+                        renderQuantity(graphics, leftPos + slot.x, topPos + slot.y, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderSettings.INSTANCE.getSecondaryColor());
 
                         GL11.glDisable(GL11.GL_LIGHTING);
                     }
@@ -157,17 +147,17 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX -= leftPos;
         mouseY -= topPos;
 
-        renderForeground(poseStack, mouseX, mouseY);
+        renderForeground(graphics, mouseX, mouseY);
 
-        for (Widget button : this.renderables) {
-            if (button instanceof SideButton sideButton) {
-                sideButton.renderTooltip(poseStack, mouseX, mouseY);
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof SideButton sideButton) {
+                sideButton.renderTooltip(graphics, mouseX, mouseY);
             }
         }
 
@@ -178,7 +168,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
                 FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!stack.isEmpty() && RenderUtils.inBounds(slot.x, slot.y, 17, 17, mouseX, mouseY)) {
-                    renderTooltip(poseStack, mouseX, mouseY, stack.getDisplayName().getString());
+                    renderTooltip(graphics, mouseX, mouseY, stack.getDisplayName().getString());
                 }
             }
         }
@@ -260,93 +250,76 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
     }
 
     public Button addButton(int x, int y, int w, int h, Component text, boolean enabled, boolean visible, Button.OnPress onPress) {
-        Button button = new Button(x, y, w, h, text, onPress);
-
+        Button button = Button.builder(text, onPress).pos(x, y).size(w, h).build();
         button.active = enabled;
         button.visible = visible;
-
-        this.addRenderableWidget(button);
-
+        addRenderableWidget(button);
         return button;
     }
 
     public void addSideButton(SideButton button) {
-        button.x = leftPos - button.getWidth() - 2;
-        button.y = topPos + sideButtonY;
-
+        button.setX(leftPos - button.getWidth() - 2);
+        button.setY(topPos + sideButtonY);
         sideButtonY += button.getHeight() + 2;
-
         sideButtons.add(button);
-        this.addRenderableWidget(button);
+        addRenderableWidget(button);
     }
 
     public List<SideButton> getSideButtons() {
         return sideButtons;
     }
 
-    public void bindTexture(String namespace, String filenameInTexturesFolder) {
-        RenderSystem.setShaderTexture(0, TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, newId -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
+    public void renderItem(GuiGraphics graphics, int x, int y, ItemStack stack) {
+        renderItem(graphics, x, y, stack, false, null, 0);
     }
 
-    public void renderItem(PoseStack poseStack, int x, int y, ItemStack stack) {
-        renderItem(poseStack, x, y, stack, false, null, 0);
-    }
-
-    public void renderItem(PoseStack poseStack, int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
+    public void renderItem(GuiGraphics graphics, int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
         try {
-            setBlitOffset(Z_LEVEL_ITEMS);
-            itemRenderer.blitOffset = Z_LEVEL_ITEMS;
-
-            itemRenderer.renderGuiItem(stack, x, y);
-
+            graphics.renderItem(stack, x, y);
             if (overlay) {
-                itemRenderer.renderGuiItemDecorations(font, stack, x, y, "");
+                graphics.renderItemDecorations(font, stack, x, y, "");
             }
-
-            setBlitOffset(0);
-            itemRenderer.blitOffset = 0;
-
             if (text != null) {
-                renderQuantity(poseStack, x, y, text, textColor);
+                renderQuantity(graphics, x, y, text, textColor);
             }
         } catch (Throwable t) {
             logger.warn("Couldn't render stack: {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
         }
     }
 
-    public void renderQuantity(PoseStack poseStack, int x, int y, String qty, int color) {
+    public void renderQuantity(GuiGraphics graphics, int x, int y, String qty, int color) {
         boolean large = minecraft.isEnforceUnicode() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
-        poseStack.pushPose();
-        poseStack.translate(x, y, Z_LEVEL_QTY);
+        graphics.pose().pushPose();
+        graphics.pose().translate(x, y, Z_LEVEL_QTY);
 
         if (!large) {
-            poseStack.scale(0.5F, 0.5F, 1);
+            graphics.pose().scale(0.5F, 0.5F, 1);
         }
 
-        font.drawShadow(poseStack, qty, (large ? 16 : 30) - font.width(qty), large ? 8 : 22, color);
+        graphics.drawString(font, qty, (large ? 16 : 30) - font.width(qty), large ? 8 : 22, color);
 
-        poseStack.popPose();
+        graphics.pose().popPose();
     }
 
-    public void renderString(PoseStack poseStack, int x, int y, String message) {
-        renderString(poseStack, x, y, message, RenderSettings.INSTANCE.getPrimaryColor());
+    public void renderString(GuiGraphics graphics, int x, int y, String message) {
+        renderString(graphics, x, y, message, RenderSettings.INSTANCE.getPrimaryColor());
     }
 
-    public void renderString(PoseStack poseStack, int x, int y, String message, int color) {
-        font.draw(poseStack, message, x, y, color);
+    public void renderString(GuiGraphics graphics, int x, int y, String message, int color) {
+        graphics.drawString(font, message, x, y, color, false);
     }
 
-    public void renderTooltip(PoseStack poseStack, int x, int y, String lines) {
-        renderTooltip(poseStack, ItemStack.EMPTY, x, y, lines);
+    public void renderTooltip(GuiGraphics graphics, int x, int y, String lines) {
+        renderTooltip(graphics, ItemStack.EMPTY, x, y, lines);
     }
 
-    public void renderTooltip(PoseStack poseStack, @Nonnull ItemStack stack, int x, int y, String lines) {
-        renderTooltip(poseStack, stack, x, y, Arrays.stream(lines.split("\n")).map(Component::literal).collect(Collectors.toList()));
+    public void renderTooltip(GuiGraphics graphics, @Nonnull ItemStack stack, int x, int y, String lines) {
+        renderTooltip(graphics, stack, x, y, Arrays.stream(lines.split("\n")).map(Component::literal).collect(Collectors.toList()));
     }
 
-    public void renderTooltip(PoseStack poseStack, @Nonnull ItemStack stack, int x, int y, List<Component> lines) {
-        renderComponentTooltip(poseStack, lines, x, y, stack);
+    public void renderTooltip(GuiGraphics graphics, @Nonnull ItemStack stack, int x, int y, List<Component> lines) {
+        graphics.renderComponentTooltip(font, lines, x, y, stack);
     }
 
     protected void onPreInit() {
@@ -357,7 +330,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
 
     public abstract void tick(int x, int y);
 
-    public abstract void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY);
+    public abstract void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY);
 
-    public abstract void renderForeground(PoseStack poseStack, int mouseX, int mouseY);
+    public abstract void renderForeground(GuiGraphics graphics, int mouseX, int mouseY);
 }
