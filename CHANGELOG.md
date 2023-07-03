@@ -15,7 +15,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed GUI side buttons not working sometimes when using Refined Storage with addons.
 
-## [v1.11.6] - 2023-03-30
+## [1.11.6] - 2023-03-30
 
 ### Fixed
 
@@ -23,7 +23,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed a bunch of issues where chunks would unintentionally be loaded by RS.
 - Reduced block updates when a controller is turning on and off constantly.
 
-## [v1.11.5] - 2023-02-12
+## [1.11.5] - 2023-02-12
 
 ### Fixed
 
@@ -32,13 +32,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed rare multithreading crash
 - Fixed Constructor being able to drop more than the maximum stack size for an item 
 
-## [v1.11.4] - 2022-12-20
+## [1.11.4] - 2022-12-20
 
 ### Fixed
 
 - Fixed duplication bug in the Interface.
 
-## [v1.11.3] - 2022-12-20
+## [1.11.3] - 2022-12-20
 
 ### Fixed
 
@@ -50,7 +50,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Increased packet size limit.
 
-## [v1.11.2] - 2022-12-17
+## [1.11.2] - 2022-12-17
 
 ### Added
 
@@ -62,27 +62,27 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed lag when opening JEI in large systems.
 - Made Refined Storage more robust against crashes when moving network blocks by unconventional means.
 
-## [v1.11.1] - 2022-10-30
+## [1.11.1] - 2022-10-30
 
 ### Fixed
 
 - Fixed not using Forge silicon tag for recipes.
 - Small corrections to the Korean translation.
 
-## [v1.11.0] - 2022-09-30
+## [1.11.0] - 2022-09-30
 
 ### Changed
 
 - Ported to Minecraft 1.19.2.
 
-## [v1.10.5] - 2023-02-12
+## [1.10.5] - 2023-02-12
 
 ### Fixed
 
 - Fixed rare multithreading crash
 - Fixed Constructor being able to drop more than the maximum stack size for an item
 
-## [v1.10.4] - 2022-12-20
+## [1.10.4] - 2022-12-20
 
 ### Fixed
 
@@ -96,7 +96,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Increased packet size limit.
 
-## [v1.10.3] - 2022-08-06
+## [1.10.3] - 2022-08-06
 
 ### Fixed
 
@@ -120,19 +120,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Forge relocation and Packing Tape blacklist tag entries to prevent block movement
 - Japanese translations for certain autocrafting actions
 
-## [v1.10.2] - 2022-03-26
+## [1.10.2] - 2022-03-26
 
 ### Changed
 
 - Ported to Minecraft 1.18.2.
 
-## [v1.10.1] - 2022-03-26
+## [1.10.1] - 2022-03-26
 
 ### Fixed
 
 - Fixed crash when opening alternatives screen.
 
-## [v1.10.0] - 2022-01-25
+## [1.10.0] - 2022-01-25
 
 ### Fixed
 
@@ -144,7 +144,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Amount specifying screen is now limited to valid values.
 - Fixed crash on servers when starting with latest Forge.
 
-## [v1.10.0-beta.4] - 2021-12-28
+## [1.10.0-beta.4] - 2021-12-28
 
 ### Fixed
 
@@ -155,20 +155,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update Korean translation by [@mindy15963](https://github.com/mindy15963).
 
-## [v1.10.0-beta.3] - 2021-12-17
+## [1.10.0-beta.3] - 2021-12-17
 
 ### Fixed
 
 - Fixed networks and network devices being removed when a chunk unloads.
 
-## [v1.10.0-beta.2] - 2021-12-16
+## [1.10.0-beta.2] - 2021-12-16
 
 ### Fixed
 
 - Fixed all Refined Storage advancements being granted when joining a world.
 - Fixed potential Pattern crash when loading Minecraft.
 
-## [v1.10.0-beta.1] - 2021-12-15
+## [1.10.0-beta.1] - 2021-12-15
 
 ### Fixed
 
@@ -185,13 +185,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Focused side buttons now display their tooltip properly.
 - Improved performance of retrieving patterns by [@metalshark](https://github.com/metalshark).
 
-## [v1.9.18] - 2022-05-18
+## [1.9.18] - 2022-05-18
 
 ### Fixed
 
 - Fixed potential Pattern crash when loading Minecraft.
 
-## [v1.9.17] - 2022-01-30
+## [1.9.17] - 2022-01-30
 
 ### Added
 
@@ -213,7 +213,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed autocrafting task getting stuck if two tasks fulfilled each others requirements.
 - Fixed fluid autocrafting breaking when using 2 stacks of the same fluid in a pattern.
 
-## [v1.9.16] - 2021-11-16
+## [1.9.16] - 2021-11-16
 
 ### Added
 
@@ -236,19 +236,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Slightly sped up External Storage item look up.
 - Fixed extraction from Storage Monitor not respecting maximum stack size.
 
-## [v1.9.15] - 2021-07-25
+## [1.9.15] - 2021-07-25
 
 ### Fixed
 
 - Fixed Refined Storage Addons compatibility.
 
-## [v1.9.14] - 2021-07-25
+## [1.9.14] - 2021-07-25
 
 ### Added
 
 - Implemented Curios support.
 
-## [v1.9.13] - 2021-06-14
+## [1.9.13] - 2021-06-14
 
 ### Added
 
@@ -276,7 +276,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed experimental pipeline nagging message.
 
-## [v1.9.12] - 2021-02-07
+## [1.9.12] - 2021-02-07
 
 ### Fixed
 
@@ -289,7 +289,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed constructor not using compare mode correctly in some cases.
 - Fixed duplication bug in the Interface.
 
-## [v1.9.11] - 2021-01-03
+## [1.9.11] - 2021-01-03
 
 ### Fixed
 
@@ -298,7 +298,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     before
     launching.
 
-## [v1.9.10] - 2021-01-02
+## [1.9.10] - 2021-01-02
 
 ### Changed
 
@@ -317,7 +317,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash when recoloring blocks that have no rotation component.
 - Fixed reloading resource packs breaking Refined Storage textures.
 
-## [v1.9.9] - 2020-11-14
+## [1.9.9] - 2020-11-14
 
 ### Fixed
 
@@ -328,7 +328,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed not being able to change the Exporter filter slot count with regulator mode without closing and re-opening the
   container.
 
-## [v1.9.8] - 2020-10-24
+## [1.9.8] - 2020-10-24
 
 ### Added
 
@@ -342,7 +342,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed various issues with Grid interactions working without power.
 - Fixed changing rotation not updating blocks.
 
-## [v1.9.7] - 2020-10-04
+## [1.9.7] - 2020-10-04
 
 ### Added
 
@@ -359,7 +359,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed deadlock caused by Portable Grid.
 - Fixed custom tooltips not working in the Grid.
 
-## [v1.9.6] - 2020-09-25
+## [1.9.6] - 2020-09-25
 
 ### Added
 
@@ -373,7 +373,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed Portable Grid losing enchantments when placing and breaking.
 
-## [v1.9.5] - 2020-09-06
+## [1.9.5] - 2020-09-06
 
 ### Added
 
@@ -392,13 +392,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed text field not being focused in amount specifying screens.
 
-## [v1.9.4] - 2020-08-30
+## [1.9.4] - 2020-08-30
 
 ### Fixed
 
 - Fixed JEI recipes/usages keys not working in Grids.
 
-## [v1.9.3-beta] - 2020-08-24
+## [1.9.3-beta] - 2020-08-24
 
 ### Added
 
@@ -414,13 +414,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed duplication bug with the Constructor.
 
-## [v1.9.2b-beta] - 2020-09-11
+## [1.9.2b-beta] - 2020-09-11
 
 ### Fixed
 
 - Fixed duplication bug with the Constructor.
 
-## [v1.9.2-beta] - 2020-07-17
+## [1.9.2-beta] - 2020-07-17
 
 ### Added
 
@@ -439,13 +439,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Network Transmitters being able to connect to any network device.
 - Fixed Crafting Tweaks buttons being in the wrong position after changing the size configuration of the Grid.
 
-## [v1.9.1-beta] - 2020-07-14
+## [1.9.1-beta] - 2020-07-14
 
 ### Fixed
 
 - Fixed server crash.
 
-## [v1.9.0-beta] - 2020-07-14
+## [1.9.0-beta] - 2020-07-14
 
 ### Added
 
@@ -455,13 +455,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed wrench requiring shift click to rotate blocks.
 
-## [v1.8.8] - 2020-07-13
+## [1.8.8] - 2020-07-13
 
 ### Fixed
 
 - Fixed duplication bug and weird behavior in the Crafting Grid matrix.
 
-## [v1.8.7] - 2020-07-11
+## [1.8.7] - 2020-07-11
 
 ### Fixed
 
@@ -483,13 +483,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed autocrafting engine version from crafting preview screen.
 
-## [v1.8.6-beta] - 2020-06-26
+## [1.8.6-beta] - 2020-06-26
 
 ### Fixed
 
 - Fixed Constructor duplication bug.
 
-## [v1.8.5-beta] - 2020-06-18
+## [1.8.5-beta] - 2020-06-18
 
 ### Added
 
@@ -514,13 +514,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Crafters no longer expose their inventory to the side they are facing.
 - Changed package name to `com.refinedmods.refinedstorage`, this is a breaking change for addons.
 
-## [v1.8.4-beta] - 2020-05-26
+## [1.8.4-beta] - 2020-05-26
 
 ### Fixed
 
 - Fixed autocrafting Crafting Monitor crash.
 
-## [v1.8.3-beta] - 2020-04-29
+## [1.8.3-beta] - 2020-04-29
 
 ### Added
 
@@ -539,7 +539,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Wireless Transmitters can now be placed on any block and in any direction.
 
-## [v1.8.2-beta] - 2020-04-25
+## [1.8.2-beta] - 2020-04-25
 
 ### Added
 
@@ -556,26 +556,26 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Updated pt_br translation.
 
-## [v1.8.1-beta] - 2020-01-30
+## [1.8.1-beta] - 2020-01-30
 
 ### Added
 
 - Port to Minecraft 1.15.2.
 - Fluid support for the Storage Monitor.
 
-## [v1.8.0-beta] - 2020-01-21
+## [1.8.0-beta] - 2020-01-21
 
 ### Added
 
 - Port to Minecraft 1.15.
 
-## [v1.7.3-beta] - 2019-12-30
+## [1.7.3-beta] - 2019-12-30
 
 ### Fixed
 
 - Fixed severe energy update lag introduced by version 1.7.2.
 
-## [v1.7.2-beta] - 2019-12-29
+## [1.7.2-beta] - 2019-12-29
 
 ### Added
 
@@ -596,7 +596,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - When pressing ESCAPE in the search box on the Grid or Crafter Manager, focus on the search bar will be lost first
   before closing the GUI immediately. Then on the next ESCAPE press, the GUI will be closed.
 
-## [v1.7.1-alpha] - 2019-11-19
+## [1.7.1-alpha] - 2019-11-19
 
 ### Fixed
 
@@ -624,7 +624,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   development builds and never used version 1.7.0 before, first switch to 1.7.0, open your world, modify a storage disk,
   and then upgrade to 1.7.1.
 
-## [v1.7.0-alpha] - 2019-11-02
+## [1.7.0-alpha] - 2019-11-02
 
 ### Added
 
@@ -647,7 +647,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Cross dimensional functionality on the Network Transmitter for the moment, this will return later.
 - Covers.
 
-## [v1.7.0+10] - 2019-10-29
+## [1.7.0+10] - 2019-10-29
 
 ### Added
 
@@ -661,7 +661,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed the ugly checkboxes
 - Misc bugfixes and crash fixes.
 
-## [v1.7.0+9] - 2019-10-28
+## [1.7.0+9] - 2019-10-28
 
 ### Added
 
@@ -671,7 +671,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Misc bugfixes and crash fixes.
 
-## [v1.7.0+8] - 2019-10-27
+## [1.7.0+8] - 2019-10-27
 
 ### Added
 
@@ -680,13 +680,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Re-added the Disk Manipulator.
 - Re-added the Portable Grid.
 
-## [v1.7.0+7] - 2019-10-22
+## [1.7.0+7] - 2019-10-22
 
 ### Fixed
 
 - Fixed a crash that can happen when opening a world.
 
-## [v1.7.0+6] - 2019-10-22
+## [1.7.0+6] - 2019-10-22
 
 ### Added
 
@@ -706,7 +706,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Misc bugfixes and crash fixes.
 
-## [v1.7.0+5] - 2019-10-17
+## [1.7.0+5] - 2019-10-17
 
 ### Added
 
@@ -719,7 +719,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Cutting Tool (you may get a Forge warning about that one, it's safe to ignore).
 - The "compare nbt" side button, replaced it with "exact mode".
 
-## [v1.7.0+4] - 2019-10-15
+## [1.7.0+4] - 2019-10-15
 
 ### Added
 
@@ -730,7 +730,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Misc bugfixes and crash fixes.
 
-## [v1.7.0+3] - 2019-10-12
+## [1.7.0+3] - 2019-10-12
 
 ### Added
 
@@ -739,7 +739,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Re-added the Fluid Grid.
 - Re-added Optifine compatibility.
 
-## [v1.7.0+2] - 2019-10-10
+## [1.7.0+2] - 2019-10-10
 
 ### Added
 
@@ -753,7 +753,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Free dirt every 10 ticks.
 
-## [v1.7.0+1] - 2019-10-09
+## [1.7.0+1] - 2019-10-09
 
 ### Added
 
@@ -761,7 +761,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Re-added the Disk Drive.
 - Re-added the Grid.
 
-## [v1.6.16] - 2020-04-26
+## [1.6.16] - 2020-04-26
 
 ### Fixed
 
@@ -774,7 +774,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Updated Russian translation.
 
-## [v1.6.15] - 2019-07-21
+## [1.6.15] - 2019-07-21
 
 ### Fixed
 
@@ -790,13 +790,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Shortened crafting text for the Russion translation to fix Grid overlays.
 - GregTech Community Edition Wires and Machines are now banned from rendering on Refined Storage patterns because they are causing crashes.
 
-## [v1.6.14] - 2019-03-23
+## [1.6.14] - 2019-03-23
 
 ### Fixed
 
 - Fixed server crash
 
-## [v1.6.13] - 2019-03-23
+## [1.6.13] - 2019-03-23
 
 ### Added
 
@@ -816,7 +816,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed autocrafting duplication bug.
 - Fixed Crafting Pattern not rendering tile entity items like a chest.
 
-## [v1.6.12] - 2018-11-28
+## [1.6.12] - 2018-11-28
 
 ### Added
 
@@ -833,13 +833,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed slight performance issue with loading Crafters from disk.
 - Fixed storage GUIs overflowing on large numbers.
 
-## [v1.6.11] - 2018-11-24
+## [1.6.11] - 2018-11-24
 
 ### Fixed
 
 - Fixed blocks neighboring a controller breaking when returning from a dimension in a unchunkloaded area.
 
-## [v1.6.10] - 2018-11-23
+## [1.6.10] - 2018-11-23
 
 ### Added
 
@@ -872,7 +872,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed the Interdimensional Upgrade, Network Transmitters are now cross dimensional by default.
 - Removed the per block FE cost of the Network Transmitter, it draws a fixed amount of FE/t now.
 
-## [v1.6.9] - 2018-10-27
+## [1.6.9] - 2018-10-27
 
 ### Changed
 
@@ -884,13 +884,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed client FPS stuttering when opening a Crafting Grid.
 - Fixed rare Grid crashing issue.
 
-## [v1.6.8] - 2018-10-20
+## [1.6.8] - 2018-10-20
 
 ### Fixed
 
 - Fixed Ender IO incompatibility.
 
-## [v1.6.7] - 2018-10-19
+## [1.6.7] - 2018-10-19
 
 ### Changed
 
@@ -901,7 +901,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed the Raw Processor recipes not taking oredicted silicon.
 - Fixed the Processor Binding recipe not taking oredicted slimeballs.
 
-## [v1.6.6] - 2018-10-18
+## [1.6.6] - 2018-10-18
 
 ### Added
 
@@ -932,7 +932,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed handling of reusable items in autocrafting, to avoid problems.
 
-## [v1.6.5] - 2018-09-11
+## [1.6.5] - 2018-09-11
 
 ### Changed
 
@@ -943,7 +943,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Refined Storage silicon's oredict entry being registered too late.
 - Fixed duplication bug with filter slots.
 
-## [v1.6.4] - 2018-09-02
+## [1.6.4] - 2018-09-02
 
 ### Changed
 
@@ -960,7 +960,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed left / right click functionality on filter slots to increase / decrease the amount, replaced that functionality with a dialog.
 
-## [v1.6.3] - 2018-08-02
+## [1.6.3] - 2018-08-02
 
 ### Added
 
@@ -971,13 +971,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash with Wireless Fluid Grid.
 - Fixed Reborn Storage crafting being slower than normal.
 
-## [v1.6.2] - 2018-07-30
+## [1.6.2] - 2018-07-30
 
 ### Fixed
 
 - Fixed Grid searching not working.
 
-## [v1.6.1] - 2018-07-30
+## [1.6.1] - 2018-07-30
 
 ### Added
 
@@ -1006,7 +1006,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed "emit signal when item is being autocrafted" option in the Detector.
 
-## [v1.6.0] - 2018-07-20
+## [1.6.0] - 2018-07-20
 
 ### Added
 
@@ -1074,7 +1074,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed ConnectedTexturesMod integration for fullbright textures, RS now has fullbright textures natively.
 - Removed autocrafting with fluids (the bucket filling mechanic). This will be replaced in a later version with native fluid autocrafting, where Crafters can insert fluids to external inventories.
 
-## [v1.5.34] - 2018-05-22
+## [1.5.34] - 2018-05-22
 
 ### Added
 
@@ -1091,7 +1091,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed repeated key events not getting handled in some cases.
 
-## [v1.5.33] - 2018-04-22
+## [1.5.33] - 2018-04-22
 
 ### Added
 
@@ -1111,7 +1111,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash when autocompleting Ender IO recipes from JEI.
 - Fixed Grid not always using all combinations when using JEI autocompletion.
 
-## [v1.5.32] - 2018-03-08
+## [1.5.32] - 2018-03-08
 
 ### Added
 
@@ -1136,7 +1136,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed an autocrafting crash.
 - Attempted to fix FPS drop on Grid sorting.
 
-## [v1.5.31] - 2017-12-31
+## [1.5.31] - 2017-12-31
 
 ### Changed
 
@@ -1151,13 +1151,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed rare Grid crash.
 - Fixed OpenComputers cable showing up in Grid as air.
 
-## [v1.5.30] - 2017-12-24
+## [1.5.30] - 2017-12-24
 
 ### Fixed
 
 - Fixed crashing bug when MCMultiPart is not installed.
 
-## [v1.5.29] - 2017-12-23
+## [1.5.29] - 2017-12-23
 
 ### Changed
 
@@ -1168,7 +1168,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed bug where MCMP multiparts were blocking RS network connections.
 - Fixed Reader/Writers for energy extracting energy when not needed.
 
-## [v1.5.28] - 2017-12-13
+## [1.5.28] - 2017-12-13
 
 ### Changed
 
@@ -1180,13 +1180,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed Writers not pushing energy.
 
-## [v1.5.27-beta] - 2017-12-09
+## [1.5.27-beta] - 2017-12-09
 
 ### Fixed
 
 - Fixed non-oredict patterns not consuming resources.
 
-## [v1.5.26-beta] - 2017-12-09
+## [1.5.26-beta] - 2017-12-09
 
 ### Added
 
@@ -1204,7 +1204,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed "detailed" Grid view type variant, made detailed tooltips a config option instead.
 
-## [v1.5.25] - 2017-11-28
+## [1.5.25] - 2017-11-28
 
 ### Fixed
 
@@ -1212,7 +1212,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed not being able to autocraft certain Modular Routers items.
 - Fixed last modified date not being sent when extracting from an External Storage.
 
-## [v1.5.24] - 2017-11-26
+## [1.5.24] - 2017-11-26
 
 ### Added
 
@@ -1234,7 +1234,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed craft-only mode for the Exporter.
 
-## [v1.5.23] - 2017-11-13
+## [1.5.23] - 2017-11-13
 
 ### Fixed
 
@@ -1242,7 +1242,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Fluid Interface with Stack Upgrade not exporting fluids.
 - Fixed fluids in Fluid Grid not showing actual mB on tooltip when pressing CTRL + SHIFT.
 
-## [v1.5.22] - 2017-11-11
+## [1.5.22] - 2017-11-11
 
 ### Added
 
@@ -1262,7 +1262,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed lag when opening a Grid with lots of items by offloading the grid sorting to another thread.
 - Performance improvement when adding patterns to the network.
 
-## [v1.5.21] - 2017-10-19
+## [1.5.21] - 2017-10-19
 
 ### Changed
 
@@ -1274,13 +1274,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed stack-crafting in the crafting grid (crafting table) causing lag on a dedicated server.
 - Fixed cable blocks, Wireless Transmitter, Detector and Portable Grid acting as full blocks (being able to place torches on them etc).
 
-## [v1.5.20] - 2017-10-09
+## [1.5.20] - 2017-10-09
 
 ### Fixed
 
 - Restore MC 1.12.0 compatibility.
 
-## [v1.5.19] - 2017-10-08
+## [1.5.19] - 2017-10-08
 
 ### Changed
 
@@ -1296,7 +1296,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed not being able to craft Immersive Engineering Revolver.
 - Fixed rare bug when server crashes on startup due to network node not existing.
 
-## [v1.5.18] - 2017-09-08
+## [1.5.18] - 2017-09-08
 
 ### Added
 
@@ -1321,7 +1321,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Reader and Writers GUIs still displaying channels even if not connected.
 - Fixed Solderer resetting progress when the inventory changes.
 
-## [v1.5.17] - 2017-08-19
+## [1.5.17] - 2017-08-19
 
 ### Added
 
@@ -1331,7 +1331,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed crash with Grid.
 
-## [v1.5.16] - 2017-08-09
+## [1.5.16] - 2017-08-09
 
 ### Fixed
 
@@ -1339,7 +1339,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash when configuring an Exporter.
 - Fixed Refined Storage not running in MC 1.12 and only on MC 1.12.1.
 
-## [v1.5.15] - 2017-08-09
+## [1.5.15] - 2017-08-09
 
 ### Added
 
@@ -1362,7 +1362,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Refined Storage not drawing small text correctly with Unicode font.
 - Fixed dupe bug with External Storage connected to an item handler.
 
-## [v1.5.14] - 2017-08-03
+## [1.5.14] - 2017-08-03
 
 ### Added
 
@@ -1382,14 +1382,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed performance issue with Controllers turning off and on and Interfaces.
 - Fixed Interfaces exposing network inventory don't hide storages that are disconnected.
 
-## [v1.5.13] - 2017-07-20
+## [1.5.13] - 2017-07-20
 
 ### Fixed
 
 - Fixed Wireless Fluid Grid not using up energy.
 - Fixed Wireless Crafting Monitor remaining in network item list.
 
-## [v1.5.12] - 2017-07-17
+## [1.5.12] - 2017-07-17
 
 ### Added
 
@@ -1399,14 +1399,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The Network Transmitter now uses 1 FE/t per block instead of 4 FE/t.
 
-## [v1.5.11] - 2017-07-16
+## [1.5.11] - 2017-07-16
 
 ### Fixed
 
 - Fixed not being able to smelt quartz into silicon.
 - Fixed Grid extracting wrong enchanted books.
 
-## [v1.5.10] - 2017-07-15
+## [1.5.10] - 2017-07-15
 
 ### Fixed
 
@@ -1417,13 +1417,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Converted Solderer recipes to JSON.
 - Implemented controller update throttling, should fix lag issues with controllers that constantly turn off and on.
 
-## [v1.5.9] - 2017-07-10
+## [1.5.9] - 2017-07-10
 
 ### Fixed
 
 - Fixed not being able to extract anything when connecting an External Storage to Storage Drawers.
 
-## [v1.5.8] - 2017-07-08
+## [1.5.8] - 2017-07-08
 
 ### Changed
 
@@ -1441,7 +1441,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed migration support for worlds from MC 1.10.2. To migrate your world to MC 1.12 from MC 1.10.2, first open it in MC 1.11.2.
 
-## [v1.5.7] - 2017-07-04
+## [1.5.7] - 2017-07-04
 
 ### Added
 
@@ -1455,7 +1455,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed crashes relating to scrollbar in GUIs.
 
-## [v1.5.6] - 2017-06-29
+## [1.5.6] - 2017-06-29
 
 ### Changed
 
@@ -1469,20 +1469,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed Processing Pattern Encoder, that functionality is now available in the Pattern Grid.
 
-## [v1.5.5-beta] - 2017-06-25
+## [1.5.5-beta] - 2017-06-25
 
 ### Changed
 
 - Updated Forge to 2363.
 
-## [v1.5.4-beta] - 2017-06-24
+## [1.5.4-beta] - 2017-06-24
 
 ### Fixed
 
 - Fixed External Storage crashing.
 - Fixed crash when node data mismatches between world and dat file.
 
-## [v1.5.3-beta] - 2017-06-24
+## [1.5.3-beta] - 2017-06-24
 
 ### Added
 
@@ -1507,14 +1507,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The Relay now reacts instantly to a redstone signal again, removed throttling for it.
 
-## [v1.5.2-beta] - 2017-06-20
+## [1.5.2-beta] - 2017-06-20
 
 ### Fixed
 
 - Fixed a bug where loading nodes would abort when a single node has an error while reading.
 - Fixed Filters not persisting correctly in Portable Grid.
 
-## [v1.5.1-beta] - 2017-06-20
+## [1.5.1-beta] - 2017-06-20
 
 ### Added
 
@@ -1538,7 +1538,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed Tesla integration.
 - Removed RS energy units, the entire mod is powered with Forge Energy now.
 
-## [v1.5.0-alpha] - 2017-06-14
+## [1.5.0-alpha] - 2017-06-14
 
 ### Added
 
@@ -1555,13 +1555,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed OpenComputers support (will be re-added as soon as OpenComputers for MC 1.12 is available).
 - Removed crafting recipes, until Forge adds the recipe system back.
 
-## [v1.4.20] - 2017-07-15
+## [1.4.20] - 2017-07-15
 
 ### Fixed
 
 - Fixed crash relating to MCMP.
 
-## [v1.4.19] - 2017-07-15
+## [1.4.19] - 2017-07-15
 
 ### Added
 
@@ -1573,7 +1573,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crashes relating to scrollbar in GUIs.
 - Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk.
 
-## [v1.4.18] - 2017-06-24
+## [1.4.18] - 2017-06-24
 
 ### Fixed
 
@@ -1588,7 +1588,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The Relay now reacts instantly to a redstone signal again, removed throttling for it.
 
-## [v1.4.17] - 2017-06-20
+## [1.4.17] - 2017-06-20
 
 ### Fixed
 
@@ -1596,7 +1596,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Disk Drive recipe not using ore dictionary for chest.
 - Fixed a bug where loading nodes would abort when a single node has an error while reading.
 
-## [v1.4.16] - 2017-06-14
+## [1.4.16] - 2017-06-14
 
 ### Added
 
@@ -1606,19 +1606,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed bug where oredict autocrafting didn't work in some cases.
 
-## [v1.4.15] - 2017-06-14
+## [1.4.15] - 2017-06-14
 
 ### Changed
 
 - Updated Storage Drawers API, fixes crashes.
 
-## [v1.4.14] - 2017-06-13
+## [1.4.14] - 2017-06-13
 
 ### Fixed
 
 - Fixed Solderer not accepting books made in anvil.
 
-## [v1.4.13] - 2017-06-13
+## [1.4.13] - 2017-06-13
 
 ### Added
 
@@ -1634,7 +1634,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed Quartz Enriched Iron ore dictionary entry.
 
-## [v1.4.12] - 2017-06-10
+## [1.4.12] - 2017-06-10
 
 ### Added
 
@@ -1655,7 +1655,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed Collosal Chests integration.
 
-## [v1.4.11] - 2017-06-05
+## [1.4.11] - 2017-06-05
 
 ### Added
 
@@ -1678,7 +1678,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed debug log configuration option, as it's no longer needed.
 - Removed "autocraft on redstone signal" option in the Crafter, use an External Storage in combination with an Interface with the Crafting Upgrade instead.
 
-## [v1.4.10-beta] - 2017-05-25
+## [1.4.10-beta] - 2017-05-25
 
 ### Changed
 
@@ -1689,13 +1689,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash when attempting to get direction of a node.
 - Fixed bug where some network parts don't want to connect to the storage system.
 
-## [v1.4.9-beta] - 2017-05-24
+## [1.4.9-beta] - 2017-05-24
 
 ### Fixed
 
 - Fixed bug where inventory data was lost sometimes upon opening the world.
 
-## [v1.4.8-beta] - 2017-05-24
+## [1.4.8-beta] - 2017-05-24
 
 ### Fixed
 
@@ -1703,7 +1703,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Controller not working anymore after changing redstone setting.
 - Fixed crash when placing or destroying network blocks.
 
-## [v1.4.7-beta] - 2017-05-23
+## [1.4.7-beta] - 2017-05-23
 
 ### Added
 
@@ -1714,7 +1714,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed bug where Portable Grid would dupe in inventory.
 - Worked around an autocrafting bug to prevent crashes.
 
-## [v1.4.6-beta] - 2017-05-17
+## [1.4.6-beta] - 2017-05-17
 
 ### Changed
 
@@ -1729,7 +1729,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed debug output from v1.4.5.
 
-## [v1.4.5-beta] - 2017-05-14
+## [1.4.5-beta] - 2017-05-14
 
 ### Added
 
@@ -1750,7 +1750,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Disk Manipulator in fluid mode not showing fluids.
 - Fixed dupe bug in the Interface.
 
-## [v1.4.4-beta] - 2017-04-27
+## [1.4.4-beta] - 2017-04-27
 
 ### Changed
 
@@ -1762,7 +1762,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed issue where empty stacks show up in the system.
 - Fixed Storage Monitor not respecting security settings.
 
-## [v1.4.3-beta] - 2017-04-22
+## [1.4.3-beta] - 2017-04-22
 
 ### Added
 
@@ -1788,7 +1788,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Grid crash.
 - Fixed Fluid Grid not formatting large quantities correctly.
 
-## [v1.4.2-beta] - 2017-04-01
+## [1.4.2-beta] - 2017-04-01
 
 ### Added
 
@@ -1824,7 +1824,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed support for the Deep Storage Unit API.
 
-## [v1.4.1-beta] - 2017-02-19
+## [1.4.1-beta] - 2017-02-19
 
 ### Added
 
@@ -1845,7 +1845,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Fluid Interface not dropping inventory contents.
 - Fixed Disk Manipulator crash.
 
-## [v1.4.0-beta] - 2017-02-06
+## [1.4.0-beta] - 2017-02-06
 
 ### Added
 
@@ -1902,7 +1902,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Autocrafting bugfixes.
 - Made sure External Storage always has the correct inventory in world.
 
-## [v1.3.5-alpha] - 2016-12-14
+## [1.3.5-alpha] - 2016-12-14
 
 ### Added
 
@@ -1923,7 +1923,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed oredict button not having the correct position on a small resolution.
 - Fixed Constructor not using Crafting Upgrade when in item dropping mode.
 
-## [v1.3.4-alpha] - 2016-12-10
+## [1.3.4-alpha] - 2016-12-10
 
 ### Added
 
@@ -1946,7 +1946,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed a few autocrafting bugs.
 - Fixed a crash with the Disk Manipulator.
 
-## [v1.3.3-alpha] - 2016-12-06
+## [1.3.3-alpha] - 2016-12-06
 
 ### Changed
 
@@ -1956,7 +1956,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed not being able to start a crafting task.
 
-## [v1.3.2-alpha] - 2016-12-04
+## [1.3.2-alpha] - 2016-12-04
 
 ### Fixed
 
@@ -1964,7 +1964,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool.
 - Fixed client crash when placing network blocks.
 
-## [v1.3.1-alpha] - 2016-12-04
+## [1.3.1-alpha] - 2016-12-04
 
 ### Changed
 
@@ -1975,7 +1975,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed Disk Drive not noticing a Storage Disk being shift clicked out of the GUI.
 
-## [v1.3.0-alpha] - 2016-12-03
+## [1.3.0-alpha] - 2016-12-03
 
 ### Added
 
@@ -1987,14 +1987,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed IC2 support.
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available).
 
-## [v1.2.26] - 2017-06-10
+## [1.2.26] - 2017-06-10
 
 ### Fixed
 
 - Fixed Interface duping items on extract-only storages.
 - Fixed calculating crafting resources for more than 9 unique items, for addon mods.
 
-## [v1.2.25] - 2017-03-25
+## [1.2.25] - 2017-03-25
 
 ### Changed
 
@@ -2002,7 +2002,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fire player crafting event when shift clicking in the grid.
 - Allow INodeNetwork instances to return an ItemStack for display in Controller GUI.
 
-## [v1.2.24] - 2017-03-18
+## [1.2.24] - 2017-03-18
 
 ### Changed
 
@@ -2012,7 +2012,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Autocrafting bugfixes.
 
-## [v1.2.23] - 2017-03-11
+## [1.2.23] - 2017-03-11
 
 ### Added
 
@@ -2030,7 +2030,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Disk Manipulator crash.
 - Fixed slow oredict comparisons causing TPS lag.
 
-## [v1.2.22] - 2017-02-19
+## [1.2.22] - 2017-02-19
 
 ### Fixed
 
@@ -2038,13 +2038,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Fluid Interface not dropping inventory contents.
 - Fixed glitchy upgrade recipes in the Solderer.
 
-## [v1.2.21] - 2017-02-07
+## [1.2.21] - 2017-02-07
 
 ### Fixed
 
 - Fixed crash when placing head with Constructor.
 
-## [v1.2.20] - 2017-02-02
+## [1.2.20] - 2017-02-02
 
 ### Added
 
@@ -2055,7 +2055,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed client side crash with cables.
 
-## [v1.2.19] - 2017-02-01
+## [1.2.19] - 2017-02-01
 
 ### Added
 
@@ -2077,7 +2077,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash when rotating External Storage.
 - Fixed disk textures not working on latest Forge.
 
-## [v1.2.18] - 2017-01-22
+## [1.2.18] - 2017-01-22
 
 ### Changed
 
@@ -2090,7 +2090,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed client side crash with disk drive.
 - Fixed crash with external storage in fluid mode.
 
-## [v1.2.17] - 2017-01-12
+## [1.2.17] - 2017-01-12
 
 ### Added
 
@@ -2110,14 +2110,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Solderer recipe conflicts, allowing for easier automation.
 - Fixed machines not connecting with cable after Controller.
 
-## [v1.2.16] - 2017-01-04
+## [1.2.16] - 2017-01-04
 
 ### Fixed
 
 - Fixed an autocrafting regression.
 - Fixed crash with External Storage.
 
-## [v1.2.15] - 2017-01-03
+## [1.2.15] - 2017-01-03
 
 ### Fixed
 
@@ -2125,13 +2125,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed External Storage crash when breaking a connected inventory.
 - Autocrafting bugfixes.
 
-## [v1.2.14] - 2016-12-24
+## [1.2.14] - 2016-12-24
 
 ### Fixed
 
 - Fixed server crash.
 
-## [v1.2.13] - 2016-12-23
+## [1.2.13] - 2016-12-23
 
 ### Fixed
 
@@ -2142,7 +2142,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Autocrafting bugfixes.
 - Made sure External Storage always has the correct inventory in world.
 
-## [v1.2.12] - 2016-12-16
+## [1.2.12] - 2016-12-16
 
 ### Changed
 
@@ -2156,7 +2156,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed oredict button not having the correct position on a small resolution.
 - Fixed Constructor not using Crafting Upgrade when in item dropping mode.
 
-## [v1.2.11] - 2016-12-10
+## [1.2.11] - 2016-12-10
 
 ### Added
 
@@ -2167,7 +2167,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The Grid now resizes based on screen size (max rows can be configured).
 - Made the Interface sideless, you can just insert or extract from any side.
 
-## [v1.2.10] - 2016-12-09
+## [1.2.10] - 2016-12-09
 
 ### Changed
 
@@ -2181,7 +2181,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed other fluid storages going negative when using void excess fluids option.
 - A few autocrafting bugfixes.
 
-## [v1.2.9] - 2016-12-06
+## [1.2.9] - 2016-12-06
 
 ### Changed
 
@@ -2191,13 +2191,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool.
 
-## [v1.2.8] - 2016-11-30
+## [1.2.8] - 2016-11-30
 
 ### Fixed
 
 - Fixed autocrafting bugs.
 
-## [v1.2.7] - 2016-11-29
+## [1.2.7] - 2016-11-29
 
 ### Changed
 
@@ -2207,7 +2207,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed not being able to place disks in Disk Drives on servers.
 
-## [v1.2.6] - 2016-11-26
+## [1.2.6] - 2016-11-26
 
 ### Changed
 
@@ -2221,7 +2221,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed Solderer progress percentage text.
 
-## [v1.2.5] - 2016-11-24
+## [1.2.5] - 2016-11-24
 
 ### Added
 
@@ -2244,7 +2244,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Constructor not calling block place event.
 - Fixed shift clicking non disk items in the Disk Manipulator voiding them.
 
-## [v1.2.4] - 2016-11-10
+## [1.2.4] - 2016-11-10
 
 ### Added
 
@@ -2267,21 +2267,21 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed ability to put External Storages on Refined Storage network blocks.
 
-## [v1.2.3] - 2016-11-06
+## [1.2.3] - 2016-11-06
 
 ### Fixed
 
 - Fixed fluid cache updating wrongly.
 - Fixed Exporter scheduling too many crafting tasks.
 
-## [v1.2.2] - 2016-11-05
+## [1.2.2] - 2016-11-05
 
 ### Fixed
 
 - Fixed item voiding when exporting to a chest with a storage in Extract Only mode.
 - Various autocrafting fixes.
 
-## [v1.2.1] - 2016-11-05
+## [1.2.1] - 2016-11-05
 
 ### Added
 
@@ -2303,7 +2303,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed controller explosions when multiple controllers are connected to the same network.
 
-## [v1.2.0] - 2016-11-03
+## [1.2.0] - 2016-11-03
 
 ### Added
 
@@ -2355,13 +2355,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Grid quantities being unreadable when using unicode font.
 - Fixed disconnecting when Storage Disk or Storage Block is too big.
 
-## [v1.2.0-beta.8] - 2016-11-03
+## [1.2.0-beta.8] - 2016-11-03
 
 ### Fixed
 
 - More autocrafting issues.
 
-## [v1.2.0-beta.7] - 2016-11-03
+## [1.2.0-beta.7] - 2016-11-03
 
 ### Fixed
 
@@ -2369,52 +2369,52 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - External Storage crashes and TPS lag issues.
 - Mekanism recipes are autocraftable again.
 
-## [v1.2.0-beta.6] - 2016-11-02
+## [1.2.0-beta.6] - 2016-11-02
 
 ### Fixed
 
 - More autocrafting issues.
 - Oredict autocrafting has been improved.
 
-## [v1.2.0-beta.5] - 2016-10-30
+## [1.2.0-beta.5] - 2016-10-30
 
 ### Fixed
 
 - More autocrafting issues.
 - External Storage TPS lag issues.
 
-## [v1.2.0-beta.4] - 2016-10-27
+## [1.2.0-beta.4] - 2016-10-27
 
 ### Fixed
 
 - More autocrafting and TPS issues.
 
-## [v1.2.0-beta.3] - 2016-10-25
+## [1.2.0-beta.3] - 2016-10-25
 
 ### Fixed
 
 - More autocrafting issues.
 
-## [v1.2.0-beta.2] - 2016-10-24
+## [1.2.0-beta.2] - 2016-10-24
 
 ### Fixed
 
 - Extreme TPS issues while crafting.
 - Laggy disk drive rendering.
 
-## [v1.2.0-beta.1] - 2016-10-23
+## [1.2.0-beta.1] - 2016-10-23
 
 ### Changed
 
 - First beta release for v1.2.0, featuring a new autocrafting system.
 
-## [v1.1.3] - 2016-10-07
+## [1.1.3] - 2016-10-07
 
 ### Fixed
 
 - Fixed some clients not starting up due to too many Disk Drive model permutations.
 
-## [v1.1.2] - 2016-10-03
+## [1.1.2] - 2016-10-03
 
 ### Added
 
@@ -2431,13 +2431,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed JEI overlay disappearing now and again.
 - Fixed Detector hitbox.
 
-## [v1.1.1] - 2016-09-28
+## [1.1.1] - 2016-09-28
 
 ### Fixed
 
 - Fixed crash on servers.
 
-## [v1.1.0] - 2016-09-28
+## [1.1.0] - 2016-09-28
 
 ### Added
 
@@ -2457,7 +2457,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crash with Disk Manipulator.
 - Fixed autocrafting not giving back byproducts.
 
-## [v1.0.5] - 2016-09-21
+## [1.0.5] - 2016-09-21
 
 ### Added
 
@@ -2479,13 +2479,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI.
 - Fixed shift clicking from Grid when player inventory is full throwing items in the world.
 
-## [v1.0.4] - 2016-09-17
+## [1.0.4] - 2016-09-17
 
 ### Fixed
 
 - Fixed lag caused by Crafter.
 
-## [v1.0.3] - 2016-09-17
+## [1.0.3] - 2016-09-17
 
 ### Added
 
@@ -2504,7 +2504,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed fluid autocrafting scheduling too much crafting tasks for buckets.
 - Fixed blocks in hand facing wrong direction.
 
-## [v1.0.2] - 2016-09-14
+## [1.0.2] - 2016-09-14
 
 ### Changed
 
@@ -2518,7 +2518,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed crafting task limit in crafting start GUI.
 
-## [v1.0.1] - 2016-09-13
+## [1.0.1] - 2016-09-13
 
 ### Added
 
@@ -2534,7 +2534,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed advanced tooltips showing in Grid when not configured to do so.
 - Optimized crafting pattern loading.
 
-## [v1.0.0] - 2016-09-12
+## [1.0.0] - 2016-09-12
 
 ### Added
 
@@ -2560,7 +2560,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Fluid Interface voiding bucket when shift clicking to out slot.
 - Fixed wrong machine connection logic.
 
-## [v0.9.4-beta] - 2016-08-27
+## [0.9.4-beta] - 2016-08-27
 
 ### Changed
 
@@ -2572,7 +2572,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Little fixes in German translation.
 - Reverted network changes that caused buggy behavior.
 
-## [v0.9.3-beta] - 2016-08-26
+## [0.9.3-beta] - 2016-08-26
 
 ### Added
 
@@ -2589,19 +2589,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fixed that the Fluid Storage Disk recipe returns an invalid disk.
 
-## [v0.9.2-beta] - 2016-08-25
+## [0.9.2-beta] - 2016-08-25
 
 ### Fixed
 
 - Fixed not being able to take out items from Wireless Grid cross-dimensionally.
 
-## [v0.9.1-beta] - 2016-08-24
+## [0.9.1-beta] - 2016-08-24
 
 ### Fixed
 
 - Fixed server crash with Grid.
 
-## [v0.9.0-beta] - 2016-08-24
+## [0.9.0-beta] - 2016-08-24
 
 ### Added
 
