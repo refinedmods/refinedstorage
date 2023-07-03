@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.autocrafting;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +60,7 @@ public class InvalidCraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public ItemStack getOutput(NonNullList<ItemStack> took) {
+    public ItemStack getOutput(NonNullList<ItemStack> took, RegistryAccess registryAccess) {
         throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
     }
 

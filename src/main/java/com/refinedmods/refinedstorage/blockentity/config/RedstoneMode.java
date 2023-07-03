@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.blockentity.config;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public enum RedstoneMode {
@@ -22,8 +23,8 @@ public enum RedstoneMode {
         return id < 0 || id >= values().length ? IGNORE : values()[id];
     }
 
-    public static <T extends BlockEntity & IRedstoneConfigurable> BlockEntitySynchronizationParameter<Integer, T> createParameter() {
-        return new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, IGNORE.ordinal(), t -> t.getRedstoneMode().ordinal(), (t, v) -> t.setRedstoneMode(RedstoneMode.getById(v)));
+    public static <T extends BlockEntity & IRedstoneConfigurable> BlockEntitySynchronizationParameter<Integer, T> createParameter(ResourceLocation id) {
+        return new BlockEntitySynchronizationParameter<>(id, EntityDataSerializers.INT, IGNORE.ordinal(), t -> t.getRedstoneMode().ordinal(), (t, v) -> t.setRedstoneMode(RedstoneMode.getById(v)));
     }
 
     public boolean isEnabled(boolean powered) {

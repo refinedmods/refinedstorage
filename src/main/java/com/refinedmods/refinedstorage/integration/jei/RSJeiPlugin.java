@@ -36,7 +36,8 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGenericGuiContainerHandler(BaseScreen.class, new GuiContainerHandler());
+        JeiHelper jeiHelper = new JeiHelper(registration.getJeiHelpers().getIngredientManager());
+        registration.addGenericGuiContainerHandler(BaseScreen.class, new GuiContainerHandler(jeiHelper));
         registration.addGhostIngredientHandler(BaseScreen.class, new GhostIngredientHandler());
     }
 
@@ -52,7 +53,7 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addCategoryExtension(CoverRecipe.class, (cover) -> new CoverCraftingCategoryExtension());
-        registration.getCraftingCategory().addCategoryExtension(HollowCoverRecipe.class, (cover) -> new HollowCoverCraftingCategoryExtension());
+        registration.getCraftingCategory().addCategoryExtension(CoverRecipe.class, cover -> new CoverCraftingCategoryExtension());
+        registration.getCraftingCategory().addCategoryExtension(HollowCoverRecipe.class, cover -> new HollowCoverCraftingCategoryExtension());
     }
 }

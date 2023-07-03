@@ -24,7 +24,7 @@ public class CrafterManagerContainerFactory implements IContainerFactory<Crafter
             data.put(buf.readComponent().getString(), buf.readInt());
         }
 
-        CrafterManagerContainerMenu container = new CrafterManagerContainerMenu((CrafterManagerBlockEntity) inv.player.level.getBlockEntity(pos), inv.player, windowId);
+        CrafterManagerContainerMenu container = new CrafterManagerContainerMenu((CrafterManagerBlockEntity) inv.player.level().getBlockEntity(pos), inv.player, windowId);
 
         container.setScreenInfoProvider(new EmptyScreenInfoProvider());
         container.initSlots(data);

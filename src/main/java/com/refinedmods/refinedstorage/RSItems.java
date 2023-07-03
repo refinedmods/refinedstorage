@@ -46,6 +46,17 @@ public final class RSItems {
     public static final RegistryObject<BlockItem> MACHINE_CASING;
     public static final RegistryObject<CoverItem> COVER;
     public static final RegistryObject<CoverItem> HOLLOW_COVER;
+    public static final RegistryObject<BlockItem> QUARTZ_ENRICHED_IRON_BLOCK;
+    public static final RegistryObject<BlockItem> CABLE;
+    public static final RegistryObject<BlockItem> DISK_DRIVE;
+    public static final RegistryObject<BlockItem> EXTERNAL_STORAGE;
+    public static final RegistryObject<BlockItem> IMPORTER;
+    public static final RegistryObject<BlockItem> EXPORTER;
+    public static final RegistryObject<BlockItem> INTERFACE;
+    public static final RegistryObject<BlockItem> FLUID_INTERFACE;
+    public static final RegistryObject<BlockItem> STORAGE_MONITOR;
+    public static final RegistryObject<BlockItem> CONSTRUCTOR;
+    public static final RegistryObject<BlockItem> DESTRUCTOR;
 
     public static final Map<ProcessorItem.Type, RegistryObject<ProcessorItem>> PROCESSORS = new EnumMap<>(ProcessorItem.Type.class);
 
@@ -122,12 +133,12 @@ public final class RSItems {
         PORTABLE_GRID = ITEMS.register("portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.NORMAL));
         CREATIVE_PORTABLE_GRID = ITEMS.register("creative_portable_grid", () -> new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
 
-        registerBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
+        QUARTZ_ENRICHED_IRON_BLOCK = registerBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON);
         MACHINE_CASING = registerBlockItemFor(RSBlocks.MACHINE_CASING);
         COVER = ITEMS.register("cover", CoverItem::new);
         HOLLOW_COVER = ITEMS.register("hollow_cover", HollowCoverItem::new);
-        registerBlockItemFor(RSBlocks.CABLE);
-        registerBlockItemFor(RSBlocks.DISK_DRIVE);
+        CABLE = registerBlockItemFor(RSBlocks.CABLE);
+        DISK_DRIVE = registerBlockItemFor(RSBlocks.DISK_DRIVE);
 
         for (ItemStorageType type : ItemStorageType.values()) {
             STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.STORAGE_BLOCKS.get(type).getId().getPath(), () -> new StorageBlockItem(RSBlocks.STORAGE_BLOCKS.get(type).get())));
@@ -137,14 +148,14 @@ public final class RSItems {
             FLUID_STORAGE_BLOCKS.put(type, ITEMS.register(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).getId().getPath(), () -> new FluidStorageBlockItem(RSBlocks.FLUID_STORAGE_BLOCKS.get(type).get())));
         }
 
-        registerBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
-        registerBlockItemFor(RSBlocks.IMPORTER);
-        registerBlockItemFor(RSBlocks.EXPORTER);
-        registerBlockItemFor(RSBlocks.INTERFACE);
-        registerBlockItemFor(RSBlocks.FLUID_INTERFACE);
-        registerBlockItemFor(RSBlocks.STORAGE_MONITOR);
-        registerBlockItemFor(RSBlocks.CONSTRUCTOR);
-        registerBlockItemFor(RSBlocks.DESTRUCTOR);
+        EXTERNAL_STORAGE = registerBlockItemFor(RSBlocks.EXTERNAL_STORAGE);
+        IMPORTER = registerBlockItemFor(RSBlocks.IMPORTER);
+        EXPORTER = registerBlockItemFor(RSBlocks.EXPORTER);
+        INTERFACE = registerBlockItemFor(RSBlocks.INTERFACE);
+        FLUID_INTERFACE = registerBlockItemFor(RSBlocks.FLUID_INTERFACE);
+        STORAGE_MONITOR = registerBlockItemFor(RSBlocks.STORAGE_MONITOR);
+        CONSTRUCTOR = registerBlockItemFor(RSBlocks.CONSTRUCTOR);
+        DESTRUCTOR = registerBlockItemFor(RSBlocks.DESTRUCTOR);
 
         CONTROLLER.put(ColorMap.DEFAULT_COLOR, ITEMS.register(
             RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath(),
@@ -208,7 +219,7 @@ public final class RSItems {
     }
 
     private static <T extends BaseBlock> RegistryObject<BlockItem> registerBlockItemFor(RegistryObject<T> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties().tab(RS.CREATIVE_MODE_TAB)));
+        return ITEMS.register(block.getId().getPath(), () -> new BaseBlockItem(block.get(), new Item.Properties()));
     }
 
     public static void register() {

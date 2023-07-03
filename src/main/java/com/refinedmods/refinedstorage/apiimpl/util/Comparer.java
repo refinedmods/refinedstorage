@@ -13,11 +13,11 @@ public class Comparer implements IComparer {
             return true;
         }
 
-        if (!ItemStack.isSame(left, right)) {
+        if (!ItemStack.isSameItem(left, right)) {
             return false;
         }
 
-        if ((flags & COMPARE_NBT) == COMPARE_NBT && !ItemStack.tagMatches(left, right)) {
+        if ((flags & COMPARE_NBT) == COMPARE_NBT && !ItemStack.isSameItemSameTags(left, right)) {
             return false;
         }
 

@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.screen.grid;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSKeyBindings;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
@@ -33,10 +32,12 @@ import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.TimeUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -48,6 +49,12 @@ import java.util.List;
 
 @MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreenInfoProvider {
+    private static final ResourceLocation PORTABLE_GRID_TEXTURE = new ResourceLocation(RS.ID, "textures/gui/portable_grid.png");
+    private static final ResourceLocation CRAFTING_GRID_TEXTURE = new ResourceLocation(RS.ID, "textures/gui/crafting_grid.png");
+    private static final ResourceLocation PATTERN_GRID_TEXTURE = new ResourceLocation(RS.ID, "textures/gui/pattern_grid.png");
+    private static final ResourceLocation PATTERN_GRID_PROCESSING_TEXTURE = new ResourceLocation(RS.ID, "textures/gui/pattern_grid_processing.png");
+    private static final ResourceLocation GRID_TEXTURE = new ResourceLocation(RS.ID, "textures/gui/grid.png");
+
     private static String searchQuery = "";
     private final IGrid grid;
     private final TabListWidget<GridContainerMenu> tabs;
@@ -62,6 +69,8 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     private boolean wasConnected;
     private boolean doSort;
     private int slotNumber;
+    private int slotNumberX;
+    private int slotNumberY;
     private int patternScrollOffset;
     private int patternScrollOffsetMax;
     private boolean updatePatternOffset;
@@ -141,8 +150,8 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             searchField.setMode(grid.getSearchBoxMode());
             searchField.setValue(searchQuery);
         } else {
-            searchField.x = sx;
-            searchField.y = sy;
+            searchField.setX(sx);
+            searchField.setY(sy);
         }
 
         addRenderableWidget(searchField);
@@ -183,7 +192,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
 
             if (!processingPattern.selected()) {
                 exactPattern = addCheckBox(
-                    processingPattern.x + processingPattern.getWidth() + 5,
+                    processingPattern.getX() + processingPattern.getWidth() + 5,
                     y + getTopHeight() + (getVisibleRows() * 18) + 60,
                     Component.translatable("misc.refinedstorage.exact"),
                     GridBlockEntity.EXACT_PATTERN.getValue(),
@@ -193,7 +202,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             } else {
                 patternScrollbar.setEnabled(true);
 
-                fluidCheckBox = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, Component.translatable("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
+                fluidCheckBox = addCheckBox(processingPattern.getX() + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, Component.translatable("misc.refinedstorage.fluidmode"), ((GridNetworkNode) grid).getType() == IType.FLUIDS, button -> {
                     BlockEntitySynchronizationManager.setParameter(GridBlockEntity.PROCESSING_TYPE, GridBlockEntity.PROCESSING_TYPE.getValue() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
                 });
             }
@@ -314,6 +323,14 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         return slotNumber;
     }
 
+    public int getSlotNumberX() {
+        return slotNumberX;
+    }
+
+    public int getSlotNumberY() {
+        return slotNumberY;
+    }
+
     private boolean isOverClear(double mouseX, double mouseY) {
         int y = getTopHeight() + (getVisibleRows() * 18) + 4;
 
@@ -336,25 +353,26 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        tabs.drawBackground(poseStack, x, y - tabs.getHeight());
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        tabs.drawBackground(graphics, x, y - tabs.getHeight());
 
+        ResourceLocation texture;
         if (grid instanceof IPortableGrid) {
-            bindTexture(RS.ID, "gui/portable_grid.png");
+            texture = PORTABLE_GRID_TEXTURE;
         } else if (grid.getGridType() == GridType.CRAFTING) {
-            bindTexture(RS.ID, "gui/crafting_grid.png");
+            texture = CRAFTING_GRID_TEXTURE;
         } else if (grid.getGridType() == GridType.PATTERN) {
-            bindTexture(RS.ID, "gui/pattern_grid" + (((GridNetworkNode) grid).isProcessingPattern() ? "_processing" : "") + ".png");
+            texture = ((GridNetworkNode) grid).isProcessingPattern() ? PATTERN_GRID_PROCESSING_TEXTURE : PATTERN_GRID_TEXTURE;
         } else {
-            bindTexture(RS.ID, "gui/grid.png");
+            texture = GRID_TEXTURE;
         }
 
         int yy = y;
 
-        blit(poseStack, x, yy, 0, 0, imageWidth - 34, getTopHeight());
+        graphics.blit(texture, x, yy, 0, 0, imageWidth - 34, getTopHeight());
 
         // Filters and/or portable grid disk
-        blit(poseStack, x + imageWidth - 34 + 4, y, 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
+        graphics.blit(texture, x + imageWidth - 34 + 4, y, 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
 
         int rows = getVisibleRows();
 
@@ -370,12 +388,12 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 }
             }
 
-            blit(poseStack, x, yy, 0, yTextureStart, imageWidth - 34, 18);
+            graphics.blit(texture, x, yy, 0, yTextureStart, imageWidth - 34, 18);
         }
 
         yy += 18;
 
-        blit(poseStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth - 34, getBottomHeight());
+        graphics.blit(texture, x, yy, 0, getTopHeight() + (18 * 3), imageWidth - 34, getBottomHeight());
 
         if (grid.getGridType() == GridType.PATTERN) {
             int ty = 0;
@@ -388,40 +406,42 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 ty = 2;
             }
 
-            blit(poseStack, x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
+            graphics.blit(texture, x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
             if (processingPattern.selected()) {
                 updatePatternScrollbar();
-                patternScrollbar.render(poseStack);
+                patternScrollbar.render(graphics);
             }
         }
 
-        tabs.drawForeground(poseStack, x, y - tabs.getHeight(), mouseX, mouseY, true);
+        tabs.drawForeground(graphics, x, y - tabs.getHeight(), mouseX, mouseY, true);
 
-        searchField.render(poseStack, 0, 0, 0);
+        searchField.render(graphics, 0, 0, 0);
 
-        scrollbar.render(poseStack);
+        scrollbar.render(graphics);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
         // Drawn in here for bug #1844 (https://github.com/refinedmods/refinedstorage/issues/1844)
         // Item tooltips can't be rendered in the foreground layer due to the X offset translation.
         if (isOverSlotWithStack()) {
-            drawGridTooltip(poseStack, view.getStacks().get(slotNumber), mouseX, mouseY);
+            drawGridTooltip(graphics, view.getStacks().get(slotNumber), mouseX, mouseY);
         }
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
-        renderString(poseStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
+        renderString(graphics, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
         int x = 8;
         int y = 19;
 
         this.slotNumber = -1;
+        this.slotNumberX = -1;
+        this.slotNumberY = -1;
 
         int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
 
@@ -430,21 +450,24 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 this.slotNumber = slot;
+                this.slotNumberX = x;
+                this.slotNumberY = y;
             }
 
             if (slot < view.getStacks().size()) {
-                view.getStacks().get(slot).draw(poseStack, this, x, y);
+                view.getStacks().get(slot).draw(graphics, this, x, y);
             }
 
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
-                poseStack.pushPose();
+                graphics.pose().pushPose();
+                graphics.pose().translate(0, 0, 300);
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
-                fillGradient(poseStack, x, y, x + 16, y + 16, color, color);
+                graphics.fillGradient(x, y, x + 16, y + 16, color, color);
                 RenderSystem.colorMask(true, true, true, true);
-                poseStack.popPose();
+                graphics.pose().popPose();
             }
 
             slot++;
@@ -458,17 +481,17 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         }
 
         if (isOverClear(mouseX, mouseY)) {
-            renderTooltip(poseStack, mouseX, mouseY, I18n.get("misc.refinedstorage.clear"));
+            renderTooltip(graphics, mouseX, mouseY, I18n.get("misc.refinedstorage.clear"));
         }
 
         if (isOverCreatePattern(mouseX, mouseY)) {
-            renderTooltip(poseStack, mouseX, mouseY, I18n.get("gui.refinedstorage.grid.pattern_create"));
+            renderTooltip(graphics, mouseX, mouseY, I18n.get("gui.refinedstorage.grid.pattern_create"));
         }
 
-        tabs.drawTooltip(poseStack, font, mouseX, mouseY);
+        tabs.drawTooltip(graphics, font, mouseX, mouseY);
     }
 
-    private void drawGridTooltip(PoseStack poseStack, IGridStack gridStack, int mouseX, int mouseY) {
+    private void drawGridTooltip(GuiGraphics graphics, IGridStack gridStack, int mouseX, int mouseY) {
         List<Component> textLines = gridStack.getTooltip(true);
 
         ItemStack stackContext = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
@@ -487,7 +510,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             }
         }
 
-        renderTooltip(poseStack, stackContext, mouseX, mouseY, textLines);
+        renderTooltip(graphics, stackContext, mouseX, mouseY, textLines);
     }
 
     @Override

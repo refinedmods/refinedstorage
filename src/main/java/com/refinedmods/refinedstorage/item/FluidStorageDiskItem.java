@@ -33,7 +33,7 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     private final FluidStorageType type;
 
     public FluidStorageDiskItem(FluidStorageType type) {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
+        super(new Item.Properties().stacksTo(1));
 
         this.type = type;
     }

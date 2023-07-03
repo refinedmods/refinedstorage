@@ -50,7 +50,7 @@ public class CraftingNode extends Node {
                     if (IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE) != null) {
                         IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
 
-                        ItemStack output = getPattern().getOutput(recipe);
+                        ItemStack output = getPattern().getOutput(recipe, network.getLevel().registryAccess());
 
                         if (!isRoot()) {
                             internalStorage.insert(output, output.getCount(), Action.PERFORM);

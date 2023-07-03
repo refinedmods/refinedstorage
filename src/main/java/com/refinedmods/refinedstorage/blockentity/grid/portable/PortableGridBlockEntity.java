@@ -57,6 +57,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -86,42 +87,42 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_ENCHANTMENTS = "Enchantments"; // @Volatile: Minecraft specific nbt key, see EnchantmentHelper
 
-    public static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter(new ResourceLocation(RS.ID, "portable_grid_redstone_mode"));
 
-    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SORTING_DIRECTION = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSortingDirection, (t, v) -> {
+    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SORTING_DIRECTION = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "portable_grid_sorting_direction"), EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
             t.setChanged();
         }
     }, (initial, p) -> GridBlockEntity.trySortGrid(initial));
 
-    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SORTING_TYPE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSortingType, (t, v) -> {
+    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SORTING_TYPE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "portable_grid_sorting_type"), EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.setChanged();
         }
     }, (initial, p) -> GridBlockEntity.trySortGrid(initial));
 
-    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SEARCH_BOX_MODE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSearchBoxMode, (t, v) -> {
+    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SEARCH_BOX_MODE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "portable_grid_search_box_mode"), EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
 
-    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SIZE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSize, (t, v) -> {
+    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> SIZE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "portable_grid_size"), EntityDataSerializers.INT, 0, PortableGridBlockEntity::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.setChanged();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
 
-    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> TAB_SELECTED = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, PortableGridBlockEntity::getTabSelected, (t, v) -> {
+    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> TAB_SELECTED = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "portable_grid_tab_selected"), EntityDataSerializers.INT, 0, PortableGridBlockEntity::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.setChanged();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
 
-    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> TAB_PAGE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, PortableGridBlockEntity::getTabPage, (t, v) -> {
+    private static final BlockEntitySynchronizationParameter<Integer, PortableGridBlockEntity> TAB_PAGE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "portable_grid_tab_page"), EntityDataSerializers.INT, 0, PortableGridBlockEntity::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);
             t.setChanged();

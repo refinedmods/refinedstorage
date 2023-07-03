@@ -29,7 +29,7 @@ public class BlockEntityMenuProvider<T extends BlockEntity> implements MenuProvi
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-        T blockEntity = (T) player.level.getBlockEntity(pos);
+        T blockEntity = (T) player.level().getBlockEntity(pos);
 
         return provider.create(blockEntity, windowId, inventory, player);
     }

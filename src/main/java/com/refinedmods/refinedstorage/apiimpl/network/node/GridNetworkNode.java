@@ -35,10 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -114,7 +111,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         });
     private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
     private final List<IFilter> filters = new ArrayList<>();
-    private final CraftingContainer matrix = new CraftingContainer(craftingContainer, 3, 3);
+    private final CraftingContainer matrix = new TransientCraftingContainer(craftingContainer, 3, 3);
     private final List<IGridTab> tabs = new ArrayList<>();
     private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
     private final GridType type;
@@ -354,7 +351,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         if (currentRecipe == null) {
             result.setItem(0, ItemStack.EMPTY);
         } else {
-            result.setItem(0, currentRecipe.assemble(matrix));
+            result.setItem(0, currentRecipe.assemble(matrix, level.registryAccess()));
         }
 
         craftingListeners.forEach(ICraftingGridListener::onCraftingMatrixChanged);

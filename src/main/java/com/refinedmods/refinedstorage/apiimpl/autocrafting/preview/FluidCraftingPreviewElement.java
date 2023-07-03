@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -57,32 +58,34 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers) {
+    public void draw(GuiGraphics graphics, int x, int y, IElementDrawers drawers) {
         if (missing) {
-            drawers.getOverlayDrawer().draw(poseStack, x, y, 0xFFF2DEDE);
+            drawers.getOverlayDrawer().draw(graphics, x, y, 0xFFF2DEDE);
         }
 
         x += 5;
         y += 7;
 
-        drawers.getFluidDrawer().draw(poseStack, x, y, getStack());
+        drawers.getFluidDrawer().draw(graphics, x, y, getStack());
 
         float scale = Minecraft.getInstance().isEnforceUnicode() ? 1F : 0.5F;
 
         y += 2;
+
+        PoseStack poseStack = graphics.pose();
 
         poseStack.pushPose();
         poseStack.scale(scale, scale, 1);
 
         if (toCraft > 0) {
             String format = doesDisableTaskStarting() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(poseStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get(format, API.instance().getQuantityFormatter().formatInBucketForm(toCraft)));
+            drawers.getStringDrawer().draw(graphics, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get(format, API.instance().getQuantityFormatter().formatInBucketForm(toCraft)));
 
             y += 7;
         }
 
         if (available > 0) {
-            drawers.getStringDrawer().draw(poseStack, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(available)));
+            drawers.getStringDrawer().draw(graphics, RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.get("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(available)));
         }
 
         poseStack.popPose();

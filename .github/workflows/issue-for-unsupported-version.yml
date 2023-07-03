@@ -1,0 +1,7 @@
+name: Issue for unsupported version
+on:
+  issues:
+    types: [ labeled, unlabeled, reopened ]
+jobs:
+  unsupported-labeler:
+    uses: refinedmods/refinedarchitect/.github/workflows/issue-for-unsupported-version.yml@v0.5.4

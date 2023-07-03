@@ -1,31 +1,40 @@
 package com.refinedmods.refinedstorage.blockentity.data;
 
 import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class BlockEntitySynchronizationParameter<T, E extends BlockEntity> {
+    private static final Set<ResourceLocation> HAD = new HashSet<>();
+
+    private final ResourceLocation id;
     private final EntityDataSerializer<T> serializer;
     private final Function<E, T> valueProducer;
     @Nullable
     private final BiConsumer<E, T> valueConsumer;
     @Nullable
     private final BlockEntitySynchronizationClientListener<T> listener;
-    private int id;
     private T value;
 
-    public BlockEntitySynchronizationParameter(EntityDataSerializer<T> serializer, T defaultValue, Function<E, T> producer) {
-        this(serializer, defaultValue, producer, null);
+    public BlockEntitySynchronizationParameter(ResourceLocation id, EntityDataSerializer<T> serializer, T defaultValue, Function<E, T> producer) {
+        this(id, serializer, defaultValue, producer, null);
     }
 
-    public BlockEntitySynchronizationParameter(EntityDataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer) {
-        this(serializer, defaultValue, producer, consumer, null);
+    public BlockEntitySynchronizationParameter(ResourceLocation id, EntityDataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer) {
+        this(id, serializer, defaultValue, producer, consumer, null);
     }
 
-    public BlockEntitySynchronizationParameter(EntityDataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer, @Nullable BlockEntitySynchronizationClientListener<T> listener) {
+    public BlockEntitySynchronizationParameter(ResourceLocation id, EntityDataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer, @Nullable BlockEntitySynchronizationClientListener<T> listener) {
+        if (!HAD.add(id)) {
+            throw new IllegalArgumentException("Duplicate BlockEntitySynchronizationParameter: " + id);
+        }
+        this.id = id;
         this.value = defaultValue;
         this.serializer = serializer;
         this.valueProducer = producer;
@@ -33,12 +42,8 @@ public class BlockEntitySynchronizationParameter<T, E extends BlockEntity> {
         this.listener = listener;
     }
 
-    public int getId() {
+    public ResourceLocation getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public EntityDataSerializer<T> getSerializer() {

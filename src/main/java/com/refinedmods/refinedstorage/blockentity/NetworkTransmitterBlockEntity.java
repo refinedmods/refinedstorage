@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkTransmitterNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -22,8 +22,8 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class NetworkTransmitterBlockEntity extends NetworkNodeBlockEntity<NetworkTransmitterNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, NetworkTransmitterBlockEntity> DISTANCE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getDistance());
-    public static final BlockEntitySynchronizationParameter<Optional<ResourceLocation>, NetworkTransmitterBlockEntity> RECEIVER_DIMENSION = new BlockEntitySynchronizationParameter<>(RSSerializers.OPTIONAL_RESOURCE_LOCATION_SERIALIZER, Optional.empty(), t -> {
+    public static final BlockEntitySynchronizationParameter<Integer, NetworkTransmitterBlockEntity> DISTANCE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "network_transmitter_distance"), EntityDataSerializers.INT, 0, t -> t.getNode().getDistance());
+    public static final BlockEntitySynchronizationParameter<Optional<ResourceLocation>, NetworkTransmitterBlockEntity> RECEIVER_DIMENSION = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "network_transmitter_receiver_dimension"), RSSerializers.OPTIONAL_RESOURCE_LOCATION_SERIALIZER, Optional.empty(), t -> {
         if (t.getNode().getReceiverDimension() != null) {
             return Optional.of(t.getNode().getReceiverDimension().location());
         }

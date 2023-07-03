@@ -1,0 +1,16 @@
+name: Publish release
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+jobs:
+  publish-release:
+    uses: refinedmods/refinedarchitect/.github/workflows/publish-release.yml@v0.5.4
+    secrets: inherit
+    with:
+      project-name: 'Refined Storage'
+      announce: true
+      mutation-testing: false
+      curseforge: true

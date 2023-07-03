@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.item;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.api.storage.StorageType;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
@@ -33,7 +32,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
     private final ItemStorageType type;
 
     public StorageDiskItem(ItemStorageType type) {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
+        super(new Item.Properties().stacksTo(1));
 
         this.type = type;
     }

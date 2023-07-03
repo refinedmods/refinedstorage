@@ -1,8 +1,6 @@
 package com.refinedmods.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
@@ -16,12 +14,15 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,15 +32,24 @@ public final class RenderUtils {
     private RenderUtils() {
     }
 
-    public static Quaternion getQuaternion(Direction direction) {
+    private static Vector3f getRotationVector(Direction direction) {
         return switch (direction) {
-            case NORTH -> new Quaternion(0, 0, 0, true);
-            case EAST -> new Quaternion(0, -90, 0, true);
-            case SOUTH -> new Quaternion(0, 180, 0, true);
-            case WEST -> new Quaternion(0, 90, 0, true);
-            case UP -> new Quaternion(90, 0, 180, true);
-            case DOWN -> new Quaternion(-90, 0, 0, true);
+            case NORTH -> new Vector3f(0, 0, 0);
+            case EAST -> new Vector3f(0, -90, 0);
+            case SOUTH -> new Vector3f(0, 180, 0);
+            case WEST -> new Vector3f(0, 90, 0);
+            case UP -> new Vector3f(90, 0, 180);
+            case DOWN -> new Vector3f(-90, 0, 0);
         };
+    }
+
+    public static Quaternionf getQuaternion(Direction direction) {
+        Vector3f vec = getRotationVector(direction);
+        return new Quaternionf().rotateXYZ(
+            vec.x() * Mth.DEG_TO_RAD,
+            vec.y() * Mth.DEG_TO_RAD,
+            vec.z() * Mth.DEG_TO_RAD
+        );
     }
 
     public static String shorten(String text, int length) {

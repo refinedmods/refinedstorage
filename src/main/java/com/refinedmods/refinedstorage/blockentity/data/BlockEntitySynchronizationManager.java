@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.blockentity.data;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParamaterUpdateMessage;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.HashMap;
@@ -10,8 +11,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BlockEntitySynchronizationManager {
-    private static final Map<Integer, BlockEntitySynchronizationParameter> REGISTRY = new HashMap<>();
-    private static int lastId = 0;
+    private static final Map<ResourceLocation, BlockEntitySynchronizationParameter> REGISTRY = new HashMap<>();
 
     private final BlockEntity blockEntity;
     private final List<BlockEntitySynchronizationParameter> parameters;
@@ -50,12 +50,10 @@ public class BlockEntitySynchronizationManager {
 
     // Synchronized so we don't conflict with addons that reuse this register method in parallel.
     public synchronized static void registerParameter(BlockEntitySynchronizationParameter parameter) {
-        parameter.setId(lastId);
-
-        REGISTRY.put(lastId++, parameter);
+        REGISTRY.put(parameter.getId(), parameter);
     }
 
-    public static BlockEntitySynchronizationParameter getParameter(int id) {
+    public static BlockEntitySynchronizationParameter getParameter(ResourceLocation id) {
         return REGISTRY.get(id);
     }
 

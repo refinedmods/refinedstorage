@@ -1,11 +1,13 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.container.DiskDriveContainerMenu;
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.blockentity.DiskDriveBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.container.DiskDriveContainerMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class DiskDriveScreen extends StorageScreen<DiskDriveContainerMenu> {
@@ -14,7 +16,7 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainerMenu> {
             containerMenu,
             inventory,
             title,
-            "gui/disk_drive.png",
+            new ResourceLocation(RS.ID, "textures/gui/disk_drive.png"),
             new StorageScreenSynchronizationParameters(
                 DiskDriveBlockEntity.TYPE,
                 NetworkNodeBlockEntity.REDSTONE_MODE,
@@ -29,9 +31,8 @@ public class DiskDriveScreen extends StorageScreen<DiskDriveContainerMenu> {
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 79, 42, I18n.get("gui.refinedstorage.disk_drive.disks"));
-
-        super.renderForeground(poseStack, mouseX, mouseY);
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 79, 42, I18n.get("gui.refinedstorage.disk_drive.disks"));
+        super.renderForeground(graphics, mouseX, mouseY);
     }
 }

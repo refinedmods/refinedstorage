@@ -3,24 +3,13 @@
     "connected=false,direction=down": {
       "model": "refinedstorage:block/wireless_transmitter/disconnected"
     },
-    "connected=true,direction=down": {
-      "model": "refinedstorage:block/wireless_transmitter/yellow"
-    },
-    "connected=false,direction=up": {
+    "connected=false,direction=east": {
       "model": "refinedstorage:block/wireless_transmitter/disconnected",
-      "x": 180
-    },
-    "connected=true,direction=up": {
-      "model": "refinedstorage:block/wireless_transmitter/yellow",
-      "x": 180
+      "x": 90,
+      "y": 270
     },
     "connected=false,direction=north": {
       "model": "refinedstorage:block/wireless_transmitter/disconnected",
-      "x": 90,
-      "y": 180
-    },
-    "connected=true,direction=north": {
-      "model": "refinedstorage:block/wireless_transmitter/yellow",
       "x": 90,
       "y": 180
     },
@@ -28,29 +17,40 @@
       "model": "refinedstorage:block/wireless_transmitter/disconnected",
       "x": 90
     },
-    "connected=true,direction=south": {
-      "model": "refinedstorage:block/wireless_transmitter/yellow",
-      "x": 90
+    "connected=false,direction=up": {
+      "model": "refinedstorage:block/wireless_transmitter/disconnected",
+      "x": 180
     },
     "connected=false,direction=west": {
       "model": "refinedstorage:block/wireless_transmitter/disconnected",
       "x": 90,
       "y": 90
     },
-    "connected=true,direction=west": {
-      "model": "refinedstorage:block/wireless_transmitter/yellow",
-      "x": 90,
-      "y": 90
-    },
-    "connected=false,direction=east": {
-      "model": "refinedstorage:block/wireless_transmitter/disconnected",
-      "x": 90,
-      "y": 270
+    "connected=true,direction=down": {
+      "model": "refinedstorage:block/wireless_transmitter/yellow"
     },
     "connected=true,direction=east": {
       "model": "refinedstorage:block/wireless_transmitter/yellow",
       "x": 90,
       "y": 270
+    },
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/wireless_transmitter/yellow",
+      "x": 90,
+      "y": 180
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/wireless_transmitter/yellow",
+      "x": 90
+    },
+    "connected=true,direction=up": {
+      "model": "refinedstorage:block/wireless_transmitter/yellow",
+      "x": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/wireless_transmitter/yellow",
+      "x": 90,
+      "y": 90
     }
   }
 }

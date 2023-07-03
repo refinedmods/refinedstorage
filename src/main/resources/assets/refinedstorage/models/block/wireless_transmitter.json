@@ -127,7 +127,10 @@
             15
           ],
           "texture": "#cutout",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         },
         "up": {
           "uv": [
@@ -137,7 +140,10 @@
             8
           ],
           "texture": "#cutout",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         }
       }
     },
@@ -162,7 +168,10 @@
             16
           ],
           "texture": "#cutout",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         },
         "east": {
           "uv": [
@@ -172,7 +181,10 @@
             16
           ],
           "texture": "#cutout",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         }
       }
     },
@@ -197,7 +209,10 @@
             16
           ],
           "texture": "#cutout",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         },
         "south": {
           "uv": [
@@ -207,7 +222,10 @@
             16
           ],
           "texture": "#cutout",
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         }
       }
     }

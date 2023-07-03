@@ -1,9 +1,10 @@
 package com.refinedmods.refinedstorage.screen;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.network.chat.Component;
-
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -11,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/priority.png");
+
     private final BlockEntitySynchronizationParameter<Integer, ?> priority;
 
     public PriorityScreen(BaseScreen parent, BlockEntitySynchronizationParameter<Integer, ?> priority, Inventory inventory) {
@@ -40,8 +43,8 @@ public class PriorityScreen extends AmountSpecifyingScreen<AbstractContainerMenu
     }
 
     @Override
-    protected String getTexture() {
-        return "gui/priority.png";
+    protected ResourceLocation getTexture() {
+        return TEXTURE;
     }
 
     @Override

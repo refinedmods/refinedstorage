@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IWhitelistBlacklist;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class WhitelistBlacklistSideButton extends SideButton {
@@ -18,13 +19,13 @@ public class WhitelistBlacklistSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.mode") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.mode." + (parameter.getValue() == IWhitelistBlacklist.WHITELIST ? "whitelist" : "blacklist"));
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
-        screen.blit(poseStack, x, y, parameter.getValue() == IWhitelistBlacklist.WHITELIST ? 0 : 16, 64, 16, 16);
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
+        graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, parameter.getValue() == IWhitelistBlacklist.WHITELIST ? 0 : 16, 64, 16, 16);
     }
 
     @Override

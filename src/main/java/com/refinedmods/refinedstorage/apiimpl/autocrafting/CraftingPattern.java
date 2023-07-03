@@ -6,11 +6,13 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.fluids.FluidStack;
@@ -80,7 +82,7 @@ public class CraftingPattern implements ICraftingPattern {
         return outputs.getOutputs();
     }
 
-    public ItemStack getOutput(NonNullList<ItemStack> took) {
+    public ItemStack getOutput(NonNullList<ItemStack> took, RegistryAccess registryAccess) {
         if (processing) {
             throw new IllegalStateException("Cannot get crafting output from processing pattern");
         }
@@ -95,7 +97,7 @@ public class CraftingPattern implements ICraftingPattern {
             craftingContainer.setItem(i, took.get(i));
         }
 
-        ItemStack result = recipe.assemble(craftingContainer);
+        ItemStack result = recipe.assemble(craftingContainer, registryAccess);
         if (result.isEmpty()) {
             throw new IllegalStateException("Cannot have empty result");
         }
@@ -265,7 +267,7 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    public static class DummyCraftingContainer extends CraftingContainer {
+    public static class DummyCraftingContainer extends TransientCraftingContainer {
         public DummyCraftingContainer() {
             super(new AbstractContainerMenu(null, 0) {
                 @Override

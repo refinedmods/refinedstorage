@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ExporterNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
@@ -11,6 +12,7 @@ import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -19,14 +21,14 @@ import javax.annotation.Nonnull;
 
 public class ExporterBlockEntity extends NetworkNodeBlockEntity<ExporterNetworkNode> {
 
-    public static final BlockEntitySynchronizationParameter<CompoundTag, ExporterBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(),
+    public static final BlockEntitySynchronizationParameter<CompoundTag, ExporterBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "exporter_cover_manager"), EntityDataSerializers.COMPOUND_TAG, new CompoundTag(),
         t -> t.getNode().getCoverManager().writeToNbt(),
         (t, v) -> t.getNode().getCoverManager().readFromNbt(v),
         (initial, p) -> {
         });
 
-    public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> TYPE = IType.createParameter();
+    public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "exporter_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> TYPE = IType.createParameter(new ResourceLocation(RS.ID, "exporter_type"));
 
     public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
         .addWatchedParameter(REDSTONE_MODE)

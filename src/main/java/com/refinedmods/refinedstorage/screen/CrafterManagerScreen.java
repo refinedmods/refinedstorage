@@ -16,8 +16,10 @@ import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
@@ -26,6 +28,8 @@ import java.util.Map;
 
 @MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu> implements IScreenInfoProvider {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/crafter_manager.png");
+
     private final CrafterManagerNetworkNode crafterManager;
 
     private ScrollbarWidget scrollbar;
@@ -65,8 +69,8 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
             });
             searchField.setMode(crafterManager.getSearchBoxMode());
         } else {
-            searchField.x = sx;
-            searchField.y = sy;
+            searchField.setX(sx);
+            searchField.setY(sy);
         }
 
         addRenderableWidget(searchField);
@@ -82,10 +86,8 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, "gui/crafter_manager.png");
-
-        blit(poseStack, x, y, 0, 0, imageWidth, getTopHeight());
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, getTopHeight());
 
         int rows = getVisibleRows();
 
@@ -103,43 +105,40 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
                 }
             }
 
-            blit(poseStack, x, yy, 0, yTextureStart, imageWidth, 18);
+            graphics.blit(TEXTURE, x, yy, 0, yTextureStart, imageWidth, 18);
         }
 
         yy += 18;
 
-        blit(poseStack, x, yy, 0, getTopHeight() + (18 * 3), imageWidth, getBottomHeight());
+        graphics.blit(TEXTURE, x, yy, 0, getTopHeight() + (18 * 3), imageWidth, getBottomHeight());
 
         if (crafterManager.isActiveOnClient()) {
             for (Slot slot : menu.slots) {
                 if (slot instanceof CrafterManagerSlot && slot.isActive()) {
-                    blit(poseStack, x + slot.x - 1, y + slot.y - 1, 0, 193, 18, 18);
+                    graphics.blit(TEXTURE, x + slot.x - 1, y + slot.y - 1, 0, 193, 18, 18);
                 }
             }
         }
 
-        searchField.render(poseStack, 0, 0, 0);
+        searchField.render(graphics, 0, 0, 0);
 
-        scrollbar.render(poseStack);
+        scrollbar.render(graphics);
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
-        renderString(poseStack, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
+        renderString(graphics, 7, getYPlayerInventory() - 12, I18n.get("container.inventory"));
 
-        if (menu != null && crafterManager.isActiveOnClient()) {
+        if (crafterManager.isActiveOnClient()) {
             for (Map.Entry<String, Integer> heading : menu.getHeadings().entrySet()) {
                 int y = heading.getValue();
 
                 if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                    bindTexture(RS.ID, "gui/crafter_manager.png");
-
-                    blit(poseStack, 7, y, 0, 174, 18 * 9, 18);
-
-                    renderString(poseStack, 7 + 4, y + 6, RenderUtils.shorten(I18n.get(heading.getKey()), 25));
+                    graphics.blit(TEXTURE, 7, y, 0, 174, 18 * 9, 18);
+                    renderString(graphics, 7 + 4, y + 6, RenderUtils.shorten(I18n.get(heading.getKey()), 25));
                 }
             }
         }

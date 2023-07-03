@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.integration.inventorytweaks.InventoryTweaksIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 
 public class GridSortingTypeSideButton extends SideButton {
@@ -19,16 +19,16 @@ public class GridSortingTypeSideButton extends SideButton {
     }
 
     @Override
-    protected String getTooltip() {
+    protected String getSideButtonTooltip() {
         return I18n.get("sidebutton.refinedstorage.grid.sorting.type") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.sorting.type." + grid.getSortingType());
     }
 
     @Override
-    protected void renderButtonIcon(PoseStack poseStack, int x, int y) {
+    protected void renderButtonIcon(GuiGraphics graphics, int x, int y) {
         if (grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED) {
-            screen.blit(poseStack, x, y, 48, 48, 16, 16);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, 48, 48, 16, 16);
         } else {
-            screen.blit(poseStack, x, y, grid.getSortingType() * 16, 32, 16, 16);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, x, y, grid.getSortingType() * 16, 32, 16, 16);
         }
     }
 

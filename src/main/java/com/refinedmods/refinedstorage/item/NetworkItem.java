@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -46,8 +46,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             if (name == null) {
                 return null;
             }
-
-            return ResourceKey.create(Registry.DIMENSION_REGISTRY, name);
+            return ResourceKey.create(Registries.DIMENSION, name);
         }
 
         return null;

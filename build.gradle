@@ -1,20 +1,9 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-
-plugins {
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-}
+apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v${gradle.ext.refinedArchitectVersion}/helper.gradle"
 
 repositories {
     maven {
-        url = "https://dvs1.progwml6.com/files/maven/"
+        name = 'JEI'
+        url = "https://maven.blamejared.com/"
     }
     maven {
         url "https://www.cursemaven.com"
@@ -23,157 +12,30 @@ repositories {
         }
     }
     maven {
+        name = 'Curios'
         url = "https://maven.theillusivec4.top/"
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+forgeProject("refinedstorage")
 
-group = 'com.refinedmods'
 archivesBaseName = 'refinedstorage'
-version = '1.11.6'
 
-if (System.getenv('GITHUB_SHA') != null) {
-    version += '+' + System.getenv('GITHUB_SHA').substring(0, 7)
-}
-
-if (System.getenv('RELEASE') != null) {
-    version = System.getenv('RELEASE').substring(1) // remove 'v'
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xmaxerrs" << "999"
-}
-
-minecraft {
-    mappings channel: 'official', version: '1.19.2'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', ''
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                refinedstorage {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                refinedstorage {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'refinedstorage', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
-            mods {
-                refinedstorage {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-sourceSets {
-    main.resources.srcDirs += 'src/generated/resources'
-}
-
-processResources {
-    inputs.property 'version', project.version
-    filesMatching('META-INF/mods.toml') {
-        expand 'version': project.version
-    }
-}
+enablePublishing()
+enableCurseForge(243076)
+enableJavadoc()
+enableSonarQube("refinedmods_refinedstorage")
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.32'
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.2.0.22")
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:15.2.0.22")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.2.0.22")
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.3.0.262")
-    compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:11.3.0.262")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:11.3.0.262")
+    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:4581240')
 
-    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:3871353')
+    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:4596466')
 
-    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:3914007')
-
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0:api")
-}
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "refinedstorage",
-                "Specification-Vendor"    : "refinedmods",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "refinedmods",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-if (System.getenv("CURSEFORGE_TOKEN") != null) {
-    curseforge {
-        apiKey = System.getenv("CURSEFORGE_TOKEN")
-        project {
-            id = '243076'
-            changelog = System.getenv("CHANGELOG")
-            changelogType = 'markdown'
-            releaseType = project.version.toString().contains('beta') ? 'beta' : (project.version.toString().contains('alpha') ? 'alpha' : 'release')
-            addGameVersion "1.19.2"
-            mainArtifact(jar) {
-                displayName = "v$project.version"
-            }
-        }
-    }
-}
-
-jar.finalizedBy('reobfJar')
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/refinedmods/refinedstorage")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-        maven {
-            name = "CreeperHost"
-            url = uri("https://maven.creeperhost.net/release")
-            credentials {
-                username = System.getenv("CREEPERHOST_MAVEN_USERNAME")
-                password = System.getenv("CREEPERHOST_MAVEN_TOKEN")
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
-
-javadoc {
-    failOnError = false
+    // TODO mixin issue
+    // runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1:api")
 }

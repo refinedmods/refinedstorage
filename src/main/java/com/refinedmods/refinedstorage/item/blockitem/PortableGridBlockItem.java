@@ -8,7 +8,6 @@ import com.refinedmods.refinedstorage.inventory.player.PlayerSlot;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.network.chat.Component;
-
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,7 +28,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
     public PortableGridBlockItem(Type type) {
         super(
             type == Type.CREATIVE ? RSBlocks.CREATIVE_PORTABLE_GRID.get() : RSBlocks.PORTABLE_GRID.get(),
-            new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1),
+            new Item.Properties().stacksTo(1),
             type == Type.CREATIVE,
             () -> RS.SERVER_CONFIG.getPortableGrid().getCapacity()
         );

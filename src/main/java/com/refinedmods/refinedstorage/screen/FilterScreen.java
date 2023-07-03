@@ -1,6 +1,5 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
@@ -10,15 +9,19 @@ import com.refinedmods.refinedstorage.network.FilterUpdateMessage;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 public class FilterScreen extends BaseScreen<FilterContainerMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/filter.png");
+
     private final ItemStack stack;
     private final String name;
     private int compare;
@@ -71,7 +74,7 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
         nameField.setBordered(false);
         nameField.setVisible(true);
         nameField.setCanLoseFocus(true);
-        nameField.setFocus(false);
+        nameField.setFocused(false);
         nameField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         nameField.setResponder(content -> sendUpdate());
 
@@ -87,7 +90,7 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
 
         modeButton.setWidth(font.width(text.getString()) + 12);
         modeButton.setMessage(text);
-        modFilterCheckBox.x = modeButton.x + modeButton.getWidth() + 4;
+        modFilterCheckBox.setX(modeButton.getX() + modeButton.getWidth() + 4);
     }
 
     @Override
@@ -111,16 +114,14 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack, int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, "gui/filter.png");
-
-        blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
+    public void renderBackground(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY) {
-        renderString(poseStack, 7, 7, title.getString());
-        renderString(poseStack, 7, 137, I18n.get("container.inventory"));
+    public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        renderString(graphics, 7, 7, title.getString());
+        renderString(graphics, 7, 137, I18n.get("container.inventory"));
     }
 
     public int getType() {

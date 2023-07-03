@@ -18,12 +18,10 @@ public class CancelAllAutocraftingCommand extends NetworkCommand {
     }
 
     public static void sendCancelMessage(CommandContext<CommandSourceStack> context, int count) {
-        String translationKey = "commands.refinedstorage.network.autocrafting.cancel.multiple";
-        if (count == 1) {
-            translationKey = "commands.refinedstorage.network.autocrafting.cancel.single";
-        }
-
-        context.getSource().sendSuccess(Component.translatable(translationKey, Component.literal("" + count).setStyle(Styles.YELLOW)), false);
+        final String translationKey = count == 1
+            ? "commands.refinedstorage.network.autocrafting.cancel.single"
+            : "commands.refinedstorage.network.autocrafting.cancel.multiple";
+        context.getSource().sendSuccess(() -> Component.translatable(translationKey, Component.literal(String.valueOf(count)).setStyle(Styles.YELLOW)), false);
     }
 
     @Override

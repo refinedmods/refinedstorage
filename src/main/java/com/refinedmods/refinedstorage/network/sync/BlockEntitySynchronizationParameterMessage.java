@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.network.sync;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationManager;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -20,7 +21,7 @@ public class BlockEntitySynchronizationParameterMessage {
     }
 
     public static BlockEntitySynchronizationParameterMessage decode(FriendlyByteBuf buf) {
-        int id = buf.readInt();
+        ResourceLocation id = buf.readResourceLocation();
         boolean initial = buf.readBoolean();
 
         BlockEntitySynchronizationParameter parameter = BlockEntitySynchronizationManager.getParameter(id);
@@ -37,7 +38,7 @@ public class BlockEntitySynchronizationParameterMessage {
     }
 
     public static void encode(BlockEntitySynchronizationParameterMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.parameter.getId());
+        buf.writeResourceLocation(message.parameter.getId());
         buf.writeBoolean(message.initial);
 
         message.parameter.getSerializer().write(buf, message.parameter.getValueProducer().apply(message.blockEntity));

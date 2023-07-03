@@ -9,9 +9,7 @@ import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
-import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -36,17 +34,14 @@ public class HollowCoverCraftingCategoryExtension implements ICraftingCategoryEx
             if (item == null || item == Items.AIR) {
                 continue;
             }
-            NonNullList<ItemStack> subBlocks = NonNullList.create();
-            block.fillItemCategory(CreativeModeTab.TAB_SEARCH, subBlocks);
-            for (ItemStack subBlock : subBlocks) {
-                if (CoverManager.isValidCover(subBlock)) {
-                    ItemStack fullCover = new ItemStack(RSItems.COVER.get());
-                    CoverItem.setItem(fullCover, subBlock);
-                    input.add(fullCover);
-                    ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER.get());
-                    CoverItem.setItem(hollowCover, subBlock);
-                    output.add(hollowCover);
-                }
+            ItemStack itemStack = new ItemStack(item);
+            if (CoverManager.isValidCover(itemStack)) {
+                ItemStack fullCover = new ItemStack(RSItems.COVER.get());
+                CoverItem.setItem(fullCover, itemStack);
+                input.add(fullCover);
+                ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER.get());
+                CoverItem.setItem(hollowCover, itemStack);
+                output.add(hollowCover);
             }
         }
 

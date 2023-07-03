@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity.grid;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -31,53 +31,53 @@ import java.util.List;
 import java.util.Set;
 
 public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Boolean, GridBlockEntity> EXACT_PATTERN = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.BOOLEAN, true, t -> t.getNode().isExactPattern(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Boolean, GridBlockEntity> EXACT_PATTERN = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_exact_mode"), EntityDataSerializers.BOOLEAN, true, t -> t.getNode().isExactPattern(), (t, v) -> {
         t.getNode().setExactPattern(v);
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.updateExactPattern(p)));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> VIEW_TYPE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getViewType(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> PROCESSING_TYPE = IType.createParameter(new ResourceLocation(RS.ID, "grid_processing_type"), (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> VIEW_TYPE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_view_type"), EntityDataSerializers.INT, 0, t -> t.getNode().getViewType(), (t, v) -> {
         if (IGrid.isValidViewType(v)) {
             t.getNode().setViewType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final BlockEntitySynchronizationParameter<List<Set<ResourceLocation>>, GridBlockEntity> ALLOWED_ITEM_TAGS = new BlockEntitySynchronizationParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedItemTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedItemTags(v));
-    public static final BlockEntitySynchronizationParameter<List<Set<ResourceLocation>>, GridBlockEntity> ALLOWED_FLUID_TAGS = new BlockEntitySynchronizationParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedFluidTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedFluidTags(v));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SORTING_DIRECTION = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<List<Set<ResourceLocation>>, GridBlockEntity> ALLOWED_ITEM_TAGS = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_allowed_item_tags"), RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedItemTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedItemTags(v));
+    public static final BlockEntitySynchronizationParameter<List<Set<ResourceLocation>>, GridBlockEntity> ALLOWED_FLUID_TAGS = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_allowed_fluid_tags"), RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedFluidTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedFluidTags(v));
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SORTING_DIRECTION = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_sorting_direction"), EntityDataSerializers.INT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.getNode().setSortingDirection(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SORTING_TYPE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SORTING_TYPE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_sorting_type"), EntityDataSerializers.INT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> trySortGrid(initial));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> TAB_SELECTED = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> TAB_SELECTED = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_tab_selected"), EntityDataSerializers.INT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> TAB_PAGE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> TAB_PAGE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_tab_page"), EntityDataSerializers.INT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
             t.getNode().setTabPage(v);
             t.getNode().markDirty();
         }
     });
-    public static final BlockEntitySynchronizationParameter<Boolean, GridBlockEntity> PROCESSING_PATTERN = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Boolean, GridBlockEntity> PROCESSING_PATTERN = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_processing_pattern"), EntityDataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
         t.getNode().setProcessingPattern(v);
         t.getNode().clearMatrix();
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SIZE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SIZE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_size"), EntityDataSerializers.INT, 0, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.resize(grid.getMinecraft(), grid.width, grid.height)));
-    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SEARCH_BOX_MODE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, GridBlockEntity> SEARCH_BOX_MODE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "grid_search_box_mode"), EntityDataSerializers.INT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();

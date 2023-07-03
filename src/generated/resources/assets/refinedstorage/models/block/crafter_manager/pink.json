@@ -1,13 +1,13 @@
 {
   "parent": "refinedstorage:block/cube_north_cutout",
   "textures": {
-    "particle": "refinedstorage:block/crafter_manager/right",
-    "east": "refinedstorage:block/crafter_manager/right",
-    "south": "refinedstorage:block/crafter_manager/back",
-    "west": "refinedstorage:block/crafter_manager/left",
-    "up": "refinedstorage:block/crafter_manager/top",
+    "cutout": "refinedstorage:block/crafter_manager/cutouts/pink",
     "down": "refinedstorage:block/bottom",
+    "east": "refinedstorage:block/crafter_manager/right",
     "north": "refinedstorage:block/crafter_manager/front",
-    "cutout": "refinedstorage:block/crafter_manager/cutouts/pink"
+    "particle": "refinedstorage:block/crafter_manager/right",
+    "south": "refinedstorage:block/crafter_manager/back",
+    "up": "refinedstorage:block/crafter_manager/top",
+    "west": "refinedstorage:block/crafter_manager/left"
   }
 }

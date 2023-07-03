@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.preview;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +33,7 @@ public class ErrorCraftingPreviewElement implements ICraftingPreviewElement {
     }
 
     @Override
-    public void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers) {
+    public void draw(GuiGraphics graphics, int x, int y, IElementDrawers drawers) {
         // NO OP
     }
 

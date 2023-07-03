@@ -1,0 +1,16 @@
+// 1.20.1	2023-07-03T11:19:34.4829224	Tags for minecraft:item mod id refinedstorage
+061bf4c2f3bdd530115615f2b04e55c2602908bd data/refinedstorage/tags/items/controller.json
+407a16e5d941c69915f75b135a13e9144cc9c43e data/refinedstorage/tags/items/crafter.json
+dc1342f1d3e6a4cd8eaaa52429a011c10c6c2d96 data/refinedstorage/tags/items/crafter_manager.json
+2f8fee222ac543909ae06a35de3c08e3e19f4f4b data/refinedstorage/tags/items/crafting_grid.json
+bf4f4ed5b02babe4717894e4823d5541d69dbfe6 data/refinedstorage/tags/items/crafting_monitor.json
+6abdee7222576fd0b2da7f86954e35ca8cab4d25 data/refinedstorage/tags/items/detector.json
+7b9c6d4ef32d5e63c327d71a8758f8b900ac9cb6 data/refinedstorage/tags/items/disk_manipulator.json
+651ca3794c0a1c28aa275a9814de7fdc04c90653 data/refinedstorage/tags/items/fluid_grid.json
+31a65b9d23f79a0191f78ba46c5ed39942d38023 data/refinedstorage/tags/items/grid.json
+295fce6281b688f4992b1181c58e9a52c80465a1 data/refinedstorage/tags/items/network_receiver.json
+37ea6fd2ffdb762fb9351359ddf9cc0f401bbbf5 data/refinedstorage/tags/items/network_transmitter.json
+9dae822d3373a348a6ab4e11de2056f369a0253b data/refinedstorage/tags/items/pattern_grid.json
+52c8060208bf763f487313b8de6243550cc2f63a data/refinedstorage/tags/items/relay.json
+555b5c80da6838aa2a4d8f5044276852b1bc525d data/refinedstorage/tags/items/security_manager.json
+e740b41d26fe5be1b6251db461627b8e5e5925aa data/refinedstorage/tags/items/wireless_transmitter.json

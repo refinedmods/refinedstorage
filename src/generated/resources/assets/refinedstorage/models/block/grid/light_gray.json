@@ -1,13 +1,13 @@
 {
   "parent": "refinedstorage:block/cube_north_cutout",
   "textures": {
-    "particle": "refinedstorage:block/grid/right",
-    "east": "refinedstorage:block/grid/right",
-    "south": "refinedstorage:block/grid/back",
-    "west": "refinedstorage:block/grid/left",
-    "up": "refinedstorage:block/grid/top",
+    "cutout": "refinedstorage:block/grid/cutouts/light_gray",
     "down": "refinedstorage:block/bottom",
+    "east": "refinedstorage:block/grid/right",
     "north": "refinedstorage:block/grid/front",
-    "cutout": "refinedstorage:block/grid/cutouts/light_gray"
+    "particle": "refinedstorage:block/grid/right",
+    "south": "refinedstorage:block/grid/back",
+    "up": "refinedstorage:block/grid/top",
+    "west": "refinedstorage:block/grid/left"
   }
 }

@@ -1,11 +1,11 @@
 package com.refinedmods.refinedstorage.apiimpl.network.grid;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.api.render.IElementDrawer;
 import com.refinedmods.refinedstorage.api.util.IFilter;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -37,20 +37,19 @@ public class GridTab implements IGridTab {
     }
 
     @Override
-    public void drawTooltip(PoseStack poseStack, int x, int y, Screen screen) {
+    public void drawTooltip(Font font, GuiGraphics graphics, int x, int y) {
         if (name != null) {
-            screen.renderTooltip(poseStack, name, x, y);
+            graphics.renderTooltip(font, name, x, y);
         }
     }
 
     @Override
-    public void drawIcon(PoseStack poseStack, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+    public void drawIcon(GuiGraphics graphics, int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
         if (!icon.isEmpty()) {
             Lighting.setupFor3DItems();
-
-            itemDrawer.draw(poseStack, x, y, icon);
+            itemDrawer.draw(graphics, x, y, icon);
         } else {
-            fluidDrawer.draw(poseStack, x, y, fluidIcon);
+            fluidDrawer.draw(graphics, x, y, fluidIcon);
         }
     }
 }

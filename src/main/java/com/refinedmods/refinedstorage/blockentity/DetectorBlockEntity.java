@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
 import com.refinedmods.refinedstorage.blockentity.config.IComparable;
@@ -11,21 +12,22 @@ import com.refinedmods.refinedstorage.screen.DetectorScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
 public class DetectorBlockEntity extends NetworkNodeBlockEntity<DetectorNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> TYPE = IType.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> MODE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getMode(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "detector_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> TYPE = IType.createParameter(new ResourceLocation(RS.ID, "detector_type"));
+    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> MODE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "detector_mode"), EntityDataSerializers.INT, 0, t -> t.getNode().getMode(), (t, v) -> {
         if (v == DetectorNetworkNode.MODE_UNDER || v == DetectorNetworkNode.MODE_EQUAL || v == DetectorNetworkNode.MODE_ABOVE) {
             t.getNode().setMode(v);
             t.getNode().markDirty();
         }
     });
-    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> AMOUNT = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getAmount(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, DetectorBlockEntity> AMOUNT = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "detector_amount"), EntityDataSerializers.INT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
     }, (initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen -> detectorScreen.updateAmountField(value)));

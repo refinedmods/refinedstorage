@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
     }
 
     @Override
-    protected List<Component> drawIngredientHighlights(PoseStack stack, int recipeX, int recipeY) {
+    protected List<Component> drawIngredientHighlights(GuiGraphics graphics, int recipeX, int recipeY) {
         List<Component> message = new ArrayList<>();
         message.add(Component.translatable("jei.tooltip.transfer"));
 
@@ -21,7 +21,7 @@ public class RecipeTransferPatternGridError extends RecipeTransferCraftingGridEr
 
         for (Ingredient ingredient : ingredientList.ingredients) {
             if (ingredient.isCraftable()) {
-                ingredient.getSlotView().drawHighlight(stack, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
+                ingredient.getSlotView().drawHighlight(graphics, AUTOCRAFTING_HIGHLIGHT_COLOR.getRGB());
                 craftMessage = true;
             }
         }

@@ -1,11 +1,11 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -196,7 +196,7 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(PoseStack poseStack, BaseScreen<?> screen, int x, int y) {
+    public void draw(GuiGraphics graphics, BaseScreen<?> screen, int x, int y) {
         String text = null;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
 
@@ -209,7 +209,7 @@ public class ItemGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        screen.renderItem(poseStack, x, y, stack, true, text, color);
+        screen.renderItem(graphics, x, y, stack, true, text, color);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
@@ -12,6 +13,7 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,11 +21,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 
 public class FluidStorageBlockEntity extends NetworkNodeBlockEntity<FluidStorageNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, FluidStorageBlockEntity> PRIORITY = IPrioritizable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, FluidStorageBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, FluidStorageBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final BlockEntitySynchronizationParameter<AccessType, FluidStorageBlockEntity> ACCESS_TYPE = IAccessType.createParameter();
-    public static final BlockEntitySynchronizationParameter<Long, FluidStorageBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> t.getNode().getStorage() != null ? (long) t.getNode().getStorage().getStored() : 0);
+    public static final BlockEntitySynchronizationParameter<Integer, FluidStorageBlockEntity> PRIORITY = IPrioritizable.createParameter(new ResourceLocation(RS.ID, "fluid_storage_priority"));
+    public static final BlockEntitySynchronizationParameter<Integer, FluidStorageBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "fluid_storage_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, FluidStorageBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter(new ResourceLocation(RS.ID, "fluid_storage_whitelist_blacklist"));
+    public static final BlockEntitySynchronizationParameter<AccessType, FluidStorageBlockEntity> ACCESS_TYPE = IAccessType.createParameter(new ResourceLocation(RS.ID, "fluid_storage_access_type"));
+    public static final BlockEntitySynchronizationParameter<Long, FluidStorageBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "fluid_storage_stored"), RSSerializers.LONG_SERIALIZER, 0L, t -> t.getNode().getStorage() != null ? (long) t.getNode().getStorage().getStored() : 0);
 
     public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
         .addWatchedParameter(REDSTONE_MODE)

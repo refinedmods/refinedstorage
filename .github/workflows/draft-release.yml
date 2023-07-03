@@ -1,0 +1,24 @@
+name: Draft release
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: 'Release type'
+        required: true
+        default: 'minor'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+      version-number-override:
+        description: 'Version number override'
+        required: false
+        type: string
+jobs:
+  draft:
+    uses: refinedmods/refinedarchitect/.github/workflows/draft-release.yml@v0.5.4
+    with:
+      release-type: ${{ inputs.release-type }}
+      version-number-override: ${{ inputs.version-number-override }}
+    secrets: inherit

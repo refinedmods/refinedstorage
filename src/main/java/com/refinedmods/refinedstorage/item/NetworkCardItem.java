@@ -1,13 +1,11 @@
 package com.refinedmods.refinedstorage.item;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.block.NetworkReceiverBlock;
 import com.refinedmods.refinedstorage.render.Styles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -28,7 +26,7 @@ public class NetworkCardItem extends Item {
     private static final String NBT_DIMENSION = "Dimension";
 
     public NetworkCardItem() {
-        super(new Item.Properties().tab(RS.CREATIVE_MODE_TAB).stacksTo(1));
+        super(new Item.Properties().stacksTo(1));
     }
 
     @Nullable
@@ -54,8 +52,7 @@ public class NetworkCardItem extends Item {
             if (name == null) {
                 return null;
             }
-
-            return ResourceKey.create(Registry.DIMENSION_REGISTRY, name);
+            return ResourceKey.create(Registries.DIMENSION, name);
         }
 
         return null;

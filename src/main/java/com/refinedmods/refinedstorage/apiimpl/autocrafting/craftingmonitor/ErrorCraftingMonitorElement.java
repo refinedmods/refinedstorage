@@ -1,11 +1,11 @@
 package com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.render.IElementDrawers;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.Styles;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -36,11 +36,9 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void draw(PoseStack poseStack, int x, int y, IElementDrawers drawers) {
-        base.draw(poseStack, x, y, drawers);
-
-        drawers.getErrorDrawer().draw(poseStack, x, y, null);
+    public void draw(GuiGraphics graphics, int x, int y, IElementDrawers drawers) {
+        base.draw(graphics, x, y, drawers);
+        drawers.getErrorDrawer().draw(graphics, x, y, null);
     }
 
     @Nullable

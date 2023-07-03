@@ -27,7 +27,7 @@ public class PortableGridBlockGridFactory implements IGridFactory {
     @Override
     @Nullable
     public IGrid createFromBlock(Player player, BlockPos pos) {
-        BlockEntity blockEntity = getRelevantBlockEntity(player.level, pos);
+        BlockEntity blockEntity = getRelevantBlockEntity(player.level(), pos);
 
         if (blockEntity instanceof PortableGridBlockEntity) {
             return (PortableGridBlockEntity) blockEntity;

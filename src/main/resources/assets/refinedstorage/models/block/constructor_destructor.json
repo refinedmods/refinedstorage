@@ -154,7 +154,10 @@
             16.0,
             16.0
           ],
-          "emissivity": 15
+          "forge_data": {
+            "block_light": 15,
+            "sky_light": 15
+          }
         }
       }
     }

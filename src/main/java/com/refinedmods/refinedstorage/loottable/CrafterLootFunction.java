@@ -40,7 +40,7 @@ public class CrafterLootFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return RSLootFunctions.CRAFTER.get();
+        return RSLootFunctions.CRAFTER;
     }
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<CrafterLootFunction> {

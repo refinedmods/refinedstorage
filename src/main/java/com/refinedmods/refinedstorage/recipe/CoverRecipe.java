@@ -5,23 +5,24 @@ import com.google.common.collect.Lists;
 import com.refinedmods.refinedstorage.RSItems;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.refinedmods.refinedstorage.item.CoverItem;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 
 import java.util.List;
 
 public class CoverRecipe extends CustomRecipe {
+    public static RecipeSerializer<CoverRecipe> SERIALIZER = new SimpleCraftingRecipeSerializer<>(CoverRecipe::new);
 
-    public static RecipeSerializer<CoverRecipe> SERIALIZER = new SimpleRecipeSerializer<>(CoverRecipe::new);
-
-    public CoverRecipe(ResourceLocation idIn) {
-        super(idIn);
+    public CoverRecipe(ResourceLocation id, CraftingBookCategory category) {
+        super(id, category);
     }
 
     public static boolean stackMatches(ItemStack first) {
@@ -76,7 +77,7 @@ public class CoverRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
         List<ItemStack> list = Lists.newArrayList();
         int ingots = 0;
         for (int i = 0; i < inv.getContainerSize(); ++i) {

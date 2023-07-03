@@ -38,7 +38,7 @@ public class ControllerLootFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return RSLootFunctions.CONTROLLER.get();
+        return RSLootFunctions.CONTROLLER;
     }
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<ControllerLootFunction> {

@@ -1,10 +1,9 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.opengl.GL11;
@@ -19,45 +18,39 @@ public abstract class SideButton extends Button {
     protected final BaseScreen<?> screen;
 
     protected SideButton(BaseScreen<?> screen) {
-        super(-1, -1, WIDTH, HEIGHT, Component.empty(), NO_ACTION);
-
+        super(Button.builder(Component.empty(), NO_ACTION).pos(-1, -1).size(WIDTH, HEIGHT));
         this.screen = screen;
     }
 
-    public void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         boolean isFocused = isFocused();
         if (isHovered || isFocused) {
-            int x = isHovered ? mouseX : (this.x - screen.getGuiLeft()) + width;
-            int y = isHovered ? mouseY : (this.y - screen.getGuiTop()) + (height / 2);
-            screen.renderTooltip(poseStack, x, y, getTooltip());
+            int x = isHovered ? mouseX : (this.getX() - screen.getGuiLeft()) + width;
+            int y = isHovered ? mouseY : (this.getY() - screen.getGuiTop()) + (height / 2);
+            screen.renderTooltip(graphics, x, y, getSideButtonTooltip());
         }
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        isHovered = RenderUtils.inBounds(x, y, width, height, mouseX, mouseY);
+        isHovered = RenderUtils.inBounds(getX(), getY(), width, height, mouseX, mouseY);
 
-        screen.bindTexture(RS.ID, "icons.png");
-        screen.blit(poseStack, x, y, 238, isHovered ? 35 : 16, WIDTH, HEIGHT);
+        graphics.blit(BaseScreen.ICONS_TEXTURE, getX(), getY(), 238, isHovered ? 35 : 16, WIDTH, HEIGHT);
 
-        renderButtonIcon(poseStack, x + 1, y + 1);
+        renderButtonIcon(graphics, getX() + 1, getY() + 1);
 
         if (isHoveredOrFocused()) {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.5f);
-            screen.blit(poseStack, x, y, 238, 54, WIDTH, HEIGHT);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, getX(), getY(), 238, 54, WIDTH, HEIGHT);
             RenderSystem.disableBlend();
         }
     }
 
-    public int getHeight() {
-        return height;
-    }
+    protected abstract void renderButtonIcon(GuiGraphics graphics, int x, int y);
 
-    protected abstract void renderButtonIcon(PoseStack poseStack, int x, int y);
-
-    protected abstract String getTooltip();
+    protected abstract String getSideButtonTooltip();
 }

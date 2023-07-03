@@ -2,9 +2,9 @@ package com.refinedmods.refinedstorage.screen.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,11 +47,11 @@ public class CheckboxWidget extends Checkbox {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.enableDepthTest();
-        Font fontRenderer = minecraft.font;
+        Font font = minecraft.font;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -63,9 +63,7 @@ public class CheckboxWidget extends Checkbox {
         int width = 10;
         int height = 10;
 
-        blit(poseStack, this.x, this.y, textureX, textureY, width, height, 32, 32);
-
-        this.renderBg(poseStack, minecraft, mouseX, mouseY);
+        graphics.blit(TEXTURE, this.getX(), this.getY(), textureX, textureY, width, height, 32, 32);
 
         int color = 14737632;
 
@@ -75,10 +73,6 @@ public class CheckboxWidget extends Checkbox {
             color = packedFGColor;
         }
 
-        if (shadow) {
-            drawString(poseStack, fontRenderer, this.getMessage(), this.x + 13, this.y + (this.height - 8) / 2, color);
-        } else {
-            fontRenderer.draw(poseStack, this.getMessage().getString(), (float) this.x + 13, this.y + (this.height - 8) / 2F, color);
-        }
+        graphics.drawString(font, this.getMessage(), this.getX() + 13, this.getY() + (this.height - 8) / 2, color, shadow);
     }
 }

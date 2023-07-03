@@ -1,12 +1,12 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -184,8 +184,8 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(PoseStack poseStack, BaseScreen<?> screen, int x, int y) {
-        FluidRenderer.INSTANCE.render(poseStack, x, y, stack);
+    public void draw(GuiGraphics graphics, BaseScreen<?> screen, int x, int y) {
+        FluidRenderer.INSTANCE.render(graphics, x, y, stack);
 
         String text;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
@@ -199,7 +199,7 @@ public class FluidGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }
 
-        screen.renderQuantity(poseStack, x, y, text, color);
+        screen.renderQuantity(graphics, x, y, text, color);
     }
 
     @Override

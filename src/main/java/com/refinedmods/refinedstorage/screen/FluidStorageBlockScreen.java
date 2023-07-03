@@ -1,9 +1,11 @@
 package com.refinedmods.refinedstorage.screen;
 
-import com.refinedmods.refinedstorage.container.FluidStorageContainerMenu;
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.blockentity.FluidStorageBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
+import com.refinedmods.refinedstorage.container.FluidStorageContainerMenu;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluidStorageBlockScreen extends StorageScreen<FluidStorageContainerMenu> {
@@ -12,7 +14,7 @@ public class FluidStorageBlockScreen extends StorageScreen<FluidStorageContainer
             containerMenu,
             inventory,
             title,
-            "gui/storage.png",
+            new ResourceLocation(RS.ID, "textures/gui/storage.png"),
             new StorageScreenSynchronizationParameters(
                 null,
                 NetworkNodeBlockEntity.REDSTONE_MODE,
