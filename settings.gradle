@@ -1,10 +1,24 @@
-pluginManagement {
+gradle.ext.refinedArchitectVersion = "0.5.1"
+
+dependencyResolutionManagement {
     repositories {
-        mavenCentral()
-        gradlePluginPortal()
         maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
+            url = "https://maven.pkg.github.com/refinedmods/refinedarchitect"
+            credentials {
+                username = "anything"
+                password = "\u0067hp_oGjcDFCn8jeTzIj4Ke9pLoEVtpnZMP4VQgaX"
+            }
+        }
+    }
+    versionCatalogs {
+        create("common") {
+            from("com.refinedmods.refinedarchitect:refinedarchitect-catalog-platform-common:${gradle.ext.refinedArchitectVersion}")
+        }
+        create("forge") {
+            from("com.refinedmods.refinedarchitect:refinedarchitect-catalog-platform-forge:${gradle.ext.refinedArchitectVersion}")
+        }
+        create("libs") {
+            from("com.refinedmods.refinedarchitect:refinedarchitect-catalog:${gradle.ext.refinedArchitectVersion}")
         }
     }
 }

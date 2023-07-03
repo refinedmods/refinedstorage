@@ -142,8 +142,6 @@ public final class ClientSetup {
         });
     }
 
-    // TODO: Emissivity is broken :(
-
     // TODO: we have probably too much emissivity (when disconnected)
 
     private static void registerBakedModelOverrides() {
