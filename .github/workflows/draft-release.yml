@@ -17,7 +17,7 @@ on:
         type: string
 jobs:
   draft:
-    uses: refinedmods/refinedarchitect/.github/workflows/draft-release.yml@v0.5.1
+    uses: refinedmods/refinedarchitect/.github/workflows/draft-release.yml@v0.5.4
     with:
       release-type: ${{ inputs.release-type }}
       version-number-override: ${{ inputs.version-number-override }}

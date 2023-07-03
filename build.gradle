@@ -17,7 +17,6 @@ repositories {
     }
 }
 
-
 forgeProject("refinedstorage")
 
 archivesBaseName = 'refinedstorage'
@@ -39,8 +38,4 @@ dependencies {
     // TODO mixin issue
     // runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1:api")
-}
-
-javadoc {
-    failOnError = false
 }
