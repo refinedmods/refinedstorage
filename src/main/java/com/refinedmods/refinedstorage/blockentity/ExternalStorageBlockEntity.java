@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStorage;
@@ -13,6 +14,7 @@ import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,12 +24,12 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 
 public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalStorageNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> PRIORITY = IPrioritizable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> TYPE = IType.createParameter();
-    public static final BlockEntitySynchronizationParameter<AccessType, ExternalStorageBlockEntity> ACCESS_TYPE = IAccessType.createParameter();
-    public static final BlockEntitySynchronizationParameter<Long, ExternalStorageBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> PRIORITY = IPrioritizable.createParameter(new ResourceLocation(RS.ID, "external_storage_priority"));
+    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "external_storage_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter(new ResourceLocation(RS.ID, "external_storage_whitelist_blacklist"));
+    public static final BlockEntitySynchronizationParameter<Integer, ExternalStorageBlockEntity> TYPE = IType.createParameter(new ResourceLocation(RS.ID, "external_storage_type"));
+    public static final BlockEntitySynchronizationParameter<AccessType, ExternalStorageBlockEntity> ACCESS_TYPE = IAccessType.createParameter(new ResourceLocation(RS.ID, "external_storage_access_type"));
+    public static final BlockEntitySynchronizationParameter<Long, ExternalStorageBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "external_storage_stored"), RSSerializers.LONG_SERIALIZER, 0L, t -> {
         long stored = 0;
 
         for (IExternalStorage<ItemStack> storage : t.getNode().getItemStorages()) {
@@ -40,7 +42,7 @@ public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalS
 
         return stored;
     });
-    public static final BlockEntitySynchronizationParameter<Long, ExternalStorageBlockEntity> CAPACITY = new BlockEntitySynchronizationParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+    public static final BlockEntitySynchronizationParameter<Long, ExternalStorageBlockEntity> CAPACITY = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "external_storage_capacity"), RSSerializers.LONG_SERIALIZER, 0L, t -> {
         long capacity = 0;
 
         for (IExternalStorage<ItemStack> storage : t.getNode().getItemStorages()) {
@@ -54,7 +56,7 @@ public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalS
         return capacity;
     });
 
-    public static final BlockEntitySynchronizationParameter<CompoundTag, ExternalStorageBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
+    public static final BlockEntitySynchronizationParameter<CompoundTag, ExternalStorageBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "external_storage_cover_manager"), EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
     });
 
     public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
