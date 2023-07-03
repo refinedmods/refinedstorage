@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed packages not being published to Maven.
+
 ## [1.12.0] - 2023-07-03
 
 ### Changed
