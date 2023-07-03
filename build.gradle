@@ -17,6 +17,8 @@ repositories {
     }
 }
 
+group = 'com.refinedmods'
+
 forgeProject("refinedstorage")
 
 archivesBaseName = 'refinedstorage'

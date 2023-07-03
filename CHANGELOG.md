@@ -7,6 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.12.1] - 2023-07-03
+
+### Fixed
+
+-   Fixed packages not being published to Maven.
+
 ## [1.12.0] - 2023-07-03
 
 ### Changed
@@ -2625,6 +2631,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 -   Fixed Wireless Transmitter crashing when it is transmitting to a removed dimension.
 -   Fixed disassembling stacked Storage Blocks only returns 1 set of items.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
+
+[1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
 
 [1.12.0]: https://github.com/refinedmods/refinedstorage/compare/f10f3e5147a45883375c6d9bffa122d9fadb12b6...v1.12.0
