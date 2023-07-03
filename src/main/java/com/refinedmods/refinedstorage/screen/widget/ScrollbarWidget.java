@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ScrollbarWidget implements GuiEventListener {
-    private static final int SCROLLER_HEIGHT = 15;
+    private static final float SCROLLER_HEIGHT = 15;
 
     private final int x;
     private final int y;
@@ -63,9 +63,9 @@ public class ScrollbarWidget implements GuiEventListener {
     public void render(GuiGraphics graphics) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (small) {
-            graphics.blit(BaseScreen.ICONS_TEXTURE, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, SCROLLER_HEIGHT);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (height - SCROLLER_HEIGHT)), isEnabled() ? 218 : 225, 0, 7, (int) SCROLLER_HEIGHT);
         } else {
-            graphics.blit(BaseScreen.ICONS_TEXTURE, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, SCROLLER_HEIGHT);
+            graphics.blit(BaseScreen.ICONS_TEXTURE, screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, (int) SCROLLER_HEIGHT);
         }
     }
 
