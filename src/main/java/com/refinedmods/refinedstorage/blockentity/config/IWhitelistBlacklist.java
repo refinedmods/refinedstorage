@@ -2,9 +2,10 @@ package com.refinedmods.refinedstorage.blockentity.config;
 
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
+import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,8 +15,8 @@ public interface IWhitelistBlacklist {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
-    static <T extends BlockEntity & INetworkNodeProxy<?>> BlockEntitySynchronizationParameter<Integer, T> createParameter() {
-        return new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> ((IWhitelistBlacklist) t.getNode()).getWhitelistBlacklistMode(), (t, v) -> {
+    static <T extends BlockEntity & INetworkNodeProxy<?>> BlockEntitySynchronizationParameter<Integer, T> createParameter(ResourceLocation id) {
+        return new BlockEntitySynchronizationParameter<>(id, EntityDataSerializers.INT, 0, t -> ((IWhitelistBlacklist) t.getNode()).getWhitelistBlacklistMode(), (t, v) -> {
             if (v == WHITELIST || v == BLACKLIST) {
                 ((IWhitelistBlacklist) t.getNode()).setWhitelistBlacklistMode(v);
             }

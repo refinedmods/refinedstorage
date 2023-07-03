@@ -11,6 +11,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Ported to Minecraft 1.20.1.
 
+### Fixed
+
+- Fixed GUI side buttons not working sometimes when using Refined Storage with addons.
+
 ## [v1.11.6] - 2023-03-30
 
 ### Fixed

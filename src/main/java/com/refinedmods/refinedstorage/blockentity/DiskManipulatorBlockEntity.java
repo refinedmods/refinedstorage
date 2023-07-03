@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DiskState;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -30,10 +32,10 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManipulatorNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> TYPE = IType.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> IO_MODE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "disk_manipulator_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter(new ResourceLocation(RS.ID, "disk_manipulator_whitelist_blacklist"));
+    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> TYPE = IType.createParameter(new ResourceLocation(RS.ID, "disk_manipulator_type"));
+    public static final BlockEntitySynchronizationParameter<Integer, DiskManipulatorBlockEntity> IO_MODE = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "disk_manipulator_mode"), EntityDataSerializers.INT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
         t.getNode().setIoMode(v);
         t.getNode().markDirty();
     });

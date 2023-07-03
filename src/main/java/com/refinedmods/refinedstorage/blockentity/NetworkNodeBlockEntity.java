@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeManager;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
@@ -13,6 +14,7 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends BaseBlockEntity implements INetworkNodeProxy<N>, IRedstoneConfigurable {
-    public static final BlockEntitySynchronizationParameter<Integer, NetworkNodeBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final BlockEntitySynchronizationParameter<Integer, NetworkNodeBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter(new ResourceLocation(RS.ID, "redstone_mode"));
 
     private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
     private N clientNode;

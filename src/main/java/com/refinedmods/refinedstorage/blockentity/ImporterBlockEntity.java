@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.apiimpl.network.node.ImporterNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverManager;
@@ -12,6 +13,7 @@ import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -19,10 +21,10 @@ import net.minecraftforge.client.model.data.ModelData;
 import javax.annotation.Nonnull;
 
 public class ImporterBlockEntity extends NetworkNodeBlockEntity<ImporterNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, ImporterBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, ImporterBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, ImporterBlockEntity> TYPE = IType.createParameter();
-    public static final BlockEntitySynchronizationParameter<CompoundTag, ImporterBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
+    public static final BlockEntitySynchronizationParameter<Integer, ImporterBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "importer_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, ImporterBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter(new ResourceLocation(RS.ID, "importer_whitelist_blacklist"));
+    public static final BlockEntitySynchronizationParameter<Integer, ImporterBlockEntity> TYPE = IType.createParameter(new ResourceLocation(RS.ID, "importer_type"));
+    public static final BlockEntitySynchronizationParameter<CompoundTag, ImporterBlockEntity> COVER_MANAGER = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "importer_cover_manager"), EntityDataSerializers.COMPOUND_TAG, new CompoundTag(), t -> t.getNode().getCoverManager().writeToNbt(), (t, v) -> t.getNode().getCoverManager().readFromNbt(v), (initial, p) -> {
     });
 
     public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()

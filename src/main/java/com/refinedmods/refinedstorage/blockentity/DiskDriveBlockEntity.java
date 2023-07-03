@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.blockentity;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -30,12 +32,12 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetworkNode> {
-    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> PRIORITY = IPrioritizable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> COMPARE = IComparable.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> TYPE = IType.createParameter();
-    public static final BlockEntitySynchronizationParameter<AccessType, DiskDriveBlockEntity> ACCESS_TYPE = IAccessType.createParameter();
-    public static final BlockEntitySynchronizationParameter<Long, DiskDriveBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> PRIORITY = IPrioritizable.createParameter(new ResourceLocation(RS.ID, "disk_drive_priority"));
+    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> COMPARE = IComparable.createParameter(new ResourceLocation(RS.ID, "disk_drive_compare"));
+    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter(new ResourceLocation(RS.ID, "disk_drive_whitelist_blacklist"));
+    public static final BlockEntitySynchronizationParameter<Integer, DiskDriveBlockEntity> TYPE = IType.createParameter(new ResourceLocation(RS.ID, "disk_drive_type"));
+    public static final BlockEntitySynchronizationParameter<AccessType, DiskDriveBlockEntity> ACCESS_TYPE = IAccessType.createParameter(new ResourceLocation(RS.ID, "disk_drive_access_type"));
+    public static final BlockEntitySynchronizationParameter<Long, DiskDriveBlockEntity> STORED = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "disk_drive_stored"), RSSerializers.LONG_SERIALIZER, 0L, t -> {
         long stored = 0;
 
         for (IStorageDisk storage : t.getNode().getItemDisks()) {
@@ -52,7 +54,7 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
 
         return stored;
     });
-    public static final BlockEntitySynchronizationParameter<Long, DiskDriveBlockEntity> CAPACITY = new BlockEntitySynchronizationParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+    public static final BlockEntitySynchronizationParameter<Long, DiskDriveBlockEntity> CAPACITY = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "disk_drive_capacity"), RSSerializers.LONG_SERIALIZER, 0L, t -> {
         long capacity = 0;
 
         for (IStorageDisk storage : t.getNode().getItemDisks()) {
