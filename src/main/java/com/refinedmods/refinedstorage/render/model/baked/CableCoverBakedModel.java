@@ -183,15 +183,15 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
                 toX = 16;
             }
 
-            fromX = 16 - size;
+            fromX = 16F - size;
         } else if (coverSide == Direction.EAST) {
             fromZ = 0;
             toZ = size;
         } else if (coverSide == Direction.WEST) {
-            fromZ = 16 - size;
+            fromZ = 16F - size;
             toZ = 16;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
-            fromZ = 16 - size;
+            fromZ = 16F - size;
             toZ = 16;
         }
         HashMap<Direction, TextureAtlasSprite> spriteCache = new HashMap<>(); //Changed from 1.12: to improve sprite getting for each side
@@ -210,7 +210,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
                 toX = 16;
             }
 
-            fromX = 16 - size;
+            fromX = 16F - size;
         } else if (coverSide == Direction.SOUTH) {
             if (hasWest) {
                 fromX = 2;
@@ -220,7 +220,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
 
             toX = size;
         } else if (coverSide == Direction.EAST) {
-            fromZ = 16 - size;
+            fromZ = 16F - size;
             toZ = 16;
         } else if (coverSide == Direction.WEST) {
             fromZ = 0;
@@ -240,7 +240,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
         // Bottom
         if (coverSide == Direction.NORTH) {
             fromX = size;
-            toX = 16 - size;
+            toX = 16F - size;
 
             if (hasDown) {
                 fromY = 2;
@@ -251,7 +251,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
             toY = size;
         } else if (coverSide == Direction.SOUTH) {
             fromX = size;
-            toX = 16 - size;
+            toX = 16F - size;
 
             if (hasDown) {
                 fromY = 2;
@@ -262,7 +262,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
             toY = size;
         } else if (coverSide == Direction.EAST) {
             fromZ = size;
-            toZ = 16 - size;
+            toZ = 16F - size;
 
             if (hasDown) {
                 fromY = 2;
@@ -273,7 +273,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
             toY = size;
         } else if (coverSide == Direction.WEST) {
             fromZ = size;
-            toZ = 16 - size;
+            toZ = 16F - size;
 
             if (hasDown) {
                 fromY = 2;
@@ -284,7 +284,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
             toY = size;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
             fromZ = size;
-            toZ = 16 - size;
+            toZ = 16F - size;
 
             fromX = 0;
             toX = size;
@@ -300,7 +300,7 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
         // Up
         if (coverSide == Direction.NORTH) {
             fromX = size;
-            toX = 16 - size;
+            toX = 16F - size;
 
             if (hasUp) {
                 toY = 14;
@@ -308,10 +308,10 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
                 toY = 16;
             }
 
-            fromY = 16 - size;
+            fromY = 16F - size;
         } else if (coverSide == Direction.SOUTH) {
             fromX = size;
-            toX = 16 - size;
+            toX = 16F - size;
 
             if (hasUp) {
                 toY = 14;
@@ -319,10 +319,10 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
                 toY = 16;
             }
 
-            fromY = 16 - size;
+            fromY = 16F - size;
         } else if (coverSide == Direction.EAST) {
             fromZ = size;
-            toZ = 16 - size;
+            toZ = 16F - size;
 
             if (hasUp) {
                 toY = 14;
@@ -330,10 +330,10 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
                 toY = 16;
             }
 
-            fromY = 16 - size;
+            fromY = 16F - size;
         } else if (coverSide == Direction.WEST) {
             fromZ = size;
-            toZ = 16 - size;
+            toZ = 16F - size;
 
             if (hasUp) {
                 toY = 14;
@@ -341,12 +341,12 @@ public class CableCoverBakedModel extends BakedModelWrapper<BakedModel> {
                 toY = 16;
             }
 
-            fromY = 16 - size;
+            fromY = 16F - size;
         } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
             fromZ = size;
-            toZ = 16 - size;
+            toZ = 16F - size;
 
-            fromX = 16 - size;
+            fromX = 16F - size;
             toX = 16;
         }
 
