@@ -24,6 +24,8 @@ this mod that allow the player to setup auto-crafting, allowing the crafting of 
     - [Packages](https://github.com/refinedmods/refinedstorage/packages)
     - [Issues](https://github.com/refinedmods/refinedstorage/issues)
     - [Refined Mods on GitHub](https://github.com/refinedmods)
+- [CurseForge](https://curseforge.com/minecraft/mc-mods/refined-storage)
+- [Modrinth](https://modrinth.com/mod/refined-storage)
 - [Wiki](https://refinedmods.com/refined-storage/)
 - [Discord](https://discordapp.com/invite/VYzsydb)
 - [Twitter](https://twitter.com/refinedmods)
