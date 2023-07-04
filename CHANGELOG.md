@@ -2903,6 +2903,224 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed not being able to take item from grid at times.
 - Fixed external storage on storage drawer sending an item count of 0 over.
 
+## [0.7.18-beta] - 2016-06-24
+
+### Fixed
+
+- Fixed cables sending updates when not needed.
+- Fixed cables not connecting to foreign machines that implement the API.
+
+## [0.7.17-beta] - 2016-06-24
+
+### Changed
+
+- Updated Forge to 1969.
+- Updated JEI to 3.6.x.
+- Introduced new crafting settings GUI.
+- Tweaked some textures.
+
+### Fixed
+
+- Fixed getting wrong items back in grid.
+- Fixed wrong item getting crafted.
+- Fixed server lag with exporter and importer.
+
+## [0.7.16-beta] - 2016-06-19
+
+### Added
+
+- Added support for Storage Drawers void upgrade.
+- Added support for Deep Storage Unit API again.
+
+### Fixed
+
+- Fixed NPE in machine searching.
+- Fixed a bug with interface giving negative amounts of items.
+- Fixed crash when using scroll wheel.
+
+## [0.7.15-beta] - 2016-06-18
+
+### Fixed
+
+- Fixed not being able to scroll with the scroll wheel using MouseTweaks.
+- Fixed grid search box mode only changing after reopening GUI.
+
+## [0.7.14-beta] - 2016-06-17
+
+### Added
+
+- Added shift clicking support to every inventory (for upgrades etc).
+- Added grid filtering options: @ for searching on mod items, # for searching on tooltips.
+- Added a way to clear patterns (shift + right click in inventory).
+
+### Changed
+
+- Updated Forge to build 1965.
+- Tweaked some recipes.
+- Tweaked energy usage in some machines.
+
+### Fixed
+
+- Fixed item overflow bug with storage drawers and external storage.
+
+## [0.7.13-beta] - 2016-06-16
+
+### Added
+
+- Added ability to triple click in grid.
+
+## [0.7.12-beta] - 2016-06-14
+
+### Fixed
+
+- Fixed creative storage blocks and disks not working.
+- Fixed interface overflowing.
+
+## [0.7.11-beta] - 2016-06-12
+
+### Changed
+
+- Right click on grid search bar clears the search query.
+
+### Fixed
+
+- Fixed crash with wireless grid.
+- Fixed high RF/t usage on external storage.
+- Fixed that requesting crafting processing task yields too many tasks.
+
+## [0.7.10-beta] - 2016-06-11
+
+### Fixed
+
+- Fixed inventories not saving correctly.
+- Fixed that the player can't shift-click patterns into the last 3 slots of the Crafter.
+
+## [0.7.9-beta] - 2016-06-11
+
+### Added
+
+- Added an API.
+- Added Storage Drawers integration.
+- Added handling for patterns that return the same item.
+- Added stack splitting between multiple storages.
+- Added handling for patterns that give back the same item.
+
+### Changed
+
+- Increased cable recipe to 12 cables.
+
+### Fixed
+
+- Fixed not being able to place sugar cane.
+- Fixed not being able to place seeds.
+- Fixed stacks not splitting between storages correctly.
+- Fixed storage not saving ItemStack capabilities.
+- Fixed dropping items into crafting grid with mouse won't work if your mouse is in between items.
+- Fixed controller still drawing power even if disabled.
+
+## [0.7.8-beta] - 2016-06-04
+
+### Changed
+
+- Updated to Forge 1951.
+
+### Fixed
+
+- Fixed crash on some worlds.
+- Improved Grid performance when sorting on quantity.
+
+## [0.7.7-beta] - 2016-06-04
+
+### Added
+
+- Added the Stack Upgrade.
+- Added Quartz Enriched Iron Block.
+- Added French translation by Leventovitch.
+
+### Changed
+
+- New items now go to the first available storage that has items in it already.
+- Tweaked some recipes.
+
+### Fixed
+
+- Fixed buggy reequip animation on wireless grid.
+- Fixed solderer not supporting ore dictionary.
+- Fixed recipes not supporting ore dictionary.
+- Fixed destructor not being able to destroy some blocks.
+- Fixed not being able to place or destroy sugar cane.
+- Fixed storage blocks not being dismantable.
+- Fixed getting more items than needed sometimes.
+- Performance improvements.
+
+## [0.7.6-beta] - 2016-05-29
+
+### Changed
+
+- Updated to Forge 1932.
+
+### Fixed
+
+- Fixed not being able to start an autocraft.
+
+## [0.7.5-beta] - 2016-05-29
+
+### Fixed
+
+- Fixed wrong ascending / descending order in Grid.
+- Fixed autocrafting not giving back byproducts.
+- Fixed Solderer causing too many chunk updates.
+- Fixed Solderer slot sides being weird.
+- Performance improvements.
+
+## [0.7.4-beta] - 2016-05-27
+
+### Changed
+
+- Updated to Forge 1922.
+
+### Fixed
+
+- Performance improvements.
+
+## [0.7.3-beta] - 2016-05-25
+
+### Changed
+
+- Crafting tasks are now sorted from new to old in the Crafting Monitor.
+- Broke Interface block inventory compatibility: make sure to take all your items out of your Interface blocks before you apply the update.
+
+### Fixed
+
+- Fixed grid performance by not sending grid data so often.
+- Fixed silicon + quartz enriched iron not having oredict names.
+
+## [0.7.2-beta] - 2016-05-24
+
+### Fixed
+
+- Fixed Importer getting stuck on slot.
+
+## [0.7.1-beta] - 2016-05-24
+
+### Fixed
+
+- Fixed NPE in some tiles.
+- Fixed going out of crafting GUI not restoring state (scrollbar and search term).
+- Fixed not being able to create a pattern in disconnected Pattern Grid.
+- Fixed not being able to place cake or string.
+- Performance improvement to Grids.
+
+## [0.7.0-beta] - 2016-05-23
+
+### Added
+
+- Port to Minecraft 1.9.4.
+
+### Fixed
+
+- Fixed Crafting Grid / Pattern Grid not throwing items on break.
+
 [Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
