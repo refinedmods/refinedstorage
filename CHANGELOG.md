@@ -3200,9 +3200,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed CTRL + pick block on machines crashing game.
-
-### Fixed
-
 - Performance improvements.
 
 ## [0.6.7-alpha] - 2016-05-19
@@ -3301,6 +3298,144 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fixed Importer voiding Storage Disks from the Disk Drive.
 - Fixed Controller not saving energy.
 - Massive performance improvements which reduces lag and lets machines connect almost instantly.
+
+## [0.5.6-alpha] - 2016-04-29
+
+### Fixed
+
+- Fixed sorting crash.
+- Fixed autofocusing on priority field in storage GUIs.
+- Fixed controller causing lag when energy level changes.
+
+## [0.5.5-alpha] - 2016-04-09
+
+### Changed
+
+- Updated to Forge 1859.
+
+### Fixed
+
+- Fixed several crashes.
+- Energy level on Controller is maintained.
+
+## [0.5.4-alpha] - 2016-04-05
+
+### Changed
+
+- Shift clicking on placing Constructor and Destructor will have opposite direction.
+
+### Fixed
+
+- Fixed machines out of the Controller's chunk range only connecting after block break when rejoining the world.
+- Fixed scrollbar skipping some rows when scrolling with mouse wheel.
+- Fixed machines from a long distance not being visible in the Controller.
+
+## [0.5.3-alpha] - 2016-04-04
+
+### Added
+
+- Added a Creative Wireless Grid.
+
+### Changed
+
+- Changed block hardness levels.
+
+### Fixed
+
+- Fixed not being able to open a Grid that is 256 blocks away from the Controller.
+- Made the mod way less network intensive.
+
+## [0.5.2-alpha] - 2016-04-03
+
+### Added
+
+- Items that don't exist anymore, won't be added to storage again to avoid crashes.
+
+### Fixed
+
+- Fixed not being able to run the mod without JEI.
+
+## [0.5.1-alpha] - 2016-04-03
+
+### Fixed
+
+- Fixed Disk Drive crashing with an `AbstractMethodException`.
+
+## [0.5.0-alpha] - 2016-04-03
+
+### Added
+
+- Deep Storage Unit integration (with this several barrel mods are now supported too!).
+- When placing Importer, Exporter or External Storage with SHIFT, it will have the opposite direction. This is for easy placement behind other blocks (furnaces for example).
+- Added mass crafting of items with shift in Crafting Grid.
+- Added JEI recipe transfering in Crafting Grid.
+- New textures.
+- Scrollbar in Grid and Crafting Grid.
+- Display of connected machines in the Controller GUI.
+- Nice formatting for items >= 1K (pressing shift while hovering over an item will still display the real item count).
+- Grid can now synchronize with JEI.
+
+### Changed
+
+- Updated to the latest Forge and JEI.
+- Renamed Drives to Disk Drives.
+- Renamed Storage Cells to Storage Disks.
+- Wireless Grid is now bound to a Controller instead of a Grid.
+- Drives have a better interface and there are now blacklist and whitelist filters for the Storage Disks in it too.
+- Destructors have the ability to whitelist and blacklist certain items now.
+- Side buttons in machine GUIs are now left, not right.
+- Shift clicking stuff in the Interface.
+- Made the normal Grid 1 row larger.
+- Machines don't need to be connected with cables anymore, they can be next to each other too.
+- Made the amount text in the Grid for items smaller.
+
+### Fixed
+
+- Fixed clicking sound in Grid.
+- Fixed a bunch of crashes.
+- Fixed Exporter not exporting is some cases.
+- Fixed Importer not importing in some cases.
+- Fixed Controller drawing RF every 20 ticks instead of every tick.
+- Fixed not being able to shift click from Crafting Grid crafting slots.
+- Fixed new items inserted after crafting in Grid being laggy.
+- Fixed flickering of items in Grid.
+- Fixed getting a stack of unstackable items from Grid.
+- Fixed Cable not having a collision box.
+- Check if the Constructor can actually place said block in the world.
+
+### Removed
+
+- Removed Wireless Transmitters.
+
+## [0.4.1-alpha] - 2016-03-24
+
+### Fixed
+
+- Fixed ID duplication issues.
+
+## [0.4.0-alpha] - 2016-03-21
+
+### Added
+
+- Relays.
+- Interfaces.
+
+### Changed
+
+- Cables now have actual collision.
+
+### Fixed
+
+- Fix Minecraft reporting that retrieving Grid type fails.
+- Fullness percentage in Creative Storage Blocks going under 0%.
+- The Controller shouldn't display the base usage when not working.
+- Check if item is valid for slot before pushing to inventories.
+
+## [0.3.0-alpha] - 2016-03-20
+
+### Added
+
+- Initial release for Minecraft 1.9.
 
 [Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
 
