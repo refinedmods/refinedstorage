@@ -3437,6 +3437,30 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Initial release for Minecraft 1.9.
 
+## [0.2.1-alpha] - 2016-02-03
+
+### Added
+
+- Internal test release.
+
+## [0.2.0-alpha] - 2016-01-31
+
+### Added
+
+- Internal test release.
+
+## [0.1.1-alpha] - 2016-01-31
+
+### Added
+
+- Internal test release.
+
+## [0.1.0-alpha] - 2016-01-03
+
+### Added
+
+- Internal test release.
+
 [Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
