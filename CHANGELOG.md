@@ -2676,7 +2676,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Updated to Forge 2046.
 - Updated Tesla.
 - Java 8 is now a requirement.
-- - Slight performance increase and network efficiency improvement in all GUI's.
+- Slight performance increase and network efficiency improvement in all GUI's.
 - Slight performance increase in Grid GUI.
 - Improved collisions of Cable parts.
 
@@ -3120,6 +3120,187 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fixed Crafting Grid / Pattern Grid not throwing items on break.
+
+## [0.6.15-alpha] - 2016-05-29
+
+### Fixed
+
+- Fixed Solderer sides being weird.
+- Fixed Solderer causing too many block updates.
+
+## [0.6.14-alpha] - 2016-05-28
+
+### Fixed
+
+- Fixed wrong ascending / descending order in Grid.
+- Performance improvements.
+
+## [0.6.13-alpha] - 2016-05-27
+
+### Fixed
+
+- Performance improvements.
+
+## [0.6.12-alpha] - 2016-05-25
+
+### Changed
+
+- Crafting tasks are now sorted from new to old in the Crafting Monitor.
+
+### Fixed
+
+- Fixed Crafting Grid / Pattern Grid not throwing items on break.
+- Fixed NPE in some tiles.
+- Fixed going out of crafting GUI not restoring state (scrollbar and search term).
+- Fixed not being able to place cake or string.
+- Fixed Importer getting stuck on slot.
+- Fixed silicon + quartz enriched iron not having oredict names.
+- Performance improvement to Grids.
+
+## [0.6.11-alpha] - 2016-05-23
+
+### Changed
+
+- Converted all inventories in the mod to Forge's item handler capability system.
+
+### Fixed
+
+- Fixed crafting patterns crashing when item of an input or output no longer exists.
+- Fixed Grid letting the current held item flicker.
+- Fixed Importer / Exporter / External Storage not being able to push or pull out of the other side of a double chest.
+
+## [0.6.10-alpha] - 2016-05-21
+
+### Changed
+
+- Increased max crafting request size to 500.
+
+### Fixed
+
+- Fixed Processing Patterns not working.
+- Fixed not being able to request more than 1 item at once.
+- Fixed crash with the Solderer.
+
+## [0.6.9-alpha] - 2016-05-20
+
+### Added
+
+- Added automation for the Solderer: every side corresponds to a slot (see the wiki).
+
+### Fixed
+
+- Fixed bug where machines wouldn't disconnect / connect when needed outside of chunk.
+- Fixed not being able to toggle redstone mode in a Wireless Transmitter.
+- Fixed same machine being connected to the network multiple times.
+- Fixed External Storage not working.
+- Reduced network usage.
+
+## [0.6.8-alpha] - 2016-05-19
+
+### Fixed
+
+- Fixed CTRL + pick block on machines crashing game.
+
+### Fixed
+
+- Performance improvements.
+
+## [0.6.7-alpha] - 2016-05-19
+
+### Fixed
+
+- Performance improvements.
+
+## [0.6.6-alpha] - 2016-05-18
+
+### Fixed
+
+- Fixed being able to insert non-allowed items in inventories with hoppers.
+- Fixed Processing Pattern Encoder not using up a Pattern.
+
+## [0.6.5-alpha] - 2016-05-18
+
+### Changed
+
+- Updated Forge to build 1907.
+
+### Fixed
+
+- Performance improvements for servers.
+- Performance improvements for client scrollbars.
+
+## [0.6.4-alpha] - 2016-05-17
+
+### Fixed
+
+- Performance improvements.
+
+## [0.6.3-alpha] - 2016-05-17
+
+### Fixed
+
+- Performance improvements.
+
+## [0.6.2-alpha] - 2016-05-17
+
+### Added
+
+- Added a max crafting quantity per request cap (hardcoded to 100).
+
+### Changed
+
+- Upgrades now draw extra energy.
+
+### Fixed
+
+- Fixed race condition with crafting tasks.
+- Fixed pressing escape in crafting settings GUI not going back to grid GUI.
+- Fixed losing autoselection in Grid when clicking on slot with autoselection mode.
+- Fixed being able to pick up from pattern result slot.
+
+## [0.6.1-alpha] - 2016-05-16
+
+### Fixed
+
+- Fixed NPE on world load.
+- Fixed Destructor crashing when removing a connected machine.
+
+## [0.6.0-alpha] - 2016-05-16
+
+### Added
+
+- Added autocrafting.
+- Added the Pattern Grid.
+- Added the Crafting Monitor.
+- Added the Crafter.
+- Added the Processing Pattern Encoder.
+- Added a Pattern item.
+- Added the Wireless Transmitter.
+- Added Speed Upgrades which are applicable on a bunch of machines.
+- Added Range Upgrades for in the Wireless Transmitter.
+- Added Crafting Upgrades.
+- Added recipe category -> item JEI integration.
+- Added Storage Housing.
+
+### Changed
+
+- Changed Grid modes to have a autoselected option.
+
+### Fixed
+
+- Fixed Destructor not playing block break sound.
+- Fixed Constructor not playing block place sound.
+- Fixed picking up from crafting result slot.
+- Fixed being able to use right click on crafting result slot.
+- Fixed item duplication issue with the Interface.
+- Fixed Importers and Exporters not working when changing facing with a wrench.
+- Fixed Crafting Grid not respecting remainder in recipes.
+- Fixed Crafting Grid giving back the wrong amount of items when shift clicking.
+- Fixed items disappearing in Grid when doing a weird combination of inputs.
+- Fixed Solderer not stacking items.
+- Fixed Importer voiding Storage Disks from the Disk Drive.
+- Fixed Controller not saving energy.
+- Massive performance improvements which reduces lag and lets machines connect almost instantly.
 
 [Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
 
