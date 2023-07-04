@@ -2631,6 +2631,278 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 -   Fixed Wireless Transmitter crashing when it is transmitting to a removed dimension.
 -   Fixed disassembling stacked Storage Blocks only returns 1 set of items.
 
+## [0.8.20-beta] - 2016-08-18
+
+### Fixed
+
+- Fixed crash with Grid.
+
+## [0.8.19-beta] - 2016-08-13
+
+### Fixed
+
+- Fixed item duplication bug with External Storage.
+- Fixed External Storage taking too long to update storage.
+- Fixed crash with Grid.
+- Fixed crash when shift clicking unsupported item in a slot.
+
+## [0.8.18-beta] - 2016-08-11
+
+### Fixed
+
+- Fixed Detector mode not persisting.
+- Fixed bug where scrollbar didn't scroll correctly and thus hiding some items.
+- Fixed Network Transmitter not dropping inventory when broken.
+
+## [0.8.17-beta] - 2016-08-09
+
+### Fixed
+
+- Fixed Grid causing sorting lag on the client.
+
+## [0.8.16-beta] - 2016-08-09
+
+### Added
+
+- Added German translation by ChillUpX.
+- Added MCMultiPart integration for Cable Parts.
+
+### Changed
+
+- You now have to click the actual cable part head in order to get the GUI open.
+- Grid Filters can now only filter 9 items, but, Grids take 4 filters now instead.
+- Grid Filters can now be configured to compare on NBT and/ or damage.
+- It is now possible to shift click items to the Storage Device filters.
+- Updated to Forge 2046.
+- Updated Tesla.
+- Java 8 is now a requirement.
+- - Slight performance increase and network efficiency improvement in all GUI's.
+- Slight performance increase in Grid GUI.
+- Improved collisions of Cable parts.
+
+### Fixed
+
+- Fixed issue with IC2 integration causing console spam.
+- Fixed not being able to change some configs in blocks.
+- Fixed serverside configs not syncing up with clientside.
+- Fixed not being able to move inventory items in Grid GUI's to hotbar via the number keys.
+- Fixed Relays when being in "Ignore Redstone" mode using up energy.
+- Fixed Crafter facing bottom side on placement.
+
+## [0.8.15-beta] - 2016-08-01
+
+### Fixed
+
+- Fixed server startup crash.
+
+## [0.8.14-beta] - 2016-08-01
+
+### Added
+
+- Added Interdimensional Upgrade so the Network Transmitter can work over different dimensions.
+
+## [0.8.13-beta] - 2016-07-31
+
+### Added
+
+- Added config option to set the base energy usage of the Controller (default is 0).
+- Added Grid Filter item to filter items in any Grid.
+- Added support for processing patterns with big stacksizes.
+- Added Network Transmitter, Network Receiver and Network Cards.
+
+### Changed
+
+- The slot where the Wireless Grid is in in the Wireless Grid GUI is now disabled, so the item can't be thrown out of the inventory by accident.
+- Changed Relay recipe to use redstone torch instead of Basic Processor.
+- Placed machines now face the block they are placed on, like hoppers.
+
+### Fixed
+
+- Fixed rendering crash with Disk Drive.
+- Fixed crash when quickly toggling sorting direction in Grid.
+- Fixed not being able to clear exporter row in interface.
+
+## [0.8.12-beta] - 2016-07-20
+
+### Fixed
+
+- Fixed dupe bug when shift clicking output slot in grid.
+
+## [0.8.11-beta] - 2016-07-19
+
+### Added
+
+- Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs.
+- Added Grid view toggle buttons (regular, craftable items only, no craftable items).
+- Added ability to shift click items into Importer, Exporter, Constructor, Destructor and Detector to set up whitelist / blacklist configurations easier.
+- Re-added opposite facing on shift click functionality.
+
+### Changed
+
+- Solderer upgrades go to upgrades slots first now when shift clicking.
+- Updated to Forge 2014.
+
+### Fixed
+
+- Fixed minor dupe bug with JEI transferring.
+- Fixed exporter crafting upgrades taking priority over other tasks.
+- Fixed NPE with incorrectly initialized disks.
+- Fixed not being able to take out items of Grid 2K16.
+- Fixed not being able to start autocrafting for certain items (most notably IC2 items).
+
+## [0.8.10-beta] - 2016-07-13
+
+### Fixed
+
+- Fixed not being able to get some items out of Grid.
+- Fixed slight glitch in Constructor and Destructor model.
+
+## [0.8.9-beta] - 2016-07-10
+
+### Added
+
+- Added a model for the Constructor.
+- Added a model for the Destructor.
+
+### Changed
+
+- Wireless Transmitters next to each other without any cable or without being connected to a machine won't work anymore, they need to be explictly connected to a cable or other machine.
+- Some models / texture tweaks.
+
+### Fixed
+
+- Fixed bug where Grid crafting doesn't handle remainder sometimes.
+- Fixed caching issues with External Storage.
+- Fixed possible crash with Disk Drives.
+
+## [0.8.8-beta] - 2016-07-10
+
+### Changed
+
+- Use ore dictionary for recipes with glass.
+- Texture tweaks.
+
+### Fixed
+
+- Fixed solderer not working with automation anymore.
+
+## [0.8.7-beta] - 2016-07-09
+
+### Added
+
+- Added better hitbox for the Solderer.
+
+### Changed
+
+- Wireless Transmitter is now only bright red when connected.
+- Improved detector model, add a better hitbox for it.
+- Improved the Wireless Transmitter texture.
+- Made the Solderer beams be bright red when they are working.
+
+### Fixed
+
+- Fixed crash with External Storage.
+- Fixed Detector not unpowering when disconnected from the network.
+
+## [0.8.6-beta] - 2016-07-09
+
+### Added
+
+- Re-added Controllers exploding when two of them are connected to the same network.
+- Added new textures.
+- Added model for External Storage.
+- Added model for Importer.
+- Added model for Exporter.
+- Added model for Detector.
+
+### Changed
+
+- Huge performance improvements to large storage networks.
+- Limited some blocks to only have a direction on the x-axis.
+- Decreased amount of block updates significantly.
+
+### Fixed
+
+- Fixed External Storage disconnecting on world reload.
+- Fixed External Storage not updating correctly.
+- Fixed wireless signal starting from Controller instead of per Wireless Transmitter individually.
+- Fixed Controller's redstone state not saving.
+- Fixed crafting tasks not saving properly.
+
+### Removed
+
+- Removed opposite facing on placement mechanic.
+- Removed Quartz Enriched Iron Block.
+
+## [0.8.5-beta] - 2016-07-04
+
+### Fixed
+
+- Fixed crash when Tesla API is not installed.
+
+## [0.8.4-beta] - 2016-07-04
+
+### Added
+
+- Added a debug storage disk.
+- Added tooltip to solderer progress bar that shows progress percentage.
+- Added support for the Tesla energy system.
+- Added support for the IC2 (EU) energy system.
+- Added a Portuguese (Brazilian) translation.
+
+### Changed
+
+- Performance improvements.
+- Tweaked grid GUI.
+
+### Removed
+
+- Removed delay until grid items are visible.
+
+## [0.8.3-beta] - 2016-07-02
+
+### Fixed
+
+- Fixed drawer controllers not working with external storage.
+- Fixed right click taking 64 items instead of 32 items.
+
+## [0.8.2-beta] - 2016-07-01
+
+### Changed
+
+- It is now possible to use middle click multiple times for the same item in grid.
+- Made the mod configurable with a config file.
+
+### Fixed
+
+- Fixed not being able to take items sometimes.
+
+## [0.8.1-beta] - 2016-06-30
+
+### Fixed
+
+- Fixed upgrades from interface not dropping.
+- Fixed lag caused by constantly rebuilding storage.
+
+## [0.8.0-beta] - 2016-06-25
+
+### Changed
+
+- Recompile for Minecraft 1.10.
+
+### Fixed
+
+- Fixed solderer not using extra RF/t with upgrades.
+
+## [0.7.19-beta] - 2016-06-25
+
+### Fixed
+
+- Fixed controller being buggy with reconnecting.
+- Fixed controller texture updating too slow when energy changes.
+- Fixed not being able to take item from grid at times.
+- Fixed external storage on storage drawer sending an item count of 0 over.
+
 [Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
