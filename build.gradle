@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.5.4/helper.gradle"
+apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.6.0/helper.gradle"
 
 repositories {
     maven {
@@ -25,6 +25,7 @@ archivesBaseName = 'refinedstorage'
 
 enablePublishing()
 enableCurseForge(243076)
+enableModrinth("KDvYkUg3")
 enableJavadoc()
 enableSonarQube("refinedmods_refinedstorage")
 

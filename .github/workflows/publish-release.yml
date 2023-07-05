@@ -7,10 +7,11 @@ on:
       - closed
 jobs:
   publish-release:
-    uses: refinedmods/refinedarchitect/.github/workflows/publish-release.yml@v0.5.4
+    uses: refinedmods/refinedarchitect/.github/workflows/publish-release.yml@v0.6.0
     secrets: inherit
     with:
       project-name: 'Refined Storage'
       announce: true
       mutation-testing: false
       curseforge: true
+      modrinth: true
