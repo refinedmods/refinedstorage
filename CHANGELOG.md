@@ -7,12 +7,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Changed
-
--   The Grid detailed tooltip now has a small font size again.
-
 ### Fixed
 
+-   The Grid detailed tooltip now has a small font size again.
 -   Fixed not being able to close GUIs anymore with autoselected search box mode.
 -   Fixed lingering tooltips of side buttons.
 
