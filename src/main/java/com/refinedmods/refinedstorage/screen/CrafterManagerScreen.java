@@ -164,7 +164,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canConsumeInput()) {
+        if (searchField.keyPressed(key, scanCode, modifiers)) {
             return true;
         }
 

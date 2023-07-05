@@ -101,7 +101,7 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
             return true;
         }
 
-        if (nameField.keyPressed(key, scanCode, modifiers) || nameField.canConsumeInput()) {
+        if (nameField.keyPressed(key, scanCode, modifiers)) {
             return true;
         }
 

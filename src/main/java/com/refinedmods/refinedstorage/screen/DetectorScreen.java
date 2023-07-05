@@ -81,7 +81,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainerMenu> {
             return true;
         }
 
-        if (amountField.keyPressed(key, scanCode, modifiers) || amountField.canConsumeInput()) {
+        if (amountField.keyPressed(key, scanCode, modifiers)) {
             return true;
         }
 
