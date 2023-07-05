@@ -155,12 +155,6 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
 
         renderForeground(graphics, mouseX, mouseY);
 
-        for (Renderable renderable : this.renderables) {
-            if (renderable instanceof SideButton sideButton) {
-                sideButton.renderTooltip(graphics, mouseX, mouseY);
-            }
-        }
-
         for (int i = 0; i < this.menu.slots.size(); ++i) {
             Slot slot = menu.slots.get(i);
 

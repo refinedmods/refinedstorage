@@ -14,6 +14,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 -   Fixed not being able to close GUIs anymore with autoselected search box mode.
+-   Fixed lingering tooltips of side buttons.
 
 ## [1.12.1] - 2023-07-03
 
