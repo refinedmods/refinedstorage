@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v${gradle.ext.refinedArchitectVersion}/helper.gradle"
+apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.5.4/helper.gradle"
 
 repositories {
     maven {
