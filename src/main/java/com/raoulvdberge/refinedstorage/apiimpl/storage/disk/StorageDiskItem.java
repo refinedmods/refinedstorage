@@ -30,6 +30,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     private int capacity;
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
+    private int storedAmount = 0;
+
     @Nullable
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
@@ -85,6 +87,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                     if (action == Action.PERFORM) {
                         otherStack.grow(remainingSpace);
 
+                        this.storedAmount += remainingSpace;
+
                         onChanged();
                     }
 
@@ -92,6 +96,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                 } else {
                     if (action == Action.PERFORM) {
                         otherStack.grow(size);
+
+                        this.storedAmount += size;
 
                         onChanged();
                     }
@@ -111,6 +117,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             if (action == Action.PERFORM) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
 
+                this.storedAmount += remainingSpace;
+
                 onChanged();
             }
 
@@ -118,6 +126,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
         } else {
             if (action == Action.PERFORM) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, size));
+
+                this.storedAmount += size;
 
                 onChanged();
             }
@@ -142,6 +152,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                         otherStack.shrink(size);
                     }
 
+                    this.storedAmount -= size;
+
                     onChanged();
                 }
 
@@ -154,7 +166,18 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
     @Override
     public int getStored() {
-        return stacks.values().stream().mapToInt(ItemStack::getCount).sum();
+        return this.storedAmount;
+    }
+
+    void recalculateStored() {
+        this.storedAmount = calculateStored();
+    }
+
+    private int calculateStored() {
+        return stacks.values()
+                .stream()
+                .mapToInt(ItemStack::getCount)
+                .sum();
     }
 
     @Override
