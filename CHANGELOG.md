@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+-  The Grid detailed tooltip now has a small font size again.
+
 ## [1.12.1] - 2023-07-03
 
 ### Fixed
