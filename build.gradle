@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v${gradle.ext.refinedArchitectVersion}/helper.gradle"
+apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.6.0/helper.gradle"
 
 repositories {
     maven {
@@ -25,6 +25,7 @@ archivesBaseName = 'refinedstorage'
 
 enablePublishing()
 enableCurseForge(243076)
+enableModrinth("KDvYkUg3")
 enableJavadoc()
 enableSonarQube("refinedmods_refinedstorage")
 
@@ -39,5 +40,6 @@ dependencies {
 
     // TODO mixin issue
     // runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1:api")
+    // can't depend on API due to Javadoc build error (CuriosApi imports stuff from common)
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
 }

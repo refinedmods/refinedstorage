@@ -7,6 +7,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.12.2] - 2023-07-05
+
+### Fixed
+
+-   The Grid detailed tooltip now has a small font size again.
+-   Fixed not being able to close GUIs anymore with autoselected search box mode.
+-   Fixed lingering tooltips of side buttons.
+
 ## [1.12.1] - 2023-07-03
 
 ### Fixed
@@ -2631,8 +2639,1360 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 -   Fixed Wireless Transmitter crashing when it is transmitting to a removed dimension.
 -   Fixed disassembling stacked Storage Blocks only returns 1 set of items.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...HEAD
+## [0.8.20-beta] - 2016-08-18
+
+### Fixed
+
+-   Fixed crash with Grid.
+
+## [0.8.19-beta] - 2016-08-13
+
+### Fixed
+
+-   Fixed item duplication bug with External Storage.
+-   Fixed External Storage taking too long to update storage.
+-   Fixed crash with Grid.
+-   Fixed crash when shift clicking unsupported item in a slot.
+
+## [0.8.18-beta] - 2016-08-11
+
+### Fixed
+
+-   Fixed Detector mode not persisting.
+-   Fixed bug where scrollbar didn't scroll correctly and thus hiding some items.
+-   Fixed Network Transmitter not dropping inventory when broken.
+
+## [0.8.17-beta] - 2016-08-09
+
+### Fixed
+
+-   Fixed Grid causing sorting lag on the client.
+
+## [0.8.16-beta] - 2016-08-09
+
+### Added
+
+-   Added German translation by ChillUpX.
+-   Added MCMultiPart integration for Cable Parts.
+
+### Changed
+
+-   You now have to click the actual cable part head in order to get the GUI open.
+-   Grid Filters can now only filter 9 items, but, Grids take 4 filters now instead.
+-   Grid Filters can now be configured to compare on NBT and/ or damage.
+-   It is now possible to shift click items to the Storage Device filters.
+-   Updated to Forge 2046.
+-   Updated Tesla.
+-   Java 8 is now a requirement.
+-   Slight performance increase and network efficiency improvement in all GUI's.
+-   Slight performance increase in Grid GUI.
+-   Improved collisions of Cable parts.
+
+### Fixed
+
+-   Fixed issue with IC2 integration causing console spam.
+-   Fixed not being able to change some configs in blocks.
+-   Fixed serverside configs not syncing up with clientside.
+-   Fixed not being able to move inventory items in Grid GUI's to hotbar via the number keys.
+-   Fixed Relays when being in "Ignore Redstone" mode using up energy.
+-   Fixed Crafter facing bottom side on placement.
+
+## [0.8.15-beta] - 2016-08-01
+
+### Fixed
+
+-   Fixed server startup crash.
+
+## [0.8.14-beta] - 2016-08-01
+
+### Added
+
+-   Added Interdimensional Upgrade so the Network Transmitter can work over different dimensions.
+
+## [0.8.13-beta] - 2016-07-31
+
+### Added
+
+-   Added config option to set the base energy usage of the Controller (default is 0).
+-   Added Grid Filter item to filter items in any Grid.
+-   Added support for processing patterns with big stacksizes.
+-   Added Network Transmitter, Network Receiver and Network Cards.
+
+### Changed
+
+-   The slot where the Wireless Grid is in in the Wireless Grid GUI is now disabled, so the item can't be thrown out of the inventory by accident.
+-   Changed Relay recipe to use redstone torch instead of Basic Processor.
+-   Placed machines now face the block they are placed on, like hoppers.
+
+### Fixed
+
+-   Fixed rendering crash with Disk Drive.
+-   Fixed crash when quickly toggling sorting direction in Grid.
+-   Fixed not being able to clear exporter row in interface.
+
+## [0.8.12-beta] - 2016-07-20
+
+### Fixed
+
+-   Fixed dupe bug when shift clicking output slot in grid.
+
+## [0.8.11-beta] - 2016-07-19
+
+### Added
+
+-   Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs.
+-   Added Grid view toggle buttons (regular, craftable items only, no craftable items).
+-   Added ability to shift click items into Importer, Exporter, Constructor, Destructor and Detector to set up whitelist / blacklist configurations easier.
+-   Re-added opposite facing on shift click functionality.
+
+### Changed
+
+-   Solderer upgrades go to upgrades slots first now when shift clicking.
+-   Updated to Forge 2014.
+
+### Fixed
+
+-   Fixed minor dupe bug with JEI transferring.
+-   Fixed exporter crafting upgrades taking priority over other tasks.
+-   Fixed NPE with incorrectly initialized disks.
+-   Fixed not being able to take out items of Grid 2K16.
+-   Fixed not being able to start autocrafting for certain items (most notably IC2 items).
+
+## [0.8.10-beta] - 2016-07-13
+
+### Fixed
+
+-   Fixed not being able to get some items out of Grid.
+-   Fixed slight glitch in Constructor and Destructor model.
+
+## [0.8.9-beta] - 2016-07-10
+
+### Added
+
+-   Added a model for the Constructor.
+-   Added a model for the Destructor.
+
+### Changed
+
+-   Wireless Transmitters next to each other without any cable or without being connected to a machine won't work anymore, they need to be explictly connected to a cable or other machine.
+-   Some models / texture tweaks.
+
+### Fixed
+
+-   Fixed bug where Grid crafting doesn't handle remainder sometimes.
+-   Fixed caching issues with External Storage.
+-   Fixed possible crash with Disk Drives.
+
+## [0.8.8-beta] - 2016-07-10
+
+### Changed
+
+-   Use ore dictionary for recipes with glass.
+-   Texture tweaks.
+
+### Fixed
+
+-   Fixed solderer not working with automation anymore.
+
+## [0.8.7-beta] - 2016-07-09
+
+### Added
+
+-   Added better hitbox for the Solderer.
+
+### Changed
+
+-   Wireless Transmitter is now only bright red when connected.
+-   Improved detector model, add a better hitbox for it.
+-   Improved the Wireless Transmitter texture.
+-   Made the Solderer beams be bright red when they are working.
+
+### Fixed
+
+-   Fixed crash with External Storage.
+-   Fixed Detector not unpowering when disconnected from the network.
+
+## [0.8.6-beta] - 2016-07-09
+
+### Added
+
+-   Re-added Controllers exploding when two of them are connected to the same network.
+-   Added new textures.
+-   Added model for External Storage.
+-   Added model for Importer.
+-   Added model for Exporter.
+-   Added model for Detector.
+
+### Changed
+
+-   Huge performance improvements to large storage networks.
+-   Limited some blocks to only have a direction on the x-axis.
+-   Decreased amount of block updates significantly.
+
+### Fixed
+
+-   Fixed External Storage disconnecting on world reload.
+-   Fixed External Storage not updating correctly.
+-   Fixed wireless signal starting from Controller instead of per Wireless Transmitter individually.
+-   Fixed Controller's redstone state not saving.
+-   Fixed crafting tasks not saving properly.
+
+### Removed
+
+-   Removed opposite facing on placement mechanic.
+-   Removed Quartz Enriched Iron Block.
+
+## [0.8.5-beta] - 2016-07-04
+
+### Fixed
+
+-   Fixed crash when Tesla API is not installed.
+
+## [0.8.4-beta] - 2016-07-04
+
+### Added
+
+-   Added a debug storage disk.
+-   Added tooltip to solderer progress bar that shows progress percentage.
+-   Added support for the Tesla energy system.
+-   Added support for the IC2 (EU) energy system.
+-   Added a Portuguese (Brazilian) translation.
+
+### Changed
+
+-   Performance improvements.
+-   Tweaked grid GUI.
+
+### Removed
+
+-   Removed delay until grid items are visible.
+
+## [0.8.3-beta] - 2016-07-02
+
+### Fixed
+
+-   Fixed drawer controllers not working with external storage.
+-   Fixed right click taking 64 items instead of 32 items.
+
+## [0.8.2-beta] - 2016-07-01
+
+### Changed
+
+-   It is now possible to use middle click multiple times for the same item in grid.
+-   Made the mod configurable with a config file.
+
+### Fixed
+
+-   Fixed not being able to take items sometimes.
+
+## [0.8.1-beta] - 2016-06-30
+
+### Fixed
+
+-   Fixed upgrades from interface not dropping.
+-   Fixed lag caused by constantly rebuilding storage.
+
+## [0.8.0-beta] - 2016-06-25
+
+### Changed
+
+-   Recompile for Minecraft 1.10.
+
+### Fixed
+
+-   Fixed solderer not using extra RF/t with upgrades.
+
+## [0.7.19-beta] - 2016-06-25
+
+### Fixed
+
+-   Fixed controller being buggy with reconnecting.
+-   Fixed controller texture updating too slow when energy changes.
+-   Fixed not being able to take item from grid at times.
+-   Fixed external storage on storage drawer sending an item count of 0 over.
+
+## [0.7.18-beta] - 2016-06-24
+
+### Fixed
+
+-   Fixed cables sending updates when not needed.
+-   Fixed cables not connecting to foreign machines that implement the API.
+
+## [0.7.17-beta] - 2016-06-24
+
+### Changed
+
+-   Updated Forge to 1969.
+-   Updated JEI to 3.6.x.
+-   Introduced new crafting settings GUI.
+-   Tweaked some textures.
+
+### Fixed
+
+-   Fixed getting wrong items back in grid.
+-   Fixed wrong item getting crafted.
+-   Fixed server lag with exporter and importer.
+
+## [0.7.16-beta] - 2016-06-19
+
+### Added
+
+-   Added support for Storage Drawers void upgrade.
+-   Added support for Deep Storage Unit API again.
+
+### Fixed
+
+-   Fixed NPE in machine searching.
+-   Fixed a bug with interface giving negative amounts of items.
+-   Fixed crash when using scroll wheel.
+
+## [0.7.15-beta] - 2016-06-18
+
+### Fixed
+
+-   Fixed not being able to scroll with the scroll wheel using MouseTweaks.
+-   Fixed grid search box mode only changing after reopening GUI.
+
+## [0.7.14-beta] - 2016-06-17
+
+### Added
+
+-   Added shift clicking support to every inventory (for upgrades etc).
+-   Added grid filtering options: @ for searching on mod items, # for searching on tooltips.
+-   Added a way to clear patterns (shift + right click in inventory).
+
+### Changed
+
+-   Updated Forge to build 1965.
+-   Tweaked some recipes.
+-   Tweaked energy usage in some machines.
+
+### Fixed
+
+-   Fixed item overflow bug with storage drawers and external storage.
+
+## [0.7.13-beta] - 2016-06-16
+
+### Added
+
+-   Added ability to triple click in grid.
+
+## [0.7.12-beta] - 2016-06-14
+
+### Fixed
+
+-   Fixed creative storage blocks and disks not working.
+-   Fixed interface overflowing.
+
+## [0.7.11-beta] - 2016-06-12
+
+### Changed
+
+-   Right click on grid search bar clears the search query.
+
+### Fixed
+
+-   Fixed crash with wireless grid.
+-   Fixed high RF/t usage on external storage.
+-   Fixed that requesting crafting processing task yields too many tasks.
+
+## [0.7.10-beta] - 2016-06-11
+
+### Fixed
+
+-   Fixed inventories not saving correctly.
+-   Fixed that the player can't shift-click patterns into the last 3 slots of the Crafter.
+
+## [0.7.9-beta] - 2016-06-11
+
+### Added
+
+-   Added an API.
+-   Added Storage Drawers integration.
+-   Added handling for patterns that return the same item.
+-   Added stack splitting between multiple storages.
+-   Added handling for patterns that give back the same item.
+
+### Changed
+
+-   Increased cable recipe to 12 cables.
+
+### Fixed
+
+-   Fixed not being able to place sugar cane.
+-   Fixed not being able to place seeds.
+-   Fixed stacks not splitting between storages correctly.
+-   Fixed storage not saving ItemStack capabilities.
+-   Fixed dropping items into crafting grid with mouse won't work if your mouse is in between items.
+-   Fixed controller still drawing power even if disabled.
+
+## [0.7.8-beta] - 2016-06-04
+
+### Changed
+
+-   Updated to Forge 1951.
+
+### Fixed
+
+-   Fixed crash on some worlds.
+-   Improved Grid performance when sorting on quantity.
+
+## [0.7.7-beta] - 2016-06-04
+
+### Added
+
+-   Added the Stack Upgrade.
+-   Added Quartz Enriched Iron Block.
+-   Added French translation by Leventovitch.
+
+### Changed
+
+-   New items now go to the first available storage that has items in it already.
+-   Tweaked some recipes.
+
+### Fixed
+
+-   Fixed buggy reequip animation on wireless grid.
+-   Fixed solderer not supporting ore dictionary.
+-   Fixed recipes not supporting ore dictionary.
+-   Fixed destructor not being able to destroy some blocks.
+-   Fixed not being able to place or destroy sugar cane.
+-   Fixed storage blocks not being dismantable.
+-   Fixed getting more items than needed sometimes.
+-   Performance improvements.
+
+## [0.7.6-beta] - 2016-05-29
+
+### Changed
+
+-   Updated to Forge 1932.
+
+### Fixed
+
+-   Fixed not being able to start an autocraft.
+
+## [0.7.5-beta] - 2016-05-29
+
+### Fixed
+
+-   Fixed wrong ascending / descending order in Grid.
+-   Fixed autocrafting not giving back byproducts.
+-   Fixed Solderer causing too many chunk updates.
+-   Fixed Solderer slot sides being weird.
+-   Performance improvements.
+
+## [0.7.4-beta] - 2016-05-27
+
+### Changed
+
+-   Updated to Forge 1922.
+
+### Fixed
+
+-   Performance improvements.
+
+## [0.7.3-beta] - 2016-05-25
+
+### Changed
+
+-   Crafting tasks are now sorted from new to old in the Crafting Monitor.
+-   Broke Interface block inventory compatibility: make sure to take all your items out of your Interface blocks before you apply the update.
+
+### Fixed
+
+-   Fixed grid performance by not sending grid data so often.
+-   Fixed silicon + quartz enriched iron not having oredict names.
+
+## [0.7.2-beta] - 2016-05-24
+
+### Fixed
+
+-   Fixed Importer getting stuck on slot.
+
+## [0.7.1-beta] - 2016-05-24
+
+### Fixed
+
+-   Fixed NPE in some tiles.
+-   Fixed going out of crafting GUI not restoring state (scrollbar and search term).
+-   Fixed not being able to create a pattern in disconnected Pattern Grid.
+-   Fixed not being able to place cake or string.
+-   Performance improvement to Grids.
+
+## [0.7.0-beta] - 2016-05-23
+
+### Added
+
+-   Port to Minecraft 1.9.4.
+
+### Fixed
+
+-   Fixed Crafting Grid / Pattern Grid not throwing items on break.
+
+## [0.6.15-alpha] - 2016-05-29
+
+### Fixed
+
+-   Fixed Solderer sides being weird.
+-   Fixed Solderer causing too many block updates.
+
+## [0.6.14-alpha] - 2016-05-28
+
+### Fixed
+
+-   Fixed wrong ascending / descending order in Grid.
+-   Performance improvements.
+
+## [0.6.13-alpha] - 2016-05-27
+
+### Fixed
+
+-   Performance improvements.
+
+## [0.6.12-alpha] - 2016-05-25
+
+### Changed
+
+-   Crafting tasks are now sorted from new to old in the Crafting Monitor.
+
+### Fixed
+
+-   Fixed Crafting Grid / Pattern Grid not throwing items on break.
+-   Fixed NPE in some tiles.
+-   Fixed going out of crafting GUI not restoring state (scrollbar and search term).
+-   Fixed not being able to place cake or string.
+-   Fixed Importer getting stuck on slot.
+-   Fixed silicon + quartz enriched iron not having oredict names.
+-   Performance improvement to Grids.
+
+## [0.6.11-alpha] - 2016-05-23
+
+### Changed
+
+-   Converted all inventories in the mod to Forge's item handler capability system.
+
+### Fixed
+
+-   Fixed crafting patterns crashing when item of an input or output no longer exists.
+-   Fixed Grid letting the current held item flicker.
+-   Fixed Importer / Exporter / External Storage not being able to push or pull out of the other side of a double chest.
+
+## [0.6.10-alpha] - 2016-05-21
+
+### Changed
+
+-   Increased max crafting request size to 500.
+
+### Fixed
+
+-   Fixed Processing Patterns not working.
+-   Fixed not being able to request more than 1 item at once.
+-   Fixed crash with the Solderer.
+
+## [0.6.9-alpha] - 2016-05-20
+
+### Added
+
+-   Added automation for the Solderer: every side corresponds to a slot (see the wiki).
+
+### Fixed
+
+-   Fixed bug where machines wouldn't disconnect / connect when needed outside of chunk.
+-   Fixed not being able to toggle redstone mode in a Wireless Transmitter.
+-   Fixed same machine being connected to the network multiple times.
+-   Fixed External Storage not working.
+-   Reduced network usage.
+
+## [0.6.8-alpha] - 2016-05-19
+
+### Fixed
+
+-   Fixed CTRL + pick block on machines crashing game.
+-   Performance improvements.
+
+## [0.6.7-alpha] - 2016-05-19
+
+### Fixed
+
+-   Performance improvements.
+
+## [0.6.6-alpha] - 2016-05-18
+
+### Fixed
+
+-   Fixed being able to insert non-allowed items in inventories with hoppers.
+-   Fixed Processing Pattern Encoder not using up a Pattern.
+
+## [0.6.5-alpha] - 2016-05-18
+
+### Changed
+
+-   Updated Forge to build 1907.
+
+### Fixed
+
+-   Performance improvements for servers.
+-   Performance improvements for client scrollbars.
+
+## [0.6.4-alpha] - 2016-05-17
+
+### Fixed
+
+-   Performance improvements.
+
+## [0.6.3-alpha] - 2016-05-17
+
+### Fixed
+
+-   Performance improvements.
+
+## [0.6.2-alpha] - 2016-05-17
+
+### Added
+
+-   Added a max crafting quantity per request cap (hardcoded to 100).
+
+### Changed
+
+-   Upgrades now draw extra energy.
+
+### Fixed
+
+-   Fixed race condition with crafting tasks.
+-   Fixed pressing escape in crafting settings GUI not going back to grid GUI.
+-   Fixed losing autoselection in Grid when clicking on slot with autoselection mode.
+-   Fixed being able to pick up from pattern result slot.
+
+## [0.6.1-alpha] - 2016-05-16
+
+### Fixed
+
+-   Fixed NPE on world load.
+-   Fixed Destructor crashing when removing a connected machine.
+
+## [0.6.0-alpha] - 2016-05-16
+
+### Added
+
+-   Added autocrafting.
+-   Added the Pattern Grid.
+-   Added the Crafting Monitor.
+-   Added the Crafter.
+-   Added the Processing Pattern Encoder.
+-   Added a Pattern item.
+-   Added the Wireless Transmitter.
+-   Added Speed Upgrades which are applicable on a bunch of machines.
+-   Added Range Upgrades for in the Wireless Transmitter.
+-   Added Crafting Upgrades.
+-   Added recipe category -> item JEI integration.
+-   Added Storage Housing.
+
+### Changed
+
+-   Changed Grid modes to have a autoselected option.
+
+### Fixed
+
+-   Fixed Destructor not playing block break sound.
+-   Fixed Constructor not playing block place sound.
+-   Fixed picking up from crafting result slot.
+-   Fixed being able to use right click on crafting result slot.
+-   Fixed item duplication issue with the Interface.
+-   Fixed Importers and Exporters not working when changing facing with a wrench.
+-   Fixed Crafting Grid not respecting remainder in recipes.
+-   Fixed Crafting Grid giving back the wrong amount of items when shift clicking.
+-   Fixed items disappearing in Grid when doing a weird combination of inputs.
+-   Fixed Solderer not stacking items.
+-   Fixed Importer voiding Storage Disks from the Disk Drive.
+-   Fixed Controller not saving energy.
+-   Massive performance improvements which reduces lag and lets machines connect almost instantly.
+
+## [0.5.6-alpha] - 2016-04-29
+
+### Fixed
+
+-   Fixed sorting crash.
+-   Fixed autofocusing on priority field in storage GUIs.
+-   Fixed controller causing lag when energy level changes.
+
+## [0.5.5-alpha] - 2016-04-09
+
+### Changed
+
+-   Updated to Forge 1859.
+
+### Fixed
+
+-   Fixed several crashes.
+-   Energy level on Controller is maintained.
+
+## [0.5.4-alpha] - 2016-04-05
+
+### Changed
+
+-   Shift clicking on placing Constructor and Destructor will have opposite direction.
+
+### Fixed
+
+-   Fixed machines out of the Controller's chunk range only connecting after block break when rejoining the world.
+-   Fixed scrollbar skipping some rows when scrolling with mouse wheel.
+-   Fixed machines from a long distance not being visible in the Controller.
+
+## [0.5.3-alpha] - 2016-04-04
+
+### Added
+
+-   Added a Creative Wireless Grid.
+
+### Changed
+
+-   Changed block hardness levels.
+
+### Fixed
+
+-   Fixed not being able to open a Grid that is 256 blocks away from the Controller.
+-   Made the mod way less network intensive.
+
+## [0.5.2-alpha] - 2016-04-03
+
+### Added
+
+-   Items that don't exist anymore, won't be added to storage again to avoid crashes.
+
+### Fixed
+
+-   Fixed not being able to run the mod without JEI.
+
+## [0.5.1-alpha] - 2016-04-03
+
+### Fixed
+
+-   Fixed Disk Drive crashing with an `AbstractMethodException`.
+
+## [0.5.0-alpha] - 2016-04-03
+
+### Added
+
+-   Deep Storage Unit integration (with this several barrel mods are now supported too!).
+-   When placing Importer, Exporter or External Storage with SHIFT, it will have the opposite direction. This is for easy placement behind other blocks (furnaces for example).
+-   Added mass crafting of items with shift in Crafting Grid.
+-   Added JEI recipe transfering in Crafting Grid.
+-   New textures.
+-   Scrollbar in Grid and Crafting Grid.
+-   Display of connected machines in the Controller GUI.
+-   Nice formatting for items >= 1K (pressing shift while hovering over an item will still display the real item count).
+-   Grid can now synchronize with JEI.
+
+### Changed
+
+-   Updated to the latest Forge and JEI.
+-   Renamed Drives to Disk Drives.
+-   Renamed Storage Cells to Storage Disks.
+-   Wireless Grid is now bound to a Controller instead of a Grid.
+-   Drives have a better interface and there are now blacklist and whitelist filters for the Storage Disks in it too.
+-   Destructors have the ability to whitelist and blacklist certain items now.
+-   Side buttons in machine GUIs are now left, not right.
+-   Shift clicking stuff in the Interface.
+-   Made the normal Grid 1 row larger.
+-   Machines don't need to be connected with cables anymore, they can be next to each other too.
+-   Made the amount text in the Grid for items smaller.
+
+### Fixed
+
+-   Fixed clicking sound in Grid.
+-   Fixed a bunch of crashes.
+-   Fixed Exporter not exporting is some cases.
+-   Fixed Importer not importing in some cases.
+-   Fixed Controller drawing RF every 20 ticks instead of every tick.
+-   Fixed not being able to shift click from Crafting Grid crafting slots.
+-   Fixed new items inserted after crafting in Grid being laggy.
+-   Fixed flickering of items in Grid.
+-   Fixed getting a stack of unstackable items from Grid.
+-   Fixed Cable not having a collision box.
+-   Check if the Constructor can actually place said block in the world.
+
+### Removed
+
+-   Removed Wireless Transmitters.
+
+## [0.4.1-alpha] - 2016-03-24
+
+### Fixed
+
+-   Fixed ID duplication issues.
+
+## [0.4.0-alpha] - 2016-03-21
+
+### Added
+
+-   Relays.
+-   Interfaces.
+
+### Changed
+
+-   Cables now have actual collision.
+
+### Fixed
+
+-   Fix Minecraft reporting that retrieving Grid type fails.
+-   Fullness percentage in Creative Storage Blocks going under 0%.
+-   The Controller shouldn't display the base usage when not working.
+-   Check if item is valid for slot before pushing to inventories.
+
+## [0.3.0-alpha] - 2016-03-20
+
+### Added
+
+-   Initial release for Minecraft 1.9.
+
+## [0.2.1-alpha] - 2016-02-03
+
+### Added
+
+-   Internal test release.
+
+## [0.2.0-alpha] - 2016-01-31
+
+### Added
+
+-   Internal test release.
+
+## [0.1.1-alpha] - 2016-01-31
+
+### Added
+
+-   Internal test release.
+
+## [0.1.0-alpha] - 2016-01-03
+
+### Added
+
+-   Internal test release.
+
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.2...HEAD
+
+[1.12.2]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...v1.12.2
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
 
-[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/f10f3e5147a45883375c6d9bffa122d9fadb12b6...v1.12.0
+[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/v1.11.6...v1.12.0
+
+[1.11.6]: https://github.com/refinedmods/refinedstorage/compare/v1.11.5...v1.11.6
+
+[1.11.5]: https://github.com/refinedmods/refinedstorage/compare/v1.11.4...v1.11.5
+
+[1.11.4]: https://github.com/refinedmods/refinedstorage/compare/v1.11.3...v1.11.4
+
+[1.11.3]: https://github.com/refinedmods/refinedstorage/compare/v1.11.2...v1.11.3
+
+[1.11.2]: https://github.com/refinedmods/refinedstorage/compare/v1.11.1...v1.11.2
+
+[1.11.1]: https://github.com/refinedmods/refinedstorage/compare/v1.11.0...v1.11.1
+
+[1.11.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.5...v1.11.0
+
+[1.10.5]: https://github.com/refinedmods/refinedstorage/compare/v1.10.4...v1.10.5
+
+[1.10.4]: https://github.com/refinedmods/refinedstorage/compare/v1.10.3...v1.10.4
+
+[1.10.3]: https://github.com/refinedmods/refinedstorage/compare/v1.10.2...v1.10.3
+
+[1.10.2]: https://github.com/refinedmods/refinedstorage/compare/v1.10.1...v1.10.2
+
+[1.10.1]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0...v1.10.1
+
+[1.10.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.4...v1.10.0
+
+[1.10.0-beta.4]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.3...v1.10.0-beta.4
+
+[1.10.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.2...v1.10.0-beta.3
+
+[1.10.0-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.1...v1.10.0-beta.2
+
+[1.10.0-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.9.18...v1.10.0-beta.1
+
+[1.9.18]: https://github.com/refinedmods/refinedstorage/compare/v1.9.17...v1.9.18
+
+[1.9.17]: https://github.com/refinedmods/refinedstorage/compare/v1.9.16...v1.9.17
+
+[1.9.16]: https://github.com/refinedmods/refinedstorage/compare/v1.9.15...v1.9.16
+
+[1.9.15]: https://github.com/refinedmods/refinedstorage/compare/v1.9.14...v1.9.15
+
+[1.9.14]: https://github.com/refinedmods/refinedstorage/compare/v1.9.13...v1.9.14
+
+[1.9.13]: https://github.com/refinedmods/refinedstorage/compare/v1.9.12...v1.9.13
+
+[1.9.12]: https://github.com/refinedmods/refinedstorage/compare/v1.9.11...v1.9.12
+
+[1.9.11]: https://github.com/refinedmods/refinedstorage/compare/v1.9.10...v1.9.11
+
+[1.9.10]: https://github.com/refinedmods/refinedstorage/compare/v1.9.9...v1.9.10
+
+[1.9.9]: https://github.com/refinedmods/refinedstorage/compare/v1.9.8...v1.9.9
+
+[1.9.8]: https://github.com/refinedmods/refinedstorage/compare/v1.9.7...v1.9.8
+
+[1.9.7]: https://github.com/refinedmods/refinedstorage/compare/v1.9.6...v1.9.7
+
+[1.9.6]: https://github.com/refinedmods/refinedstorage/compare/v1.9.5...v1.9.6
+
+[1.9.5]: https://github.com/refinedmods/refinedstorage/compare/v1.9.4...v1.9.5
+
+[1.9.4]: https://github.com/refinedmods/refinedstorage/compare/v1.9.3-beta...v1.9.4
+
+[1.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2b-beta...v1.9.3-beta
+
+[1.9.2b-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta...v1.9.2b-beta
+
+[1.9.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.1-beta...v1.9.2-beta
+
+[1.9.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.0-beta...v1.9.1-beta
+
+[1.9.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.8...v1.9.0-beta
+
+[1.8.8]: https://github.com/refinedmods/refinedstorage/compare/v1.8.7...v1.8.8
+
+[1.8.7]: https://github.com/refinedmods/refinedstorage/compare/v1.8.6-beta...v1.8.7
+
+[1.8.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.5-beta...v1.8.6-beta
+
+[1.8.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.4-beta...v1.8.5-beta
+
+[1.8.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.3-beta...v1.8.4-beta
+
+[1.8.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.2-beta...v1.8.3-beta
+
+[1.8.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.1-beta...v1.8.2-beta
+
+[1.8.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.0-beta...v1.8.1-beta
+
+[1.8.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.7.3-beta...v1.8.0-beta
+
+[1.7.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.7.2-beta...v1.7.3-beta
+
+[1.7.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.7.1-alpha...v1.7.2-beta
+
+[1.7.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0-alpha...v1.7.1-alpha
+
+[1.7.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+10...v1.7.0-alpha
+
+[1.7.0+10]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+9...v1.7.0+10
+
+[1.7.0+9]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+8...v1.7.0+9
+
+[1.7.0+8]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+7...v1.7.0+8
+
+[1.7.0+7]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+6...v1.7.0+7
+
+[1.7.0+6]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+5...v1.7.0+6
+
+[1.7.0+5]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+4...v1.7.0+5
+
+[1.7.0+4]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+3...v1.7.0+4
+
+[1.7.0+3]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+2...v1.7.0+3
+
+[1.7.0+2]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+1...v1.7.0+2
+
+[1.7.0+1]: https://github.com/refinedmods/refinedstorage/compare/v1.6.16...v1.7.0+1
+
+[1.6.16]: https://github.com/refinedmods/refinedstorage/compare/v1.6.15...v1.6.16
+
+[1.6.15]: https://github.com/refinedmods/refinedstorage/compare/v1.6.14...v1.6.15
+
+[1.6.14]: https://github.com/refinedmods/refinedstorage/compare/v1.6.13...v1.6.14
+
+[1.6.13]: https://github.com/refinedmods/refinedstorage/compare/v1.6.12...v1.6.13
+
+[1.6.12]: https://github.com/refinedmods/refinedstorage/compare/v1.6.11...v1.6.12
+
+[1.6.11]: https://github.com/refinedmods/refinedstorage/compare/v1.6.10...v1.6.11
+
+[1.6.10]: https://github.com/refinedmods/refinedstorage/compare/v1.6.9...v1.6.10
+
+[1.6.9]: https://github.com/refinedmods/refinedstorage/compare/v1.6.8...v1.6.9
+
+[1.6.8]: https://github.com/refinedmods/refinedstorage/compare/v1.6.7...v1.6.8
+
+[1.6.7]: https://github.com/refinedmods/refinedstorage/compare/v1.6.6...v1.6.7
+
+[1.6.6]: https://github.com/refinedmods/refinedstorage/compare/v1.6.5...v1.6.6
+
+[1.6.5]: https://github.com/refinedmods/refinedstorage/compare/v1.6.4...v1.6.5
+
+[1.6.4]: https://github.com/refinedmods/refinedstorage/compare/v1.6.3...v1.6.4
+
+[1.6.3]: https://github.com/refinedmods/refinedstorage/compare/v1.6.2...v1.6.3
+
+[1.6.2]: https://github.com/refinedmods/refinedstorage/compare/v1.6.1...v1.6.2
+
+[1.6.1]: https://github.com/refinedmods/refinedstorage/compare/v1.6.0...v1.6.1
+
+[1.6.0]: https://github.com/refinedmods/refinedstorage/compare/v1.5.34...v1.6.0
+
+[1.5.34]: https://github.com/refinedmods/refinedstorage/compare/v1.5.33...v1.5.34
+
+[1.5.33]: https://github.com/refinedmods/refinedstorage/compare/v1.5.32...v1.5.33
+
+[1.5.32]: https://github.com/refinedmods/refinedstorage/compare/v1.5.31...v1.5.32
+
+[1.5.31]: https://github.com/refinedmods/refinedstorage/compare/v1.5.30...v1.5.31
+
+[1.5.30]: https://github.com/refinedmods/refinedstorage/compare/v1.5.29...v1.5.30
+
+[1.5.29]: https://github.com/refinedmods/refinedstorage/compare/v1.5.28...v1.5.29
+
+[1.5.28]: https://github.com/refinedmods/refinedstorage/compare/v1.5.27-beta...v1.5.28
+
+[1.5.27-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.26-beta...v1.5.27-beta
+
+[1.5.26-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.25...v1.5.26-beta
+
+[1.5.25]: https://github.com/refinedmods/refinedstorage/compare/v1.5.24...v1.5.25
+
+[1.5.24]: https://github.com/refinedmods/refinedstorage/compare/v1.5.23...v1.5.24
+
+[1.5.23]: https://github.com/refinedmods/refinedstorage/compare/v1.5.22...v1.5.23
+
+[1.5.22]: https://github.com/refinedmods/refinedstorage/compare/v1.5.21...v1.5.22
+
+[1.5.21]: https://github.com/refinedmods/refinedstorage/compare/v1.5.20...v1.5.21
+
+[1.5.20]: https://github.com/refinedmods/refinedstorage/compare/v1.5.19...v1.5.20
+
+[1.5.19]: https://github.com/refinedmods/refinedstorage/compare/v1.5.18...v1.5.19
+
+[1.5.18]: https://github.com/refinedmods/refinedstorage/compare/v1.5.17...v1.5.18
+
+[1.5.17]: https://github.com/refinedmods/refinedstorage/compare/v1.5.16...v1.5.17
+
+[1.5.16]: https://github.com/refinedmods/refinedstorage/compare/v1.5.15...v1.5.16
+
+[1.5.15]: https://github.com/refinedmods/refinedstorage/compare/v1.5.14...v1.5.15
+
+[1.5.14]: https://github.com/refinedmods/refinedstorage/compare/v1.5.13...v1.5.14
+
+[1.5.13]: https://github.com/refinedmods/refinedstorage/compare/v1.5.12...v1.5.13
+
+[1.5.12]: https://github.com/refinedmods/refinedstorage/compare/v1.5.11...v1.5.12
+
+[1.5.11]: https://github.com/refinedmods/refinedstorage/compare/v1.5.10...v1.5.11
+
+[1.5.10]: https://github.com/refinedmods/refinedstorage/compare/v1.5.9...v1.5.10
+
+[1.5.9]: https://github.com/refinedmods/refinedstorage/compare/v1.5.8...v1.5.9
+
+[1.5.8]: https://github.com/refinedmods/refinedstorage/compare/v1.5.7...v1.5.8
+
+[1.5.7]: https://github.com/refinedmods/refinedstorage/compare/v1.5.6...v1.5.7
+
+[1.5.6]: https://github.com/refinedmods/refinedstorage/compare/v1.5.5-beta...v1.5.6
+
+[1.5.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.4-beta...v1.5.5-beta
+
+[1.5.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.3-beta...v1.5.4-beta
+
+[1.5.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.2-beta...v1.5.3-beta
+
+[1.5.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.1-beta...v1.5.2-beta
+
+[1.5.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.0-alpha...v1.5.1-beta
+
+[1.5.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.4.20...v1.5.0-alpha
+
+[1.4.20]: https://github.com/refinedmods/refinedstorage/compare/v1.4.19...v1.4.20
+
+[1.4.19]: https://github.com/refinedmods/refinedstorage/compare/v1.4.18...v1.4.19
+
+[1.4.18]: https://github.com/refinedmods/refinedstorage/compare/v1.4.17...v1.4.18
+
+[1.4.17]: https://github.com/refinedmods/refinedstorage/compare/v1.4.16...v1.4.17
+
+[1.4.16]: https://github.com/refinedmods/refinedstorage/compare/v1.4.15...v1.4.16
+
+[1.4.15]: https://github.com/refinedmods/refinedstorage/compare/v1.4.14...v1.4.15
+
+[1.4.14]: https://github.com/refinedmods/refinedstorage/compare/v1.4.13...v1.4.14
+
+[1.4.13]: https://github.com/refinedmods/refinedstorage/compare/v1.4.12...v1.4.13
+
+[1.4.12]: https://github.com/refinedmods/refinedstorage/compare/v1.4.11...v1.4.12
+
+[1.4.11]: https://github.com/refinedmods/refinedstorage/compare/v1.4.10-beta...v1.4.11
+
+[1.4.10-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.9-beta...v1.4.10-beta
+
+[1.4.9-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.8-beta...v1.4.9-beta
+
+[1.4.8-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.7-beta...v1.4.8-beta
+
+[1.4.7-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.6-beta...v1.4.7-beta
+
+[1.4.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.5-beta...v1.4.6-beta
+
+[1.4.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.4-beta...v1.4.5-beta
+
+[1.4.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.3-beta...v1.4.4-beta
+
+[1.4.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.2-beta...v1.4.3-beta
+
+[1.4.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.1-beta...v1.4.2-beta
+
+[1.4.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.0-beta...v1.4.1-beta
+
+[1.4.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.3.5-alpha...v1.4.0-beta
+
+[1.3.5-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.4-alpha...v1.3.5-alpha
+
+[1.3.4-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.3-alpha...v1.3.4-alpha
+
+[1.3.3-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.2-alpha...v1.3.3-alpha
+
+[1.3.2-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.1-alpha...v1.3.2-alpha
+
+[1.3.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.0-alpha...v1.3.1-alpha
+
+[1.3.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.2.26...v1.3.0-alpha
+
+[1.2.26]: https://github.com/refinedmods/refinedstorage/compare/v1.2.25...v1.2.26
+
+[1.2.25]: https://github.com/refinedmods/refinedstorage/compare/v1.2.24...v1.2.25
+
+[1.2.24]: https://github.com/refinedmods/refinedstorage/compare/v1.2.23...v1.2.24
+
+[1.2.23]: https://github.com/refinedmods/refinedstorage/compare/v1.2.22...v1.2.23
+
+[1.2.22]: https://github.com/refinedmods/refinedstorage/compare/v1.2.21...v1.2.22
+
+[1.2.21]: https://github.com/refinedmods/refinedstorage/compare/v1.2.20...v1.2.21
+
+[1.2.20]: https://github.com/refinedmods/refinedstorage/compare/v1.2.19...v1.2.20
+
+[1.2.19]: https://github.com/refinedmods/refinedstorage/compare/v1.2.18...v1.2.19
+
+[1.2.18]: https://github.com/refinedmods/refinedstorage/compare/v1.2.17...v1.2.18
+
+[1.2.17]: https://github.com/refinedmods/refinedstorage/compare/v1.2.16...v1.2.17
+
+[1.2.16]: https://github.com/refinedmods/refinedstorage/compare/v1.2.15...v1.2.16
+
+[1.2.15]: https://github.com/refinedmods/refinedstorage/compare/v1.2.14...v1.2.15
+
+[1.2.14]: https://github.com/refinedmods/refinedstorage/compare/v1.2.13...v1.2.14
+
+[1.2.13]: https://github.com/refinedmods/refinedstorage/compare/v1.2.12...v1.2.13
+
+[1.2.12]: https://github.com/refinedmods/refinedstorage/compare/v1.2.11...v1.2.12
+
+[1.2.11]: https://github.com/refinedmods/refinedstorage/compare/v1.2.10...v1.2.11
+
+[1.2.10]: https://github.com/refinedmods/refinedstorage/compare/v1.2.9...v1.2.10
+
+[1.2.9]: https://github.com/refinedmods/refinedstorage/compare/v1.2.8...v1.2.9
+
+[1.2.8]: https://github.com/refinedmods/refinedstorage/compare/v1.2.7...v1.2.8
+
+[1.2.7]: https://github.com/refinedmods/refinedstorage/compare/v1.2.6...v1.2.7
+
+[1.2.6]: https://github.com/refinedmods/refinedstorage/compare/v1.2.5...v1.2.6
+
+[1.2.5]: https://github.com/refinedmods/refinedstorage/compare/v1.2.4...v1.2.5
+
+[1.2.4]: https://github.com/refinedmods/refinedstorage/compare/v1.2.3...v1.2.4
+
+[1.2.3]: https://github.com/refinedmods/refinedstorage/compare/v1.2.2...v1.2.3
+
+[1.2.2]: https://github.com/refinedmods/refinedstorage/compare/v1.2.1...v1.2.2
+
+[1.2.1]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0...v1.2.1
+
+[1.2.0]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.8...v1.2.0
+
+[1.2.0-beta.8]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.7...v1.2.0-beta.8
+
+[1.2.0-beta.7]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.6...v1.2.0-beta.7
+
+[1.2.0-beta.6]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.5...v1.2.0-beta.6
+
+[1.2.0-beta.5]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.4...v1.2.0-beta.5
+
+[1.2.0-beta.4]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.3...v1.2.0-beta.4
+
+[1.2.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.2...v1.2.0-beta.3
+
+[1.2.0-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.1...v1.2.0-beta.2
+
+[1.2.0-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.1.3...v1.2.0-beta.1
+
+[1.1.3]: https://github.com/refinedmods/refinedstorage/compare/v1.1.2...v1.1.3
+
+[1.1.2]: https://github.com/refinedmods/refinedstorage/compare/v1.1.1...v1.1.2
+
+[1.1.1]: https://github.com/refinedmods/refinedstorage/compare/v1.1.0...v1.1.1
+
+[1.1.0]: https://github.com/refinedmods/refinedstorage/compare/v1.0.5...v1.1.0
+
+[1.0.5]: https://github.com/refinedmods/refinedstorage/compare/v1.0.4...v1.0.5
+
+[1.0.4]: https://github.com/refinedmods/refinedstorage/compare/v1.0.3...v1.0.4
+
+[1.0.3]: https://github.com/refinedmods/refinedstorage/compare/v1.0.2...v1.0.3
+
+[1.0.2]: https://github.com/refinedmods/refinedstorage/compare/v1.0.1...v1.0.2
+
+[1.0.1]: https://github.com/refinedmods/refinedstorage/compare/v1.0.0...v1.0.1
+
+[1.0.0]: https://github.com/refinedmods/refinedstorage/compare/v0.9.4-beta...v1.0.0
+
+[0.9.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.3-beta...v0.9.4-beta
+
+[0.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.2-beta...v0.9.3-beta
+
+[0.9.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.1-beta...v0.9.2-beta
+
+[0.9.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.0-beta...v0.9.1-beta
+
+[0.9.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.20-beta...v0.9.0-beta
+
+[0.8.20-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.19-beta...v0.8.20-beta
+
+[0.8.19-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.18-beta...v0.8.19-beta
+
+[0.8.18-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.17-beta...v0.8.18-beta
+
+[0.8.17-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.16-beta...v0.8.17-beta
+
+[0.8.16-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.15-beta...v0.8.16-beta
+
+[0.8.15-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.14-beta...v0.8.15-beta
+
+[0.8.14-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.13-beta...v0.8.14-beta
+
+[0.8.13-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.12-beta...v0.8.13-beta
+
+[0.8.12-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.11-beta...v0.8.12-beta
+
+[0.8.11-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.10-beta...v0.8.11-beta
+
+[0.8.10-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.9-beta...v0.8.10-beta
+
+[0.8.9-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.8-beta...v0.8.9-beta
+
+[0.8.8-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.7-beta...v0.8.8-beta
+
+[0.8.7-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.6-beta...v0.8.7-beta
+
+[0.8.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.5-beta...v0.8.6-beta
+
+[0.8.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.4-beta...v0.8.5-beta
+
+[0.8.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.3-beta...v0.8.4-beta
+
+[0.8.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.2-beta...v0.8.3-beta
+
+[0.8.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.1-beta...v0.8.2-beta
+
+[0.8.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.0-beta...v0.8.1-beta
+
+[0.8.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.19-beta...v0.8.0-beta
+
+[0.7.19-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.18-beta...v0.7.19-beta
+
+[0.7.18-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.17-beta...v0.7.18-beta
+
+[0.7.17-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.16-beta...v0.7.17-beta
+
+[0.7.16-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.15-beta...v0.7.16-beta
+
+[0.7.15-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.14-beta...v0.7.15-beta
+
+[0.7.14-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.13-beta...v0.7.14-beta
+
+[0.7.13-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.12-beta...v0.7.13-beta
+
+[0.7.12-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.11-beta...v0.7.12-beta
+
+[0.7.11-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.10-beta...v0.7.11-beta
+
+[0.7.10-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.9-beta...v0.7.10-beta
+
+[0.7.9-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.8-beta...v0.7.9-beta
+
+[0.7.8-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.7-beta...v0.7.8-beta
+
+[0.7.7-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.6-beta...v0.7.7-beta
+
+[0.7.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.5-beta...v0.7.6-beta
+
+[0.7.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.4-beta...v0.7.5-beta
+
+[0.7.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.3-beta...v0.7.4-beta
+
+[0.7.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.2-beta...v0.7.3-beta
+
+[0.7.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.1-beta...v0.7.2-beta
+
+[0.7.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.0-beta...v0.7.1-beta
+
+[0.7.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.6.15-alpha...v0.7.0-beta
+
+[0.6.15-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.14-alpha...v0.6.15-alpha
+
+[0.6.14-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.13-alpha...v0.6.14-alpha
+
+[0.6.13-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.12-alpha...v0.6.13-alpha
+
+[0.6.12-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.11-alpha...v0.6.12-alpha
+
+[0.6.11-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.10-alpha...v0.6.11-alpha
+
+[0.6.10-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.9-alpha...v0.6.10-alpha
+
+[0.6.9-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.8-alpha...v0.6.9-alpha
+
+[0.6.8-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.7-alpha...v0.6.8-alpha
+
+[0.6.7-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.6-alpha...v0.6.7-alpha
+
+[0.6.6-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.5-alpha...v0.6.6-alpha
+
+[0.6.5-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.4-alpha...v0.6.5-alpha
+
+[0.6.4-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.3-alpha...v0.6.4-alpha
+
+[0.6.3-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.2-alpha...v0.6.3-alpha
+
+[0.6.2-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.1-alpha...v0.6.2-alpha
+
+[0.6.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.0-alpha...v0.6.1-alpha
+
+[0.6.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.6-alpha...v0.6.0-alpha
+
+[0.5.6-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.5-alpha...v0.5.6-alpha
+
+[0.5.5-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.4-alpha...v0.5.5-alpha
+
+[0.5.4-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.3-alpha...v0.5.4-alpha
+
+[0.5.3-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.2-alpha...v0.5.3-alpha
+
+[0.5.2-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.1-alpha...v0.5.2-alpha
+
+[0.5.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.0-alpha...v0.5.1-alpha
+
+[0.5.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.4.1-alpha...v0.5.0-alpha
+
+[0.4.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.4.0-alpha...v0.4.1-alpha
+
+[0.4.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.3.0-alpha...v0.4.0-alpha
+
+[0.3.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.2.1-alpha...v0.3.0-alpha
+
+[0.2.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.2.0-alpha...v0.2.1-alpha
+
+[0.2.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.1.1-alpha...v0.2.0-alpha
+
+[0.1.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.1.0-alpha...v0.1.1-alpha
+
+[0.1.0-alpha]: https://github.com/refinedmods/refinedstorage/releases/tag/v0.1.0-alpha

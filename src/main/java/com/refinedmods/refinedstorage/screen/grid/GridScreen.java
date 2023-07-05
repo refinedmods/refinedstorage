@@ -33,17 +33,22 @@ import com.refinedmods.refinedstorage.util.RenderUtils;
 import com.refinedmods.refinedstorage.util.TimeUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -492,25 +497,34 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     }
 
     private void drawGridTooltip(GuiGraphics graphics, IGridStack gridStack, int mouseX, int mouseY) {
-        List<Component> textLines = gridStack.getTooltip(true);
-
         ItemStack stackContext = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
 
-        if (RS.CLIENT_CONFIG.getGrid().getDetailedTooltip()) {
-            Style detailedTextStyle = Style.EMPTY.applyFormat(ChatFormatting.GRAY).withItalic(true);
+        List<? extends FormattedText> textElements = gridStack.getTooltip(true);
+        List<ClientTooltipComponent> components = new ArrayList<>(ForgeHooksClient.gatherTooltipComponents(
+            stackContext,
+            textElements,
+            mouseX,
+            minecraft.getWindow().getGuiScaledWidth(),
+            minecraft.getWindow().getGuiScaledHeight(),
+            font
+        ));
 
+        if (RS.CLIENT_CONFIG.getGrid().getDetailedTooltip()) {
+            final float scale = (minecraft != null && minecraft.isEnforceUnicode()) ? 1F : 0.7F;
             if (!gridStack.isCraftable()) {
-                textLines.add(Component.translatable("misc.refinedstorage.total", gridStack.getFormattedFullQuantity())
-                    .withStyle(detailedTextStyle));
+                MutableComponent total = Component.translatable("misc.refinedstorage.total", gridStack.getFormattedFullQuantity())
+                    .withStyle(ChatFormatting.GRAY);
+                components.add(new SmallClientTooltipComponent(total, scale));
             }
 
             if (gridStack.getTrackerEntry() != null) {
-                textLines.add(Component.translatable(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()))
-                    .withStyle(detailedTextStyle));
+                MutableComponent time = Component.translatable(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()))
+                    .withStyle(ChatFormatting.GRAY);
+                components.add(new SmallClientTooltipComponent(time, scale));
             }
         }
 
-        renderTooltip(graphics, stackContext, mouseX, mouseY, textLines);
+        graphics.renderTooltipInternal(font, components, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE);
     }
 
     @Override
@@ -669,7 +683,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canConsumeInput()) {
+        if (searchField.keyPressed(key, scanCode, modifiers)) {
             return true;
         }
 
