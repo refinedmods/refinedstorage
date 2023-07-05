@@ -3465,4 +3465,524 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
 
-[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/f10f3e5147a45883375c6d9bffa122d9fadb12b6...v1.12.0
+[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/v1.11.6...v1.12.0
+
+[1.11.6]: https://github.com/refinedmods/refinedstorage/compare/v1.11.5...v1.11.6
+
+[1.11.5]: https://github.com/refinedmods/refinedstorage/compare/v1.11.4...v1.11.5
+
+[1.11.4]: https://github.com/refinedmods/refinedstorage/compare/v1.11.3...v1.11.4
+
+[1.11.3]: https://github.com/refinedmods/refinedstorage/compare/v1.11.2...v1.11.3
+
+[1.11.2]: https://github.com/refinedmods/refinedstorage/compare/v1.11.1...v1.11.2
+
+[1.11.1]: https://github.com/refinedmods/refinedstorage/compare/v1.11.0...v1.11.1
+
+[1.11.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.5...v1.11.0
+
+[1.10.5]: https://github.com/refinedmods/refinedstorage/compare/v1.10.4...v1.10.5
+
+[1.10.4]: https://github.com/refinedmods/refinedstorage/compare/v1.10.3...v1.10.4
+
+[1.10.3]: https://github.com/refinedmods/refinedstorage/compare/v1.10.2...v1.10.3
+
+[1.10.2]: https://github.com/refinedmods/refinedstorage/compare/v1.10.1...v1.10.2
+
+[1.10.1]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0...v1.10.1
+
+[1.10.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.4...v1.10.0
+
+[1.10.0-beta.4]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.3...v1.10.0-beta.4
+
+[1.10.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.2...v1.10.0-beta.3
+
+[1.10.0-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.10.0-beta.1...v1.10.0-beta.2
+
+[1.10.0-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.9.18...v1.10.0-beta.1
+
+[1.9.18]: https://github.com/refinedmods/refinedstorage/compare/v1.9.17...v1.9.18
+
+[1.9.17]: https://github.com/refinedmods/refinedstorage/compare/v1.9.16...v1.9.17
+
+[1.9.16]: https://github.com/refinedmods/refinedstorage/compare/v1.9.15...v1.9.16
+
+[1.9.15]: https://github.com/refinedmods/refinedstorage/compare/v1.9.14...v1.9.15
+
+[1.9.14]: https://github.com/refinedmods/refinedstorage/compare/v1.9.13...v1.9.14
+
+[1.9.13]: https://github.com/refinedmods/refinedstorage/compare/v1.9.12...v1.9.13
+
+[1.9.12]: https://github.com/refinedmods/refinedstorage/compare/v1.9.11...v1.9.12
+
+[1.9.11]: https://github.com/refinedmods/refinedstorage/compare/v1.9.10...v1.9.11
+
+[1.9.10]: https://github.com/refinedmods/refinedstorage/compare/v1.9.9...v1.9.10
+
+[1.9.9]: https://github.com/refinedmods/refinedstorage/compare/v1.9.8...v1.9.9
+
+[1.9.8]: https://github.com/refinedmods/refinedstorage/compare/v1.9.7...v1.9.8
+
+[1.9.7]: https://github.com/refinedmods/refinedstorage/compare/v1.9.6...v1.9.7
+
+[1.9.6]: https://github.com/refinedmods/refinedstorage/compare/v1.9.5...v1.9.6
+
+[1.9.5]: https://github.com/refinedmods/refinedstorage/compare/v1.9.4...v1.9.5
+
+[1.9.4]: https://github.com/refinedmods/refinedstorage/compare/v1.9.3-beta...v1.9.4
+
+[1.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2b-beta...v1.9.3-beta
+
+[1.9.2b-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta...v1.9.2b-beta
+
+[1.9.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.1-beta...v1.9.2-beta
+
+[1.9.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.0-beta...v1.9.1-beta
+
+[1.9.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.8...v1.9.0-beta
+
+[1.8.8]: https://github.com/refinedmods/refinedstorage/compare/v1.8.7...v1.8.8
+
+[1.8.7]: https://github.com/refinedmods/refinedstorage/compare/v1.8.6-beta...v1.8.7
+
+[1.8.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.5-beta...v1.8.6-beta
+
+[1.8.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.4-beta...v1.8.5-beta
+
+[1.8.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.3-beta...v1.8.4-beta
+
+[1.8.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.2-beta...v1.8.3-beta
+
+[1.8.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.1-beta...v1.8.2-beta
+
+[1.8.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.8.0-beta...v1.8.1-beta
+
+[1.8.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.7.3-beta...v1.8.0-beta
+
+[1.7.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.7.2-beta...v1.7.3-beta
+
+[1.7.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.7.1-alpha...v1.7.2-beta
+
+[1.7.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0-alpha...v1.7.1-alpha
+
+[1.7.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+10...v1.7.0-alpha
+
+[1.7.0+10]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+9...v1.7.0+10
+
+[1.7.0+9]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+8...v1.7.0+9
+
+[1.7.0+8]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+7...v1.7.0+8
+
+[1.7.0+7]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+6...v1.7.0+7
+
+[1.7.0+6]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+5...v1.7.0+6
+
+[1.7.0+5]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+4...v1.7.0+5
+
+[1.7.0+4]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+3...v1.7.0+4
+
+[1.7.0+3]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+2...v1.7.0+3
+
+[1.7.0+2]: https://github.com/refinedmods/refinedstorage/compare/v1.7.0+1...v1.7.0+2
+
+[1.7.0+1]: https://github.com/refinedmods/refinedstorage/compare/v1.6.16...v1.7.0+1
+
+[1.6.16]: https://github.com/refinedmods/refinedstorage/compare/v1.6.15...v1.6.16
+
+[1.6.15]: https://github.com/refinedmods/refinedstorage/compare/v1.6.14...v1.6.15
+
+[1.6.14]: https://github.com/refinedmods/refinedstorage/compare/v1.6.13...v1.6.14
+
+[1.6.13]: https://github.com/refinedmods/refinedstorage/compare/v1.6.12...v1.6.13
+
+[1.6.12]: https://github.com/refinedmods/refinedstorage/compare/v1.6.11...v1.6.12
+
+[1.6.11]: https://github.com/refinedmods/refinedstorage/compare/v1.6.10...v1.6.11
+
+[1.6.10]: https://github.com/refinedmods/refinedstorage/compare/v1.6.9...v1.6.10
+
+[1.6.9]: https://github.com/refinedmods/refinedstorage/compare/v1.6.8...v1.6.9
+
+[1.6.8]: https://github.com/refinedmods/refinedstorage/compare/v1.6.7...v1.6.8
+
+[1.6.7]: https://github.com/refinedmods/refinedstorage/compare/v1.6.6...v1.6.7
+
+[1.6.6]: https://github.com/refinedmods/refinedstorage/compare/v1.6.5...v1.6.6
+
+[1.6.5]: https://github.com/refinedmods/refinedstorage/compare/v1.6.4...v1.6.5
+
+[1.6.4]: https://github.com/refinedmods/refinedstorage/compare/v1.6.3...v1.6.4
+
+[1.6.3]: https://github.com/refinedmods/refinedstorage/compare/v1.6.2...v1.6.3
+
+[1.6.2]: https://github.com/refinedmods/refinedstorage/compare/v1.6.1...v1.6.2
+
+[1.6.1]: https://github.com/refinedmods/refinedstorage/compare/v1.6.0...v1.6.1
+
+[1.6.0]: https://github.com/refinedmods/refinedstorage/compare/v1.5.34...v1.6.0
+
+[1.5.34]: https://github.com/refinedmods/refinedstorage/compare/v1.5.33...v1.5.34
+
+[1.5.33]: https://github.com/refinedmods/refinedstorage/compare/v1.5.32...v1.5.33
+
+[1.5.32]: https://github.com/refinedmods/refinedstorage/compare/v1.5.31...v1.5.32
+
+[1.5.31]: https://github.com/refinedmods/refinedstorage/compare/v1.5.30...v1.5.31
+
+[1.5.30]: https://github.com/refinedmods/refinedstorage/compare/v1.5.29...v1.5.30
+
+[1.5.29]: https://github.com/refinedmods/refinedstorage/compare/v1.5.28...v1.5.29
+
+[1.5.28]: https://github.com/refinedmods/refinedstorage/compare/v1.5.27-beta...v1.5.28
+
+[1.5.27-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.26-beta...v1.5.27-beta
+
+[1.5.26-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.25...v1.5.26-beta
+
+[1.5.25]: https://github.com/refinedmods/refinedstorage/compare/v1.5.24...v1.5.25
+
+[1.5.24]: https://github.com/refinedmods/refinedstorage/compare/v1.5.23...v1.5.24
+
+[1.5.23]: https://github.com/refinedmods/refinedstorage/compare/v1.5.22...v1.5.23
+
+[1.5.22]: https://github.com/refinedmods/refinedstorage/compare/v1.5.21...v1.5.22
+
+[1.5.21]: https://github.com/refinedmods/refinedstorage/compare/v1.5.20...v1.5.21
+
+[1.5.20]: https://github.com/refinedmods/refinedstorage/compare/v1.5.19...v1.5.20
+
+[1.5.19]: https://github.com/refinedmods/refinedstorage/compare/v1.5.18...v1.5.19
+
+[1.5.18]: https://github.com/refinedmods/refinedstorage/compare/v1.5.17...v1.5.18
+
+[1.5.17]: https://github.com/refinedmods/refinedstorage/compare/v1.5.16...v1.5.17
+
+[1.5.16]: https://github.com/refinedmods/refinedstorage/compare/v1.5.15...v1.5.16
+
+[1.5.15]: https://github.com/refinedmods/refinedstorage/compare/v1.5.14...v1.5.15
+
+[1.5.14]: https://github.com/refinedmods/refinedstorage/compare/v1.5.13...v1.5.14
+
+[1.5.13]: https://github.com/refinedmods/refinedstorage/compare/v1.5.12...v1.5.13
+
+[1.5.12]: https://github.com/refinedmods/refinedstorage/compare/v1.5.11...v1.5.12
+
+[1.5.11]: https://github.com/refinedmods/refinedstorage/compare/v1.5.10...v1.5.11
+
+[1.5.10]: https://github.com/refinedmods/refinedstorage/compare/v1.5.9...v1.5.10
+
+[1.5.9]: https://github.com/refinedmods/refinedstorage/compare/v1.5.8...v1.5.9
+
+[1.5.8]: https://github.com/refinedmods/refinedstorage/compare/v1.5.7...v1.5.8
+
+[1.5.7]: https://github.com/refinedmods/refinedstorage/compare/v1.5.6...v1.5.7
+
+[1.5.6]: https://github.com/refinedmods/refinedstorage/compare/v1.5.5-beta...v1.5.6
+
+[1.5.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.4-beta...v1.5.5-beta
+
+[1.5.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.3-beta...v1.5.4-beta
+
+[1.5.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.2-beta...v1.5.3-beta
+
+[1.5.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.1-beta...v1.5.2-beta
+
+[1.5.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.5.0-alpha...v1.5.1-beta
+
+[1.5.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.4.20...v1.5.0-alpha
+
+[1.4.20]: https://github.com/refinedmods/refinedstorage/compare/v1.4.19...v1.4.20
+
+[1.4.19]: https://github.com/refinedmods/refinedstorage/compare/v1.4.18...v1.4.19
+
+[1.4.18]: https://github.com/refinedmods/refinedstorage/compare/v1.4.17...v1.4.18
+
+[1.4.17]: https://github.com/refinedmods/refinedstorage/compare/v1.4.16...v1.4.17
+
+[1.4.16]: https://github.com/refinedmods/refinedstorage/compare/v1.4.15...v1.4.16
+
+[1.4.15]: https://github.com/refinedmods/refinedstorage/compare/v1.4.14...v1.4.15
+
+[1.4.14]: https://github.com/refinedmods/refinedstorage/compare/v1.4.13...v1.4.14
+
+[1.4.13]: https://github.com/refinedmods/refinedstorage/compare/v1.4.12...v1.4.13
+
+[1.4.12]: https://github.com/refinedmods/refinedstorage/compare/v1.4.11...v1.4.12
+
+[1.4.11]: https://github.com/refinedmods/refinedstorage/compare/v1.4.10-beta...v1.4.11
+
+[1.4.10-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.9-beta...v1.4.10-beta
+
+[1.4.9-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.8-beta...v1.4.9-beta
+
+[1.4.8-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.7-beta...v1.4.8-beta
+
+[1.4.7-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.6-beta...v1.4.7-beta
+
+[1.4.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.5-beta...v1.4.6-beta
+
+[1.4.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.4-beta...v1.4.5-beta
+
+[1.4.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.3-beta...v1.4.4-beta
+
+[1.4.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.2-beta...v1.4.3-beta
+
+[1.4.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.1-beta...v1.4.2-beta
+
+[1.4.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.4.0-beta...v1.4.1-beta
+
+[1.4.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.3.5-alpha...v1.4.0-beta
+
+[1.3.5-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.4-alpha...v1.3.5-alpha
+
+[1.3.4-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.3-alpha...v1.3.4-alpha
+
+[1.3.3-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.2-alpha...v1.3.3-alpha
+
+[1.3.2-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.1-alpha...v1.3.2-alpha
+
+[1.3.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.3.0-alpha...v1.3.1-alpha
+
+[1.3.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v1.2.26...v1.3.0-alpha
+
+[1.2.26]: https://github.com/refinedmods/refinedstorage/compare/v1.2.25...v1.2.26
+
+[1.2.25]: https://github.com/refinedmods/refinedstorage/compare/v1.2.24...v1.2.25
+
+[1.2.24]: https://github.com/refinedmods/refinedstorage/compare/v1.2.23...v1.2.24
+
+[1.2.23]: https://github.com/refinedmods/refinedstorage/compare/v1.2.22...v1.2.23
+
+[1.2.22]: https://github.com/refinedmods/refinedstorage/compare/v1.2.21...v1.2.22
+
+[1.2.21]: https://github.com/refinedmods/refinedstorage/compare/v1.2.20...v1.2.21
+
+[1.2.20]: https://github.com/refinedmods/refinedstorage/compare/v1.2.19...v1.2.20
+
+[1.2.19]: https://github.com/refinedmods/refinedstorage/compare/v1.2.18...v1.2.19
+
+[1.2.18]: https://github.com/refinedmods/refinedstorage/compare/v1.2.17...v1.2.18
+
+[1.2.17]: https://github.com/refinedmods/refinedstorage/compare/v1.2.16...v1.2.17
+
+[1.2.16]: https://github.com/refinedmods/refinedstorage/compare/v1.2.15...v1.2.16
+
+[1.2.15]: https://github.com/refinedmods/refinedstorage/compare/v1.2.14...v1.2.15
+
+[1.2.14]: https://github.com/refinedmods/refinedstorage/compare/v1.2.13...v1.2.14
+
+[1.2.13]: https://github.com/refinedmods/refinedstorage/compare/v1.2.12...v1.2.13
+
+[1.2.12]: https://github.com/refinedmods/refinedstorage/compare/v1.2.11...v1.2.12
+
+[1.2.11]: https://github.com/refinedmods/refinedstorage/compare/v1.2.10...v1.2.11
+
+[1.2.10]: https://github.com/refinedmods/refinedstorage/compare/v1.2.9...v1.2.10
+
+[1.2.9]: https://github.com/refinedmods/refinedstorage/compare/v1.2.8...v1.2.9
+
+[1.2.8]: https://github.com/refinedmods/refinedstorage/compare/v1.2.7...v1.2.8
+
+[1.2.7]: https://github.com/refinedmods/refinedstorage/compare/v1.2.6...v1.2.7
+
+[1.2.6]: https://github.com/refinedmods/refinedstorage/compare/v1.2.5...v1.2.6
+
+[1.2.5]: https://github.com/refinedmods/refinedstorage/compare/v1.2.4...v1.2.5
+
+[1.2.4]: https://github.com/refinedmods/refinedstorage/compare/v1.2.3...v1.2.4
+
+[1.2.3]: https://github.com/refinedmods/refinedstorage/compare/v1.2.2...v1.2.3
+
+[1.2.2]: https://github.com/refinedmods/refinedstorage/compare/v1.2.1...v1.2.2
+
+[1.2.1]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0...v1.2.1
+
+[1.2.0]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.8...v1.2.0
+
+[1.2.0-beta.8]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.7...v1.2.0-beta.8
+
+[1.2.0-beta.7]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.6...v1.2.0-beta.7
+
+[1.2.0-beta.6]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.5...v1.2.0-beta.6
+
+[1.2.0-beta.5]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.4...v1.2.0-beta.5
+
+[1.2.0-beta.4]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.3...v1.2.0-beta.4
+
+[1.2.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.2...v1.2.0-beta.3
+
+[1.2.0-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.2.0-beta.1...v1.2.0-beta.2
+
+[1.2.0-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.1.3...v1.2.0-beta.1
+
+[1.1.3]: https://github.com/refinedmods/refinedstorage/compare/v1.1.2...v1.1.3
+
+[1.1.2]: https://github.com/refinedmods/refinedstorage/compare/v1.1.1...v1.1.2
+
+[1.1.1]: https://github.com/refinedmods/refinedstorage/compare/v1.1.0...v1.1.1
+
+[1.1.0]: https://github.com/refinedmods/refinedstorage/compare/v1.0.5...v1.1.0
+
+[1.0.5]: https://github.com/refinedmods/refinedstorage/compare/v1.0.4...v1.0.5
+
+[1.0.4]: https://github.com/refinedmods/refinedstorage/compare/v1.0.3...v1.0.4
+
+[1.0.3]: https://github.com/refinedmods/refinedstorage/compare/v1.0.2...v1.0.3
+
+[1.0.2]: https://github.com/refinedmods/refinedstorage/compare/v1.0.1...v1.0.2
+
+[1.0.1]: https://github.com/refinedmods/refinedstorage/compare/v1.0.0...v1.0.1
+
+[1.0.0]: https://github.com/refinedmods/refinedstorage/compare/v0.9.4-beta...v1.0.0
+
+[0.9.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.3-beta...v0.9.4-beta
+
+[0.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.2-beta...v0.9.3-beta
+
+[0.9.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.1-beta...v0.9.2-beta
+
+[0.9.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.9.0-beta...v0.9.1-beta
+
+[0.9.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.20-beta...v0.9.0-beta
+
+[0.8.20-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.19-beta...v0.8.20-beta
+
+[0.8.19-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.18-beta...v0.8.19-beta
+
+[0.8.18-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.17-beta...v0.8.18-beta
+
+[0.8.17-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.16-beta...v0.8.17-beta
+
+[0.8.16-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.15-beta...v0.8.16-beta
+
+[0.8.15-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.14-beta...v0.8.15-beta
+
+[0.8.14-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.13-beta...v0.8.14-beta
+
+[0.8.13-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.12-beta...v0.8.13-beta
+
+[0.8.12-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.11-beta...v0.8.12-beta
+
+[0.8.11-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.10-beta...v0.8.11-beta
+
+[0.8.10-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.9-beta...v0.8.10-beta
+
+[0.8.9-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.8-beta...v0.8.9-beta
+
+[0.8.8-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.7-beta...v0.8.8-beta
+
+[0.8.7-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.6-beta...v0.8.7-beta
+
+[0.8.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.5-beta...v0.8.6-beta
+
+[0.8.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.4-beta...v0.8.5-beta
+
+[0.8.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.3-beta...v0.8.4-beta
+
+[0.8.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.2-beta...v0.8.3-beta
+
+[0.8.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.1-beta...v0.8.2-beta
+
+[0.8.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.8.0-beta...v0.8.1-beta
+
+[0.8.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.19-beta...v0.8.0-beta
+
+[0.7.19-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.18-beta...v0.7.19-beta
+
+[0.7.18-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.17-beta...v0.7.18-beta
+
+[0.7.17-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.16-beta...v0.7.17-beta
+
+[0.7.16-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.15-beta...v0.7.16-beta
+
+[0.7.15-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.14-beta...v0.7.15-beta
+
+[0.7.14-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.13-beta...v0.7.14-beta
+
+[0.7.13-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.12-beta...v0.7.13-beta
+
+[0.7.12-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.11-beta...v0.7.12-beta
+
+[0.7.11-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.10-beta...v0.7.11-beta
+
+[0.7.10-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.9-beta...v0.7.10-beta
+
+[0.7.9-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.8-beta...v0.7.9-beta
+
+[0.7.8-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.7-beta...v0.7.8-beta
+
+[0.7.7-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.6-beta...v0.7.7-beta
+
+[0.7.6-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.5-beta...v0.7.6-beta
+
+[0.7.5-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.4-beta...v0.7.5-beta
+
+[0.7.4-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.3-beta...v0.7.4-beta
+
+[0.7.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.2-beta...v0.7.3-beta
+
+[0.7.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.1-beta...v0.7.2-beta
+
+[0.7.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.7.0-beta...v0.7.1-beta
+
+[0.7.0-beta]: https://github.com/refinedmods/refinedstorage/compare/v0.6.15-alpha...v0.7.0-beta
+
+[0.6.15-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.14-alpha...v0.6.15-alpha
+
+[0.6.14-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.13-alpha...v0.6.14-alpha
+
+[0.6.13-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.12-alpha...v0.6.13-alpha
+
+[0.6.12-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.11-alpha...v0.6.12-alpha
+
+[0.6.11-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.10-alpha...v0.6.11-alpha
+
+[0.6.10-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.9-alpha...v0.6.10-alpha
+
+[0.6.9-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.8-alpha...v0.6.9-alpha
+
+[0.6.8-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.7-alpha...v0.6.8-alpha
+
+[0.6.7-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.6-alpha...v0.6.7-alpha
+
+[0.6.6-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.5-alpha...v0.6.6-alpha
+
+[0.6.5-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.4-alpha...v0.6.5-alpha
+
+[0.6.4-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.3-alpha...v0.6.4-alpha
+
+[0.6.3-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.2-alpha...v0.6.3-alpha
+
+[0.6.2-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.1-alpha...v0.6.2-alpha
+
+[0.6.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.6.0-alpha...v0.6.1-alpha
+
+[0.6.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.6-alpha...v0.6.0-alpha
+
+[0.5.6-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.5-alpha...v0.5.6-alpha
+
+[0.5.5-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.4-alpha...v0.5.5-alpha
+
+[0.5.4-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.3-alpha...v0.5.4-alpha
+
+[0.5.3-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.2-alpha...v0.5.3-alpha
+
+[0.5.2-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.1-alpha...v0.5.2-alpha
+
+[0.5.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.5.0-alpha...v0.5.1-alpha
+
+[0.5.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.4.1-alpha...v0.5.0-alpha
+
+[0.4.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.4.0-alpha...v0.4.1-alpha
+
+[0.4.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.3.0-alpha...v0.4.0-alpha
+
+[0.3.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.2.1-alpha...v0.3.0-alpha
+
+[0.2.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.2.0-alpha...v0.2.1-alpha
+
+[0.2.0-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.1.1-alpha...v0.2.0-alpha
+
+[0.1.1-alpha]: https://github.com/refinedmods/refinedstorage/compare/v0.1.0-alpha...v0.1.1-alpha
+
+[0.1.0-alpha]: https://github.com/refinedmods/refinedstorage/releases/tag/v0.1.0-alpha
