@@ -5,3 +5,5 @@ on:
 jobs:
   validate-changelog:
     uses: refinedmods/refinedarchitect/.github/workflows/validate-changelog.yml@v0.7.1
+    with:
+      validation-level: 'warn'
