@@ -65,57 +65,47 @@ public class SearchWidget extends EditBox {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifier) {
-        boolean result = super.keyPressed(keyCode, scanCode, modifier);
+        if (super.keyPressed(keyCode, scanCode, modifier)) {
+            return true;
+        }
 
         if (isFocused()) {
             if (keyCode == GLFW.GLFW_KEY_UP) {
                 updateHistory(-1);
-
-                result = true;
             } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
                 updateHistory(1);
-
-                result = true;
             } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
                 saveHistory();
-
                 if (canLoseFocus) {
                     setFocused(false);
                 }
-
-                result = true;
             } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
                 saveHistory();
-
                 if (!canLoseFocus) {
                     // If we can't lose focus,
                     // and we press escape,
                     // we unfocus ourselves,
                     // and close the screen immediately.
                     setFocused(false);
-
-                    result = false; // Bubble the event up to the screen.
+                    return false; // Bubble the event up to the screen.
                 } else {
                     // If we can lose focus,
                     // and we press escape,
                     // we unfocus ourselves.
                     // On the next escape press, the screen will close.
                     setFocused(false);
-
-                    result = true;
+                    return true; // Swallow
                 }
             }
         }
 
         if (BaseScreen.isKeyDown(RSKeyBindings.FOCUS_SEARCH_BAR) && canLoseFocus) {
             setFocused(!isFocused());
-
             saveHistory();
-
-            result = true;
+            return true;
         }
 
-        return result;
+        return isFocused() && canConsumeInput() && keyCode != GLFW.GLFW_KEY_ESCAPE;
     }
 
     private void updateHistory(int delta) {

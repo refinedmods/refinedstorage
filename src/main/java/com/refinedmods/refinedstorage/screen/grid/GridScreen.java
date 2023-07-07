@@ -686,7 +686,6 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         if (searchField.keyPressed(key, scanCode, modifiers)) {
             return true;
         }
-
         return super.keyPressed(key, scanCode, modifiers);
     }
 

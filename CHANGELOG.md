@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed not being able to type "e" in Grid search box.
+
 ## [1.12.2] - 2023-07-05
 
 ### Fixed
