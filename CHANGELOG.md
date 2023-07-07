@@ -7,6 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.12.3] - 2023-07-07
+
+### Fixed
+
+-   Fixed not being able to type "e" in Grid search box.
+
 ## [1.12.2] - 2023-07-05
 
 ### Fixed
@@ -3469,7 +3475,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.2...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.3...HEAD
+
+[1.12.3]: https://github.com/refinedmods/refinedstorage/compare/v1.12.2...v1.12.3
 
 [1.12.2]: https://github.com/refinedmods/refinedstorage/compare/v1.12.1...v1.12.2
 
