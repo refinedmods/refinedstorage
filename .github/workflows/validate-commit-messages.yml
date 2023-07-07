@@ -2,4 +2,4 @@ name: Validate commit messages
 on: [ pull_request ]
 jobs:
   validate-commit-messages:
-    uses: refinedmods/refinedarchitect/.github/workflows/validate-commit-messages.yml@v0.6.0
+    uses: refinedmods/refinedarchitect/.github/workflows/validate-commit-messages.yml@v0.7.1
