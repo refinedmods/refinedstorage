@@ -88,7 +88,7 @@ Documentation must be kept up to date when adding or changing functionality.
 
 ### Javadoc
 
-Javadoc is available after every release on https://refinedmods.com/refinedstorage/.
+Javadoc is available after every release on https://refinedmods.com/javadoc/refinedstorage.
 
 ### API annotations
 
@@ -196,7 +196,7 @@ The workflow takes care of the following:
 - Running a build.
 - Publishing on [GitHub packages](https://github.com/refinedmods/refinedstorage/packages) and
   CreeperHost Maven.
-- Publishing Javadoc on [GitHub pages](https://github.com/refinedmods/refinedstorage/tree/gh-pages).
+- Publishing Javadoc on [GitHub pages](https://github.com/refinedmods/javadoc).
 - Deploying on [GitHub releases](https://github.com/refinedmods/refinedstorage/releases).
 - Announcing the release on Discord and Twitter.
 - Creating a PR that merges `main` back into `develop` to get the changes to `CHANGELOG.md` and `build.gradle`
