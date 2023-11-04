@@ -70,7 +70,7 @@ public class GridFluidUpdateMessage {
             grid.setView(new GridViewImpl(grid, GridScreen.getDefaultSorter(), GridScreen.getSorters()));
             grid.getView().setCanCraft(message.canCraft);
             grid.getView().setStacks(message.stacks);
-            grid.getView().sort();
+            grid.getView().forceSort();
         });
 
         ctx.get().setPacketHandled(true);
