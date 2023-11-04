@@ -24,4 +24,6 @@ public interface IGridView {
     boolean canCraft();
 
     void sort();
+
+    void forceSort();
 }
