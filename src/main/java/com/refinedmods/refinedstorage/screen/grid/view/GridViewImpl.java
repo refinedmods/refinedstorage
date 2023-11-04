@@ -63,11 +63,16 @@ public class GridViewImpl implements IGridView {
             return;
         }
 
+        forceSort();
+    }
+
+    @Override
+    public void forceSort() {
         if (screen.getGrid().isGridActive()) {
             this.stacks = map.values().stream()
-                .filter(getActiveFilters())
-                .sorted(getActiveSort())
-                .collect(Collectors.toCollection(ArrayList::new));
+                    .filter(getActiveFilters())
+                    .sorted(getActiveSort())
+                    .collect(Collectors.toCollection(ArrayList::new));
             this.active = true;
         } else {
             this.stacks = new ArrayList<>();
