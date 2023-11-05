@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.blockentity.config.*;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
+import com.refinedmods.refinedstorage.config.ServerConfig;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -72,7 +73,7 @@ public class ExternalStorageBlockEntity extends NetworkNodeBlockEntity<ExternalS
         .build();
 
     public ExternalStorageBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.EXTERNAL_STORAGE.get(), pos, state, SPEC);
+        super(RSBlockEntities.EXTERNAL_STORAGE.get(), pos, state, SPEC, ExternalStorageNetworkNode.class);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class ExporterBlockEntity extends NetworkNodeBlockEntity<ExporterNetworkN
         .build();
 
     public ExporterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.EXPORTER.get(), pos, state, SPEC);
+        super(RSBlockEntities.EXPORTER.get(), pos, state, SPEC, ExporterNetworkNode.class);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class RelayBlockEntity extends NetworkNodeBlockEntity<RelayNetworkNode> {
         .build();
 
     public RelayBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.RELAY.get(), pos, state, SPEC);
+        super(RSBlockEntities.RELAY.get(), pos, state, SPEC, RelayNetworkNode.class);
     }
 
     @Override

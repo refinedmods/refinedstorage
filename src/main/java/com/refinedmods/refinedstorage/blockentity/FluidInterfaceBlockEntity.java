@@ -26,16 +26,16 @@ public class FluidInterfaceBlockEntity extends NetworkNodeBlockEntity<FluidInter
     public static final BlockEntitySynchronizationParameter<FluidStack, FluidInterfaceBlockEntity> TANK_OUT = new BlockEntitySynchronizationParameter<>(new ResourceLocation(RS.ID, "fluid_interface_out"), RSSerializers.FLUID_STACK_SERIALIZER, FluidStack.EMPTY, t -> t.getNode().getTankOut().getFluid());
 
     public static BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder()
-        .addWatchedParameter(REDSTONE_MODE)
-        .addParameter(TANK_IN)
-        .addParameter(TANK_OUT)
-        .build();
+            .addWatchedParameter(REDSTONE_MODE)
+            .addParameter(TANK_IN)
+            .addParameter(TANK_OUT)
+            .build();
 
     private final LazyOptional<IFluidHandler> tankCapability = LazyOptional.of(() -> getNode().getTank());
     private final LazyOptional<IItemHandler> inCapability = LazyOptional.of(() -> getNode().getIn());
 
     public FluidInterfaceBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.FLUID_INTERFACE.get(), pos, state, SPEC);
+        super(RSBlockEntities.FLUID_INTERFACE.get(), pos, state, SPEC, FluidInterfaceNetworkNode.class);
     }
 
     @Nonnull

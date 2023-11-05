@@ -57,7 +57,7 @@ public class DiskManipulatorBlockEntity extends NetworkNodeBlockEntity<DiskManip
     private final DiskState[] diskState = new DiskState[6];
 
     public DiskManipulatorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DISK_MANIPULATOR.get(), pos, state, SPEC);
+        super(RSBlockEntities.DISK_MANIPULATOR.get(), pos, state, SPEC, DiskManipulatorNetworkNode.class);
         Arrays.fill(diskState, DiskState.NONE);
     }
 

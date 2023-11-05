@@ -122,6 +122,7 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
@@ -197,8 +198,8 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
         }
 
         return blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
-            && !isSideCovered(blockEntity, direction)
-            && !isSideCovered(world.getBlockEntity(pos.relative(direction)), direction.getOpposite());
+                && !isSideCovered(blockEntity, direction)
+                && !isSideCovered(world.getBlockEntity(pos.relative(direction)), direction.getOpposite());
     }
 
     private boolean isSideCovered(BlockEntity blockEntity, Direction direction) {
@@ -229,12 +230,12 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
         boolean down = hasNodeConnection(world, pos.relative(Direction.DOWN), currentState, Direction.UP);
 
         return currentState
-            .setValue(NORTH, north)
-            .setValue(EAST, east)
-            .setValue(SOUTH, south)
-            .setValue(WEST, west)
-            .setValue(UP, up)
-            .setValue(DOWN, down);
+                .setValue(NORTH, north)
+                .setValue(EAST, east)
+                .setValue(SOUTH, south)
+                .setValue(WEST, west)
+                .setValue(UP, up)
+                .setValue(DOWN, down);
     }
 
     @Override

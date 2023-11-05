@@ -1,5 +1,9 @@
 apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.7.1/helper.gradle"
 
+ext {
+    forgeVersion = "47.1.0"
+}
+
 repositories {
     maven {
         name = 'JEI'
@@ -38,10 +42,7 @@ dependencies {
 
     compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:4596466')
 
-    // TODO mixin issue
-    // runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
-    // can't depend on API due to Javadoc build error (CuriosApi imports stuff from common)
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
+    implementation fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
 }
 
 minecraft {

@@ -27,7 +27,7 @@ public class CableBlockEntity extends NetworkNodeBlockEntity<CableNetworkNode> {
         .build();
 
     public CableBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CABLE.get(), pos, state, SPEC);
+        super(RSBlockEntities.CABLE.get(), pos, state, SPEC, CableNetworkNode.class);
     }
 
     @Override

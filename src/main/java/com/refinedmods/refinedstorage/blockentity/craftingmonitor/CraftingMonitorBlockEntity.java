@@ -41,7 +41,7 @@ public class CraftingMonitorBlockEntity extends NetworkNodeBlockEntity<CraftingM
         .build();
 
     public CraftingMonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CRAFTING_MONITOR.get(), pos, state, SPEC);
+        super(RSBlockEntities.CRAFTING_MONITOR.get(), pos, state, SPEC, CraftingMonitorNetworkNode.class);
     }
 
     @Override
