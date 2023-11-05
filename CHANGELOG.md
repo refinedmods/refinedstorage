@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed JEI transfer for larger processing recipes 
+
 ## [1.12.3] - 2023-07-07
 
 ### Fixed

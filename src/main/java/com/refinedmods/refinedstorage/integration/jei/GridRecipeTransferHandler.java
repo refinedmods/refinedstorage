@@ -19,7 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,7 +127,13 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private void moveItems(GridContainerMenu gridContainer, Object recipe, IRecipeSlotsView recipeLayout, Player player) {
         this.lastTransferTimeMs = System.currentTimeMillis();
 
-        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !(recipe instanceof CraftingRecipe)) {
+        boolean isCraftingRecipe = false;
+        if(recipe instanceof Recipe<?> castRecipe)
+        {
+            isCraftingRecipe = castRecipe.getType() == net.minecraft.world.item.crafting.RecipeType.CRAFTING;
+        }
+
+        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !isCraftingRecipe) {
             moveForProcessing(recipeLayout, gridContainer, player);
         } else {
             move(recipeLayout);
