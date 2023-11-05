@@ -9,7 +9,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
--   Fixed JEI transfer for larger processing recipes 
+-   Fixed JEI transfer for larger processing recipes
+-   Fixed rare autocrafting crash
 
 ## [1.12.3] - 2023-07-07
 
