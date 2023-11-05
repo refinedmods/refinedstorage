@@ -29,7 +29,7 @@ public class InterfaceBlockEntity extends NetworkNodeBlockEntity<InterfaceNetwor
     private final LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
 
     public InterfaceBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.INTERFACE.get(), pos, state, SPEC);
+        super(RSBlockEntities.INTERFACE.get(), pos, state, SPEC, InterfaceNetworkNode.class);
     }
 
     @Nonnull

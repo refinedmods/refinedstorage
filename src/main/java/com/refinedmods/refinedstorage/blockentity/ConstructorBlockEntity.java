@@ -40,7 +40,7 @@ public class ConstructorBlockEntity extends NetworkNodeBlockEntity<ConstructorNe
         .build();
 
     public ConstructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CONSTRUCTOR.get(), pos, state, SPEC);
+        super(RSBlockEntities.CONSTRUCTOR.get(), pos, state, SPEC, ConstructorNetworkNode.class);
     }
 
     @Override

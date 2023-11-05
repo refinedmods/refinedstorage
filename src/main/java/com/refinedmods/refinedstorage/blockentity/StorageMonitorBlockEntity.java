@@ -6,6 +6,7 @@ import com.refinedmods.refinedstorage.blockentity.config.IComparable;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
+import com.refinedmods.refinedstorage.config.ServerConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +39,7 @@ public class StorageMonitorBlockEntity extends NetworkNodeBlockEntity<StorageMon
     private FluidStack fluidStack = FluidStack.EMPTY;
 
     public StorageMonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.STORAGE_MONITOR.get(), pos, state, SPEC);
+        super(RSBlockEntities.STORAGE_MONITOR.get(), pos, state, SPEC, StorageMonitorNetworkNode.class);
     }
 
     @Override
