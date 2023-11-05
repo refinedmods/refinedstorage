@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class CraftingMonitorBlockEntity extends NetworkNodeBlockEntity<CraftingMonitorNetworkNode> {
     public CraftingMonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CRAFTING_MONITOR, pos, state);
+        super(RSBlockEntities.CRAFTING_MONITOR, pos, state, CraftingMonitorNetworkNode.class);
 
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(TAB_PAGE);

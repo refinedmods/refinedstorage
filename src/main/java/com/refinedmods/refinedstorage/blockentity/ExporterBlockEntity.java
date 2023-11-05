@@ -29,7 +29,7 @@ public class ExporterBlockEntity extends NetworkNodeBlockEntity<ExporterNetworkN
     public static final BlockEntitySynchronizationParameter<Integer, ExporterBlockEntity> TYPE = IType.createParameter();
 
     public ExporterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.EXPORTER, pos, state);
+        super(RSBlockEntities.EXPORTER, pos, state, ExporterNetworkNode.class);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);

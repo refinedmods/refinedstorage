@@ -20,7 +20,7 @@ public class CableBlockEntity extends NetworkNodeBlockEntity<CableNetworkNode> {
     });
 
     public CableBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CABLE, pos, state);
+        super(RSBlockEntities.CABLE, pos, state, CableNetworkNode.class);
         dataManager.addWatchedParameter(COVER_MANAGER);
     }
 

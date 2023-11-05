@@ -54,7 +54,7 @@ public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
         }
     }, (initial, p) -> trySortGrid(initial));
     public GridBlockEntity(GridType type, BlockPos pos, BlockState state) {
-        super(getType(type), pos, state);
+        super(getType(type), pos, state, GridNetworkNode.class);
 
         this.type = type;
 

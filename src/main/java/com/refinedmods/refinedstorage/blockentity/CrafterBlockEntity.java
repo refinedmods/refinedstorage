@@ -24,7 +24,7 @@ public class CrafterBlockEntity extends NetworkNodeBlockEntity<CrafterNetworkNod
     private final LazyOptional<IItemHandler> patternsCapability = LazyOptional.of(() -> getNode().getPatternInventory());
 
     public CrafterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CRAFTER, pos, state);
+        super(RSBlockEntities.CRAFTER, pos, state, CrafterNetworkNode.class);
 
         dataManager.addWatchedParameter(MODE);
         dataManager.addParameter(HAS_ROOT);

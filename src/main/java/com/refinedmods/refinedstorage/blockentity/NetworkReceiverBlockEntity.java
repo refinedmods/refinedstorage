@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 public class NetworkReceiverBlockEntity extends NetworkNodeBlockEntity<NetworkReceiverNetworkNode> {
     public NetworkReceiverBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.NETWORK_RECEIVER, pos, state);
+        super(RSBlockEntities.NETWORK_RECEIVER, pos, state, NetworkReceiverNetworkNode.class);
     }
 
     @Override

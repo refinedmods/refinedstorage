@@ -26,7 +26,7 @@ public class ImporterBlockEntity extends NetworkNodeBlockEntity<ImporterNetworkN
     });
 
     public ImporterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.IMPORTER, pos, state);
+        super(RSBlockEntities.IMPORTER, pos, state, ImporterNetworkNode.class);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);

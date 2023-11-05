@@ -14,7 +14,7 @@ public class WirelessTransmitterBlockEntity extends NetworkNodeBlockEntity<Wirel
     public static final BlockEntitySynchronizationParameter<Integer, WirelessTransmitterBlockEntity> RANGE = new BlockEntitySynchronizationParameter<>(EntityDataSerializers.INT, 0, t -> t.getNode().getRange());
 
     public WirelessTransmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.WIRELESS_TRANSMITTER, pos, state);
+        super(RSBlockEntities.WIRELESS_TRANSMITTER, pos, state, WirelessTransmitterNetworkNode.class);
 
         dataManager.addWatchedParameter(RANGE);
     }

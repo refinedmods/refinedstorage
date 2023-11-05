@@ -27,7 +27,7 @@ public class FluidStorageBlockEntity extends NetworkNodeBlockEntity<FluidStorage
     private final FluidStorageType type;
 
     public FluidStorageBlockEntity(FluidStorageType type, BlockPos pos, BlockState state) {
-        super(getType(type), pos, state);
+        super(getType(type), pos, state, FluidStorageNetworkNode.class);
 
         this.type = type;
 

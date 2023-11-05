@@ -34,7 +34,7 @@ public class DestructorBlockEntity extends NetworkNodeBlockEntity<DestructorNetw
         });
 
     public DestructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DESTRUCTOR, pos, state);
+        super(RSBlockEntities.DESTRUCTOR, pos, state, DestructorNetworkNode.class);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);

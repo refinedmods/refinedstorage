@@ -27,7 +27,7 @@ public class StorageBlockEntity extends NetworkNodeBlockEntity<StorageNetworkNod
     private final ItemStorageType type;
 
     public StorageBlockEntity(ItemStorageType type, BlockPos pos, BlockState state) {
-        super(getType(type), pos, state);
+        super(getType(type), pos, state, StorageNetworkNode.class);
 
         this.type = type;
 

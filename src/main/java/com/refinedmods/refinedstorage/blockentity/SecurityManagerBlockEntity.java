@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 public class SecurityManagerBlockEntity extends NetworkNodeBlockEntity<SecurityManagerNetworkNode> {
     public SecurityManagerBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.SECURITY_MANAGER, pos, state);
+        super(RSBlockEntities.SECURITY_MANAGER, pos, state, SecurityManagerNetworkNode.class);
     }
 
     @Override

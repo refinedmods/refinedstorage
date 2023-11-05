@@ -32,7 +32,7 @@ public class ConstructorBlockEntity extends NetworkNodeBlockEntity<ConstructorNe
         });
 
     public ConstructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CONSTRUCTOR, pos, state);
+        super(RSBlockEntities.CONSTRUCTOR, pos, state, ConstructorNetworkNode.class);
 
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);

@@ -87,7 +87,7 @@ public class DiskDriveBlockEntity extends NetworkNodeBlockEntity<DiskDriveNetwor
     private final DiskState[] diskState = new DiskState[8];
 
     public DiskDriveBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DISK_DRIVE, pos, state);
+        super(RSBlockEntities.DISK_DRIVE, pos, state, DiskDriveNetworkNode.class);
 
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
