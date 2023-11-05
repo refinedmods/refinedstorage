@@ -142,8 +142,6 @@ public final class ClientSetup {
         });
     }
 
-    // TODO: we have probably too much emissivity (when disconnected)
-
     private static void registerBakedModelOverrides() {
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "cable"), (base, registry) -> new CableCoverBakedModel(base));
         BAKED_MODEL_OVERRIDE_REGISTRY.add(new ResourceLocation(RS.ID, "exporter"), (base, registry) -> new CableCoverBakedModel(base));

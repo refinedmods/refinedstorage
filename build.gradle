@@ -1,5 +1,6 @@
 apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.7.1/helper.gradle"
 
+// TODO: remove in 1.21
 ext {
     forgeVersion = "47.1.0"
 }
@@ -45,8 +46,13 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
 }
 
+// TODO: remove in 1.21
 minecraft {
     runs {
+        server {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+        }
         client {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
