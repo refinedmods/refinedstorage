@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,12 +70,12 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         if (doTransfer) {
             if (tracker.hasMissingButAutocraftingAvailable() && Screen.hasControlDown()) {
                 tracker.createCraftingRequests().forEach((id, count) -> RS.NETWORK_HANDLER.sendToServer(
-                    new GridCraftingPreviewRequestMessage(
-                        id,
-                        count,
-                        Screen.hasShiftDown(),
-                        false
-                    )
+                        new GridCraftingPreviewRequestMessage(
+                                id,
+                                count,
+                                Screen.hasShiftDown(),
+                                false
+                        )
                 ));
             } else {
                 moveItems(container, recipe, recipeLayout, tracker);
@@ -148,7 +149,13 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
     private void moveItems(GridContainerMenu gridContainer, Object recipe, IRecipeSlotsView recipeLayout, IngredientTracker tracker) {
         this.lastTransferTimeMs = System.currentTimeMillis();
 
-        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !(recipe instanceof CraftingRecipe)) {
+        boolean isCraftingRecipe = false;
+        if(recipe instanceof Recipe<?> castRecipe)
+        {
+            isCraftingRecipe = castRecipe.getType() == net.minecraft.world.item.crafting.RecipeType.CRAFTING;
+        }
+
+        if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !isCraftingRecipe) {
             moveForProcessing(recipeLayout, tracker);
         } else {
             move(recipeLayout);
