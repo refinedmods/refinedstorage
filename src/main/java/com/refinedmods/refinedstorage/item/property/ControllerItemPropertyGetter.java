@@ -14,10 +14,14 @@ import javax.annotation.Nullable;
 public class ControllerItemPropertyGetter implements ItemPropertyFunction {
     @Override
     public float call(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int p) {
+        // if that stack is still clean (like in the creative mode tab, or just crafted) maintain the on state.
+        if (stack.getTag() == null) {
+            return ControllerBlock.EnergyType.ON.ordinal();
+        }
         IEnergyStorage storage = stack.getCapability(ForgeCapabilities.ENERGY).orElse(null);
         if (storage != null) {
             return Network.getEnergyType(storage.getEnergyStored(), storage.getMaxEnergyStored()).ordinal();
         }
-        return ControllerBlock.EnergyType.OFF.ordinal();
+        return ControllerBlock.EnergyType.ON.ordinal();
     }
 }

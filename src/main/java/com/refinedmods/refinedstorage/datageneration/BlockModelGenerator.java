@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BlockModelGenerator extends BlockStateProvider {
     private static final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
@@ -249,7 +250,24 @@ public class BlockModelGenerator extends BlockStateProvider {
                             resourceLocation(folderName, "cutouts/" + color)
                     );
 
-                    simpleBlockItem(block, model);
+                    final ResourceLocation energyType = new ResourceLocation(RS.ID, "energy_type");
+                    itemModels().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath())
+                            .override()
+                            .predicate(energyType, 0)
+                            .model(models().getExistingFile(
+                                    new ResourceLocation(RS.ID, "block/" + folderName + "/off")
+                            )).end().override()
+                            .predicate(energyType, 1)
+                            .model(models().getExistingFile(
+                                    new ResourceLocation(RS.ID, "block/" + folderName + "/nearly_off")
+                            )).end().override()
+                            .predicate(energyType, 2)
+                            .model(models().getExistingFile(
+                                    new ResourceLocation(RS.ID, "block/" + folderName + "/nearly_on")
+                            )).end().override()
+                            .predicate(energyType, 3)
+                            .model(model).end();
+
                     return model;
                 }
             });

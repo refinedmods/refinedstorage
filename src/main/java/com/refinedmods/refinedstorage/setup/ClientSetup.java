@@ -50,7 +50,7 @@ public final class ClientSetup {
     private static final ResourceLocation DISK_FULL_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_full");
     private static final ResourceLocation DISK_DISCONNECTED_RESOURCE = new ResourceLocation(RS.ID + ":block/disks/disk_disconnected");
 
-    private static final ResourceLocation CONNECTED = new ResourceLocation("connected");
+    private static final ResourceLocation CONNECTED = new ResourceLocation(RS.ID, "connected");
 
     private static final BakedModelOverrideRegistry BAKED_MODEL_OVERRIDE_REGISTRY = new BakedModelOverrideRegistry();
 
@@ -96,10 +96,10 @@ public final class ClientSetup {
 
         // ItemProperties isn't thread safe
         e.enqueueWork(() -> {
-            ItemProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation("active"), new SecurityCardItemPropertyGetter());
+            ItemProperties.register(RSItems.SECURITY_CARD.get(), new ResourceLocation(RS.ID, "active"), new SecurityCardItemPropertyGetter());
 
-            RSItems.CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
-            RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation("energy_type"), new ControllerItemPropertyGetter()));
+            RSItems.CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation(RS.ID, "energy_type"), new ControllerItemPropertyGetter()));
+            RSItems.CREATIVE_CONTROLLER.values().forEach(controller -> ItemProperties.register(controller.get(), new ResourceLocation(RS.ID, "energy_type"), new ControllerItemPropertyGetter()));
 
             ItemProperties.register(RSItems.WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
             ItemProperties.register(RSItems.CREATIVE_WIRELESS_CRAFTING_MONITOR.get(), CONNECTED, new NetworkItemPropertyGetter());
