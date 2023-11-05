@@ -103,20 +103,15 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
             IFluidHandler handler = LevelUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
 
             if (handler != null) {
-                FluidStack stack = handler.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
+                FluidStack extractedSimulated = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.SIMULATE);
 
-                if (!stack.isEmpty() &&
-                    IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) &&
-                    network.insertFluid(stack, stack.getAmount(), Action.SIMULATE).isEmpty()) {
-                    FluidStack toDrain = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.SIMULATE);
+                if (!extractedSimulated.isEmpty()
+                        && IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, extractedSimulated)
+                        && network.insertFluid(extractedSimulated, extractedSimulated.getAmount(), Action.SIMULATE).isEmpty()) {
+                    FluidStack extracted = handler.drain(extractedSimulated, IFluidHandler.FluidAction.EXECUTE);
 
-                    if (!toDrain.isEmpty()) {
-                        FluidStack remainder = network.insertFluidTracked(toDrain, toDrain.getAmount());
-                        if (!remainder.isEmpty()) {
-                            toDrain.shrink(remainder.getAmount());
-                        }
-
-                        handler.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
+                    if (!extracted.isEmpty()) {
+                        network.insertFluidTracked(extracted, extracted.getAmount());
                     }
                 }
             }
