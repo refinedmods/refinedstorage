@@ -530,13 +530,15 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
         if (tabs.mouseClicked()) {
+            setFocused(null);
             return true;
         }
-
         if (scrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
+            setFocused(null);
             return true;
         }
         if (grid.getGridType() == GridType.PATTERN && patternScrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
+            setFocused(null);
             return true;
         }
         if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
@@ -551,11 +553,15 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
 
             RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
+            setFocused(null);
+
             return true;
         } else if (clickedClear) {
             minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
+
+            setFocused(null);
 
             return true;
         } else if (grid.isGridActive()) {
@@ -567,6 +573,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 } else {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemInsertHeldMessage(clickedButton == 1));
                 }
+                setFocused(null);
 
                 return true;
             }
@@ -596,6 +603,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                     }
                 }
 
+                setFocused(null);
                 return true;
             }
         }

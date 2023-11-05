@@ -47,17 +47,22 @@ public class SearchWidget extends EditBox {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        boolean wasFocused = isFocused();
-
         boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
-
         boolean clickedWidget = mouseX >= this.getX() && mouseX < this.getX() + this.width && mouseY >= this.getY() && mouseY < this.getY() + this.height;
 
         if (clickedWidget && mouseButton == 1) {
+            // On right click, clear the widget and focus, save history if necessary.
+            if (isFocused()) {
+                saveHistory();
+            }
             setValue("");
             setFocused(true);
-        } else if (wasFocused != isFocused()) {
+        }
+
+        if (!clickedWidget && isFocused()) {
+            // If we are focused, and we click outside the search box, lose focus.
             saveHistory();
+            setFocused(false);
         }
 
         return result;
