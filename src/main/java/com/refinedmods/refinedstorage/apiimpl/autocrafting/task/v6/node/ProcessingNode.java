@@ -121,10 +121,20 @@ public class ProcessingNode extends Node {
 
                     boolean hasAllRequirements = false;
 
-                    List<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(true), internalStorage, Action.SIMULATE);
+                    var simulatedRequirements = requirements.getSingleItemRequirementSet(true);
+                    if(simulatedRequirements == null) {
+                        return;
+                    }
+
+                    List<ItemStack> extractedItems = IoUtil.extractFromInternalItemStorage(simulatedRequirements, internalStorage, Action.SIMULATE);
                     List<FluidStack> extractedFluids = null;
                     if (extractedItems != null) {
-                        extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(true), internalFluidStorage, Action.SIMULATE);
+                        var simulatedFluidRequirements = requirements.getSingleFluidRequirementSet(true);
+                        if(simulatedFluidRequirements == null) {
+                            return;
+                        }
+
+                        extractedFluids = IoUtil.extractFromInternalFluidStorage(simulatedFluidRequirements, internalFluidStorage, Action.SIMULATE);
                         if (extractedFluids != null) {
                             hasAllRequirements = true;
                         }
@@ -151,9 +161,17 @@ public class ProcessingNode extends Node {
                     }
 
                     this.state = ProcessingState.READY;
+                    var actualRequirements = requirements.getSingleItemRequirementSet(false);
+                    if(actualRequirements == null) {
+                        return;
+                    }
+                    extractedItems = IoUtil.extractFromInternalItemStorage(actualRequirements, internalStorage, Action.PERFORM);
 
-                    extractedItems = IoUtil.extractFromInternalItemStorage(requirements.getSingleItemRequirementSet(false), internalStorage, Action.PERFORM);
-                    extractedFluids = IoUtil.extractFromInternalFluidStorage(requirements.getSingleFluidRequirementSet(false), internalFluidStorage, Action.PERFORM);
+                    var actualFluidRequirements = requirements.getSingleFluidRequirementSet(false);
+                    if(actualFluidRequirements == null) {
+                        return;
+                    }
+                    extractedFluids = IoUtil.extractFromInternalFluidStorage(actualFluidRequirements, internalFluidStorage, Action.PERFORM);
 
                     container.insertItemsIntoInventory(extractedItems, Action.PERFORM);
                     container.insertFluidsIntoInventory(extractedFluids, Action.PERFORM);

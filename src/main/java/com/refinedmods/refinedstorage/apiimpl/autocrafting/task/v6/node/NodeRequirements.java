@@ -90,7 +90,7 @@ public class NodeRequirements {
                     }
                 }
             } else {
-                throw new IllegalStateException("Bad!");
+                return null;
             }
         }
 
@@ -137,7 +137,7 @@ public class NodeRequirements {
                     }
                 }
             } else {
-                throw new IllegalStateException("Bad!");
+                return null;
             }
         }
 
