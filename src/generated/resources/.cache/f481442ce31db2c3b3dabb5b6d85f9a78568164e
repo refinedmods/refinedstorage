@@ -1,5 +1,5 @@
-// 1.20.1	2023-07-03T11:19:34.5471111	Tags for minecraft:block mod id refinedstorage
-3f3a0c830f4ddc021ae2c2a36f75311d8df1fb2e data/forge/tags/blocks/relocation_not_supported.json
+// 1.20.1	2023-11-05T14:19:25.400231284	Tags for minecraft:block mod id refinedstorage
+1fa2f2b3024535fa34f1b192e3f4abaae383119b data/forge/tags/blocks/relocation_not_supported.json
 061bf4c2f3bdd530115615f2b04e55c2602908bd data/refinedstorage/tags/blocks/controller.json
 407a16e5d941c69915f75b135a13e9144cc9c43e data/refinedstorage/tags/blocks/crafter.json
 dc1342f1d3e6a4cd8eaaa52429a011c10c6c2d96 data/refinedstorage/tags/blocks/crafter_manager.json

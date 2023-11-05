@@ -1,5 +1,5 @@
 {
-  "parent": "refinedstorage:block/constructor_destructor",
+  "parent": "refinedstorage:block/constructor_destructor_nonemissive",
   "textures": {
     "front": "refinedstorage:block/destructor/destructor",
     "cutout": "refinedstorage:block/destructor/cutouts/disconnected"

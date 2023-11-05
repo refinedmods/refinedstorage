@@ -1,5 +1,5 @@
 {
-  "parent": "refinedstorage:block/cube_cutout",
+  "parent": "refinedstorage:block/cube_cutout_nonemissive",
   "textures": {
     "cutout_down": "refinedstorage:block/bottom",
     "cutout_east": "refinedstorage:block/crafter/cutouts/side_disconnected",
