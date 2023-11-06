@@ -45,7 +45,7 @@ public class DestructorBlockEntity extends NetworkNodeBlockEntity<DestructorNetw
         .build();
 
     public DestructorBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.DESTRUCTOR.get(), pos, state, SPEC);
+        super(RSBlockEntities.DESTRUCTOR.get(), pos, state, SPEC, DestructorNetworkNode.class);
     }
 
     @Override

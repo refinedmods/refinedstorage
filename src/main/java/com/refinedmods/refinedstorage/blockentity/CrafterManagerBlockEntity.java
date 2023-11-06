@@ -35,7 +35,7 @@ public class CrafterManagerBlockEntity extends NetworkNodeBlockEntity<CrafterMan
         .build();
 
     public CrafterManagerBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.CRAFTER_MANAGER.get(), pos, state, SPEC);
+        super(RSBlockEntities.CRAFTER_MANAGER.get(), pos, state, SPEC, CrafterManagerNetworkNode.class);
     }
 
     @Override

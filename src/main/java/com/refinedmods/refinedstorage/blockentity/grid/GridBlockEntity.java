@@ -119,7 +119,7 @@ public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
     private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
 
     public GridBlockEntity(GridType type, BlockPos pos, BlockState state) {
-        super(getType(type), pos, state, SPEC);
+        super(getType(type), pos, state, SPEC, GridNetworkNode.class);
         this.type = type;
     }
 

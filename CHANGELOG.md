@@ -7,6 +7,26 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.12.4] - 2023-11-05
+
+### Added
+
+-   Re-added compatibility with Inventory Sorter.
+
+### Fixed
+
+-   Various world corruption issues if Refined Storage blocks were removed unexpectedly or with another mod.
+-   Fixed Grid search bar not being able to lose focus.
+-   Fixed JEI transfer crash for larger processing recipes.
+-   Fixed rare autocrafting crash.
+-   Fixed some models in inactive state being emissive.
+-   Fixed Controller item not rendering energy state correctly.
+-   Fixed duplication bug with the Crafting Grid.
+-   Fixed fluid duplication bug with the Importer and GregTechCEu machines.
+-   Attempted to fix issue where Grid doesn't load items and requires a client restart.
+-   Fixed Crafter Manager slots being able to sort with Inventory Sorter.
+-   Fixed duplication bug in the Crafter with Inventory Sorter.
+
 ## [1.12.3] - 2023-07-07
 
 ### Fixed
@@ -3475,7 +3495,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.3...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.4...HEAD
+
+[1.12.4]: https://github.com/refinedmods/refinedstorage/compare/v1.12.3...v1.12.4
 
 [1.12.3]: https://github.com/refinedmods/refinedstorage/compare/v1.12.2...v1.12.3
 

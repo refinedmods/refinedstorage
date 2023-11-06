@@ -28,16 +28,26 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends BaseBlockEntity implements INetworkNodeProxy<N>, IRedstoneConfigurable {
-    public static final BlockEntitySynchronizationParameter<Integer, NetworkNodeBlockEntity> REDSTONE_MODE = RedstoneMode.createParameter(new ResourceLocation(RS.ID, "redstone_mode"));
+    public static final BlockEntitySynchronizationParameter<Integer, NetworkNodeBlockEntity<?>> REDSTONE_MODE = RedstoneMode.createParameter(new ResourceLocation(RS.ID, "redstone_mode"));
 
     private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
+    private final Class<N> networkNodeClass;
     private N clientNode;
     private N removedNode;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    // TODO: remove this ctor in 1.21
+    @Deprecated
     protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, BlockEntitySynchronizationSpec syncSpec) {
         super(type, pos, state, syncSpec);
+        this.networkNodeClass = null;
+    }
+
+    protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, BlockEntitySynchronizationSpec syncSpec,
+                                     Class<N> networkNodeClass) {
+        super(type, pos, state, syncSpec);
+        this.networkNodeClass = networkNodeClass;
     }
 
     @Override
@@ -72,11 +82,18 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
                 node = createAndSetNode(manager);
             }
 
-            return (N) node;
+            return doCast(node);
         } catch (ClassCastException e) {
             LOGGER.warn("Node @ {} got desynced with it's block entity container, recreating", worldPosition, e);
             return (N) createAndSetNode(manager);
         }
+    }
+
+    private N doCast(INetworkNode node) {
+        if (networkNodeClass == null) {
+            return (N) node;
+        }
+        return networkNodeClass.cast(node);
     }
 
     private INetworkNode createAndSetNode(INetworkNodeManager manager) {
@@ -110,7 +127,11 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
             INetworkNode node = manager.getNode(worldPosition);
 
             if (node != null) {
-                removedNode = (N) node;
+                try {
+                    removedNode = doCast(node);
+                } catch (ClassCastException e) {
+                    removedNode = null;
+                }
             }
 
             manager.removeNode(worldPosition);

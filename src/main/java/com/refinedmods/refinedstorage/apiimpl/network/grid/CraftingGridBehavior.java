@@ -23,6 +23,9 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
+import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -123,16 +126,18 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         }
 
         for (ItemStack craftedItem : craftedItemsList) {
-            if (!player.getInventory().add(craftedItem.copy())) {
-                ItemStack remainder = craftedItem;
+            ItemStack remainder = ItemHandlerHelper.insertItem(
+                    new PlayerMainInvWrapper(player.getInventory()),
+                    craftedItem.copy(),
+                    false
+            );
 
-                if (useNetwork) {
-                    remainder = network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
-                }
+            if (!remainder.isEmpty() && useNetwork) {
+                remainder = network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
+            }
 
-                if (!remainder.isEmpty()) {
-                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainder);
-                }
+            if (!remainder.isEmpty()) {
+                Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), remainder);
             }
         }
 

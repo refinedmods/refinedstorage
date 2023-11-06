@@ -13,7 +13,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.List;
 import java.util.function.Supplier;
 public class GridTransferMessage {
-    private final ItemStack[][] recipe = new ItemStack[9][];
+    private ItemStack[][] recipe;
     List<List<ItemStack>> inputs;
 
     public GridTransferMessage() {
@@ -26,6 +26,7 @@ public class GridTransferMessage {
     public static GridTransferMessage decode(FriendlyByteBuf buf) {
         GridTransferMessage msg = new GridTransferMessage();
         int slots = buf.readInt();
+        msg.recipe = new ItemStack[slots][];
         for (int i = 0; i < slots; i++) {
             int numberOfIngredients = buf.readInt();
             msg.recipe[i] = new ItemStack[numberOfIngredients];

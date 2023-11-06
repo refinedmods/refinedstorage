@@ -26,6 +26,8 @@ public interface IGridView {
 
     void sort();
 
+    void forceSort();
+
     void addDeltaListener(Consumer<IGridStack> listener);
 
     void removed();

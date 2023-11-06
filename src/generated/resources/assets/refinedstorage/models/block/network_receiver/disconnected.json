@@ -1,5 +1,5 @@
 {
-  "parent": "refinedstorage:block/cube_all_cutout",
+  "parent": "refinedstorage:block/cube_all_cutout_nonemissive",
   "textures": {
     "all": "refinedstorage:block/network_receiver/network_receiver",
     "cutout": "refinedstorage:block/network_receiver/cutouts/disconnected",

@@ -36,7 +36,7 @@ public class ImporterBlockEntity extends NetworkNodeBlockEntity<ImporterNetworkN
         .build();
 
     public ImporterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.IMPORTER.get(), pos, state, SPEC);
+        super(RSBlockEntities.IMPORTER.get(), pos, state, SPEC, ImporterNetworkNode.class);
     }
 
     @Override

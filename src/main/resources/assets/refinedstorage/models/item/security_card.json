@@ -6,13 +6,13 @@
   "overrides": [
     {
       "predicate": {
-        "active": 0
+        "refinedstorage:active": 0
       },
       "model": "refinedstorage:item/security_card_inactive"
     },
     {
       "predicate": {
-        "active": 1
+        "refinedstorage:active": 1
       },
       "model": "refinedstorage:item/security_card_active"
     }

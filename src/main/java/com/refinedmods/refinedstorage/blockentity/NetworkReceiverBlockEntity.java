@@ -15,7 +15,7 @@ public class NetworkReceiverBlockEntity extends NetworkNodeBlockEntity<NetworkRe
         .build();
 
     public NetworkReceiverBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.NETWORK_RECEIVER.get(), pos, state, SPEC);
+        super(RSBlockEntities.NETWORK_RECEIVER.get(), pos, state, SPEC, NetworkReceiverNetworkNode.class);
     }
 
     @Override

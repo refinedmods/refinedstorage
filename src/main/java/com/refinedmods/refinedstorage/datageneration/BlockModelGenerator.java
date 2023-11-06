@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BlockModelGenerator extends BlockStateProvider {
     private static final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
@@ -51,14 +52,14 @@ public class BlockModelGenerator extends BlockStateProvider {
 
             models.wirelessTransmitterBlock(block, state -> {
                 if (Boolean.FALSE.equals(state.getValue(NetworkNodeBlock.CONNECTED))) {
-                    return models.createWirelessTransmitterModel(
-                        "block/" + folderName + "/disconnected",
-                        resourceLocation(folderName, "cutouts/disconnected")
+                    return models.createWirelessTransmitterNonEmissiveModel(
+                            "block/" + folderName + "/disconnected",
+                            resourceLocation(folderName, "cutouts/disconnected")
                     );
                 } else {
                     ModelFile model = models.createWirelessTransmitterModel(
-                        "block/" + folderName + "/" + color,
-                        resourceLocation(folderName, "cutouts/" + color)
+                            "block/" + folderName + "/" + color,
+                            resourceLocation(folderName, "cutouts/" + color)
                     );
 
                     simpleBlockItem(block, model);
@@ -75,14 +76,14 @@ public class BlockModelGenerator extends BlockStateProvider {
 
             models.simpleBlockStateModel(block, state -> {
                 if (Boolean.FALSE.equals(state.getValue(DetectorBlock.POWERED))) {
-                    return models.createDetectorModel(
-                        "block/" + folderName + "/off",
-                        resourceLocation(folderName, "cutouts/off")
+                    return models.createDetectorNonEmissiveModel(
+                            "block/" + folderName + "/off",
+                            resourceLocation(folderName, "cutouts/off")
                     );
                 } else {
                     ModelFile model = models.createDetectorModel(
-                        "block/" + folderName + "/" + color,
-                        resourceLocation(folderName, "cutouts/" + color)
+                            "block/" + folderName + "/" + color,
+                            resourceLocation(folderName, "cutouts/" + color)
                     );
 
                     simpleBlockItem(block, model);
@@ -99,36 +100,36 @@ public class BlockModelGenerator extends BlockStateProvider {
 
             models.horizontalRSBlock(block, state -> {
                 if (Boolean.FALSE.equals(state.getValue(NetworkNodeBlock.CONNECTED))) {
-                    return models.createCubeCutoutModel(
-                        "block/" + folderName + "/disconnected",
-                        BOTTOM,
-                        BOTTOM,
-                        resourceLocation(folderName, "top"),
-                        resourceLocation(folderName, "cutouts/top_disconnected"),
-                        resourceLocation(folderName, "right"),
-                        resourceLocation(folderName, "cutouts/right_disconnected"),
-                        resourceLocation(folderName, "left"),
-                        resourceLocation(folderName, "cutouts/left_disconnected"),
-                        resourceLocation(folderName, "front"),
-                        resourceLocation(folderName, "cutouts/front_disconnected"),
-                        resourceLocation(folderName, "back"),
-                        resourceLocation(folderName, "cutouts/back_disconnected")
+                    return models.createCubeCutoutNonEmissiveModel(
+                            "block/" + folderName + "/disconnected",
+                            BOTTOM,
+                            BOTTOM,
+                            resourceLocation(folderName, "top"),
+                            resourceLocation(folderName, "cutouts/top_disconnected"),
+                            resourceLocation(folderName, "right"),
+                            resourceLocation(folderName, "cutouts/right_disconnected"),
+                            resourceLocation(folderName, "left"),
+                            resourceLocation(folderName, "cutouts/left_disconnected"),
+                            resourceLocation(folderName, "front"),
+                            resourceLocation(folderName, "cutouts/front_disconnected"),
+                            resourceLocation(folderName, "back"),
+                            resourceLocation(folderName, "cutouts/back_disconnected")
                     );
                 } else {
                     ModelFile model = models.createCubeCutoutModel(
-                        "block/" + folderName + "/" + color,
-                        BOTTOM,
-                        BOTTOM,
-                        resourceLocation(folderName, "top"),
-                        resourceLocation(folderName, "cutouts/top" + "_" + color),
-                        resourceLocation(folderName, "right"),
-                        resourceLocation(folderName, "cutouts/right" + "_" + color),
-                        resourceLocation(folderName, "left"),
-                        resourceLocation(folderName, "cutouts/left" + "_" + color),
-                        resourceLocation(folderName, "front"),
-                        resourceLocation(folderName, "cutouts/front" + "_" + color),
-                        resourceLocation(folderName, "back"),
-                        resourceLocation(folderName, "cutouts/back" + "_" + color)
+                            "block/" + folderName + "/" + color,
+                            BOTTOM,
+                            BOTTOM,
+                            resourceLocation(folderName, "top"),
+                            resourceLocation(folderName, "cutouts/top" + "_" + color),
+                            resourceLocation(folderName, "right"),
+                            resourceLocation(folderName, "cutouts/right" + "_" + color),
+                            resourceLocation(folderName, "left"),
+                            resourceLocation(folderName, "cutouts/left" + "_" + color),
+                            resourceLocation(folderName, "front"),
+                            resourceLocation(folderName, "cutouts/front" + "_" + color),
+                            resourceLocation(folderName, "back"),
+                            resourceLocation(folderName, "cutouts/back" + "_" + color)
                     );
 
                     simpleBlockItem(block, model);
@@ -145,18 +146,18 @@ public class BlockModelGenerator extends BlockStateProvider {
 
             models.simpleBlockStateModel(block, state -> {
                 if (Boolean.FALSE.equals(state.getValue(NetworkNodeBlock.CONNECTED))) {
-                    return models.createCubeAllCutoutModel(
-                        "block/" + folderName + "/disconnected",
-                        resourceLocation(folderName, folderName),
-                        resourceLocation(folderName, folderName),
-                        resourceLocation(folderName, "cutouts/disconnected")
+                    return models.createCubeAllCutoutNonEmissiveModel(
+                            "block/" + folderName + "/disconnected",
+                            resourceLocation(folderName, folderName),
+                            resourceLocation(folderName, folderName),
+                            resourceLocation(folderName, "cutouts/disconnected")
                     );
                 } else {
                     ModelFile model = models.createCubeAllCutoutModel(
-                        "block/" + folderName + "/" + color,
-                        resourceLocation(folderName, folderName),
-                        resourceLocation(folderName, folderName),
-                        resourceLocation(folderName, "cutouts/" + color)
+                            "block/" + folderName + "/" + color,
+                            resourceLocation(folderName, folderName),
+                            resourceLocation(folderName, folderName),
+                            resourceLocation(folderName, "cutouts/" + color)
                     );
 
                     simpleBlockItem(block, model);
@@ -173,36 +174,36 @@ public class BlockModelGenerator extends BlockStateProvider {
 
             models.anyDirectionalRSBlock(block, state -> {
                 if (Boolean.FALSE.equals(state.getValue(NetworkNodeBlock.CONNECTED))) {
-                    return models.createCubeCutoutModel(
-                        "block/" + folderName + "/disconnected",
-                        BOTTOM,
-                        BOTTOM,
-                        resourceLocation(folderName, "top"),
-                        resourceLocation(folderName, "cutouts/top_disconnected"),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_disconnected"),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_disconnected"),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_disconnected"),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_disconnected")
+                    return models.createCubeCutoutNonEmissiveModel(
+                            "block/" + folderName + "/disconnected",
+                            BOTTOM,
+                            BOTTOM,
+                            resourceLocation(folderName, "top"),
+                            resourceLocation(folderName, "cutouts/top_disconnected"),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_disconnected"),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_disconnected"),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_disconnected"),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_disconnected")
                     );
                 } else {
                     ModelFile model = models.createCubeCutoutModel(
-                        "block/" + folderName + "/" + color,
-                        BOTTOM,
-                        BOTTOM,
-                        resourceLocation(folderName, "top"),
-                        resourceLocation(folderName, "cutouts/top_" + color),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_" + color),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_" + color),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_" + color),
-                        resourceLocation(folderName, "side"),
-                        resourceLocation(folderName, "cutouts/side_" + color)
+                            "block/" + folderName + "/" + color,
+                            BOTTOM,
+                            BOTTOM,
+                            resourceLocation(folderName, "top"),
+                            resourceLocation(folderName, "cutouts/top_" + color),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_" + color),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_" + color),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_" + color),
+                            resourceLocation(folderName, "side"),
+                            resourceLocation(folderName, "cutouts/side_" + color)
                     );
 
                     simpleBlockItem(block, model);
@@ -219,37 +220,54 @@ public class BlockModelGenerator extends BlockStateProvider {
 
             models.simpleBlockStateModel(block, state -> {
                 if (state.getValue(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.OFF)) {
-                    return models.createCubeAllCutoutModel(
-                        "block/" + folderName + "/off",
-                        resourceLocation(folderName, "off"),
-                        resourceLocation(folderName, "off"),
-                        resourceLocation(folderName, "cutouts/off")
+                    return models.createCubeAllCutoutNonEmissiveModel(
+                            "block/" + folderName + "/off",
+                            resourceLocation(folderName, "off"),
+                            resourceLocation(folderName, "off"),
+                            resourceLocation(folderName, "cutouts/off")
                     );
                 } else if (state.getValue(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_OFF)) {
                     return models.createControllerNearlyCutoutModel(
-                        "block/" + folderName + "/nearly_off",
-                        resourceLocation(folderName, "off"),
-                        resourceLocation(folderName, "on"),
-                        resourceLocation(folderName, "cutouts/nearly_off"),
-                        resourceLocation(folderName, "cutouts/nearly_off_gray")
+                            "block/" + folderName + "/nearly_off",
+                            resourceLocation(folderName, "off"),
+                            resourceLocation(folderName, "on"),
+                            resourceLocation(folderName, "cutouts/nearly_off"),
+                            resourceLocation(folderName, "cutouts/nearly_off_gray")
                     );
                 } else if (state.getValue(ControllerBlock.ENERGY_TYPE).equals(ControllerBlock.EnergyType.NEARLY_ON)) {
                     return models.createControllerNearlyCutoutModel(
-                        "block/" + folderName + "/nearly_on",
-                        resourceLocation(folderName, "off"),
-                        resourceLocation(folderName, "on"),
-                        resourceLocation(folderName, "cutouts/nearly_on"),
-                        resourceLocation(folderName, "cutouts/nearly_on_gray")
+                            "block/" + folderName + "/nearly_on",
+                            resourceLocation(folderName, "off"),
+                            resourceLocation(folderName, "on"),
+                            resourceLocation(folderName, "cutouts/nearly_on"),
+                            resourceLocation(folderName, "cutouts/nearly_on_gray")
                     );
                 } else {
                     ModelFile model = models.createCubeAllCutoutModel(
-                        "block/" + folderName + "/" + color,
-                        resourceLocation(folderName, "off"),
-                        resourceLocation(folderName, "on"),
-                        resourceLocation(folderName, "cutouts/" + color)
+                            "block/" + folderName + "/" + color,
+                            resourceLocation(folderName, "off"),
+                            resourceLocation(folderName, "on"),
+                            resourceLocation(folderName, "cutouts/" + color)
                     );
 
-                    simpleBlockItem(block, model);
+                    final ResourceLocation energyType = new ResourceLocation(RS.ID, "energy_type");
+                    itemModels().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath())
+                            .override()
+                            .predicate(energyType, 0)
+                            .model(models().getExistingFile(
+                                    new ResourceLocation(RS.ID, "block/" + folderName + "/off")
+                            )).end().override()
+                            .predicate(energyType, 1)
+                            .model(models().getExistingFile(
+                                    new ResourceLocation(RS.ID, "block/" + folderName + "/nearly_off")
+                            )).end().override()
+                            .predicate(energyType, 2)
+                            .model(models().getExistingFile(
+                                    new ResourceLocation(RS.ID, "block/" + folderName + "/nearly_on")
+                            )).end().override()
+                            .predicate(energyType, 3)
+                            .model(model).end();
+
                     return model;
                 }
             });
@@ -261,27 +279,27 @@ public class BlockModelGenerator extends BlockStateProvider {
             Block block = registryObject.get();
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
 
-            ModelFile disconnected = models.createCubeNorthCutoutModel(
-                "block/" + folderName + "/disconnected",
-                BOTTOM,
-                resourceLocation(folderName, "top"),
-                resourceLocation(folderName, "front"),
-                resourceLocation(folderName, "back"),
-                resourceLocation(folderName, "right"),
-                resourceLocation(folderName, "left"),
-                resourceLocation(folderName, "right"),
-                resourceLocation(folderName, "cutouts/disconnected")
+            ModelFile disconnected = models.createCubeNorthCutoutNonEmissiveModel(
+                    "block/" + folderName + "/disconnected",
+                    BOTTOM,
+                    resourceLocation(folderName, "top"),
+                    resourceLocation(folderName, "front"),
+                    resourceLocation(folderName, "back"),
+                    resourceLocation(folderName, "right"),
+                    resourceLocation(folderName, "left"),
+                    resourceLocation(folderName, "right"),
+                    resourceLocation(folderName, "cutouts/disconnected")
             );
             ModelFile connected = models.createCubeNorthCutoutModel(
-                "block/" + folderName + "/" + color,
-                BOTTOM,
-                resourceLocation(folderName, "top"),
-                resourceLocation(folderName, "front"),
-                resourceLocation(folderName, "back"),
-                resourceLocation(folderName, "right"),
-                resourceLocation(folderName, "left"),
-                resourceLocation(folderName, "right"),
-                resourceLocation(folderName, "cutouts/" + color)
+                    "block/" + folderName + "/" + color,
+                    BOTTOM,
+                    resourceLocation(folderName, "top"),
+                    resourceLocation(folderName, "front"),
+                    resourceLocation(folderName, "back"),
+                    resourceLocation(folderName, "right"),
+                    resourceLocation(folderName, "left"),
+                    resourceLocation(folderName, "right"),
+                    resourceLocation(folderName, "cutouts/" + color)
             );
 
             //generate Item Model

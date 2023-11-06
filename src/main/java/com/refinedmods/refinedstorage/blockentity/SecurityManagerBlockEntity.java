@@ -15,7 +15,7 @@ public class SecurityManagerBlockEntity extends NetworkNodeBlockEntity<SecurityM
         .build();
 
     public SecurityManagerBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.SECURITY_MANAGER.get(), pos, state, SPEC);
+        super(RSBlockEntities.SECURITY_MANAGER.get(), pos, state, SPEC, SecurityManagerNetworkNode.class);
     }
 
     @Override

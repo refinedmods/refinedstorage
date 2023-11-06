@@ -54,7 +54,7 @@ public class PortableGridFluidUpdateMessage {
         BaseScreen.executeLater(GridScreen.class, grid -> {
             grid.setView(new GridViewImpl(grid, GridScreen.getDefaultSorter(), GridScreen.getSorters()));
             grid.getView().setStacks(message.stacks);
-            grid.getView().sort();
+            grid.getView().forceSort();
         });
 
         ctx.get().setPacketHandled(true);

@@ -89,9 +89,19 @@ public class BlockModels {
             .texture("torch", torch);
     }
 
+    public BlockModelBuilder createDetectorNonEmissiveModel(String name, ResourceLocation torch) {
+        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "detector_nonemissive"))
+                .texture("torch", torch);
+    }
+
     public BlockModelBuilder createWirelessTransmitterModel(String name, ResourceLocation cutout) {
         return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "wireless_transmitter"))
             .texture("cutout", cutout);
+    }
+
+    public BlockModelBuilder createWirelessTransmitterNonEmissiveModel(String name, ResourceLocation cutout) {
+        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "wireless_transmitter_nonemissive"))
+                .texture("cutout", cutout);
     }
 
     public BlockModelBuilder createCubeCutoutModel(String name, ResourceLocation down, ResourceLocation downCutout, ResourceLocation up, ResourceLocation upCutout, ResourceLocation east, ResourceLocation eastCutout, ResourceLocation west, ResourceLocation westCutout, ResourceLocation north, ResourceLocation northCutout, ResourceLocation south, ResourceLocation southCutout) {
@@ -111,6 +121,23 @@ public class BlockModels {
             .texture("cutout_up", upCutout);
     }
 
+    public BlockModelBuilder createCubeCutoutNonEmissiveModel(String name, ResourceLocation down, ResourceLocation downCutout, ResourceLocation up, ResourceLocation upCutout, ResourceLocation east, ResourceLocation eastCutout, ResourceLocation west, ResourceLocation westCutout, ResourceLocation north, ResourceLocation northCutout, ResourceLocation south, ResourceLocation southCutout) {
+        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "cube_cutout_nonemissive"))
+                .texture("particle", north)
+                .texture("east", east)
+                .texture("south", south)
+                .texture("west", west)
+                .texture("up", up)
+                .texture("down", down)
+                .texture("north", north)
+                .texture("cutout_down", downCutout)
+                .texture("cutout_east", eastCutout)
+                .texture("cutout_west", westCutout)
+                .texture("cutout_south", southCutout)
+                .texture("cutout_north", northCutout)
+                .texture("cutout_up", upCutout);
+    }
+
     public BlockModelBuilder createControllerNearlyCutoutModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation grayCutout, ResourceLocation cutout) {
         return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "block/controller_nearly"))
             .texture("particle", particle)
@@ -126,6 +153,13 @@ public class BlockModels {
             .texture("cutout", cutout);
     }
 
+    public BlockModelBuilder createCubeAllCutoutNonEmissiveModel(String name, ResourceLocation particle, ResourceLocation all, ResourceLocation cutout) {
+        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "cube_all_cutout_nonemissive"))
+                .texture("particle", particle)
+                .texture("all", all)
+                .texture("cutout", cutout);
+    }
+
     public BlockModelBuilder createCubeNorthCutoutModel(String name, ResourceLocation down, ResourceLocation up, ResourceLocation north, ResourceLocation south, ResourceLocation east, ResourceLocation west, ResourceLocation particle, ResourceLocation cutout) {
         return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "cube_north_cutout"))
             .texture("particle", particle)
@@ -136,6 +170,18 @@ public class BlockModels {
             .texture("down", down)
             .texture("north", north)
             .texture("cutout", cutout);
+    }
+
+    public BlockModelBuilder createCubeNorthCutoutNonEmissiveModel(String name, ResourceLocation down, ResourceLocation up, ResourceLocation north, ResourceLocation south, ResourceLocation east, ResourceLocation west, ResourceLocation particle, ResourceLocation cutout) {
+        return generator.models().withExistingParent(name, new ResourceLocation(RS.ID, "cube_north_cutout_nonemissive"))
+                .texture("particle", particle)
+                .texture("east", east)
+                .texture("south", south)
+                .texture("west", west)
+                .texture("up", up)
+                .texture("down", down)
+                .texture("north", north)
+                .texture("cutout", cutout);
     }
 
     class CustomLoaderBuilderBasic extends CustomLoaderBuilder<BlockModelBuilder> {

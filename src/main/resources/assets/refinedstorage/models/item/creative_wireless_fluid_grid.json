@@ -6,13 +6,13 @@
   "overrides": [
     {
       "predicate": {
-        "connected": 0
+        "refinedstorage:connected": 0
       },
       "model": "refinedstorage:item/wireless_fluid_grid_disconnected"
     },
     {
       "predicate": {
-        "connected": 1
+        "refinedstorage:connected": 1
       },
       "model": "refinedstorage:item/wireless_fluid_grid_connected"
     }

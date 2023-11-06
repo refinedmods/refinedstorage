@@ -22,7 +22,7 @@ public class WirelessTransmitterBlockEntity extends NetworkNodeBlockEntity<Wirel
         .build();
 
     public WirelessTransmitterBlockEntity(BlockPos pos, BlockState state) {
-        super(RSBlockEntities.WIRELESS_TRANSMITTER.get(), pos, state, SPEC);
+        super(RSBlockEntities.WIRELESS_TRANSMITTER.get(), pos, state, SPEC, WirelessTransmitterNetworkNode.class);
     }
 
     @Override

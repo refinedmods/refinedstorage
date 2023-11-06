@@ -1,3 +1,28 @@
 {
-  "parent": "refinedstorage:block/controller/light_blue"
+  "overrides": [
+    {
+      "model": "refinedstorage:block/controller/off",
+      "predicate": {
+        "refinedstorage:energy_type": 0.0
+      }
+    },
+    {
+      "model": "refinedstorage:block/controller/nearly_off",
+      "predicate": {
+        "refinedstorage:energy_type": 1.0
+      }
+    },
+    {
+      "model": "refinedstorage:block/controller/nearly_on",
+      "predicate": {
+        "refinedstorage:energy_type": 2.0
+      }
+    },
+    {
+      "model": "refinedstorage:block/controller/light_blue",
+      "predicate": {
+        "refinedstorage:energy_type": 3.0
+      }
+    }
+  ]
 }
