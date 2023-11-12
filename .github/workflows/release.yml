@@ -29,15 +29,6 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   RELEASE: ${{ steps.tagName.outputs.tag }}
-            - name: Build documentation
-              run: ./gradlew javadoc
-              env:
-                  RELEASE: ${{ steps.tagName.outputs.tag }}
-            - name: Publish documentation
-              uses: JamesIves/github-pages-deploy-action@4.1.5
-              with:
-                  branch: gh-pages
-                  folder: build/docs/javadoc
             - name: Publish
               run: ./gradlew publish
               env:
@@ -49,7 +40,7 @@ jobs:
               id: changelog_reader
               uses: mindsers/changelog-reader-action@v2
               with:
-                  version: 'Unreleased'
+                  version: '1.11.7'
                   path: ./CHANGELOG.md
             - name: Release on GitHub
               uses: softprops/action-gh-release@v1
@@ -75,14 +66,6 @@ jobs:
                   args: 'Refined Storage {{ GIT_TAG_NAME }} has been released! {{ RELEASE_URL }}'
               env:
                   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-            - name: Notify Twitter
-              uses: ethomson/send-tweet-action@v1
-              with:
-                  status: Refined Storage ${{ env.GIT_TAG_NAME }} has been released! ${{ env.RELEASE_URL }}
-                  consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
-                  consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
-                  access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-                  access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
             - name: Announce to Mastodon
               uses: rzr/fediverse-action@master
               with:
