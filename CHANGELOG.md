@@ -3516,7 +3516,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
 
-[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/v1.11.6...v1.12.0
+[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/v1.11.7...v1.12.0
+
+[1.11.7]: https://github.com/refinedmods/refinedstorage/compare/v1.11.6...v1.11.7
 
 [1.11.6]: https://github.com/refinedmods/refinedstorage/compare/v1.11.5...v1.11.6
 
