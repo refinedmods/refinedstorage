@@ -128,6 +128,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Ported to Minecraft 1.19.2.
 
+## [1.10.6] - 2023-11-15
+
+### Fixed
+
+-   Fixed a bunch of issues where chunks would unintentionally be loaded by RS.
+-   Reduced block updates when a controller is turning on and off constantly.
+-   Various world corruption issues if Refined Storage blocks were removed unexpectedly or with another mod.
+-   Fixed JEI transfer crash for larger processing recipes.
+-   Fixed rare autocrafting crash.
+-   Fixed duplication bug with the Crafting Grid.
+-   Fixed fluid duplication bug with the Importer in certain situations.
+-   Attempted to fix issue where Grid doesn't load items and requires a client restart.
+
 ## [1.10.5] - 2023-02-12
 
 ### Fixed
@@ -3532,7 +3545,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.11.1]: https://github.com/refinedmods/refinedstorage/compare/v1.11.0...v1.11.1
 
-[1.11.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.5...v1.11.0
+[1.11.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.6...v1.11.0
+
+[1.10.6]: https://github.com/refinedmods/refinedstorage/compare/v1.10.5...v1.10.6
 
 [1.10.5]: https://github.com/refinedmods/refinedstorage/compare/v1.10.4...v1.10.5
 
