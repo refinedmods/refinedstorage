@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.screen.grid.sorting;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 
+// TODO: remove in 1.20.x
 public class InventoryTweaksGridSorter implements IGridSorter {
     @Override
     public boolean isApplicable(IGrid grid) {
