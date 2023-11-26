@@ -40,7 +40,7 @@ jobs:
               id: changelog_reader
               uses: mindsers/changelog-reader-action@v2
               with:
-                  version: '1.10.6'
+                  version: '1.10.7'
                   path: ./CHANGELOG.md
             - name: Release on GitHub
               uses: softprops/action-gh-release@v1
