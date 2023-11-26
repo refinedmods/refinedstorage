@@ -128,7 +128,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Ported to Minecraft 1.19.2.
 
-## [1.10.6] - 2023-11-15
+## [1.10.6] - 2023-11-26
 
 ### Fixed
 
