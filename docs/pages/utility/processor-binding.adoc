@@ -1,0 +1,5 @@
+= Processor Binding
+:icon: processor-binding.png
+:from: v1.6.6
+
+{doctitle} is used to craft the various processors.

@@ -1,0 +1,9 @@
+= 1k Storage Block
+:icon: 1k-storage-block.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-block.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store 1.000 items.

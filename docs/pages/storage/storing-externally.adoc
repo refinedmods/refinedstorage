@@ -1,0 +1,32 @@
+= Storing externally
+
+So far you've used xref:index.adoc#_storage_disks[storage disks] or xref:index.adoc#_storage_blocks[storage blocks].
+What if you want to use a chest or another inventory as storage?
+
+== The External Storage
+
+Craft an xref:external-storage.adoc[] and connect it to an external inventory like a link:https://minecraft.gamepedia.com/Chest[Chest].
+
+If you now insert items, they will go in the inventory.
+
+You can also filter items that can enter the external inventory with the filter slots.
+
+== Supported storages
+
+The xref:external-storage.adoc[] supports every block that is an inventory.
+Some examples:
+
+- link:https://minecraft.gamepedia.com/Chest[Chests]
+- Storage Drawers
+- Regular drawers
+- Drawer Controller
+- Iron Chests
+- etc...
+
+== Using an External Storage alongside other storages
+
+When you insert or extract an item from the storage network, Refined Storage will extract or insert from the storage with the highest priority first.
+
+Simply give a storage a higher priority than the other one, and Refined Storage will prioritize correctly.
+
+If the storage is full, Refined Storage will attempt to insert or extract from the next available storage, with a lower priority.

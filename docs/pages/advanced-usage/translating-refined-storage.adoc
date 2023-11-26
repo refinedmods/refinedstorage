@@ -1,0 +1,16 @@
+= Translating Refined Storage
+
+== How to create a translation
+
+Copy link:https://github.com/refinedmods/refinedstorage/blob/develop/src/main/resources/assets/refinedstorage/lang/en_us.json[en_us.json] from Refined Storage GitHub repository to a text file on your computer and replace the texts with your language.
+
+== How to submit your translation
+
+* If you know Git well enough, you can contribute new language files via a pull request.
+* If you do not know how to use Git/GitHub, upload the translation file to Pastebin or Gist and send it to me through a link:https://github.com/refinedmods/refinedstorage/issues[GitHub issue].
+
+== Updating existing translations
+
+You can compare the new and removed translation keys yourself, link:https://github.com/refinedmods/refinedstorage/blob/develop/tools/missing-translation-keys.sh[or use a Bash script] that outputs a diff between `en_US` and the version specified.
+
+You can, of course, always diff manually using another tool, like the `diff` utility or an online diffing tool.

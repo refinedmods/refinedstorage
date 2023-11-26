@@ -1,0 +1,22 @@
+= Disk Manipulator
+:icon: disk-manipulator.png
+:from: v1.0.5
+
+The {doctitle} is a block that adds a fast way of transferring items between xref:../storage/index.adoc#_storage_disks[storage disks] or xref:../storage/index.adoc#_fluid_storage_disks[fluid storage disks] and the storage network.
+
+== Whitelist or blacklist
+
+The player can configure the {doctitle} to have a certain whitelist or blacklist of items that can be transferred.
+
+The whitelist or blacklist can be configured to be NBT or damage sensitive.
+
+== Mode
+
+The player can also choose whether to insert items to the storage network or extract items from the storage network.
+
+include::../../partials/recoloring.adoc[]
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]
+- xref:../upgrades/stack-upgrade.adoc[]

@@ -1,0 +1,47 @@
+= Processing recipes
+
+== What are processing recipes?
+
+So far, in xref:getting-started-with-autocrafting.adoc[] you learnt how to automate regular crafting recipes.
+
+What if you want to automate the creation of items that don't involve a crafting recipe, like ores to ingots in a furnace?
+
+For this you use processing xref:pattern.adoc[patterns].
+
+== Processing patterns
+
+You can create processing xref:pattern.adoc[patterns] in the xref:pattern-grid.adoc[] by toggling the "processing" checkbox.
+
+The GUI will change and it'll allow you to define up to 9 inputs and outputs.
+
+- Inputs is what Refined Storage will extract from your storage network.
+- Outputs are what Refined Storage expects back in the network when the item has processed.
+
+== Example
+
+Let's say you want to automate link:https://minecraft.gamepedia.com/Iron_Ore[Iron Ore] to link:https://minecraft.gamepedia.com/Iron_Ingot[Iron Ingot].
+
+- In the input section you put 1 link:https://minecraft.gamepedia.com/Iron_Ore[Iron Ore].
+- In the output section you put 1 link:https://minecraft.gamepedia.com/Iron_Ingot[Iron Ingot].
+
+== Inserting the pattern
+
+Make a xref:crafter.adoc[] and let it face the machine in a way it can input it in the correct slot.
+
+Insert the processing xref:pattern.adoc[] you just created in the xref:crafter.adoc[] facing the machine.
+
+When you now request the item, Refined Storage will insert the inputs in the machine.
+
+You do need to get the item manually back in the storage network so Refined Storage knows that the item has been processed.
+You can use any device to get the item back in the storage network, like an xref:../input-and-output/interface.adoc[] or xref:../input-and-output/importer.adoc[].
+
+== Allowed tags
+
+The allowed tags system in Refined Storage allows the player to decide which items or fluids can be used as alternatives when the original specified item or fluid isn't found in the storage network.
+
+These tags are retrieved from Minecraft's tag system.
+You can specify the allowed tags in the xref:pattern-grid.adoc[].
+
+== Chaining crafters
+
+You can xref:crafter.adoc#_chaining[chain crafters] to connect multiple xref:crafter.adoc[crafters] to the same machine.

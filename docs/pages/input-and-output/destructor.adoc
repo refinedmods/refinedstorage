@@ -1,0 +1,16 @@
+= Destructor
+:icon: destructor.png
+:from: v0.3.0-alpha
+
+The {doctitle} destroys blocks or fluids in front of it and puts the drops in the storage network.
+
+The {doctitle} has the ability to only break certain blocks or fluids, with the whitelist and blacklist option.
+Said whitelist and blacklist can be NBT or damage sensitive.
+
+The {doctitle} can also pick up items in the world instead of destroying blocks.
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]
+- xref:../upgrades/fortune-upgrade.adoc[]
+- xref:../upgrades/silk-touch-upgrade.adoc[]

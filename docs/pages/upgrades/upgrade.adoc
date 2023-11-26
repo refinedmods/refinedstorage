@@ -1,0 +1,5 @@
+= Upgrade
+:icon: upgrade.png
+:from: v0.6.0-alpha
+
+The {doctitle} is the base item used for xref:index.adoc[every type of upgrade].

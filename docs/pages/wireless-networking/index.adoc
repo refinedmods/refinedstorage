@@ -1,0 +1,19 @@
+= Wireless networking
+
+- xref:networks-over-long-distances.adoc[]
+
+== Wireless tools
+
+- xref:wireless-transmitter.adoc[]
+- xref:wireless-grid.adoc[]
+- xref:creative-wireless-grid.adoc[]
+- xref:wireless-fluid-grid.adoc[]
+- xref:creative-wireless-fluid-grid.adoc[]
+- xref:wireless-crafting-monitor.adoc[]
+- xref:creative-wireless-crafting-monitor.adoc[]
+
+== Wireless networks
+
+- xref:network-card.adoc[]
+- xref:network-receiver.adoc[]
+- xref:network-transmitter.adoc[]

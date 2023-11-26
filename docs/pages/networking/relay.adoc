@@ -1,0 +1,9 @@
+= Relay
+:from: v0.4.0-alpha
+:icon: relay.png
+
+The Relay acts as xref:cable.adoc[], but can be turned on or off depending on the redstone configuration.
+
+Devices connected after the Relay will be on or off depending if the {doctitle} is on.
+
+include::../../partials/recoloring.adoc[]

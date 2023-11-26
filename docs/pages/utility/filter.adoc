@@ -1,0 +1,31 @@
+= Filter
+:icon: filter.png
+:from: v0.8.13-beta
+
+The {doctitle} is an item that can be used in any xref:../viewing-resources/grid.adoc[].
+
+In the {doctitle}'s GUI, which can be opened by pressing right click while holding the filter in hand, the player can specify which items and fluids can be visible.
+
+== Items and fluids
+
+The Grid can filter fluids in the xref:../viewing-resources/fluid-grid.adoc[] and items in any other xref:../viewing-resources/grid.adoc[] by toggling between item and fluid mode.
+
+== {doctitle}ing
+
+The player can choose to let the filter be damage or damage sensitive.
+It is also possible to use a mod filter.
+
+The {doctitle} can be set in a whitelist or blacklist mode, too.
+
+== Icon and name
+
+The player can also configure an icon and name for the {doctitle}.
+
+In item and fluid mode an icon can be specified.
+
+As soon as the {doctitle} has an icon specified, it will appear as a tab in the xref:../viewing-resources/grid.adoc[].
+Then, open the tab to see the filtered items or fluids.
+
+== Clearing
+
+Use SHIFT + right click in your inventory while holding the {doctitle} to clear it.

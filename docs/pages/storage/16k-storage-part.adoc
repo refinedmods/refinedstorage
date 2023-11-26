@@ -1,0 +1,5 @@
+= 16k Storage Part
+:icon: 16k-storage-part.png
+:from: v0.3.0-alpha
+
+The {doctitle} is used to craft the xref:16k-storage-block.adoc[].

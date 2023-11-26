@@ -1,0 +1,11 @@
+= Creative Fluid Storage Block
+:icon: creative-fluid-storage-block.png
+:from: v0.9.0-beta
+
+include::../../partials/fluid-storage-block.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store an infinite amount of buckets.
+
+It can only be obtained in creative mode.

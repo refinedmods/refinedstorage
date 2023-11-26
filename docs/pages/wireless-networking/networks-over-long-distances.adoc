@@ -1,0 +1,46 @@
+= Networks over long distances
+
+Refined Storage supports 2 scenarios for long distance networking:
+
+- xref:../viewing-resources/how-to-view-resources.adoc#_wireless_access[Viewing your resources wirelessly]
+- Extending a network over a long distance without using cables (see below)
+
+== The problem
+
+Sometimes, you may have different areas all scattered throughout your world.
+
+Here is the problem: you want access to your Refined Storage system on all of those areas.
+
+You could lay xref:../networking/cable.adoc[] from your base to every area, but what if said area is 1000 blocks away?
+Are you really going to craft 1000 xref:../networking/cable.adoc[cables]?
+Didn't think so.
+
+== The solution
+
+Use the xref:network-transmitter.adoc[] and xref:network-receiver.adoc[].
+
+Simply craft a xref:network-transmitter.adoc[] and connect it to your Refined Storage system in your main base.
+
+Next up, craft a xref:network-card.adoc[].
+I'll be telling what you need this for in a second, bear with me.
+
+After crafting a xref:network-card.adoc[], craft a xref:network-receiver.adoc[] and place it in the area far away from your base.
+
+Take the xref:network-card.adoc[] and right click it on the xref:network-receiver.adoc[].
+
+Put the xref:network-card.adoc[] in the xref:network-transmitter.adoc[] so the xref:network-transmitter.adoc[] knows where to send a signal to.
+
+And now you are done.
+Simply connect machines to your xref:network-receiver.adoc[] according to the normal machine connecting rules.
+
+I suppose you could treat the xref:network-receiver.adoc[] as a xref:...
+
+== One very important thing to note
+
+The xref:../networking/controller.adoc[] in your main base and the xref:network-receiver.adoc[] in the other area **both** have to be chunkloaded **before** linking it to the network.
+
+After linking, both areas have to stay chunkloaded.
+
+== Using Refined Storage v1.7.x or v1.8.x?
+
+Cross dimensional functionality isn't available in this version.

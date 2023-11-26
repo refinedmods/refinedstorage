@@ -1,0 +1,5 @@
+= 4k Storage Part
+:icon: 4k-storage-part.png
+:from: v0.3.0-alpha
+
+The {doctitle} is used to craft the xref:4k-storage-block.adoc[].

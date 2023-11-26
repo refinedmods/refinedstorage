@@ -1,0 +1,16 @@
+= Constructor
+:icon: constructor.png
+:from: v0.3.0-alpha
+
+The {doctitle} places items or fluids from the storage network in the world.
+
+No other blocks can be in front of the {doctitle} (except fluids) and it should be possible for the block to be placed (for example: saplings need dirt).
+
+The {doctitle} can also drop items in the world instead of placing actual blocks.
+When provided with a xref:../upgrades/stack-upgrade.adoc[], it'll drop stacks of items at a time.
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]
+- xref:../upgrades/stack-upgrade.adoc[]
+- xref:../upgrades/crafting-upgrade.adoc[]

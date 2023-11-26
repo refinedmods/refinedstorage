@@ -1,0 +1,9 @@
+= Stack Upgrade
+:icon: stack-upgrade.png
+:from: v0.7.7-beta
+
+The {doctitle} will improve item or fluid transfer speeds by using a whole stack (64 items) instead of 1 item at a time.
+
+It can be combined with xref:speed-upgrade.adoc[speed upgrades] to let the device go to the next slot quicker.
+
+By using this upgrade, the amount of FE/t that this device draws will increase.

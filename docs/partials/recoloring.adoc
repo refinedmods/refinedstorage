@@ -1,0 +1,6 @@
+== Recoloring
+
+You can recolor the {doctitle} in 2 ways:
+
+- Using a dye on the {doctitle}
+- Combining the block with a dye as a crafting recipe

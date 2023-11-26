@@ -1,0 +1,51 @@
+= Pattern Grid
+:icon: pattern-grid.png
+:from: v0.6.0-alpha
+
+The {doctitle} is the same as a regular xref:../viewing-resources/grid.adoc[], but also allows for the creation of xref:pattern.adoc[patterns].
+
+== Mode
+
+By default, the {doctitle} creates regular crafting xref:pattern.adoc[patterns].
+
+To create processing xref:pattern.adoc[patterns], toggle the "processing" checkbox.
+
+== Allowed tags
+
+The allowed tags system in Refined Storage allows the player to decide which items or fluids can be used as alternatives when the specified item or fluid isn't found in the storage network.
+
+These tags are retrieved from link:https://minecraft.gamepedia.com/Tag[Minecraft's tag system].
+You can specify the allowed tags in the {doctitle}.
+
+To define valid alternatives for an item or fluid, use CTRL + click on the input slot and specify the allowed tags that can be used during autocrafting.
+Items or fluids from that tag are then marked as valid alternatives if the original item or fluid can't be found in the storage network.
+
+You can also define valid alternatives by clicking on the item or fluid and then clicking on "Alternatives".
+
+== Ore dictionary (Refined Storage v1.6.x or lower only)
+
+To create ore dictionary sensitive xref:pattern.adoc[patterns], toggle the "oredict" checkbox.
+
+== Modifying a pattern
+
+You can re-insert a xref:pattern.adoc[] in the output slot to modify and (possibly) override it.
+
+== Recipe transferring
+
+The {doctitle} integrates with link:https://minecraft.curseforge.com/projects/jei[JEI (Just Enough Items)] so the player can use recipe transferring.
+
+You don't necessarily need the actual items in your storage network to create a xref:pattern.adoc[] for it.
+
+Refined Storage will notify you when you have a xref:pattern.adoc[] for an item configured when transferring a recipe.
+
+== Manual input/output configuration
+
+Click an item or fluid in the slots to configure the xref:pattern.adoc[].
+
+Click on the item or fluid to change the quantity.
+
+Use CTRL + click to modify the allowed tags for the input slot (Minecraft 1.14.4 and above).
+
+Use shift to clear the slot.
+
+include::../../partials/recoloring.adoc[]

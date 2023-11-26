@@ -1,0 +1,12 @@
+= Hollow Cover
+:icon: hollow-cover.png
+:from: v1.6.0
+
+A {doctitle} is the same as a xref:cover.adoc[] but has a hole so that you can pass xref:../networking/cable.adoc[cables] through it.
+
+You can also put it on the front of an xref:../input-and-output/importer.adoc[] or xref:../input-and-output/exporter.adoc[] to hide part of the block.
+
+It will let a network signal through.
+
+They can be removed by sneaking and right-clicking them with the xref:wrench.adoc[].
+

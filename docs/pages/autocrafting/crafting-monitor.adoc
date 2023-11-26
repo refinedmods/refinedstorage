@@ -1,0 +1,31 @@
+= Crafting Monitor
+:icon: crafting-monitor.png
+:from: v0.6.0-alpha
+
+The {doctitle} is a block that shows all the current running crafting tasks and how long they have been running.
+
+Each crafting task can be cancelled manually.
+It is also possible to cancel all crafting tasks at once.
+
+Per task, it shows a grid of cells, each containing information about how an item or fluid is used in the crafting task.
+This is what the terminology in those cells mean:
+
+- Stored: the item or fluid is stored in the internal inventory of the crafting task, and will be used later on
+- Missing: the crafting task cannot continue without this item or fluid as it's missing
+- Processing: the item or fluid displayed is currently inserted into an external machine and is processing
+- Scheduled: the item or fluid is scheduled to be made by inserting it's ingredients in an external machine later
+- Crafting: this item is being crafted (regular crafting, not processing)
+
+== Sizes
+
+The size of any {doctitle} can be configured as well:
+
+- Stretched (default)
+- Small
+- Medium
+- Large
+
+When choosing the stretched size, the {doctitle} will take up all the vertical screen space.
+This can be limited through the `maxRowsStretch` config option.
+
+include::../../partials/recoloring.adoc[]

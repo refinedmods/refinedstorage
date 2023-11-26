@@ -1,0 +1,68 @@
+= Frequently asked questions (FAQ)
+
+== I have an idea for a feature that can be toggled on or off with an config option!
+
+Refined Storage doesn't do config options for features or things that change behavior in general.
+Why not?
+
+- The experience players have with Refined Storage can differ between modpacks and that can be confusing
+- Issues will be created by players wondering why their favorite feature doesn't work in modpack A, but does in modpack B
+- Putting features or behaviors behind a config option makes it harder to maintain
+- With bug reports we'd have to ask if the feature is toggled on or off in the config
+- Bugs might get noticed later since it's behind a config option and thus less visible
+
+== Not including "X" in Refined Storage makes this mod useless when mods like "Y" aren't installed!
+
+The philosophy of the mod is to have as less overlap with other mods and to only focus on the storage network part of the mod.
+If other mods are required to achieve something, that isn't a problem.
+
+Examples:
+
+- Autocrafting needs an external bucket filling machine in order to convert fluids to buckets
+- Energy that Refined Storage uses needs to be generated with another mod
+
+== What is the difference between Refined Storage and Applied Energistics?
+
+Refined Storage is the simpler of the two and was heavily based off of AE1.
+
+AE2 has been around for years and was a direct descendent of AE1, while RS is much younger and started mostly scratch with AE (both versions) as inspiration.
+
+A lot of people prefer the simplicity of RS, while a similarly large portion of people prefer AE2's complexity due to enjoying the puzzle aspects.
+
+== Can I use this mod in my private/public mod pack?
+
+Yes, you don't need to ask permission.
+
+== Can I connect Refined Storage to my Applied Energistics 2 system, or vice-versa?
+
+No, you can't.
+
+You might've found an issue on our issue tracker that says you can, but no, you can't.
+
+== Is there a Refined Storage for MC 1.7.10?
+
+No, there isn't.
+
+== Will you make a Refined Storage for MC 1.7.10?
+
+No, I won't.
+
+== What versions of Minecraft are supported?
+
+See xref:whats-new.adoc#_version_support[version support].
+
+== Is there a way to have infinite Wireless Transmitter range?
+
+It's not possible if you're using the base Refined Storage mod, or Refined Storage Addons.
+You'll have to find an addon mod which does add such functionality.
+
+Alternatively, you can increase the range in the Refined Storage config file to be infinite.
+
+== Is there a way to request autocrafting in the Grid if I already have the item or fluid?
+
+Yes!
+There are many helpful key and mouse bindings for the xref:viewing-resources/grid.adoc#_controls[grid].
+
+== I found an issue/bug with Refined Storage!
+
+Head over to our link:https://github.com/refinedmods/refinedstorage/issues[issue tracker on GitHub] and report it there.

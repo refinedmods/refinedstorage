@@ -1,0 +1,12 @@
+= Cut Silicon
+:icon: cut-silicon.png
+:from: v0.3.0-alpha
+:to: v1.6.6
+
+[.alert.alert-warning]
+****
+{doctitle} has been removed in v1.6.6. It has been replaced with xref:processor-binding.adoc[].
+****
+
+{doctitle} is used to craft the various processors.
+It is made with a xref:cutting-tool.adoc[].

@@ -1,0 +1,7 @@
+= Creative Wireless Grid
+:icon: wireless-grid.png
+:from: v0.5.3-alpha
+
+The {doctitle} is the same as a regular xref:wireless-grid.adoc[] but has infinite energy.
+
+It can only be obtained in creative mode.

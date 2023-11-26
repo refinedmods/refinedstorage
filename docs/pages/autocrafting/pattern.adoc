@@ -1,0 +1,44 @@
+= Pattern
+:icon: pattern.png
+:from: v0.6.0-alpha
+
+A {doctitle} is an item that is used in autocrafting.
+It stores the recipe that should be autocrafted.
+
+A recipe can be assigned with the xref:pattern-grid.adoc[] and the {doctitle} is stored in a xref:crafter.adoc[].
+
+[#_processing]
+== Processing
+
+If the {doctitle} is in processing mode, it will push the inputs to the connected inventory of the xref:crafter.adoc[].
+
+== Exact mode (patterns in crafting mode)
+
+Exact mode is turned on by default which means every {doctitle} is an "exact pattern".
+This means Refined Storage takes items exactly as defined in the {doctitle}.
+
+When Exact mode is turned off it will also match for other acceptable inputs for that crafting recipe.
+
+Exact mode can't be set for patterns in processing mode.
+For processing mode, see the section about allowed tags.
+
+== Allowed tags (patterns in processing mode)
+
+The allowed tags system in Refined Storage allows the player to decide which items or fluids can be used as alternatives when the original specified item or fluid isn't found in the storage network.
+
+These tags are retrieved from link:https://minecraft.gamepedia.com/Tag[Minecraft's tag system].
+You can specify the allowed tags in the xref:pattern-grid.adoc[].
+
+== Ore dictionary mode (Refined Storage v1.6.x or lower only)
+
+The {doctitle} can be configured to be an ore dictionary pattern.
+Instead of extracting the exact item, it'll try to extract equivalent items according to the ore dictionary as well.
+
+== Clearing
+
+Use SHIFT + right click in your inventory while holding the {doctitle} to clear it.
+You can also override the {doctitle} in the xref:pattern-grid.adoc[].
+
+== Modifying
+
+You can re-insert a {doctitle} in the output slot of the xref:pattern-grid.adoc[] to modify and (possibly) override it.

@@ -1,0 +1,11 @@
+= Cover
+:icon: cover.png
+:from: v1.6.0-alpha
+
+A {doctitle} is an item used to hide xref:../networking/cable.adoc[cables].
+
+You can also hide blocks that have a cable on them, like the xref:../input-and-output/importer.adoc[] or xref:../input-and-output/exporter.adoc[].
+
+It will block network connections, xref:../networking/cable.adoc[cables] can't pass through the "hidden" side.
+
+They can be removed by sneaking and right-clicking them with the xref:wrench.adoc[].

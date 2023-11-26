@@ -1,0 +1,19 @@
+= Crafting Grid
+:icon: crafting-grid.png
+:from: v0.3.0-alpha
+
+The {doctitle} is the same as a regular xref:grid.adoc[], but has a crafting inventory.
+
+When an item is crafted, it won't just clear the crafting slots, but it'll try to retrieve the same items from the storage network again.
+
+== Recipe transferring
+
+The {doctitle} integrates with link:https://minecraft.curseforge.com/projects/jei[JEI (Just Enough Items)] so the player can use recipe transferring.
+
+Refined Storage will warn you when you don't have the required item present in your inventory, storage network or crafting matrix.
+Even with this warning, you can still transfer items.
+
+If you don't have some required items, but autocrafting is available for said items, you can press CTRL + CLICK to start autocrafting for said items.
+Note that you need a xref:../autocrafting/pattern.adoc[] configured for these items.
+
+include::../../partials/recoloring.adoc[]

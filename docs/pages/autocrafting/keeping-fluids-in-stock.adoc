@@ -1,0 +1,14 @@
+= Keeping fluids in stock
+
+Keeping fluids in stock work the same way as xref:keeping-items-in-stock.adoc[keeping items in stock].
+
+Create a xref:../input-and-output/fluid-interface.adoc[] with a xref:../upgrades/crafting-upgrade.adoc[] in it.
+Then, specify the fluid that you want to keep in stock by clicking a fluid container (like a bucket) in the "out" slot.
+You can change the amount by left or right clicking on the fluid.
+The fluids will now be autocrafted if needed.
+
+To make the stocked fluids available to your storage network, create an xref:../storage/external-storage.adoc[] and put it on the xref:../input-and-output/fluid-interface.adoc[].
+Put the xref:../storage/external-storage.adoc[] in fluid mode.
+
+Make sure the xref:../storage/external-storage.adoc[] is in "extract-only" mode.
+That way, Refined Storage won't attempt to insert fluids in the xref:../input-and-output/fluid-interface.adoc[] that is meant for keeping in stock.

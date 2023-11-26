@@ -1,0 +1,5 @@
+= Raw Advanced Processor
+:icon: raw-advanced-processor.png
+:from: v0.3.0-alpha
+
+The {doctitle} is used to craft a xref:advanced-processor.adoc[].

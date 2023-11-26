@@ -1,0 +1,11 @@
+A {doctitle} is an item where items from the storage system are stored on.
+It has to be put in a xref:../pages/storage/disk-drive.adoc[].
+
+The {doctitle} won't despawn when dropped in the world.
+
+== Uncrafting
+
+Sneak and right click while holding the empty {doctitle} to retrieve the various parts back:
+
+- The corresponding xref:../pages/storage/index.adoc#_fluid_storage_parts[fluid storage part]
+- xref:../pages/storage/storage-housing.adoc[]

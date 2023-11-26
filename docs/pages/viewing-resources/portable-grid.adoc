@@ -1,0 +1,28 @@
+= Portable Grid
+:icon: portable-grid.png
+:from: v1.4.5-beta
+
+The {doctitle} is a portable storage that isn't connected to a network.
+It allows you to interact with a xref:../storage/index.adoc#_storage_disks[storage disk] while not being connected to a network.
+
+As soon as you insert a xref:../storage/index.adoc#_storage_disks[storage disk], you can access the contents of your xref:../storage/index.adoc#_storage_disks[storage disk] in the grid view.
+
+It's essentially a xref:../storage/disk-drive.adoc[] and xref:grid.adoc[] in one block or item.
+It can be placed in the world, or, be used as a handheld device as well.
+
+To place it in the world hold the {doctitle} while sneaking.
+
+== Energy behavior
+
+To use the {doctitle} the item or block needs Forge Energy (FE).
+
+The {doctitle} draws energy on following actions:
+
+[cols="1,1"]
+|===
+|Action|Amount of Forge Energy drawed
+
+|Opening the {doctitle}|30 FE
+|Extracting an item or fluid from storage|3 FE
+|Inserting an item or fluid to storage|3 FE
+|===

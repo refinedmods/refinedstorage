@@ -1,0 +1,12 @@
+= Input and output
+
+- xref:getting-items-in-and-out.adoc[]
+- xref:importer.adoc[]
+- xref:exporter.adoc[]
+- xref:constructor.adoc[]
+- xref:destructor.adoc[]
+- xref:interface.adoc[]
+- xref:fluid-interface.adoc[]
+- xref:disk-manipulator.adoc[]
+- xref:reader.adoc[]
+- xref:writer.adoc[]

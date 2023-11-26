@@ -1,0 +1,87 @@
+= Getting started with autocrafting
+
+== What is autocrafting?
+
+Autocrafting is automated crafting through Refined Storage.
+
+You can already craft items manually using items from your storage network with the xref:../viewing-resources/crafting-grid.adoc[], but autocrafting makes it a tad bit easier and automated.
+
+Instead of manually moving items in the crafting matrix, you can make Refined Storage do all the work.
+
+== Patterns
+
+To teach Refined Storage a recipe to craft we use a xref:pattern-grid.adoc[].
+This xref:pattern-grid.adoc[] creates xref:pattern.adoc[patterns].
+
+A xref:pattern.adoc[] contains the recipe of the item you want to craft.
+
+== Pattern dependencies
+
+You need to create a xref:pattern.adoc[] for each sub-item you want automatically crafted.
+
+Refined Storage will first try to extract the sub-item from your storage, but if it isn't available, it will fall back to the xref:pattern.adoc[] of the sub-item to know how to create it.
+If there is no xref:pattern.adoc[] for the sub-item, the sub-item will be displayed as "missing" and the autocrafting task can't run.
+
+== Example
+
+You want to autocraft link:https://minecraft.gamepedia.com/Chest[chests].
+
+- Create a xref:pattern.adoc[] for the chest
+- Create a xref:pattern.adoc[] for the wooden planks that are used to craft the chest
+- If you don't create the pattern, and you have wooden planks, than Refined Storage will be able to use those
+- If you run out of planks, Refined Storage will not know what to do
+- If you don't create the pattern, and you don't have wooden planks, than Refined Storage will not know how to craft this item and the crafting task can't
+
+== Exact mode
+
+Exact mode is turned on by default which means every xref:pattern.adoc[] is an "exact pattern".
+This means Refined Storage takes items exactly as defined in the xref:pattern.adoc[]
+
+When Exact mode is turned off it will also match for other acceptable inputs for that crafting recipe (other types of wood, etc).
+
+== Crafters
+
+Once you created your xref:pattern.adoc[patterns], craft a xref:crafter.adoc[] and connect it to your storage network.
+
+In those xref:crafter.adoc[crafters] you'll store all your xref:pattern.adoc[patterns].
+
+== Requesting an item
+
+As soon as the relevant xref:pattern.adoc[patterns] to craft an item are stored in a xref:crafter.adoc[], you will be able to request the item through any xref:../viewing-resources/grid.adoc[].
+
+You can do this by clicking on the item you want to autocraft.
+If the item is already available and you want to request more of that item, you can use the CTRL + SHIFT key combination to open the crafting window.
+
+When requesting an item, Refined Storage will first ask how many of that item you want to craft.
+Then, it will show you what items it will take or craft.
+
+You can't start an autocrafting task if you have insufficient resources, unless you have the ability to autocraft those resources.
+
+== How autocrafting works internally
+
+Initially, when the autocrafting task is started, all the "initial" needed items and fluids are extracted from the storage network and inserted into the internal storage of the autocrafting task (crafting storage).
+
+All further actions to those items are performed in the internal storage, so the network doesn't "see" any changes while the task is running.
+
+Because all the subcrafts are done in the internal storage, the storage network can not "steal" items from autocrafting tasks.
+
+When an item is inserted through an xref:../input-and-output/importer.adoc[] or xref:../input-and-output/interface.adoc[], it will first go through the internal storage of autocrafting.
+That is prioritized.
+If the autocrafting task deems the item or fluid as necessary, it will be intercepted and the storage network will receive nothing.
+
+== Monitoring your crafting tasks
+
+Craft a xref:crafting-monitor.adoc[] and connect it to your storage network to see how the crafting task is progressing.
+
+You can also cancel autocrafting tasks from there.
+
+You can also use a xref:../wireless-networking/wireless-crafting-monitor.adoc[] to see the running crafting tasks remotely from your inventory.
+
+== Managing your patterns in a convenient way
+
+Want a convenient way to access all your xref:pattern.adoc[patterns] in the xref:crafter.adoc[crafters] of your storage network?
+Use the xref:crafter-manager.adoc[].
+
+== Speeding up your crafting tasks
+
+Insert xref:../upgrades/speed-upgrade.adoc[speed upgrades] in the xref:crafter.adoc[crafters].

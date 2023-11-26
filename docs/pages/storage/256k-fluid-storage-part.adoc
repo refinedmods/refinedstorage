@@ -1,0 +1,5 @@
+= 256k Fluid Storage Part
+:icon: 256k-fluid-storage-part.png
+:from: v0.9.0-beta
+
+The {doctitle} is used to craft the xref:256k-fluid-storage-disk.adoc[] and xref:256k-fluid-storage-block.adoc[].

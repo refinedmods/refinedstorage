@@ -1,0 +1,9 @@
+= 1k Storage Disk
+:icon: 1k-storage-disk.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-disk.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store 1.000 items.

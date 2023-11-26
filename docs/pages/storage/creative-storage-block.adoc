@@ -1,0 +1,11 @@
+= Creative Storage Block
+:icon: creative-storage-block.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-block.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store an infinite amount of items.
+
+It can only be obtained in creative mode.

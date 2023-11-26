@@ -1,0 +1,12 @@
+= Cutting Tool
+:icon: cutting-tool.png
+:from: v1.6.0
+:to: v1.7.0-alpha
+
+[.alert.alert-warning]
+****
+The Cutting Tool has been removed in v1.7.0-alpha.
+Crafting covers now uses an iron nugget instead.
+****
+
+The Cutting Tool is a tool that is used to craft xref:../utility/cover.adoc[covers].

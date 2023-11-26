@@ -1,0 +1,32 @@
+= Crafter Manager
+:icon: crafter-manager.png
+:from: v1.5.33
+
+The Crafter Manager is a block that allows you to see all your xref:pattern.adoc[patterns] in one GUI.
+
+== Naming
+
+All the xref:pattern.adoc[patterns] are listed and categorized per xref:crafter.adoc[].
+The categorization is based on the name of the xref:crafter.adoc[].
+
+To decide which name a xref:crafter.adoc[] gets, the following rules (in order) are used:
+
+1. If the xref:crafter.adoc[] is renamed with a Minecraft link:https://minecraft.gamepedia.com/Anvil[Anvil], use that name
+2. If the xref:crafter.adoc[] is connected to a machine in the world, use the name of that machine
+3. Use "Crafter" as name
+
+== Sizes
+
+One can configure the Crafter Manager size:
+
+- Stretched (default)
+- Small
+- Medium
+- Large
+
+When choosing the stretched size, the Crafter Manager will take up all the vertical screen space.
+This can be limited through the `maxRowsStretch` config option.
+
+include::../../partials/search-box.adoc[]
+
+include::../../partials/recoloring.adoc[]

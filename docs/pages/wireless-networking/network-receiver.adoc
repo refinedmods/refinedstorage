@@ -1,0 +1,13 @@
+= Network Receiver
+:icon: network-receiver.png
+:from: v0.8.13-beta
+
+The {doctitle} is the block that receives a signal from the xref:network-transmitter.adoc[].
+
+In order for the {doctitle} to work reliably the {doctitle} has to be chunkloaded.
+
+include::../../partials/recoloring.adoc[]
+
+== Using Refined Storage v1.7.x or v1.8.x?
+
+Cross dimensional functionality isn't available in this version.

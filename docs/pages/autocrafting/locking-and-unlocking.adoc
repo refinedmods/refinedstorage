@@ -1,0 +1,68 @@
+= Locking and unlocking
+:from: v1.6.6
+
+The xref:crafter.adoc[] in Refined Storage supports locking mechanisms.
+
+Locking and unlocking a xref:crafter.adoc[] only applies to processing recipes.
+
+The locking and unlocking functionality also has to be enabled by configuring the xref:crafter.adoc[] mode.
+
+== Crafter modes
+
+=== Ignore redstone signal (default)
+
+Ignores redstone signals.
+This is the default.
+
+=== Redstone signal locks autocrafting
+
+- If a xref:crafter.adoc[] is locked, it can't insert items or fluids to the connected inventory.
+- If a xref:crafter.adoc[] is unlocked, it can insert items or fluids to the connected inventory.
+
+=== Redstone signal unlocks autocrafting
+
+This is the opposite of the "Redstone signal locks autocrafting" mode.
+
+=== Redstone pulse inserts next set
+
+This mode was primarily introduced to support a concept called "blocking mode".
+
+Blocking mode is primarily utilised for processing recipes, where the machine that does the processing can only handle 1 recipe at a time.
+
+If the xref:crafter.adoc[] is in "Redstone pulse inserts next set" mode, this is the flow:
+
+- The xref:crafter.adoc[] will automatically go in an unlocked state
+- As soon as you request a recipe in this xref:crafter.adoc[], it will send out 1 set of items and fluids defined in the xref:pattern.adoc[]
+- The xref:crafter.adoc[] now goes in a locked state, and it won't push out any more items and fluids
+- The xref:crafter.adoc[] will stay locked until it receives a redstone pulse
+
+When you apply a redstone pulse:
+
+- The xref:crafter.adoc[] will unlock itself
+- The xref:crafter.adoc[] pushes the next set of items and fluids, if any
+- If there were any items and fluids to push, the xref:crafter.adoc[] will lock itself again
+
+Generally, you'd apply a redstone signal if the recipe you're processing has completed.
+It is up to the player to handle that.
+
+== Common mistakes with "Redstone pulse inserts next set"
+
+- Wrong redstone flow causes the xref:crafter.adoc[] to lock when it is supposed to unlock
+- When testing your contraption, accidentally locking the xref:crafter.adoc[] and then wondering why your xref:crafter.adoc[] doesn't process anything next time you request something
+
+=== Crafter deadlock
+
+If you use an xref:../input-and-output/importer.adoc[] on a chest to import the final processed item, and also using a comparator to send the redstone signal to the xref:crafter.adoc[] to unlock again:
+
+- If the xref:../input-and-output/importer.adoc[] imports too fast AND
+- the comparator doesn't pick up the item being in the chest AND
+- by not picking up the item, thus, not sending out a redstone signal
+
+You'd cause a deadlock because the xref:crafter.adoc[] doesn't receive a redstone pulse, and the xref:crafter.adoc[] would keep waiting forever.
+
+The solution for this is to only enable the xref:../input-and-output/importer.adoc[] AFTER the redstone pulse is sent to the xref:crafter.adoc[].
+Use the xref:../input-and-output/importer.adoc[] redstone settings to achieve this.
+
+== Other resources
+
+- link:https://www.youtube.com/watch?v=c9s-IfDPKxw[Demo video]

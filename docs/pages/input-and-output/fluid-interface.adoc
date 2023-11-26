@@ -1,0 +1,26 @@
+= Fluid Interface
+:icon: fluid-interface.png
+:from: v0.9.0-beta
+
+The {doctitle} is the same as an xref:interface.adoc[] but for fluids.
+
+It has 2 internal tanks, one for input and one for output.
+
+== Input slot
+
+The {doctitle} has an input slot to import the contents of fluid containers (like a filled bucket).
+
+You can also interact with the input tank by using pipes from other mods.
+
+== Output configuration
+
+- Click a fluid container (like a filled bucket) in the "Out" slot to configure the output fluid.
+- Use left or right click on the fluid to change the mB amount.
+- Use shift to clear the fluid slot.
+- You can also interact with the output tank by using pipes from other mods.
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]
+- xref:../upgrades/stack-upgrade.adoc[]
+- xref:../upgrades/crafting-upgrade.adoc[]

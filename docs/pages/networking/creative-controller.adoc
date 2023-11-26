@@ -1,0 +1,9 @@
+= Creative Controller
+:from: v0.3.0-alpha
+:icon: controller.png
+
+The {doctitle} is the same as a regular xref:controller.adoc[] but has infinite energy.
+
+It can only be obtained in creative mode.
+
+include::../../partials/recoloring.adoc[]

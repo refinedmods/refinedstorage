@@ -1,0 +1,7 @@
+= Creative Wireless Fluid Grid
+:from: v1.4.0-beta
+:icon: wireless-fluid-grid.png
+
+The {doctitle} is the same as a regular xref:wireless-fluid-grid.adoc[] but has infinite energy.
+
+It can only be obtained in creative mode.

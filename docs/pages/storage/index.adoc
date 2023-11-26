@@ -1,0 +1,61 @@
+= Storage
+
+- xref:storing-externally.adoc[]
+- xref:storing-fluids.adoc[]
+
+== Network devices
+
+- xref:disk-drive.adoc[]
+- xref:external-storage.adoc[]
+
+[#_storage_parts]
+== Storage parts
+
+- xref:1k-storage-part.adoc[]
+- xref:4k-storage-part.adoc[]
+- xref:16k-storage-part.adoc[]
+- xref:64k-storage-part.adoc[]
+
+[#_storage_disks]
+== Storage disks
+
+- xref:1k-storage-disk.adoc[]
+- xref:4k-storage-disk.adoc[]
+- xref:16k-storage-disk.adoc[]
+- xref:64k-storage-disk.adoc[]
+- xref:creative-storage-disk.adoc[]
+
+[#_storage_blocks]
+== Storage blocks
+
+- xref:1k-storage-block.adoc[]
+- xref:4k-storage-block.adoc[]
+- xref:16k-storage-block.adoc[]
+- xref:64k-storage-block.adoc[]
+- xref:creative-storage-block.adoc[]
+
+[#_fluid_storage_parts]
+== Fluid storage parts
+
+- xref:64k-fluid-storage-part.adoc[]
+- xref:256k-fluid-storage-part.adoc[]
+- xref:1024k-fluid-storage-part.adoc[]
+- xref:4096k-fluid-storage-part.adoc[]
+
+[#_fluid_storage_disks]
+== Fluid storage disks
+
+- xref:64k-fluid-storage-disk.adoc[]
+- xref:256k-fluid-storage-disk.adoc[]
+- xref:1024k-fluid-storage-disk.adoc[]
+- xref:4096k-fluid-storage-disk.adoc[]
+- xref:creative-fluid-storage-disk.adoc[]
+
+[#_fluid_storage_blocks]
+== Fluid storage blocks
+
+- xref:64k-fluid-storage-block.adoc[]
+- xref:256k-fluid-storage-block.adoc[]
+- xref:1024k-fluid-storage-block.adoc[]
+- xref:4096k-fluid-storage-block.adoc[]
+- xref:creative-fluid-storage-block.adoc[]
