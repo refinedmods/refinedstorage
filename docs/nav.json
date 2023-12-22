@@ -20,6 +20,11 @@
     "icon": "bi-question-circle-fill"
   },
   {
+    "title": "Need help?",
+    "ref": "need-help.adoc",
+    "icon": "bi-person-raised-hand"
+  },
+  {
     "title": "Networking",
     "ref": "networking/index.adoc",
     "children": [

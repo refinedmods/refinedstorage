@@ -1,9 +1,0 @@
-{
-  "name": "Refined Storage",
-  "version": "0.0.0",
-  "pagesPath": "pages/",
-  "pageTemplateOverrides": {
-    "index.adoc": "refined-storage-index"
-  },
-  "assetsPath": "assets/"
-}

@@ -47,10 +47,6 @@ No, there isn't.
 
 No, I won't.
 
-== What versions of Minecraft are supported?
-
-See xref:whats-new.adoc#_version_support[version support].
-
 == Is there a way to have infinite Wireless Transmitter range?
 
 It's not possible if you're using the base Refined Storage mod, or Refined Storage Addons.
