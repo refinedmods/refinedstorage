@@ -480,13 +480,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Fixed duplication bug with the Constructor.
 
-## [1.9.2b-beta] - 2020-09-11
+## [1.9.2-beta.2] - 2020-09-11
 
 ### Fixed
 
 -   Fixed duplication bug with the Constructor.
 
-## [1.9.2-beta] - 2020-07-17
+## [1.9.2-beta.1] - 2020-07-17
 
 ### Added
 
@@ -3599,11 +3599,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.9.4]: https://github.com/refinedmods/refinedstorage/compare/v1.9.3-beta...v1.9.4
 
-[1.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2b-beta...v1.9.3-beta
+[1.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta.2...v1.9.3-beta
 
-[1.9.2b-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta...v1.9.2b-beta
+[1.9.2-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta.1...v1.9.2-beta.2
 
-[1.9.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.1-beta...v1.9.2-beta
+[1.9.2-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.9.1-beta...v1.9.2-beta.1
 
 [1.9.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.0-beta...v1.9.1-beta
 
