@@ -19,7 +19,7 @@
                 <span>
                     <i class="bi bi-calendar"></i>
                     <span
-                            th:text="${#dates.format(currentRelease.release.createdAt, 'dd-MM-yyyy')}"
+                            th:text="${#dates.format(currentRelease.release.createdAt, 'yyyy-MM-dd')}"
                             th:remove="tag"></span>
                 </span>
                 <span>
@@ -85,7 +85,7 @@
                         <span>
                             <i class="bi bi-calendar"></i>
                             <span
-                                    th:text="${#dates.format(otherRelease.release.createdAt, 'dd-MM-yyyy')}"
+                                    th:text="${#dates.format(otherRelease.release.createdAt, 'yyyy-MM-dd')}"
                                     th:remove="tag"></span>
                         </span>
                         <span>
