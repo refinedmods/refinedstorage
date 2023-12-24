@@ -63,7 +63,7 @@
     <div class="accordion" id="other-releases">
         <div class="accordion-item" th:each="otherRelease : ${otherReleases}">
             <h2 class="accordion-header">
-                <button class="accordion-button d-flex gap-2"
+                <button class="accordion-button d-flex gap-2 collapsed"
                         type="button"
                         data-bs-toggle="collapse"
                         th:attr="data-bs-target='#collapse-' + ${otherRelease.slug}, aria-controls='collapse-' + ${otherRelease.slug}">
