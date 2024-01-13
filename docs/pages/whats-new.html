@@ -5,7 +5,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div th:if="${currentRelease != null}" class="card">
+    <main th:if="${currentRelease != null}" class="card">
         <div class="card-body">
             <h2 class="card-title">
                 In version <span th:text="${currentRelease.release.getName()}" th:remove="tag"></span>
@@ -56,7 +56,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </main>
 
     <h3 class="mt-2 mb-2">Other releases</h3>
 
