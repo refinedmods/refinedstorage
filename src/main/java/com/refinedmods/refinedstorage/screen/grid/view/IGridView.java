@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 public interface IGridView {
     List<IGridStack> getStacks();
 
-    void setStacks(List<IGridStack> stacks);
+    void setStacks(List<? extends IGridStack> stacks);
 
     @Nullable
     IGridStack get(UUID id);

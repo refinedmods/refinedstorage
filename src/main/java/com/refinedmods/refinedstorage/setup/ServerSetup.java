@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.command.network.GetNetworkCommand;
 import com.refinedmods.refinedstorage.command.network.ListNetworkCommand;
 import com.refinedmods.refinedstorage.command.pattern.PatternDumpCommand;
 import net.minecraft.commands.Commands;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 public class ServerSetup {
     @SubscribeEvent

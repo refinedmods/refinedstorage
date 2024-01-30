@@ -116,9 +116,9 @@ public class ScrollbarWidget implements GuiEventListener {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
         if (isEnabled()) {
-            setOffset(offset + Math.max(Math.min(-(int) scrollDelta, 1), -1));
+            setOffset(offset + Math.max(Math.min(-(int) delta, 1), -1));
 
             return true;
         }

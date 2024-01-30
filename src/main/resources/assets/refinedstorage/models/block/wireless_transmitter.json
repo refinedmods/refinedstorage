@@ -127,7 +127,7 @@
             15
           ],
           "texture": "#cutout",
-          "forge_data": {
+          "neoforge_data": {
             "block_light": 15,
             "sky_light": 15
           }
@@ -140,7 +140,7 @@
             8
           ],
           "texture": "#cutout",
-          "forge_data": {
+          "neoforge_data": {
             "block_light": 15,
             "sky_light": 15
           }
@@ -168,7 +168,7 @@
             16
           ],
           "texture": "#cutout",
-          "forge_data": {
+          "neoforge_data": {
             "block_light": 15,
             "sky_light": 15
           }
@@ -181,7 +181,7 @@
             16
           ],
           "texture": "#cutout",
-          "forge_data": {
+          "neoforge_data": {
             "block_light": 15,
             "sky_light": 15
           }
@@ -209,7 +209,7 @@
             16
           ],
           "texture": "#cutout",
-          "forge_data": {
+          "neoforge_data": {
             "block_light": 15,
             "sky_light": 15
           }
@@ -222,7 +222,7 @@
             16
           ],
           "texture": "#cutout",
-          "forge_data": {
+          "neoforge_data": {
             "block_light": 15,
             "sky_light": 15
           }

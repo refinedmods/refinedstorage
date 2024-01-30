@@ -9,16 +9,15 @@ import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.grid.AlternativesScreen;
-import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
+import com.refinedmods.refinedstorage.screen.widget.SmallCheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,8 +25,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
@@ -114,7 +112,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTicks);
 
         super.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -235,8 +233,8 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
         }
     }
 
-    public CheckboxWidget addCheckBox(int x, int y, Component text, boolean checked, Consumer<Checkbox> onPress) {
-        CheckboxWidget checkBox = new CheckboxWidget(x, y, text, checked, onPress);
+    public SmallCheckboxWidget addCheckBox(int x, int y, Component text, boolean checked, Consumer<SmallCheckboxWidget> onPress) {
+        SmallCheckboxWidget checkBox = new SmallCheckboxWidget(x, y, text, checked, onPress);
 
         this.addRenderableWidget(checkBox);
 
@@ -277,7 +275,7 @@ public abstract class BaseScreen<T extends AbstractContainerMenu> extends Abstra
                 renderQuantity(graphics, x, y, text, textColor);
             }
         } catch (Throwable t) {
-            logger.warn("Couldn't render stack: {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
+            logger.warn("Couldn't render stack: {}", BuiltInRegistries.ITEM.getKey(stack.getItem()));
         }
     }
 

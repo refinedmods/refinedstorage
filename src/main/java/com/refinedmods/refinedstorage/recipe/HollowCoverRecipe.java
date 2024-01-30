@@ -19,8 +19,8 @@ import java.util.List;
 public class HollowCoverRecipe extends CustomRecipe {
     public static RecipeSerializer<HollowCoverRecipe> SERIALIZER = new SimpleCraftingRecipeSerializer<>(HollowCoverRecipe::new);
 
-    public HollowCoverRecipe(ResourceLocation id, CraftingBookCategory category) {
-        super(id, category);
+    public HollowCoverRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     public static boolean stackMatches(ItemStack first) {

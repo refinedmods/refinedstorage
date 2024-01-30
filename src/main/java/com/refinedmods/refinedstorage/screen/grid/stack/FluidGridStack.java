@@ -1,27 +1,35 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
-import com.google.common.collect.Lists;
+import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
+import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
+import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.api.util.IStackList;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
+import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.IReverseTag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FluidGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
@@ -42,12 +50,13 @@ public class FluidGridStack implements IGridStack {
     private String cachedModId;
     private String cachedModName;
 
-    public FluidGridStack(UUID id, @Nullable UUID otherId, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable) {
+    public FluidGridStack(UUID id, @Nullable UUID otherId, FluidStack stack,
+                          boolean craftable, @Nullable StorageTrackerEntry entry) {
         this.id = id;
         this.otherId = otherId;
         this.stack = stack;
-        this.entry = entry;
         this.craftable = craftable;
+        this.entry = entry;
     }
 
     public void setZeroed(boolean zeroed) {
@@ -85,7 +94,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 cachedName = stack.getDisplayName().getString();
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve fluid name of {}", ForgeRegistries.FLUIDS.getKey(stack.getFluid()));
+                LOGGER.warn("Could not retrieve fluid name of {}", BuiltInRegistries.FLUID.getKey(stack.getFluid()));
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -97,7 +106,7 @@ public class FluidGridStack implements IGridStack {
     @Override
     public String getModId() {
         if (cachedModId == null) {
-            ResourceLocation registryName = ForgeRegistries.FLUIDS.getKey(stack.getFluid());
+            ResourceLocation registryName = BuiltInRegistries.FLUID.getKey(stack.getFluid());
 
             if (registryName != null) {
                 cachedModId = registryName.getNamespace();
@@ -125,14 +134,13 @@ public class FluidGridStack implements IGridStack {
     @Override
     public Set<String> getTags() {
         if (cachedTags == null) {
-            cachedTags = ForgeRegistries.FLUIDS
-                .tags()
-                .getReverseTag(stack.getFluid())
-                .stream()
-                .flatMap(IReverseTag::getTagKeys)
-                .map(TagKey::location)
-                .map(ResourceLocation::getPath)
-                .collect(Collectors.toSet());
+            cachedTags = BuiltInRegistries.FLUID.getResourceKey(stack.getFluid())
+                .flatMap(k -> BuiltInRegistries.FLUID.getHolder(k)
+                    .map(holder -> holder.tags()
+                        .map(TagKey::location)
+                        .map(ResourceLocation::getPath)
+                        .collect(Collectors.toSet())))
+                .orElse(Collections.emptySet());
         }
 
         return cachedTags;
@@ -145,7 +153,7 @@ public class FluidGridStack implements IGridStack {
             try {
                 tooltip = Lists.newArrayList(stack.getDisplayName());
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve fluid tooltip of {}", ForgeRegistries.FLUIDS.getKey(stack.getFluid()));
+                LOGGER.warn("Could not retrieve fluid tooltip of {}", BuiltInRegistries.FLUID.getKey(stack.getFluid()));
                 tooltip = Lists.newArrayList(Component.literal(ERROR_PLACEHOLDER));
             }
 
@@ -216,5 +224,38 @@ public class FluidGridStack implements IGridStack {
     @Override
     public void setTrackerEntry(@Nullable StorageTrackerEntry entry) {
         this.entry = entry;
+    }
+
+    public static FluidGridStack of(
+        final IStorageCache<FluidStack> cache,
+        @Nullable final IStackList<FluidStack> craftablesList,
+        final IStorageTracker<FluidStack> storageTracker,
+        final StackListResult<FluidStack> delta
+    ) {
+        StackListEntry<FluidStack> craftingEntry = craftablesList == null ? null : cache.getCraftablesList().getEntry(delta.getStack(), IComparer.COMPARE_NBT);
+        return new FluidGridStack(
+            delta.getId(),
+            craftingEntry != null ? craftingEntry.getId() : null,
+            delta.getStack().copy(), // copy is very important as the same stack will be shared between server<->client on single player
+            false,
+            storageTracker.get(delta.getStack())
+        );
+    }
+
+    public static FluidGridStack of(
+        final StackListEntry<FluidStack> entry,
+        final IStorageTracker<FluidStack> storageTracker,
+        @Nullable final IStackList<FluidStack> oppositeList,
+        final boolean craftable
+    ) {
+        StackListEntry<FluidStack> otherEntry =
+            oppositeList == null ? null : oppositeList.getEntry(entry.getStack(), IComparer.COMPARE_NBT);
+        return new FluidGridStack(
+            entry.getId(),
+            otherEntry != null ? otherEntry.getId() : null,
+            entry.getStack().copy(), // copy is very important as the same stack will be shared between server<->client on single player
+            craftable,
+            storageTracker.get(entry.getStack())
+        );
     }
 }

@@ -8,12 +8,14 @@ import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
 import com.refinedmods.refinedstorage.container.AlternativesContainerMenu;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
+import com.refinedmods.refinedstorage.screen.widget.SmallCheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -21,10 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.IReverseTag;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -77,12 +77,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         if (item != null) {
             lines.add(new ItemLine(item));
 
-            Collection<TagKey<Item>> tagsOfItem = ForgeRegistries.ITEMS
-                .tags()
-                .getReverseTag(item.getItem())
-                .stream()
-                .flatMap(IReverseTag::getTagKeys)
-                .collect(Collectors.toSet());
+            Collection<TagKey<Item>> tagsOfItem = BuiltInRegistries.ITEM.getResourceKey(item.getItem())
+                .flatMap(k -> BuiltInRegistries.ITEM.getHolder(k)
+                    .map(holder -> holder.tags().collect(Collectors.toSet())))
+                .orElse(Collections.emptySet());
 
             for (TagKey<Item> owningTag : tagsOfItem) {
                 lines.add(new TagLine(owningTag.location(), GridBlockEntity.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag.location())));
@@ -91,7 +89,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
                 ItemListLine line = new ItemListLine();
 
-                for (Item itemInTag : ForgeRegistries.ITEMS.tags().getTag(owningTag)) {
+                for (Holder<Item> itemInTag : BuiltInRegistries.ITEM.getTagOrEmpty(owningTag)) {
                     if (itemCount > 0 && itemCount % 8 == 0) {
                         lines.add(line);
                         line = new ItemListLine();
@@ -107,12 +105,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
         } else if (fluid != null) {
             lines.add(new FluidLine(fluid));
 
-            Collection<TagKey<Fluid>> tagsOfFluid = ForgeRegistries.FLUIDS
-                .tags()
-                .getReverseTag(fluid.getFluid())
-                .stream()
-                .flatMap(IReverseTag::getTagKeys)
-                .collect(Collectors.toSet());
+            Collection<TagKey<Fluid>> tagsOfFluid = BuiltInRegistries.FLUID.getResourceKey(fluid.getFluid())
+                .flatMap(k -> BuiltInRegistries.FLUID.getHolder(k)
+                    .map(holder -> holder.tags().collect(Collectors.toSet())))
+                .orElse(Collections.emptySet());
 
             for (TagKey<Fluid> owningTag : tagsOfFluid) {
                 lines.add(new TagLine(owningTag.location(), GridBlockEntity.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag.location())));
@@ -121,7 +117,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
                 FluidListLine line = new FluidListLine();
 
-                for (Fluid fluidInTag : ForgeRegistries.FLUIDS.tags().getTag(owningTag)) {
+                for (Holder<Fluid> fluidInTag : BuiltInRegistries.FLUID.getTagOrEmpty(owningTag)) {
                     if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();
@@ -222,8 +218,8 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
     }
 
     @Override
-    public boolean mouseScrolled(double x, double y, double delta) {
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
+        return this.scrollbar.mouseScrolled(x, y, z, delta) || super.mouseScrolled(x, y, z, delta);
     }
 
     @Override
@@ -248,7 +244,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
             if (line instanceof TagLine) {
                 TagLine tagLine = (TagLine) line;
 
-                if (tagLine.widget.selected()) {
+                if (tagLine.widget.isSelected()) {
                     allowed.add(tagLine.tagName);
                 }
             }
@@ -313,14 +309,13 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainerMenu> {
 
     private class TagLine implements Line {
         private final ResourceLocation tagName;
-        private final CheckboxWidget widget;
+        private final SmallCheckboxWidget widget;
 
         public TagLine(ResourceLocation tagName, boolean checked) {
             this.tagName = tagName;
             this.widget = addCheckBox(-100, -100, Component.literal(RenderUtils.shorten(tagName.toString(), 22)), checked, btn -> {
                 // NO OP
             });
-
             widget.setFGColor(0xFF373737);
             widget.setShadow(false);
         }

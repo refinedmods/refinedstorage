@@ -5,8 +5,7 @@ import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;

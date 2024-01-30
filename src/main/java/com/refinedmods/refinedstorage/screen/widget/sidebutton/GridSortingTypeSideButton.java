@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
-import com.refinedmods.refinedstorage.integration.inventorytweaks.InventoryTweaksIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
@@ -20,7 +20,8 @@ public class GridSortingTypeSideButton extends SideButton {
 
     @Override
     protected String getSideButtonTooltip() {
-        return I18n.get("sidebutton.refinedstorage.grid.sorting.type") + "\n" + ChatFormatting.GRAY + I18n.get("sidebutton.refinedstorage.grid.sorting.type." + grid.getSortingType());
+        return I18n.get("sidebutton.refinedstorage.grid.sorting.type") + "\n" + ChatFormatting.GRAY +
+            I18n.get("sidebutton.refinedstorage.grid.sorting.type." + grid.getSortingType());
     }
 
     @Override
@@ -47,12 +48,8 @@ public class GridSortingTypeSideButton extends SideButton {
         } else if (type == IGrid.SORTING_TYPE_ID) {
             type = IGrid.SORTING_TYPE_LAST_MODIFIED;
         } else if (type == IGrid.SORTING_TYPE_LAST_MODIFIED) {
-            if (grid.getGridType() == GridType.FLUID || !InventoryTweaksIntegration.isLoaded()) {
-                type = IGrid.SORTING_TYPE_QUANTITY;
-            } else {
-                type = IGrid.SORTING_TYPE_INVENTORYTWEAKS;
-            }
-        } else if (type == IGrid.SORTING_TYPE_INVENTORYTWEAKS) {
+            type = IGrid.SORTING_TYPE_QUANTITY;
+        } else {
             type = IGrid.SORTING_TYPE_QUANTITY;
         }
 

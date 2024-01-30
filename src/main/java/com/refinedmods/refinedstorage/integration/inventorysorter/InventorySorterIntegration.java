@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.integration.inventorysorter;
 
 import com.refinedmods.refinedstorage.RS;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.InterModComms;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModList;
 
 public class InventorySorterIntegration {
     private static final String ID = "inventorysorter";

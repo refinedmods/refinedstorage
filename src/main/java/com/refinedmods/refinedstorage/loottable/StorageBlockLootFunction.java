@@ -12,17 +12,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public class StorageBlockLootFunction extends LootItemConditionalFunction {
-    protected StorageBlockLootFunction(LootItemCondition[] conditions) {
-        super(conditions);
+public class StorageBlockLootFunction implements LootItemFunction {
+    @Override
+    public LootItemFunctionType getType() {
+        return RSLootFunctions.STORAGE_BLOCK;
     }
 
     @Override
-    public ItemStack run(ItemStack stack, LootContext lootContext) {
+    public ItemStack apply(ItemStack stack, LootContext lootContext) {
         BlockEntity blockEntity = lootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
 
         // This code needs to work without the node being removed as well.
@@ -47,17 +49,5 @@ public class StorageBlockLootFunction extends LootItemConditionalFunction {
         }
 
         return stack;
-    }
-
-    @Override
-    public LootItemFunctionType getType() {
-        return RSLootFunctions.STORAGE_BLOCK;
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<StorageBlockLootFunction> {
-        @Override
-        public StorageBlockLootFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditions) {
-            return new StorageBlockLootFunction(conditions);
-        }
     }
 }

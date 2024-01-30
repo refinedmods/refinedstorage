@@ -15,6 +15,10 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryLis
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,14 +28,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class StorageMonitorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final int DEPOSIT_ALL_MAX_DELAY = 500;
@@ -143,7 +145,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
-            player.getInventory().setItem(player.getInventory().selected, network.insertItemTracked(toInsert, toInsert.getCount()));
+            player.getInventory()
+                .setItem(player.getInventory().selected, network.insertItemTracked(toInsert, toInsert.getCount()));
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
@@ -158,7 +161,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             return;
         }
 
-        if (!result.getValue().isEmpty() && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE).isEmpty()) {
+        if (!result.getValue().isEmpty() &&
+            network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE).isEmpty()) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(toInsert, false);
@@ -169,7 +173,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
             ItemStack container = result.getLeft();
             if (!player.getInventory().add(container.copy())) {
-                Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), container);
+                Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(),
+                    container);
             }
         }
     }
@@ -218,15 +223,21 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
         boolean shift = player.isCrouching();
         if (shift) {
-            NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).ifPresent(fluidHandler -> {
+            NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
+                IFluidHandlerItem fluidHandler = bucket.getCapability(Capabilities.FluidHandler.ITEM);
+                if (fluidHandler == null) {
+                    return;
+                }
                 network.getFluidStorageTracker().changed(player, stack.copy());
 
-                fluidHandler.fill(network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.fill(network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM),
+                    IFluidHandler.FluidAction.EXECUTE);
 
                 if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
-                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
+                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(),
+                        player.getZ(), fluidHandler.getContainer());
                 }
-            }));
+            });
         }
     }
 
@@ -303,7 +314,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
                 ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
                 return stored != null ? stored.getCount() : 0;
             } else {
-                return network.getItemStorageCache().getList().getStacks(toCheck).stream().mapToInt(entry -> entry.getStack().getCount()).sum();
+                return network.getItemStorageCache().getList().getStacks(toCheck).stream()
+                    .mapToInt(entry -> entry.getStack().getCount()).sum();
             }
 
         } else if (getType() == IType.FLUIDS) {

@@ -5,20 +5,22 @@ import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.item.*;
 import com.refinedmods.refinedstorage.util.ColorMap;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 public class RSCreativeModeTabItems {
     private RSCreativeModeTabItems() {
     }
 
     public static void register(RegisterEvent.RegisterHelper<CreativeModeTab> helper) {
-        helper.register("general", CreativeModeTab.builder()
+        helper.register(new ResourceLocation(RS.ID, "general"), CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.refinedstorage"))
             .icon(() -> new ItemStack(RSBlocks.CREATIVE_CONTROLLER.get(ColorMap.DEFAULT_COLOR).get()))
             .displayItems((params, output) -> RSCreativeModeTabItems.append(output))
@@ -129,7 +131,7 @@ public class RSCreativeModeTabItems {
             addCovers(output, coverExampleStack);
             return;
         }
-        for (Block block : ForgeRegistries.BLOCKS.getValues()) {
+        for (Block block : BuiltInRegistries.BLOCK) {
             Item item = Item.byBlock(block);
             if (item == Items.AIR) {
                 continue;
@@ -150,12 +152,12 @@ public class RSCreativeModeTabItems {
         output.accept(hollowCoverStack);
     }
 
-    private static void add(CreativeModeTab.Output output, ColorMap<BlockItem> cm) {
+    private static void add(CreativeModeTab.Output output, ColorMap<Item, ? extends Item> cm) {
         cm.values().forEach(c -> add(output, c));
     }
 
     private static void add(CreativeModeTab.Output output, ItemStorageType type) {
-        RegistryObject<StoragePartItem> part = RSItems.ITEM_STORAGE_PARTS.get(type);
+        DeferredHolder<Item, StoragePartItem> part = RSItems.ITEM_STORAGE_PARTS.get(type);
         if (part != null) {
             add(output, part);
         }
@@ -171,7 +173,7 @@ public class RSCreativeModeTabItems {
     }
 
     private static void add(CreativeModeTab.Output output, FluidStorageType type) {
-        RegistryObject<FluidStoragePartItem> part = RSItems.FLUID_STORAGE_PARTS.get(type);
+        DeferredHolder<Item, FluidStoragePartItem> part = RSItems.FLUID_STORAGE_PARTS.get(type);
         if (part != null) {
             add(output, part);
         }
@@ -182,7 +184,7 @@ public class RSCreativeModeTabItems {
         add(output, RSItems.UPGRADE_ITEMS.get(type));
     }
 
-    private static void add(CreativeModeTab.Output output, RegistryObject<? extends Item> ro) {
+    private static void add(CreativeModeTab.Output output, DeferredHolder<Item, ? extends Item> ro) {
         output.accept(ro.get());
     }
 }

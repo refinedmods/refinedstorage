@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
  * This {@link FunctionalInterface} is used to define a draw/render function.
  * This function use x and y coords and the element to draw.
  *
- * @param <T> the element to draw, usually {@link String}, {@link net.minecraft.world.item.ItemStack} or {@link net.minecraftforge.fluids.FluidStack}
+ * @param <T> the element to draw, usually {@link String}, {@link net.minecraft.world.item.ItemStack} or {@link net.neoforged.neoforge.fluids.FluidStack}
  */
 @FunctionalInterface
 public interface IElementDrawer<T> {

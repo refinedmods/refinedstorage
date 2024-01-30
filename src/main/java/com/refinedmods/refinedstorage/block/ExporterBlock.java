@@ -24,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 
 public class ExporterBlock extends CableBlock {
     private static final VoxelShape LINE_NORTH_1 = box(6, 6, 0, 10, 10, 2);
@@ -117,8 +116,7 @@ public class ExporterBlock extends CableBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getLocation())) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<ExporterBlockEntity>(
                     Component.translatable("gui.refinedstorage.exporter"),
                     (blockEntity, windowId, inventory, p) -> new ExporterContainerMenu(blockEntity, player, windowId),

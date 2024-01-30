@@ -1,45 +1,41 @@
 package com.refinedmods.refinedstorage.recipe;
 
-import com.google.gson.JsonObject;
+import java.util.Objects;
+
+import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nullable;
 
 public class UpgradeWithEnchantedBookRecipeSerializer implements RecipeSerializer<UpgradeWithEnchantedBookRecipe> {
     @Override
-    public UpgradeWithEnchantedBookRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-        JsonObject enchantmentInfo = json.getAsJsonObject("enchantment");
-
-        ItemStack result = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.getAsJsonPrimitive("result").getAsString())));
-        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentInfo.getAsJsonPrimitive("id").getAsString()));
-
-        int level = 1;
-        if (enchantmentInfo.has("level")) {
-            level = enchantmentInfo.getAsJsonPrimitive("level").getAsInt();
-        }
-
-        return new UpgradeWithEnchantedBookRecipe(recipeId, enchantment, level, result);
-    }
-
-    @Nullable
-    @Override
-    public UpgradeWithEnchantedBookRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-        ItemStack result = buffer.readItem();
-        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
-        int level = buffer.readInt();
-
-        return new UpgradeWithEnchantedBookRecipe(recipeId, enchantment, level, result);
+    public Codec<UpgradeWithEnchantedBookRecipe> codec() {
+        return UpgradeWithEnchantedBookRecipe.CODEC;
     }
 
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, UpgradeWithEnchantedBookRecipe recipe) {
-        buffer.writeItem(recipe.getResult());
-        buffer.writeResourceLocation(ForgeRegistries.ENCHANTMENTS.getKey(recipe.getEnchant().enchantment));
-        buffer.writeInt(recipe.getEnchant().level);
+    public UpgradeWithEnchantedBookRecipe fromNetwork(final FriendlyByteBuf buf) {
+        final Holder<Item> result = BuiltInRegistries.ITEM.getHolder(ResourceKey.create(
+            Registries.ITEM,
+            buf.readResourceLocation()
+        )).orElseThrow();
+        final Holder<Enchantment> enchantment = BuiltInRegistries.ENCHANTMENT.getHolder(ResourceKey.create(
+            Registries.ENCHANTMENT,
+            buf.readResourceLocation()
+        )).orElseThrow();
+        final int level = buf.readInt();
+        return new UpgradeWithEnchantedBookRecipe(enchantment, level, result);
+    }
+
+    @Override
+    public void toNetwork(final FriendlyByteBuf buf, final UpgradeWithEnchantedBookRecipe recipe) {
+        buf.writeResourceLocation(recipe.getResultItem().unwrapKey().orElseThrow().location());
+        buf.writeResourceLocation(Objects.requireNonNull(recipe.getEnchantmentId()));
+        buf.writeInt(recipe.getEnchantmentLevel());
     }
 }

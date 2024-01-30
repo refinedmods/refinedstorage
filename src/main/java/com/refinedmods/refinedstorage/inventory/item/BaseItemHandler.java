@@ -3,8 +3,7 @@ package com.refinedmods.refinedstorage.inventory.item;
 import com.refinedmods.refinedstorage.inventory.listener.InventoryListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
-
+import net.neoforged.neoforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;

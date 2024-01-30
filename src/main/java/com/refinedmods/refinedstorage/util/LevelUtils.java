@@ -1,7 +1,12 @@
 package com.refinedmods.refinedstorage.util;
 
-import com.mojang.authlib.GameProfile;
 import com.refinedmods.refinedstorage.render.Styles;
+
+import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.Nullable;
+
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -12,21 +17,16 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 
 public final class LevelUtils {
     private LevelUtils() {
@@ -40,29 +40,26 @@ public final class LevelUtils {
         }
     }
 
-    public static IItemHandler getItemHandler(@Nullable BlockEntity blockEntity, Direction side) {
-        if (blockEntity == null) {
+    public static IItemHandler getItemHandler(@Nullable Level level, BlockPos pos, Direction side) {
+        if (level == null) {
             return null;
         }
-
-        IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).orElse(null);
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, side);
         if (handler == null) {
-            if (side != null && blockEntity instanceof WorldlyContainer) {
-                handler = new SidedInvWrapper((WorldlyContainer) blockEntity, side);
-            } else if (blockEntity instanceof Container) {
-                handler = new InvWrapper((Container) blockEntity);
+            if (level instanceof WorldlyContainer) {
+                handler = new SidedInvWrapper((WorldlyContainer) level, side);
+            } else if (level instanceof Container) {
+                handler = new InvWrapper((Container) level);
             }
         }
-
         return handler;
     }
 
-    public static IFluidHandler getFluidHandler(@Nullable BlockEntity blockEntity, Direction side) {
-        if (blockEntity != null) {
-            return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).orElse(null);
+    public static IFluidHandler getFluidHandler(@Nullable Level level, BlockPos pos, Direction side) {
+        if (level == null) {
+            return null;
         }
-
-        return null;
+        return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, side);
     }
 
     public static FakePlayer getFakePlayer(ServerLevel level, @Nullable UUID owner) {
@@ -80,7 +77,8 @@ public final class LevelUtils {
     }
 
     public static void sendNoPermissionMessage(Player player) {
-        player.sendSystemMessage(Component.translatable("misc.refinedstorage.security.no_permission").setStyle(Styles.RED));
+        player.sendSystemMessage(
+            Component.translatable("misc.refinedstorage.security.no_permission").setStyle(Styles.RED));
     }
 
     public static HitResult rayTracePlayer(Level level, Player player) {

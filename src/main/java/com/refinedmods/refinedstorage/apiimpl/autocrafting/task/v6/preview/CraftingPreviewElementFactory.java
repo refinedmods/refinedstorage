@@ -7,8 +7,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

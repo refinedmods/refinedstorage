@@ -7,8 +7,7 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.HashMap;
 import java.util.Map;
 

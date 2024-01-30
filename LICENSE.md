@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright © 2015 - 2023 Refined Mods
+Copyright © 2015 - 2024 Refined Mods
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

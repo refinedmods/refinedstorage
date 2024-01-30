@@ -5,8 +5,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICrafting
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.List;
 import java.util.UUID;
 

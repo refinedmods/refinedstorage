@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
+import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorSyncTask;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonitorBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
@@ -99,6 +100,15 @@ public class CraftingMonitorContainerMenu extends BaseContainerMenu implements I
 
     @Override
     public void onChanged() {
-        RS.NETWORK_HANDLER.sendTo((ServerPlayer) getPlayer(), new CraftingMonitorUpdateMessage(craftingMonitor));
+        RS.NETWORK_HANDLER.sendTo((ServerPlayer) getPlayer(), new CraftingMonitorUpdateMessage(
+            craftingMonitor.getTasks().stream().map(task -> new CraftingMonitorSyncTask(
+                task.getId(),
+                task.getRequested(),
+                task.getQuantity(),
+                task.getStartTime(),
+                task.getCompletionPercentage(),
+                task.getCraftingMonitorElements()
+            )).toList()
+        ));
     }
 }

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "refinedstorage:controller",
-      "has_the_recipe"
+      "has_the_recipe",
+      "refinedstorage:controller"
     ]
   ],
   "rewards": {
     "recipes": [
       "refinedstorage:coloring_recipes/red_detector"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -18,8 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
-
 import javax.annotation.Nullable;
 
 public class CrafterBlock extends ColoredNetworkBlock {
@@ -55,8 +53,7 @@ public class CrafterBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attempt(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<CrafterBlockEntity>(
                     ((CrafterBlockEntity) level.getBlockEntity(pos)).getNode().getName(),
                     (blockEntity, windowId, inventory, p) -> new CrafterContainerMenu(blockEntity, player, windowId),

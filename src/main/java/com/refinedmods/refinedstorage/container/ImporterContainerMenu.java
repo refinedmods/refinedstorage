@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.blockentity.ImporterBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class ImporterContainerMenu extends BaseContainerMenu {
     public ImporterContainerMenu(ImporterBlockEntity importer, Player player, int windowId) {

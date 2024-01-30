@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.blockentity.data;
 
 import com.refinedmods.refinedstorage.RS;
-import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParamaterUpdateMessage;
+import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParameterUpdateMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -58,6 +58,6 @@ public class BlockEntitySynchronizationManager {
     }
 
     public static void setParameter(BlockEntitySynchronizationParameter parameter, Object value) {
-        RS.NETWORK_HANDLER.sendToServer(new BlockEntitySynchronizationParamaterUpdateMessage(parameter, value));
+        RS.NETWORK_HANDLER.sendToServer(new BlockEntitySynchronizationParameterUpdateMessage(parameter, value));
     }
 }

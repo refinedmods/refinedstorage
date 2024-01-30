@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 
 public class DetectorBlock extends ColoredNetworkBlock {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
@@ -69,7 +68,7 @@ public class DetectorBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ColorMap<DetectorBlock> colorMap = RSBlocks.DETECTOR;
+        ColorMap<Block, DetectorBlock> colorMap = RSBlocks.DETECTOR;
         DyeColor color = DyeColor.getColor(player.getItemInHand(hand));
 
         if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
@@ -79,8 +78,7 @@ public class DetectorBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<DetectorBlockEntity>(
                     Component.translatable("gui.refinedstorage.detector"),
                     (blockEntity, windowId, inventory, p) -> new DetectorContainerMenu(blockEntity, player, windowId),

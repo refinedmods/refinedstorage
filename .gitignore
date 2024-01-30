@@ -7,7 +7,7 @@ eclipse/
 .nb-gradle-properties
 .project
 *.launch
-run/
+runs/
 *.iml
 *.ipr
 *.iws

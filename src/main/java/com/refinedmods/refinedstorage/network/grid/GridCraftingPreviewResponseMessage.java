@@ -1,24 +1,29 @@
 package com.refinedmods.refinedstorage.network.grid;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.network.ClientProxy;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class GridCraftingPreviewResponseMessage {
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+
+public class GridCraftingPreviewResponseMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid_crafting_preview_response");
+
     private final List<ICraftingPreviewElement> elements;
     private final UUID id;
     private final int quantity;
     private final boolean fluids;
 
-    public GridCraftingPreviewResponseMessage(List<ICraftingPreviewElement> elements, UUID id, int quantity, boolean fluids) {
+    public GridCraftingPreviewResponseMessage(List<ICraftingPreviewElement> elements, UUID id, int quantity,
+                                              boolean fluids) {
         this.elements = elements;
         this.id = id;
         this.quantity = quantity;
@@ -42,21 +47,8 @@ public class GridCraftingPreviewResponseMessage {
         return new GridCraftingPreviewResponseMessage(elements, id, quantity, fluids);
     }
 
-    public static void encode(GridCraftingPreviewResponseMessage message, FriendlyByteBuf buf) {
-        buf.writeUUID(message.id);
-        buf.writeInt(message.quantity);
-        buf.writeBoolean(message.fluids);
-        buf.writeInt(message.elements.size());
-
-        for (ICraftingPreviewElement element : message.elements) {
-            buf.writeResourceLocation(element.getId());
-            element.write(buf);
-        }
-    }
-
-    public static void handle(GridCraftingPreviewResponseMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingPreviewResponseMessage(message));
-        ctx.get().setPacketHandled(true);
+    public static void handle(GridCraftingPreviewResponseMessage message, PlayPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> ClientProxy.onReceivedCraftingPreviewResponseMessage(message));
     }
 
     public List<ICraftingPreviewElement> getElements() {
@@ -73,5 +65,23 @@ public class GridCraftingPreviewResponseMessage {
 
     public boolean isFluids() {
         return fluids;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeUUID(id);
+        buf.writeInt(quantity);
+        buf.writeBoolean(fluids);
+        buf.writeInt(elements.size());
+
+        for (ICraftingPreviewElement element : elements) {
+            buf.writeResourceLocation(element.getId());
+            element.write(buf);
+        }
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

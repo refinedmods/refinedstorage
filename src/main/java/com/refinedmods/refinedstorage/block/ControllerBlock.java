@@ -11,6 +11,7 @@ import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,8 +33,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
@@ -64,13 +65,13 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
         super.setPlacedBy(level, pos, state, entity, stack);
 
         if (!level.isClientSide) {
-            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyFromStack -> {
-                BlockEntity blockEntity = level.getBlockEntity(pos);
-
-                if (blockEntity != null) {
-                    blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyFromBlockEntity -> energyFromBlockEntity.receiveEnergy(energyFromStack.getEnergyStored(), false));
+            IEnergyStorage energyFromStack = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyFromStack != null) {
+                IEnergyStorage energyFromBlockEntity = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, Direction.NORTH);
+                if (energyFromBlockEntity != null) {
+                     energyFromBlockEntity.receiveEnergy(energyFromStack.getEnergyStored(), false);
                 }
-            });
+            }
         }
     }
 
@@ -95,7 +96,7 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
             return result;
         }
 
-        ColorMap<ControllerBlock> colorMap = type == NetworkType.CREATIVE ? RSBlocks.CREATIVE_CONTROLLER : RSBlocks.CONTROLLER;
+        ColorMap<Block, ControllerBlock> colorMap = type == NetworkType.CREATIVE ? RSBlocks.CREATIVE_CONTROLLER : RSBlocks.CONTROLLER;
         DyeColor color = DyeColor.getColor(player.getItemInHand(hand));
 
         if (color != null && !state.getBlock().equals(colorMap.get(color).get())) {
@@ -105,8 +106,7 @@ public class ControllerBlock extends BaseBlock implements EntityBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                 new MenuProvider() {
                     @Override
                     public Component getDisplayName() {

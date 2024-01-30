@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.integration.inventorytweaks;
 
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 public class InventoryTweaksIntegration {
     private InventoryTweaksIntegration() {

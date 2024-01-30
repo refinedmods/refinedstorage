@@ -8,12 +8,15 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
-import net.minecraft.world.item.ItemStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.Nonnull;
+
+import net.minecraft.world.item.ItemStack;
 
 public class PortableItemStorageCache implements IStorageCache<ItemStack> {
     private final IPortableGrid portableGrid;
@@ -88,6 +91,14 @@ public class PortableItemStorageCache implements IStorageCache<ItemStack> {
     @Override
     public IStackList<ItemStack> getCraftablesList() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<? extends IGridStack> getGridStacks() {
+        return portableGrid.getItemCache().getList().getStacks()
+            .stream()
+            .map(stack -> ItemGridStack.of(stack, portableGrid.getItemStorageTracker(), null, false))
+            .toList();
     }
 
     @Override

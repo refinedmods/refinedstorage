@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.blockentity.CrafterBlockEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class CrafterContainerMenu extends BaseContainerMenu {
     public CrafterContainerMenu(CrafterBlockEntity crafter, Player player, int windowId) {

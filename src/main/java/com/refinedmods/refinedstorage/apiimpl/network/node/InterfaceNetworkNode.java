@@ -21,8 +21,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
 public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "interface");

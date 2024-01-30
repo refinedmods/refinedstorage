@@ -1,15 +1,18 @@
 package com.refinedmods.refinedstorage.network;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.FilterContainerMenu;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
+
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.function.Supplier;
+public class FilterUpdateMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "filter_update");
 
-public class FilterUpdateMessage {
     private final int compare;
     private final int mode;
     private final boolean modFilter;
@@ -34,27 +37,27 @@ public class FilterUpdateMessage {
         );
     }
 
-    public static void encode(FilterUpdateMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.compare);
-        buf.writeInt(message.mode);
-        buf.writeBoolean(message.modFilter);
-        buf.writeUtf(message.name);
-        buf.writeInt(message.type);
+    public static void handle(FilterUpdateMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            FilterItem.setCompare(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.compare);
+            FilterItem.setMode(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.mode);
+            FilterItem.setModFilter(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.modFilter);
+            FilterItem.setName(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.name);
+            FilterItem.setType(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.type);
+        }));
     }
 
-    public static void handle(FilterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Player player = ctx.get().getSender();
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(compare);
+        buf.writeInt(mode);
+        buf.writeBoolean(modFilter);
+        buf.writeUtf(name);
+        buf.writeInt(type);
+    }
 
-        if (player != null && player.containerMenu instanceof FilterContainerMenu) {
-            ctx.get().enqueueWork(() -> {
-                FilterItem.setCompare(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.compare);
-                FilterItem.setMode(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.mode);
-                FilterItem.setModFilter(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.modFilter);
-                FilterItem.setName(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.name);
-                FilterItem.setType(((FilterContainerMenu) player.containerMenu).getFilterItem(), message.type);
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

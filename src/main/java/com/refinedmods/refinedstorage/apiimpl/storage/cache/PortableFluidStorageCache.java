@@ -8,9 +8,12 @@ import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.blockentity.grid.portable.IPortableGrid;
-import net.minecraftforge.fluids.FluidStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 
 import javax.annotation.Nonnull;
+import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,6 +91,14 @@ public class PortableFluidStorageCache implements IStorageCache<FluidStack> {
     @Override
     public IStackList<FluidStack> getCraftablesList() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<? extends IGridStack> getGridStacks() {
+        return portableGrid.getFluidCache().getList().getStacks()
+            .stream()
+            .map(stack -> FluidGridStack.of(stack, portableGrid.getFluidStorageTracker(), null, false))
+            .toList();
     }
 
     @Override

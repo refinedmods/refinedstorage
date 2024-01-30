@@ -3,12 +3,12 @@ package com.refinedmods.refinedstorage.item.property;
 import com.refinedmods.refinedstorage.apiimpl.network.Network;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
-
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 
 public class ControllerItemPropertyGetter implements ItemPropertyFunction {
@@ -18,7 +18,7 @@ public class ControllerItemPropertyGetter implements ItemPropertyFunction {
         if (stack.getTag() == null) {
             return ControllerBlock.EnergyType.ON.ordinal();
         }
-        IEnergyStorage storage = stack.getCapability(ForgeCapabilities.ENERGY).orElse(null);
+        IEnergyStorage storage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (storage != null) {
             return Network.getEnergyType(storage.getEnergyStored(), storage.getMaxEnergyStored()).ordinal();
         }

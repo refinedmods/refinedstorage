@@ -18,8 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
-
 import javax.annotation.Nullable;
 
 public class StorageBlock extends NetworkNodeBlock {
@@ -60,7 +58,8 @@ public class StorageBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen((ServerPlayer) player, new BlockEntityMenuProvider<StorageBlockEntity>(
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
+                new BlockEntityMenuProvider<StorageBlockEntity>(
                 ((StorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
                 (blockEntity, windowId, inventory, p) -> new StorageContainerMenu(blockEntity, player, windowId),
                 pos

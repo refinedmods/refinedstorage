@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.container.FilterContainerMenu;
 import com.refinedmods.refinedstorage.item.FilterItem;
 import com.refinedmods.refinedstorage.network.FilterUpdateMessage;
 import com.refinedmods.refinedstorage.render.RenderSettings;
-import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
+import com.refinedmods.refinedstorage.screen.widget.SmallCheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -29,7 +29,7 @@ public class FilterScreen extends BaseScreen<FilterContainerMenu> {
     private boolean modFilter;
     private int type;
 
-    private CheckboxWidget modFilterCheckBox;
+    private SmallCheckboxWidget modFilterCheckBox;
     private Button modeButton;
     private EditBox nameField;
 

@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.blockentity.ExporterBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class ExporterContainerMenu extends BaseContainerMenu {
     private final ExporterBlockEntity exporter;

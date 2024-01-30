@@ -2,12 +2,11 @@ package com.refinedmods.refinedstorage.apiimpl.util;
 
 import com.refinedmods.refinedstorage.api.util.IQuantityFormatter;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import net.minecraftforge.fluids.FluidType;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class QuantityFormatter implements IQuantityFormatter {
     private final DecimalFormat formatterWithUnits = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));

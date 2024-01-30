@@ -28,7 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -253,8 +253,8 @@ public class CraftingPreviewScreen extends BaseScreen<AbstractContainerMenu> {
     }
 
     @Override
-    public boolean mouseScrolled(double x, double y, double delta) {
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
+        return this.scrollbar.mouseScrolled(x, y, z, delta) || super.mouseScrolled(x, y, z, delta);
     }
 
     @Override

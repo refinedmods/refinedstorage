@@ -184,14 +184,14 @@ public abstract class AmountSpecifyingScreen<T extends AbstractContainerMenu> ex
     }
 
     @Override
-    public boolean mouseScrolled(double x, double y, double delta) {
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
         if (delta > 0) {
             onIncrementButtonClicked(1);
         } else {
             onIncrementButtonClicked(-1);
         }
 
-        return super.mouseScrolled(x, y, delta);
+        return super.mouseScrolled(x, y, z, delta);
     }
 
     public void close() {

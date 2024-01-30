@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class IdGridSorter implements IGridSorter {
     @Override

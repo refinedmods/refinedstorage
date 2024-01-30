@@ -10,7 +10,6 @@ import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class SecurityManagerBlock extends ColoredNetworkBlock {
     public SecurityManagerBlock() {
@@ -39,8 +37,7 @@ public class SecurityManagerBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            Runnable action = () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            Runnable action = () -> player.openMenu(
                 new BlockEntityMenuProvider<SecurityManagerBlockEntity>(
                     Component.translatable("gui.refinedstorage.security_manager"),
                     (blockEntity, windowId, inventory, p) -> new SecurityManagerContainerMenu(blockEntity, player, windowId),

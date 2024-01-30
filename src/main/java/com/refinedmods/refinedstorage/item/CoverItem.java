@@ -40,7 +40,7 @@ public class CoverItem extends Item {
         }
         ItemStack result = item.copy();
         result.setCount(1);
-        cover.getTag().put(NBT_ITEM, result.serializeNBT());
+        cover.getTag().put(NBT_ITEM, result.save(new CompoundTag()));
     }
 
     @Nonnull

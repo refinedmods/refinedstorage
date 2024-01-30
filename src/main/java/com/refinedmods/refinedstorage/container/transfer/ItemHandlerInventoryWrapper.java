@@ -1,9 +1,8 @@
 package com.refinedmods.refinedstorage.container.transfer;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import java.util.Objects;
 
 class ItemHandlerInventoryWrapper implements IInventoryWrapper {

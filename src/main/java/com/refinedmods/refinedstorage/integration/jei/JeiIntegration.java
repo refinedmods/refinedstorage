@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.integration.jei;
 
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 public final class JeiIntegration {
     private JeiIntegration() {

@@ -2,4 +2,4 @@ name: Validate branch name
 on: [ pull_request ]
 jobs:
   validate-branch-name:
-    uses: refinedmods/refinedarchitect/.github/workflows/validate-branch-name.yml@v0.7.1
+    uses: refinedmods/refinedarchitect/.github/workflows/validate-branch-name.yml@v0.11.4

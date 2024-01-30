@@ -3,10 +3,9 @@ package com.refinedmods.refinedstorage.datageneration;
 import com.refinedmods.refinedstorage.RS;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.List;
 import java.util.Set;
 

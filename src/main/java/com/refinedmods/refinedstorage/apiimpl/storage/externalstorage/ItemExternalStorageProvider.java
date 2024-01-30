@@ -18,14 +18,12 @@ import javax.annotation.Nonnull;
 
 public class ItemExternalStorageProvider implements IExternalStorageProvider<ItemStack> {
     @Override
-    public boolean canProvide(BlockEntity blockEntity, Direction direction) {
-        INetworkNode node = NetworkUtils.getNodeFromBlockEntity(blockEntity);
-
+    public boolean canProvide(Level level, BlockPos pos, Direction direction) {
+        INetworkNode node = NetworkUtils.getNodeFromBlockEntity(level.getBlockEntity(pos));
         if (node instanceof IStorageProvider) {
             return false;
         }
-
-        return LevelUtils.getItemHandler(blockEntity, direction.getOpposite()) != null;
+        return LevelUtils.getItemHandler(level, pos, direction.getOpposite()) != null;
     }
 
     @Nonnull
@@ -33,20 +31,10 @@ public class ItemExternalStorageProvider implements IExternalStorageProvider<Ite
     public IExternalStorage<ItemStack> provide(IExternalStorageContext context, BlockEntity blockEntity, Direction direction) {
         return new ItemExternalStorage(context, () -> {
             Level level = blockEntity.getLevel();
-
             if (level == null) {
                 return null;
             }
-
-            BlockPos blockPos = blockEntity.getBlockPos();
-
-            if (!level.isLoaded(blockPos)) {
-                return null;
-            }
-
-            BlockEntity currentBlockEntity = level.getBlockEntity(blockPos);
-
-            return LevelUtils.getItemHandler(currentBlockEntity, direction.getOpposite());
+            return LevelUtils.getItemHandler(level, blockEntity.getBlockPos(), direction.getOpposite());
         }, blockEntity instanceof InterfaceBlockEntity);
     }
 

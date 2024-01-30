@@ -10,10 +10,11 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,8 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
         }
 
         if (!bucket.isEmpty()) {
-            bucket.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).ifPresent(fluidHandler -> {
+            IFluidHandlerItem fluidHandler = bucket.getCapability(Capabilities.FluidHandler.ITEM);
+            if (fluidHandler != null) {
                 portableGrid.getFluidStorageTracker().changed(player, stack.copy());
 
                 fluidHandler.fill(portableGrid.getFluidStorage().extract(stack, FluidType.BUCKET_VOLUME, IComparer.COMPARE_NBT, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
@@ -67,7 +69,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
                 }
 
                 portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
-            });
+            }
         }
     }
 

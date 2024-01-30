@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.datageneration;
 
 import com.refinedmods.refinedstorage.RSBlockEntities;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
@@ -9,9 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockEntityTagGenerator extends TagsProvider<BlockEntityType<?>> {
@@ -67,7 +66,7 @@ public class BlockEntityTagGenerator extends TagsProvider<BlockEntityType<?>> {
     }
 
     private ResourceKey<BlockEntityType<?>> resourceKey(BlockEntityType<?> type) {
-        return ForgeRegistries.BLOCK_ENTITY_TYPES.getResourceKey(type).get();
+        return BuiltInRegistries.BLOCK_ENTITY_TYPE.getResourceKey(type).get();
     }
 
     @Override

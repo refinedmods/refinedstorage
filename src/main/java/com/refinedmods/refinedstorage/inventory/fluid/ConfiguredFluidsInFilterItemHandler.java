@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.item.FilterItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ConfiguredFluidsInFilterItemHandler extends FluidInventory {
     public ConfiguredFluidsInFilterItemHandler(ItemStack stack) {

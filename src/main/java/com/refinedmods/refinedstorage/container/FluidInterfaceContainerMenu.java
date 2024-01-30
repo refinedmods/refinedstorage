@@ -5,7 +5,7 @@ import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.blockentity.FluidInterfaceBlockEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class FluidInterfaceContainerMenu extends BaseContainerMenu {
     public FluidInterfaceContainerMenu(FluidInterfaceBlockEntity fluidInterface, Player player, int windowId) {

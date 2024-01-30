@@ -62,7 +62,7 @@ public class CreateDiskCommand implements Command<CommandSourceStack> {
                     ItemEntity itemEntity = player.drop(stack, false);
                     if (itemEntity != null) {
                         itemEntity.setNoPickUpDelay();
-                        itemEntity.setThrower(player.getUUID());
+                        itemEntity.setThrower(player);
                     }
                 }
 

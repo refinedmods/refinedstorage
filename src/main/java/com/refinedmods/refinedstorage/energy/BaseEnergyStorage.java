@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.energy;
 
-import net.minecraftforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.EnergyStorage;
 
 public class BaseEnergyStorage extends EnergyStorage {
     public BaseEnergyStorage(int capacity, int maxReceive, int maxExtract) {

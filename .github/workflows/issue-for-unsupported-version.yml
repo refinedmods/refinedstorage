@@ -4,4 +4,4 @@ on:
     types: [ labeled, unlabeled, reopened ]
 jobs:
   unsupported-labeler:
-    uses: refinedmods/refinedarchitect/.github/workflows/issue-for-unsupported-version.yml@v0.7.1
+    uses: refinedmods/refinedarchitect/.github/workflows/issue-for-unsupported-version.yml@v0.11.4

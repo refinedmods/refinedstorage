@@ -1,44 +1,43 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.grid.IGridTab;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.network.ClientProxy;
 import com.refinedmods.refinedstorage.screen.CraftingMonitorScreen;
-import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public class CraftingMonitorUpdateMessage {
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class CraftingMonitorUpdateMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafting_monitor_update");
+
     private static final Logger LOGGER = LogManager.getLogger(CraftingMonitorUpdateMessage.class);
 
-    private ICraftingMonitor craftingMonitor;
+    private final List<CraftingMonitorSyncTask> tasks;
 
-    private List<IGridTab> tasks = new ArrayList<>();
-
-    public CraftingMonitorUpdateMessage(ICraftingMonitor craftingMonitor) {
-        this.craftingMonitor = craftingMonitor;
-    }
-
-    public CraftingMonitorUpdateMessage(List<IGridTab> tasks) {
+    public CraftingMonitorUpdateMessage(List<CraftingMonitorSyncTask> tasks) {
         this.tasks = tasks;
     }
 
     public static CraftingMonitorUpdateMessage decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
 
-        List<IGridTab> tasks = new ArrayList<>();
+        List<CraftingMonitorSyncTask> tasks = new ArrayList<>();
 
         for (int i = 0; i < size; ++i) {
             UUID id = buf.readUUID();
@@ -59,30 +58,40 @@ public class CraftingMonitorUpdateMessage {
             int elementCount = buf.readInt();
 
             for (int j = 0; j < elementCount; ++j) {
-                Function<FriendlyByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().get(buf.readResourceLocation());
+                Function<FriendlyByteBuf, ICraftingMonitorElement> factory =
+                    API.instance().getCraftingMonitorElementRegistry().get(buf.readResourceLocation());
 
                 if (factory != null) {
                     elements.add(factory.apply(buf));
                 }
             }
 
-            tasks.add(new CraftingMonitorScreen.Task(id, requested, qty, executionStarted, percentage, elements));
+            tasks.add(new CraftingMonitorSyncTask(id, requested, qty, executionStarted, percentage, elements));
         }
 
         return new CraftingMonitorUpdateMessage(tasks);
     }
 
-    public static void encode(CraftingMonitorUpdateMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.craftingMonitor.getTasks().size());
+    public static void handle(CraftingMonitorUpdateMessage message, PlayPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> ClientProxy.onReceivedCraftingMonitorUpdateMessage(message));
+    }
 
-        for (ICraftingTask task : message.craftingMonitor.getTasks()) {
-            buf.writeUUID(task.getId());
-            buf.writeNbt(task.getRequested().writeToNbt());
-            buf.writeInt(task.getQuantity());
-            buf.writeLong(task.getStartTime());
-            buf.writeInt(task.getCompletionPercentage());
+    public List<CraftingMonitorSyncTask> getTasks() {
+        return tasks;
+    }
 
-            List<ICraftingMonitorElement> elements = task.getCraftingMonitorElements();
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(tasks.size());
+
+        for (CraftingMonitorSyncTask task : tasks) {
+            buf.writeUUID(task.id());
+            buf.writeNbt(task.requestInfo().writeToNbt());
+            buf.writeInt(task.quantity());
+            buf.writeLong(task.startTime());
+            buf.writeInt(task.completionPercentage());
+
+            List<ICraftingMonitorElement> elements = task.elements();
 
             buf.writeInt(elements.size());
 
@@ -94,12 +103,8 @@ public class CraftingMonitorUpdateMessage {
         }
     }
 
-    public static void handle(CraftingMonitorUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingMonitorUpdateMessage(message));
-        ctx.get().setPacketHandled(true);
-    }
-
-    public List<IGridTab> getTasks() {
-        return tasks;
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

@@ -1,20 +1,23 @@
 package com.refinedmods.refinedstorage.network.grid;
 
-
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.List;
-import java.util.function.Supplier;
-public class GridTransferMessage {
+
+public class GridTransferMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid_transfer");
+
     private ItemStack[][] recipe;
-    List<List<ItemStack>> inputs;
+    private List<List<ItemStack>> inputs;
 
     public GridTransferMessage() {
     }
@@ -39,10 +42,22 @@ public class GridTransferMessage {
         return msg;
     }
 
-    public static void encode(GridTransferMessage message, FriendlyByteBuf buf) {
+    public static void handle(GridTransferMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (player.containerMenu instanceof GridContainerMenu) {
+                IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
 
-        buf.writeInt(message.inputs.size());
-        for (List<ItemStack> stacks : message.inputs) {
+                if (grid.getGridType() == GridType.CRAFTING || grid.getGridType() == GridType.PATTERN) {
+                    grid.onRecipeTransfer(player, message.recipe);
+                }
+            }
+        }));
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(inputs.size());
+        for (List<ItemStack> stacks : inputs) {
             buf.writeInt(stacks.size());
 
             for (ItemStack possibleStack : stacks) {
@@ -51,22 +66,8 @@ public class GridTransferMessage {
         }
     }
 
-
-    public static void handle(GridTransferMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Player player = ctx.get().getSender();
-
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof GridContainerMenu) {
-                    IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
-
-                    if (grid.getGridType() == GridType.CRAFTING || grid.getGridType() == GridType.PATTERN) {
-                        grid.onRecipeTransfer(player, message.recipe);
-                    }
-                }
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

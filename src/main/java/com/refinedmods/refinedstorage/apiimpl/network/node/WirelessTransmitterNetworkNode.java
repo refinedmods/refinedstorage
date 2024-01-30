@@ -13,7 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class WirelessTransmitterNetworkNode extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");

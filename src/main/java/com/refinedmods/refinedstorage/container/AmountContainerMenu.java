@@ -3,8 +3,8 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.container.slot.DisabledSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class AmountContainerMenu extends BaseContainerMenu {
     public AmountContainerMenu(Player player, ItemStack stack) {

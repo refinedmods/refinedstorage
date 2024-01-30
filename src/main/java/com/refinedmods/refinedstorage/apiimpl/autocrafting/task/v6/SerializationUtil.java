@@ -15,7 +15,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class SerializationUtil {
     private static final String NBT_PATTERN_STACK = "Stack";
@@ -79,7 +79,7 @@ public class SerializationUtil {
     public static CompoundTag writePatternToNbt(ICraftingPattern pattern) {
         CompoundTag tag = new CompoundTag();
 
-        tag.put(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
+        tag.put(NBT_PATTERN_STACK, pattern.getStack().save(new CompoundTag()));
         tag.putLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().asLong());
 
         return tag;
