@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.13.0-beta.1] - 2024-02-12
+
 ### Added
 
 -   Ported to Minecraft 1.20.4.
@@ -3523,7 +3525,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.4...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.1...HEAD
+
+[1.13.0-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.4...v1.13.0-beta.1
 
 [1.12.4]: https://github.com/refinedmods/refinedstorage/compare/v1.12.3...v1.12.4
 
