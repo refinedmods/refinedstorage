@@ -11,7 +11,6 @@ import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
 import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
-import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -19,8 +18,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,19 +27,11 @@ import javax.annotation.Nullable;
 public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends BaseBlockEntity implements INetworkNodeProxy<N>, IRedstoneConfigurable {
     public static final BlockEntitySynchronizationParameter<Integer, NetworkNodeBlockEntity<?>> REDSTONE_MODE = RedstoneMode.createParameter(new ResourceLocation(RS.ID, "redstone_mode"));
 
-    private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
     private final Class<N> networkNodeClass;
     private N clientNode;
     private N removedNode;
 
     private static final Logger LOGGER = LogManager.getLogger();
-
-    // TODO: remove this ctor in 1.21
-    @Deprecated
-    protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, BlockEntitySynchronizationSpec syncSpec) {
-        super(type, pos, state, syncSpec);
-        this.networkNodeClass = null;
-    }
 
     protected NetworkNodeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, BlockEntitySynchronizationSpec syncSpec,
                                      Class<N> networkNodeClass) {
@@ -148,14 +137,4 @@ public abstract class NetworkNodeBlockEntity<N extends NetworkNode> extends Base
     }
 
     public abstract N createNode(Level level, BlockPos pos);
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY) {
-            return networkNodeProxy.cast();
-        }
-
-        return super.getCapability(cap, direction);
-    }
 }

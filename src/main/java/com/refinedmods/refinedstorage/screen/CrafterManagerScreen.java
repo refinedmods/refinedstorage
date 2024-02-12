@@ -184,8 +184,8 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainerMenu
     }
 
     @Override
-    public boolean mouseScrolled(double x, double y, double delta) {
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
+        return this.scrollbar.mouseScrolled(x, y, z, delta) || super.mouseScrolled(x, y, z, delta);
     }
 
     public SearchWidget getSearchField() {

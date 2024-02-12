@@ -24,11 +24,10 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -260,8 +259,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         if (proxy == null) {
             return null;
         }
-
-        return LevelUtils.getItemHandler(proxy.getFacingBlockEntity(), proxy.getDirection().getOpposite());
+        return LevelUtils.getItemHandler(level, proxy.getPosition().relative(proxy.getDirection()), proxy.getDirection().getOpposite());
     }
 
     @Nullable
@@ -271,8 +269,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         if (proxy == null) {
             return null;
         }
-
-        return LevelUtils.getFluidHandler(proxy.getFacingBlockEntity(), proxy.getDirection().getOpposite());
+        return LevelUtils.getFluidHandler(level, proxy.getPosition().relative(proxy.getDirection()), proxy.getDirection().getOpposite());
     }
 
     @Override

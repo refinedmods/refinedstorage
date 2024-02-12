@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.container.slot.filter.DisabledFluidFilterSlot;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidAmountContainerMenu extends BaseContainerMenu {
     public FluidAmountContainerMenu(Player player, FluidStack stack) {

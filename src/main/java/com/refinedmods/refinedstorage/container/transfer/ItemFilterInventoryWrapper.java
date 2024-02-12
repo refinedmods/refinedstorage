@@ -2,8 +2,8 @@ package com.refinedmods.refinedstorage.container.transfer;
 
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 class ItemFilterInventoryWrapper implements IInventoryWrapper {
     private final IItemHandlerModifiable filterInv;

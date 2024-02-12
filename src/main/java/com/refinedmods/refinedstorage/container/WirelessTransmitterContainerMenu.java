@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.container;
 import com.refinedmods.refinedstorage.RSContainerMenus;
 import com.refinedmods.refinedstorage.blockentity.WirelessTransmitterBlockEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class WirelessTransmitterContainerMenu extends BaseContainerMenu {
     public WirelessTransmitterContainerMenu(WirelessTransmitterBlockEntity wirelessTransmitter, Player player, int windowId) {

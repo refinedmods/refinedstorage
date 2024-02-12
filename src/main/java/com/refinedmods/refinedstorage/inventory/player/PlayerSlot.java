@@ -2,17 +2,17 @@ package com.refinedmods.refinedstorage.inventory.player;
 
 import com.refinedmods.refinedstorage.integration.curios.CuriosIntegration;
 import com.refinedmods.refinedstorage.util.PacketBufferUtils;
+
+import java.util.Optional;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-
-import java.util.Optional;
 
 public class PlayerSlot {
     int slot;
@@ -47,9 +47,9 @@ public class PlayerSlot {
             return player.getInventory().getItem(slot);
         }
 
-        LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(player);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
 
-        Optional<ICurioStacksHandler> stacksHandler = curiosHandler.resolve().flatMap((handler ->
+        Optional<ICurioStacksHandler> stacksHandler = curiosInventory.flatMap((handler ->
             handler.getStacksHandler(curioSlot)
         ));
 

@@ -24,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 
 public class ConstructorBlock extends CableBlock {
     private static final VoxelShape HEAD_NORTH = Shapes.or(box(2, 2, 0, 14, 14, 2), HOLDER_NORTH);
@@ -93,8 +92,7 @@ public class ConstructorBlock extends CableBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getLocation())) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<ConstructorBlockEntity>(
                     Component.translatable("gui.refinedstorage.constructor"),
                     (blockEntity, windowId, inventory, p) -> new ConstructorContainerMenu(blockEntity, player, windowId),

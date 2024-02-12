@@ -3,12 +3,13 @@ package com.refinedmods.refinedstorage;
 import com.refinedmods.refinedstorage.recipe.CoverRecipe;
 import com.refinedmods.refinedstorage.recipe.HollowCoverRecipe;
 import com.refinedmods.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class RSRecipeSerializers {
-    public static final DeferredRegister<RecipeSerializer<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, RS.ID);
+    public static final DeferredRegister<RecipeSerializer<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, RS.ID);
 
     static {
         REGISTRY.register("upgrade_with_enchanted_book", UpgradeWithEnchantedBookRecipeSerializer::new);

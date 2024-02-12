@@ -1,23 +1,26 @@
 package com.refinedmods.refinedstorage.network;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.filter.FilterSlot;
 import com.refinedmods.refinedstorage.container.slot.legacy.LegacyFilterSlot;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
-public class SetFilterSlotMessage {
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+
+public class SetFilterSlotMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "set_filter_slot");
+
     private final int containerSlot;
     private final ItemStack stack;
 
@@ -30,27 +33,16 @@ public class SetFilterSlotMessage {
         return new SetFilterSlotMessage(buf.readInt(), buf.readItem());
     }
 
-    public static void encode(SetFilterSlotMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.containerSlot);
-        buf.writeItem(message.stack);
-    }
+    public static void handle(SetFilterSlotMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (!message.stack.isEmpty() && message.stack.getCount() <= message.stack.getMaxStackSize()) {
+                AbstractContainerMenu container = player.containerMenu;
 
-    public static void handle(SetFilterSlotMessage message, Supplier<NetworkEvent.Context> ctx) {
-        if (!message.stack.isEmpty() && message.stack.getCount() <= message.stack.getMaxStackSize()) {
-            Player player = ctx.get().getSender();
-
-            if (player != null) {
-                ctx.get().enqueueWork(() -> {
-                    AbstractContainerMenu container = player.containerMenu;
-
-                    if (container != null && message.containerSlot >= 0 && message.containerSlot < container.slots.size()) {
-                        handle(message, container);
-                    }
-                });
+                if (container != null && message.containerSlot >= 0 && message.containerSlot < container.slots.size()) {
+                    handle(message, container);
+                }
             }
-        }
-
-        ctx.get().setPacketHandled(true);
+        }));
     }
 
     private static void handle(SetFilterSlotMessage message, AbstractContainerMenu container) {
@@ -64,8 +56,10 @@ public class SetFilterSlotMessage {
             if (container instanceof GridContainerMenu) {
                 IGrid grid = ((GridContainerMenu) container).getGrid();
                 //exclude output slots
-                if (grid instanceof GridNetworkNode && slot.getSlotIndex() < ((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().size()) {
-                    Set<ResourceLocation> list = new HashSet<>(((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().get(slot.getSlotIndex()));
+                if (grid instanceof GridNetworkNode &&
+                    slot.getSlotIndex() < ((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().size()) {
+                    Set<ResourceLocation> list = new HashSet<>(
+                        ((GridNetworkNode) grid).getAllowedTagList().getAllowedItemTags().get(slot.getSlotIndex()));
 
                     postAction = () -> {
                         ((GridNetworkNode) grid).getAllowedTagList().setAllowedItemTags(slot.getSlotIndex(), list);
@@ -77,5 +71,16 @@ public class SetFilterSlotMessage {
             slot.set(message.stack);
             postAction.run();
         }
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(containerSlot);
+        buf.writeItem(stack);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

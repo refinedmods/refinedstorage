@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -43,7 +42,7 @@ public class GridManager implements IGridManager {
             return;
         }
 
-        NetworkHooks.openScreen(player, new GridMenuProvider(grid.getLeft(), grid.getRight()), buf -> {
+        player.openMenu(new GridMenuProvider(grid.getLeft(), grid.getRight()), buf -> {
             buf.writeResourceLocation(id);
 
             buf.writeBoolean(pos != null);

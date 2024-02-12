@@ -2,7 +2,7 @@ package com.refinedmods.refinedstorage.api.storage.externalstorage;
 
 import com.refinedmods.refinedstorage.api.storage.AccessType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
  * Provides information about an external storage.

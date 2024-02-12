@@ -18,7 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class FluidStorageBlock extends NetworkNodeBlock {
     private final FluidStorageType type;
@@ -58,7 +57,8 @@ public class FluidStorageBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen((ServerPlayer) player, new BlockEntityMenuProvider<FluidStorageBlockEntity>(
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
+                new BlockEntityMenuProvider<FluidStorageBlockEntity>(
                 ((FluidStorageBlockEntity) level.getBlockEntity(pos)).getNode().getTitle(),
                 (blockEntity, windowId, inventory, p) -> new FluidStorageContainerMenu(blockEntity, player, windowId),
                 pos

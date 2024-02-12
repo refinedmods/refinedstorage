@@ -1,15 +1,18 @@
 package com.refinedmods.refinedstorage.network;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.function.Supplier;
+public class FluidFilterSlotUpdateMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid_filter_update");
 
-public class FluidFilterSlotUpdateMessage {
     private final int containerSlot;
     private final FluidStack stack;
 
@@ -18,16 +21,11 @@ public class FluidFilterSlotUpdateMessage {
         this.stack = stack;
     }
 
-    public static void encode(FluidFilterSlotUpdateMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.containerSlot);
-        message.stack.writeToPacket(buf);
-    }
-
     public static FluidFilterSlotUpdateMessage decode(FriendlyByteBuf buf) {
         return new FluidFilterSlotUpdateMessage(buf.readInt(), FluidStack.readFromPacket(buf));
     }
 
-    public static void handle(FluidFilterSlotUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(FluidFilterSlotUpdateMessage message, PlayPayloadContext ctx) {
         BaseScreen.executeLater(gui -> {
             if (message.containerSlot >= 0 && message.containerSlot < gui.getMenu().slots.size()) {
                 Slot slot = gui.getMenu().getSlot(message.containerSlot);
@@ -37,7 +35,16 @@ public class FluidFilterSlotUpdateMessage {
                 }
             }
         });
+    }
 
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(containerSlot);
+        stack.writeToPacket(buf);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

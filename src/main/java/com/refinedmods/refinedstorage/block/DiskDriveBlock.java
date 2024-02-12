@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class DiskDriveBlock extends NetworkNodeBlock {
     public DiskDriveBlock() {
@@ -37,8 +36,7 @@ public class DiskDriveBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<DiskDriveBlockEntity>(
                     Component.translatable("gui.refinedstorage.disk_drive"),
                     (blockEntity, windowId, inventory, p) -> new DiskDriveContainerMenu(blockEntity, p, windowId),

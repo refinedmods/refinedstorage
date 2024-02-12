@@ -21,7 +21,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 
 public class WirelessTransmitterBlock extends ColoredNetworkBlock {
     private static final VoxelShape SHAPE_DOWN = box(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
@@ -80,8 +79,7 @@ public class WirelessTransmitterBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<WirelessTransmitterBlockEntity>(
                     Component.translatable("gui.refinedstorage.wireless_transmitter"),
                     (blockEntity, windowId, inventory, p) -> new WirelessTransmitterContainerMenu(blockEntity, player, windowId),

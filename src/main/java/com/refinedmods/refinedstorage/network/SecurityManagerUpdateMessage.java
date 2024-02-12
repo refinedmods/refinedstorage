@@ -1,29 +1,29 @@
 package com.refinedmods.refinedstorage.network;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
+import com.refinedmods.refinedstorage.container.SecurityManagerContainerMenu;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.function.Supplier;
+public class SecurityManagerUpdateMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "security_manager_update");
 
-public class SecurityManagerUpdateMessage {
-    private final BlockPos pos;
     private final Permission permission;
     private final boolean state;
 
-    public SecurityManagerUpdateMessage(BlockPos pos, Permission permission, boolean state) {
-        this.pos = pos;
+    public SecurityManagerUpdateMessage(Permission permission, boolean state) {
         this.permission = permission;
         this.state = state;
     }
 
     public static SecurityManagerUpdateMessage decode(FriendlyByteBuf buf) {
-        BlockPos pos = buf.readBlockPos();
-
         int id = buf.readInt();
         Permission permission = Permission.INSERT;
 
@@ -36,28 +36,25 @@ public class SecurityManagerUpdateMessage {
 
         boolean state = buf.readBoolean();
 
-        return new SecurityManagerUpdateMessage(pos, permission, state);
+        return new SecurityManagerUpdateMessage(permission, state);
     }
 
-    public static void encode(SecurityManagerUpdateMessage message, FriendlyByteBuf buf) {
-        buf.writeBlockPos(message.pos);
-        buf.writeInt(message.permission.getId());
-        buf.writeBoolean(message.state);
+    public static void handle(SecurityManagerUpdateMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (player.containerMenu instanceof SecurityManagerContainerMenu securityManagerContainerMenu) {
+                securityManagerContainerMenu.updatePermission(message.permission, message.state);
+            }
+        }));
     }
 
-    public static void handle(SecurityManagerUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Player player = ctx.get().getSender();
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(permission.getId());
+        buf.writeBoolean(state);
+    }
 
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                BlockEntity blockEntity = player.getCommandSenderWorld().getBlockEntity(message.pos);
-
-                if (blockEntity instanceof SecurityManagerBlockEntity) {
-                    ((SecurityManagerBlockEntity) blockEntity).getNode().updatePermission(message.permission, message.state);
-                }
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

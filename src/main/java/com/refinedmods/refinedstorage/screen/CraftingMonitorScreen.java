@@ -15,6 +15,7 @@ import com.refinedmods.refinedstorage.apiimpl.render.ElementDrawers;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.ICraftingMonitor;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorCancelMessage;
+import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorSyncTask;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
@@ -27,8 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -80,8 +80,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
         this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);
     }
 
-    public void setTasks(List<IGridTab> tasks) {
-        this.tasks = tasks;
+    public void setTasks(List<CraftingMonitorSyncTask> tasks) {
+        this.tasks = tasks.stream().map(Task::new).collect(Lists::newArrayList, List::add, List::addAll);
     }
 
     public List<ICraftingMonitorElement> getElements() {
@@ -258,8 +258,8 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
     }
 
     @Override
-    public boolean mouseScrolled(double x, double y, double delta) {
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
+        return this.scrollbar.mouseScrolled(x, y, z, delta) || super.mouseScrolled(x, y, z, delta);
     }
 
     public static class Task implements IGridTab {
@@ -270,13 +270,13 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainerMe
         private final int completionPercentage;
         private final List<ICraftingMonitorElement> elements;
 
-        public Task(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
-            this.id = id;
-            this.requested = requested;
-            this.qty = qty;
-            this.executionStarted = executionStarted;
-            this.completionPercentage = completionPercentage;
-            this.elements = elements;
+        public Task(CraftingMonitorSyncTask syncTask) {
+            this.id = syncTask.id();
+            this.requested = syncTask.requestInfo();
+            this.qty = syncTask.quantity();
+            this.executionStarted = syncTask.startTime();
+            this.completionPercentage = syncTask.completionPercentage();
+            this.elements = syncTask.elements();
         }
 
         @Override

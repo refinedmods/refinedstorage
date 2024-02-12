@@ -162,11 +162,6 @@ The build workflow takes care of the following:
 
 - Running a Gradle build, running our tests in the process and generating an aggregated code coverage report for the API
   modules.
-- Analyzing the code on SonarQube.
-  > Because of
-  > [limitations with SonarQube](https://portal.productboard.com/sonarsource/1-sonarcloud/c/50-sonarcloud-analyzes-external-pull-request),
-  > pull requests originating from a fork aren't analyzed on SonarQube.
-
 - Code style validation with Checkstyle.
 - Mutation and line coverage test with Pitest.
 - Uploading the artifacts on the action.

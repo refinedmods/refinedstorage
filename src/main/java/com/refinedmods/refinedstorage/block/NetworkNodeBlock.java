@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public abstract class NetworkNodeBlock extends BaseBlock implements EntityBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");

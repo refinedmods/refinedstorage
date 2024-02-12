@@ -5,15 +5,16 @@ import com.refinedmods.refinedstorage.RSBlocks;
 import com.refinedmods.refinedstorage.block.ControllerBlock;
 import com.refinedmods.refinedstorage.block.DetectorBlock;
 import com.refinedmods.refinedstorage.block.NetworkNodeBlock;
+import com.refinedmods.refinedstorage.util.BlockColorMap;
 import com.refinedmods.refinedstorage.util.ColorMap;
-import net.minecraft.data.DataGenerator;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class BlockModelGenerator extends BlockStateProvider {
     private static final ResourceLocation BOTTOM = new ResourceLocation(RS.ID, "block/bottom");
@@ -139,7 +140,7 @@ public class BlockModelGenerator extends BlockStateProvider {
         });
     }
 
-    private <T extends Block> void genCubeAllCutoutModels(ColorMap<T> blockMap) {
+    private <T extends Block> void genCubeAllCutoutModels(BlockColorMap<T> blockMap) {
         blockMap.forEach((color, registryObject) -> {
             Block block = registryObject.get();
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();
@@ -213,7 +214,7 @@ public class BlockModelGenerator extends BlockStateProvider {
         });
     }
 
-    private <T extends Block> void genControllerModels(ColorMap<T> blockMap) {
+    private <T extends Block> void genControllerModels(BlockColorMap<T> blockMap) {
         blockMap.forEach((color, registryObject) -> {
             Block block = registryObject.get();
             String folderName = RSBlocks.CONTROLLER.get(ColorMap.DEFAULT_COLOR).getId().getPath();
@@ -251,7 +252,7 @@ public class BlockModelGenerator extends BlockStateProvider {
                     );
 
                     final ResourceLocation energyType = new ResourceLocation(RS.ID, "energy_type");
-                    itemModels().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath())
+                    itemModels().getBuilder(BuiltInRegistries.BLOCK.getKey(block).getPath())
                             .override()
                             .predicate(energyType, 0)
                             .model(models().getExistingFile(
@@ -274,7 +275,7 @@ public class BlockModelGenerator extends BlockStateProvider {
         });
     }
 
-    private <T extends Block> void genNorthCutoutModels(ColorMap<T> blockMap, boolean useLoader) {
+    private <T extends Block> void genNorthCutoutModels(BlockColorMap<T> blockMap, boolean useLoader) {
         blockMap.forEach((color, registryObject) -> {
             Block block = registryObject.get();
             String folderName = blockMap.get(ColorMap.DEFAULT_COLOR).getId().getPath();

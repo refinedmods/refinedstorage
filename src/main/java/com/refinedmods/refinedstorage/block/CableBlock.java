@@ -7,11 +7,11 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.refinedmods.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.refinedmods.refinedstorage.block.shape.ShapeCache;
 import com.refinedmods.refinedstorage.blockentity.CableBlockEntity;
-import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.refinedmods.refinedstorage.render.ConstantsCable;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -56,7 +56,7 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
     private static final VoxelShape SHAPE_UP = box(6, 10, 6, 10, 16, 10);
     private static final VoxelShape SHAPE_DOWN = box(6, 0, 6, 10, 6, 10);
 
-    public CableBlock(Properties props) {
+    protected CableBlock(Properties props) {
         super(props);
         this.registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
     }
@@ -177,29 +177,29 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
     }
 
     @Override
-    public boolean placeLiquid(LevelAccessor worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
-        return SimpleWaterloggedBlock.super.placeLiquid(worldIn, pos, state, fluidStateIn);
+    public boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
+        return SimpleWaterloggedBlock.super.placeLiquid(world, pos, state, fluidState);
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
-        return SimpleWaterloggedBlock.super.canPlaceLiquid(worldIn, pos, state, fluidIn);
+    public boolean canPlaceLiquid(Player player, BlockGetter world, BlockPos pos, BlockState state, Fluid fluid) {
+        return SimpleWaterloggedBlock.super.canPlaceLiquid(player, world, pos, state, fluid);
     }
 
-    private boolean hasNodeConnection(LevelAccessor world, BlockPos pos, BlockState state, Direction direction) {
+    private boolean hasNodeConnection(LevelAccessor level, BlockPos pos, BlockState state, Direction direction) {
         // Prevent the "holder" of a cable block conflicting with a cable connection.
         if (getDirection() != BlockDirection.NONE && state.getValue(getDirection().getProperty()).getOpposite() == direction) {
             return false;
         }
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity == null) {
             return false;
         }
 
-        return blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent()
+        return level.getBlockEntity(pos) instanceof INetworkNodeProxy
                 && !isSideCovered(blockEntity, direction)
-                && !isSideCovered(world.getBlockEntity(pos.relative(direction)), direction.getOpposite());
+                && !isSideCovered(level.getBlockEntity(pos.relative(direction)), direction.getOpposite());
     }
 
     private boolean isSideCovered(BlockEntity blockEntity, Direction direction) {
@@ -207,10 +207,10 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
             return false;
         }
 
-        Optional<INetworkNode> node = blockEntity.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).map(INetworkNodeProxy::getNode);
+        INetworkNode node = blockEntity instanceof INetworkNodeProxy<?> proxy ? proxy.getNode() : null;
 
-        if (node.isPresent() && node.get() instanceof ICoverable) {
-            Cover cover = ((ICoverable) node.get()).getCoverManager().getCover(direction);
+        if (node instanceof ICoverable coverable) {
+            Cover cover = coverable.getCoverManager().getCover(direction);
             if (cover == null) {
                 return false;
             } else {
@@ -221,13 +221,13 @@ public class CableBlock extends NetworkNodeBlock implements SimpleWaterloggedBlo
         return false;
     }
 
-    private BlockState getState(BlockState currentState, LevelAccessor world, BlockPos pos) {
-        boolean north = hasNodeConnection(world, pos.relative(Direction.NORTH), currentState, Direction.SOUTH);
-        boolean east = hasNodeConnection(world, pos.relative(Direction.EAST), currentState, Direction.WEST);
-        boolean south = hasNodeConnection(world, pos.relative(Direction.SOUTH), currentState, Direction.NORTH);
-        boolean west = hasNodeConnection(world, pos.relative(Direction.WEST), currentState, Direction.EAST);
-        boolean up = hasNodeConnection(world, pos.relative(Direction.UP), currentState, Direction.DOWN);
-        boolean down = hasNodeConnection(world, pos.relative(Direction.DOWN), currentState, Direction.UP);
+    private BlockState getState(BlockState currentState, LevelAccessor level, BlockPos pos) {
+        boolean north = hasNodeConnection(level, pos.relative(Direction.NORTH), currentState, Direction.SOUTH);
+        boolean east = hasNodeConnection(level, pos.relative(Direction.EAST), currentState, Direction.WEST);
+        boolean south = hasNodeConnection(level, pos.relative(Direction.SOUTH), currentState, Direction.NORTH);
+        boolean west = hasNodeConnection(level, pos.relative(Direction.WEST), currentState, Direction.EAST);
+        boolean up = hasNodeConnection(level, pos.relative(Direction.UP), currentState, Direction.DOWN);
+        boolean down = hasNodeConnection(level, pos.relative(Direction.DOWN), currentState, Direction.UP);
 
         return currentState
                 .setValue(NORTH, north)

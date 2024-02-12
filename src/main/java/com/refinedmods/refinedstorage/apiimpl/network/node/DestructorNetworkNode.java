@@ -36,15 +36,14 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.IFluidBlock;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import java.util.List;
 
 public class DestructorNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
@@ -160,7 +159,7 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
             BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(level, front, frontBlockState, LevelUtils.getFakePlayer((ServerLevel) level, getOwner()));
 
-            if (!MinecraftForge.EVENT_BUS.post(e)) {
+            if (!NeoForge.EVENT_BUS.post(e).isCanceled()) {
                 frontBlock.playerWillDestroy(level, front, frontBlockState, LevelUtils.getFakePlayer((ServerLevel) level, getOwner()));
 
                 level.removeBlock(front, false);

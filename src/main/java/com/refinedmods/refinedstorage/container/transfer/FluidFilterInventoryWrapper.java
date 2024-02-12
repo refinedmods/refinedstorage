@@ -5,8 +5,8 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 
 class FluidFilterInventoryWrapper implements IInventoryWrapper {
     private final FluidInventory filterInv;

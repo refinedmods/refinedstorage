@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
 import com.refinedmods.refinedstorage.container.SecurityManagerContainerMenu;
 import com.refinedmods.refinedstorage.item.SecurityCardItem;
 import com.refinedmods.refinedstorage.network.SecurityManagerUpdateMessage;
-import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
+import com.refinedmods.refinedstorage.screen.widget.SmallCheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,7 +21,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainerMe
     private static final ResourceLocation TEXTURE = new ResourceLocation(RS.ID, "textures/gui/security_manager.png");
 
     private final SecurityManagerBlockEntity securityManager;
-    private final CheckboxWidget[] permissions = new CheckboxWidget[Permission.values().length];
+    private final SmallCheckboxWidget[] permissions = new SmallCheckboxWidget[Permission.values().length];
 
     public SecurityManagerScreen(SecurityManagerContainerMenu containerMenu, Inventory inventory, Component title) {
         super(containerMenu, 176, 234, inventory, title);
@@ -44,7 +44,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainerMe
     }
 
     private void handle(int i) {
-        RS.NETWORK_HANDLER.sendToServer(new SecurityManagerUpdateMessage(securityManager.getBlockPos(), Permission.values()[i], permissions[i].selected()));
+        RS.NETWORK_HANDLER.sendToServer(new SecurityManagerUpdateMessage(Permission.values()[i], permissions[i].isSelected()));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainerMe
         ItemStack card = securityManager.getNode().getEditCard().getStackInSlot(0);
 
         for (Permission permission : Permission.values()) {
-            permissions[permission.getId()].setChecked(!card.isEmpty() && SecurityCardItem.hasPermission(card, permission));
+            permissions[permission.getId()].setSelected(!card.isEmpty() && SecurityCardItem.hasPermission(card, permission));
         }
     }
 
@@ -68,7 +68,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainerMe
         renderString(graphics, 7, 140, I18n.get("container.inventory"));
 
         for (int i = 0; i < permissions.length; ++i) {
-            CheckboxWidget permission = permissions[i];
+            SmallCheckboxWidget permission = permissions[i];
             if (RenderUtils.inBounds(permission.getX() - leftPos, permission.getY() - topPos, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
                 renderTooltip(graphics, mouseX, mouseY, I18n.get("gui.refinedstorage.security_manager.permission." + i + ".tooltip"));
             }

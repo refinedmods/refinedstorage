@@ -16,13 +16,11 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCrafting
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -174,21 +172,21 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                Optional<IItemHandler> playerInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).resolve();
-                if (playerInventory.isPresent()) {
+                IItemHandler playerInventory = player.getCapability(Capabilities.ItemHandler.ENTITY);
+                if (playerInventory != null) {
                     if (preferredSlot != -1) {
-                        ItemStack remainder = playerInventory.get().insertItem(preferredSlot, took, true);
+                        ItemStack remainder = playerInventory.insertItem(preferredSlot, took, true);
                         if (remainder.getCount() != took.getCount()) {
                             ItemStack inserted = network.extractItem(item, size - remainder.getCount(), Action.PERFORM);
-                            playerInventory.get().insertItem(preferredSlot, inserted, false);
+                            playerInventory.insertItem(preferredSlot, inserted, false);
                             took.setCount(remainder.getCount());
                         }
                     }
 
-                    if (!took.isEmpty() && ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, true).isEmpty()) {
+                    if (!took.isEmpty() && ItemHandlerHelper.insertItemStacked(playerInventory, took, true).isEmpty()) {
                         took = network.extractItem(item, size, Action.PERFORM);
 
-                        ItemHandlerHelper.insertItemStacked(playerInventory.get(), took, false);
+                        ItemHandlerHelper.insertItemStacked(playerInventory, took, false);
                     }
                 }
             } else {

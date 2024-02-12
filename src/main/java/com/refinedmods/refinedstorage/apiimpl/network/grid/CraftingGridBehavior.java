@@ -20,13 +20,10 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -111,7 +108,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         //A second list to remember which items have been extracted
         IStackList<ItemStack> usedItems = API.instance().createItemStackList();
 
-        ForgeHooks.setCraftingPlayer(player);
+        CommonHooks.setCraftingPlayer(player);
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
             grid.onCrafted(player, availableItems, usedItems);
@@ -145,8 +142,8 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         // otherwise it's not being called.
         // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> checkTakeAchievements(stack)
         crafted.onCraftedBy(player.level(), player, amountCrafted);
-        ForgeEventFactory.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
-        ForgeHooks.setCraftingPlayer(null);
+        EventHooks.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
+        CommonHooks.setCraftingPlayer(null);
     }
 
     private void filterDuplicateStacks(INetwork network, CraftingContainer matrix, IStackList<ItemStack> availableItems) {

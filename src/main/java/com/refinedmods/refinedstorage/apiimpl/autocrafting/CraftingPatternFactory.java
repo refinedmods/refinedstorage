@@ -4,7 +4,20 @@ import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.item.PatternItem;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -12,16 +25,11 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.IReverseTag;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CraftingPatternFactory {
     public static final CraftingPatternFactory INSTANCE = new CraftingPatternFactory();
@@ -48,7 +56,8 @@ public class CraftingPatternFactory {
                 }
 
                 if (outputs.isEmpty() && fluidOutputs.isEmpty()) {
-                    throw new CraftingPatternFactoryException(Component.translatable("misc.refinedstorage.pattern.error.processing_no_outputs"));
+                    throw new CraftingPatternFactoryException(
+                        Component.translatable("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
                 CraftingContainer craftingContainer = new CraftingPattern.DummyCraftingContainer();
@@ -57,7 +66,9 @@ public class CraftingPatternFactory {
                     fillCraftingInputs(craftingContainer, stack, inputs, i);
                 }
 
-                Optional<CraftingRecipe> foundRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level);
+                Optional<CraftingRecipe> foundRecipe =
+                    level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level)
+                        .map(RecipeHolder::value);
                 if (foundRecipe.isPresent()) {
                     recipe = foundRecipe.get();
 
@@ -72,10 +83,12 @@ public class CraftingPatternFactory {
                             modifyCraftingInputsToUseAlternatives(recipe, inputs);
                         }
                     } else {
-                        throw new CraftingPatternFactoryException(Component.translatable("misc.refinedstorage.pattern.error.no_output"));
+                        throw new CraftingPatternFactoryException(
+                            Component.translatable("misc.refinedstorage.pattern.error.no_output"));
                     }
                 } else {
-                    throw new CraftingPatternFactoryException(Component.translatable("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
+                    throw new CraftingPatternFactoryException(
+                        Component.translatable("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
                 }
             }
         } catch (CraftingPatternFactoryException e) {
@@ -93,7 +106,9 @@ public class CraftingPatternFactory {
         );
     }
 
-    private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, @Nullable AllowedTagList allowedTagList) throws CraftingPatternFactoryException {
+    private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs,
+                                      NonNullList<ItemStack> outputs, @Nullable AllowedTagList allowedTagList)
+        throws CraftingPatternFactoryException {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
         if (input.isEmpty()) {
@@ -104,13 +119,12 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfItem = ForgeRegistries.ITEMS
-                    .tags()
-                    .getReverseTag(input.getItem())
-                    .stream()
-                    .flatMap(IReverseTag::getTagKeys)
-                    .map(TagKey::location)
-                    .collect(Collectors.toSet());
+                Collection<ResourceLocation> tagsOfItem = BuiltInRegistries.ITEM.getResourceKey(input.getItem())
+                    .flatMap(k -> BuiltInRegistries.ITEM.getHolder(k)
+                        .map(holder -> holder.tags()
+                            .map(TagKey::location)
+                            .collect(Collectors.toSet())))
+                    .orElse(Collections.emptySet());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedItemTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -123,8 +137,8 @@ public class CraftingPatternFactory {
                             )
                         );
                     } else {
-                        TagKey<Item> tagKey = TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), declaredAllowedTag);
-                        for (Item element : ForgeRegistries.ITEMS.tags().getTag(tagKey)) {
+                        TagKey<Item> tagKey = TagKey.create(Registries.ITEM, declaredAllowedTag);
+                        for (Holder<Item> element : BuiltInRegistries.ITEM.getTagOrEmpty(tagKey)) {
                             possibilities.add(new ItemStack(element, input.getCount()));
                         }
                     }
@@ -140,7 +154,10 @@ public class CraftingPatternFactory {
         }
     }
 
-    private void fillProcessingFluidInputs(int i, ItemStack stack, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTagList allowedTagList) throws CraftingPatternFactoryException {
+    private void fillProcessingFluidInputs(int i, ItemStack stack, List<NonNullList<FluidStack>> fluidInputs,
+                                           NonNullList<FluidStack> fluidOutputs,
+                                           @Nullable AllowedTagList allowedTagList)
+        throws CraftingPatternFactoryException {
         FluidStack input = PatternItem.getFluidInputSlot(stack, i);
         if (input.isEmpty()) {
             fluidInputs.add(NonNullList.create());
@@ -150,13 +167,12 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfFluid = ForgeRegistries.FLUIDS
-                    .tags()
-                    .getReverseTag(input.getFluid())
-                    .stream()
-                    .flatMap(IReverseTag::getTagKeys)
-                    .map(TagKey::location)
-                    .collect(Collectors.toSet());
+                Collection<ResourceLocation> tagsOfFluid = BuiltInRegistries.FLUID.getResourceKey(input.getFluid())
+                    .flatMap(k -> BuiltInRegistries.FLUID.getHolder(k)
+                        .map(holder -> holder.tags()
+                            .map(TagKey::location)
+                            .collect(Collectors.toSet())))
+                    .orElse(Collections.emptySet());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedFluidTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -169,8 +185,9 @@ public class CraftingPatternFactory {
                             )
                         );
                     } else {
-                        TagKey<Fluid> tagKey = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), declaredAllowedTag);
-                        for (Fluid element : ForgeRegistries.FLUIDS.tags().getTag(tagKey)) {
+                        TagKey<Fluid> tagKey =
+                            TagKey.create(Registries.FLUID, declaredAllowedTag);
+                        for (Holder<Fluid> element : BuiltInRegistries.FLUID.getTagOrEmpty(tagKey)) {
                             possibilities.add(new FluidStack(element, input.getAmount()));
                         }
                     }
@@ -186,7 +203,8 @@ public class CraftingPatternFactory {
         }
     }
 
-    private void fillCraftingInputs(CraftingContainer inv, ItemStack stack, List<NonNullList<ItemStack>> inputs, int i) {
+    private void fillCraftingInputs(CraftingContainer inv, ItemStack stack, List<NonNullList<ItemStack>> inputs,
+                                    int i) {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
         inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.of(ItemStack.EMPTY, input));

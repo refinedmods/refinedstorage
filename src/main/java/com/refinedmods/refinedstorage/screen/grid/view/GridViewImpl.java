@@ -38,7 +38,7 @@ public class GridViewImpl implements IGridView {
     }
 
     @Override
-    public void setStacks(List<IGridStack> stacks) {
+    public void setStacks(List<? extends IGridStack> stacks) {
         map.clear();
 
         for (IGridStack stack : stacks) {

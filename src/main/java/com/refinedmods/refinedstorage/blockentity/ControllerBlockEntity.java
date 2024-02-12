@@ -15,23 +15,16 @@ import com.refinedmods.refinedstorage.blockentity.config.RedstoneMode;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationParameter;
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.blockentity.data.RSSerializers;
-import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +45,9 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
         .addParameter(NODES)
         .build();
 
-    private final LazyOptional<INetworkNodeProxy<RootNetworkNode>> networkNodeProxyCap = LazyOptional.of(() -> this);
     private final NetworkType type;
     private INetwork removedNetwork;
     private Network dummyNetwork;
-    private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> getNetwork().getEnergyStorage());
 
     public ControllerBlockEntity(NetworkType type, BlockPos pos, BlockState state) {
         super(type == NetworkType.CREATIVE ? RSBlockEntities.CREATIVE_CONTROLLER.get() : RSBlockEntities.CONTROLLER.get(), pos, state, SPEC);
@@ -163,19 +154,5 @@ public class ControllerBlockEntity extends BaseBlockEntity implements INetworkNo
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
         ((Network) getNetwork()).setRedstoneMode(mode);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return energyProxyCap.cast();
-        }
-
-        if (cap == NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY) {
-            return networkNodeProxyCap.cast();
-        }
-
-        return super.getCapability(cap, direction);
     }
 }

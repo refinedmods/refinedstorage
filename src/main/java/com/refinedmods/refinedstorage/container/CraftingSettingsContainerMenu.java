@@ -7,8 +7,8 @@ import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class CraftingSettingsContainerMenu extends BaseContainerMenu {
     public CraftingSettingsContainerMenu(Player player, IGridStack stack) {

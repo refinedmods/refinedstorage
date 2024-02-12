@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class ConfiguredItemsInFilterItemHandler extends ItemStackHandler {
     private final ItemStack stack;

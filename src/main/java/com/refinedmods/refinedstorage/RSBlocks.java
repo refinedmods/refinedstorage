@@ -6,14 +6,14 @@ import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.refinedmods.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.refinedmods.refinedstorage.block.*;
 import com.refinedmods.refinedstorage.item.blockitem.PortableGridBlockItem;
-import com.refinedmods.refinedstorage.util.ColorMap;
+import com.refinedmods.refinedstorage.util.BlockColorMap;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -21,41 +21,41 @@ import java.util.List;
 import java.util.Map;
 
 public final class RSBlocks {
-    public static final RegistryObject<ImporterBlock> IMPORTER;
-    public static final RegistryObject<ExporterBlock> EXPORTER;
-    public static final RegistryObject<QuartzEnrichedIronBlock> QUARTZ_ENRICHED_IRON;
-    public static final RegistryObject<MachineCasingBlock> MACHINE_CASING;
-    public static final RegistryObject<CableBlock> CABLE;
-    public static final RegistryObject<DiskDriveBlock> DISK_DRIVE;
-    public static final RegistryObject<ExternalStorageBlock> EXTERNAL_STORAGE;
-    public static final Map<ItemStorageType, RegistryObject<StorageBlock>> STORAGE_BLOCKS = new EnumMap<>(ItemStorageType.class);
-    public static final Map<FluidStorageType, RegistryObject<FluidStorageBlock>> FLUID_STORAGE_BLOCKS = new EnumMap<>(FluidStorageType.class);
-    public static final Map<TagKey<Block>, ColorMap<? extends Block>> COLORED_BLOCK_TAGS = new HashMap<>();
-    public static final RegistryObject<InterfaceBlock> INTERFACE;
-    public static final RegistryObject<FluidInterfaceBlock> FLUID_INTERFACE;
-    public static final RegistryObject<StorageMonitorBlock> STORAGE_MONITOR;
-    public static final RegistryObject<ConstructorBlock> CONSTRUCTOR;
-    public static final RegistryObject<DestructorBlock> DESTRUCTOR;
-    public static final RegistryObject<PortableGridBlock> PORTABLE_GRID;
-    public static final RegistryObject<PortableGridBlock> CREATIVE_PORTABLE_GRID;
-    public static final List<RegistryObject<? extends Block>> COLORED_BLOCKS = new ArrayList<>();
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RS.ID);
-    public static final ColorMap<CrafterBlock> CRAFTER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<RelayBlock> RELAY = new ColorMap<>(BLOCKS);
-    public static final ColorMap<NetworkTransmitterBlock> NETWORK_TRANSMITTER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<NetworkReceiverBlock> NETWORK_RECEIVER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<ControllerBlock> CONTROLLER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<ControllerBlock> CREATIVE_CONTROLLER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<GridBlock> GRID = new ColorMap<>(BLOCKS);
-    public static final ColorMap<GridBlock> CRAFTING_GRID = new ColorMap<>(BLOCKS);
-    public static final ColorMap<GridBlock> PATTERN_GRID = new ColorMap<>(BLOCKS);
-    public static final ColorMap<GridBlock> FLUID_GRID = new ColorMap<>(BLOCKS);
-    public static final ColorMap<SecurityManagerBlock> SECURITY_MANAGER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<WirelessTransmitterBlock> WIRELESS_TRANSMITTER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<DiskManipulatorBlock> DISK_MANIPULATOR = new ColorMap<>(BLOCKS);
-    public static final ColorMap<CrafterManagerBlock> CRAFTER_MANAGER = new ColorMap<>(BLOCKS);
-    public static final ColorMap<CraftingMonitorBlock> CRAFTING_MONITOR = new ColorMap<>(BLOCKS);
-    public static final ColorMap<DetectorBlock> DETECTOR = new ColorMap<>(BLOCKS);
+    public static final DeferredHolder<Block, ImporterBlock> IMPORTER;
+    public static final DeferredHolder<Block, ExporterBlock> EXPORTER;
+    public static final DeferredHolder<Block, QuartzEnrichedIronBlock> QUARTZ_ENRICHED_IRON;
+    public static final DeferredHolder<Block, MachineCasingBlock> MACHINE_CASING;
+    public static final DeferredHolder<Block, CableBlock> CABLE;
+    public static final DeferredHolder<Block, DiskDriveBlock> DISK_DRIVE;
+    public static final DeferredHolder<Block, ExternalStorageBlock> EXTERNAL_STORAGE;
+    public static final Map<ItemStorageType, DeferredHolder<Block, StorageBlock>> STORAGE_BLOCKS = new EnumMap<>(ItemStorageType.class);
+    public static final Map<FluidStorageType, DeferredHolder<Block, FluidStorageBlock>> FLUID_STORAGE_BLOCKS = new EnumMap<>(FluidStorageType.class);
+    public static final Map<TagKey<Block>, BlockColorMap<?>> COLORED_BLOCK_TAGS = new HashMap<>();
+    public static final DeferredHolder<Block, InterfaceBlock> INTERFACE;
+    public static final DeferredHolder<Block, FluidInterfaceBlock> FLUID_INTERFACE;
+    public static final DeferredHolder<Block, StorageMonitorBlock> STORAGE_MONITOR;
+    public static final DeferredHolder<Block, ConstructorBlock> CONSTRUCTOR;
+    public static final DeferredHolder<Block, DestructorBlock> DESTRUCTOR;
+    public static final DeferredHolder<Block, PortableGridBlock> PORTABLE_GRID;
+    public static final DeferredHolder<Block, PortableGridBlock> CREATIVE_PORTABLE_GRID;
+    public static final List<DeferredHolder<Block, ? extends Block>> COLORED_BLOCKS = new ArrayList<>();
+    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, RS.ID);
+    public static final BlockColorMap<CrafterBlock> CRAFTER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<RelayBlock> RELAY = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<NetworkTransmitterBlock> NETWORK_TRANSMITTER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<NetworkReceiverBlock> NETWORK_RECEIVER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<ControllerBlock> CONTROLLER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<ControllerBlock> CREATIVE_CONTROLLER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<GridBlock> GRID = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<GridBlock> CRAFTING_GRID = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<GridBlock> PATTERN_GRID = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<GridBlock> FLUID_GRID = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<SecurityManagerBlock> SECURITY_MANAGER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<WirelessTransmitterBlock> WIRELESS_TRANSMITTER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<DiskManipulatorBlock> DISK_MANIPULATOR = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<CrafterManagerBlock> CRAFTER_MANAGER = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<CraftingMonitorBlock> CRAFTING_MONITOR = new BlockColorMap<>(BLOCKS);
+    public static final BlockColorMap<DetectorBlock> DETECTOR = new BlockColorMap<>(BLOCKS);
     private static final String GRID_SUFFIX = "_grid";
 
     static {
@@ -103,7 +103,7 @@ public final class RSBlocks {
     private RSBlocks() {
     }
 
-    public static void register() {
-        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    public static void register(IEventBus bus) {
+        BLOCKS.register(bus);
     }
 }

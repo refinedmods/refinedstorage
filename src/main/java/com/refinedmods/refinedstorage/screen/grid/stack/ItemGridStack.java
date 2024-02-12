@@ -1,26 +1,37 @@
 package com.refinedmods.refinedstorage.screen.grid.stack;
 
+import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
+import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
+import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.api.util.IStackList;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
+import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.util.RenderUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.IReverseTag;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class ItemGridStack implements IGridStack {
     private static final String ERROR_PLACEHOLDER = "<Error>";
@@ -45,7 +56,8 @@ public class ItemGridStack implements IGridStack {
         this.stack = stack;
     }
 
-    public ItemGridStack(UUID id, @Nullable UUID otherId, ItemStack stack, boolean craftable, StorageTrackerEntry entry) {
+    public ItemGridStack(UUID id, @Nullable UUID otherId, ItemStack stack, boolean craftable,
+                         StorageTrackerEntry entry) {
         this.id = id;
         this.otherId = otherId;
         this.stack = stack;
@@ -95,7 +107,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 cachedName = stack.getHoverName().getString();
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve item name of {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
+                LOGGER.warn("Could not retrieve item name of {}", BuiltInRegistries.ITEM.getKey(stack.getItem()));
 
                 cachedName = ERROR_PLACEHOLDER;
             }
@@ -135,14 +147,13 @@ public class ItemGridStack implements IGridStack {
     @Override
     public Set<String> getTags() {
         if (cachedTags == null) {
-            cachedTags = ForgeRegistries.ITEMS
-                .tags()
-                .getReverseTag(stack.getItem())
-                .stream()
-                .flatMap(IReverseTag::getTagKeys)
-                .map(TagKey::location)
-                .map(ResourceLocation::getPath)
-                .collect(Collectors.toSet());
+            cachedTags = BuiltInRegistries.ITEM.getResourceKey(stack.getItem())
+                .flatMap(k -> BuiltInRegistries.ITEM.getHolder(k)
+                    .map(holder -> holder.tags()
+                        .map(TagKey::location)
+                        .map(ResourceLocation::getPath)
+                        .collect(Collectors.toSet())))
+                .orElse(Collections.emptySet());
         }
 
         return cachedTags;
@@ -155,7 +166,7 @@ public class ItemGridStack implements IGridStack {
             try {
                 tooltip = RenderUtils.getTooltipFromItem(stack);
             } catch (Throwable t) {
-                LOGGER.warn("Could not retrieve item tooltip of {}", ForgeRegistries.ITEMS.getKey(stack.getItem()));
+                LOGGER.warn("Could not retrieve item tooltip of {}", BuiltInRegistries.ITEM.getKey(stack.getItem()));
 
                 tooltip = new ArrayList<>();
                 tooltip.add(Component.literal(ERROR_PLACEHOLDER));
@@ -226,5 +237,37 @@ public class ItemGridStack implements IGridStack {
     @Override
     public void setTrackerEntry(@Nullable StorageTrackerEntry entry) {
         this.entry = entry;
+    }
+
+    public static ItemGridStack of(
+        final IStorageCache<ItemStack> cache,
+        @Nullable final IStackList<ItemStack> craftablesList,
+        final IStorageTracker<ItemStack> storageTracker,
+        final StackListResult<ItemStack> delta
+    ) {
+        StackListEntry<ItemStack> craftingEntry = craftablesList == null ? null : cache.getCraftablesList().getEntry(delta.getStack(), IComparer.COMPARE_NBT);
+        return new ItemGridStack(
+            delta.getId(),
+            craftingEntry != null ? craftingEntry.getId() : null,
+            delta.getStack().copy(), // copy is very important as the same stack will be shared between server<->client on single player
+            false,
+            storageTracker.get(delta.getStack())
+        );
+    }
+
+    public static ItemGridStack of(
+        final StackListEntry<ItemStack> entry,
+        final IStorageTracker<ItemStack> storageTracker,
+        @Nullable final IStackList<ItemStack> oppositeList,
+        final boolean craftable
+    ) {
+        StackListEntry<ItemStack> otherEntry = oppositeList == null ? null : oppositeList.getEntry(entry.getStack(), IComparer.COMPARE_NBT);
+        return new ItemGridStack(
+            entry.getId(),
+            otherEntry != null ? otherEntry.getId() : null,
+            entry.getStack().copy(), // copy is very important as the same stack will be shared between server<->client on single player
+            craftable,
+            storageTracker.get(entry.getStack())
+        );
     }
 }

@@ -2,8 +2,7 @@ package com.refinedmods.refinedstorage.inventory.fluid;
 
 import com.refinedmods.refinedstorage.inventory.listener.InventoryListener;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;

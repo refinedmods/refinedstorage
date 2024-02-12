@@ -24,8 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -102,7 +101,7 @@ public class FilterItem extends Item {
             stack.setTag(new CompoundTag());
         }
 
-        stack.getTag().put(NBT_ICON, icon.serializeNBT());
+        stack.getTag().put(NBT_ICON, icon.save(new CompoundTag()));
     }
 
     public static void setFluidIcon(ItemStack stack, @Nullable FluidStack icon) {

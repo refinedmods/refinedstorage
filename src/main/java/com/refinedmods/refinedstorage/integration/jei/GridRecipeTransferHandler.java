@@ -8,9 +8,9 @@ import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMes
 import com.refinedmods.refinedstorage.network.grid.GridProcessingTransferMessage;
 import com.refinedmods.refinedstorage.network.grid.GridTransferMessage;
 import com.refinedmods.refinedstorage.screen.grid.GridScreen;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -185,7 +185,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     private void handleFluidIngredient(List<FluidStack> list, IRecipeSlotView slotView) {
         if (slotView != null) {
-            slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(list::add);
+            slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(list::add);
         }
     }
 

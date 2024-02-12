@@ -6,7 +6,7 @@ import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ElementDrawers<T extends AbstractContainerMenu> implements IElementDrawers {
     protected final BaseScreen<T> screen;

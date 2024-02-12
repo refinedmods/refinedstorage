@@ -1,98 +1,221 @@
 package com.refinedmods.refinedstorage.network;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorCancelMessage;
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
 import com.refinedmods.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeRequestMessage;
 import com.refinedmods.refinedstorage.network.disk.StorageDiskSizeResponseMessage;
-import com.refinedmods.refinedstorage.network.grid.*;
+import com.refinedmods.refinedstorage.network.grid.GridClearMessage;
+import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewRequestMessage;
+import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
+import com.refinedmods.refinedstorage.network.grid.GridCraftingStartRequestMessage;
+import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
+import com.refinedmods.refinedstorage.network.grid.GridFluidDeltaMessage;
+import com.refinedmods.refinedstorage.network.grid.GridFluidInsertHeldMessage;
+import com.refinedmods.refinedstorage.network.grid.GridFluidPullMessage;
+import com.refinedmods.refinedstorage.network.grid.GridFluidUpdateMessage;
+import com.refinedmods.refinedstorage.network.grid.GridItemDeltaMessage;
+import com.refinedmods.refinedstorage.network.grid.GridItemGridScrollMessage;
+import com.refinedmods.refinedstorage.network.grid.GridItemInsertHeldMessage;
+import com.refinedmods.refinedstorage.network.grid.GridItemInventoryScrollMessage;
+import com.refinedmods.refinedstorage.network.grid.GridItemPullMessage;
+import com.refinedmods.refinedstorage.network.grid.GridItemUpdateMessage;
+import com.refinedmods.refinedstorage.network.grid.GridPatternCreateMessage;
+import com.refinedmods.refinedstorage.network.grid.GridProcessingTransferMessage;
+import com.refinedmods.refinedstorage.network.grid.GridTransferMessage;
+import com.refinedmods.refinedstorage.network.grid.PortableGridSettingsUpdateMessage;
+import com.refinedmods.refinedstorage.network.grid.WirelessFluidGridSettingsUpdateMessage;
+import com.refinedmods.refinedstorage.network.grid.WirelessGridSettingsUpdateMessage;
 import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParameterMessage;
-import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParamaterUpdateMessage;
-import net.minecraft.resources.ResourceLocation;
+import com.refinedmods.refinedstorage.network.sync.BlockEntitySynchronizationParameterUpdateMessage;
+
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
 public class NetworkHandler {
-    private final String protocolVersion = Integer.toString(1);
-    private final ResourceLocation channel = new ResourceLocation(RS.ID, "main_channel");
-    private final SimpleChannel handler = NetworkRegistry.ChannelBuilder
-        .named(channel)
-        .clientAcceptedVersions(protocolVersion::equals)
-        .serverAcceptedVersions(protocolVersion::equals)
-        .networkProtocolVersion(() -> protocolVersion)
-        .simpleChannel();
-    private final PacketSplitter splitter = new PacketSplitter(10, handler, channel);
-
-    public void register() {
-        int id = 0;
-
-        handler.registerMessage(id++, StorageDiskSizeRequestMessage.class, StorageDiskSizeRequestMessage::encode, StorageDiskSizeRequestMessage::decode, StorageDiskSizeRequestMessage::handle);
-        handler.registerMessage(id++, StorageDiskSizeResponseMessage.class, StorageDiskSizeResponseMessage::encode, StorageDiskSizeResponseMessage::decode, StorageDiskSizeResponseMessage::handle);
-        handler.registerMessage(id++, FilterUpdateMessage.class, FilterUpdateMessage::encode, FilterUpdateMessage::decode, FilterUpdateMessage::handle);
-        handler.registerMessage(id++, FluidFilterSlotUpdateMessage.class, FluidFilterSlotUpdateMessage::encode, FluidFilterSlotUpdateMessage::decode, FluidFilterSlotUpdateMessage::handle);
-        handler.registerMessage(id++, BlockEntitySynchronizationParameterMessage.class, BlockEntitySynchronizationParameterMessage::encode, BlockEntitySynchronizationParameterMessage::decode, (msg, ctx) -> BlockEntitySynchronizationParameterMessage.handle(ctx));
-        handler.registerMessage(id++, BlockEntitySynchronizationParamaterUpdateMessage.class, BlockEntitySynchronizationParamaterUpdateMessage::encode, BlockEntitySynchronizationParamaterUpdateMessage::decode, BlockEntitySynchronizationParamaterUpdateMessage::handle);
-        splitter.registerMessage(id++, GridItemUpdateMessage.class, GridItemUpdateMessage::encode, GridItemUpdateMessage::decode, GridItemUpdateMessage::handle);
-        splitter.registerMessage(id++, GridItemDeltaMessage.class, GridItemDeltaMessage::encode, GridItemDeltaMessage::decode, GridItemDeltaMessage::handle);
-        handler.registerMessage(id++, GridItemPullMessage.class, GridItemPullMessage::encode, GridItemPullMessage::decode, GridItemPullMessage::handle);
-        handler.registerMessage(id++, GridItemGridScrollMessage.class, GridItemGridScrollMessage::encode, GridItemGridScrollMessage::decode, GridItemGridScrollMessage::handle);
-        handler.registerMessage(id++, GridItemInventoryScrollMessage.class, GridItemInventoryScrollMessage::encode, GridItemInventoryScrollMessage::decode, GridItemInventoryScrollMessage::handle);
-        handler.registerMessage(id++, GridItemInsertHeldMessage.class, GridItemInsertHeldMessage::encode, GridItemInsertHeldMessage::decode, GridItemInsertHeldMessage::handle);
-        handler.registerMessage(id++, GridClearMessage.class, (msg, buf) -> {
-        }, buf -> new GridClearMessage(), (msg, ctx) -> GridClearMessage.handle(ctx));
-        handler.registerMessage(id++, GridPatternCreateMessage.class, GridPatternCreateMessage::encode, GridPatternCreateMessage::decode, GridPatternCreateMessage::handle);
-        handler.registerMessage(id++, SetFilterSlotMessage.class, SetFilterSlotMessage::encode, SetFilterSlotMessage::decode, SetFilterSlotMessage::handle);
-        handler.registerMessage(id++, SetFluidFilterSlotMessage.class, SetFluidFilterSlotMessage::encode, SetFluidFilterSlotMessage::decode, SetFluidFilterSlotMessage::handle);
-        handler.registerMessage(id++, GridFluidUpdateMessage.class, GridFluidUpdateMessage::encode, GridFluidUpdateMessage::decode, GridFluidUpdateMessage::handle);
-        handler.registerMessage(id++, GridFluidDeltaMessage.class, GridFluidDeltaMessage::encode, GridFluidDeltaMessage::decode, GridFluidDeltaMessage::handle);
-        handler.registerMessage(id++, GridFluidInsertHeldMessage.class, (msg, buf) -> {
-        }, buf -> new GridFluidInsertHeldMessage(), (msg, ctx) -> GridFluidInsertHeldMessage.handle(ctx));
-        handler.registerMessage(id++, GridFluidPullMessage.class, GridFluidPullMessage::encode, GridFluidPullMessage::decode, GridFluidPullMessage::handle);
-        splitter.registerMessage(id++, GridTransferMessage.class, GridTransferMessage::encode, GridTransferMessage::decode, GridTransferMessage::handle);
-        handler.registerMessage(id++, GridProcessingTransferMessage.class, GridProcessingTransferMessage::encode, GridProcessingTransferMessage::decode, GridProcessingTransferMessage::handle);
-        handler.registerMessage(id++, SecurityManagerUpdateMessage.class, SecurityManagerUpdateMessage::encode, SecurityManagerUpdateMessage::decode, SecurityManagerUpdateMessage::handle);
-        handler.registerMessage(id++, WirelessGridSettingsUpdateMessage.class, WirelessGridSettingsUpdateMessage::encode, WirelessGridSettingsUpdateMessage::decode, WirelessGridSettingsUpdateMessage::handle);
-        handler.registerMessage(id++, OpenNetworkItemMessage.class, OpenNetworkItemMessage::encode, OpenNetworkItemMessage::decode, OpenNetworkItemMessage::handle);
-        handler.registerMessage(id++, WirelessFluidGridSettingsUpdateMessage.class, WirelessFluidGridSettingsUpdateMessage::encode, WirelessFluidGridSettingsUpdateMessage::decode, WirelessFluidGridSettingsUpdateMessage::handle);
-        handler.registerMessage(id++, PortableGridSettingsUpdateMessage.class, PortableGridSettingsUpdateMessage::encode, PortableGridSettingsUpdateMessage::decode, PortableGridSettingsUpdateMessage::handle);
-        splitter.registerMessage(id++, PortableGridItemUpdateMessage.class, PortableGridItemUpdateMessage::encode, PortableGridItemUpdateMessage::decode, PortableGridItemUpdateMessage::handle);
-        splitter.registerMessage(id++, PortableGridItemDeltaMessage.class, PortableGridItemDeltaMessage::encode, PortableGridItemDeltaMessage::decode, PortableGridItemDeltaMessage::handle);
-        handler.registerMessage(id++, PortableGridFluidUpdateMessage.class, PortableGridFluidUpdateMessage::encode, PortableGridFluidUpdateMessage::decode, PortableGridFluidUpdateMessage::handle);
-        handler.registerMessage(id++, PortableGridFluidDeltaMessage.class, PortableGridFluidDeltaMessage::encode, PortableGridFluidDeltaMessage::decode, PortableGridFluidDeltaMessage::handle);
-        handler.registerMessage(id++, GridCraftingPreviewRequestMessage.class, GridCraftingPreviewRequestMessage::encode, GridCraftingPreviewRequestMessage::decode, GridCraftingPreviewRequestMessage::handle);
-        handler.registerMessage(id++, GridCraftingPreviewResponseMessage.class, GridCraftingPreviewResponseMessage::encode, GridCraftingPreviewResponseMessage::decode, GridCraftingPreviewResponseMessage::handle);
-        handler.registerMessage(id++, GridCraftingStartRequestMessage.class, GridCraftingStartRequestMessage::encode, GridCraftingStartRequestMessage::decode, GridCraftingStartRequestMessage::handle);
-        handler.registerMessage(id++, GridCraftingStartResponseMessage.class, (msg, buf) -> {
-        }, buf -> new GridCraftingStartResponseMessage(), (msg, ctx) -> GridCraftingStartResponseMessage.handle(ctx));
-        splitter.registerMessage(id++, CraftingMonitorUpdateMessage.class, CraftingMonitorUpdateMessage::encode, CraftingMonitorUpdateMessage::decode, CraftingMonitorUpdateMessage::handle);
-        handler.registerMessage(id++, CraftingMonitorCancelMessage.class, CraftingMonitorCancelMessage::encode, CraftingMonitorCancelMessage::decode, CraftingMonitorCancelMessage::handle);
-        handler.registerMessage(id++, WirelessCraftingMonitorSettingsUpdateMessage.class, WirelessCraftingMonitorSettingsUpdateMessage::encode, WirelessCraftingMonitorSettingsUpdateMessage::decode, WirelessCraftingMonitorSettingsUpdateMessage::handle);
-        handler.registerMessage(id++, SplitPacketMessage.class, SplitPacketMessage::encode, SplitPacketMessage::decode, SplitPacketMessage::handle);
+    public void register(IPayloadRegistrar registrar) {
+        registrar.play(
+            StorageDiskSizeRequestMessage.ID,
+            StorageDiskSizeRequestMessage::decode,
+            handler -> handler.server(StorageDiskSizeRequestMessage::handle)
+        );
+        registrar.play(
+            StorageDiskSizeResponseMessage.ID,
+            StorageDiskSizeResponseMessage::decode,
+            handler -> handler.client(StorageDiskSizeResponseMessage::handle)
+        );
+        registrar.play(
+            FilterUpdateMessage.ID,
+            FilterUpdateMessage::decode,
+            handler -> handler.server(FilterUpdateMessage::handle)
+        );
+        registrar.play(
+            FluidFilterSlotUpdateMessage.ID,
+            FluidFilterSlotUpdateMessage::decode,
+            handler -> handler.server(FluidFilterSlotUpdateMessage::handle)
+        );
+        registrar.play(
+            BlockEntitySynchronizationParameterMessage.ID,
+            BlockEntitySynchronizationParameterMessage::decode,
+            handler -> handler.client(BlockEntitySynchronizationParameterMessage::handle)
+        );
+        registrar.play(
+            BlockEntitySynchronizationParameterUpdateMessage.ID,
+            BlockEntitySynchronizationParameterUpdateMessage::decode,
+            handler -> handler.server(BlockEntitySynchronizationParameterUpdateMessage::handle)
+        );
+        registrar.play(
+            GridItemUpdateMessage.ID,
+            GridItemUpdateMessage::decode,
+            handler -> handler.client(GridItemUpdateMessage::handle)
+        );
+        registrar.play(
+            GridItemDeltaMessage.ID,
+            GridItemDeltaMessage::decode,
+            handler -> handler.client(GridItemDeltaMessage::handle)
+        );
+        registrar.play(
+            GridItemPullMessage.ID,
+            GridItemPullMessage::decode,
+            handler -> handler.server(GridItemPullMessage::handle)
+        );
+        registrar.play(
+            GridItemGridScrollMessage.ID,
+            GridItemGridScrollMessage::decode,
+            handler -> handler.server(GridItemGridScrollMessage::handle)
+        );
+        registrar.play(
+            GridItemInventoryScrollMessage.ID,
+            GridItemInventoryScrollMessage::decode,
+            handler -> handler.server(GridItemInventoryScrollMessage::handle)
+        );
+        registrar.play(
+            GridItemInsertHeldMessage.ID,
+            GridItemInsertHeldMessage::decode,
+            handler -> handler.server(GridItemInsertHeldMessage::handle)
+        );
+        registrar.play(
+            GridClearMessage.ID,
+            ctx -> new GridClearMessage(),
+            handler -> handler.server(GridClearMessage::handle)
+        );
+        registrar.play(
+            GridPatternCreateMessage.ID,
+            GridPatternCreateMessage::decode,
+            handler -> handler.server(GridPatternCreateMessage::handle)
+        );
+        registrar.play(
+            SetFilterSlotMessage.ID,
+            SetFilterSlotMessage::decode,
+            handler -> handler.server(SetFilterSlotMessage::handle)
+        );
+        registrar.play(
+            SetFluidFilterSlotMessage.ID,
+            SetFluidFilterSlotMessage::decode,
+            handler -> handler.server(SetFluidFilterSlotMessage::handle)
+        );
+        registrar.play(
+            GridFluidUpdateMessage.ID,
+            GridFluidUpdateMessage::decode,
+            handler -> handler.client(GridFluidUpdateMessage::handle)
+        );
+        registrar.play(
+            GridFluidDeltaMessage.ID,
+            GridFluidDeltaMessage::decode,
+            handler -> handler.client(GridFluidDeltaMessage::handle)
+        );
+        registrar.play(
+            GridFluidInsertHeldMessage.ID,
+            ctx -> new GridFluidInsertHeldMessage(),
+            handler -> handler.server(GridFluidInsertHeldMessage::handle)
+        );
+        registrar.play(
+            GridFluidPullMessage.ID,
+            GridFluidPullMessage::decode,
+            handler -> handler.server(GridFluidPullMessage::handle)
+        );
+        registrar.play(
+            GridTransferMessage.ID,
+            GridTransferMessage::decode,
+            handler -> handler.server(GridTransferMessage::handle)
+        );
+        registrar.play(
+            GridProcessingTransferMessage.ID,
+            GridProcessingTransferMessage::decode,
+            handler -> handler.server(GridProcessingTransferMessage::handle)
+        );
+        registrar.play(
+            SecurityManagerUpdateMessage.ID,
+            SecurityManagerUpdateMessage::decode,
+            handler -> handler.server(SecurityManagerUpdateMessage::handle)
+        );
+        registrar.play(
+            WirelessGridSettingsUpdateMessage.ID,
+            WirelessGridSettingsUpdateMessage::decode,
+            handler -> handler.server(WirelessGridSettingsUpdateMessage::handle)
+        );
+        registrar.play(
+            OpenNetworkItemMessage.ID,
+            OpenNetworkItemMessage::decode,
+            handler -> handler.server(OpenNetworkItemMessage::handle)
+        );
+        registrar.play(
+            WirelessFluidGridSettingsUpdateMessage.ID,
+            WirelessFluidGridSettingsUpdateMessage::decode,
+            handler -> handler.server(WirelessFluidGridSettingsUpdateMessage::handle)
+        );
+        registrar.play(
+            PortableGridSettingsUpdateMessage.ID,
+            PortableGridSettingsUpdateMessage::decode,
+            handler -> handler.server(PortableGridSettingsUpdateMessage::handle)
+        );
+        registrar.play(
+            GridCraftingPreviewRequestMessage.ID,
+            GridCraftingPreviewRequestMessage::decode,
+            handler -> handler.server(GridCraftingPreviewRequestMessage::handle)
+        );
+        registrar.play(
+            GridCraftingPreviewResponseMessage.ID,
+            GridCraftingPreviewResponseMessage::decode,
+            handler -> handler.client(GridCraftingPreviewResponseMessage::handle)
+        );
+        registrar.play(
+            GridCraftingStartRequestMessage.ID,
+            GridCraftingStartRequestMessage::decode,
+            handler -> handler.server(GridCraftingStartRequestMessage::handle)
+        );
+        registrar.play(
+            GridCraftingStartResponseMessage.ID,
+            buf -> new GridCraftingStartResponseMessage(),
+            handler -> handler.client(GridCraftingStartResponseMessage::handle)
+        );
+        registrar.play(
+            CraftingMonitorUpdateMessage.ID,
+            CraftingMonitorUpdateMessage::decode,
+            handler -> handler.client(CraftingMonitorUpdateMessage::handle)
+        );
+        registrar.play(
+            CraftingMonitorCancelMessage.ID,
+            CraftingMonitorCancelMessage::decode,
+            handler -> handler.server(CraftingMonitorCancelMessage::handle)
+        );
+        registrar.play(
+            WirelessCraftingMonitorSettingsUpdateMessage.ID,
+            WirelessCraftingMonitorSettingsUpdateMessage::decode,
+            handler -> handler.server(WirelessCraftingMonitorSettingsUpdateMessage::handle)
+        );
     }
 
-    public void sendTo(ServerPlayer player, Object message) {
+    public void sendTo(ServerPlayer player, CustomPacketPayload message) {
         if (!(player instanceof FakePlayer)) {
-            if (splitter.shouldMessageBeSplit(message.getClass())) {
-                splitter.sendToPlayer(player, message);
-            } else {
-                handler.send(PacketDistributor.PLAYER.with(() -> player), message);
-            }
+            PacketDistributor.PLAYER.with(player).send(message);
         }
     }
 
-    public void sendToServer(Object message) {
-        if (splitter.shouldMessageBeSplit(message.getClass())) {
-            splitter.sendToServer(message);
-        } else {
-            handler.send(PacketDistributor.SERVER.noArg(), message);
-        }
-    }
-
-    public void addPackagePart(int communicationId, int packetIndex, byte[] payload) {
-        splitter.addPackagePart(communicationId, packetIndex, payload);
+    public void sendToServer(CustomPacketPayload message) {
+        PacketDistributor.SERVER.noArg().send(message);
     }
 }

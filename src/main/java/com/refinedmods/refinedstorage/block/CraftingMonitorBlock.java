@@ -8,7 +8,6 @@ import com.refinedmods.refinedstorage.blockentity.craftingmonitor.CraftingMonito
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class CraftingMonitorBlock extends ColoredNetworkBlock {
     public CraftingMonitorBlock() {
@@ -44,8 +42,7 @@ public class CraftingMonitorBlock extends ColoredNetworkBlock {
         if (!level.isClientSide) {
             CraftingMonitorBlockEntity blockEntity = (CraftingMonitorBlockEntity) level.getBlockEntity(pos);
 
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attempt(level, pos, player, () -> player.openMenu(
                 new CraftingMonitorMenuProvider(RSContainerMenus.CRAFTING_MONITOR.get(), blockEntity.getNode(), blockEntity),
                 pos
             ), Permission.MODIFY, Permission.AUTOCRAFTING);

@@ -1,8 +1,7 @@
 package com.refinedmods.refinedstorage.inventory.item;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 
 public class ProxyItemHandler implements IItemHandler {

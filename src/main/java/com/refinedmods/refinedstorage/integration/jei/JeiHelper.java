@@ -4,7 +4,6 @@ import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.runtime.IClickableIngredient;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.renderer.Rect2i;
-
 import java.util.Optional;
 
 public class JeiHelper {

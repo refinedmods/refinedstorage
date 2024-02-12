@@ -9,8 +9,12 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.storage.cache.InvalidateCause;
 import com.refinedmods.refinedstorage.api.util.IStackList;
+import com.refinedmods.refinedstorage.api.util.StackListEntry;
 import com.refinedmods.refinedstorage.api.util.StackListResult;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
+import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
+
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -140,6 +144,31 @@ public class ItemStorageCache implements IStorageCache<ItemStack> {
     @Override
     public IStackList<ItemStack> getCraftablesList() {
         return craftables;
+    }
+
+    @Override
+    public List<? extends IGridStack> getGridStacks() {
+        final List<ItemGridStack> stacks = new ArrayList<>();
+
+        for (StackListEntry<ItemStack> stack : network.getItemStorageCache().getList().getStacks()) {
+            stacks.add(ItemGridStack.of(
+                stack,
+                network.getItemStorageTracker(),
+                network.getItemStorageCache().getCraftablesList(),
+                false
+            ));
+        }
+
+        for (StackListEntry<ItemStack> stack : network.getItemStorageCache().getCraftablesList().getStacks()) {
+            stacks.add(ItemGridStack.of(
+                stack,
+                network.getItemStorageTracker(),
+                network.getItemStorageCache().getList(),
+                true
+            ));
+        }
+
+        return stacks;
     }
 
     @Override

@@ -18,7 +18,6 @@ import com.refinedmods.refinedstorage.util.LevelUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.PositionImpl;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -34,14 +33,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -122,7 +120,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
                 new BlockHitResult(Vec3.ZERO, getDirection(), pos, false)
             );
 
-            InteractionResult result = ForgeHooks.onPlaceItemIntoWorld(ctx);
+            InteractionResult result = CommonHooks.onPlaceItemIntoWorld(ctx);
             if (result.consumesAction()) {
                 network.extractItem(tookCopy, 1, Action.PERFORM);
             }
@@ -138,7 +136,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(stack, dropCount, compare, Action.PERFORM);
 
         if (!took.isEmpty()) {
-            DefaultDispenseItemBehavior.spawnItem(level, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+            DefaultDispenseItemBehavior.spawnItem(level, took, 6, getDirection(), new Vec3(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             network.getCraftingManager().request(this, stack, 1);
         }

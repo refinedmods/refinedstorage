@@ -7,7 +7,6 @@ import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class CrafterManagerBlock extends ColoredNetworkBlock {
     public CrafterManagerBlock() {
@@ -41,8 +39,7 @@ public class CrafterManagerBlock extends ColoredNetworkBlock {
         }
 
         if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attempt(level, pos, player, () -> player.openMenu(
                 new CrafterManagerMenuProvider((CrafterManagerBlockEntity) level.getBlockEntity(pos)),
                 buf -> CrafterManagerMenuProvider.writeToBuffer(buf, level, pos)
             ), Permission.MODIFY, Permission.AUTOCRAFTING);

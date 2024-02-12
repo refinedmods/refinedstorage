@@ -51,7 +51,6 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.util.LevelUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -65,19 +64,17 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.server.ServerLifecycleHooks;
-
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
@@ -146,7 +143,6 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
     private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
     private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
     private EnergyStorage energyStorage = createEnergyStorage(0);
-    private final LazyOptional<EnergyStorage> energyStorageCap = LazyOptional.of(() -> energyStorage);
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     private int sortingType;
     private int sortingDirection;
@@ -245,7 +241,9 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
         this.tabPage = WirelessGridItem.getTabPage(stack);
         this.size = WirelessGridItem.getSize(stack);
 
-        this.energyStorage = createEnergyStorage(stack.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0));
+        this.energyStorage = createEnergyStorage(
+            Optional.ofNullable(stack.getCapability(Capabilities.EnergyStorage.ITEM)).map(IEnergyStorage::getEnergyStored).orElse(0)
+        );
 
         if (stack.hasTag()) {
             for (int i = 0; i < 4; ++i) {
@@ -292,7 +290,7 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
             stack.getTag().put(NBT_ENCHANTMENTS, enchants);
         }
 
-        stack.getCapability(ForgeCapabilities.ENERGY, null).ifPresent(itemEnergy -> itemEnergy.receiveEnergy(energyStorage.getEnergyStored(), false));
+        Optional.ofNullable(stack.getCapability(Capabilities.EnergyStorage.ITEM)).ifPresent(itemEnergy -> itemEnergy.receiveEnergy(energyStorage.getEnergyStored(), false));
 
         for (int i = 0; i < 4; ++i) {
             StackUtils.writeItems(filter, i, stack.getTag());
@@ -607,6 +605,10 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
         return RS.SERVER_CONFIG.getPortableGrid().getCapacity();
     }
 
+    public EnergyStorage getEnergyStorage() {
+        return energyStorage;
+    }
+
     @Override
     public PortableGridDiskState getDiskState() {
         if (!hasDisk()) {
@@ -744,16 +746,6 @@ public class PortableGridBlockEntity extends BaseBlockEntity implements IGrid, I
         super.readUpdate(tag);
 
         clientGridType = GridType.values()[tag.getInt(NBT_TYPE)];
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return energyStorageCap.cast();
-        }
-
-        return super.getCapability(cap, direction);
     }
 
     public void onOpened() {

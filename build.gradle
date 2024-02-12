@@ -1,9 +1,4 @@
-apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.7.1/helper.gradle"
-
-// TODO: remove in 1.21
-ext {
-    forgeVersion = "47.1.0"
-}
+apply from: "https://raw.githubusercontent.com/refinedmods/refinedarchitect/v0.11.4/helper.gradle"
 
 repositories {
     maven {
@@ -32,34 +27,15 @@ enablePublishing()
 enableCurseForge(243076)
 enableModrinth("KDvYkUg3")
 enableJavadoc()
-enableSonarQube("refinedmods_refinedstorage")
 
 dependencies {
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.2.0.22")
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:15.2.0.22")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.2.0.22")
+    compileOnly "mezz.jei:jei-1.20.4-common-api:17.3.0.43"
+    compileOnly "mezz.jei:jei-1.20.4-neoforge-api:17.3.0.43"
+    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:17.3.0.43"
 
-    compileOnly fg.deobf('curse.maven:mouse-tweaks-60089:4581240')
+    compileOnly "curse.maven:mouse-tweaks-60089:4776995"
 
-    compileOnly fg.deobf('curse.maven:crafting-tweaks-233071:4596466')
+    compileOnly 'curse.maven:crafting-tweaks-233071:4991559'
 
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:5.2.0-beta.3+1.20.1")
-}
-
-// TODO: remove in 1.21
-minecraft {
-    runs {
-        server {
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-        }
-        client {
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-        }
-        data {
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-        }
-    }
+    implementation "top.theillusivec4.curios:curios-neoforge:7.2.0+1.20.4"
 }

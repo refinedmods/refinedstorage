@@ -4,9 +4,8 @@ import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.container.slot.grid.CraftingGridSlot;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModList;
-
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 

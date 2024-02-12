@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.network.grid;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
@@ -8,17 +9,19 @@ import com.refinedmods.refinedstorage.inventory.fluid.FluidInventory;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
 
-public class GridProcessingTransferMessage {
+public class GridProcessingTransferMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid_processing_transfer");
+
     private final Collection<ItemStack> inputs;
     private final Collection<ItemStack> outputs;
     private final Collection<FluidStack> fluidInputs;
@@ -67,59 +70,59 @@ public class GridProcessingTransferMessage {
         return new GridProcessingTransferMessage(inputs, outputs, fluidInputs, fluidOutputs);
     }
 
-    public static void encode(GridProcessingTransferMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.inputs.size());
+    public static void handle(GridProcessingTransferMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (player.containerMenu instanceof GridContainerMenu) {
+                IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
 
-        for (ItemStack stack : message.inputs) {
+                if (grid.getGridType() == GridType.PATTERN) {
+                    BaseItemHandler handler = ((GridNetworkNode) grid).getProcessingMatrix();
+                    FluidInventory handlerFluid = ((GridNetworkNode) grid).getProcessingMatrixFluids();
+
+                    clearInputsAndOutputs(handler);
+                    clearInputsAndOutputs(handlerFluid);
+
+                    setInputs(handler, message.inputs, handlerFluid, message.fluidInputs);
+                    setOutputs(handler, message.outputs, handlerFluid, message.fluidOutputs);
+
+
+                    ((GridNetworkNode) grid).setProcessingPattern(true);
+                    ((GridNetworkNode) grid).markDirty();
+                }
+            }
+        }));
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(inputs.size());
+
+        for (ItemStack stack : inputs) {
             StackUtils.writeItemStack(buf, stack);
         }
 
-        buf.writeInt(message.outputs.size());
+        buf.writeInt(outputs.size());
 
-        for (ItemStack stack : message.outputs) {
+        for (ItemStack stack : outputs) {
             StackUtils.writeItemStack(buf, stack);
         }
 
-        buf.writeInt(message.fluidInputs.size());
+        buf.writeInt(fluidInputs.size());
 
-        for (FluidStack stack : message.fluidInputs) {
+        for (FluidStack stack : fluidInputs) {
             stack.writeToPacket(buf);
         }
 
-        buf.writeInt(message.fluidOutputs.size());
+        buf.writeInt(fluidOutputs.size());
 
-        for (FluidStack stack : message.fluidOutputs) {
+        for (FluidStack stack : fluidOutputs) {
             stack.writeToPacket(buf);
         }
     }
 
-    public static void handle(GridProcessingTransferMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Player player = ctx.get().getSender();
-
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof GridContainerMenu) {
-                    IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
-
-                    if (grid.getGridType() == GridType.PATTERN) {
-                        BaseItemHandler handler = ((GridNetworkNode) grid).getProcessingMatrix();
-                        FluidInventory handlerFluid = ((GridNetworkNode) grid).getProcessingMatrixFluids();
-
-                        clearInputsAndOutputs(handler);
-                        clearInputsAndOutputs(handlerFluid);
-
-                        setInputs(handler, message.inputs, handlerFluid, message.fluidInputs);
-                        setOutputs(handler, message.outputs, handlerFluid, message.fluidOutputs);
-
-
-                        ((GridNetworkNode) grid).setProcessingPattern(true);
-                        ((GridNetworkNode) grid).markDirty();
-                    }
-                }
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 
     private static void clearInputsAndOutputs(BaseItemHandler handler) {

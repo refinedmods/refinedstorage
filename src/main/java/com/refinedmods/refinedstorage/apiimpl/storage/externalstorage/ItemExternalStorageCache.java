@@ -3,8 +3,7 @@ package com.refinedmods.refinedstorage.apiimpl.storage.externalstorage;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.items.IItemHandler;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;

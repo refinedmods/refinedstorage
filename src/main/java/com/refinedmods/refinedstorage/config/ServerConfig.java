@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
-    private final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-    private final ForgeConfigSpec spec;
+    private final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+    private final ModConfigSpec spec;
 
     private final Upgrades upgrades;
     private final Controller controller;
@@ -72,7 +72,7 @@ public class ServerConfig {
         spec = builder.build();
     }
 
-    public ForgeConfigSpec getSpec() {
+    public ModConfigSpec getSpec() {
         return spec;
     }
 
@@ -197,18 +197,21 @@ public class ServerConfig {
     }
 
     public class Controller {
-        private final ForgeConfigSpec.BooleanValue useEnergy;
-        private final ForgeConfigSpec.IntValue capacity;
-        private final ForgeConfigSpec.IntValue baseUsage;
-        private final ForgeConfigSpec.IntValue maxTransfer;
+        private final ModConfigSpec.BooleanValue useEnergy;
+        private final ModConfigSpec.IntValue capacity;
+        private final ModConfigSpec.IntValue baseUsage;
+        private final ModConfigSpec.IntValue maxTransfer;
 
         public Controller() {
             builder.push("controller");
 
             useEnergy = builder.comment("Whether the Controller uses energy").define("useEnergy", true);
-            capacity = builder.comment("The energy capacity of the Controller").defineInRange("capacity", 32000, 0, Integer.MAX_VALUE);
-            baseUsage = builder.comment("The base energy used by the Controller").defineInRange("baseUsage", 0, 0, Integer.MAX_VALUE);
-            maxTransfer = builder.comment("The maximum energy that the Controller can receive").defineInRange("maxTransfer", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+            capacity = builder.comment("The energy capacity of the Controller")
+                .defineInRange("capacity", 32000, 0, Integer.MAX_VALUE);
+            baseUsage = builder.comment("The base energy used by the Controller")
+                .defineInRange("baseUsage", 0, 0, Integer.MAX_VALUE);
+            maxTransfer = builder.comment("The maximum energy that the Controller can receive")
+                .defineInRange("maxTransfer", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -231,7 +234,7 @@ public class ServerConfig {
     }
 
     public class Cable {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Cable() {
             builder.push("cable");
@@ -247,14 +250,16 @@ public class ServerConfig {
     }
 
     public class DiskDrive {
-        private final ForgeConfigSpec.IntValue usage;
-        private final ForgeConfigSpec.IntValue diskUsage;
+        private final ModConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue diskUsage;
 
         public DiskDrive() {
             builder.push("diskDrive");
 
-            usage = builder.comment("The energy used by the Disk Drive").defineInRange("usage", 0, 0, Integer.MAX_VALUE);
-            diskUsage = builder.comment("The energy used per disk in the Disk Drive").defineInRange("diskUsage", 1, 0, Integer.MAX_VALUE);
+            usage =
+                builder.comment("The energy used by the Disk Drive").defineInRange("usage", 0, 0, Integer.MAX_VALUE);
+            diskUsage = builder.comment("The energy used per disk in the Disk Drive")
+                .defineInRange("diskUsage", 1, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -269,18 +274,21 @@ public class ServerConfig {
     }
 
     public class Grid {
-        private final ForgeConfigSpec.IntValue gridUsage;
-        private final ForgeConfigSpec.IntValue craftingGridUsage;
-        private final ForgeConfigSpec.IntValue patternGridUsage;
-        private final ForgeConfigSpec.IntValue fluidGridUsage;
+        private final ModConfigSpec.IntValue gridUsage;
+        private final ModConfigSpec.IntValue craftingGridUsage;
+        private final ModConfigSpec.IntValue patternGridUsage;
+        private final ModConfigSpec.IntValue fluidGridUsage;
 
         public Grid() {
             builder.push("grid");
 
             gridUsage = builder.comment("The energy used by Grids").defineInRange("gridUsage", 2, 0, Integer.MAX_VALUE);
-            craftingGridUsage = builder.comment("The energy used by Crafting Grids").defineInRange("craftingGridUsage", 4, 0, Integer.MAX_VALUE);
-            patternGridUsage = builder.comment("The energy used by Pattern Grids").defineInRange("patternGridUsage", 4, 0, Integer.MAX_VALUE);
-            fluidGridUsage = builder.comment("The energy used by Fluid Grids").defineInRange("fluidGridUsage", 2, 0, Integer.MAX_VALUE);
+            craftingGridUsage = builder.comment("The energy used by Crafting Grids")
+                .defineInRange("craftingGridUsage", 4, 0, Integer.MAX_VALUE);
+            patternGridUsage = builder.comment("The energy used by Pattern Grids")
+                .defineInRange("patternGridUsage", 4, 0, Integer.MAX_VALUE);
+            fluidGridUsage = builder.comment("The energy used by Fluid Grids")
+                .defineInRange("fluidGridUsage", 2, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -303,28 +311,37 @@ public class ServerConfig {
     }
 
     public class Upgrades {
-        private final ForgeConfigSpec.IntValue rangeUpgradeUsage;
-        private final ForgeConfigSpec.IntValue speedUpgradeUsage;
-        private final ForgeConfigSpec.IntValue craftingUpgradeUsage;
-        private final ForgeConfigSpec.IntValue stackUpgradeUsage;
-        private final ForgeConfigSpec.IntValue silkTouchUpgradeUsage;
-        private final ForgeConfigSpec.IntValue fortune1UpgradeUsage;
-        private final ForgeConfigSpec.IntValue fortune2UpgradeUsage;
-        private final ForgeConfigSpec.IntValue fortune3UpgradeUsage;
-        private final ForgeConfigSpec.IntValue regulatorUpgradeUsage;
+        private final ModConfigSpec.IntValue rangeUpgradeUsage;
+        private final ModConfigSpec.IntValue speedUpgradeUsage;
+        private final ModConfigSpec.IntValue craftingUpgradeUsage;
+        private final ModConfigSpec.IntValue stackUpgradeUsage;
+        private final ModConfigSpec.IntValue silkTouchUpgradeUsage;
+        private final ModConfigSpec.IntValue fortune1UpgradeUsage;
+        private final ModConfigSpec.IntValue fortune2UpgradeUsage;
+        private final ModConfigSpec.IntValue fortune3UpgradeUsage;
+        private final ModConfigSpec.IntValue regulatorUpgradeUsage;
 
         public Upgrades() {
             builder.push("upgrades");
 
-            rangeUpgradeUsage = builder.comment("The additional energy used by the Range Upgrade").defineInRange("rangeUpgradeUsage", 8, 0, Integer.MAX_VALUE);
-            speedUpgradeUsage = builder.comment("The additional energy used by the Speed Upgrade").defineInRange("speedUpgradeUsage", 2, 0, Integer.MAX_VALUE);
-            craftingUpgradeUsage = builder.comment("The additional energy used by the Crafting Upgrade").defineInRange("craftingUpgradeUsage", 5, 0, Integer.MAX_VALUE);
-            stackUpgradeUsage = builder.comment("The additional energy used by the Stack Upgrade").defineInRange("stackUpgradeUsage", 12, 0, Integer.MAX_VALUE);
-            silkTouchUpgradeUsage = builder.comment("The additional energy used by the Silk Touch Upgrade").defineInRange("silkTouchUpgradeUsage", 15, 0, Integer.MAX_VALUE);
-            fortune1UpgradeUsage = builder.comment("The additional energy used by the Fortune 1 Upgrade").defineInRange("fortune1UpgradeUsage", 10, 0, Integer.MAX_VALUE);
-            fortune2UpgradeUsage = builder.comment("The additional energy used by the Fortune 2 Upgrade").defineInRange("fortune2UpgradeUsage", 12, 0, Integer.MAX_VALUE);
-            fortune3UpgradeUsage = builder.comment("The additional energy used by the Fortune 3 Upgrade").defineInRange("fortune3UpgradeUsage", 14, 0, Integer.MAX_VALUE);
-            regulatorUpgradeUsage = builder.comment("The additional energy used by the Regulator Upgrade").defineInRange("regulatorUpgradeUsage", 15, 0, Integer.MAX_VALUE);
+            rangeUpgradeUsage = builder.comment("The additional energy used by the Range Upgrade")
+                .defineInRange("rangeUpgradeUsage", 8, 0, Integer.MAX_VALUE);
+            speedUpgradeUsage = builder.comment("The additional energy used by the Speed Upgrade")
+                .defineInRange("speedUpgradeUsage", 2, 0, Integer.MAX_VALUE);
+            craftingUpgradeUsage = builder.comment("The additional energy used by the Crafting Upgrade")
+                .defineInRange("craftingUpgradeUsage", 5, 0, Integer.MAX_VALUE);
+            stackUpgradeUsage = builder.comment("The additional energy used by the Stack Upgrade")
+                .defineInRange("stackUpgradeUsage", 12, 0, Integer.MAX_VALUE);
+            silkTouchUpgradeUsage = builder.comment("The additional energy used by the Silk Touch Upgrade")
+                .defineInRange("silkTouchUpgradeUsage", 15, 0, Integer.MAX_VALUE);
+            fortune1UpgradeUsage = builder.comment("The additional energy used by the Fortune 1 Upgrade")
+                .defineInRange("fortune1UpgradeUsage", 10, 0, Integer.MAX_VALUE);
+            fortune2UpgradeUsage = builder.comment("The additional energy used by the Fortune 2 Upgrade")
+                .defineInRange("fortune2UpgradeUsage", 12, 0, Integer.MAX_VALUE);
+            fortune3UpgradeUsage = builder.comment("The additional energy used by the Fortune 3 Upgrade")
+                .defineInRange("fortune3UpgradeUsage", 14, 0, Integer.MAX_VALUE);
+            regulatorUpgradeUsage = builder.comment("The additional energy used by the Regulator Upgrade")
+                .defineInRange("regulatorUpgradeUsage", 15, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -367,20 +384,25 @@ public class ServerConfig {
     }
 
     public class StorageBlock {
-        private final ForgeConfigSpec.IntValue oneKUsage;
-        private final ForgeConfigSpec.IntValue fourKUsage;
-        private final ForgeConfigSpec.IntValue sixteenKUsage;
-        private final ForgeConfigSpec.IntValue sixtyFourKUsage;
-        private final ForgeConfigSpec.IntValue creativeUsage;
+        private final ModConfigSpec.IntValue oneKUsage;
+        private final ModConfigSpec.IntValue fourKUsage;
+        private final ModConfigSpec.IntValue sixteenKUsage;
+        private final ModConfigSpec.IntValue sixtyFourKUsage;
+        private final ModConfigSpec.IntValue creativeUsage;
 
         public StorageBlock() {
             builder.push("storageBlock");
 
-            oneKUsage = builder.comment("The energy used by the 1k Storage Block").defineInRange("oneKUsage", 2, 0, Integer.MAX_VALUE);
-            fourKUsage = builder.comment("The energy used by the 4k Storage Block").defineInRange("fourKUsage", 4, 0, Integer.MAX_VALUE);
-            sixteenKUsage = builder.comment("The energy used by the 16k Storage Block").defineInRange("sixteenKUsage", 6, 0, Integer.MAX_VALUE);
-            sixtyFourKUsage = builder.comment("The energy used by the 64k Storage Block").defineInRange("sixtyFourKUsage", 8, 0, Integer.MAX_VALUE);
-            creativeUsage = builder.comment("The energy used by the Creative Storage Block").defineInRange("creativeUsage", 10, 0, Integer.MAX_VALUE);
+            oneKUsage = builder.comment("The energy used by the 1k Storage Block")
+                .defineInRange("oneKUsage", 2, 0, Integer.MAX_VALUE);
+            fourKUsage = builder.comment("The energy used by the 4k Storage Block")
+                .defineInRange("fourKUsage", 4, 0, Integer.MAX_VALUE);
+            sixteenKUsage = builder.comment("The energy used by the 16k Storage Block")
+                .defineInRange("sixteenKUsage", 6, 0, Integer.MAX_VALUE);
+            sixtyFourKUsage = builder.comment("The energy used by the 64k Storage Block")
+                .defineInRange("sixtyFourKUsage", 8, 0, Integer.MAX_VALUE);
+            creativeUsage = builder.comment("The energy used by the Creative Storage Block")
+                .defineInRange("creativeUsage", 10, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -407,20 +429,25 @@ public class ServerConfig {
     }
 
     public class FluidStorageBlock {
-        private final ForgeConfigSpec.IntValue sixtyFourKUsage;
-        private final ForgeConfigSpec.IntValue twoHundredFiftySixKUsage;
-        private final ForgeConfigSpec.IntValue thousandTwentyFourKUsage;
-        private final ForgeConfigSpec.IntValue fourThousandNinetySixKUsage;
-        private final ForgeConfigSpec.IntValue creativeUsage;
+        private final ModConfigSpec.IntValue sixtyFourKUsage;
+        private final ModConfigSpec.IntValue twoHundredFiftySixKUsage;
+        private final ModConfigSpec.IntValue thousandTwentyFourKUsage;
+        private final ModConfigSpec.IntValue fourThousandNinetySixKUsage;
+        private final ModConfigSpec.IntValue creativeUsage;
 
         public FluidStorageBlock() {
             builder.push("fluidStorageBlock");
 
-            sixtyFourKUsage = builder.comment("The energy used by the 64k Fluid Storage Block").defineInRange("sixtyFourKUsage", 2, 0, Integer.MAX_VALUE);
-            twoHundredFiftySixKUsage = builder.comment("The energy used by the 256k Fluid Storage Block").defineInRange("twoHundredFiftySixKUsage", 4, 0, Integer.MAX_VALUE);
-            thousandTwentyFourKUsage = builder.comment("The energy used by the 1024k Fluid Storage Block").defineInRange("thousandTwentyFourKUsage", 6, 0, Integer.MAX_VALUE);
-            fourThousandNinetySixKUsage = builder.comment("The energy used by the 4096k Fluid Storage Block").defineInRange("fourThousandNinetySixKUsage", 8, 0, Integer.MAX_VALUE);
-            creativeUsage = builder.comment("The energy used by the Creative Fluid Storage Block").defineInRange("creativeUsage", 10, 0, Integer.MAX_VALUE);
+            sixtyFourKUsage = builder.comment("The energy used by the 64k Fluid Storage Block")
+                .defineInRange("sixtyFourKUsage", 2, 0, Integer.MAX_VALUE);
+            twoHundredFiftySixKUsage = builder.comment("The energy used by the 256k Fluid Storage Block")
+                .defineInRange("twoHundredFiftySixKUsage", 4, 0, Integer.MAX_VALUE);
+            thousandTwentyFourKUsage = builder.comment("The energy used by the 1024k Fluid Storage Block")
+                .defineInRange("thousandTwentyFourKUsage", 6, 0, Integer.MAX_VALUE);
+            fourThousandNinetySixKUsage = builder.comment("The energy used by the 4096k Fluid Storage Block")
+                .defineInRange("fourThousandNinetySixKUsage", 8, 0, Integer.MAX_VALUE);
+            creativeUsage = builder.comment("The energy used by the Creative Fluid Storage Block")
+                .defineInRange("creativeUsage", 10, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -447,12 +474,13 @@ public class ServerConfig {
     }
 
     public class ExternalStorage {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public ExternalStorage() {
             builder.push("externalStorage");
 
-            usage = builder.comment("The energy used by the External Storage").defineInRange("usage", 6, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the External Storage")
+                .defineInRange("usage", 6, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -463,7 +491,7 @@ public class ServerConfig {
     }
 
     public class Importer {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Importer() {
             builder.push("importer");
@@ -479,7 +507,7 @@ public class ServerConfig {
     }
 
     public class Exporter {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Exporter() {
             builder.push("exporter");
@@ -495,12 +523,13 @@ public class ServerConfig {
     }
 
     public class NetworkReceiver {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public NetworkReceiver() {
             builder.push("networkReceiver");
 
-            usage = builder.comment("The energy used by the Network Receiver").defineInRange("usage", 0, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Network Receiver")
+                .defineInRange("usage", 0, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -511,12 +540,13 @@ public class ServerConfig {
     }
 
     public class NetworkTransmitter {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public NetworkTransmitter() {
             builder.push("networkTransmitter");
 
-            usage = builder.comment("The energy used by the Network Transmitter").defineInRange("usage", 64, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Network Transmitter")
+                .defineInRange("usage", 64, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -527,7 +557,7 @@ public class ServerConfig {
     }
 
     public class Relay {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Relay() {
             builder.push("relay");
@@ -543,7 +573,7 @@ public class ServerConfig {
     }
 
     public class Detector {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Detector() {
             builder.push("detector");
@@ -559,14 +589,16 @@ public class ServerConfig {
     }
 
     public class SecurityManager {
-        private final ForgeConfigSpec.IntValue usage;
-        private final ForgeConfigSpec.IntValue usagePerCard;
+        private final ModConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usagePerCard;
 
         public SecurityManager() {
             builder.push("securityManager");
 
-            usage = builder.comment("The energy used by the Security Manager").defineInRange("usage", 4, 0, Integer.MAX_VALUE);
-            usagePerCard = builder.comment("The additional energy used by Security Cards in the Security Manager").defineInRange("usagePerCard", 10, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Security Manager")
+                .defineInRange("usage", 4, 0, Integer.MAX_VALUE);
+            usagePerCard = builder.comment("The additional energy used by Security Cards in the Security Manager")
+                .defineInRange("usagePerCard", 10, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -581,7 +613,7 @@ public class ServerConfig {
     }
 
     public class Interface {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Interface() {
             builder.push("interface");
@@ -597,12 +629,13 @@ public class ServerConfig {
     }
 
     public class FluidInterface {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public FluidInterface() {
             builder.push("fluidInterface");
 
-            usage = builder.comment("The energy used by the Fluid Interface").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Fluid Interface")
+                .defineInRange("usage", 2, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -613,16 +646,19 @@ public class ServerConfig {
     }
 
     public class WirelessTransmitter {
-        private final ForgeConfigSpec.IntValue usage;
-        private final ForgeConfigSpec.IntValue baseRange;
-        private final ForgeConfigSpec.IntValue rangePerUpgrade;
+        private final ModConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue baseRange;
+        private final ModConfigSpec.IntValue rangePerUpgrade;
 
         public WirelessTransmitter() {
             builder.push("wirelessTransmitter");
 
-            usage = builder.comment("The energy used by the Wireless Transmitter").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
-            baseRange = builder.comment("The base range of the Wireless Transmitter").defineInRange("baseRange", 16, 0, Integer.MAX_VALUE);
-            rangePerUpgrade = builder.comment("The additional range per Range Upgrade in the Wireless Transmitter").defineInRange("rangePerUpgrade", 8, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Wireless Transmitter")
+                .defineInRange("usage", 8, 0, Integer.MAX_VALUE);
+            baseRange = builder.comment("The base range of the Wireless Transmitter")
+                .defineInRange("baseRange", 16, 0, Integer.MAX_VALUE);
+            rangePerUpgrade = builder.comment("The additional range per Range Upgrade in the Wireless Transmitter")
+                .defineInRange("rangePerUpgrade", 8, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -641,12 +677,13 @@ public class ServerConfig {
     }
 
     public class StorageMonitor {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public StorageMonitor() {
             builder.push("storageMonitor");
 
-            usage = builder.comment("The energy used by the Storage Monitor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Storage Monitor")
+                .defineInRange("usage", 3, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -657,20 +694,24 @@ public class ServerConfig {
     }
 
     public class WirelessGrid {
-        private final ForgeConfigSpec.BooleanValue useEnergy;
-        private final ForgeConfigSpec.IntValue capacity;
-        private final ForgeConfigSpec.IntValue openUsage;
-        private final ForgeConfigSpec.IntValue extractUsage;
-        private final ForgeConfigSpec.IntValue insertUsage;
+        private final ModConfigSpec.BooleanValue useEnergy;
+        private final ModConfigSpec.IntValue capacity;
+        private final ModConfigSpec.IntValue openUsage;
+        private final ModConfigSpec.IntValue extractUsage;
+        private final ModConfigSpec.IntValue insertUsage;
 
         public WirelessGrid() {
             builder.push("wirelessGrid");
 
             useEnergy = builder.comment("Whether the Wireless Grid uses energy").define("useEnergy", true);
-            capacity = builder.comment("The energy capacity of the Wireless Grid").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
-            openUsage = builder.comment("The energy used by the Wireless Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
-            extractUsage = builder.comment("The energy used by the Wireless Grid to extract items").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
-            insertUsage = builder.comment("The energy used by the Wireless Grid to insert items").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
+            capacity = builder.comment("The energy capacity of the Wireless Grid")
+                .defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Wireless Grid to open")
+                .defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            extractUsage = builder.comment("The energy used by the Wireless Grid to extract items")
+                .defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
+            insertUsage = builder.comment("The energy used by the Wireless Grid to insert items")
+                .defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -697,20 +738,24 @@ public class ServerConfig {
     }
 
     public class WirelessFluidGrid {
-        private final ForgeConfigSpec.BooleanValue useEnergy;
-        private final ForgeConfigSpec.IntValue capacity;
-        private final ForgeConfigSpec.IntValue openUsage;
-        private final ForgeConfigSpec.IntValue extractUsage;
-        private final ForgeConfigSpec.IntValue insertUsage;
+        private final ModConfigSpec.BooleanValue useEnergy;
+        private final ModConfigSpec.IntValue capacity;
+        private final ModConfigSpec.IntValue openUsage;
+        private final ModConfigSpec.IntValue extractUsage;
+        private final ModConfigSpec.IntValue insertUsage;
 
         public WirelessFluidGrid() {
             builder.push("wirelessFluidGrid");
 
             useEnergy = builder.comment("Whether the Wireless Fluid Grid uses energy").define("useEnergy", true);
-            capacity = builder.comment("The energy capacity of the Wireless Fluid Grid").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
-            openUsage = builder.comment("The energy used by the Wireless Fluid Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
-            extractUsage = builder.comment("The energy used by the Wireless Fluid Grid to extract fluids").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
-            insertUsage = builder.comment("The energy used by the Wireless Fluid Grid to insert fluids").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
+            capacity = builder.comment("The energy capacity of the Wireless Fluid Grid")
+                .defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Wireless Fluid Grid to open")
+                .defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            extractUsage = builder.comment("The energy used by the Wireless Fluid Grid to extract fluids")
+                .defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
+            insertUsage = builder.comment("The energy used by the Wireless Fluid Grid to insert fluids")
+                .defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -737,20 +782,24 @@ public class ServerConfig {
     }
 
     public class PortableGrid {
-        private final ForgeConfigSpec.BooleanValue useEnergy;
-        private final ForgeConfigSpec.IntValue capacity;
-        private final ForgeConfigSpec.IntValue openUsage;
-        private final ForgeConfigSpec.IntValue extractUsage;
-        private final ForgeConfigSpec.IntValue insertUsage;
+        private final ModConfigSpec.BooleanValue useEnergy;
+        private final ModConfigSpec.IntValue capacity;
+        private final ModConfigSpec.IntValue openUsage;
+        private final ModConfigSpec.IntValue extractUsage;
+        private final ModConfigSpec.IntValue insertUsage;
 
         public PortableGrid() {
             builder.push("portableGrid");
 
             useEnergy = builder.comment("Whether the Portable Grid uses energy").define("useEnergy", true);
-            capacity = builder.comment("The energy capacity of the Portable Grid").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
-            openUsage = builder.comment("The energy used by the Portable Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
-            extractUsage = builder.comment("The energy used by the Portable Grid to extract items or fluids").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
-            insertUsage = builder.comment("The energy used by the Portable Grid to insert items or fluids").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
+            capacity = builder.comment("The energy capacity of the Portable Grid")
+                .defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Portable Grid to open")
+                .defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            extractUsage = builder.comment("The energy used by the Portable Grid to extract items or fluids")
+                .defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
+            insertUsage = builder.comment("The energy used by the Portable Grid to insert items or fluids")
+                .defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -777,12 +826,13 @@ public class ServerConfig {
     }
 
     public class Constructor {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Constructor() {
             builder.push("constructor");
 
-            usage = builder.comment("The energy used by the Constructor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
+            usage =
+                builder.comment("The energy used by the Constructor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -793,12 +843,13 @@ public class ServerConfig {
     }
 
     public class Destructor {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public Destructor() {
             builder.push("destructor");
 
-            usage = builder.comment("The energy used by the Destructor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
+            usage =
+                builder.comment("The energy used by the Destructor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -809,12 +860,13 @@ public class ServerConfig {
     }
 
     public class DiskManipulator {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public DiskManipulator() {
             builder.push("diskManipulator");
 
-            usage = builder.comment("The energy used by the Disk Manipulator").defineInRange("usage", 4, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Disk Manipulator")
+                .defineInRange("usage", 4, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -825,14 +877,15 @@ public class ServerConfig {
     }
 
     public class Crafter {
-        private final ForgeConfigSpec.IntValue usage;
-        private final ForgeConfigSpec.IntValue patternUsage;
+        private final ModConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue patternUsage;
 
         public Crafter() {
             builder.push("crafter");
 
             usage = builder.comment("The energy used by the Crafter").defineInRange("usage", 4, 0, Integer.MAX_VALUE);
-            patternUsage = builder.comment("The energy used for every Pattern in the Crafter").defineInRange("patternUsage", 1, 0, Integer.MAX_VALUE);
+            patternUsage = builder.comment("The energy used for every Pattern in the Crafter")
+                .defineInRange("patternUsage", 1, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -847,12 +900,13 @@ public class ServerConfig {
     }
 
     public class CrafterManager {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public CrafterManager() {
             builder.push("crafterManager");
 
-            usage = builder.comment("The energy used by the Crafter Manager").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Crafter Manager")
+                .defineInRange("usage", 8, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -863,12 +917,13 @@ public class ServerConfig {
     }
 
     public class CraftingMonitor {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ModConfigSpec.IntValue usage;
 
         public CraftingMonitor() {
             builder.push("craftingMonitor");
 
-            usage = builder.comment("The energy used by the Crafting Monitor").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
+            usage = builder.comment("The energy used by the Crafting Monitor")
+                .defineInRange("usage", 8, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -879,20 +934,25 @@ public class ServerConfig {
     }
 
     public class WirelessCraftingMonitor {
-        private final ForgeConfigSpec.BooleanValue useEnergy;
-        private final ForgeConfigSpec.IntValue capacity;
-        private final ForgeConfigSpec.IntValue openUsage;
-        private final ForgeConfigSpec.IntValue cancelUsage;
-        private final ForgeConfigSpec.IntValue cancelAllUsage;
+        private final ModConfigSpec.BooleanValue useEnergy;
+        private final ModConfigSpec.IntValue capacity;
+        private final ModConfigSpec.IntValue openUsage;
+        private final ModConfigSpec.IntValue cancelUsage;
+        private final ModConfigSpec.IntValue cancelAllUsage;
 
         public WirelessCraftingMonitor() {
             builder.push("wirelessCraftingMonitor");
 
             useEnergy = builder.comment("Whether the Wireless Crafting Monitor uses energy").define("useEnergy", true);
-            capacity = builder.comment("The energy capacity of the Wireless Crafting Monitor").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
-            openUsage = builder.comment("The energy used by the Wireless Crafting Monitor to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
-            cancelUsage = builder.comment("The energy used by the Wireless Crafting Monitor to cancel a crafting task").defineInRange("cancelUsage", 5, 0, Integer.MAX_VALUE);
-            cancelAllUsage = builder.comment("The energy used by the Wireless Crafting Monitor to cancel all crafting tasks").defineInRange("cancelAllUsage", 10, 0, Integer.MAX_VALUE);
+            capacity = builder.comment("The energy capacity of the Wireless Crafting Monitor")
+                .defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Wireless Crafting Monitor to open")
+                .defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            cancelUsage = builder.comment("The energy used by the Wireless Crafting Monitor to cancel a crafting task")
+                .defineInRange("cancelUsage", 5, 0, Integer.MAX_VALUE);
+            cancelAllUsage =
+                builder.comment("The energy used by the Wireless Crafting Monitor to cancel all crafting tasks")
+                    .defineInRange("cancelAllUsage", 10, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -919,12 +979,14 @@ public class ServerConfig {
     }
 
     public class Autocrafting {
-        private final ForgeConfigSpec.IntValue calculationTimeoutMs;
+        private final ModConfigSpec.IntValue calculationTimeoutMs;
 
         public Autocrafting() {
             builder.push("autocrafting");
 
-            calculationTimeoutMs = builder.comment("The autocrafting calculation timeout in milliseconds, crafting tasks taking longer than this to calculate are cancelled to avoid server strain").defineInRange("calculationTimeoutMs", 5000, 5000, Integer.MAX_VALUE);
+            calculationTimeoutMs = builder.comment(
+                    "The autocrafting calculation timeout in milliseconds, crafting tasks taking longer than this to calculate are cancelled to avoid server strain")
+                .defineInRange("calculationTimeoutMs", 5000, 5000, Integer.MAX_VALUE);
 
             builder.pop();
         }

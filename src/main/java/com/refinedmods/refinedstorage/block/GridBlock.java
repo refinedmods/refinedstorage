@@ -5,15 +5,19 @@ import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
 import com.refinedmods.refinedstorage.blockentity.grid.GridBlockEntity;
+import com.refinedmods.refinedstorage.util.BlockColorMap;
 import com.refinedmods.refinedstorage.util.BlockUtils;
 import com.refinedmods.refinedstorage.util.ColorMap;
 import com.refinedmods.refinedstorage.util.NetworkUtils;
+
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -45,7 +49,7 @@ public class GridBlock extends ColoredNetworkBlock {
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ColorMap<GridBlock> map;
+        BlockColorMap<?> map;
         switch (type) {
             case FLUID:
                 map = RSBlocks.FLUID_GRID;

@@ -111,7 +111,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         @Override
-        public void visit(Operator operator) {
+        public void visit(com.refinedmods.refinedstorage.api.network.INetworkNodeVisitor.Operator operator) {
             if (node instanceof INetworkNodeVisitor) {
                 ((INetworkNodeVisitor) node).visit(operator);
             } else {

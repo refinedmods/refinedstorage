@@ -30,7 +30,7 @@ public abstract class RSSavedData extends SavedData {
             NbtUtils.addCurrentDataVersion(tag);
 
             try {
-                NbtIo.writeCompressed(tag, tempFile);
+                NbtIo.writeCompressed(tag, tempFile.toPath());
                 if (file.exists()) {
                     if (!file.delete()) {
                         LOGGER.error("Failed to delete " + file.getName());

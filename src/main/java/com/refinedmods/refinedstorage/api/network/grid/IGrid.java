@@ -12,8 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -29,9 +28,6 @@ public interface IGrid {
     int SORTING_TYPE_QUANTITY = 0;
     int SORTING_TYPE_NAME = 1;
     int SORTING_TYPE_ID = 2;
-    // todo: remove in 1.21.x
-    @Deprecated
-    int SORTING_TYPE_INVENTORYTWEAKS = 3;
     int SORTING_TYPE_LAST_MODIFIED = 4;
 
     int SEARCH_BOX_MODE_NORMAL = 0;
@@ -82,7 +78,6 @@ public interface IGrid {
         return type == SORTING_TYPE_QUANTITY ||
                 type == SORTING_TYPE_NAME ||
                 type == SORTING_TYPE_ID ||
-                type == SORTING_TYPE_INVENTORYTWEAKS ||
                 type == SORTING_TYPE_LAST_MODIFIED;
     }
 
