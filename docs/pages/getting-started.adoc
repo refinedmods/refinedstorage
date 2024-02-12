@@ -1,0 +1,55 @@
+= Getting started
+
+== Core concepts
+
+Refined Storage is a storage mod where you can build a storage network made up of devices.
+Those devices manipulate your storage.
+
+In this tutorial:
+
+- You'll craft a xref:storage/disk-drive.adoc[].
+A xref:storage/disk-drive.adoc[] can contain item or fluid storage disks.
+Those disks will provide your storage network with storage.
+If you insert or extract an item, it will use the data on your disks.
+- You'll craft a xref:viewing-resources/grid.adoc[].
+Through that block, you can modify your storage (which will modify the data on your disks).
+- Before crafting any of these devices, you'll first craft a xref:networking/controller.adoc[], which ties the entire network together.
+
+== A minimal setup
+
+=== Step 0: Install Refined Storage (if necessary)
+
+Ensure that the modpack that you are playing contains Refined Storage.
+You can validate this by checking the modlist of your modpack.
+
+If your modpack doesn't have Refined Storage installed, or you are creating your own modpack, xref:how-to-install.adoc[check the installation instructions here].
+
+It might also be helpful to know that Refined Storage xref:how-to-install.adoc#_optional_dependencies[has integration with various other mods].
+
+=== Step 1: The Controller
+
+Craft the xref:networking/controller.adoc[].
+The xref:networking/controller.adoc[] is the "core" of your storage network.
+You'll be connecting all the Refined Storage devices to this block.
+
+The xref:networking/controller.adoc[] needs energy.
+More specifically, Forge Energy or RF.
+Lots of mods that generate energy support this.
+
+=== Step 2: Storage and accessing your items
+
+Craft a xref:storage/disk-drive.adoc[] and a xref:storage/1k-storage-disk.adoc[] to store your items.
+
+You can craft a higher tier of xref:storage/index.adoc#_storage_disks[storage disk], but for simplicity sake we're going for a 1k, which can store 1.000 items.
+
+Put the xref:storage/1k-storage-disk.adoc[] in the xref:storage/disk-drive.adoc[] and craft a xref:viewing-resources/grid.adoc[] to access your items.
+
+Connect those blocks to the xref:networking/controller.adoc[] with xref:networking/cable.adoc[], but you can also just place them next to each other in any direction.
+
+=== Step 3: Viewing your storage
+
+You are now able to insert and extract items in the xref:viewing-resources/grid.adoc[].
+
+== Disks in block form
+
+You can also use the various xref:storage/index.adoc#_storage_blocks[storage blocks] instead of xref:storage/index.adoc#_storage_disks[storage disks].

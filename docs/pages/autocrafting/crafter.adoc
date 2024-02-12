@@ -1,0 +1,37 @@
+= Crafter
+:icon: crafter.png
+:from: v0.6.0-alpha
+
+The {doctitle} is a block that crafts items with xref:pattern.adoc[patterns].
+It can take xref:../upgrades/speed-upgrade.adoc[speed upgrades] to increase the crafting speed.
+
+With processing xref:pattern.adoc[patterns], the {doctitle} has to face the correct input side of the machine.
+
+[#_chaining]
+== Chaining
+
+A {doctitle} can be chained by letting them face each other.
+
+This is useful when connecting a {doctitle} to a single machine.
+When you run out of slots in your first {doctitle}, the one facing the machine, you can put another {doctitle} behind the first {doctitle} to get additional xref:pattern.adoc[] slots.
+
+== {doctitle} modes
+
+The {doctitle} has 4 modes:
+
+- Ignore redstone signal (default)
+- Redstone signal unlocks autocrafting
+- Redstone signal locks autocrafting
+- Redstone pulse inserts next set
+
+The (un)locking mechanism is used to block the {doctitle}, so it can't insert items or fluids into the connected inventory.
+
+"Blocking mode" can be achieved with the "Redstone pulse inserts next set" mode.
+
+See xref:locking-and-unlocking.adoc[] for more details.
+
+include::../../partials/recoloring.adoc[]
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]

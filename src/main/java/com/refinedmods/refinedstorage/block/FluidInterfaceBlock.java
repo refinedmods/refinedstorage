@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class FluidInterfaceBlock extends NetworkNodeBlock {
     public FluidInterfaceBlock() {
@@ -33,8 +32,7 @@ public class FluidInterfaceBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attempt(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<FluidInterfaceBlockEntity>(
                     Component.translatable("gui.refinedstorage.fluid_interface"),
                     (blockEntity, windowId, inventory, p) -> new FluidInterfaceContainerMenu(blockEntity, player, windowId),

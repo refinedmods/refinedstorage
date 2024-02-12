@@ -53,7 +53,7 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addCategoryExtension(CoverRecipe.class, cover -> new CoverCraftingCategoryExtension());
-        registration.getCraftingCategory().addCategoryExtension(HollowCoverRecipe.class, cover -> new HollowCoverCraftingCategoryExtension());
+        registration.getCraftingCategory().addExtension(CoverRecipe.class, new CoverCraftingCategoryExtension());
+        registration.getCraftingCategory().addExtension(HollowCoverRecipe.class, new HollowCoverCraftingCategoryExtension());
     }
 }

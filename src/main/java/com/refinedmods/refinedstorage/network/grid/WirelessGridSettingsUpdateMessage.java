@@ -1,18 +1,20 @@
 package com.refinedmods.refinedstorage.network.grid;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import com.refinedmods.refinedstorage.blockentity.grid.WirelessGrid;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.function.Supplier;
+public class WirelessGridSettingsUpdateMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_grid_settings_update");
 
-public class WirelessGridSettingsUpdateMessage {
     private final int viewType;
     private final int sortingDirection;
     private final int sortingType;
@@ -43,58 +45,58 @@ public class WirelessGridSettingsUpdateMessage {
         );
     }
 
-    public static void encode(WirelessGridSettingsUpdateMessage message, FriendlyByteBuf buf) {
-        buf.writeInt(message.viewType);
-        buf.writeInt(message.sortingDirection);
-        buf.writeInt(message.sortingType);
-        buf.writeInt(message.searchBoxMode);
-        buf.writeInt(message.size);
-        buf.writeInt(message.tabSelected);
-        buf.writeInt(message.tabPage);
+    public static void handle(WirelessGridSettingsUpdateMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (player.containerMenu instanceof GridContainerMenu) {
+                IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
+
+                if (grid instanceof WirelessGrid) {
+                    ItemStack stack = ((WirelessGrid) grid).getStack();
+
+                    if (!stack.hasTag()) {
+                        stack.setTag(new CompoundTag());
+                    }
+
+                    if (IGrid.isValidViewType(message.viewType)) {
+                        stack.getTag().putInt(GridNetworkNode.NBT_VIEW_TYPE, message.viewType);
+                    }
+
+                    if (IGrid.isValidSortingDirection(message.sortingDirection)) {
+                        stack.getTag().putInt(GridNetworkNode.NBT_SORTING_DIRECTION, message.sortingDirection);
+                    }
+
+                    if (IGrid.isValidSortingType(message.sortingType)) {
+                        stack.getTag().putInt(GridNetworkNode.NBT_SORTING_TYPE, message.sortingType);
+                    }
+
+                    if (IGrid.isValidSearchBoxMode(message.searchBoxMode)) {
+                        stack.getTag().putInt(GridNetworkNode.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                    }
+
+                    if (IGrid.isValidSize(message.size)) {
+                        stack.getTag().putInt(GridNetworkNode.NBT_SIZE, message.size);
+                    }
+
+                    stack.getTag().putInt(GridNetworkNode.NBT_TAB_SELECTED, message.tabSelected);
+                    stack.getTag().putInt(GridNetworkNode.NBT_TAB_PAGE, message.tabPage);
+                }
+            }
+        }));
     }
 
-    public static void handle(WirelessGridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Player player = ctx.get().getSender();
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(viewType);
+        buf.writeInt(sortingDirection);
+        buf.writeInt(sortingType);
+        buf.writeInt(searchBoxMode);
+        buf.writeInt(size);
+        buf.writeInt(tabSelected);
+        buf.writeInt(tabPage);
+    }
 
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof GridContainerMenu) {
-                    IGrid grid = ((GridContainerMenu) player.containerMenu).getGrid();
-
-                    if (grid instanceof WirelessGrid) {
-                        ItemStack stack = ((WirelessGrid) grid).getStack();
-
-                        if (!stack.hasTag()) {
-                            stack.setTag(new CompoundTag());
-                        }
-
-                        if (IGrid.isValidViewType(message.viewType)) {
-                            stack.getTag().putInt(GridNetworkNode.NBT_VIEW_TYPE, message.viewType);
-                        }
-
-                        if (IGrid.isValidSortingDirection(message.sortingDirection)) {
-                            stack.getTag().putInt(GridNetworkNode.NBT_SORTING_DIRECTION, message.sortingDirection);
-                        }
-
-                        if (IGrid.isValidSortingType(message.sortingType)) {
-                            stack.getTag().putInt(GridNetworkNode.NBT_SORTING_TYPE, message.sortingType);
-                        }
-
-                        if (IGrid.isValidSearchBoxMode(message.searchBoxMode)) {
-                            stack.getTag().putInt(GridNetworkNode.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
-                        }
-
-                        if (IGrid.isValidSize(message.size)) {
-                            stack.getTag().putInt(GridNetworkNode.NBT_SIZE, message.size);
-                        }
-
-                        stack.getTag().putInt(GridNetworkNode.NBT_TAB_SELECTED, message.tabSelected);
-                        stack.getTag().putInt(GridNetworkNode.NBT_TAB_PAGE, message.tabPage);
-                    }
-                }
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

@@ -1,0 +1,24 @@
+= Writer
+:icon: writer.png
+:from: v1.4.0-beta
+:to: v1.7.0-alpha
+
+[.alert.alert-warning]
+****
+The {doctitle} has been removed in version v1.7.0-alpha.
+****
+
+A {doctitle} has the ability to manage xref:reader.adoc[] / {doctitle} channels on a network.
+
+The {doctitle} is a block that exposes items, fluids, energy and / or a redstone signal from the bound channel.
+The data that is received is sent from the xref:reader.adoc[].
+
+The {doctitle} doesn't auto-push any of the supported types (with an exception to redstone signals).
+You have to extract it manually.
+
+== Supported types
+
+- Items
+- Fluids
+- Energy
+- Redstone

@@ -1,0 +1,5 @@
+= Raw Basic Processor
+:icon: raw-basic-processor.png
+:from: v0.3.0-alpha
+
+The {doctitle} is used to craft a xref:basic-processor.adoc[].

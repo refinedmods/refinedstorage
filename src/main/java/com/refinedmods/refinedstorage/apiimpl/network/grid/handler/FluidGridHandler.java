@@ -15,10 +15,11 @@ import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -40,23 +41,26 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).ifPresent(fluidHandler -> {
-            network.getFluidStorageTracker().changed(player, stack.copy());
+        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
+            IFluidHandlerItem fluidHandler = bucket.getCapability(Capabilities.FluidHandler.ITEM);
+            if (fluidHandler != null) {
+                network.getFluidStorageTracker().changed(player, stack.copy());
 
-            FluidStack extracted = network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM);
+                FluidStack extracted = network.extractFluid(stack, FluidType.BUCKET_VOLUME, Action.PERFORM);
 
-            fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
 
-            if (shift) {
-                if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
-                    Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
+                if (shift) {
+                    if (!player.getInventory().add(fluidHandler.getContainer().copy())) {
+                        Containers.dropItemStack(player.getCommandSenderWorld(), player.getX(), player.getY(), player.getZ(), fluidHandler.getContainer());
+                    }
+                } else {
+                    player.containerMenu.setCarried(fluidHandler.getContainer());
                 }
-            } else {
-                player.containerMenu.setCarried(fluidHandler.getContainer());
-            }
 
-            network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
-        }));
+                network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
+            }
+        });
     }
 
     @Override

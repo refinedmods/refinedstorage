@@ -1,0 +1,32 @@
+The {doctitle} is a block that provides the system with storage.
+It is similar to the xref:../pages/storage/index.adoc#_storage_disks[storage disk], but can be placed in the world.
+
+When breaking the {doctitle}, the items that it holds persist, so you won't lose any of your items.
+
+The {doctitle} won't despawn when dropped in the world.
+
+== Priority
+
+A (negative or positive) priority can be chosen (where a higher priority gets higher precedence to place items in).
+
+== Whitelist and blacklist
+
+There is also a whitelist and blacklist option to only allow or forbid some items from entering the {doctitle}.
+
+The whitelist or blacklist can be configured to be NBT or damage sensitive.
+
+== Mode
+
+The {doctitle} has support for the following modes:
+
+- Insert and extract (default)
+- Insert only
+- Extract only
+
+== Uncrafting
+
+Sneak and right click while holding the empty {doctitle} to retrieve the various parts back:
+
+- The corresponding xref:../pages/storage/index.adoc#_storage_parts[Storage Part]
+- xref:../pages/utility/basic-processor.adoc[]
+- xref:../pages/utility/machine-casing.adoc[]

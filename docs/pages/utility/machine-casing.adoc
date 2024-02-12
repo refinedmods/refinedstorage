@@ -1,0 +1,5 @@
+= Machine Casing
+:icon: machine-casing.png
+:from: v0.3.0-alpha
+
+The {doctitle} is a block that is used to craft the various Refined Storage devices.

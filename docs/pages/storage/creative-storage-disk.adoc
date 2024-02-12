@@ -1,0 +1,11 @@
+= Creative Storage Disk
+:icon: creative-storage-disk.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-disk.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store an infinite amount of items.
+
+It can only be obtained in creative mode.

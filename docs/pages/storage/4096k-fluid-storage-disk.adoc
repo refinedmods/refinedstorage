@@ -1,0 +1,9 @@
+= 4096k Fluid Storage Disk
+:icon: 4096k-fluid-storage-disk.png
+:from: v0.9.0-beta
+
+include::../../partials/fluid-storage-disk.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store 4096.000 millibuckets or 4096 buckets of any fluid.

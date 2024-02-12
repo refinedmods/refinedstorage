@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class StorageMonitorBlock extends NetworkNodeBlock {
     public StorageMonitorBlock() {
@@ -44,8 +43,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
             ItemStack held = player.getItemInHand(handIn);
 
             if (player.isCrouching()) {
-                return NetworkUtils.attemptModify(level, pos, player, () -> NetworkHooks.openScreen(
-                    (ServerPlayer) player,
+                return NetworkUtils.attemptModify(level, pos, player, () -> player.openMenu(
                     new BlockEntityMenuProvider<StorageMonitorBlockEntity>(
                         Component.translatable("gui.refinedstorage.storage_monitor"),
                         (blockEntity, windowId, inventory, p) -> new StorageMonitorContainerMenu(blockEntity, player, windowId),

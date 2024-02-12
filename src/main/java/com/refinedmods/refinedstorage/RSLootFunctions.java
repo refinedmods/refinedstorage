@@ -4,6 +4,8 @@ import com.refinedmods.refinedstorage.loottable.ControllerLootFunction;
 import com.refinedmods.refinedstorage.loottable.CrafterLootFunction;
 import com.refinedmods.refinedstorage.loottable.PortableGridBlockLootFunction;
 import com.refinedmods.refinedstorage.loottable.StorageBlockLootFunction;
+
+import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -19,9 +21,16 @@ public final class RSLootFunctions {
     }
 
     public static void register() {
-        STORAGE_BLOCK = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "storage_block"), new LootItemFunctionType(new StorageBlockLootFunction.Serializer()));
-        PORTABLE_GRID = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "portable_grid"), new LootItemFunctionType(new PortableGridBlockLootFunction.Serializer()));
-        CRAFTER = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "crafter"), new LootItemFunctionType(new CrafterLootFunction.Serializer()));
-        CONTROLLER = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "controller"), new LootItemFunctionType(new ControllerLootFunction.Serializer()));
+        STORAGE_BLOCK =
+            Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "storage_block"),
+                new LootItemFunctionType(Codec.unit(new StorageBlockLootFunction())));
+        PORTABLE_GRID =
+            Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "portable_grid"),
+                new LootItemFunctionType(
+                    Codec.unit(new PortableGridBlockLootFunction())));
+        CRAFTER = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "crafter"),
+            new LootItemFunctionType(Codec.unit(new CrafterLootFunction())));
+        CONTROLLER = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(RS.ID, "controller"),
+            new LootItemFunctionType(Codec.unit(new ControllerLootFunction())));
     }
 }

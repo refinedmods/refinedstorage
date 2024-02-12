@@ -1,16 +1,20 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
-import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.blockentity.craftingmonitor.WirelessCraftingMonitor;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class WirelessCraftingMonitorSettingsUpdateMessage {
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+
+public class WirelessCraftingMonitorSettingsUpdateMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_crafting_monitor_settings_update");
+
     private final Optional<UUID> tabSelected;
     private final int tabPage;
 
@@ -31,25 +35,26 @@ public class WirelessCraftingMonitorSettingsUpdateMessage {
         return new WirelessCraftingMonitorSettingsUpdateMessage(tabSelected, tabPage);
     }
 
-    public static void encode(WirelessCraftingMonitorSettingsUpdateMessage message, FriendlyByteBuf buf) {
-        buf.writeBoolean(message.tabSelected.isPresent());
-
-        message.tabSelected.ifPresent(buf::writeUUID);
-
-        buf.writeInt(message.tabPage);
+    public static void handle(WirelessCraftingMonitorSettingsUpdateMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (player.containerMenu instanceof CraftingMonitorContainerMenu) {
+                ((WirelessCraftingMonitor) ((CraftingMonitorContainerMenu) player.containerMenu).getCraftingMonitor()).setSettings(
+                    message.tabSelected, message.tabPage);
+            }
+        }));
     }
 
-    public static void handle(WirelessCraftingMonitorSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayer player = ctx.get().getSender();
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeBoolean(tabSelected.isPresent());
 
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof CraftingMonitorContainerMenu) {
-                    ((WirelessCraftingMonitor) ((CraftingMonitorContainerMenu) player.containerMenu).getCraftingMonitor()).setSettings(message.tabSelected, message.tabPage);
-                }
-            });
-        }
+        tabSelected.ifPresent(buf::writeUUID);
 
-        ctx.get().setPacketHandled(true);
+        buf.writeInt(tabPage);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

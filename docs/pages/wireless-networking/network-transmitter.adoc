@@ -1,0 +1,15 @@
+= Network Transmitter
+:icon: network-transmitter.png
+:from: v0.8.13-beta
+
+A {doctitle} sends a network signal to a xref:network-receiver.adoc[] that is specified in the given xref:network-card.adoc[].
+
+In order for the {doctitle} to work the xref:../networking/controller.adoc[] where the {doctitle} is connected to has to be chunkloaded.
+
+The {doctitle} can work in the current dimension or across different dimensions.
+
+include::../../partials/recoloring.adoc[]
+
+== Using Refined Storage v1.7.x or v1.8.x?
+
+Cross dimensional functionality isn't available in this version.

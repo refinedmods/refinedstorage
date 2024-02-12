@@ -22,12 +22,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class ExporterNetworkNode extends NetworkNode implements IComparable, IType, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "exporter");
@@ -88,7 +88,11 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
         if (canUpdate() && ticks % upgrades.getSpeed() == 0 && level.isLoaded(pos)) {
             if (type == IType.ITEMS) {
-                IItemHandler handler = LevelUtils.getItemHandler(getFacingBlockEntity(), getDirection().getOpposite());
+                IItemHandler handler = LevelUtils.getItemHandler(
+                    level,
+                    pos.relative(getDirection()),
+                    getDirection().getOpposite()
+                );
 
                 if (handler != null) {
                     while (filterSlot + 1 < itemFilters.getSlots() && itemFilters.getStackInSlot(filterSlot).isEmpty()) {
@@ -168,7 +172,11 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                     filterSlot = 0;
                 }
 
-                IFluidHandler handler = LevelUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
+                IFluidHandler handler = LevelUtils.getFluidHandler(
+                    level,
+                    pos.relative(getDirection()),
+                    getDirection().getOpposite()
+                );
 
                 if (handler != null) {
                     FluidStack stack = fluids[filterSlot];

@@ -1,0 +1,5 @@
+= Destruction Core
+:from: v0.3.0-alpha
+:icon: destruction-core.png
+
+The {doctitle} is used in recipes for devices that turn resources from the world into resources in the storage network.

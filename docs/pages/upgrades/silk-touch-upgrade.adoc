@@ -1,0 +1,7 @@
+= Silk Touch Upgrade
+:icon: silk-touch-upgrade.png
+:from: v1.2.0
+
+The {doctitle} makes the xref:../input-and-output/destructor.adoc[] use Silk Touch on the blocks that it is breaking.
+
+By using this upgrade, the amount of FE/t that this device draws will increase.

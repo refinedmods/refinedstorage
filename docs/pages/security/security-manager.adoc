@@ -1,0 +1,41 @@
+= Security Manager
+:from: v1.4.0-beta
+:icon: security-manager.png
+
+The {doctitle} is a block that can store xref:security-card.adoc[security cards].
+
+From its GUI, you can configure what permissions each player (that is bound with a xref:security-card.adoc[]) has.
+
+Once the xref:security-card.adoc[] is inserted in the top slots, the permissions for that player will be restricted to the ones configured.
+
+== Behavior
+
+When no xref:security-card.adoc[security cards] are active on the network, everyone has access to all permissions.
+
+Start inserting xref:security-card.adoc[security cards] to define permissions for players.
+
+Players who have no configured xref:security-card.adoc[] are still able to do everything in the network (all permissions).
+
+To configure a "global" set of permissions for all unconfigured players, configure a xref:security-card.adoc[] that isn't bound to a player and insert it in the {doctitle}.
+
+Operators (OPs) on a server have access to all permissions, overriding all network security.
+
+== The placer
+
+The placer of the {doctitle} will always be able to open it's GUI and change the security settings, regardless of permissions.
+
+== Permissions
+
+[cols="1,1"]
+|===
+|Type|Description
+
+|Insert|Inserting items to the network
+|Extract|Extracting items from the network
+|Autocrafting|Starting, cancelling and viewing crafting tasks
+|Modify|Opening block GUIs from the network
+|Build|Adding or removing devices to or from the network
+|Security|Ability to change security options
+|===
+
+include::../../partials/recoloring.adoc[]

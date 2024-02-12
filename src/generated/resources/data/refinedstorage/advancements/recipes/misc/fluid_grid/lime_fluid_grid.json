@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "refinedstorage:grid",
-      "has_the_recipe"
+      "has_the_recipe",
+      "refinedstorage:grid"
     ]
   ],
   "rewards": {
     "recipes": [
       "refinedstorage:fluid_grid/lime_fluid_grid"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

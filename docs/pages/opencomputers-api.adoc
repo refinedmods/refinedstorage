@@ -1,0 +1,27 @@
+= OpenComputers API
+
+[cols="1,1"]
+|===
+|Method|Description|
+
+|`isConnected():boolean`|Whether the node is connected.
+|`getEnergyUsage():number`|Gets the energy usage of this network.|
+|`getTasks():table`|Gets the crafting tasks of this network.
+|`getPattern(stack:table):table`|Get one pattern of this network.
+|`getFluidPattern(stack:table):table`|Get one fluid pattern of this network.
+|`getPatterns():table`|Gets the patterns of this network.
+|`getFluidPatterns():table`|Gets the fluid patterns of this network.
+|`hasPattern(stack:table):boolean`|Whether a crafting pattern exists for this item.
+|`hasFluidPattern(stack:table):boolean`|Whether a crafting pattern exists for this fluid.
+|`scheduleTask(stack:table[,count: number[, canSchedule: boolean]]):table`|Schedules a crafting task.
+|`scheduleFluidTask(stack:table[,count: number[, canSchedule: boolean]]):table`|Schedules a fluid crafting task.
+|`cancelTask(stack:table):number`|Cancels a task and returns the amount of tasks cancelled.
+|`cancelFluidTask(stack:table):number`|Cancels a fluid task and returns the amount of tasks cancelled.
+|`extractFluid(stack:table[,amount:number[, direction:number]]):table`|Extracts a fluid from the network.
+|`getFluid(stack:table):table`|Gets a fluid from the network.
+|`getFluids():table`|Gets a list of all fluids in this network.
+|`extractItem(stack:table[,count:number[, direction:number]]):table`|Extracts an item from the network.
+|`getItem(stack:table[,compareMeta:boolean[, compareNBT:boolean]]):table`|Gets an item from the network.
+|`getItems():table`|Gets a list of all items in this network.
+|`getStorages():table`|Gets a list of all connected storage disks and blocks in this network.
+|===

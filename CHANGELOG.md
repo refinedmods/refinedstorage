@@ -7,6 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.13.0-beta.1] - 2024-02-12
+
+### Added
+
+-   Ported to Minecraft 1.20.4.
+
 ## [1.12.4] - 2023-11-05
 
 ### Added
@@ -56,6 +62,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 -   Fixed GUI side buttons not working sometimes when using Refined Storage with addons.
+
+## [1.11.7] - 2023-11-12
+
+### Fixed
+
+-   Various world corruption issues if Refined Storage blocks were removed unexpectedly or with another mod.
+-   Fixed JEI transfer crash for larger processing recipes.
+-   Fixed rare autocrafting crash.
+-   Fixed duplication bug with the Crafting Grid.
+-   Fixed fluid duplication bug with the Importer and GregTechCEu machines.
+-   Attempted to fix issue where Grid doesn't load items and requires a client restart.
 
 ## [1.11.6] - 2023-03-30
 
@@ -116,6 +133,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 -   Ported to Minecraft 1.19.2.
+
+## [1.10.6] - 2023-11-26
+
+### Fixed
+
+-   Fixed a bunch of issues where chunks would unintentionally be loaded by RS.
+-   Reduced block updates when a controller is turning on and off constantly.
+-   Various world corruption issues if Refined Storage blocks were removed unexpectedly or with another mod.
+-   Fixed JEI transfer crash for larger processing recipes.
+-   Fixed rare autocrafting crash.
+-   Fixed duplication bug with the Crafting Grid.
+-   Fixed fluid duplication bug with the Importer in certain situations.
+-   Attempted to fix issue where Grid doesn't load items and requires a client restart.
 
 ## [1.10.5] - 2023-02-12
 
@@ -456,13 +486,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Fixed duplication bug with the Constructor.
 
-## [1.9.2b-beta] - 2020-09-11
+## [1.9.2-beta.2] - 2020-09-11
 
 ### Fixed
 
 -   Fixed duplication bug with the Constructor.
 
-## [1.9.2-beta] - 2020-07-17
+## [1.9.2-beta.1] - 2020-07-17
 
 ### Added
 
@@ -3495,7 +3525,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.12.4...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.1...HEAD
+
+[1.13.0-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.4...v1.13.0-beta.1
 
 [1.12.4]: https://github.com/refinedmods/refinedstorage/compare/v1.12.3...v1.12.4
 
@@ -3505,7 +3537,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.12.1]: https://github.com/refinedmods/refinedstorage/compare/v1.12.0...v1.12.1
 
-[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/v1.11.6...v1.12.0
+[1.12.0]: https://github.com/refinedmods/refinedstorage/compare/v1.11.7...v1.12.0
+
+[1.11.7]: https://github.com/refinedmods/refinedstorage/compare/v1.11.6...v1.11.7
 
 [1.11.6]: https://github.com/refinedmods/refinedstorage/compare/v1.11.5...v1.11.6
 
@@ -3519,7 +3553,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.11.1]: https://github.com/refinedmods/refinedstorage/compare/v1.11.0...v1.11.1
 
-[1.11.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.5...v1.11.0
+[1.11.0]: https://github.com/refinedmods/refinedstorage/compare/v1.10.6...v1.11.0
+
+[1.10.6]: https://github.com/refinedmods/refinedstorage/compare/v1.10.5...v1.10.6
 
 [1.10.5]: https://github.com/refinedmods/refinedstorage/compare/v1.10.4...v1.10.5
 
@@ -3571,11 +3607,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [1.9.4]: https://github.com/refinedmods/refinedstorage/compare/v1.9.3-beta...v1.9.4
 
-[1.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2b-beta...v1.9.3-beta
+[1.9.3-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta.2...v1.9.3-beta
 
-[1.9.2b-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta...v1.9.2b-beta
+[1.9.2-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.9.2-beta.1...v1.9.2-beta.2
 
-[1.9.2-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.1-beta...v1.9.2-beta
+[1.9.2-beta.1]: https://github.com/refinedmods/refinedstorage/compare/v1.9.1-beta...v1.9.2-beta.1
 
 [1.9.1-beta]: https://github.com/refinedmods/refinedstorage/compare/v1.9.0-beta...v1.9.1-beta
 

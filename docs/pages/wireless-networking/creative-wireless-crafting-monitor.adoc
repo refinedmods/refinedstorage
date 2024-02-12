@@ -1,0 +1,7 @@
+= Creative Wireless Crafting Monitor
+:icon: wireless-crafting-monitor.png
+:from: v1.2.1
+
+The {doctitle} is the same as a regular xref:wireless-crafting-monitor.adoc[] but has infinite energy.
+
+It can only be obtained in creative mode.

@@ -1,11 +1,15 @@
 package com.refinedmods.refinedstorage.container;
 
 import com.refinedmods.refinedstorage.RSContainerMenus;
+import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.blockentity.SecurityManagerBlockEntity;
+
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class SecurityManagerContainerMenu extends BaseContainerMenu {
+    private final SecurityManagerBlockEntity securityManager;
+
     public SecurityManagerContainerMenu(SecurityManagerBlockEntity securityManager, Player player, int windowId) {
         super(RSContainerMenus.SECURITY_MANAGER.get(), securityManager, player, windowId);
 
@@ -29,5 +33,11 @@ public class SecurityManagerContainerMenu extends BaseContainerMenu {
 
         transferManager.addBiTransfer(player.getInventory(), securityManager.getNode().getCardsItems());
         transferManager.addTransfer(securityManager.getNode().getEditCard(), player.getInventory());
+
+        this.securityManager = securityManager;
+    }
+
+    public void updatePermission(Permission permission, boolean state) {
+        securityManager.getNode().updatePermission(permission, state);
     }
 }

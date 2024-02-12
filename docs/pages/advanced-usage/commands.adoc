@@ -1,0 +1,76 @@
+= Commands
+
+[cols="1,1"]
+|===
+|Refined Storage version|Command      |Explanation
+
+|v1.9.5 or higher        |`/refinedstorage disk create <player> <id>`|Creates a disk for a player by disk ID.
+|v1.9.5 or higher        |`/refinedstorage disk list`|Lists all disks on the server.
+|v1.9.5 or higher        |`/refinedstorage disk list <player>`|Lists all disks on the server, that the given player created.
+|v1.9.5 or higher        |`/refinedstorage network list <dimension>`|Lists all networks in a dimension, sorted by highest tick time first.
+|v1.9.5 or higher        |`/refinedstorage network get <dimension> <pos>`|Gets information about a network in a dimension and position.
+|v1.9.5 or higher        |`/refinedstorage network get <dimension> <pos> autocrafting list`|Gets all autocrafting tasks for a network.
+|v1.9.5 or higher        |`/refinedstorage network get <dimension> <pos> autocrafting get <id>`|Gets a specific autocrafting task in a network.
+|v1.9.5 or higher        |`/refinedstorage network get <dimension> <pos> autocrafting cancel`|Cancels all autocrafting tasks in a network.
+|v1.9.5 or higher        |`/refinedstorage network get <dimension> <pos> autocrafting cancel <id>`|Cancels a specific autocrafting task in a network.
+|v1.9.5 or higher        |`/refinedstorage pattern dump`|Dumps information about the currently held xref:../autocrafting/pattern.adoc[]. Meant for debugging purposes.
+|v1.6.x                  |`/createdisk`|See <<_createdisk>>.
+|===
+
+[#_createdisk]
+== `/createdisk`
+
+[.alert.alert-info]
+****
+This command is only available for Minecraft 1.12.2 on Refined Storage version v1.6.x.
+****
+
+Use the `/createdisk` command to spawn in a disk with a given ID.
+
+=== Usage
+
+`/createdisk <player> <item> <metadata> <id>`
+
+==== Player
+
+The player name to give the disk to.
+
+==== Item
+
+The item ID of the storage disk.
+For Refined Storage this would be `refinedstorage:storage_disk` (or `refinedstorage:fluid_storage_disk` for fluid disks).
+
+==== Metadata
+
+The metadata value signifies the type of disk.
+
+**Items**
+
+[cols="1,1"]
+|===
+|Disk type|Metadata value
+
+|1k|0
+|4k|1
+|16k|2
+|64k|3
+|Creative|4
+|===
+
+**Fluids**
+
+[cols="1,1"]
+|===
+|Disk type|Metadata value
+
+|64k|0
+|256k|1
+|1024k|2
+|4096k|3
+|Creative|4
+|===
+
+==== ID
+
+The ID parameter is the ID of the disk.
+A disk ID can be found by turning on advanced tooltips and checking the tooltip of the disk.

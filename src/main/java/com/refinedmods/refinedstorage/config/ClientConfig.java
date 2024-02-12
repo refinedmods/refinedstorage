@@ -1,10 +1,10 @@
 package com.refinedmods.refinedstorage.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
-    private final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-    private final ForgeConfigSpec spec;
+    private final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+    private final ModConfigSpec spec;
 
     private final Grid grid;
     private final CrafterManager crafterManager;
@@ -17,7 +17,7 @@ public class ClientConfig {
         spec = builder.build();
     }
 
-    public ForgeConfigSpec getSpec() {
+    public ModConfigSpec getSpec() {
         return spec;
     }
 
@@ -34,20 +34,28 @@ public class ClientConfig {
     }
 
     public class Grid {
-        private final ForgeConfigSpec.IntValue maxRowsStretch;
-        private final ForgeConfigSpec.BooleanValue detailedTooltip;
-        private final ForgeConfigSpec.BooleanValue largeFont;
-        private final ForgeConfigSpec.BooleanValue preventSortingWhileShiftIsDown;
-        private final ForgeConfigSpec.BooleanValue rememberSearchQuery;
+        private final ModConfigSpec.IntValue maxRowsStretch;
+        private final ModConfigSpec.BooleanValue detailedTooltip;
+        private final ModConfigSpec.BooleanValue largeFont;
+        private final ModConfigSpec.BooleanValue preventSortingWhileShiftIsDown;
+        private final ModConfigSpec.BooleanValue rememberSearchQuery;
 
         public Grid() {
             builder.push("grid");
 
-            maxRowsStretch = builder.comment("The maximum amount of rows that the Grid can show when stretched").defineInRange("maxRowsStretch", Integer.MAX_VALUE, 3, Integer.MAX_VALUE);
-            detailedTooltip = builder.comment("Whether the Grid should display a detailed tooltip when hovering over an item or fluid").define("detailedTooltip", true);
-            largeFont = builder.comment("Whether the Grid should use a large font for stack quantity display").define("largeFont", false);
-            preventSortingWhileShiftIsDown = builder.comment("Whether the Grid should prevent sorting while the shift key is held down").define("preventSortingWhileShiftIsDown", true);
-            rememberSearchQuery = builder.comment("Whether the Grid should remember the search query when closing and re-opening the Grid").define("rememberSearchQuery", false);
+            maxRowsStretch = builder.comment("The maximum amount of rows that the Grid can show when stretched")
+                .defineInRange("maxRowsStretch", Integer.MAX_VALUE, 3, Integer.MAX_VALUE);
+            detailedTooltip = builder.comment(
+                    "Whether the Grid should display a detailed tooltip when hovering over an item or fluid")
+                .define("detailedTooltip", true);
+            largeFont = builder.comment("Whether the Grid should use a large font for stack quantity display")
+                .define("largeFont", false);
+            preventSortingWhileShiftIsDown =
+                builder.comment("Whether the Grid should prevent sorting while the shift key is held down")
+                    .define("preventSortingWhileShiftIsDown", true);
+            rememberSearchQuery = builder.comment(
+                    "Whether the Grid should remember the search query when closing and re-opening the Grid")
+                .define("rememberSearchQuery", false);
 
             builder.pop();
         }
@@ -74,12 +82,14 @@ public class ClientConfig {
     }
 
     public class CrafterManager {
-        private final ForgeConfigSpec.IntValue maxRowsStretch;
+        private final ModConfigSpec.IntValue maxRowsStretch;
 
         public CrafterManager() {
             builder.push("crafterManager");
 
-            maxRowsStretch = builder.comment("The maximum amount of rows that the Crafter Manager can show when stretched").defineInRange("maxRowsStretch", Integer.MAX_VALUE, 3, Integer.MAX_VALUE);
+            maxRowsStretch =
+                builder.comment("The maximum amount of rows that the Crafter Manager can show when stretched")
+                    .defineInRange("maxRowsStretch", Integer.MAX_VALUE, 3, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -91,11 +101,13 @@ public class ClientConfig {
 
     public class Cover {
 
-        private final ForgeConfigSpec.BooleanValue showAllCoversInJEI;
+        private final ModConfigSpec.BooleanValue showAllCoversInJEI;
 
         public Cover() {
             builder.push("cover");
-            showAllCoversInJEI = builder.comment("When true all the possible covers will be added to JEI (Game restart required)").define("showAllCoversInJEI", false);
+            showAllCoversInJEI =
+                builder.comment("When true all the possible covers will be added to JEI (Game restart required)")
+                    .define("showAllCoversInJEI", false);
             builder.pop();
         }
 

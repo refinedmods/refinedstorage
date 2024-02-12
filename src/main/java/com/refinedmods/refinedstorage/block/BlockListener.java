@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.block;
 
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public class BlockListener {
     // Allow break without tool

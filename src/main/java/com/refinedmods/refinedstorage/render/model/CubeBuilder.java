@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.render.model;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
+import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -113,46 +113,34 @@ public class CubeBuilder {
         return quad.get(0);
     }
 
-    private Uv getDefaultUv(Direction face, TextureAtlasSprite texture, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+    private Uv getDefaultUv(Direction face, TextureAtlasSprite texture, float x1, float y1, float z1, float x2, float y2, float z2) {
         Uv uv = new Uv();
 
+        if (face.getAxis() != Direction.Axis.Y) {
+            uv.v1 = texture.getV(1 - y1);
+            uv.v2 = texture.getV(1 - y2);
+        } else {
+            uv.v1 = texture.getV(z1);
+            uv.v2 = texture.getV(z2);
+        }
+
         switch (face) {
-            case DOWN:
-                uv.xFrom = texture.getU(fromX * 16);
-                uv.yFrom = texture.getV(16 - fromZ * 16);
-                uv.xTo = texture.getU(toX * 16);
-                uv.yTo = texture.getV(16 - toZ * 16);
-                break;
-            case UP:
-                uv.xFrom = texture.getU(fromX * 16);
-                uv.yFrom = texture.getV(fromZ * 16);
-                uv.xTo = texture.getU(toX * 16);
-                uv.yTo = texture.getV(toZ * 16);
-                break;
-            case NORTH:
-                uv.xFrom = texture.getU(16 - fromX * 16);
-                uv.yFrom = texture.getV(16 - fromY * 16);
-                uv.xTo = texture.getU(16 - toX * 16);
-                uv.yTo = texture.getV(16 - toY * 16);
-                break;
-            case SOUTH:
-                uv.xFrom = texture.getU(fromX * 16);
-                uv.yFrom = texture.getV(16 - fromY * 16);
-                uv.xTo = texture.getU(toX * 16);
-                uv.yTo = texture.getV(16 - toY * 16);
-                break;
-            case WEST:
-                uv.xFrom = texture.getU(fromZ * 16);
-                uv.yFrom = texture.getV(16 - fromY * 16);
-                uv.xTo = texture.getU(toZ * 16);
-                uv.yTo = texture.getV(16 - toY * 16);
-                break;
-            case EAST:
-                uv.xFrom = texture.getU(16 - toZ * 16);
-                uv.yFrom = texture.getV(16 - fromY * 16);
-                uv.xTo = texture.getU(16 - fromZ * 16);
-                uv.yTo = texture.getV(16 - toY * 16);
-                break;
+            case DOWN, UP, SOUTH -> {
+                uv.u1 = texture.getU(x1);
+                uv.u2 = texture.getU(x2);
+            }
+            case NORTH -> {
+                uv.u1 = texture.getU(1 - x2);
+                uv.u2 = texture.getU(1 - x1);
+            }
+            case WEST -> {
+                uv.u1 = texture.getU(z1);
+                uv.u2 = texture.getU(z2);
+            }
+            case EAST -> {
+                uv.u1 = texture.getU(1 - z2);
+                uv.u2 = texture.getU(1 - z1);
+            }
         }
 
         return uv;
@@ -165,20 +153,20 @@ public class CubeBuilder {
         switch (face.uvRotation) {
             default:
             case CLOCKWISE_0:
-                u = uv.xFrom;
-                v = uv.yFrom;
+                u = uv.u1;
+                v = uv.v1;
                 break;
             case CLOCKWISE_90:
-                u = uv.xFrom;
-                v = uv.yTo;
+                u = uv.u1;
+                v = uv.v2;
                 break;
             case CLOCKWISE_180:
-                u = uv.xTo;
-                v = uv.yTo;
+                u = uv.u2;
+                v = uv.v2;
                 break;
             case CLOCKWISE_270:
-                u = uv.xTo;
-                v = uv.yFrom;
+                u = uv.u2;
+                v = uv.v1;
                 break;
         }
 
@@ -192,20 +180,20 @@ public class CubeBuilder {
         switch (face.uvRotation) {
             default:
             case CLOCKWISE_0:
-                u = uv.xTo;
-                v = uv.yFrom;
+                u = uv.u2;
+                v = uv.v1;
                 break;
             case CLOCKWISE_90:
-                u = uv.xFrom;
-                v = uv.yFrom;
+                u = uv.u1;
+                v = uv.v1;
                 break;
             case CLOCKWISE_180:
-                u = uv.xFrom;
-                v = uv.yTo;
+                u = uv.u1;
+                v = uv.v2;
                 break;
             case CLOCKWISE_270:
-                u = uv.xTo;
-                v = uv.yTo;
+                u = uv.u2;
+                v = uv.v2;
                 break;
         }
 
@@ -219,20 +207,20 @@ public class CubeBuilder {
         switch (face.uvRotation) {
             default:
             case CLOCKWISE_0:
-                u = uv.xTo;
-                v = uv.yTo;
+                u = uv.u2;
+                v = uv.v2;
                 break;
             case CLOCKWISE_90:
-                u = uv.xTo;
-                v = uv.yFrom;
+                u = uv.u2;
+                v = uv.v1;
                 break;
             case CLOCKWISE_180:
-                u = uv.xFrom;
-                v = uv.yFrom;
+                u = uv.u1;
+                v = uv.v1;
                 break;
             case CLOCKWISE_270:
-                u = uv.xFrom;
-                v = uv.yTo;
+                u = uv.u1;
+                v = uv.v2;
                 break;
         }
 
@@ -246,20 +234,20 @@ public class CubeBuilder {
         switch (face.uvRotation) {
             default:
             case CLOCKWISE_0:
-                u = uv.xFrom;
-                v = uv.yTo;
+                u = uv.u1;
+                v = uv.v2;
                 break;
             case CLOCKWISE_90:
-                u = uv.xTo;
-                v = uv.yTo;
+                u = uv.u2;
+                v = uv.v2;
                 break;
             case CLOCKWISE_180:
-                u = uv.xTo;
-                v = uv.yFrom;
+                u = uv.u2;
+                v = uv.v1;
                 break;
             case CLOCKWISE_270:
-                u = uv.xFrom;
-                v = uv.yFrom;
+                u = uv.u1;
+                v = uv.v1;
                 break;
         }
 
@@ -286,10 +274,10 @@ public class CubeBuilder {
     }
 
     private static class Uv {
-        private float xFrom;
-        private float xTo;
-        private float yFrom;
-        private float yTo;
+        private float u1;
+        private float u2;
+        private float v1;
+        private float v2;
     }
 
     public static class Face {

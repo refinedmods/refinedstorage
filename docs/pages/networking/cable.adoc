@@ -1,0 +1,7 @@
+= Cable
+:from: v0.3.0-alpha
+:icon: cable.png
+
+{doctitle} is used to connect devices to the xref:controller.adoc[].
+
+They are not always necessary, as long as the devices are next to each other in any direction a connection will be established as well.

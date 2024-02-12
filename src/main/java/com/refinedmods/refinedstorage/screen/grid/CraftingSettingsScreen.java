@@ -9,7 +9,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainerMenu> {
     private final IGridStack stack;

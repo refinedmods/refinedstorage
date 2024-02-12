@@ -6,8 +6,16 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
+import com.refinedmods.refinedstorage.network.grid.GridStackDelta;
 import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
+
+import java.util.UUID;
+import java.util.function.Function;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -18,98 +26,89 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.attachment.AttachmentInternals;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Function;
 
 public final class StackUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
-    private static final String NBT_FORGE_CAPS = "ForgeCaps"; // @Volatile
 
-    private static final Logger LOGGER = LogManager.getLogger(StackUtils.class);
     private static final String NBT_ITEM_ID = "Id";
     private static final String NBT_ITEM_QUANTITY = "Quantity";
     private static final String NBT_ITEM_NBT = "NBT";
-    private static final String NBT_ITEM_CAPS = "Caps";
 
     private StackUtils() {
     }
 
-    // @Volatile: from PacketBuffer#writeItemStack, with some tweaks to allow int stack counts
+    // @Volatile: from FriendlyByteBuf#writeItem, but allows int item stack counts.
     public static void writeItemStack(FriendlyByteBuf buf, @Nonnull ItemStack stack) {
         if (stack.isEmpty()) {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);
-
             Item item = stack.getItem();
-
-            buf.writeVarInt(Item.getId(item));
+            buf.writeId(BuiltInRegistries.ITEM, item);
             buf.writeInt(stack.getCount());
-
-            CompoundTag tag = null;
-
-            if (item.canBeDepleted() || item.shouldOverrideMultiplayerNbt()) {
-                tag = stack.getTag();
+            CompoundTag compoundtag = null;
+            if (item.isDamageable(stack) || item.shouldOverrideMultiplayerNbt()) {
+                compoundtag = stack.getTag();
             }
+            compoundtag = AttachmentInternals.addAttachmentsToTag(compoundtag, stack, false);
 
-            buf.writeNbt(tag);
+            buf.writeNbt(compoundtag);
         }
     }
 
-    // @Volatile: from PacketBuffer#readItemStack, with some tweaks to allow int stack counts
+    // @Volatile: from FriendlyByteBuf#readItem, but allows int item stack counts.
     public static ItemStack readItemStack(FriendlyByteBuf buf) {
         if (!buf.readBoolean()) {
             return ItemStack.EMPTY;
         } else {
-            int id = buf.readVarInt();
-            int count = buf.readInt();
-
-            ItemStack stack = new ItemStack(Item.byId(id), count);
-
-            stack.readShareTag(buf.readNbt());
-
-            return stack;
+            Item item = buf.readById(BuiltInRegistries.ITEM);
+            int i = buf.readInt();
+            return AttachmentInternals.reconstructItemStack(item, i, buf.readNbt());
         }
     }
 
-    public static void writeItemGridStack(FriendlyByteBuf buf, ItemStack stack, UUID id, @Nullable UUID otherId, boolean craftable, @Nullable StorageTrackerEntry entry) {
-        writeItemStack(buf, stack);
+    public static void writeItemGridStackDelta(FriendlyByteBuf buf, GridStackDelta<ItemGridStack> delta) {
+        buf.writeInt(delta.change());
+        writeItemGridStack(buf, delta.stack());
+    }
 
-        buf.writeBoolean(craftable);
-        buf.writeUUID(id);
+    public static void writeItemGridStack(FriendlyByteBuf buf, ItemGridStack stack) {
+        writeItemStack(buf, stack.getStack());
 
-        buf.writeBoolean(otherId != null);
-        if (otherId != null) {
-            buf.writeUUID(otherId);
+        buf.writeBoolean(stack.isCraftable());
+        buf.writeUUID(stack.getId());
+
+        buf.writeBoolean(stack.getOtherId() != null);
+        if (stack.getOtherId() != null) {
+            buf.writeUUID(stack.getOtherId());
         }
 
-        if (entry == null) {
+        if (stack.getTrackerEntry() == null) {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);
 
-            buf.writeLong(entry.getTime());
-            buf.writeUtf(entry.getName());
+            buf.writeLong(stack.getTrackerEntry().getTime());
+            buf.writeUtf(stack.getTrackerEntry().getName());
         }
+    }
+
+    public static GridStackDelta<ItemGridStack> readItemGridStackDelta(FriendlyByteBuf buf) {
+        int delta = buf.readInt();
+        return new GridStackDelta<>(delta, readItemGridStack(buf));
     }
 
     public static ItemGridStack readItemGridStack(FriendlyByteBuf buf) {
@@ -131,25 +130,35 @@ public final class StackUtils {
         return new ItemGridStack(id, otherId, stack, craftable, entry);
     }
 
-    public static void writeFluidGridStack(FriendlyByteBuf buf, FluidStack stack, UUID id, @Nullable UUID otherId, boolean craftable, @Nullable StorageTrackerEntry entry) {
-        stack.writeToPacket(buf);
+    public static void writeFluidGridStackDelta(FriendlyByteBuf buf, GridStackDelta<FluidGridStack> delta) {
+        buf.writeInt(delta.change());
+        writeFluidGridStack(buf, delta.stack());
+    }
 
-        buf.writeBoolean(craftable);
-        buf.writeUUID(id);
+    public static void writeFluidGridStack(FriendlyByteBuf buf, FluidGridStack stack) {
+        stack.getStack().writeToPacket(buf);
 
-        buf.writeBoolean(otherId != null);
-        if (otherId != null) {
-            buf.writeUUID(otherId);
+        buf.writeBoolean(stack.isCraftable());
+        buf.writeUUID(stack.getId());
+
+        buf.writeBoolean(stack.getOtherId() != null);
+        if (stack.getOtherId() != null) {
+            buf.writeUUID(stack.getOtherId());
         }
 
-        if (entry == null) {
+        if (stack.getTrackerEntry() == null) {
             buf.writeBoolean(false);
         } else {
             buf.writeBoolean(true);
 
-            buf.writeLong(entry.getTime());
-            buf.writeUtf(entry.getName());
+            buf.writeLong(stack.getTrackerEntry().getTime());
+            buf.writeUtf(stack.getTrackerEntry().getName());
         }
+    }
+
+    public static GridStackDelta<FluidGridStack> readFluidGridStackDelta(FriendlyByteBuf buf) {
+        int delta = buf.readInt();
+        return new GridStackDelta<>(delta, readFluidGridStack(buf));
     }
 
     public static FluidGridStack readFluidGridStack(FriendlyByteBuf buf) {
@@ -167,11 +176,14 @@ public final class StackUtils {
             entry = new StorageTrackerEntry(buf.readLong(), PacketBufferUtils.readString(buf));
         }
 
-        return new FluidGridStack(id, otherId, stack, entry, craftable);
+        return new FluidGridStack(id, otherId, stack, craftable, entry);
     }
 
     @SuppressWarnings("unchecked")
-    public static void createStorages(ServerLevel level, ItemStack diskStack, int slot, IStorageDisk<ItemStack>[] itemDisks, IStorageDisk<FluidStack>[] fluidDisks, Function<IStorageDisk<ItemStack>, IStorageDisk> itemDiskWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidDiskWrapper) {
+    public static void createStorages(ServerLevel level, ItemStack diskStack, int slot,
+                                      IStorageDisk<ItemStack>[] itemDisks, IStorageDisk<FluidStack>[] fluidDisks,
+                                      Function<IStorageDisk<ItemStack>, IStorageDisk> itemDiskWrapper,
+                                      Function<IStorageDisk<FluidStack>, IStorageDisk> fluidDiskWrapper) {
         if (diskStack.isEmpty()) {
             itemDisks[slot] = null;
             fluidDisks[slot] = null;
@@ -193,7 +205,8 @@ public final class StackUtils {
         }
     }
 
-    public static void writeItems(IItemHandler handler, int id, CompoundTag tag, Function<ItemStack, CompoundTag> serializer) {
+    public static void writeItems(IItemHandler handler, int id, CompoundTag tag,
+                                  Function<ItemStack, CompoundTag> serializer) {
         ListTag tagList = new ListTag();
 
         for (int i = 0; i < handler.getSlots(); i++) {
@@ -213,7 +226,8 @@ public final class StackUtils {
         writeItems(handler, id, tag, stack -> stack.save(new CompoundTag()));
     }
 
-    public static void readItems(IItemHandlerModifiable handler, int id, CompoundTag tag, Function<CompoundTag, ItemStack> deserializer) {
+    public static void readItems(IItemHandlerModifiable handler, int id, CompoundTag tag,
+                                 Function<CompoundTag, ItemStack> deserializer) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (tag.contains(name)) {
@@ -296,9 +310,10 @@ public final class StackUtils {
             stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
         }
 
-        IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse(null);
+        IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (handler != null) {
-            FluidStack result = handler.drain(FluidType.BUCKET_VOLUME, simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+            FluidStack result = handler.drain(FluidType.BUCKET_VOLUME,
+                simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
 
             return Pair.of(handler.getContainer(), result);
         }
@@ -307,53 +322,23 @@ public final class StackUtils {
     }
 
     public static CompoundTag serializeStackToNbt(@Nonnull ItemStack stack) {
-        CompoundTag dummy = new CompoundTag();
-
         CompoundTag itemTag = new CompoundTag();
-
-        ResourceLocation key = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem()), "Item is not registered");
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         itemTag.putString(NBT_ITEM_ID, key.toString());
         itemTag.putInt(NBT_ITEM_QUANTITY, stack.getCount());
-
-        if (stack.hasTag()) {
-            itemTag.put(NBT_ITEM_NBT, stack.getTag());
+        var tag = AttachmentInternals.addAttachmentsToTag(stack.getTag(), stack, true);
+        if (tag != null) {
+            itemTag.put(NBT_ITEM_NBT, tag);
         }
-
-        // @Volatile
-        stack.save(dummy);
-        if (dummy.contains(NBT_FORGE_CAPS)) {
-            itemTag.put(NBT_ITEM_CAPS, dummy.get(NBT_FORGE_CAPS));
-        }
-        dummy.remove(NBT_FORGE_CAPS);
-
         return itemTag;
     }
 
     @Nonnull
     public static ItemStack deserializeStackFromNbt(CompoundTag tag) {
-        Item item;
-        if (tag.contains(NBT_ITEM_ID)) {
-            item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString(NBT_ITEM_ID)));
-
-            if (item == null) {
-                LOGGER.warn("Could not deserialize item from string ID {}, it no longer exists", tag.getString(NBT_ITEM_ID));
-            }
-        } else {
-            throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_ID + " tag was found!");
-        }
-
-        if (item == null) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack stack = new ItemStack(
-            item,
+        return AttachmentInternals.reconstructItemStack(
+            BuiltInRegistries.ITEM.get(new ResourceLocation(tag.getString(NBT_ITEM_ID))),
             tag.getInt(NBT_ITEM_QUANTITY),
-            tag.contains(NBT_ITEM_CAPS) ? tag.getCompound(NBT_ITEM_CAPS) : null
+            tag.getCompound(NBT_ITEM_NBT)
         );
-
-        stack.setTag(tag.contains(NBT_ITEM_NBT) ? tag.getCompound(NBT_ITEM_NBT) : null);
-
-        return stack;
     }
 }

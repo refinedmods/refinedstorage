@@ -1,0 +1,25 @@
+= Resource packs
+
+== Color settings
+
+You can change the text colors that Refined Storage uses in its GUIs by changing the `pack.mcmeta` file.
+
+Example:
+
+[source,json]
+----
+{
+  "pack": {
+    "pack_format": 4,
+    "description": "An example"
+  },
+  "refinedstorage": {
+    "primary_color": 11184810,
+    "secondary_color": 11184810
+  }
+}
+----
+
+`primary_color` is used for the GUI titles, `secondary_color` is used for all the rest.
+
+The color is an integer representation of an RGBA color.

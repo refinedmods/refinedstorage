@@ -1,0 +1,31 @@
+= Wireless Transmitter
+:icon: wireless-transmitter.png
+:from: v0.6.0-alpha
+
+The {doctitle} is used to send signals to wireless network items in Refined Storage.
+
+== Range
+
+The default range is 16 blocks, but can be upgraded with xref:../upgrades/range-upgrade.adoc[range upgrades].
+
+=== Bigger range
+
+Keep in mind, **you are not limited to 1 {doctitle}**!
+
+You can spread multiple around in your world, each maximally upgraded with xref:../upgrades/range-upgrade.adoc[range upgrades].
+
+Note that every {doctitle} needs to be connected to the network through a xref:../networking/cable.adoc[] or xref:network-receiver.adoc[].
+
+== Placing transmitters efficiently
+
+Placing 2 {doctitle}s just next to each other will not do that much.
+
+The wireless signal starts from the {doctitle}'s position, so, if you place 2 transmitters next to each other you'll only have a net gain of 1 block.
+
+Instead, you have to spread your wireless transmitters around.
+
+include::../../partials/recoloring.adoc[]
+
+== Applicable upgrades
+
+- xref:../upgrades/range-upgrade.adoc[]

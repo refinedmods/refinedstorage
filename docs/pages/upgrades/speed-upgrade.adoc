@@ -1,0 +1,7 @@
+= Speed Upgrade
+:icon: speed-upgrade.png
+:from: v0.6.0-alpha
+
+The {doctitle} will increase the speed of the device that it is being inserted to.
+
+By using this upgrade, the amount of FE/t that this device draws will increase.

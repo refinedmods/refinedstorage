@@ -31,8 +31,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandlerModifiable;
-
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;

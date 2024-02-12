@@ -1,0 +1,37 @@
+= Getting items in and out
+
+So far, you know xref:../getting-started.adoc[how to add storage disks to your network and view them].
+But how do you get those items in and out in an automated way?
+
+This is a quick overview of all the devices that manipulate your storage.
+
+== Exporter
+
+If you want to get items out of your storage network, use an xref:exporter.adoc[] and connect it to an inventory where you want to export to.
+
+Configure the filter slots of the xref:exporter.adoc[] to the items you want to export.
+
+== Importer
+
+If you want to get items in your storage network, use an xref:importer.adoc[] and connect it to an inventory where you want to import from.
+
+== Interface
+
+Want the best of both worlds?
+Use an xref:interface.adoc[] to get importing and exporting functionality in one block.
+
+== Constructor
+
+To place blocks from your storage network in the world, use an xref:constructor.adoc[].
+
+Configure the filter slots of the xref:constructor.adoc[] to the block you want to place.
+
+== Destructor
+
+To destroy and insert blocks from the world into your storage, use an xref:destructor.adoc[].
+
+You can configure a whitelist or blacklist of blocks to destroy.
+
+== Disk Manipulator
+
+If you want to import from disks or export to a disk from the network, use a xref:disk-manipulator.adoc[].

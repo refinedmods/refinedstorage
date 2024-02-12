@@ -4,6 +4,6 @@ on:
     types: [ opened, synchronize, reopened, ready_for_review, labeled, unlabeled ]
 jobs:
   validate-changelog:
-    uses: refinedmods/refinedarchitect/.github/workflows/validate-changelog.yml@v0.7.1
+    uses: refinedmods/refinedarchitect/.github/workflows/validate-changelog.yml@v0.11.4
     with:
       validation-level: 'warn'

@@ -1,0 +1,21 @@
+= Processing Pattern Encoder
+:icon: processing-pattern-encoder.png
+:from: v0.6.0-alpha
+:to: v1.5.6
+
+[.alert.alert-warning]
+****
+The {doctitle} has been removed in v1.5.6 and its functionality has been moved to the xref:pattern-grid.adoc[].
+****
+
+A {doctitle} is used to create xref:pattern.adoc[patterns] meant for machine automation.
+
+It takes up to 9 inputs and 9 outputs, so the storage network knows what to take and what to expect.
+
+This block can't be connected to a storage network.
+
+== Recipe transferring
+
+The {doctitle} integrates with link:https://minecraft.curseforge.com/projects/jei[JEI (Just Enough Items)] so the player can use recipe transferring.
+
+When using this, Refined Storage will use the inputs and outputs that the link:https://minecraft.curseforge.com/projects/jei[JEI] recipe has.

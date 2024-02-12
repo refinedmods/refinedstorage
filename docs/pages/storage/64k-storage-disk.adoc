@@ -1,0 +1,9 @@
+= 64k Storage Disk
+:icon: 64k-storage-disk.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-disk.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store 64.000 items.

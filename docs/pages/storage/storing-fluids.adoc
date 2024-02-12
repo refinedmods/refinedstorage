@@ -1,0 +1,25 @@
+= Storing fluids
+
+As opposed to only item storage, Refined Storage is able to store fluids as well.
+This is done in the entirely same way as item storages.
+
+All the things you can do to manipulate items (with xref:../input-and-output/exporter.adoc[exporters] or xref:../input-and-output/importer.adoc[importers]) you can do with fluids as well.
+
+== Storage
+
+The same way as you connect item storages, you can connect fluid storages as well:
+
+- xref:index.adoc#_fluid_storage_disks[Any fluid storage disk] in a xref:disk-drive.adoc[]
+- xref:index.adoc#_fluid_storage_blocks[Any fluid storage block]
+- xref:external-storage.adoc[] in fluid mode
+
+== Accessing fluids
+
+Use a xref:../viewing-resources/fluid-grid.adoc[].
+
+== Manipulating fluids
+
+Any block that would manipulate items can manipulate fluids as well by simply putting the block in fluid mode.
+
+There is one exception to this: the xref:../input-and-output/interface.adoc[] has no fluid mode.
+Use a xref:../input-and-output/fluid-interface.adoc[] instead.

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout.html}">
+<head>
+    <title th:utext="${title}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <main>
+        <div class="container bg-body-tertiary rounded-3 mb-4 mt-4 pt-4">
+            <div class="row g-4 p-5 row-cols-1 row-cols-lg-3">
+                <div class="col">
+                    <h2 class="h4"><i class="bi bi-discord"></i> Have a question?</h2>
+                    <p>Join our Discord server for community support.</p>
+                    <a href="https://discordapp.com/invite/VYzsydb" class="icon-link d-inline-flex align-items-center">
+                        Join our Discord server
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+                <div class="col">
+                    <h2 class="h4"><i class="bi bi-bug-fill"></i> Found a bug, crash or other problem?</h2>
+                    <p>Issues can be reported on our issue tracker.</p>
+                    <a href="https://github.com/refinedmods/refinedstorage/issues"
+                       class="icon-link d-inline-flex align-items-center">
+                        Refined Storage on GitHub
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+                <div class="col">
+                    <h2 class="h4"><i class="bi bi-rss-fill"></i> Want to stay up to date?</h2>
+                    <p>Follow us on Twitter or Mastodon to stay up to date with Refined Mods news and releases.</p>
+                    <a href="https://twitter.com/refinedmods" class="icon-link d-inline-flex align-items-center">
+                        Follow @refinedmods on Twitter
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <a href="https://anvil.social/@refinedmods" rel="me"
+                       class="icon-link d-inline-flex align-items-center">
+                        Follow @refinedmods on Mastodon
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div th:utext="${content}" th:remove="tag">
+        </div>
+    </main>
+</div>
+</body>
+</html>

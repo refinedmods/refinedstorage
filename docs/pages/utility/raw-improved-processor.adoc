@@ -1,0 +1,5 @@
+= Raw Improved Processor
+:icon: raw-improved-processor.png
+:from: v0.3.0-alpha
+
+The {doctitle} is used to craft a xref:improved-processor.adoc[].

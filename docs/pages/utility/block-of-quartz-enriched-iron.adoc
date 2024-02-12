@@ -1,0 +1,5 @@
+= Block of Quartz Enriched Iron
+:from: v1.4.0-beta
+:icon: block-of-quartz-enriched-iron.png
+
+The {doctitle} is xref:quartz-enriched-iron.adoc[] in block form.

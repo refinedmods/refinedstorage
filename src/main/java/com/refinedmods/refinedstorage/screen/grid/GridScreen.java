@@ -24,7 +24,7 @@ import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
 import com.refinedmods.refinedstorage.screen.grid.view.GridViewImpl;
 import com.refinedmods.refinedstorage.screen.grid.view.IGridView;
-import com.refinedmods.refinedstorage.screen.widget.CheckboxWidget;
+import com.refinedmods.refinedstorage.screen.widget.SmallCheckboxWidget;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.screen.widget.SearchWidget;
 import com.refinedmods.refinedstorage.screen.widget.TabListWidget;
@@ -44,7 +44,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.neoforged.neoforge.client.ClientHooks;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
@@ -66,9 +66,9 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     private final int patternScrollOffsetAbsoluteMax = GridNetworkNode.PROCESSING_MATRIX_SIZE / 3 - 3;
     private IGridView view;
     private SearchWidget searchField;
-    private CheckboxWidget exactPattern;
-    private CheckboxWidget processingPattern;
-    private CheckboxWidget fluidCheckBox;
+    private SmallCheckboxWidget exactPattern;
+    private SmallCheckboxWidget processingPattern;
+    private SmallCheckboxWidget fluidCheckBox;
     private ScrollbarWidget scrollbar;
     private ScrollbarWidget patternScrollbar;
     private boolean wasConnected;
@@ -112,7 +112,6 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         sorters.add(new QuantityGridSorter());
         sorters.add(new IdGridSorter());
         sorters.add(new LastModifiedGridSorter());
-        sorters.add(new InventoryTweaksGridSorter());
 
         return sorters;
     }
@@ -187,21 +186,21 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
 
             processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, Component.translatable("misc.refinedstorage.processing"), GridBlockEntity.PROCESSING_PATTERN.getValue(), btn -> {
                 // Rebuild the inventory slots before the slot change packet arrives.
-                GridBlockEntity.PROCESSING_PATTERN.setValue(false, processingPattern.selected());
+                GridBlockEntity.PROCESSING_PATTERN.setValue(false, processingPattern.isSelected());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
                 this.menu.initSlots();
 
                 patternScrollOffset = 0; // reset offset when switching between crafting and processing
-                BlockEntitySynchronizationManager.setParameter(GridBlockEntity.PROCESSING_PATTERN, processingPattern.selected());
+                BlockEntitySynchronizationManager.setParameter(GridBlockEntity.PROCESSING_PATTERN, processingPattern.isSelected());
             });
 
-            if (!processingPattern.selected()) {
+            if (!processingPattern.isSelected()) {
                 exactPattern = addCheckBox(
                     processingPattern.getX() + processingPattern.getWidth() + 5,
                     y + getTopHeight() + (getVisibleRows() * 18) + 60,
                     Component.translatable("misc.refinedstorage.exact"),
                     GridBlockEntity.EXACT_PATTERN.getValue(),
-                    btn -> BlockEntitySynchronizationManager.setParameter(GridBlockEntity.EXACT_PATTERN, exactPattern.selected())
+                    btn -> BlockEntitySynchronizationManager.setParameter(GridBlockEntity.EXACT_PATTERN, exactPattern.isSelected())
                 );
                 patternScrollbar.setEnabled(false);
             } else {
@@ -412,7 +411,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
             }
 
             graphics.blit(texture, x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
-            if (processingPattern.selected()) {
+            if (processingPattern.isSelected()) {
                 updatePatternScrollbar();
                 patternScrollbar.render(graphics);
             }
@@ -500,7 +499,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
         ItemStack stackContext = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
 
         List<? extends FormattedText> textElements = gridStack.getTooltip(true);
-        List<ClientTooltipComponent> components = new ArrayList<>(ForgeHooksClient.gatherTooltipComponents(
+        List<ClientTooltipComponent> components = new ArrayList<>(ClientHooks.gatherTooltipComponents(
             stackContext,
             textElements,
             mouseX,
@@ -637,7 +636,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     }
 
     @Override
-    public boolean mouseScrolled(double x, double y, double delta) {
+    public boolean mouseScrolled(double x, double y, double z, double delta) {
         if (hasShiftDown() || hasControlDown()) {
             if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
                 doSort = !isOverSlotArea(x - leftPos, y - topPos) && !isOverCraftingOutputArea(x - leftPos, y - topPos);
@@ -650,14 +649,14 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
                 }
             }
 
-            return super.mouseScrolled(x, y, delta);
+            return super.mouseScrolled(x, y, z, delta);
         }
 
-        if (grid.getGridType() == GridType.PATTERN && isOverPatternArea(x - leftPos, y - topPos) && patternScrollbar.mouseScrolled(x, y, delta)) {
+        if (grid.getGridType() == GridType.PATTERN && isOverPatternArea(x - leftPos, y - topPos) && patternScrollbar.mouseScrolled(x, y, z, delta)) {
             return true;
         }
 
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+        return this.scrollbar.mouseScrolled(x, y, z, delta) || super.mouseScrolled(x, y, z, delta);
     }
 
     private boolean isOverInventory(double x, double y) {
@@ -713,7 +712,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
 
     public void updateExactPattern(boolean checked) {
         if (exactPattern != null) {
-            exactPattern.setChecked(checked);
+            exactPattern.setSelected(checked);
         }
     }
 
@@ -753,7 +752,7 @@ public class GridScreen extends BaseScreen<GridContainerMenu> implements IScreen
     }
 
     public void updatePatternScrollbar() {
-        patternScrollbar.setEnabled(processingPattern.selected() && patternScrollOffsetMax > 0);
+        patternScrollbar.setEnabled(processingPattern.isSelected() && patternScrollOffsetMax > 0);
         int oldOffset = patternScrollbar.getOffset();
         patternScrollbar.setMaxOffset(Math.min(patternScrollOffsetMax, patternScrollOffsetAbsoluteMax));
 

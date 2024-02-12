@@ -24,11 +24,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class ImporterNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "importer");
@@ -68,7 +68,11 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
         if (type == IType.ITEMS) {
             BlockEntity facing = getFacingBlockEntity();
-            IItemHandler handler = LevelUtils.getItemHandler(facing, getDirection().getOpposite());
+            IItemHandler handler = LevelUtils.getItemHandler(
+                level,
+                pos.relative(getDirection()),
+                getDirection().getOpposite()
+            );
 
             if (facing instanceof DiskDriveBlockEntity || handler == null) {
                 return;
@@ -100,7 +104,11 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
                 }
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = LevelUtils.getFluidHandler(getFacingBlockEntity(), getDirection().getOpposite());
+            IFluidHandler handler = LevelUtils.getFluidHandler(
+                level,
+                pos.relative(getDirection()),
+                getDirection().getOpposite()
+            );
 
             if (handler != null) {
                 FluidStack extractedSimulated = handler.drain(FluidType.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.SIMULATE);

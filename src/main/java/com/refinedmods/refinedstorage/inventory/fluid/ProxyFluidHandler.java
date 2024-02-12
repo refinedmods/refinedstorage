@@ -1,10 +1,9 @@
 package com.refinedmods.refinedstorage.inventory.fluid;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-
 import javax.annotation.Nonnull;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class ProxyFluidHandler implements IFluidHandler {
     private final FluidTank insertHandler;

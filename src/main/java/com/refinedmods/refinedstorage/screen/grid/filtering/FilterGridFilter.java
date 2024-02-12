@@ -5,11 +5,11 @@ import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.ItemGridStack;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -48,14 +48,11 @@ public class FilterGridFilter implements Predicate<IGridStack> {
                 FluidStack stackInFilter = (FluidStack) filter.getStack();
 
                 if (filter.isModFilter()) {
-                    ResourceLocation stackInFilterRegistryName = ForgeRegistries.FLUIDS.getKey(stackInFilter.getFluid());
+                    ResourceLocation stackInFilterRegistryName = BuiltInRegistries.FLUID.getKey(stackInFilter.getFluid());
+                    String stackInFilterModId = stackInFilterRegistryName.getNamespace();
 
-                    if (stackInFilterRegistryName != null) {
-                        String stackInFilterModId = stackInFilterRegistryName.getNamespace();
-
-                        if (stackInFilterModId.equalsIgnoreCase(stack.getModId())) {
-                            return filter.getMode() == IFilter.MODE_WHITELIST;
-                        }
+                    if (stackInFilterModId.equalsIgnoreCase(stack.getModId())) {
+                        return filter.getMode() == IFilter.MODE_WHITELIST;
                     }
                 } else if (API.instance().getComparer().isEqual(((FluidGridStack) stack).getStack(), stackInFilter, filter.getCompare())) {
                     return filter.getMode() == IFilter.MODE_WHITELIST;

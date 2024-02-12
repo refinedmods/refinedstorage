@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -24,9 +24,10 @@ public class LootTableGenerator extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        RSBlocks.CONTROLLER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), ControllerLootFunction.builder()));
+        RSBlocks.CONTROLLER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), ControllerLootFunction::new));
         RSBlocks.CREATIVE_CONTROLLER.values().forEach(block -> dropSelf(block.get()));
-        RSBlocks.CRAFTER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(), CrafterLootFunction.builder()));
+        RSBlocks.CRAFTER.values().forEach(block -> genBlockItemLootTableWithFunction(block.get(),
+            CrafterLootFunction::new));
         RSBlocks.GRID.values().forEach(block -> dropSelf(block.get()));
         RSBlocks.CRAFTING_GRID.values().forEach(block -> dropSelf(block.get()));
         RSBlocks.FLUID_GRID.values().forEach(block -> dropSelf(block.get()));
@@ -44,7 +45,7 @@ public class LootTableGenerator extends BlockLootSubProvider {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return RSBlocks.COLORED_BLOCKS.stream().map(RegistryObject::get).collect(Collectors.toList());
+        return RSBlocks.COLORED_BLOCKS.stream().map(DeferredHolder::get).collect(Collectors.toList());
     }
 
     private void genBlockItemLootTableWithFunction(Block block, LootItemFunction.Builder builder) {

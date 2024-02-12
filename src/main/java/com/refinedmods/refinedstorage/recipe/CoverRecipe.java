@@ -14,15 +14,14 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-
+import net.neoforged.neoforge.common.Tags;
 import java.util.List;
 
 public class CoverRecipe extends CustomRecipe {
     public static RecipeSerializer<CoverRecipe> SERIALIZER = new SimpleCraftingRecipeSerializer<>(CoverRecipe::new);
 
-    public CoverRecipe(ResourceLocation id, CraftingBookCategory category) {
-        super(id, category);
+    public CoverRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     public static boolean stackMatches(ItemStack first) {

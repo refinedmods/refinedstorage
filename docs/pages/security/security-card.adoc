@@ -1,0 +1,7 @@
+= Security Card
+:from: v1.4.0-beta
+:icon: security-card.png
+
+The {doctitle} is an item that is bound to a player by right clicking.
+
+The {doctitle} has to be inserted into a xref:security-manager.adoc[], and can be configured from there as well.

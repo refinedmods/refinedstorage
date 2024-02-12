@@ -1,0 +1,52 @@
+== Search box modes
+
+[cols="1,1"]
+|===
+|Type|Description
+
+|Normal|The default search box mode
+|Normal (autoselected)|Autoselects the search box
+|JEI synchronized|Synchronizes the search box with JEI
+|JEI synchronized (autoselected)|Synchronizes the search box with JEI and autoselects the search box
+|JEI synchronized (two-way)|Synchronizes the search box with JEI and synchronizes JEI with the search box
+|JEI synchronized (two-way autoselected)|Synchronizes the search box with JEI, synchronizes JEI with the search box and autoselects the search box
+|===
+
+== Search box filters
+
+=== Mod ID or name
+
+Prefix your search query with `@` followed by the mod ID or name to only show items of said mod.
+
+You can also give search terms after that, so it'll only display certain items of that mod.
+
+For example:
+
+- `@ic2` will only show link:https://minecraft.curseforge.com/projects/industrial-craft[IndustrialCraft 2] items and blocks
+- `@ic2 nuclear` will only show link:https://minecraft.curseforge.com/projects/industrial-craft[IndustrialCraft 2] items and blocks that have "nuclear" in its name
+
+=== Tooltip
+
+Prefix your search query with `#` followed by the tooltip text to search for.
+
+=== Ore dictionary (Refined Storage 1.6.x or lower)
+
+Prefix your search query with `$` followed by the ore dictionary name.
+
+For example: `$ingot` will only show ingots, because those are listed as `ingotIron`, `ingotGold`, ... in the ore dictionary.
+
+=== Tags (Refined Storage 1.7.x or higher)
+
+Prefix your search query with `$` followed by the tag name.
+
+For example: `$gem` will show all items marked as a gem in the item tags.
+
+=== Searching multiple items
+
+You can use the `|` symbol to search for multiple items at once.
+
+For example: to look for ingots and dirt, use: `ingot|dirt`.
+
+== Search box history
+
+Use the up and down arrow keys to scroll through the search box history.

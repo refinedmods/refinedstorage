@@ -1,0 +1,20 @@
+= Solderer
+:icon: solderer.png
+:from: v0.3.0-alpha
+:to: v1.6.0
+
+[.alert.alert-warning]
+****
+The {doctitle} has been removed in v1.6.0. It has been replaced with xref:processor-binding.adoc[].
+****
+
+The {doctitle} is a device that is used to craft several items and blocks.
+
+The {doctitle} is not sided.
+You can insert from any side and it'll automatically put the items in the right slot.
+
+Use of link:https://minecraft.curseforge.com/projects/jei[JEI (Just Enough Items)] is (highly) recommended to see the recipes of the {doctitle}.
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]

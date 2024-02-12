@@ -1,15 +1,20 @@
 package com.refinedmods.refinedstorage.network.craftingmonitor;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.CraftingMonitorContainerMenu;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
-import java.util.function.Supplier;
+import javax.annotation.Nullable;
 
-public class CraftingMonitorCancelMessage {
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+
+public class CraftingMonitorCancelMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafting_monitor_cancel");
+
     @Nullable
     private final UUID taskId;
 
@@ -21,25 +26,28 @@ public class CraftingMonitorCancelMessage {
         return new CraftingMonitorCancelMessage(buf.readBoolean() ? buf.readUUID() : null);
     }
 
-    public static void encode(CraftingMonitorCancelMessage message, FriendlyByteBuf buf) {
-        buf.writeBoolean(message.taskId != null);
+    public static void handle(CraftingMonitorCancelMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            if (player.containerMenu instanceof CraftingMonitorContainerMenu) {
+                ((CraftingMonitorContainerMenu) player.containerMenu).getCraftingMonitor().onCancelled(
+                    (ServerPlayer) player,
+                    message.taskId
+                );
+            }
+        }));
+    }
 
-        if (message.taskId != null) {
-            buf.writeUUID(message.taskId);
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeBoolean(taskId != null);
+
+        if (taskId != null) {
+            buf.writeUUID(taskId);
         }
     }
 
-    public static void handle(CraftingMonitorCancelMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayer player = ctx.get().getSender();
-
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                if (player.containerMenu instanceof CraftingMonitorContainerMenu) {
-                    ((CraftingMonitorContainerMenu) player.containerMenu).getCraftingMonitor().onCancelled(player, message.taskId);
-                }
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

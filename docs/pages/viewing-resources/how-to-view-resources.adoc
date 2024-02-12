@@ -1,0 +1,33 @@
+= How to view resources
+
+== Grid
+
+You can use the xref:grid.adoc[], xref:crafting-grid.adoc[] or xref:fluid-grid.adoc[] to view resources in your network.
+
+[#_wireless_access]
+== Wireless access
+
+Refined Storage has extensive wireless abilities to access your storage network remotely.
+
+Craft a xref:../wireless-networking/wireless-grid.adoc[] and right click it on a xref:../networking/controller.adoc[].
+
+Craft a xref:../wireless-networking/wireless-transmitter.adoc[] and add it to your network.
+You can now access your storage in a radius around the xref:../wireless-networking/wireless-transmitter.adoc[].
+
+Want a higher range?
+Simply place multiple xref:../wireless-networking/wireless-transmitter.adoc[wireless transmitters] around your world, but not next to each other.
+
+== Portable Grid
+
+Want to access an individual xref:../storage/index.adoc#_storage_disks[storage disk]?
+Use a xref:portable-grid.adoc[].
+
+Give it energy and insert a disk, and you're good to go.
+It doesn't depend on a storage network.
+
+== Storage Monitor
+
+Want to see how much you have of an item in your storage network?
+Connect a xref:storage-monitor.adoc[] and configure an item to display.
+
+You can then see how much you have of that item and interact with it by inserting or extracting multiple items at once.

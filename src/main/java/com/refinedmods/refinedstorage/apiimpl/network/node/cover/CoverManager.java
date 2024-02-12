@@ -12,10 +12,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-
+import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,14 +75,11 @@ public class CoverManager {
     }
 
     @Nullable
-    @SuppressWarnings("deprecation")
     public static BlockState getBlockState(ItemStack item) {
         Block block = getBlock(item);
-
         if (block == null) {
             return null;
         }
-
         return block.defaultBlockState();
     }
 
@@ -165,7 +161,7 @@ public class CoverManager {
             CompoundTag tag = new CompoundTag();
 
             tag.putInt(NBT_DIRECTION, entry.getKey().ordinal());
-            tag.put(NBT_ITEM, entry.getValue().getStack().serializeNBT());
+            tag.put(NBT_ITEM, entry.getValue().getStack().save(new CompoundTag()));
             tag.putInt(NBT_TYPE, entry.getValue().getType().ordinal());
 
             list.put(entry.getKey().ordinal() + "", tag);

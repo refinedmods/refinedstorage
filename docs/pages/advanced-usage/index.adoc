@@ -1,0 +1,8 @@
+= Advanced usage
+
+- xref:commands.adoc[]
+- xref:profiling.adoc[]
+- xref:resource-packs.adoc[]
+- xref:translating-refined-storage.adoc[]
+- xref:using-development-builds.adoc[]
+- xref:using-the-api.adoc[]

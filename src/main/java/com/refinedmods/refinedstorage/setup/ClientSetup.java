@@ -33,14 +33,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 
@@ -59,38 +59,10 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent e) {
-        MinecraftForge.EVENT_BUS.register(new KeyInputListener());
+        NeoForge.EVENT_BUS.register(new KeyInputListener());
 
         registerBakedModelOverrides();
         registerPatternRenderHandlers();
-
-        // MenuScreens isn't thread safe
-        e.enqueueWork(() -> {
-            MenuScreens.register(RSContainerMenus.FILTER.get(), FilterScreen::new);
-            MenuScreens.register(RSContainerMenus.CONTROLLER.get(), ControllerScreen::new);
-            MenuScreens.register(RSContainerMenus.DISK_DRIVE.get(), DiskDriveScreen::new);
-            MenuScreens.register(RSContainerMenus.GRID.get(), new GridScreenFactory());
-            MenuScreens.register(RSContainerMenus.STORAGE_BLOCK.get(), StorageBlockScreen::new);
-            MenuScreens.register(RSContainerMenus.FLUID_STORAGE_BLOCK.get(), FluidStorageBlockScreen::new);
-            MenuScreens.register(RSContainerMenus.EXTERNAL_STORAGE.get(), ExternalStorageScreen::new);
-            MenuScreens.register(RSContainerMenus.IMPORTER.get(), ImporterScreen::new);
-            MenuScreens.register(RSContainerMenus.EXPORTER.get(), ExporterScreen::new);
-            MenuScreens.register(RSContainerMenus.NETWORK_TRANSMITTER.get(), NetworkTransmitterScreen::new);
-            MenuScreens.register(RSContainerMenus.RELAY.get(), RelayScreen::new);
-            MenuScreens.register(RSContainerMenus.DETECTOR.get(), DetectorScreen::new);
-            MenuScreens.register(RSContainerMenus.SECURITY_MANAGER.get(), SecurityManagerScreen::new);
-            MenuScreens.register(RSContainerMenus.INTERFACE.get(), InterfaceScreen::new);
-            MenuScreens.register(RSContainerMenus.FLUID_INTERFACE.get(), FluidInterfaceScreen::new);
-            MenuScreens.register(RSContainerMenus.WIRELESS_TRANSMITTER.get(), WirelessTransmitterScreen::new);
-            MenuScreens.register(RSContainerMenus.STORAGE_MONITOR.get(), StorageMonitorScreen::new);
-            MenuScreens.register(RSContainerMenus.CONSTRUCTOR.get(), ConstructorScreen::new);
-            MenuScreens.register(RSContainerMenus.DESTRUCTOR.get(), DestructorScreen::new);
-            MenuScreens.register(RSContainerMenus.DISK_MANIPULATOR.get(), DiskManipulatorScreen::new);
-            MenuScreens.register(RSContainerMenus.CRAFTER.get(), CrafterScreen::new);
-            MenuScreens.register(RSContainerMenus.CRAFTER_MANAGER.get(), new CrafterManagerScreenFactory());
-            MenuScreens.register(RSContainerMenus.CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
-            MenuScreens.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
-        });
 
         BlockEntityRenderers.register(RSBlockEntities.STORAGE_MONITOR.get(), ctx -> new StorageMonitorBlockEntityRenderer());
 
@@ -110,6 +82,34 @@ public final class ClientSetup {
             ItemProperties.register(RSItems.WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
             ItemProperties.register(RSItems.CREATIVE_WIRELESS_FLUID_GRID.get(), CONNECTED, new NetworkItemPropertyGetter());
         });
+    }
+
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent e) {
+        e.register(RSContainerMenus.FILTER.get(), FilterScreen::new);
+        e.register(RSContainerMenus.CONTROLLER.get(), ControllerScreen::new);
+        e.register(RSContainerMenus.DISK_DRIVE.get(), DiskDriveScreen::new);
+        e.register(RSContainerMenus.GRID.get(), new GridScreenFactory());
+        e.register(RSContainerMenus.STORAGE_BLOCK.get(), StorageBlockScreen::new);
+        e.register(RSContainerMenus.FLUID_STORAGE_BLOCK.get(), FluidStorageBlockScreen::new);
+        e.register(RSContainerMenus.EXTERNAL_STORAGE.get(), ExternalStorageScreen::new);
+        e.register(RSContainerMenus.IMPORTER.get(), ImporterScreen::new);
+        e.register(RSContainerMenus.EXPORTER.get(), ExporterScreen::new);
+        e.register(RSContainerMenus.NETWORK_TRANSMITTER.get(), NetworkTransmitterScreen::new);
+        e.register(RSContainerMenus.RELAY.get(), RelayScreen::new);
+        e.register(RSContainerMenus.DETECTOR.get(), DetectorScreen::new);
+        e.register(RSContainerMenus.SECURITY_MANAGER.get(), SecurityManagerScreen::new);
+        e.register(RSContainerMenus.INTERFACE.get(), InterfaceScreen::new);
+        e.register(RSContainerMenus.FLUID_INTERFACE.get(), FluidInterfaceScreen::new);
+        e.register(RSContainerMenus.WIRELESS_TRANSMITTER.get(), WirelessTransmitterScreen::new);
+        e.register(RSContainerMenus.STORAGE_MONITOR.get(), StorageMonitorScreen::new);
+        e.register(RSContainerMenus.CONSTRUCTOR.get(), ConstructorScreen::new);
+        e.register(RSContainerMenus.DESTRUCTOR.get(), DestructorScreen::new);
+        e.register(RSContainerMenus.DISK_MANIPULATOR.get(), DiskManipulatorScreen::new);
+        e.register(RSContainerMenus.CRAFTER.get(), CrafterScreen::new);
+        e.register(RSContainerMenus.CRAFTER_MANAGER.get(), new CrafterManagerScreenFactory());
+        e.register(RSContainerMenus.CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
+        e.register(RSContainerMenus.WIRELESS_CRAFTING_MONITOR.get(), CraftingMonitorScreen::new);
     }
 
     private static void registerPatternRenderHandlers() {
@@ -200,8 +200,8 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void onRegisterModelGeometry(final ModelEvent.RegisterGeometryLoaders e) {
-        e.register("disk_drive", new DiskDriveGeometryLoader());
-        e.register("disk_manipulator", new DiskManipulatorGeometryLoader());
-        e.register("portable_grid", new PortableGridGeometryLoader());
+        e.register(new ResourceLocation(RS.ID, "disk_drive"), new DiskDriveGeometryLoader());
+        e.register(new ResourceLocation(RS.ID, "disk_manipulator"), new DiskManipulatorGeometryLoader());
+        e.register(new ResourceLocation(RS.ID, "portable_grid"), new PortableGridGeometryLoader());
     }
 }

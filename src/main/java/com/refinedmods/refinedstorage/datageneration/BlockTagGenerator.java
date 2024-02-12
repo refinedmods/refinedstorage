@@ -2,15 +2,14 @@ package com.refinedmods.refinedstorage.datageneration;
 
 import com.refinedmods.refinedstorage.RSBlocks;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
@@ -46,6 +45,6 @@ public class BlockTagGenerator extends BlockTagsProvider {
     }
 
     private ResourceKey<Block> resourceKey(Block block) {
-        return ForgeRegistries.BLOCKS.getResourceKey(block).get();
+        return BuiltInRegistries.BLOCK.getResourceKey(block).get();
     }
 }

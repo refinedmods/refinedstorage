@@ -16,8 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
-
+import net.neoforged.neoforge.client.model.data.ModelData;
 import javax.annotation.Nonnull;
 
 public class ImporterBlockEntity extends NetworkNodeBlockEntity<ImporterNetworkNode> {

@@ -1,0 +1,18 @@
+= Importer
+:icon: importer.png
+:from: v0.3.0-alpha
+
+The {doctitle} imports items or fluids from an inventory in front of the block and inserts it in the storage network (if there is space).
+
+By default, it will import all accessible slots (place the {doctitle} on the correct side, where the slot or fluid tank is reachable) but the player can use the whitelist or blacklist as well.
+
+== Whitelist and blacklist
+
+There is also a whitelist and blacklist option to only allow or forbid some items from entering the storage network.
+
+The whitelist or blacklist can be configured to be NBT or damage sensitive.
+
+== Applicable upgrades
+
+- xref:../upgrades/speed-upgrade.adoc[]
+- xref:../upgrades/stack-upgrade.adoc[]

@@ -1,0 +1,11 @@
+= Upgrades
+
+- xref:upgrade.adoc[]
+- xref:range-upgrade.adoc[]
+- xref:speed-upgrade.adoc[]
+- xref:stack-upgrade.adoc[]
+- xref:crafting-upgrade.adoc[]
+- xref:regulator-upgrade.adoc[]
+- xref:fortune-upgrade.adoc[]
+- xref:silk-touch-upgrade.adoc[]
+- xref:interdimensional-upgrade.adoc[]

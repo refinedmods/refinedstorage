@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.storage.IStorage;
 import com.refinedmods.refinedstorage.api.storage.IStorageProvider;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IStackList;
+import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -93,6 +94,11 @@ public interface IStorageCache<T> {
      * @return a list of craftables
      */
     IStackList<T> getCraftablesList();
+
+    /**
+     * @return grid stacks to sync initially
+     */
+    List<? extends IGridStack> getGridStacks();
 
     /**
      * @return the storages connected to this network

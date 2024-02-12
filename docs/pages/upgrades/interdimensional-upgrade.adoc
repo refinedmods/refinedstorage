@@ -1,0 +1,13 @@
+= Interdimensional Upgrade
+:icon: interdimensional-upgrade.png
+:from: v0.8.14-beta
+:to: v1.6.10
+
+[.alert.alert-warning]
+****
+This upgrade has been removed in v1.6.10. The xref:../wireless-networking/network-transmitter.adoc[] is now cross dimensional by default.
+****
+
+The Interdimensional Upgrade is an upgrade that allows the xref:../wireless-networking/network-transmitter.adoc[] to work cross-dimensionally.
+
+This upgrade takes a lot of extra FE/t by default (1000 FE/t extra).

@@ -1,0 +1,10 @@
+= Wrench
+:icon: wrench.png
+:from: v1.2.0
+
+The {doctitle} is a tool that can do two things:
+
+- Rotate blocks
+- Break Refined Storage xref:cover.adoc[covers]
+
+Simply sneak and right click when using the {doctitle}.

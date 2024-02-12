@@ -1,0 +1,9 @@
+= 4k Storage Block
+:icon: 4k-storage-block.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-block.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store 4.000 items.

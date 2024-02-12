@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class InterfaceBlock extends NetworkNodeBlock {
     public InterfaceBlock() {
@@ -33,8 +32,7 @@ public class InterfaceBlock extends NetworkNodeBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!level.isClientSide) {
-            return NetworkUtils.attempt(level, pos, player, () -> NetworkHooks.openScreen(
-                (ServerPlayer) player,
+            return NetworkUtils.attempt(level, pos, player, () -> player.openMenu(
                 new BlockEntityMenuProvider<InterfaceBlockEntity>(
                     Component.translatable("gui.refinedstorage.interface"),
                     (blockEntity, windowId, inventory, p) -> new InterfaceContainerMenu(blockEntity, player, windowId),

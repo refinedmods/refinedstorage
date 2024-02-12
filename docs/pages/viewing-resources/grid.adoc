@@ -1,0 +1,93 @@
+= Grid
+:icon: grid.png
+:from: v0.3.0-alpha
+
+The {doctitle} is a block that allows access to the items and fluids in the storage network.
+
+The player can extract items or fluids from the central GUI.
+
+[#_controls]
+== Controls
+
+[cols="1,1"]
+|===
+| Type | Description
+
+| Left click | Takes at most 64 items
+| Right click | Takes at most 32 items
+| Middle click | Takes 1 item (removed since v1.9.7)
+| SHIFT + Mouse scroll in the player inventory | Pushes 1 item to or from the player's inventory (since v1.9.7)
+| SHIFT + Mouse scroll in the {doctitle} inventory | Pushes 1 item to or from the {doctitle} inventory (since v1.9.7)
+| CTRL + Mouse scroll | Pushes 1 item to or from the player's mouse (since v1.9.7)
+| SHIFT | Pushes the items to the player's inventory
+| SHIFT + CTRL | Forces the crafting window to open *even if the item or fluid is available*
+| CTRL + X | Clears crafting matrix
+| Right click on search bar | Clears the search query
+| Tab | Selects the search bar when the {doctitle} isn't in autoselection mode
+| When in the crafting start GUI, pressing SHIFT | Skips the crafting preview window
+|===
+
+== Sorting
+
+The items or fluids in a {doctitle} can be sorted in various ways:
+
+- By name
+- By quantity
+- By item ID
+- Last modified
+- InventoryTweaks sorting (only available if InventoryTweaks is installed)
+
+The sorting direction can also be chosen (ascending or descending).
+
+include::../../partials/search-box.adoc[]
+
+== Filter
+
+In the sidebar of the {doctitle} there are slots where the player can insert xref:../utility/filter.adoc[filters] to filter certain items in the {doctitle}.
+
+== Tabs
+
+A {doctitle} can also have tabs.
+When clicking on the tab, only items configured in the xref:../utility/filter.adoc[] are visible.
+
+To use tabs in the {doctitle}, make a xref:../utility/filter.adoc[] with an icon specified.
+
+To have more than 4 tabs, put a xref:../utility/filter.adoc[] in a xref:../utility/filter.adoc[].
+
+== Sizes
+
+The size of any {doctitle} can be configured as well:
+
+- Stretched (default)
+- Small
+- Medium
+- Large
+
+When choosing the stretched size, the {doctitle} will take up all the vertical screen space.
+This can be limited through the `maxRowsStretch` config option.
+
+== Display
+
+The {doctitle} can be configured to only show craftable items or only non-craftable items.
+
+By default, the tooltips for items in a {doctitle} are a little bit bigger to display the total item count and the last modified information.
+This can be turned off by using the `detailedTooltip` config option.
+
+By default, the {doctitle} uses a small font size to display item or fluid quantities.
+Use the `largeFont` config option to change this.
+
+== Remember search query
+
+The {doctitle} can be configured to remember the search query when closing and re-opening the GUI.
+You can do this by modifying the `rememberSearchQuery` config option.
+
+== Prevent sorting while shift is down
+
+By default, the {doctitle} doesn't perform sorting when you're shift clicking items out of the storage network.
+This is done to prevent items and fluids shifting around your screen.
+
+As soon as you stop pressing the shift key, the view is sorted again.
+
+To disable this behavior, modify the `preventSortingWhileShiftIsDown` config option.
+
+include::../../partials/recoloring.adoc[]

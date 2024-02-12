@@ -19,11 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -116,7 +113,6 @@ public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
     }
 
     private final GridType type;
-    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
 
     public GridBlockEntity(GridType type, BlockPos pos, BlockState state) {
         super(getType(type), pos, state, SPEC, GridNetworkNode.class);
@@ -129,13 +125,10 @@ public class GridBlockEntity extends NetworkNodeBlockEntity<GridNetworkNode> {
         return new GridNetworkNode(level, pos, type);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER && type == GridType.PATTERN) {
-            return diskCapability.cast();
+    public IItemHandler getInventory() {
+        if (type == GridType.PATTERN) {
+            return getNode().getPatterns();
         }
-
-        return super.getCapability(cap, direction);
+        return null;
     }
 }

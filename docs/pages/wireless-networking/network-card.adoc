@@ -1,0 +1,7 @@
+= Network Card
+:from: v0.8.13-beta
+:icon: network-card.png
+
+A {doctitle} is an item that stores the coordinates of a xref:network-receiver.adoc[].
+
+The player has to insert the {doctitle} in a xref:network-transmitter.adoc[].

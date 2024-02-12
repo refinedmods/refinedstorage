@@ -1,16 +1,20 @@
 package com.refinedmods.refinedstorage.network.grid;
 
+import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.container.GridContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class GridItemPullMessage {
+public class GridItemPullMessage implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid_item_pull");
+
     private final UUID id;
     private final int flags;
 
@@ -23,28 +27,28 @@ public class GridItemPullMessage {
         return new GridItemPullMessage(buf.readUUID(), buf.readInt());
     }
 
-    public static void encode(GridItemPullMessage message, FriendlyByteBuf buf) {
-        buf.writeUUID(message.id);
-        buf.writeInt(message.flags);
+    public static void handle(GridItemPullMessage message, PlayPayloadContext ctx) {
+        ctx.player().ifPresent(player -> ctx.workHandler().submitAsync(() -> {
+            AbstractContainerMenu container = player.containerMenu;
+
+            if (container instanceof GridContainerMenu) {
+                IGrid grid = ((GridContainerMenu) container).getGrid();
+
+                if (grid.getItemHandler() != null) {
+                    grid.getItemHandler().onExtract((ServerPlayer) player, message.id, -1, message.flags);
+                }
+            }
+        }));
     }
 
-    public static void handle(GridItemPullMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayer player = ctx.get().getSender();
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeUUID(id);
+        buf.writeInt(flags);
+    }
 
-        if (player != null) {
-            ctx.get().enqueueWork(() -> {
-                AbstractContainerMenu container = player.containerMenu;
-
-                if (container instanceof GridContainerMenu) {
-                    IGrid grid = ((GridContainerMenu) container).getGrid();
-
-                    if (grid.getItemHandler() != null) {
-                        grid.getItemHandler().onExtract(player, message.id, -1, message.flags);
-                    }
-                }
-            });
-        }
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

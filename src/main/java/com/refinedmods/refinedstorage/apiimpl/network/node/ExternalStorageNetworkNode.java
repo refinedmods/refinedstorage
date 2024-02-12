@@ -33,8 +33,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -215,7 +215,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         if (facing != null) {
             if (type == IType.ITEMS) {
                 for (IExternalStorageProvider<ItemStack> provider : API.instance().<ItemStack>getExternalStorageProviders(StorageType.ITEM)) {
-                    if (provider.canProvide(facing, getDirection())) {
+                    if (provider.canProvide(level, pos.relative(getDirection()), getDirection())) {
                         itemStorages.add(provider.provide(this, getFacingBlockEntity(), getDirection()));
 
                         break;
@@ -223,7 +223,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
                 }
             } else if (type == IType.FLUIDS) {
                 for (IExternalStorageProvider<FluidStack> provider : API.instance().<FluidStack>getExternalStorageProviders(StorageType.FLUID)) {
-                    if (provider.canProvide(facing, getDirection())) {
+                    if (provider.canProvide(level, pos.relative(getDirection()), getDirection())) {
                         fluidStorages.add(provider.provide(this, getFacingBlockEntity(), getDirection()));
 
                         break;

@@ -1,0 +1,9 @@
+= 64k Storage Block
+:icon: 64k-storage-block.png
+:from: v0.3.0-alpha
+
+include::../../partials/storage-block.adoc[]
+
+== Storage capacity
+
+The {doctitle} can store 64.000 items.

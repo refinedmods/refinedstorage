@@ -1,0 +1,24 @@
+= Storage Monitor
+:icon: storage-monitor.png
+:from: v1.4.1-beta
+
+The {doctitle} is a block that displays the current amount of a certain item or fluid in your storage system.
+
+== Configuration
+
+Use SHIFT + right click on the block to open a GUI to configure the item or fluid being displayed.
+
+== Item inserting and extracting
+
+- You can extract the item specified from the system by left clicking
+- Regular left click for a full stack (64 items)
+- Shift left click for 1 of a stack (1 item)
+- You can insert items from your inventory that match the item being displayed by right clicking
+- Right click quickly to insert all items matching the item displayed in your
+
+== Fluid inserting and extracting (since v1.8.1)
+
+- You can extract the fluid specified in bucket from from the system by shift left clicking
+- Make sure you have a bucket in your inventory or storage network
+- You can insert fluids from your inventory that match the fluid being displayed by right clicking
+- Make sure you have a fluid container in your inventory that contains the fluid you want to insert

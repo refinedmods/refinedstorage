@@ -1,0 +1,7 @@
+= Crafting Upgrade
+:icon: crafting-upgrade.png
+:from: v0.6.0-alpha
+
+The {doctitle} will schedule a crafting task when the item being used in a device is needed but not available.
+
+By using this upgrade, the amount of FE/t that this device draws will increase.

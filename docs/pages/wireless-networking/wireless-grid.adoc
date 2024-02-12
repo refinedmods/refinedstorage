@@ -1,0 +1,39 @@
+= Wireless Grid
+:from: v0.3.0-alpha
+:icon: wireless-grid.png
+
+With the {doctitle} the player can access their items from anywhere.
+
+To activate the {doctitle}, the player has to right click the {doctitle} on a xref:../networking/controller.adoc[].
+If you're playing on Refined Storage v1.7.x or higher you can bind the {doctitle} by right clicking on any connected network device.
+
+To use the {doctitle} the item needs Forge Energy (FE).
+You'll have to charge it in a block that charges items from another mod.
+
+After doing all these steps, the {doctitle} is still missing a signal from the storage network.
+Add at least 1 xref:wireless-transmitter.adoc[] to the network to get a basic range of 16 blocks.
+
+If the {doctitle} is ready for use, it will light up blue.
+
+== Troubleshooting
+
+Sometimes, the {doctitle} doesn't open or stays gray.
+To enable it make sure that:
+
+- The {doctitle} is bound to a xref:../networking/controller.adoc[]
+- There is at least 1 xref:wireless-transmitter.adoc[] connected to the network
+- That you are in range of the xref:wireless-transmitter.adoc[]
+- The xref:../networking/controller.adoc[] block is still in the world on the place where you bound it to
+
+== Energy behavior
+
+The {doctitle} draws energy on following actions:
+
+[cols="1,1"]
+|===
+|Action|Amount of Forge Energy used
+
+|Opening the {doctitle}|30 FE
+|Pulling an item from storage|3 FE
+|Pushing an item to storage|3 FE
+|===

@@ -6,8 +6,7 @@ import com.refinedmods.refinedstorage.blockentity.CrafterManagerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.network.IContainerFactory;
-
+import net.neoforged.neoforge.network.IContainerFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
