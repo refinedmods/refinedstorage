@@ -16,30 +16,23 @@ import java.util.List;
 public class GridTransferMessage implements CustomPacketPayload {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid_transfer");
 
-    private ItemStack[][] recipe;
-    private List<List<ItemStack>> inputs;
+    private final ItemStack[][] recipe;
 
-    public GridTransferMessage() {
-    }
-
-    public GridTransferMessage(List<List<ItemStack>> inputs) {
-        this.inputs = inputs;
+    public GridTransferMessage(final ItemStack[][] recipe) {
+        this.recipe = recipe;
     }
 
     public static GridTransferMessage decode(FriendlyByteBuf buf) {
-        GridTransferMessage msg = new GridTransferMessage();
         int slots = buf.readInt();
-        msg.recipe = new ItemStack[slots][];
+        final ItemStack[][] recipe = new ItemStack[slots][];
         for (int i = 0; i < slots; i++) {
             int numberOfIngredients = buf.readInt();
-            msg.recipe[i] = new ItemStack[numberOfIngredients];
-
+            recipe[i] = new ItemStack[numberOfIngredients];
             for (int j = 0; j < numberOfIngredients; j++) {
-                msg.recipe[i][j] = StackUtils.readItemStack(buf);
+                recipe[i][j] = StackUtils.readItemStack(buf);
             }
         }
-
-        return msg;
+        return new GridTransferMessage(recipe);
     }
 
     public static void handle(GridTransferMessage message, PlayPayloadContext ctx) {
@@ -56,10 +49,9 @@ public class GridTransferMessage implements CustomPacketPayload {
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeInt(inputs.size());
-        for (List<ItemStack> stacks : inputs) {
-            buf.writeInt(stacks.size());
-
+        buf.writeInt(recipe.length);
+        for (ItemStack[] stacks : recipe) {
+            buf.writeInt(stacks.length);
             for (ItemStack possibleStack : stacks) {
                 StackUtils.writeItemStack(buf, possibleStack);
             }

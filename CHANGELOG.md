@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 -   Fixed JEI transfer in the Pattern Grid wrongly choosing "Processing" mode.
+-   Fixed JEI transfer not working in single player.
 
 ## [1.13.0-beta.1] - 2024-02-12
 

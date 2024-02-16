@@ -156,7 +156,12 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
             return stacks;
         }).toList();
 
-        RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(inputs));
+        final ItemStack[][] inputsArray = new ItemStack[inputs.size()][];
+        for (int i = 0; i < inputs.size(); i++) {
+            inputsArray[i] = inputs.get(i).toArray(new ItemStack[0]);
+        }
+
+        RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(inputsArray));
     }
 
     private void moveForProcessing(IRecipeSlotsView recipeLayout, GridContainerMenu gridContainer, Player player) {
