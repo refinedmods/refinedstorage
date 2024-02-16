@@ -19,7 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -128,9 +128,8 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
         this.lastTransferTimeMs = System.currentTimeMillis();
 
         boolean isCraftingRecipe = false;
-        if(recipe instanceof Recipe<?> castRecipe)
-        {
-            isCraftingRecipe = castRecipe.getType() == net.minecraft.world.item.crafting.RecipeType.CRAFTING;
+        if (recipe instanceof RecipeHolder<?> castRecipe) {
+            isCraftingRecipe = castRecipe.value().getType() == net.minecraft.world.item.crafting.RecipeType.CRAFTING;
         }
 
         if (gridContainer.getGrid().getGridType() == GridType.PATTERN && !isCraftingRecipe) {
@@ -142,7 +141,6 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler<GridCon
 
     private void move(IRecipeSlotsView recipeSlotsView) {
         List<List<ItemStack>> inputs = recipeSlotsView.getSlotViews(RecipeIngredientRole.INPUT).stream().map(view -> {
-
             //Creating a mutable list
             List<ItemStack> stacks = view.getItemStacks().collect(Collectors.toCollection(ArrayList::new));
 
