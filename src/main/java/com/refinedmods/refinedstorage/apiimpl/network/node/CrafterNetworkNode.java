@@ -156,6 +156,8 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
         if (network != null) {
             network.getCraftingManager().invalidate();
         }
+
+        level.invalidateCapabilities(pos);
     }
 
     @Override
