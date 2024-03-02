@@ -137,7 +137,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 -   Fixed not using Forge silicon tag for recipes.
--   Small corrections to the Korean ation.
+-   Small corrections to the Korean translation.
 
 ## [1.11.0] - 2022-09-30
 
