@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+-   Added Hungarian translation.
+
 ## [1.13.0-beta.2] - 2024-02-16
 
 ### Fixed
@@ -133,7 +137,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 -   Fixed not using Forge silicon tag for recipes.
--   Small corrections to the Korean translation.
+-   Small corrections to the Korean ation.
 
 ## [1.11.0] - 2022-09-30
 
