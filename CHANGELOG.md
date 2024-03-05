@@ -7,6 +7,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.13.0-beta.3] - 2024-03-05
+
+### Fixed
+
+-   Fixed items in disks deserializing with an empty NBT tag.
+-   Fixed placing fluids in the pattern grid disconnecting the client.
+
 ## [1.13.0-beta.2] - 2024-02-16
 
 ### Fixed
@@ -3532,7 +3539,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.2...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.3...HEAD
+
+[1.13.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.2...v1.13.0-beta.3
 
 [1.13.0-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.1...v1.13.0-beta.2
 
