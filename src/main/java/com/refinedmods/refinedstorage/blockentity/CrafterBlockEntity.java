@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizatio
 import com.refinedmods.refinedstorage.blockentity.data.BlockEntitySynchronizationSpec;
 import com.refinedmods.refinedstorage.screen.CrafterBlockEntitySynchronizationClientListener;
 
+import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 
 import net.minecraft.core.BlockPos;
@@ -44,8 +45,8 @@ public class CrafterBlockEntity extends NetworkNodeBlockEntity<CrafterNetworkNod
         return new CrafterNetworkNode(level, pos);
     }
 
-    public IItemHandler getPatterns(Direction direction) {
-        if (!direction.equals(this.getNode().getDirection())) {
+    public IItemHandler getPatterns(@Nullable Direction direction) {
+        if (direction != null && !direction.equals(this.getNode().getDirection())) {
             return getNode().getPatternInventory();
         }
         return null;
