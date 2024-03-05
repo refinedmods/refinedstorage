@@ -7,6 +7,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- Fixed an error that occurred when targeting the crafter with Jade installed
+
 ## [1.13.0-beta.3] - 2024-03-05
 
 ### Fixed
