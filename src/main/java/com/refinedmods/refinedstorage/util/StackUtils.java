@@ -338,7 +338,7 @@ public final class StackUtils {
         return AttachmentInternals.reconstructItemStack(
             BuiltInRegistries.ITEM.get(new ResourceLocation(tag.getString(NBT_ITEM_ID))),
             tag.getInt(NBT_ITEM_QUANTITY),
-            tag.getCompound(NBT_ITEM_NBT)
+            tag.contains(NBT_ITEM_NBT) ? tag.getCompound(NBT_ITEM_NBT) : null
         );
     }
 }
