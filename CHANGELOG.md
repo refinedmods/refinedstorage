@@ -7,6 +7,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- Fixed placing fluids in the pattern grid disconnecting the client.
+
 ## [1.13.0-beta.2] - 2024-02-16
 
 ### Fixed
