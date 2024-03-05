@@ -55,7 +55,7 @@ public class NetworkHandler {
         registrar.play(
             FluidFilterSlotUpdateMessage.ID,
             FluidFilterSlotUpdateMessage::decode,
-            handler -> handler.server(FluidFilterSlotUpdateMessage::handle)
+            handler -> handler.client(FluidFilterSlotUpdateMessage::handle)
         );
         registrar.play(
             BlockEntitySynchronizationParameterMessage.ID,
