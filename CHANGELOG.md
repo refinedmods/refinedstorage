@@ -3543,7 +3543,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.2...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.3...HEAD
+
+[1.13.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.2...v1.13.0-beta.3
 
 [1.13.0-beta.2]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.1...v1.13.0-beta.2
 
