@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.13.0-beta.4] - 2024-03-07
+
 ### Added
 
 -   Added Hungarian translation.
@@ -3547,7 +3549,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 -   Internal test release.
 
-[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.3...HEAD
+[Unreleased]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.4...HEAD
+
+[1.13.0-beta.4]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.3...v1.13.0-beta.4
 
 [1.13.0-beta.3]: https://github.com/refinedmods/refinedstorage/compare/v1.13.0-beta.2...v1.13.0-beta.3
 
