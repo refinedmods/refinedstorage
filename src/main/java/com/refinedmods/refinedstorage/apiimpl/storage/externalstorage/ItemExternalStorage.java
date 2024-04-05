@@ -7,8 +7,9 @@ import com.refinedmods.refinedstorage.api.storage.externalstorage.IExternalStora
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -116,6 +117,11 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
                 ItemStack slot = handler.getStackInSlot(i);
 
                 if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
+                    //Checks if the requested amount of 64 isn't found in the slot
+                    if(slot.getCount() < remaining) {
+                        remaining = slot.getCount();
+                    }
+
                     ItemStack got = handler.extractItem(i, Math.min(remaining, stack.getMaxStackSize()), action == Action.SIMULATE);
 
                     if (!got.isEmpty()) {
@@ -127,7 +133,7 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
 
                         remaining -= got.getCount();
 
-                        if (remaining <= 0) {
+                        if (remaining == 0) {
                             break;
                         }
                     }
