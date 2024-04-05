@@ -111,23 +111,25 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
 
         ItemStack received = ItemStack.EMPTY;
 
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            ItemStack slot = handler.getStackInSlot(i);
+        while(remaining > 0) {
+            for (int i = 0; i < handler.getSlots(); ++i) {
+                ItemStack slot = handler.getStackInSlot(i);
 
-            if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
-                ItemStack got = handler.extractItem(i, remaining, action == Action.SIMULATE);
+                if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
+                    ItemStack got = handler.extractItem(i, Math.min(remaining, stack.getMaxStackSize()), action == Action.SIMULATE);
 
-                if (!got.isEmpty()) {
-                    if (received.isEmpty()) {
-                        received = got.copy();
-                    } else {
-                        received.grow(got.getCount());
-                    }
+                    if (!got.isEmpty()) {
+                        if (received.isEmpty()) {
+                            received = got.copy();
+                        } else {
+                            received.grow(got.getCount());
+                        }
 
-                    remaining -= got.getCount();
+                        remaining -= got.getCount();
 
-                    if (remaining == 0) {
-                        break;
+                        if (remaining <= 0) {
+                            break;
+                        }
                     }
                 }
             }

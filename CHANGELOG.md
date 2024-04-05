@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+-   Fixed dupe with External Storage and a higher stack size than 64.
+
 ## [1.13.0-beta.4] - 2024-03-07
 
 ### Added
