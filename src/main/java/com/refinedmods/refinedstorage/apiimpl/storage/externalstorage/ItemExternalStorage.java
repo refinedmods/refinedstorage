@@ -117,7 +117,7 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
                 ItemStack slot = handler.getStackInSlot(i);
 
                 if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
-                    //Checks if the requested amount of 64 isn't found in the slot
+                    //Check if the requested amount of 64 isn't found in the slot
                     if(slot.getCount() < remaining) {
                         remaining = slot.getCount();
                     }
