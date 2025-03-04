@@ -1,6 +1,6 @@
 = Commands
 
-[cols="1,1"]
+[cols="1,1,2"]
 |===
 |Refined Storage version|Command      |Explanation
 
