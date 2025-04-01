@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
+    - name: 🛠 Refined Storage v2.x Issue Tracker
+      url: https://github.com/refinedmods/refinedstorage2/issues
+      about: Report all bugs, suggestions, and support requests for Refined Storage v2.x here.
+    - name: 🚫 No Support for v1.x
+      url: https://github.com/refinedmods/refinedstorage
+      about: Refined Storage v1.x is no longer maintained. We do not accept issues or provide support for it.
     - name: Discord Community Support
       url: https://discordapp.com/invite/VYzsydb
       about: Please ask and answer questions here. Issues should be used for bugs and feature requests.

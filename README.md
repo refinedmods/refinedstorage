@@ -1,3 +1,17 @@
+<!-- IMPORTANT NOTICE -->
+<div style="border: 2px solid red; padding: 1em; color: #b00020; font-weight: bold; font-size: 1.2em; border-radius: 8px; text-align: center;">
+
+⚠️ <strong>IMPORTANT NOTICE</strong> ⚠️  
+<br><br>
+This repository is for <strong>Refined Storage v1.x</strong>.  
+<br><br>
+🛑 <strong>v1.x is no longer maintained, and we won't be fixing issues for this version.</strong>  
+<br><br>
+📝 For issues related to <strong>Refined Storage v2.x</strong>, please use the  
+<a href="https://github.com/refinedmods/refinedstorage2/issues">Refined Storage 2 issue tracker</a>.
+
+</div>
+
 <div align="center">
   <img width="280" alt="Refined Storage logo" src="https://raw.githubusercontent.com/refinedmods/refinedstorage/develop/images/logo.png" />
   <h1 style="margin-top: 0">Refined Storage</h1>
